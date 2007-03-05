@@ -28,17 +28,20 @@
 
 
 import os
+import cStringIO
+from xml.dom.minidom import parseString
+import zipfile
 from cgi import FieldStorage
 from zLOG import LOG
 from zExceptions import BadRequest
 from Testing import ZopeTestCase
-from ZPublisher.HTTPRequest import FileUpload
 from DateTime import DateTime
+from AccessControl.SecurityManagement import newSecurityManager
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Type.Cache import clearCache
 
 
 if __name__ == '__main__':
@@ -50,18 +53,37 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 ooodoc_coordinates = ('127.0.0.1', 8008)
 
+testrun = ()
+
 def shout(msg):
   msg = str(msg)
   ZopeTestCase._print('\n ' + msg)
   LOG('Testing... ', 0, msg)
 
+def unpackData(data):
+  """
+  Unpack Pdata into string
+  """
+  if isinstance(data, str):
+    return data
+  else:
+    data_list = []
+    while data is not None:
+      data_list.append(data.data)
+      data = data.next
+    return ''.join(data_list)
+
+class FileUploadTest(file):
+
+  __allow_access_to_unprotected_subobjects__=1
+
+  def __init__(self, path, name):
+    self.filename = name
+    file.__init__(self, path)
 
 def makeFileUpload(name):
   path = os.getenv('INSTANCE_HOME') + '/../Products/ERP5OOo/tests/' + name
-  headers = {'content-disposition': 'form-data; name="field_my_file"; filename="%s"' % name}
-  fs = FieldStorage(fp=open(path), headers=headers)
-  fup = FileUpload(fs)
-  return fup
+  return FileUploadTest(path, name)
 
 class TestIngestion(ERP5TypeTestCase):
   """
@@ -139,11 +161,10 @@ class TestIngestion(ERP5TypeTestCase):
       Create a new manager user and login.
     """
     user_name = 'bartek'
-    user_folder = self.getPortal().acl_users
+    user_folder = self.portal.acl_users
     user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor'], [])
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
-
 
   def createCategories(self):
     """
@@ -154,7 +175,15 @@ class TestIngestion(ERP5TypeTestCase):
                           {'path' : 'role/internal'
                            ,'title': 'Internal'
                            }
-
+                          ,{'path' : 'function/musician/wind/saxophone'
+                           ,'title': 'Saxophone'
+                           }
+                          ,{'path' : 'group/medium'
+                           ,'title': 'Medium'
+                           }
+                          ,{'path' : 'site/arctic/spitsbergen'
+                           ,'title': 'Spitsbergen'
+                           }
                          ]
 
     # Create categories
@@ -216,12 +245,15 @@ class TestIngestion(ERP5TypeTestCase):
       it has id as given and reference like document_[id]
       immediately catalogged and verified in two ways
     """
-    dm = self.getPortal().document_module
+    dm = self.portal.document_module
+    doc = getattr(dm, id, None)
+    if doc is not None:
+      dm.manage_delObjects([id,])
     reference =  'document_' + id
     doc = dm.newContent(portal_type=portal_type, id=id, reference=reference)
     #doctext._getServerCoordinate = getOoodCoordinate()
     doc.reindexObject(); get_transaction().commit(); self.tic()
-    self.checkObjectCatalogged('Text', reference)
+    self.checkObjectCatalogged(portal_type, reference)
     self.assert_(hasattr(dm, id))
 
 
@@ -279,37 +311,88 @@ class TestIngestion(ERP5TypeTestCase):
                                      )
     person.reindexObject(); get_transaction().commit(); self.tic()
 
+
   def stepCreateTextDocument(self, sequence=None, sequence_list=None, **kw):
     """
-      create an empty document 'one'
+      create an empty Text document 'one'
       for further testing
+      (first delete if exists)
     """
     self.createDocument('Text', 'one')
+
+  def stepCreateSpreadsheetDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+      create an empty Spreadsheet document 'two'
+      for further testing
+      (first delete if exists)
+    """
+    self.createDocument('Spreadsheet', 'two')
+
+  def stepCreatePresentationDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+      create an empty Presentation document 'three'
+      for further testing
+      (first delete if exists)
+    """
+    self.createDocument('Presentation', 'three')
+
+  def stepCreateDrawingDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+      create an empty Drawing document 'four'
+      for further testing
+      (first delete if exists)
+    """
+    self.createDocument('Drawing', 'four')
+
+  def stepCheckEmptyState(self, sequence=None, sequence_list=None, **kw):
+    """
+      check if the document is in "empty" processing state
+    """
+    dm = self.portal.document_module
+    context = getattr(dm, 'one', None)
+    return self.assertEquals(context.getExternalProcessingState(), 'empty')
+
+  def stepCheckUploadedState(self, sequence=None, sequence_list=None, **kw):
+    """
+      check if the document is in "uploaded" processing state
+    """
+    dm = self.portal.document_module
+    context = getattr(dm, 'one', None)
+    return self.assertEquals(context.getExternalProcessingState(), 'uploaded')
+
+  def stepCheckConvertedState(self, sequence=None, sequence_list=None, **kw):
+    """
+      check if the document is in "converted" processing state
+    """
+    dm = self.portal.document_module
+    context = getattr(dm, 'one', None)
+    return self.assertEquals(context.getExternalProcessingState(), 'converted')
 
   def stepStraightUpload(self, sequence=None, sequence_list=None, **kw):
     """
       Upload a file directly from the form
       check if it has the data and source_reference
     """
-    dm = self.getPortal().document_module
+    dm = self.portal.document_module
     doc = getattr(dm, 'one')
     f = makeFileUpload('TEST-en-002.doc')
     doc.edit(file=f)
     self.assert_(doc.hasFile())
     self.assertEquals(doc.getSourceReference(), 'TEST-en-002.doc')
     self.assertEquals(doc.getRevision(), '')
+    doc.reindexObject(); get_transaction().commit(); self.tic()
 
   def stepDialogUpload(self, sequence=None, sequence_list=None, **kw):
     """
       upload a file using dialog
       should increase revision
     """
-    dm = self.getPortal().document_module
+    dm = self.portal.document_module
     context = getattr(dm, 'one')
     f = makeFileUpload('TEST-en-002.doc')
-    file_name = f.filename
     context.Document_uploadFile(file=f)
     self.assertEquals(context.getRevision(), '001')
+    context.reindexObject(); get_transaction().commit(); self.tic()
 
   def stepDiscoverFromFilename(self, sequence=None, sequence_list=None, **kw):
     """
@@ -317,21 +400,186 @@ class TestIngestion(ERP5TypeTestCase):
       this should trigger metadata discovery and we should have
       basic coordinates immediately, from first stage
     """
-    dm = self.getPortal().document_module
+    dm = self.portal.document_module
     context = getattr(dm, 'one')
     f = makeFileUpload('TEST-en-002.doc')
-    file_name = f.filename
     context.Document_uploadFile(file=f)
     self.assertEquals(context.getReference(), 'TEST')
     self.assertEquals(context.getLanguage(), 'en')
     self.assertEquals(context.getVersion(), '002')
 
+  def stepCheckConvertedContent(self, sequence=None, sequence_list=None, **kw):
+    """
+      check if the input file was successfully converted
+      and that it includes what it should
+    """
+    self.tic()
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    self.assert_(context.hasOOFile())
+    self.assert_('magic' in context.SearchableText())
+
+  def stepSetDiscoveryScripts(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create Text_getPropertyDictFrom[source] scripts
+      to simulate custom site's configuration
+    """
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    script_id = 'Text_getPropertyDictFromUserLogin'
+    factory = context.manage_addProduct['PythonScripts'].manage_addPythonScript
+    factory(id=script_id)
+    script = getattr(context, script_id)
+    script.ZPythonScript_edit('user_name=None',"return {'contributor':'person_module/john'}")
+    script_id = 'Text_getPropertyDictFromContent'
+    factory(id=script_id)
+    script = getattr(context, script_id)
+    script.ZPythonScript_edit('', "return {'short_title':'short'}")
+    result = context.Text_getPropertyDictFromContent()
+
+  def stepTestMetadataSetting(self, sequence=None, sequence_list=None, **kw):
+    """
+      Upload with custom getPropertyDict methods
+      check that all metadata are correct
+    """
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    f = makeFileUpload('TEST-en-002.doc')
+    context.Document_uploadFile(file=f)
+    get_transaction().commit()
+    self.tic()
+    # reference from filename (the rest was checked some other place)
+    self.assertEquals(context.getReference(), 'TEST')
+    # short_title from content
+    self.assertEquals(context.getShortTitle(), 'short')
+    # contributors from user
+    self.assertEquals(context.getContributor(), 'person_module/john')
+    # title from metadata inside the doc
+    self.assertEquals(context.getTitle(), 'title')
+
+  def stepEditMetadata(self, sequence=None, sequence_list=None, **kw):
+    """
+      we change metadata in a doc which has ODF
+    """
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    kw = dict(title='another title',
+              subject='another subject',
+              description='another description')
+    context.editMetadata(kw)
+    # context.edit(**kw) - this works from UI but not from here - is there a problem somewhere?
+    context.reindexObject(); get_transaction().commit();
+    self.tic(); self.tic();
+
+  def stepCheckChangedMetadata(self, sequence=None, sequence_list=None, **kw):
+    """
+      then we download it and check if it is changed
+    """
+    # XXX actually this is an example of how it should be
+    # implemented in OOoDocument class - we don't really
+    # need oood for getting/setting metadata...
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    newcontent = context.getOOFile()
+    cs = cStringIO.StringIO()
+    cs.write(unpackData(newcontent))
+    z = zipfile.ZipFile(cs)
+    s = z.read('meta.xml')
+    xmlob = parseString(s)
+    title = xmlob.getElementsByTagName('dc:title')[0].childNodes[0].data
+    self.assertEquals(title, u'another title')
+    subject = xmlob.getElementsByTagName('dc:subject')[0].childNodes[0].data
+    self.assertEquals(subject, u'another subject')
+    description = xmlob.getElementsByTagName('dc:description')[0].childNodes[0].data
+    self.assertEquals(description, u'another description')
+    
+  def ingestFormats(self, doc_id, formats_from):
+    """
+      method for bulk ingesting files of various formats
+      we take them one by one based on naming convention
+      ingest, convert
+      check that a magic word is in every of them
+    """
+    dm = self.portal.document_module
+    context = getattr(dm, doc_id)
+    for rev, format in enumerate(formats_from):
+      filename = 'TEST-en-002.' + format
+      f = makeFileUpload(filename)
+      context.edit(file=f)
+      context.convertToBase()
+      context.reindexObject(); get_transaction().commit(); self.tic()
+      self.assert_('magic' in context.SearchableText())
+
+  def stepIngestTextFormats(self, sequence=None, sequence_list=None, **kw):
+    """
+      ingest all supported text formats
+      make sure they are converted
+    """
+    formats_from = ['rtf', 'doc', 'txt', 'sxw', 'sdw']
+    self.ingestFormats('one', formats_from)
+
+  def stepIngestSpreadsheetFormats(self, sequence=None, sequence_list=None, **kw):
+    """
+      ingest all supported spreadsheet formats
+      make sure they are converted
+    """
+    formats_from = ['xls', 'sxc', 'sdc']
+    self.ingestFormats('two', formats_from)
+
+  def stepIngestPresentationFormats(self, sequence=None, sequence_list=None, **kw):
+    """
+      ingest all supported presentation formats
+      make sure they are converted
+    """
+    formats_from = ['ppt', 'sxi', 'sdd']
+    self.ingestFormats('three', formats_from)
+
+  def stepIngestDrawingFormats(self, sequence=None, sequence_list=None, **kw):
+    """
+      ingest all supported presentation formats
+      make sure they are converted
+    """
+    formats_from = ['sxd', 'sda']
+    self.ingestFormats('four', formats_from)
+
+  def checkDocumentExportList(self, doc_id, format, targets):
+    """
+      given the docs id
+      make sure targets are in
+      the objects target format list
+    """
+    dm = self.portal.document_module
+    context = getattr(dm, doc_id)
+    filename = 'TEST-en-002.' + format
+    f = makeFileUpload(filename)
+    context.edit(file=f)
+    context.convertToBase()
+    context.reindexObject(); get_transaction().commit(); self.tic()
+    clearCache()
+    target_list = [x[1] for x in context.getTargetFormatItemList()]
+    for target in targets:
+      self.assert_(target in target_list)
+
+  def stepCheckTextDocumentExportList(self, sequence=None, sequence_list=None, **kw):
+    self.checkDocumentExportList('one', 'doc', ['pdf', 'doc', 'rtf', 'html-writer', 'txt'])
+
+  def stepCheckSpreadsheetDocumentExportList(self, sequence=None, sequence_list=None, **kw):
+    self.checkDocumentExportList('two', 'xls', ['csv', 'html-calc', 'xls', 'calc.pdf'])
+
+  def stepCheckPresentationDocumentExportList(self, sequence=None, sequence_list=None, **kw):
+    self.checkDocumentExportList('three', 'ppt', ['impr.pdf', 'ppt'])
+
+  def stepCheckDrawingDocumentExportList(self, sequence=None, sequence_list=None, **kw):
+    self.checkDocumentExportList('four', 'sxd', ['jpg', 'draw.pdf', 'svg'])
+
+    
 
   ##################################
   ##  Tests
   ##################################
 
   def test_01_checkBasics(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if testrun and 1 not in testrun:return
     if not run: return
     if not quiet: shout('test_01_checkBasics')
     sequence_list = SequenceList()
@@ -344,19 +592,163 @@ class TestIngestion(ERP5TypeTestCase):
 
   def test_02_TextDoc(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
-      Test basic behaviour of Text document
+      Test basic behaviour of a document:
+      - create empty doc
+      - upload a file directly
+      - upload a file using upload dialog
+      - make sure revision was increased
+      - check that it was properly converted
+      - check if coordinates were extracted from file name
     """
+    if testrun and 2 not in testrun:return
     if not run: return
     if not quiet: shout('test_02_TextDoc')
     sequence_list = SequenceList()
     step_list = [ 'stepCreateTextDocument'
+                 ,'stepCheckEmptyState'
                  ,'stepStraightUpload'
+                 ,'stepCheckConvertedState'
                  ,'stepDialogUpload'
+                 ,'stepCheckConvertedState'
                  ,'stepDiscoverFromFilename'
+                 ,'stepCheckConvertedContent'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_03_MetadataExtraction(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Test metadata extraction from various sources:
+      - from filename (doublecheck)
+      - from user (by overwriting type-based method)
+      - from content (same way)
+      - from file metadata
+      We try to verity that all this works
+      (order will be tested later)
+      
+      XXX Metadata of document (title, subject, description)
+      are retrieved and set upon conversion, and they
+      are not taken into account in the procedure
+      so they overwrite what was set before content and
+      are overwritten by what was after
+      XXX why do we use keywords to set subject_list???
+    """
+    if testrun and 3 not in testrun:return
+    if not run: return
+    if not quiet: shout('test_03_MetadataExtraction')
+    sequence_list = SequenceList()
+    step_list = [ 'stepCreateTextDocument'
+                 ,'stepSetDiscoveryScripts'
+                 ,'stepTestMetadataSetting'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_04_MetadataEditing(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Check metadata in the object and in the ODF document
+      Edit metadata on the object
+      Download ODF, make sure it is changed
+    """
+    if testrun and 4 not in testrun:return
+    if not run: return
+    if not quiet: shout('test_04_MetadataEditing')
+    sequence_list = SequenceList()
+    step_list = [ 'stepCreateTextDocument'
+                 ,'stepDialogUpload'
+                 ,'stepEditMetadata'
+                 ,'stepCheckChangedMetadata'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_05_FormatIngestion(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Ingest various formats (xls, doc, sxi, ppt etc)
+      Verify that they are successfully converted
+      - have ODF data and contain magic word in SearchableText
+    """
+    if testrun and 5 not in testrun:return
+    if not run: return
+    if not quiet: shout('test_05_FormatIngestion')
+    sequence_list = SequenceList()
+    step_list = [ 'stepCreateTextDocument'
+                 ,'stepIngestTextFormats'
+                 ,'stepCreateSpreadsheetDocument'
+                 ,'stepIngestSpreadsheetFormats'
+                 ,'stepCreatePresentationDocument'
+                 ,'stepIngestPresentationFormats'
+                 ,'stepCreateDrawingDocument'
+                 ,'stepIngestDrawingFormats'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_06_FormatGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Test generationof files in all possible formats
+      (do we need to test it here? it is tested
+      in oood tests...)
+      - at least check if they have correct lists of available formats for export
+    """
+    if testrun and 6 not in testrun:return
+    if not run: return
+    if not quiet: shout('test_06_FormatGeneration')
+    sequence_list = SequenceList()
+    step_list = [ 'stepCreateTextDocument'
+                 ,'stepCheckTextDocumentExportList'
+                 ,'stepCreateSpreadsheetDocument'
+                 ,'stepCheckSpreadsheetDocumentExportList'
+                 ,'stepCreatePresentationDocument'
+                 ,'stepCheckPresentationDocumentExportList'
+                 ,'stepCreateDrawingDocument'
+                 ,'stepCheckDrawingDocumentExportList'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_07_SnapshotGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Generate snapshot, make sure it is there, 
+      try to generate it again, remove and 
+      generate once more
+    """
+    if testrun and 7 not in testrun:return
+    if not run: return
+    if not quiet: shout('test_07_SnapshotGeneration')
+
+  def test_08_Cache(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      I don't know how to verify how cache works - the only
+      think I know how to check is change file contents and 
+      make sure new version is served
+    """
+
+  def test_09_Contribute(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Create content through portal_contributions
+      - use newContent to ingest various types 
+        also to test content_type_registry setup
+      - verify that
+        - appropriate portal_types were created
+        - the files were converted
+        - metadata was read
+    """
+    if testrun and 8 not in testrun:return
+    if not run: return
+    if not quiet: shout('test_09_Contribute')
+
+  def test_10_MetadataSettingPreferenceOrder(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Create a doc, try to set the same metadata from different sources
+      check that the right ones remained
+      change preference order, check again
+    """
 
 
 if __name__ == '__main__':
