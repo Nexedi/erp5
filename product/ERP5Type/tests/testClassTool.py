@@ -26,19 +26,10 @@
 #
 ##############################################################################
 
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.CachePlugins.DummyCache import DummyCache
-from Products.ERP5Type.Cache import CachingMethod
 from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Type.tests.utils import installRealClassTool
 from zLOG import LOG
 import time
 
@@ -50,12 +41,14 @@ except ImportError:
 class TestClassTool(ERP5TypeTestCase):
 
   run_all_test = 1
- 
+  quiet = 1
+  
   def getTitle(self):
     return "Class Tool"
   
   def afterSetUp(self):
     self.login()
+    installRealClassTool(self.getPortal())
     
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -64,7 +57,7 @@ class TestClassTool(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def test_01_CheckClassTool(self, quiet=0, run=run_all_test):
+  def test_01_CheckClassTool(self, quiet=quiet, run=run_all_test):
     """
       Make sure that portal_classes exists
     """
@@ -75,12 +68,13 @@ class TestClassTool(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
       
-      portal = self.getPortal()
-      self.assertNotEqual(None,getattr(portal,'portal_classes',None))
-      get_transaction().commit()
+    portal = self.getPortal()
+    self.assertNotEqual(None,getattr(portal,'portal_classes',None))
+    get_transaction().commit()
 
 
-  def test_02_CheckFileWriteIsTransactional(self, quiet=0, run=run_all_test):
+  def test_02_CheckFileWriteIsTransactional(self, quiet=quiet,
+                                            run=run_all_test):
     if not run:
       return
     if not quiet:
@@ -88,23 +82,21 @@ class TestClassTool(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
       
-      portal = self.getPortal()
-      portal_classes = portal.portal_classes
-      
-      portal_classes.newDocument('Toto')
-      get_transaction().abort()
-      self.assertNotEqual(portal_classes.getLocalDocumentList(), ['Toto'])
+    portal = self.getPortal()
+    portal_classes = portal.portal_classes
+    
+    portal_classes.newDocument('Toto')
+    get_transaction().abort()
+    self.assertNotEqual(portal_classes.getLocalDocumentList(), ['Toto'])
 
-      portal_classes.newDocument('Toto')
-      get_transaction().commit()
-      self.assertEqual(portal_classes.getLocalDocumentList(), ['Toto'])
+    portal_classes.newDocument('Toto')
+    get_transaction().commit()
+    self.assertEqual(portal_classes.getLocalDocumentList(), ['Toto'])
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestClassTool))
-        return suite
+
+import unittest
+def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestClassTool))
+    return suite
 
