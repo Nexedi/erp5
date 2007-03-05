@@ -113,7 +113,6 @@ if request.has_key(\'at_date\'):\n
 \n
   zGetList = context.AccountingTransactionModule_zGetAccountingTransactionList\n
   transaction_list = zGetList( selection_params = params\n
-                             , selection        = None\n
                              , **params\n
                              )\n
 else:\n

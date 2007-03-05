@@ -112,12 +112,6 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>selection</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>selection_domain</string> </key>
                                 <value>
                                   <dictionary/>
@@ -159,7 +153,6 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>selection</string>
                             <string>selection_domain</string>
                             <string>selection_report</string>
                             <string>node_uid</string>
@@ -204,8 +197,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>selection\r\n
-selection_domain\r\n
+            <value> <string>selection_domain\r\n
 selection_report\r\n
 node_uid\r\n
 where_expression\r\n

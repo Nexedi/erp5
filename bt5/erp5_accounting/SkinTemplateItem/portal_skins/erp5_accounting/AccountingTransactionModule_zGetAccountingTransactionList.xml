@@ -247,12 +247,6 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>selection_sort_on</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>specific_reference</string> </key>
                                 <value>
                                   <dictionary/>
@@ -302,7 +296,6 @@
                             <string>selection_domain</string>
                             <string>selection_report</string>
                             <string>selection_params</string>
-                            <string>selection_sort_on</string>
                             <string>select_expression</string>
                             <string>from_date</string>
                             <string>at_date</string>
@@ -344,7 +337,6 @@
 selection_domain\r\n
 selection_report\r\n
 selection_params=""\r\n
-selection_sort_on\r\n
 select_expression\r\n
 from_date=""\r\n
 at_date=""\r\n
