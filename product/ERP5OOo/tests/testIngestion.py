@@ -246,7 +246,7 @@ class TestIngestion(ERP5TypeTestCase):
       it has id as given and reference like document_[id]
       immediately catalogged and verified in two ways
     """
-    dm = self.portal.document_module
+    dm = self.portal.getDefaultModule(portal_type)
     doc = getattr(dm, id, None)
     if doc is not None:
       dm.manage_delObjects([id,])
@@ -257,6 +257,77 @@ class TestIngestion(ERP5TypeTestCase):
     self.checkObjectCatalogged(portal_type, reference)
     self.assert_(hasattr(dm, id))
 
+  def ingestFormats(self, doc_id, formats_from, portal_type=None):
+    """
+      method for bulk ingesting files of various formats
+      we take them one by one based on naming convention
+      ingest, convert
+      check that a magic word is in every of them
+      (unless it is Image or File)
+    """
+    if portal_type is None:
+      dm = self.portal.document_module
+    else:
+      dm = self.portal.getDefaultModule(portal_type)
+    context = getattr(dm, doc_id)
+    for rev, format in enumerate(formats_from):
+      filename = 'TEST-en-002.' + format
+      f = makeFileUpload(filename)
+      context.edit(file=f)
+      context.convertToBase()
+      context.reindexObject(); get_transaction().commit(); self.tic()
+      self.failUnless(context.hasFile())
+      if context.getPortalType() in ('Image', 'File'): # these are not subject to conversion
+        self.assertEquals(context.getExternalProcessingState(), 'uploaded')
+      else:
+        self.assertEquals(context.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
+        self.assert_('magic' in context.SearchableText())
+
+  def checkDocumentExportList(self, doc_id, format, targets):
+    """
+      given the docs id
+      make sure targets are in
+      the objects target format list
+    """
+    dm = self.portal.document_module
+    context = getattr(dm, doc_id)
+    filename = 'TEST-en-002.' + format
+    f = makeFileUpload(filename)
+    context.edit(file=f)
+    context.convertToBase()
+    context.reindexObject(); get_transaction().commit(); self.tic()
+    clearCache()
+    target_list = [x[1] for x in context.getTargetFormatItemList()]
+    for target in targets:
+      self.assert_(target in target_list)
+
+  def contributeFiles(self, with_portal_type=False):
+    ext2type = (
+      ('ppt' , 'Presentation')
+      ,('doc' , 'Text')
+      ,('sdc' , 'Spreadsheet')
+      ,('sxc' , 'Drawing')
+      ,('pdf' , 'PDF')
+      ,('jpg' , 'Image')
+      ,('py'  , 'File')
+      )
+    for ext, typ in ext2type:
+      shout(ext)
+      filename = 'TEST-en-002.' + ext
+      file = makeFileUpload(filename)
+      if with_portal_type:
+        ob = self.portal.portal_contributions.newContent(portal_type=typ, file=file)
+      else:
+        ob = self.portal.portal_contributions.newContent(file=file)
+      self.assertEquals(ob.getPortalType(), typ)
+      self.assertEquals(ob.getReference(), 'TEST')
+      ob.reindexObject(); get_transaction().commit(); self.tic()
+      if ob.getPortalType() in ('Image', 'File'): # these are not subject to conversion
+        self.assertEquals(ob.getExternalProcessingState(), 'uploaded')
+      else:
+        self.assertEquals(ob.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
+        self.assert_('magic' in ob.SearchableText())
+    
 
   ##################################
   ##  Basic steps
@@ -301,17 +372,18 @@ class TestIngestion(ERP5TypeTestCase):
 
   def stepCreatePerson(self, sequence=None, sequence_list=None, **kw):
     """
-      Create a person.
+      Create a person (if not exists).
     """
     portal_type = 'Person'
+    id = 'john'
     reference = 'john_doe'
-    person_module = self.portal.getDefaultModule(portal_type)
-    person = person_module.newContent( portal_type=portal_type
-                                     , id='john'
+    person_module = self.portal.person_module
+    if getattr(person_module, 'john', False): return 
+    person = person_module.newContent( portal_type='Person'
+                                     , id=id
                                      ,  reference = reference
                                      )
     person.reindexObject(); get_transaction().commit(); self.tic()
-
 
   def stepCreateTextDocument(self, sequence=None, sequence_list=None, **kw):
     """
@@ -344,6 +416,22 @@ class TestIngestion(ERP5TypeTestCase):
       (first delete if exists)
     """
     self.createDocument('Drawing', 'four')
+
+  def stepCreatePDFDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+      create an empty PDF document 'five'
+      for further testing
+      (first delete if exists)
+    """
+    self.createDocument('PDF', 'five')
+
+  def stepCreateImageDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+      create an empty Image document 'six'
+      for further testing
+      (first delete if exists)
+    """
+    self.createDocument('Image', 'six')
 
   def stepCheckEmptyState(self, sequence=None, sequence_list=None, **kw):
     """
@@ -494,23 +582,6 @@ class TestIngestion(ERP5TypeTestCase):
     description = xmlob.getElementsByTagName('dc:description')[0].childNodes[0].data
     self.assertEquals(description, u'another description')
     
-  def ingestFormats(self, doc_id, formats_from):
-    """
-      method for bulk ingesting files of various formats
-      we take them one by one based on naming convention
-      ingest, convert
-      check that a magic word is in every of them
-    """
-    dm = self.portal.document_module
-    context = getattr(dm, doc_id)
-    for rev, format in enumerate(formats_from):
-      filename = 'TEST-en-002.' + format
-      f = makeFileUpload(filename)
-      context.edit(file=f)
-      context.convertToBase()
-      context.reindexObject(); get_transaction().commit(); self.tic()
-      self.assert_('magic' in context.SearchableText())
-
   def stepIngestTextFormats(self, sequence=None, sequence_list=None, **kw):
     """
       ingest all supported text formats
@@ -535,6 +606,14 @@ class TestIngestion(ERP5TypeTestCase):
     formats_from = ['ppt', 'sxi', 'sdd']
     self.ingestFormats('three', formats_from)
 
+  def stepIngestPDFFormats(self, sequence=None, sequence_list=None, **kw):
+    """
+      ingest all supported PDF formats
+      make sure they are converted
+    """
+    formats_from = ['pdf']
+    self.ingestFormats('five', formats_from)
+
   def stepIngestDrawingFormats(self, sequence=None, sequence_list=None, **kw):
     """
       ingest all supported presentation formats
@@ -543,23 +622,20 @@ class TestIngestion(ERP5TypeTestCase):
     formats_from = ['sxd', 'sda']
     self.ingestFormats('four', formats_from)
 
-  def checkDocumentExportList(self, doc_id, format, targets):
+  def stepIngestPDFFormats(self, sequence=None, sequence_list=None, **kw):
     """
-      given the docs id
-      make sure targets are in
-      the objects target format list
+      ingest all supported pdf formats
+      make sure they are converted
     """
-    dm = self.portal.document_module
-    context = getattr(dm, doc_id)
-    filename = 'TEST-en-002.' + format
-    f = makeFileUpload(filename)
-    context.edit(file=f)
-    context.convertToBase()
-    context.reindexObject(); get_transaction().commit(); self.tic()
-    clearCache()
-    target_list = [x[1] for x in context.getTargetFormatItemList()]
-    for target in targets:
-      self.assert_(target in target_list)
+    formats_from = ['pdf']
+    self.ingestFormats('five', formats_from)
+
+  def stepIngestImageFormats(self, sequence=None, sequence_list=None, **kw):
+    """
+      ingest all supported image formats
+    """
+    formats_from = ['jpg', 'gif', 'bmp', 'png']
+    self.ingestFormats('six', formats_from, 'Image')
 
   def stepCheckTextDocumentExportList(self, sequence=None, sequence_list=None, **kw):
     self.checkDocumentExportList('one', 'doc', ['pdf', 'doc', 'rtf', 'html-writer', 'txt'])
@@ -572,6 +648,12 @@ class TestIngestion(ERP5TypeTestCase):
 
   def stepCheckDrawingDocumentExportList(self, sequence=None, sequence_list=None, **kw):
     self.checkDocumentExportList('four', 'sxd', ['jpg', 'draw.pdf', 'svg'])
+
+  def stepExportPDF(self, sequence=None, sequence_list=None, **kw):
+    shout('not yet implemented')
+
+  def stepExportImage(self, sequence=None, sequence_list=None, **kw):
+    shout('not yet implemented')
 
   def stepCheckHasSnapshot(self, sequence=None, sequence_list=None, **kw):
     dm = self.portal.document_module
@@ -599,23 +681,29 @@ class TestIngestion(ERP5TypeTestCase):
     context = getattr(dm, 'one')
     context.deleteSnapshot()
 
-  def stepContributeFiles(self, sequence=None, sequence_list=None, **kw):
-    ext2type = (
-      ('ppt' , 'Presentation')
-      ,('doc' , 'Text')
-      ,('sdc' , 'Spreadsheet')
-      ,('odg' , 'Drawing')
-      ,('pdf' , 'PDF')
-      ,('jpg' , 'Image')
-      ,('py'  , 'File')
-      )
-    for ext, typ in ext2type:
-      shout(ext)
-      filename = 'TEST-en-002.' + ext
-      file = makeFileUpload(filename)
-      ob = self.portal.portal_contributions.newContent(file=file)
-      self.assertEquals(ob.getPortalType(), typ)
-    
+  def stepContributeFilesWithType(self, sequence=None, sequence_list=None, **kw):
+    """
+      Contribute all kinds of files giving portal type explicitly
+      TODO: test situation whereby portal_type given explicitly is wrong
+    """
+    self.contributeFiles(with_portal_type=True)
+
+  def stepContributeFilesWithNoType(self, sequence=None, sequence_list=None, **kw):
+    """
+      Contribute all kinds of files
+      let the system figure out portal type by itself
+    """
+    self.contributeFiles(with_portal_type=False)
+
+  def stepReceiveEmailFromUnknown(self, sequence=None, sequence_list=None, **kw):
+    shout('not yet implemented')
+
+  def stepReceiveEmailFromJohn(self, sequence=None, sequence_list=None, **kw):
+    shout('not yet implemented')
+
+  def stepVerifyEmailedDocuments(self, sequence=None, sequence_list=None, **kw):
+    shout('not yet implemented')
+
 
   ##################################
   ##  Tests
@@ -713,12 +801,17 @@ class TestIngestion(ERP5TypeTestCase):
       Ingest various formats (xls, doc, sxi, ppt etc)
       Verify that they are successfully converted
       - have ODF data and contain magic word in SearchableText
+      - or have text data and contain magic word in SearchableText
+        TODO:
+      - or were not moved in processing_status_workflow if the don't
+        implement _convertToBase (e.g. Image)
+      Verify that you can not upload file of the wrong format.
     """
     if testrun and 5 not in testrun:return
     if not run: return
     if not quiet: shout('test_05_FormatIngestion')
     sequence_list = SequenceList()
-    step_list = [ 'stepCreateTextDocument'
+    step_list = ['stepCreateTextDocument'
                  ,'stepIngestTextFormats'
                  ,'stepCreateSpreadsheetDocument'
                  ,'stepIngestSpreadsheetFormats'
@@ -726,6 +819,10 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepIngestPresentationFormats'
                  ,'stepCreateDrawingDocument'
                  ,'stepIngestDrawingFormats'
+                 ,'stepCreatePDFDocument'
+                 ,'stepIngestPDFFormats'
+                 ,'stepCreateImageDocument'
+                 ,'stepIngestImageFormats'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
@@ -733,9 +830,10 @@ class TestIngestion(ERP5TypeTestCase):
 
   def test_06_FormatGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
-      Test generationof files in all possible formats
+      T,est generationof files in all possible formats
       (do we need to test it here? it is tested
       in oood tests...)
+      XXX except PDF and Image which should be tested here
       - at least check if they have correct lists of available formats for export
     """
     if testrun and 6 not in testrun:return
@@ -750,6 +848,10 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepCheckPresentationDocumentExportList'
                  ,'stepCreateDrawingDocument'
                  ,'stepCheckDrawingDocumentExportList'
+                 ,'stepCreatePDFDocument'
+                 ,'stepExportPDF'
+                 ,'stepCreateImageDocument'
+                 ,'stepExportImage'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
@@ -779,7 +881,6 @@ class TestIngestion(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-
   def test_08_Cache(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       I don't know how to verify how cache works - the only
@@ -797,11 +898,12 @@ class TestIngestion(ERP5TypeTestCase):
         - the files were converted
         - metadata was read
     """
-    if testrun and 8 not in testrun:return
+    if testrun and 9 not in testrun:return
     if not run: return
     if not quiet: shout('test_09_Contribute')
     sequence_list = SequenceList()
-    step_list = [ 'stepContributeFiles'
+    step_list = ['stepContributeFilesWithNoType'
+                 ,'stepContributeFilesWithType'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
@@ -813,6 +915,25 @@ class TestIngestion(ERP5TypeTestCase):
       check that the right ones remained
       change preference order, check again
     """
+
+  def test_11_EmailIngestion(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Simulate email piped to ERP5 by an MTA by uploading test email from file
+      Check that document objects are created and appropriate data are set
+      (owner, and anything discovered from user and mail body)
+    """
+    if testrun and 11 not in testrun:return
+    if not run: return
+    if not quiet: shout('test_09_Contribute')
+    sequence_list = SequenceList()
+    step_list = [ 'stepReceiveEmailFromUnknown'
+                 ,'stepCreatePerson'
+                 ,'stepReceiveEmailFromJohn'
+                 ,'stepVerifyEmailedDocuments'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
 
 if __name__ == '__main__':
