@@ -138,7 +138,7 @@ class AlarmTool(BaseTool):
         if alarm.isActive() or not alarm.isEnabled():
           # do nothing if already active, or not enabled
           continue
-        alarm.activate().activeSense()
+        alarm.activeSense()
 
   security.declareProtected(Permissions.ManageProperties, 'isSubscribed')
   def isSubscribed(self):
