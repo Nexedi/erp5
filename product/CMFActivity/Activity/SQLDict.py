@@ -450,7 +450,7 @@ class SQLDict(RAMDict):
                   'Could not validate %s on %s' % (m.method_id , path))
 
       if len(result):
-        uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
+        uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = None,
                                                      processing_node = None,)
         activity_tool.SQLDict_delMessage(uid = [x.uid for x in uid_list])
 
