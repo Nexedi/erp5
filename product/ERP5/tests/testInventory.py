@@ -332,6 +332,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.tic()
     workflow_tool.doActionFor(packing_list,
                       "start_action", "packing_list_workflow")
+    workflow_tool.doActionFor(packing_list,
+                      "stop_action", "packing_list_workflow")
+    workflow_tool.doActionFor(packing_list,
+                      "deliver_action", "packing_list_workflow")
                         
   def stepCreateOrganisationList(self, sequence=None, sequence_list=None, **kw):
     """
