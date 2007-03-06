@@ -1649,6 +1649,45 @@ class TestCMFActivity(ERP5TypeTestCase):
       self.assertEquals(m.activity_kw.get('tag'), 'The Tag')
 
 
+  def test_77_FlushAfterMultipleActivate(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck all message are flushed in SQLDict'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    orga_module = self.getOrganisationModule()
+    p = orga_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    self.assertEqual(p.getDescription(), "")
+    activity_tool = self.getPortal().portal_activities
+
+    def updateDesc(self):
+      d =self.getDescription()
+      self.setDescription(d+'a')
+    Organisation.updateDesc = updateDesc
+
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
+    # First check dequeue read same message only once
+    for i in xrange(10):
+      p.activate(activity="SQLDict").updateDesc()
+      get_transaction().commit()
+
+    # len is 1 because of group by
+    self.assertEqual(len(activity_tool.getMessageList()), 1)
+    self.tic()
+    self.assertEqual(p.getDescription(), "a")
+
+    # Check if there is pending activity after deleting an object
+    for i in xrange(10):
+      p.activate(activity="SQLDict").updateDesc()
+      get_transaction().commit()
+    # len is 1 because of group by
+    self.assertEqual(len(activity_tool.getMessageList()), 1)
+    activity_tool.flush(p, invoke=0)
+    get_transaction().commit()
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
+
 if __name__ == '__main__':
     framework()
 else:
