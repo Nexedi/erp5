@@ -46,9 +46,10 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>payment_mode/recettes/cheque/cdc</string>
-                <string>payment_mode/recettes/cheque/cdc</string>
-                <string>payment_mode/recettes/cheque/cdc</string>
+                <string>payment_mode/recettes/cdc</string>
+                <string>payment_mode/recettes/cdc</string>
+                <string>payment_mode/recettes/cdc</string>
+                <string>payment_mode/recettes/cdc</string>
               </tuple>
             </value>
         </item>
