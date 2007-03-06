@@ -450,7 +450,9 @@ class SQLDict(RAMDict):
                   'Could not validate %s on %s' % (m.method_id , path))
 
       if len(result):
-        activity_tool.SQLDict_delMessage(uid = [line.uid for line in result])
+        uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
+                                                     processing_node = None,)
+        activity_tool.SQLDict_delMessage(uid = [x.uid for x in uid_list])
 
   def getMessageList(self, activity_tool, processing_node=None,include_processing=0,**kw):
     # YO: reading all lines might cause a deadlock
