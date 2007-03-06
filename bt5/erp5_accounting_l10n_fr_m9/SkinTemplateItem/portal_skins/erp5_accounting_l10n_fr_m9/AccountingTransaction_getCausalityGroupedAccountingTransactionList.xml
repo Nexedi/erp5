@@ -82,7 +82,8 @@ for accounting_transaction in [context] + context.getCausalityValueList(\n
   accounting_transaction_set[accounting_transaction] = 1\n
   for related_causality in accounting_transaction.getCausalityRelatedValueList(\n
               portal_type=accounting_transaction_type_list):\n
-    accounting_transaction_set[related_causality] = 1\n
+    if related_causality.getSimulationState() not in (\'cancelled\', \'deleted\'):\n
+      accounting_transaction_set[related_causality] = 1\n
 \n
 return accounting_transaction_set.keys()\n
 </string> </value>
