@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:"%s/%s/view" % (object.getPortalObject().getPath(), object.getCausality(portal_type=object.getPortalInvoiceTypeList()))</string> </value>
+            <value> <string>python:"%s/%s/view" % (object.getPortalObject().getPath(), object.getCausality())</string> </value>
         </item>
       </dictionary>
     </pickle>
