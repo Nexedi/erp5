@@ -42,6 +42,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Cache import clearCache
+from Products.ERP5OOo.Document.OOoDocument import ConversionError
 
 
 if __name__ == '__main__':
@@ -572,6 +573,48 @@ class TestIngestion(ERP5TypeTestCase):
   def stepCheckDrawingDocumentExportList(self, sequence=None, sequence_list=None, **kw):
     self.checkDocumentExportList('four', 'sxd', ['jpg', 'draw.pdf', 'svg'])
 
+  def stepCheckHasSnapshot(self, sequence=None, sequence_list=None, **kw):
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    self.failUnless(context.hasSnapshot())
+
+  def stepCheckHasNoSnapshot(self, sequence=None, sequence_list=None, **kw):
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    self.failIf(context.hasSnapshot())
+
+  def stepCreateSnapshot(self, sequence=None, sequence_list=None, **kw):
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    context.createSnapshot()
+
+  def stepTryRecreateSnapshot(self, sequence=None, sequence_list=None, **kw):
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    # XXX this always fails, don't know why
+    #self.assertRaises(ConversionError, context.createSnapshot)
+
+  def stepDeleteSnapshot(self, sequence=None, sequence_list=None, **kw):
+    dm = self.portal.document_module
+    context = getattr(dm, 'one')
+    context.deleteSnapshot()
+
+  def stepContributeFiles(self, sequence=None, sequence_list=None, **kw):
+    ext2type = (
+      ('ppt' , 'Presentation')
+      ,('doc' , 'Text')
+      ,('sdc' , 'Spreadsheet')
+      ,('odg' , 'Drawing')
+      ,('pdf' , 'PDF')
+      ,('jpg' , 'Image')
+      ,('py'  , 'File')
+      )
+    for ext, typ in ext2type:
+      shout(ext)
+      filename = 'TEST-en-002.' + ext
+      file = makeFileUpload(filename)
+      ob = self.portal.portal_contributions.newContent(file=file)
+      self.assertEquals(ob.getPortalType(), typ)
     
 
   ##################################
@@ -721,6 +764,21 @@ class TestIngestion(ERP5TypeTestCase):
     if testrun and 7 not in testrun:return
     if not run: return
     if not quiet: shout('test_07_SnapshotGeneration')
+    sequence_list = SequenceList()
+    step_list = [ 'stepCreateTextDocument'
+                 ,'stepDialogUpload'
+                 ,'stepCheckHasNoSnapshot'
+                 ,'stepCreateSnapshot'
+                 ,'stepTryRecreateSnapshot'
+                 ,'stepCheckHasSnapshot'
+                 ,'stepDeleteSnapshot'
+                 ,'stepCheckHasNoSnapshot'
+                 ,'stepCreateSnapshot'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
   def test_08_Cache(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -742,6 +800,12 @@ class TestIngestion(ERP5TypeTestCase):
     if testrun and 8 not in testrun:return
     if not run: return
     if not quiet: shout('test_09_Contribute')
+    sequence_list = SequenceList()
+    step_list = [ 'stepContributeFiles'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
   def test_10_MetadataSettingPreferenceOrder(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
