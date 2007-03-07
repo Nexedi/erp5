@@ -19,6 +19,7 @@
  </portal_type>
  <portal_type id="Purchase Supply Line">
   <item>Purchase Supply Cell</item>
+  <item>Predicate</item>
  </portal_type>
  <portal_type id="Returned Sale Packing List Line">
   <item>Returned Sale Packing List Cell</item>
@@ -33,9 +34,11 @@
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Sale Supply Line">
+  <item>Predicate</item>
   <item>Sale Supply Cell</item>
  </portal_type>
  <portal_type id="Supply Line">
+  <item>Predicate</item>
   <item>Supply Cell</item>
  </portal_type>
 </hidden_content_type_list>

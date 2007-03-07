@@ -3,11 +3,14 @@ Internal Packing List Line | Internal Packing List Cell
 Inventory Line | Inventory Cell
 Purchase Order Line | Purchase Order Cell
 Purchase Packing List Line | Purchase Packing List Cell
+Purchase Supply Line | Predicate
 Purchase Supply Line | Purchase Supply Cell
 Purchase Supply | Supply Line
 Returned Sale Packing List Line | Returned Sale Packing List Cell
 Sale Order Line | Sale Order Cell
 Sale Packing List Line | Sale Packing List Cell
+Sale Supply Line | Predicate
 Sale Supply Line | Sale Supply Cell
 Sale Supply | Supply Line
+Supply Line | Predicate
 Supply Line | Supply Cell

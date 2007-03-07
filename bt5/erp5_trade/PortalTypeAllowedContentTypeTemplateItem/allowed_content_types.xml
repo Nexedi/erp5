@@ -60,6 +60,7 @@
  </portal_type>
  <portal_type id="Purchase Supply Line">
   <item>Purchase Supply Cell</item>
+  <item>Predicate</item>
  </portal_type>
  <portal_type id="Purchase Supply Module">
   <item>Purchase Supply</item>
@@ -111,6 +112,7 @@
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Sale Supply Line">
+  <item>Predicate</item>
   <item>Sale Supply Cell</item>
  </portal_type>
  <portal_type id="Sale Supply Module">
@@ -125,5 +127,6 @@
  </portal_type>
  <portal_type id="Supply Line">
   <item>Supply Cell</item>
+  <item>Predicate</item>
  </portal_type>
 </allowed_content_type_list>
