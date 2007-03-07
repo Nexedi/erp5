@@ -91,9 +91,6 @@ class Alarm(Periodicity, XMLObject):
       later.
 
       """
-      # Set the new date
-      LOG('activeSense, self.getPath()',0,self.getPath())
-
       self.setNextAlarmDate()
       method_id = self.getActiveSenseMethodId()
       if method_id is not None:
@@ -109,10 +106,7 @@ class Alarm(Periodicity, XMLObject):
       previous calculation made by activeSense.
       """
       method_id = self.getSenseMethodId()
-      process = self.getCurrentActiveProcess()
-      value = False
-      if process is None:
-        process = self.getLastActiveProcess()
+      process = self.getLastActiveProcess()
       if process is None:
         return value
       if method_id is not None:
@@ -139,11 +133,10 @@ class Alarm(Periodicity, XMLObject):
       if method_id is None:
           return ''
       method = getattr(self,method_id)
-      process = self.getCurrentActiveProcess()
-      if process is None:
-        process = self.getLastActiveProcess()
-      result = method(process=process)
-      process.setDescription(result)
+      process = self.getLastActiveProcess()
+      result = None
+      if process is not None:
+        result = method(process=process)
       return result
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
@@ -170,55 +163,21 @@ class Alarm(Periodicity, XMLObject):
 
     notify = WorkflowMethod(_notify, id='notify')
 
-    security.declareProtected(Permissions.View, 'getActiveProcessList')
-    def getActiveProcessList(self):
-      """
-      Returns the list of active processes used with
-      this alarm. The list of processes will allow to
-      retrieve the results history of this alarm
-      """
-      process_id_list = self.getActiveProcessIdList()
-      portal_activities = getToolByName(self,'portal_activities')
-      process_list = []
-      if process_id_list is not None:
-        for process_id in process_id_list:
-          process = portal_activities._getOb(process_id)
-          process_list.append(process)
-      return process_list
-
     security.declareProtected(Permissions.View, 'getLastActiveProcess')
     def getLastActiveProcess(self):
       """
       This returns the last active process finished. So it will
       not returns the current one
       """
-      active_process_id_list = self.getActiveProcessIdList()
-      portal_activities = getToolByName(self,'portal_activities')
-      last_process = None
-      if active_process_id_list is not None:
-        if len(active_process_id_list)>0 and not self.isActive():
-          last_process_id = active_process_id_list[len(active_process_id_list)-1]
-          last_process = portal_activities._getOb(last_process_id)
-        elif len(active_process_id_list)>1 and self.isActive():
-          last_process_id = active_process_id_list[len(active_process_id_list)-2]
-          last_process = portal_activities._getOb(last_process_id)
-      return last_process
-
-    security.declareProtected(Permissions.View, 'getCurrentActiveProcess')
-    def getCurrentActiveProcess(self):
-      """
-      Returns the list of active processes used with
-      this alarm. The list of processes will allow to
-      retrieve the results history of this alarm
-      """
-      current_process = None
-      active_process_id_list = self.getActiveProcessIdList()
-      if active_process_id_list is not None:
-        if len(active_process_id_list)>0 and self.isActive():
-          current_process_id = active_process_id_list[len(active_process_id_list)-1]
-          portal_activities = getToolByName(self,'portal_activities')
-          current_process = portal_activities._getOb(current_process_id)
-      return current_process
+      active_process_list = self.getCausalityRelatedValueList(
+                                    portal_type='Active Process')
+      def sort_date(a, b):
+        return cmp(a.getStartDate(), b.getStartDate())
+      active_process_list.sort(sort_date)
+      active_process = None
+      if len(active_process_list)>0:
+        active_process = active_process_list[-1]
+      return active_process
 
     security.declareProtected(Permissions.ModifyPortalContent, 'newActiveProcess')
     def newActiveProcess(self):
@@ -231,30 +190,4 @@ class Alarm(Periodicity, XMLObject):
       active_process = portal_activities.newActiveProcess()
       active_process.setStartDate(DateTime())
       active_process.setCausalityValue(self)
-      process_id = active_process.getId()
-      active_process_id_list = self.getActiveProcessIdList()
-      active_process_id_list.append(process_id)
-      self.setActiveProcessIdList(active_process_id_list)
       return active_process
-
-    security.declareProtected(Permissions.View, 'getActiveProcessIdList')
-    def getActiveProcessIdList(self):
-      """
-      Returns the list of process ids used to store results of this alarm
-      """
-      return getattr(self,'_active_process_id_list',[])
-
-    security.declareProtected(Permissions.View, 'getActiveProcessValueList')
-    def getActiveProcessValueList(self,**kw):
-      """
-      Returns the list of process used to store results of this alarm
-      """
-      portal_activities = getToolByName(self,'portal_activities')
-      return [portal_activities._getOb(x) for x in self.getActiveProcessIdList()]
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setActiveProcessIdList')
-    def setActiveProcessIdList(self, value):
-      """
-      Set the list of process ids used to store results of this alarm
-      """
-      self._active_process_id_list = value
