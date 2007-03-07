@@ -408,6 +408,20 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setNextAlarmDate(current_date=date)
     self.assertEquals(alarm.getAlarmDate(),date)
 
+  def test_14_NewActiveProcess(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test New Active Process'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    alarm = self.newAlarm()
+    active_process = alarm.newActiveProcess()
+    self.assertEquals('Active Process', active_process.getPortalType())
+    self.assertEquals(alarm, active_process.getCausalityValue())
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(active_process, alarm.getLastActiveProcess())
+ 
 if __name__ == '__main__':
     framework()
 else:
