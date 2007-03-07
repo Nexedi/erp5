@@ -42,7 +42,7 @@ from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.File import File, stripHtml
-from Products.ERP5.Document.Document import ConversionCacheMixin
+from Products.ERP5.Document.Document import ConversionCacheMixin, ConversionError
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
@@ -50,9 +50,6 @@ enc=base64.encodestring
 dec=base64.decodestring
 
 _MARKER = []
-
-
-class ConversionError(Exception):pass
 
 
 class OOoDocument(File, ConversionCacheMixin):
