@@ -28,7 +28,9 @@
 
 from DateTime import DateTime
 from operator import add
+from xmlrpclib import Fault
 import re
+import socket
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base
@@ -48,6 +50,7 @@ def makeSortedTuple(kw):
   items.sort()
   return tuple(items)
 
+class ConversionError(Exception):pass
 
 class ConversionCacheMixin:
   """
@@ -901,7 +904,7 @@ class Document(XMLObject):
     return self._getTypeBasedMethod('finishIngestion',
         fallback_script_id='Document_finishIngestion')
 
-  security.declareProtected(Permissions.View, 'convert')
+  security.declareProtected(Permissions.View, 'convertToBase')
   def convertToBase(self, REQUEST=None):
     """
       This is run upon upload of the file to make the first
