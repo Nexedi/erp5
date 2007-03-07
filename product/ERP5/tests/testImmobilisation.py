@@ -264,11 +264,12 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
              destination_section_value = property_dict['destination_section'],
              start_date =                property_dict['datetime'],
              stop_date =                 property_dict['datetime'],)
-    # Set the Packing List to started state, because the expand
+    # Set the Packing List to stopped state, because the expand
     # process get only deliveries in current_inventory_state
     pl.confirm()
     pl.setReady()
     pl.start()
+    pl.stop()
     # Artificially update causality state because we don't want to tic here
     pl.updateCausalityState()
     packing_list_list = sequence.get('packing_list_list', [])
