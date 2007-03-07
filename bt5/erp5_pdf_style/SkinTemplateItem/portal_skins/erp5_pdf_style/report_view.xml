@@ -92,11 +92,8 @@
                         <para  style="TableStandard" tal:content="python: str(item)" />\n
                       </tal:block>\n
                     </tal:block>\n
-                    <tal:block tal:condition="python: not (same_type(value, []) or same_type(value, ()) or same_type(value, DateTime()) or same_type(value, None))">\n
-                      <para  style="TableStandard" tal:content="python: \'%s \' % value" />\n
-                    </tal:block>\n
-                    <tal:block tal:condition="python: same_type(value, DateTime())">\n
-                      <para  style="TableStandard" tal:content="python: field.render_view(value)" />\n
+                    <tal:block tal:condition="python: not (same_type(value, []) or same_type(value, ()) or same_type(value, None))">\n
+                      <para  style="TableStandard" tal:content="python: field.render_pdf(value)" />\n
                     </tal:block>\n
                     <tal:block tal:condition="python: value is None">\n
                       <para  style="TableStandard" tal:content="python: \' \'" />\n
