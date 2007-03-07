@@ -423,12 +423,12 @@ class SQLDict(RAMDict):
                                processing_node=None,include_processing=0)
       for line in result:
         path = line.path
-        method_id = line.method_id
-        if not method_dict.has_key(method_id):
+        line_method_id = line.method_id
+        if not method_dict.has_key(line_method_id):
           # Only invoke once (it would be different for a queue)
           # This is optimisation with the goal to process objects on the same
           # node and minimize network traffic with ZEO server
-          method_dict[method_id] = 1
+          method_dict[line_method_id] = 1
           m = self.loadMessage(line.message, uid = line.uid)
           if invoke:
             # First Validate
@@ -450,7 +450,7 @@ class SQLDict(RAMDict):
                   'Could not validate %s on %s' % (m.method_id , path))
 
       if len(result):
-        uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = None,
+        uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
                                                      processing_node = None,)
         activity_tool.SQLDict_delMessage(uid = [x.uid for x in uid_list])
 
