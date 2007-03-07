@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import clearCache\n
-clearCache()\n
+            <value> <string>context.portal_caches.clearAllCache()\n
 </string> </value>
         </item>
         <item>
@@ -112,8 +111,8 @@ clearCache()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>clearCache</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
