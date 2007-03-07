@@ -75,7 +75,7 @@ portal = context.getPortalObject()\n
 total_debit = 0\n
 total_credit = 0\n
 \n
-origin_cache = cache_storage[\'m9_report_per_origin_and_sheet_summary\']\n
+origin_cache = cache_storage[cache_key]\n
 origin_list = origin_cache.keys()\n
 origin_list.sort()\n
 \n
@@ -114,8 +114,14 @@ return line_list\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>cache_key=\'m9_report_per_origin_and_sheet_summary\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,12 +141,13 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>cache_key</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -176,7 +183,9 @@ return line_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>m9_report_per_origin_and_sheet_summary</string>
+              </tuple>
             </value>
         </item>
         <item>

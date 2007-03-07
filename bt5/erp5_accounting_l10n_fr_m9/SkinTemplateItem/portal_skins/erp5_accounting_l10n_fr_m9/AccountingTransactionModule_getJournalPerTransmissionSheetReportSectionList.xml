@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
 """\n
 from Products.ERP5Form.Report import ReportSection\n
 request = context.REQUEST\n
@@ -84,15 +86,20 @@ section_category = request[\'section_category\']\n
 portal_type = request[\'portal_type\']\n
 \n
 payment_mode_url = None\n
+detail_per_payment_mode = 0\n
+payment_mode_request_keys = dict()\n
+\n
 if portal_type == \'Payment Transaction\':\n
   payment_mode = request.get(\'payment_mode\')\n
   if payment_mode:\n
     payment_mode_value = portal.portal_categories.payment_mode\\\n
                                 .restrictedTraverse(payment_mode)\n
     payment_mode_url = payment_mode_value.getRelativeUrl().split(\'/\', 1)[1]\n
-\n
+    detail_per_payment_mode = len(payment_mode_value.contentValues()) > 0\n
+    for pm in payment_mode_value.contentValues():\n
+      cache_storage.setdefault(\'m9_report_per_%s\' % pm.getRelativeUrl(), {})\n
+    \n
 simulation_state = [\'delivered\']\n
-\n
 selection_name = \'accounting_selection\'\n
 simtool = context.portal_simulation\n
 \n
@@ -164,7 +171,19 @@ for brain in simtool.getMovementHistoryList(\n
 \n
     total_debit, total_credit = account.get(origin, (0, 0))\n
     account[origin] = ( total_debit + debit, total_credit + credit )\n
-    # per origin and sheet\n
+    \n
+    # per origin and sheet, detailed per payment mode\n
+    if detail_per_payment_mode:\n
+      key = \'m9_report_per_payment_mode/%s\' % mvt.getPaymentMode()\n
+      if key not in payment_mode_request_keys:\n
+        payment_mode_request_keys[key] = mvt.getPaymentModeTitle()\n
+      origin_cache = cache_storage[key].setdefault(brain.node_relative_url, {})\n
+      total_debit, total_credit = origin_cache.get(\n
+                              (sheet, brain.node_relative_url), (0, 0))\n
+      origin_cache[(sheet, brain.node_relative_url)] = \\\n
+                                            ( total_debit + debit,\n
+                                              total_credit + credit )\n
+    # per origin and sheet, global\n
     origin_cache = per_origin_and_sheet_cache.setdefault(origin, {})\n
     total_debit, total_credit = origin_cache.get(\n
                               (sheet, brain.node_relative_url), (0, 0))\n
@@ -177,19 +196,37 @@ for brain in simtool.getMovementHistoryList(\n
     cache[brain.node_relative_url] = ( total_debit + debit,\n
                                        total_credit + credit )\n
 \n
-report_section_list = [ ReportSection(\n
+report_section_list = []\n
+report_section_list.append(ReportSection(\n
       title=N_(\'Transactions\'),\n
       path=context.getPhysicalPath(),\n
       form_id=\'AccountingTransactionModule_viewPerOriginAndSheetSummary\',\n
       selection_name=\'accounting_transaction_module_m9_\'\n
                      \'accounting_transaction_list_report_selection\',\n
-      selection_params={},\n
+      selection_params=dict(cache_key=\'m9_report_per_origin_and_sheet_summary\'),\n
       selection_columns=[(\'sheet\', \'Transmission Sheet\'),\n
                          (\'account_id\', \'Account\'),\n
                          (\'account_title\', \'Account Name\'),\n
                          (\'debit\', \'Debit\'),\n
                          (\'credit\', \'Credit\')],\n
-      listbox_display_mode=\'FlatListMode\', )]\n
+      listbox_display_mode=\'FlatListMode\', ))\n
+\n
+if detail_per_payment_mode:\n
+  for cache_key, payment_mode_title in payment_mode_request_keys.items():\n
+    report_section_list.append(ReportSection(\n
+      title=N_(\'Transactions for Payment Mode ${payment_mode_title}\',\n
+              mapping=dict(payment_mode_title=payment_mode_title)),\n
+      path=context.getPhysicalPath(),\n
+      level=3,\n
+      form_id=\'AccountingTransactionModule_viewPerOriginAndSheetSummary\',\n
+      selection_name=\'accounting_transaction_module_m9_\'\n
+                     \'accounting_transaction_list_report_selection\',\n
+      selection_params=dict(cache_key=cache_key),\n
+      selection_columns=[(\'account_id\', \'Account\'),\n
+                         (\'account_title\', \'Account Name\'),\n
+                         (\'debit\', \'Debit\'),\n
+                         (\'credit\', \'Credit\')],\n
+      listbox_display_mode=\'FlatListMode\', ))\n
 \n
 for account_class in range(1, 10):\n
   account_class = str(account_class)\n
@@ -207,7 +244,9 @@ for account_class in range(1, 10):\n
         listbox_display_mode=\'FlatListMode\', ))\n
 \n
 return report_section_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -271,8 +310,14 @@ return report_section_list\n
                             <string>section_category</string>
                             <string>portal_type</string>
                             <string>payment_mode_url</string>
+                            <string>detail_per_payment_mode</string>
+                            <string>dict</string>
+                            <string>payment_mode_request_keys</string>
                             <string>payment_mode</string>
                             <string>payment_mode_value</string>
+                            <string>len</string>
+                            <string>_getiter_</string>
+                            <string>pm</string>
                             <string>simulation_state</string>
                             <string>selection_name</string>
                             <string>simtool</string>
@@ -283,7 +328,6 @@ return report_section_list\n
                             <string>getAccountClass</string>
                             <string>origin_id_cache</string>
                             <string>getOriginId</string>
-                            <string>_getiter_</string>
                             <string>brain</string>
                             <string>mvt</string>
                             <string>origin</string>
@@ -297,13 +341,15 @@ return report_section_list\n
                             <string>total_debit</string>
                             <string>total_credit</string>
                             <string>_write_</string>
+                            <string>key</string>
                             <string>origin_cache</string>
                             <string>cache</string>
                             <string>report_section_list</string>
+                            <string>cache_key</string>
+                            <string>payment_mode_title</string>
                             <string>range</string>
                             <string>account_class</string>
                             <string>str</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
