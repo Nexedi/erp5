@@ -11,7 +11,9 @@ Applied Rule | metadata
 Applied Rule | print
 Applied Rule | print_pdf
 Applied Rule | view
+Base Category | history
 Base Category | list
+Base Category | metadata
 Base Category | view
 Base Domain | history
 Base Domain | list
