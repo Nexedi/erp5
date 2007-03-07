@@ -139,7 +139,6 @@ class PDFDocument(File, ConversionCacheMixin):
       We mark it in cache as done, even if we fail, so we don't keep trying if it
       doesn't work.
     """
-    portal_workflow = getToolByName(self, 'portal_workflow')
     if hasattr(self, 'data') and (force == 1 or not self.hasConversion(format = 'txt')):
       # XXX-JPS accessing attribute data is bad
       self.log('PdfDocument', 'regenerating txt')
@@ -159,12 +158,16 @@ class PDFDocument(File, ConversionCacheMixin):
         else:
           msg = 'Converted to text'
       finally:
-        portal_workflow.doActionFor(self, 'process', comment=msg)
+        self.processFile(comment=msg)
         # we don't need to store it twice, just mark we have it (or rather we already tried)
         # we try only once
         self.setConversion('empty', format = 'txt') 
 
   SearchableText=getSearchableText
+
+  security.declarePrivate('_convertToBase')
+  def _convertToBase(self):
+    self._convertToText(force=1)
 
   security.declareProtected(Permissions.View, 'getHtmlRepresentation')
   def getHtmlRepresentation(self, force=0):

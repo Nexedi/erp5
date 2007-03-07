@@ -320,6 +320,7 @@ class Document(XMLObject):
                               'subject', 'source_reference', 'source_project_title')
 
   data = '' # some day this will be in property sheets
+  base_format = 'base storage format'
 
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
@@ -900,13 +901,44 @@ class Document(XMLObject):
     return self._getTypeBasedMethod('finishIngestion',
         fallback_script_id='Document_finishIngestion')
 
-  def convertToBase(self):
+  security.declareProtected(Permissions.View, 'convert')
+  def convertToBase(self, REQUEST=None):
+    """
+      This is run upon upload of the file to make the first
+      conversion; calls _convertToBase which be default does
+      nothing.
+      Records the result in processing_status_workflow
+      In OOo documents it converts into ODF format so that we can easily
+      convert into other formats, play with metadata and such.
+      In PDF doc it converts to plain text, so that we don't have to
+      reconvert every time we reindex the object.
+    """
+    try:
+      msg = self._convertToBase()
+      if msg is None:
+        msg = 'Converted to %s.' % self.base_format
+      self.convertFile(comment=msg) # Invoke workflow method
+    except NotImplementedError:# we don't do any workflow action if nothing has been done
+      msg = '' 
+    except ConversionError, e:
+      msg = 'Problem: %s' % (str(e) or 'undefined.')
+      self.processFile(comment=msg)
+    except Fault, e:
+      msg = 'Problem: %s' % (repr(e) or 'undefined.')
+      self.processFile(comment=msg)
+    except socket.error, e:
+      msg = 'Problem: %s' % (repr(e) or 'undefined.')
+      self.processFile(comment=msg)
+    return msg
+
+
+  def _convertToBase(self):
     """
       API method - some subclasses store data in a certain 'base' format
       (e.g. OOoDocument uses ODF)
 
       XXX-JPS What is this ? Explain. Name unclear
     """
-    pass
+    raise NotImplementedError
 
 # vim: filetype=python syntax=python shiftwidth=2

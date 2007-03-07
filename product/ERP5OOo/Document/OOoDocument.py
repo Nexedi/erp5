@@ -132,6 +132,8 @@ class OOoDocument(File, ConversionCacheMixin):
         'mode'        : ''},
   )
 
+  base_format = 'Open Document Format'
+
   # regexps for stripping xml from docs
   rx_strip = re.compile('<[^>]*?>', re.DOTALL|re.MULTILINE)
   rx_compr = re.compile('\s+')
@@ -194,28 +196,6 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     m = Message(domain='ui', message=msg)
     return (code, m)
-
-  security.declareProtected(Permissions.View, 'convert')
-  def convertToBase(self, REQUEST=None):
-    """
-      Converts from the initial format to base format (ODF);
-      communicates with the conversion server
-      and gets converted file as well as metadata
-    """
-    try:
-      self._convertToBase()
-      msg = 'Converted to Open Document Format.'
-      self.convertFile(comment=msg) # Invoke workflow method
-    except ConversionError, e:
-      msg = 'Problem: %s' % (str(e) or 'undefined.')
-      self.processFile(comment=msg)
-    except Fault, e:
-      msg = 'Problem: %s' % (repr(e) or 'undefined.')
-      self.processFile(comment=msg)
-    except socket.error, e:
-      msg = 'Problem: %s' % (repr(e) or 'undefined.')
-      self.processFile(comment=msg)
-    return msg
 
   security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
   def getTargetFormatItemList(self):
