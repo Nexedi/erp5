@@ -18,6 +18,7 @@ import Globals
 import AccessControl
 from Globals import package_home
 
+from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from ZPublisher import BeforeTraverse
 from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite, PortalGenerator
@@ -1177,7 +1178,10 @@ class ERP5Generator(PortalGenerator):
       addMessageCatalog('default', 'ERP5 Localized Messages', ('en',))
       addMessageCatalog('erp5_ui', 'ERP5 Localized Interface', ('en',))
       addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en',))
-
+    
+    # Add an error_log
+    if 'error_log' not in p.objectIds():
+      manage_addErrorLog(p)
 
   def setupMembersFolder(self, p):
     """

@@ -203,6 +203,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.failUnless(('Dummy Jump Action', {}) in
                       translation_service._translated['ui'])
 
+  def test_error_log(self):
+    self.failUnless('error_log' in self.portal.objectIds())
+    
 if __name__ == '__main__':
     framework()
 else:
