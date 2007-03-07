@@ -60,6 +60,9 @@ FTPAccess = permissions.FTPAccess
 ImportExportObjects = ac_permissions.import_export_objects
 UseMailhostServices = ac_permissions.use_mailhost_services
 
+# Default Catalog Permissions
+SearchCatalog = 'Search ZCatalog'
+
 # Default CMF Core Permissions
 ListFolderContents = permissions.ListFolderContents
 ListUndoableChanges = permissions.ListUndoableChanges
