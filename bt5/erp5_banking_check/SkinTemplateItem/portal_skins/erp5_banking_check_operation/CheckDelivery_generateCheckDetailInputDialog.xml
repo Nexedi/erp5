@@ -106,14 +106,15 @@ def generate_error(listbox_line, column_title, error_message):\n
 # listbox is not passed at the first time when this script is called.\n
 # when the user clicks on the Update button, listbox is passed, and\n
 # the contents must be preserved in the form.\n
+new_listbox = []\n
 if listbox in (None,()) or (previous_resource not in(\'\',None) and previous_resource!=resource):\n
-  listbox = []\n
   for i in range(0,10):\n
     #listbox.append({\'quantity\':1,\'uid\':\'new_%03i\' % i})\n
-    listbox.append({\'quantity\':1})\n
+    new_listbox.append({\'quantity\':1})\n
 \n
 else:\n
   for line in listbox:\n
+    new_listbox.append(line) # Add line from the begining. All changes in the loop will apply to the appended object (pointer).\n
     destination_payment_reference = line.get(\'destination_payment_reference\',None)\n
     reference_range_min = line.get(\'reference_range_min\',None)\n
     reference_range_max = line.get(\'reference_range_max\',None)\n
@@ -121,8 +122,19 @@ else:\n
     quantity = int(line.get(\'quantity\',0))\n
     if item_model.isFixedPrice():\n
       if quantity > 1:\n
-        message = \'You must define one by one in this case\'\n
-        generate_error(line,\'quantity\',message)\n
+        try:\n
+          if len(reference_range_min) != 10:\n
+            raise ValueError, \'Reference must be 10 char long.\'\n
+          reference_numeric_part = int(reference_range_min[4:])\n
+        except ValueError, message:\n
+          generate_error(line, \'reference_range_min\', \'Reference format unrecognized: %s\' % (message, ))\n
+        else:\n
+          reference_prefix = reference_range_min[:4]\n
+          line[\'quantity\'] = 1\n
+          for increment in xrange(quantity):\n
+            new_line = line.copy()\n
+            new_line[\'reference_range_min\'] = \'%s%06d\' % (reference_prefix, reference_numeric_part + increment + 1)\n
+            new_listbox.append(new_line)\n
     if destination_payment_reference not in (None,\'\'):\n
       account_list = [x.getObject() for x in\n
                       context.portal_catalog(portal_type=\'Bank Account\',\n
@@ -175,10 +187,14 @@ else:\n
           generate_error(line,\'reference_range_min\',message)\n
           generate_error(line,\'reference_range_max\',message)\n
 \n
+# Update all listbox_keys\n
+for line_index in xrange(len(new_listbox)):\n
+  new_listbox[line_index][\'listbox_key\'] = \'%03d\' % (line_index, )\n
+\n
 if batch_mode:\n
   return error_value\n
 else:\n
-  context.Base_updateDialogForm(listbox=listbox\n
+  context.Base_updateDialogForm(listbox=new_listbox\n
                              , portal_type = context.getPortalType()\n
                              , resource=resource\n
                              , previous_resource=resource\n
@@ -261,6 +277,7 @@ else:\n
                             <string>error_value</string>
                             <string>field_error_dict</string>
                             <string>generate_error</string>
+                            <string>new_listbox</string>
                             <string>_getiter_</string>
                             <string>range</string>
                             <string>i</string>
@@ -271,21 +288,27 @@ else:\n
                             <string>check_amount</string>
                             <string>int</string>
                             <string>quantity</string>
+                            <string>len</string>
+                            <string>ValueError</string>
+                            <string>_getitem_</string>
+                            <string>reference_numeric_part</string>
                             <string>message</string>
+                            <string>reference_prefix</string>
+                            <string>_write_</string>
+                            <string>xrange</string>
+                            <string>increment</string>
+                            <string>new_line</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
                             <string>account_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
                             <string>account</string>
-                            <string>_write_</string>
                             <string>destination_trade</string>
                             <string>check_quantity</string>
                             <string>check_reference</string>
-                            <string>ValueError</string>
                             <string>check_amount_relative_url</string>
                             <string>check_amount_value</string>
+                            <string>line_index</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
