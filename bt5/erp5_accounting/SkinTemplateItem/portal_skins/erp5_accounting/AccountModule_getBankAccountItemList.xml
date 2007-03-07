@@ -72,12 +72,16 @@
 if organisation == \'\' :\n
   organisation = context.REQUEST.get(\'organisation\', None)\n
 if organisation is None : \n
-  organisation = portal.portal_preferences.getPreferredAccountingTransactionSourceSection()\n
+  organisation = portal.portal_preferences\\\n
+               .getPreferredAccountingTransactionSourceSection()\n
 \n
 organisation = portal.restrictedTraverse(organisation)\n
 item_list = [(\'\', \'\')]\n
-for bank in organisation.objectValues(portal_type=portal.getPortalPaymentNodeTypeList()):\n
-  item_list.append((bank.getTitle(), bank.getRelativeUrl()))\n
+for bank in organisation.contentValues(\n
+                       portal_type=portal.getPortalPaymentNodeTypeList()):\n
+  item_list.append((\'%s - %s\' % (bank.getReference(),\n
+                                 bank.getTitle() or bank.getSourceFreeText()),\n
+                    bank.getRelativeUrl()))\n
 \n
 return item_list\n
 </string> </value>
