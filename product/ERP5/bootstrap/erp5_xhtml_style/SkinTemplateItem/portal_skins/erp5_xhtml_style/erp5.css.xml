@@ -482,6 +482,13 @@ div.index_html table {\n
   text-align: left;\n
 }\n
 \n
+.ModuleShortcut div {\n
+  margin-left: 0.5em;\n
+  text-indent: -0.5em;\n
+  line-height: 1.1em;\n
+  margin-bottom: 0.5em;\n
+}\n
+\n
 #main_bar button .description,\n
 #context_bar button .description,\n
 .content .field .description,\n
