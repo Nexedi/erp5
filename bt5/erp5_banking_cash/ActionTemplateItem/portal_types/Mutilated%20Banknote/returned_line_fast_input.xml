@@ -104,7 +104,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: here.getSimulationState() == "confirmed"</string> </value>
+            <value> <string>python: here.getSimulationState() == "finished"</string> </value>
         </item>
       </dictionary>
     </pickle>

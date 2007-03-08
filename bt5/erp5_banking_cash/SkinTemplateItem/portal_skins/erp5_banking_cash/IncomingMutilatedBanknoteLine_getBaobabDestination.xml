@@ -68,14 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># if sent to headquarter, line must not exist\n
-if not \'siege\' in context.getSource():\n
-  # if we sent to headquarter, we have order the document at one time\n
-  for workflow_item in context.getParentValue().Base_getWorkflowHistoryItemList(\'mutilated_banknote_workflow\',display=0):\n
-    if workflow_item.getProperty(\'action\')==\'order_action\':\n
-      return None\n
+            <value> <string># When the parent document (Mutilated Banknote) is finished or delivered, the mutilated banknotes must not be put in the "caisse_coutante/billets_mutiles"\n
+# In reality, they are moved to "caisse_courante/billets_mutiles" with "canceled" status.\n
+# To do this, the "mutilated" from "caisse_courante/billets_mutiles" are destroyed from erp5 point of view and new ones with state "canceled" are added to "caisse_courante/encaisse_des_billets_et_monnaies".\n
+# See ExchangedMutilatedBanknoteLine_getBaobabDestination (those lines are created at "planned" state).\n
 \n
-return context.getDestination()\n
+if context.getParent().getSimulationState() in (\'finished\', \'delivered\'):\n
+  return None\n
+else:\n
+  return \'%s/surface/caisse_courante/billets_mutiles\' % (context.getParent().getSource(), )\n
 </string> </value>
         </item>
         <item>
@@ -128,8 +129,6 @@ return context.getDestination()\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_getiter_</string>
-                            <string>workflow_item</string>
                             <string>None</string>
                           </tuple>
                         </value>

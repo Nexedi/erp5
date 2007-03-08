@@ -104,7 +104,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: here.getSimulationState() == "planned"</string> </value>
+            <value> <string>python: here.getSimulationState() in ("stopped", "planned")</string> </value>
         </item>
       </dictionary>
     </pickle>
