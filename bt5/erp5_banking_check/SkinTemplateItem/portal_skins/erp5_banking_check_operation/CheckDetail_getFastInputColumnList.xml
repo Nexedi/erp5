@@ -88,8 +88,7 @@ if item_model.getPortalType()== \'Check Model\':\n
   if len(item_model.getVariationRangeCategoryList())>0:\n
     return_list.append([\'check_type\',\'Check Value\'])\n
   return_list.append([\'reference_range_min\',\'Start Number\'])\n
-  if not item_model.isFixedPrice():\n
-    return_list.append([\'reference_range_max\',\'Stop Number\'])\n
+  return_list.append([\'reference_range_max\',\'Stop Number\'])\n
 \n
 if item_model.getPortalType()== \'Checkbook Model\':\n
   return_list.append([\'destination_payment_reference\',\'Account Reference\'])\n
