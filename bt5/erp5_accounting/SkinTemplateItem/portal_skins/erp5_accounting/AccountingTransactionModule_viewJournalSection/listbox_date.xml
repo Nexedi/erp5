@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_at_date</string> </value>
+            <value> <string>listbox_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -97,6 +97,14 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden_day_is_last_day</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_day</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -265,7 +273,7 @@
                 </item>
                 <item>
                     <key> <string>default_now</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -273,7 +281,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -311,7 +319,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>start_datetime</string> </key>
@@ -325,7 +333,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>At Date</string> </value>
+                    <value> <string>Date</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -415,28 +423,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>Default</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>date</string> </key>
+                    <key>                 <string>date</string> </key>
                     <value>
                       <list>
-                        <string>year</string>
-                        <string>month</string>
-                        <string>day</string>
+<string>year</string>
+<string>month</string>
+<string>day</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>time</string> </key>
+                    <key>                 <string>time</string> </key>
                     <value>
                       <list>
-                        <string>hour</string>
-                        <string>minute</string>
-                        <string>ampm</string>
+<string>hour</string>
+<string>minute</string>
+<string>ampm</string>
                       </list>
                     </value>
                 </item>

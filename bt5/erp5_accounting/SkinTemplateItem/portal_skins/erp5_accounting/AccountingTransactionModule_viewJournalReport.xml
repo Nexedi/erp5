@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
+          <string>Products.ERP5Form.Report</string>
+          <string>ERP5Report</string>
         </tuple>
         <none/>
       </tuple>
@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>AccountingTransactionModule_viewJournalReport</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -64,6 +64,8 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -72,32 +74,41 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_payment</string>
-                        <string>your_payment_mode</string>
+                        <string>at_date</string>
+                        <string>from_date</string>
+                        <string>section_category</string>
+                        <string>portal_type</string>
+                        <string>simulation_state</string>
+                        <string>payment</string>
+                        <string>payment_mode</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_section_category</string>
-                        <string>your_from_date</string>
-                        <string>your_at_date</string>
-                        <string>your_portal_skin</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list>
-                        <string>your_portal_type</string>
-                        <string>your_simulation_state</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -105,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionModule_viewJournalDialog</string> </value>
+            <value> <string>AccountingTransactionModule_viewJournalReport</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -113,11 +124,15 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>AccountingTransactionModule_viewJournalDialog</string> </value>
+            <value> <string>AccountingTransactionModule_viewJournalReport</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>report_view</string> </value>
+        </item>
+        <item>
+            <key> <string>report_method</string> </key>
+            <value> <string>AccountingTransactionModule_getJournalReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

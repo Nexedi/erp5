@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>AccountingTransactionModule_viewJournalReport</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -64,6 +64,8 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -72,32 +74,39 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>your_payment</string>
-                        <string>your_payment_mode</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>your_section_category</string>
-                        <string>your_from_date</string>
-                        <string>your_at_date</string>
-                        <string>your_portal_skin</string>
+                        <string>listbox_date</string>
+                        <string>listbox_debit</string>
+                        <string>listbox_credit</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_portal_type</string>
-                        <string>your_simulation_state</string>
-                      </list>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -105,7 +114,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionModule_viewJournalDialog</string> </value>
+            <value> <string>AccountingTransactionModule_viewJournalSection</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -113,11 +122,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>AccountingTransactionModule_viewJournalDialog</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>AccountingTransactionModule_viewJournalSection</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -129,15 +134,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Journal</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

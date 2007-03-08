@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Form.Report import ReportSection\n
+request = container.REQUEST\n
+N_ = container.Base_translateString\n
+\n
+portal_type = request[\'portal_type\']\n
+simulation_state = request[\'simulation_state\']\n
+at_date = request[\'at_date\'].latestTime()\n
+from_date = request.get(\'from_date\', at_date.earliestTime())\n
+section_uid = context.Base_getSectionUidListForSectionCategory(\n
+                                     request[\'section_category\'])\n
+payment_mode = request.get(\'payment_mode\')\n
+payment = request.get(\'payment\')\n
+\n
+# Also get the currency, to know the precision\n
+currency = context.Base_getCurrencyForSection(request[\'section_category\'])\n
+precision = context.account_module.getQuantityPrecisionFromResource(currency)\n
+# we set the precision in request, for formatting on editable fields\n
+request.set(\'precision\', precision)\n
+\n
+if len(portal_type) > 1:\n
+  selection_columns = [\n
+    (\'specific_reference\', \'Transaction Reference\'),\n
+    (\'date\', \'Date\'),\n
+    (\'title\', \'Accounting Transaction Title\'),\n
+    (\'portal_type\', \'Journal Type\'),\n
+    (\'node_title\', \'Account\'),\n
+    (\'mirror_section_title\', \'Third Party\'),\n
+    (\'debit\', \'Debit\'),\n
+    (\'credit\', \'Credit\')]\n
+else:\n
+  selection_columns = [\n
+    (\'specific_reference\', \'Transaction Reference\'),\n
+    (\'date\', \'Date\'),\n
+    (\'title\', \'Accounting Transaction Title\'),\n
+    (\'node_title\', \'Account\'),\n
+    (\'mirror_section_title\', \'Third Party\'),\n
+    (\'debit\', \'Debit\'),\n
+    (\'credit\', \'Credit\')]\n
+\n
+\n
+return [ReportSection(\n
+          path=context.getPhysicalPath(),\n
+          title=N_(\'Transactions\'),\n
+          selection_name=\'journal_selection\',\n
+          form_id=\'AccountingTransactionModule_viewJournalSection\',\n
+          selection_columns=selection_columns,\n
+          selection_params=dict(portal_type=portal_type,\n
+                                section_uid=section_uid,\n
+                                precision=precision,\n
+                                simulation_state=simulation_state,\n
+                                at_date=at_date,\n
+                                from_date=from_date,\n
+                                payment_mode=payment_mode,\n
+                                payment=payment))]\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>N_</string>
+                            <string>_getitem_</string>
+                            <string>portal_type</string>
+                            <string>simulation_state</string>
+                            <string>at_date</string>
+                            <string>from_date</string>
+                            <string>context</string>
+                            <string>section_uid</string>
+                            <string>payment_mode</string>
+                            <string>payment</string>
+                            <string>currency</string>
+                            <string>precision</string>
+                            <string>len</string>
+                            <string>selection_columns</string>
+                            <string>dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getJournalReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import Object\n
+request = container.REQUEST\n
+portal = context.getPortalObject()\n
+\n
+line_list = []\n
+\n
+extra_kw = dict()\n
+if payment:\n
+  extra_kw[\'payment\'] = payment\n
+\n
+account_title_cache = dict()\n
+def getAccountId(node_relative_url):\n
+  if node_relative_url not in account_title_cache:\n
+    title = portal.restrictedTraverse(node_relative_url).Account_getGapId()\n
+    account_title_cache[node_relative_url] = title\n
+  return account_title_cache[node_relative_url]\n
+\n
+displayed_transaction = dict()\n
+total_credit = 0\n
+total_debit = 0\n
+\n
+for brain in portal.portal_simulation.getMovementHistoryList(\n
+                                from_date=from_date,\n
+                                at_date=at_date,\n
+                                section_uid=section_uid,\n
+                                parent_portal_type=portal_type,\n
+                                simulation_state=simulation_state,\n
+                                sort_on=((\'stock.date\', \'ASC\'),\n
+# FIXME: this should actually be sorted on parent_delivery_specific_reference\n
+# a related key which does not exists, and would anyway not be efficient with\n
+# current tables\n
+                                         (\'parent_uid\', \'descending\'),\n
+                                         (\'stock.total_price\', \'descending\')),\n
+                                **extra_kw):\n
+  debit = max(brain.total_price, 0)\n
+  credit = max(-brain.total_price, 0)\n
+  mvt = brain.getObject()\n
+  if payment_mode and not \\\n
+        mvt.getPaymentMode(\'\').startswith(payment_mode):\n
+    continue\n
+  \n
+  total_debit += debit\n
+  total_credit += credit\n
+  \n
+  transaction = mvt.getParentValue()\n
+  is_source = brain.section_relative_url.startswith(transaction.getSourceSection())\n
+  \n
+  if is_source:\n
+    mirror_section_title = mvt.getDestinationSectionTitle()\n
+  else:\n
+    mirror_section_title = mvt.getSourceSectionTitle()\n
+\n
+  if transaction.getUid() not in displayed_transaction:\n
+    displayed_transaction[transaction.getUid()] = 1\n
+    if is_source:\n
+      specific_reference = transaction.getSourceReference()\n
+    else:\n
+      specific_reference = transaction.getDestinationReference()\n
+    displayed_transaction[transaction.getUid()] = 1\n
+    title = mvt.getTitle() or transaction.getTitle()\n
+    date = brain.date\n
+  else:\n
+    specific_reference = \'\'\n
+    title = mvt.getTitle() or \'\'\n
+    date = None\n
+\n
+  line_list.append( Object(uid=\'new_\',\n
+                           title=title,\n
+                           portal_type=transaction.getTranslatedPortalType(),\n
+                           specific_reference=specific_reference,\n
+                           mirror_section_title=mirror_section_title,\n
+                           node_title=getAccountId(brain.node_relative_url),\n
+                           date=date,\n
+                           debit=debit,\n
+                           credit=credit))\n
+ \n
+request.set(\n
+      \'AccountingTransactionModule_getJournalSectionLineList.total_debit\',\n
+       total_debit)\n
+request.set(\n
+      \'AccountingTransactionModule_getJournalSectionLineList.total_credit\',\n
+       total_credit)\n
+\n
+return line_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection, at_date, from_date, portal_type, simulation_state, section_uid, payment_mode=None, payment=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>8</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>at_date</string>
+                            <string>from_date</string>
+                            <string>portal_type</string>
+                            <string>simulation_state</string>
+                            <string>section_uid</string>
+                            <string>payment_mode</string>
+                            <string>payment</string>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>line_list</string>
+                            <string>dict</string>
+                            <string>extra_kw</string>
+                            <string>_write_</string>
+                            <string>account_title_cache</string>
+                            <string>getAccountId</string>
+                            <string>displayed_transaction</string>
+                            <string>total_credit</string>
+                            <string>total_debit</string>
+                            <string>_getiter_</string>
+                            <string>_apply_</string>
+                            <string>brain</string>
+                            <string>max</string>
+                            <string>debit</string>
+                            <string>credit</string>
+                            <string>mvt</string>
+                            <string>transaction</string>
+                            <string>is_source</string>
+                            <string>mirror_section_title</string>
+                            <string>specific_reference</string>
+                            <string>title</string>
+                            <string>date</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getJournalSectionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
