@@ -86,14 +86,18 @@ else:\n
 \n
 source_section = transaction.getSourceSectionValue()\n
 if source_section is not None and source_section.isMemberOf(section_category):\n
-  external_payment = transaction.getDestinationPaymentValue(portal_type=\'External Payment\')\n
-  if external_payment is not None:\n
-    return external_payment.getShortTitle() or external_payment.getTitle()\n
+  external_payment = transaction.getDestinationPaymentValue()\n
+  if external_payment is not None and \\\n
+              external_payment.getPortalType() == \'External Payment\':\n
+    return external_payment.getShortTitle() or external_payment.getTitle()\\\n
+               or transaction.getDestinationSectionTitle()\n
   return transaction.getDestinationSectionTitle()\n
 \n
-external_payment = transaction.getSourcePaymentValue(portal_type=\'External Payment\')\n
-if external_payment is not None:\n
-  return external_payment.getShortTitle() or external_payment.getTitle()\n
+external_payment = transaction.getSourcePaymentValue()\n
+if external_payment is not None and \\\n
+            external_payment.getPortalType() == \'External Payment\':\n
+  return external_payment.getShortTitle() or external_payment.getTitle()\\\n
+               or transaction.getSourceSectionTitle()\n
 return transaction.getSourceSectionTitle()\n
 </string> </value>
         </item>
