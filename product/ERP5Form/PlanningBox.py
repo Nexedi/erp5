@@ -2822,13 +2822,13 @@ class AxisGroup:
     """
     if self.is_open:
       # current report is unfold, action 'fold'
-      self.info_title.link = 'portal_selections/foldReport?report_url=' + \
+      self.info_title.link = 'foldReport?report_url=' + \
                               '%s&form_id=%s&list_selection_name=%s' %(
                               self.url, form_id, selection_name)
       self.info_title.info = '[-] ' + self.info_title.info
     else:
       # current report is fold, action 'unfold'
-      self.info_title.link = 'portal_selections/unfoldReport?report_url=' + \
+      self.info_title.link = 'unfoldReport?report_url=' + \
                              '%s&form_id=%s&list_selection_name=%s' %(
                               self.url, form_id, selection_name)
       self.info_title.info = '[+] ' + self.info_title.info
