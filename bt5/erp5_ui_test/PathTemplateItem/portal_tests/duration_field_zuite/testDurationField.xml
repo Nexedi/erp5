@@ -91,17 +91,17 @@
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -116,24 +116,24 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 \n
 <!-- Test second value -->\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>59.0</td>\n
+  <td>59</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -148,24 +148,24 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>59.0</td>\n
+  <td>59</td>\n
 </tr>\n
 \n
 <!-- Test minute value -->\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>58.0</td>\n
+  <td>58</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -180,24 +180,24 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>58.0</td>\n
+  <td>58</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>59.0</td>\n
+  <td>59</td>\n
 </tr>\n
 \n
 <!-- Test hour value -->\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>23.0</td>\n
+  <td>23</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -212,24 +212,24 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>23.0</td>\n
+  <td>23</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>58.0</td>\n
+  <td>58</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>59.0</td>\n
+  <td>59</td>\n
 </tr>\n
 \n
 <!-- Test second increase minutes -->\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>63.0</td>\n
+  <td>63</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -244,24 +244,24 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>23.0</td>\n
+  <td>23</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>59.0</td>\n
+  <td>59</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>3.0</td>\n
+  <td>3</td>\n
 </tr>\n
 \n
 <!-- Test minutes increase hour -->\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>63.0</td>\n
+  <td>63</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -276,34 +276,34 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>24.0</td>\n
+  <td>24</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>3.0</td>\n
+  <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>3.0</td>\n
+  <td>3</td>\n
 </tr>\n
 \n
 <!-- Test seconds increase hour -->\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>3600.0</td>\n
+  <td>3600</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -318,17 +318,17 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_hour</td>\n
-  <td>1.0</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_minute</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>subfield_field_my_quantity_second</td>\n
-  <td>0.0</td>\n
+  <td>0</td>\n
 </tr>\n
 \n
 </tbody></table>\n
