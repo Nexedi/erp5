@@ -76,12 +76,14 @@ def getNumordre(tr):\n
     return numordre_cache[tr]\n
   except KeyError:\n
     sort_key = (tr.getIntIndex(),\n
-                tr.getSourceSectionTitle())\n
+                tr.getDestinationSectionTitle(),\n
+                tr.getSourceReference() )\n
     if not sort_key[0]:\n
       causality = tr.getCausalityValue()\n
       if causality is not None:\n
         sort_key = (causality.getIntIndex(),\n
-                    causality.getSourceSectionTitle())\n
+                    causality.getSourceSectionTitle(),\n
+                    causality.getDestinationReference())\n
     return numordre_cache.setdefault(tr, tr.getProperty(\'noordre\',\n
                                                 sort_key))\n
 \n
