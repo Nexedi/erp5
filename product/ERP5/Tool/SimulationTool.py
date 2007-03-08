@@ -1760,7 +1760,8 @@ class SimulationTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getAvailableTime')
     def getAvailableTime(self, from_date=None, to_date=None, 
-                         portal_type=[], node=[], **kw):
+                         portal_type=[], node=[], 
+                         resource=[], src__=0, **kw):
       """
       Calculate available time for a node
       Returns an inventory of a single or multiple resources on a single
@@ -1772,6 +1773,9 @@ class SimulationTool(BaseTool):
 
       node           - only take rows in stock table which node_uid is
                        equivalent to node
+
+      resource       - only take rows in stock table which resource_uid is
+                       equivalent to resource
 
       portal_type    - only take rows in stock table which portal_type
                        is in portal_type parameter
@@ -1789,8 +1793,11 @@ class SimulationTool(BaseTool):
                           to_date=to_date,
                           portal_type=portal_type,
                           node=node,
-                          **kw)[0].total_quantity
-      if (result is None) or (result < 0):
+                          resource=resource,
+                          src__=src__, **kw)[0].total_quantity
+      if src__:
+        return result_list
+      elif (result is None) or (result < 0):
         result = 0
       return result
 
@@ -1798,6 +1805,7 @@ class SimulationTool(BaseTool):
                               'getAvailableTimeSequence')
     def getAvailableTimeSequence(self, from_date, to_date,  
                                  portal_type=[], node=[],
+                                 resource=[], 
                                  src__=0,
                                  **kw):
       """
@@ -1826,7 +1834,11 @@ class SimulationTool(BaseTool):
                              period_list=Sequence(from_date, to_date, **kw),
                              portal_type=portal_type,
                              node=node,
+                             resource=resource,
                              src__=src__)
+      for x in result_list:
+        if x.total_quantity < 0:
+          x.total_quantity = 0
       return result_list
 
 from Products.ERP5Type.DateUtils import addToDate
