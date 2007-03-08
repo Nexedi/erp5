@@ -70,13 +70,21 @@
             <key> <string>_body</string> </key>
             <value> <string>numordre_cache = dict()\n
 def getNumordre(tr):\n
-  \'\'\'calculate numordre and cache it.\n
+  \'\'\'calculate a sort key and cache it.\n
   \'\'\'\n
   try:\n
     return numordre_cache[tr]\n
   except KeyError:\n
+    sort_key = (tr.getIntIndex(),\n
+                tr.getSourceSectionTitle())\n
+    if not sort_key[0]:\n
+      causality = tr.getCausalityValue()\n
+      if causality is not None:\n
+        sort_key = (causality.getIntIndex(),\n
+                    causality.getSourceSectionTitle())\n
     return numordre_cache.setdefault(tr, tr.getProperty(\'noordre\',\n
-                                            tr.getSourceReference()))\n
+                                                sort_key))\n
+\n
 \n
 def transfer_comparator(a, b):\n
   \'\'\'Compare 2 accounting transactions.\n
@@ -90,11 +98,11 @@ def getPaymentTransactionList():\n
   transaction_list.sort(transfer_comparator)\n
   return transaction_list\n
 \n
-from Products.ERP5Type.Cache import CachingMethod\n
-no_getPaymentTransactionList = CachingMethod(\n
-                               getPaymentTransactionList,\n
-                               id=\'%s%s\' % (script.getId(),\n
-                                            context.getId()))\n
+# from Products.ERP5Type.Cache import CachingMethod\n
+# getPaymentTransactionList = CachingMethod(\n
+#                               getPaymentTransactionList,\n
+#                               id=\'%s%s\' % (script.getId(),\n
+#                                            context.getId()))\n
 \n
 \n
 return getPaymentTransactionList()\n
@@ -152,12 +160,6 @@ return getPaymentTransactionList()\n
                             <string>getNumordre</string>
                             <string>transfer_comparator</string>
                             <string>getPaymentTransactionList</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>_getattr_</string>
-                            <string>script</string>
-                            <string>context</string>
-                            <string>no_getPaymentTransactionList</string>
                           </tuple>
                         </value>
                     </item>

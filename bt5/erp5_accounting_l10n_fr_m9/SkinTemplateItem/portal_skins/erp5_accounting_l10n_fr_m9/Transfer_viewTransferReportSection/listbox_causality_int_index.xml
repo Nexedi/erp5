@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'%05d\' % cell.getCausalityValue().getIntIndex()</string> </value>
+            <value> <string>python: \'%05d\' % (cell.getIntIndex() or cell.getCausalityValue().getIntIndex())</string> </value>
         </item>
       </dictionary>
     </pickle>
