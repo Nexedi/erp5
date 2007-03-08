@@ -126,8 +126,11 @@ def getAccountClass(account_url):\n
   except KeyError:\n
     account = portal.restrictedTraverse(account_url)\n
     # fr / m9 / ${classe} / ...\n
-    classe = account.getGap().split(\'/\')[2]\n
-    # XXX this can raise with bad account. add a constraint checker on accounts\n
+    try:\n
+      classe = account.getGap().split(\'/\')[2]\n
+    except IndexError:\n
+      # XXX "bad accounts" will be associated to 9 class\n
+      classe = \'9\'\n
     # XXX also this only work if you have only m9 installed. But anyway, it\'s\n
     # not planned to support m9 and other accounting version on the same\n
     # instance.\n
