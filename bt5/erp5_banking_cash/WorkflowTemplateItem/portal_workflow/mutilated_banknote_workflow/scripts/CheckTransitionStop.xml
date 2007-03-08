@@ -68,39 +68,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 ob = state_change[\'object\']\n
-state = ob.getSimulationState()\n
 \n
 if not ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=ob.getStartDate()):\n
   msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
   raise ValidationFailed, (msg,)\n
 \n
-if  state == "planned":\n
-  if len(ob.objectValues(portal_type=\'Exchanged Mutilated Banknote Line\')) == 0:\n
-    msg = Message(domain = "ui", message="You must defined exchanged banknote line.")\n
-    raise ValidationFailed, (msg,)\n
-  if ob.getTotalPrice(portal_type=\'Exchanged Mutilated Banknote Line\', fast=0) > ob.getTotalPrice(portal_type=\'Incoming Mutilated Banknote Line\', fast=0):\n
-    msg = Message(domain = "ui", message="Total exchanged greater than total supply.")\n
-    raise ValidationFailed, (msg,)\n
-  if ob.getTotalPrice(portal_type=\'Exchanged Mutilated Banknote Line\', fast=0) != ob.getDestinationTotalAssetPrice():\n
-    msg = Message(domain = "ui", message="Exchanged amount differ between line and document.")\n
-    raise ValidationFailed, (msg,)\n
+# check presence of banknote\n
+if len(ob.objectValues()) == 0:\n
+  msg = Message(domain = "ui", message="No mutilated banknotes defined.")\n
+  raise ValidationFailed, (msg,)\n
 \n
-elif state == "ordered":\n
-  if ob.getDestinationTotalAssetPrice() == 0:\n
-    msg = Message(domain = "ui", message="Exchanged amount must be defined on document.")\n
-    raise ValidationFailed, (msg,)\n
-  elif len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
-    msg = Message(domain = "ui", message="You can\'t have exchanged line defined.")\n
-    raise ValidationFailed, (msg,)\n
-
-
-]]></string> </value>
+# check price defined\n
+if ob.getSourceTotalAssetPrice() != ob.getTotalPrice(portal_type=\'Incoming Mutilated Banknote Line\', fast=0):\n
+  msg = Message(domain = "ui", message="Amont differ between document and line.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# check reporter defined\n
+if ob.getSourceDecision() == 0:\n
+  msg = Message(domain = "ui", message="You must define a reporter.")\n
+  raise ValidationFailed, (msg,)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -150,7 +141,6 @@ elif state == "ordered":\n
                             <string>_getitem_</string>
                             <string>ob</string>
                             <string>_getattr_</string>
-                            <string>state</string>
                             <string>msg</string>
                             <string>len</string>
                           </tuple>
@@ -169,7 +159,7 @@ elif state == "ordered":\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CheckTransitionConfirm</string> </value>
+            <value> <string>CheckTransitionStop</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

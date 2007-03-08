@@ -68,19 +68,33 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 ob = state_change[\'object\']\n
+\n
 if not ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=ob.getStartDate()):\n
   msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
   raise ValidationFailed, (msg,)\n
 \n
-# check presence of banknote\n
-if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
-  msg = Message(domain = "ui", message="Transition forbidden with exchanged banknote line defined.")\n
+if ob.getDestinationTotalAssetPrice() == 0:\n
+  msg = Message(domain = "ui", message="Exchanged amount must be defined on document.")\n
   raise ValidationFailed, (msg,)\n
-</string> </value>
+if len(ob.objectValues(portal_type=\'Exchanged Mutilated Banknote Line\')) == 0:\n
+  msg = Message(domain = "ui", message="You must defined exchanged banknote line.")\n
+  raise ValidationFailed, (msg,)\n
+exchanged_mutilated_banknote_total_price = ob.getTotalPrice(portal_type=\'Exchanged Mutilated Banknote Line\', fast=0)\n
+if exchanged_mutilated_banknote_total_price > ob.getTotalPrice(portal_type=\'Incoming Mutilated Banknote Line\', fast=0):\n
+  msg = Message(domain = "ui", message="Total exchanged greater than total supply.")\n
+  raise ValidationFailed, (msg,)\n
+if exchanged_mutilated_banknote_total_price != ob.getDestinationTotalAssetPrice():\n
+  msg = Message(domain = "ui", message="Exchanged amount differ between line and document.")\n
+  raise ValidationFailed, (msg,)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -132,6 +146,7 @@ if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
                             <string>_getattr_</string>
                             <string>msg</string>
                             <string>len</string>
+                            <string>exchanged_mutilated_banknote_total_price</string>
                           </tuple>
                         </value>
                     </item>
@@ -148,7 +163,7 @@ if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CheckTransitionOrder</string> </value>
+            <value> <string>CheckTransitionFinish</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -24,15 +24,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Send To Counter</string> </value>
+            <value> <string>Archive</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=confirm_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=archive_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>confirm</string> </value>
+            <value> <string>archive</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirm_action</string> </value>
+            <value> <string>archive_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -54,11 +54,11 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>CheckTransitionConfirm</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sent To Counter Action</string> </value>
+            <value> <string>Archive Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -84,7 +84,7 @@
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>

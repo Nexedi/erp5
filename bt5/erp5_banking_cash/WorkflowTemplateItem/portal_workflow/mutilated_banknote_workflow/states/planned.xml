@@ -34,18 +34,16 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sent To Validation</string> </value>
+            <value> <string>Sent To Headquarters</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>confirm</string>
-                <string>confirm_action</string>
-                <string>deliver</string>
-                <string>deliver_action</string>
-                <string>order</string>
-                <string>order_action</string>
+                <string>archive</string>
+                <string>archive_action</string>
+                <string>finish</string>
+                <string>finish_action</string>
               </tuple>
             </value>
         </item>
@@ -78,9 +76,9 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>DestinationAssignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -89,7 +87,6 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -104,7 +101,6 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -113,9 +109,9 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>DestinationAssignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

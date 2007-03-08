@@ -46,11 +46,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>cancel</string> </value>
+            <value> <string>finish</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>cancelled</string> </value>
+            <value> <string>finished</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cancel</string> </value>
+            <value> <string>Finish</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -84,9 +84,7 @@
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Assignee</string>
                 <string>Assignor</string>
-                <string>DestinationAssignor</string>
               </tuple>
             </value>
         </item>

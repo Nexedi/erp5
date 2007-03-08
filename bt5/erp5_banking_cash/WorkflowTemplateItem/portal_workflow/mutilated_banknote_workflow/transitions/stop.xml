@@ -46,11 +46,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>order</string> </value>
+            <value> <string>stop</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>ordered</string> </value>
+            <value> <string>stopped</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Order</string> </value>
+            <value> <string>Stop</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -84,7 +84,7 @@
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>

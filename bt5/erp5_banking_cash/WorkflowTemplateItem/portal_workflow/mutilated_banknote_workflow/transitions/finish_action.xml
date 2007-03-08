@@ -24,15 +24,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Send To Headquarters</string> </value>
+            <value> <string>Send To Counter</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=order_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=finish_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>order</string> </value>
+            <value> <string>finish</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>order_action</string> </value>
+            <value> <string>finish_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -54,11 +54,11 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>CheckTransitionOrder</string> </value>
+            <value> <string>CheckTransitionFinish</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Send To Validation Action</string> </value>
+            <value> <string>Finish Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -80,38 +80,13 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>expr</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>roles</string> </key>
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: "siege" not in here.getSource("")</string> </value>
         </item>
       </dictionary>
     </pickle>

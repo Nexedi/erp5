@@ -24,19 +24,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Mutilated Banknote To Validate (%(count)s)</string> </value>
+            <value> <string>Mutilated Banknote To Pay (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=ordered&portal_type=Mutilated Banknote&reset=1
+Base_viewWorklist?simulation_state=finished&portal_type=Mutilated Banknote&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Document To Validate</string> </value>
+            <value> <string>Document To Pay</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,7 +46,7 @@ Base_viewWorklist?simulation_state=ordered&portal_type=Mutilated Banknote&reset=
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ordered</string> </value>
+            <value> <string>finished</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -109,7 +109,7 @@ Base_viewWorklist?simulation_state=ordered&portal_type=Mutilated Banknote&reset=
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>ordered</string>
+                        <string>finished</string>
                       </tuple>
                     </value>
                 </item>

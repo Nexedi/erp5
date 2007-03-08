@@ -24,15 +24,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Send To Validation</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string></string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=stop_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>stop</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -46,23 +46,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirm</string> </value>
+            <value> <string>stop_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>confirmed</string> </value>
-        </item>
-        <item>
-            <key> <string>script_name</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>script_name</string> </key>
+            <value> <string>CheckTransitionStop</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Sent To Counter</string> </value>
+            <value> <string>Stop action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>2</int> </value>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -84,7 +84,7 @@
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>

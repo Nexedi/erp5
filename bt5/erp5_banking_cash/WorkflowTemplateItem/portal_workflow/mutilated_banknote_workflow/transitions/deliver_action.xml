@@ -80,14 +80,38 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>expr</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>roles</string> </key>
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignor</string>
                 <string>Assignee</string>
               </tuple>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: "siege" not in here.getSource("")</string> </value>
         </item>
       </dictionary>
     </pickle>

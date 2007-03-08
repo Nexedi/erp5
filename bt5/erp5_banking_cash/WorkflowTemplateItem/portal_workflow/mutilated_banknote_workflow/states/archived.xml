@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>cancelled</string> </value>
+            <value> <string>archived</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cancelled</string> </value>
+            <value> <string>Archived</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -82,9 +82,7 @@
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
@@ -96,9 +94,7 @@
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>

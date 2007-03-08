@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Send To Validation</string> </value>
+            <value> <string>Plan</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

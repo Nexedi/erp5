@@ -72,24 +72,13 @@
 from Products.ERP5Type.Message import Message\n
 \n
 ob = state_change[\'object\']\n
-\n
 if not ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=ob.getStartDate()):\n
   msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
   raise ValidationFailed, (msg,)\n
 \n
 # check presence of banknote\n
-if len(ob.objectValues()) == 0:\n
-  msg = Message(domain = "ui", message="No mutilated banknotes defined.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-# check price defined\n
-if ob.getSourceTotalAssetPrice() != ob.getTotalPrice(portal_type=\'Incoming Mutilated Banknote Line\', fast=0):\n
-  msg = Message(domain = "ui", message="Amont differ between document and line.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-# check reporter defined\n
-if ob.getSourceDecision() == 0:\n
-  msg = Message(domain = "ui", message="You must defined reporter.")\n
+if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
+  msg = Message(domain = "ui", message="Transition forbidden with exchanged banknote line defined.")\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>

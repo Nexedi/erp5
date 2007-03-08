@@ -73,50 +73,29 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-ob = state_change[\'object\']\n
-state = ob.getSimulationState()\n
-# only \'siege\' can do this when no pay back\n
-if state == "planned":\n
-  if ob.getTotalPrice(portal_type="Exchanged Mutilated Banknote Line", fast=0) != 0:\n
-    # we must be in \'siege\' and we want to pay back for another site\n
-    if \'siege\' not in ob.getSource() or ob.getSource() == ob.getSourceTrade():\n
-      msg = Message(domain = "ui", message="You can\'t do this transition.")\n
-      raise ValidationFailed, (msg,)\n
-  if ob.getDestinationTotalAssetPrice() != 0:\n
-    msg = Message(domain = "ui", message="Returned amount must be 0.")\n
-    raise ValidationFailed, (msg,)\n
+ob = state_change[\'object\']    \n
 \n
-# check no banknote defined, no pay back\n
-elif state == "ordered":\n
-  if len(ob.objectValues(portal_type=["Exchanged Mutilated Banknote Line", "Outgoing Mutilated Banknote Line"])) != 0:\n
-    msg = Message(domain = "ui", message="You can\'t do this transition with exchanged or returned banknote defined.")\n
-    raise ValidationFailed, (msg,)\n
-  if ob.getDestinationTotalAssetPrice() != 0:\n
-    msg = Message(domain = "ui", message="Returned amount must be 0.")\n
-    raise ValidationFailed, (msg,)\n
-    \n
-# check outgoing line, we pay back\n
-elif state == "confirmed":\n
-  if len(ob.objectValues(portal_type="Outgoing Mutilated Banknote Line")) == 0:\n
-    msg = Message(domain = "ui", message="You must defined returned banknote.")\n
-    raise ValidationFailed, (msg,)\n
-  if ob.getDestinationTotalAssetPrice() != ob.getTotalPrice(portal_type="Outgoing Mutilated Banknote Line", fast=0):\n
-    msg = Message(domain = "ui", message="Returned value different from exchanged value.")\n
-    raise ValidationFailed, (msg,)\n
-  # check we are in an opened accounting day\n
-  vault = \'%s/surface/caisse_courante/encaisse_des_billets_et_monnaies\' %(ob.getSource(),)\n
-  date = ob.getStartDate()\n
-  if not ob.Baobab_checkCounterDateOpen(site=vault, date=date):\n
-    msg = Message(domain = "ui", message="Counter Date is not opened")\n
-    raise ValidationFailed, (msg,)\n
-  # now check balance\n
-  resource = ob.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Mutilated Banknote Line\', same_source=1)\n
-  if resource == 2:\n
-    msg = Message(domain="ui", message="No Returned banknote defined.")\n
-    raise ValidationFailed, (msg,)\n
-  elif resource <> 0 :\n
-    msg = Message(domain="ui", message="Insufficient Balance.")\n
-    raise ValidationFailed, (msg,)\n
+# check we are in an opened accounting day\n
+vault = \'%s/surface/caisse_courante/encaisse_des_billets_et_monnaies\' %(ob.getSource(),)\n
+date = ob.getStartDate()\n
+if not ob.Baobab_checkCounterDateOpen(site=vault, date=date):\n
+  msg = Message(domain = "ui", message="Counter Date is not opened")\n
+  raise ValidationFailed, (msg,)\n
+\n
+if len(ob.objectValues(portal_type="Outgoing Mutilated Banknote Line")) == 0:\n
+  msg = Message(domain = "ui", message="You must defined returned banknote.")\n
+  raise ValidationFailed, (msg,)\n
+if ob.getDestinationTotalAssetPrice() != ob.getTotalPrice(portal_type="Outgoing Mutilated Banknote Line", fast=0):\n
+  msg = Message(domain = "ui", message="Returned value different from exchanged value.")\n
+  raise ValidationFailed, (msg,)\n
+# now check balance\n
+resource = ob.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Mutilated Banknote Line\', same_source=1)\n
+if resource == 2:\n
+  msg = Message(domain="ui", message="No Returned banknote defined.")\n
+  raise ValidationFailed, (msg,)\n
+elif resource <> 0 :\n
+  msg = Message(domain="ui", message="Insufficient Balance.")\n
+  raise ValidationFailed, (msg,)\n
 
 
 ]]></string> </value>
@@ -169,11 +148,10 @@ elif state == "confirmed":\n
                             <string>_getitem_</string>
                             <string>ob</string>
                             <string>_getattr_</string>
-                            <string>state</string>
-                            <string>msg</string>
-                            <string>len</string>
                             <string>vault</string>
                             <string>date</string>
+                            <string>msg</string>
+                            <string>len</string>
                             <string>resource</string>
                           </tuple>
                         </value>

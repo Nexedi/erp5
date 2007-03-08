@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Send To Validation</string> </value>
+            <value> <string>Send To Headquarters</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Send To Validation Action</string> </value>
+            <value> <string>Plan Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -80,6 +80,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>expr</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>roles</string> </key>
             <value>
               <tuple>
@@ -87,6 +93,25 @@
                 <string>Assignor</string>
               </tuple>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: "siege" not in here.getSource("")</string> </value>
         </item>
       </dictionary>
     </pickle>
