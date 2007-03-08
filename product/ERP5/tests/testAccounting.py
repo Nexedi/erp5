@@ -110,7 +110,8 @@ class AccountingTestCase(ERP5TypeTestCase):
   username = 'username'
 
   @reindex
-  def _makeOne(self, portal_type='Accounting Transaction', lines=None, **kw):
+  def _makeOne(self, portal_type='Accounting Transaction', lines=None,
+               simulation_state='draft', **kw):
     """Creates an accounting transaction, and edit it with kw.
     
     The default settings is for self.section.
@@ -132,6 +133,14 @@ class AccountingTestCase(ERP5TypeTestCase):
       for line in lines:
         line.setdefault('portal_type', transaction_to_line_mapping[portal_type])
         tr.newContent(**line)
+    if simulation_state == 'planned':
+      tr.plan()
+    elif simulation_state == 'confirmed':
+      tr.confirm()
+    elif simulation_state in ('stopped', 'delivered'):
+      tr.stop()
+      if simulation_state == 'delivered':
+        tr.deliver()
     return tr
 
 
