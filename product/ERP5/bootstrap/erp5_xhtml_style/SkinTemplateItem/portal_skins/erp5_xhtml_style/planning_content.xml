@@ -194,13 +194,13 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <b tal:replace="nothing"> previous page exists </b>\n
       <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
         tal:attributes="src string:${address}/images/1leftarrowv.png;\n
-          name string:${address}/portal_selections/previousPage:method"/>\n
+          name string:${address}/previousPage:method"/>\n
     </tal:block>\n
 \n
     <select name="list_start" title="Change Page" size="1"\n
             onChange=""\n
             tal:condition="python:basic.main_axis_info[\'bound_page_total\'] > 1"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setPage\')">\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/setPage\')">\n
       <tal:block tal:repeat="current_page_number python:range(basic.main_axis_info[\'bound_page_total\']+1)[1:]">\n
         <tal:block tal:condition="python:current_page_number==basic.main_axis_info[\'bound_page_current\']">\n
           <b tal:replace="nothing"> actual page is selected </b>\n
@@ -221,7 +221,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <b tal:replace="nothing"> next page exists </b>\n
       <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
         tal:attributes="src string:${address}/images/1rightarrowv.png;\n
-          name string:${address}/portal_selections/nextPage:method"/>\n
+          name string:${address}/nextPage:method"/>\n
     </tal:block>\n
 \n
   </td>\n
@@ -247,7 +247,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
     <!-- processing zoom level select -->\n
     <select name="zoom_level" title="Change Zoom Level" size="1"\n
             onChange=""\n
-            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setZoomLevel\')">\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/setZoomLevel\')">\n
       <tal:block tal:repeat="current_zoom_level python:[0.25,0.5,1,2,3,4,8]">\n
         <tal:block tal:condition="python:current_zoom_level==basic.secondary_axis_info[\'zoom_level\']">\n
           <b tal:replace="nothing"> current zoom level is selected </b>\n
@@ -270,14 +270,14 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <b tal:replace="nothing"> previous page exists </b>\n
       <input type="image" src="/images/1leftarrowv.png" title="Previous Zoom Page" name="" border="0"\n
         tal:attributes="src string:${address}/images/1leftarrowv.png;\n
-          name string:${address}/portal_selections/previousZoom:method"/>\n
+          name string:${address}/previousZoom:method"/>\n
     </tal:block>\n
 \n
     <!-- pocessing zoom page selection widgets -->\n
     <select name="zoom_start" title="Change Zoom Page" size="1"\n
             onChange=""\n
             tal:condition="python:basic.secondary_axis_info[\'zoom_level\'] > 1"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setZoom\')">\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/setZoom\')">\n
       <tal:block tal:repeat="current_zoom_page_number python:range(basic.secondary_axis_info[\'zoom_level\'])">\n
         <tal:block tal:condition="python:current_zoom_page_number == basic.secondary_axis_info[\'zoom_start\']">\n
           <b tal:replace="nothing"> actual zoom page is selected </b>\n
@@ -300,7 +300,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <b tal:replace="nothing"> next page exists </b>\n
       <input type="image" src="/images/1rightarrowv.png" title="Next Zoom Page" name="" border="0"\n
         tal:attributes="src string:${address}/images/1rightarrowv.png;\n
-          name string:${address}/portal_selections/nextZoom:method"/>\n
+          name string:${address}/nextZoom:method"/>\n
     </tal:block>\n
   </td>\n
   </tr>\n
@@ -351,14 +351,14 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <!-- previous page exists -->\n
       <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
         tal:attributes="src previous_src;\n
-                        name string:${address}/portal_selections/previousPage:method;\n
+                        name string:${address}/previousPage:method;\n
                         id python:axis.name + \'_previous\'"/>\n
     </tal:block>\n
     <tal:block tal:condition="python:basic.main_axis_info[\'bound_stop\']!=basic.main_axis_info[\'bound_end\']">\n
       <!-- next page exists -->\n
       <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
          tal:attributes="src next_src;\n
-                         name string:${address}/portal_selections/nextPage:method;\n
+                         name string:${address}/nextPage:method;\n
                          id python:axis.name + \'_next\'"/>\n
     </tal:block>\n
 \n
@@ -398,14 +398,14 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <!-- previous page exists -->\n
       <input type="image" src="/images/1leftarrowv.png" title="Previous Zoom Page" name="" border="0"\n
          tal:attributes="src previous_src;\n
-                         name string:${address}/portal_selections/previousZoom:method;\n
+                         name string:${address}/previousZoom:method;\n
                          id python:axis.name + \'_previous\'"/>\n
     </tal:block>\n
     <tal:block tal:condition="python:basic.secondary_axis_info[\'zoom_start\']!=(basic.secondary_axis_info[\'zoom_level\'] - 1) and basic.secondary_axis_info[\'zoom_level\'] > 1">\n
       <!-- next page exists -->\n
       <input type="image" src="/images/1rightarrowv.png" title="Next Zoom Page" name="" border="0"\n
          tal:attributes="src next_src;\n
-                         name string:${address}/portal_selections/nextZoom:method;\n
+                         name string:${address}/nextZoom:method;\n
                          id python:axis.name + \'_next\'"/>\n
     </tal:block>\n
   </tal:block>\n
@@ -499,8 +499,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 <!--/div-->\n
 </div>\n
 </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></string> </value>
         </item>
