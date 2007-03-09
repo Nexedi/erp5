@@ -62,7 +62,6 @@
             <value>
               <list>
                 <string>Default</string>
-                <string>2</string>
               </list>
             </value>
         </item>
@@ -71,23 +70,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>2</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
                         <string>from_date</string>
                         <string>at_date</string>
-                        <string>transaction_section_category</string>
-                        <string>transaction_simulation_state</string>
-                        <string>account</string>
-                        <string>destination_section</string>
-                        <string>source_payment</string>
+                        <string>section_category</string>
+                        <string>portal_type</string>
+                        <string>simulation_state</string>
                         <string>omit_grouping_reference</string>
+                        <string>node</string>
+                        <string>mirror_section</string>
+                        <string>payment</string>
                       </list>
                     </value>
                 </item>

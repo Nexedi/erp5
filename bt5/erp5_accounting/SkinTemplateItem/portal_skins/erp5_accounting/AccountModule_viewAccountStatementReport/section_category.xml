@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>account</string> </value>
+            <value> <string>section_category</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -146,9 +146,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -247,7 +245,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Account</string> </value>
+                    <value> <string>Section</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -281,26 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: "%s - %s" % (here.restrictedTraverse(request.get(\'account\', \'\')).Account_getGapId(), here.restrictedTraverse(request.get(\'account\', \'\')).getTitle())</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:request.get(\'account\', \'\') != \'\'</string> </value>
+            <value> <string>python:here.getPortalObject().portal_categories.resolveCategory(request.get(\'section_category\')).getLogicalPath()</string> </value>
         </item>
       </dictionary>
     </pickle>

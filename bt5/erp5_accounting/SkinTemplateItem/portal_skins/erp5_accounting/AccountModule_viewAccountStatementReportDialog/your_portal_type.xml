@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>ListField</string>
+          <string>MultiListField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_destination_section</string> </value>
+            <value> <string>your_portal_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,16 +76,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -104,7 +102,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -125,7 +123,7 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -153,17 +151,13 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -172,7 +166,9 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -183,7 +179,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -203,7 +199,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -230,10 +228,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -245,23 +239,27 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Third Party</string> </value>
+                    <value> <string>Journal Type</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>
@@ -273,8 +271,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
         </tuple>
         <none/>
       </tuple>
@@ -282,8 +280,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:request.get(\'destination_section\', \'\')</string> </value>
+            <key> <string>method_name</string> </key>
+            <value> <string>AccountingTransactionModule_getTranslatedPortalTypeItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -302,7 +300,45 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Account_getDestinationSectionItemList(account = request.get(\'account\', \'\'))</string> </value>
+            <value> <string>python: [ x[1] for x in here.AccountingTransactionModule_getTranslatedPortalTypeItemList()]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/AccountingTransactionModule_getTranslatedPortalTypeItemList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: len(field.get_value(\'items\'))</string> </value>
         </item>
       </dictionary>
     </pickle>

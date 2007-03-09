@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>source_payment</string> </value>
+            <value> <string>payment</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.restrictedTraverse(request.get(\'source_payment\', \'\')).getTitle()</string> </value>
+            <value> <string>python: here.restrictedTraverse(request.get(\'payment\', \'\')).getTitle()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -300,7 +300,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:request.get(\'source_payment\', \'\') != \'\'</string> </value>
+            <value> <string>request/payment | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -76,9 +76,9 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>your_account</string>
-                        <string>your_destination_section</string>
-                        <string>your_source_payment</string>
+                        <string>your_node</string>
+                        <string>your_mirror_section</string>
+                        <string>your_payment</string>
                       </list>
                     </value>
                 </item>
@@ -92,9 +92,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_transaction_section_category</string>
+                        <string>your_section_category</string>
                         <string>your_from_date</string>
                         <string>your_at_date</string>
+                        <string>your_omit_grouping_reference</string>
                         <string>your_portal_skin</string>
                       </list>
                     </value>
@@ -103,7 +104,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>your_transaction_simulation_state</string>
+                        <string>your_simulation_state</string>
+                        <string>your_portal_type</string>
                       </list>
                     </value>
                 </item>

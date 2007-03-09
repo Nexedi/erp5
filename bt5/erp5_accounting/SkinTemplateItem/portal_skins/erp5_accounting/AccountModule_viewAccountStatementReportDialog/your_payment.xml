@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_source_payment</string> </value>
+            <value> <string>your_payment</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

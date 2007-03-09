@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>transaction_section_category</string> </value>
+            <value> <string>mirror_section</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -146,7 +146,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -245,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Section</string> </value>
+                    <value> <string>Third Party</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -279,7 +281,26 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getPortalObject().portal_categories.resolveCategory(here.REQUEST.transaction_section_category).getLogicalPath()</string> </value>
+            <value> <string>python: here.restrictedTraverse(request.get(\'mirror_section\', \'\')).getTitle()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>request/mirror_section | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>

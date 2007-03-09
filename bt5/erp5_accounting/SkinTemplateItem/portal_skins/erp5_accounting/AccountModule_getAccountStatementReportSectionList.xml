@@ -71,77 +71,68 @@
             <value> <string>"""Get the report sections for account statement.\n
 Account is the combination of :\n
    - node (the Account in account module)\n
-   - destination_section (the Entity in organisation / person module)\n
-   - source_payment (the Bank account for the organisation)\n
+   - mirror_section (the Entity in organisation / person module)\n
+   - payment (the Bank account for the organisation)\n
 """\n
 \n
 from Products.ERP5Form.Report import ReportSection\n
 request = context.REQUEST\n
+traverse = context.getPortalObject().restrictedTraverse\n
 \n
-# TODO:\n
-# s/transaction_section_category/section_category\n
-# s/transaction_simulation_state/simulation_sate\n
-#  ( also in dialog )\n
+# for preference info fields on Account_viewAccountingTransactionList\n
+request.set(\'is_accounting_report\', True)\n
+\n
 \n
 at_date = request[\'at_date\']\n
-transaction_section_category = request[\'transaction_section_category\']\n
-# XXX for now account is required (ie. we cannot display all transactions with\n
+section_uid = context.Base_getSectionUidListForSectionCategory(\n
+                                             request[\'section_category\'])\n
+# XXX for now node is required (ie. we cannot display all transactions with\n
 # a third party regardless of the account).\n
-account = request[\'account\']\n
-destination_section = request.get(\'destination_section\', None)\n
+node = request[\'node\']\n
+mirror_section = request.get(\'mirror_section\', None)\n
 source_payment = request.get(\'source_payment\', None)\n
-transaction_simulation_state = request[\'transaction_simulation_state\']\n
+simulation_state = request[\'simulation_state\']\n
 from_date = request.get(\'from_date\', None)\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
+parent_portal_type = request.get(\'portal_type\')\n
 \n
-request.other[\'is_accounting_report\'] = True\n
 \n
-params = {\n
-  \'at_date\'                      : at_date,\n
-  \'section_category\'             : transaction_section_category,\n
-  \'transaction_section_category\' : transaction_section_category,\n
-  \'simulation_state\'             : transaction_simulation_state,\n
-  \'accounting_transaction_line_currency\' : None,\n
-  \'omit_grouping_reference\'      : omit_grouping_reference,\n
-  \'from_date_summary\' : 1\n
-}\n
-\n
+params = dict(at_date=at_date,\n
+              section_uid=section_uid,\n
+              node_uid=traverse(node).getUid(),\n
+              from_date_summary=1,\n
+              simulation_state=simulation_state, )\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
-else :\n
-  params[\'no_from_date\'] = 1\n
 if source_payment :\n
-  params[\'payment_uid\'] = context.restrictedTraverse(source_payment).getUid()\n
-if destination_section :\n
-  params[\'mirror_section_uid\'] = context.restrictedTraverse(\n
-                                        destination_section).getUid()\n
+  params[\'payment_uid\'] = traverse(source_payment).getUid()\n
+if mirror_section :\n
+  params[\'mirror_section_uid\'] = traverse(mirror_section).getUid()\n
+if parent_portal_type:\n
+  params[\'parent_portal_type\'] = parent_portal_type\n
+if omit_grouping_reference:\n
+  params[\'hide_grouping\'] = 1\n
 \n
-params[\'node_uid\'] = context.restrictedTraverse(account).getUid()\n
+selection_columns = [\n
+    (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
+    (\'date\', \'Date\'),\n
+    (\'Movement_getExplanationTitle\', \'Accounting Transaction Title\'),\n
+    (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
+    (\'debit\', \'Debit\'),\n
+    (\'credit\', \'Credit\'),\n
+    (\'running_total_price\', \'Net\'),]\n
 \n
-result = []\n
-portal = context.portal_url.getPortalObject()\n
+return [ ReportSection(\n
+            path=node,\n
+            form_id=\'Account_viewAccountingTransactionList\',\n
+            selection_name=\'account_preference_selection\',\n
+            selection_params=params,\n
+            selection_columns=selection_columns,\n
+            listbox_display_mode=\'FlatListMode\',\n
+            selection_sort_order=[\n
+                        (\'stock.date\', \'ascending\'),\n
+                        (\'stock.uid\', \'ascending\')],) ]\n
 \n
-account_columns = (\n
-  (\'date\', \'Accounting Operation Date\'),\n
-  (\'Movement_getExplanationTitle\', \'Title\'),\n
-  (\'Movement_getSpecificReference\', \'Accounting Transaction Reference\'),\n
-#  (\'translated_portal_type\', \'Type\'),\n
-#  (\'third_party\', \'Third Party\'),\n
-#  (\'translated_simulation_state_title\', \'State\'),\n
-  (\'debit\', \'Debit\'),\n
-  (\'credit\', \'Credit\'),\n
-  (\'running_total_price\', \'Net\'),\n
-)\n
-\n
-return [ReportSection(\n
-              path = account,\n
-              form_id = \'Account_viewAccountingTransactionList\',\n
-              selection_name = \'account_preference_selection\',\n
-              selection_params = params,\n
-              selection_columns = account_columns,\n
-              listbox_display_mode = \'FlatListMode\',\n
-              selection_sort_order = [(\'stock.date\',\n
-                                       \'ascending\')],)]\n
 # vim: syntax=python\n
 </string> </value>
         </item>
@@ -190,22 +181,23 @@ return [ReportSection(\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>traverse</string>
+                            <string>True</string>
                             <string>_getitem_</string>
                             <string>at_date</string>
-                            <string>transaction_section_category</string>
-                            <string>account</string>
+                            <string>section_uid</string>
+                            <string>node</string>
                             <string>None</string>
-                            <string>destination_section</string>
+                            <string>mirror_section</string>
                             <string>source_payment</string>
-                            <string>transaction_simulation_state</string>
+                            <string>simulation_state</string>
                             <string>from_date</string>
                             <string>omit_grouping_reference</string>
-                            <string>True</string>
-                            <string>_write_</string>
+                            <string>parent_portal_type</string>
+                            <string>dict</string>
                             <string>params</string>
-                            <string>result</string>
-                            <string>portal</string>
-                            <string>account_columns</string>
+                            <string>_write_</string>
+                            <string>selection_columns</string>
                           </tuple>
                         </value>
                     </item>

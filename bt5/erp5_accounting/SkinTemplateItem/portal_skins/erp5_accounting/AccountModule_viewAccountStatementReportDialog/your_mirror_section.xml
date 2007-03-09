@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>MultiListField</string>
+          <string>ListField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_transaction_simulation_state</string> </value>
+            <value> <string>your_mirror_section</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,6 +76,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -100,7 +104,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -149,6 +153,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -175,7 +183,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -195,9 +203,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -224,63 +230,38 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>cancelled</string>
-                          <string>cancelled</string>
-                        </tuple>
-                        <tuple>
-                          <string>draft</string>
-                          <string>draft</string>
-                        </tuple>
-                        <tuple>
-                          <string>planned</string>
-                          <string>planned</string>
-                        </tuple>
-                        <tuple>
-                          <string>confirmed</string>
-                          <string>confirmed</string>
-                        </tuple>
-                        <tuple>
-                          <string>stopped</string>
-                          <string>stopped</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivered</string>
-                          <string>delivered</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>6</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Transaction Simulation State</string> </value>
+                    <value> <string>Third Party</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />
-
-]]></string> </value>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -302,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredAccountingTransactionSimulationStateList</string> </value>
+            <value> <string>python:request.get(\'destination_section\', \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -321,7 +302,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_getTranslatedWorkflowStateItemList(wf_id = \'accounting_workflow\')</string> </value>
+            <value> <string>python:here.Account_getDestinationSectionItemList(account = request.get(\'account\', \'\'))</string> </value>
         </item>
       </dictionary>
     </pickle>
