@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -81,7 +83,9 @@ context.ImmobilisationDelivery_expandAggregatedItems()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/immobilisation_workflow/scripts/ImmobilisationMovement_beforeEdit</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -123,9 +127,10 @@ context.ImmobilisationDelivery_expandAggregatedItems()\n
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
                             <string>movement</string>
                           </tuple>
                         </value>

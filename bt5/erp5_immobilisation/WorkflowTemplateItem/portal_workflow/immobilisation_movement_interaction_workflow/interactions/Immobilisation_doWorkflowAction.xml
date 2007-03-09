@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5.Interaction</string>
+          <string>InteractionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>activate_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value>
+              <list>
+                <string>Immobilisation_updateImmobilisationState</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Immobilisation_doWorkflowAction</string> </value>
+        </item>
+        <item>
+            <key> <string>method_id</string> </key>
+            <value>
+              <list>
+                <string>set_ready</string>
+                <string>start</string>
+                <string>stop</string>
+                <string>deliver</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_filter</string> </key>
+            <value>
+              <list>
+                <string>Purchase Packing List</string>
+                <string>Sale Packing List</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

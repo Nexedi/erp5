@@ -4,7 +4,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5.Tool.Category</string>
+          <string>Products.ERP5Type.Document.BaseCategory</string>
           <string>BaseCategory</string>
         </tuple>
         <none/>
@@ -28,12 +28,6 @@
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -85,6 +79,12 @@
             </value>
         </item>
         <item>
+            <key> <string>category_type</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple/>
@@ -92,9 +92,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
@@ -105,6 +103,12 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>immobilisation_vat_account</string> </value>
+        </item>
+        <item>
+            <key> <string>id_generator</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id_group</string> </key>
@@ -133,6 +137,34 @@
             </value>
         </item>
         <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Base Category</string> </value>
+        </item>
+        <item>
+            <key> <string>read_permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>rid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple/>
@@ -146,6 +178,12 @@
         </item>
         <item>
             <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>write_permission</string> </key>
             <value>
               <none/>
             </value>

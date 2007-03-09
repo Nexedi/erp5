@@ -164,12 +164,6 @@
               <none/>
             </value>
         </item>
-        <item>
-            <key> <string>workflow_history</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
@@ -211,27 +205,6 @@
     </pickle>
     <pickle>
       <none/>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
     </pickle>
   </record>
 </ZopeData>

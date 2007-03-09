@@ -31,6 +31,12 @@
             </value>
         </item>
         <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>immobilisation_delivery_workflow</string> </value>
         </item>

@@ -77,8 +77,6 @@
                 <string>Inventory Line</string>
                 <string>Purchase Packing List Cell</string>
                 <string>Purchase Packing List Line</string>
-                <string>Reevaluation Packing List Line</string>
-                <string>Restoration Packing List Line</string>
                 <string>Sale Packing List Cell</string>
                 <string>Sale Packing List Line</string>
               </list>
