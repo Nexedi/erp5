@@ -24,8 +24,6 @@ def get_request():
 Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
 
-IS_PORTAL_EXISTING = 1
-
 import itools.zope
 
 def get_context():
@@ -165,6 +163,11 @@ portal_name = 'erp5_portal'
 # prevent replaying the same failing setup step for each test.
 failed_portal_installation = {}
 
+# have we installed business templates ?
+# this is a mapping 'list of business template -> boolean
+setup_done = {}
+
+
 def _getConnectionStringDict():
   """Returns the connection strings used for this test.
   """
@@ -188,7 +191,12 @@ def _getConnectionStringDict():
                                 erp5_sql_deferred_connection_string
   return connection_string_dict
 
+
 class ERP5TypeTestCase(PortalTestCase):
+    """TestCase for ERP5 based tests.
+
+    This TestCase setups an ERP5Site and installs business templates.
+    """
 
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped with --save option.')
@@ -224,7 +232,6 @@ class ERP5TypeTestCase(PortalTestCase):
 
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
-         Override if you don't like the default.
       """
       return self.app[self.getPortalName()]
 
@@ -321,7 +328,8 @@ class ERP5TypeTestCase(PortalTestCase):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
-      erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
+      erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
+                                            'erp5_mysql_innodb_catalog')
       setupERP5Site(business_template_list=new_template_list,
                     light_install=light_install,
                     portal_name=self.getPortalName(),
@@ -496,7 +504,6 @@ def setupERP5Site( business_template_list=(),
       business_template_list must be specified correctly
       (e.g. '("erp5_base", )').
     '''
-    global IS_PORTAL_EXISTING
     from Products.ERP5Type.Base import _aq_reset
     if portal_name in failed_portal_installation:
       raise RuntimeError, 'Installation of %s already failed, giving up'\
@@ -509,8 +516,10 @@ def setupERP5Site( business_template_list=(),
       global current_app
       current_app = app
 
-      if not hasattr(aq_base(app), portal_name):
-        IS_PORTAL_EXISTING = 0
+      global setup_done
+      if not (hasattr(aq_base(app), portal_name) and
+               setup_done.get(tuple(business_template_list))):
+        setup_done[tuple(business_template_list)] = 1
         try:
           _start = time.time()
           # Add user and log in
@@ -525,26 +534,30 @@ def setupERP5Site( business_template_list=(),
           if hot_reindexing:
             setattr(app, 'isIndexable', 0)
             reindex = 0
-          if not quiet:
-            ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
 
-          extra_constructor_kw = _getConnectionStringDict()
-          email_from_address = os.environ.get('email_from_address')
-          if email_from_address is not None:
-            extra_constructor_kw['email_from_address'] = email_from_address
-          factory = app.manage_addProduct['ERP5']
-          factory.manage_addERP5Site(portal_name,
+          portal = getattr(app, portal_name, None)
+          if portal is None:
+            if not quiet:
+              ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
+            
+            extra_constructor_kw = _getConnectionStringDict()
+            email_from_address = os.environ.get('email_from_address')
+            if email_from_address is not None:
+              extra_constructor_kw['email_from_address'] = email_from_address
+
+            factory = app.manage_addProduct['ERP5']
+            factory.manage_addERP5Site(portal_name,
                                      erp5_catalog_storage=erp5_catalog_storage,
                                      light_install=light_install,
                                      reindex=reindex,
                                      create_activities=create_activities,
                                      **extra_constructor_kw )
+            portal = app[portal_name]
 
-          if not quiet:
-            ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
-          # Release locks
-          get_transaction().commit()
-          portal = app[portal_name]
+            if not quiet:
+              ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
+            # Release locks
+            get_transaction().commit()
 
           if os.environ.get('erp5_load_data_fs'):
             # Import local PropertySheets, Documents
@@ -637,6 +650,9 @@ def setupERP5Site( business_template_list=(),
         else:
           get_transaction().commit()
           ZopeTestCase.close(app)
+      else:
+        # Display which test is run when loading for the 1st time
+        ZopeTestCase._print('Ran Unit test of %s\n' % title)
 
       if os.environ.get('erp5_load_data_fs'):
         # Import local PropertySheets, Documents
@@ -648,11 +664,6 @@ def setupERP5Site( business_template_list=(),
         for id_ in getLocalConstraintList():
           importLocalConstraint(id_)
         _aq_reset()
-
-      if IS_PORTAL_EXISTING == 1:
-        # Display which test is run when loading for the 1st time
-        IS_PORTAL_EXISTING = 0
-        ZopeTestCase._print('Ran Unit test of %s\n' % title)
 
     except:
       f = StringIO()
