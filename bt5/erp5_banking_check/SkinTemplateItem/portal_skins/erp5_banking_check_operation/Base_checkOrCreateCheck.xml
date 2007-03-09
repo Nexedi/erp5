@@ -76,7 +76,6 @@
 # 2 - if the end date is passed, we raise an error\n
 from Products.ERP5Type.Message import Message\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from DateTime import DateTime\n
 \n
 if destination:\n
   bank_account = context.getDestinationPaymentValue()\n
@@ -125,10 +124,7 @@ for check_reference in reference_list:\n
     raise ValidationFailed, (msg,)\n
   result = context.portal_catalog(portal_type = \'Check\', reference = check_reference)\n
   if len(result) == 0:\n
-    # We will not allow creation of generic check after a particular date\n
-    end_date = DateTime(\'2009/01/01\')\n
-    now = DateTime()\n
-    if (now - end_date) >0:\n
+    if not context.Base_isAutomaticCheckCreationAllowed():\n
       msg = Message(domain = "ui", message="Sorry, this reference does not exist")\n
       raise ValidationFailed, (msg,)\n
 \n
@@ -222,7 +218,6 @@ return check_list\n
                             <string>Message</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>bank_account</string>
@@ -239,8 +234,6 @@ return check_list\n
                             <string>message_tag</string>
                             <string>result</string>
                             <string>len</string>
-                            <string>end_date</string>
-                            <string>now</string>
                             <string>checkbook</string>
                             <string>_getitem_</string>
                             <string>generic_model</string>
