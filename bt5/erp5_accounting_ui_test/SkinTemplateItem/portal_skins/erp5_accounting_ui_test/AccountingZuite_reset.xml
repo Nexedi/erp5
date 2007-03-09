@@ -94,9 +94,7 @@ if pref.owner_info()[\'id\'] != str(context.REQUEST.AUTHENTICATED_USER):\n
   cb = ptool.manage_copyObjects([\'accounting_zuite_preference\'])\n
   # FIXME: how could this work ???\n
   ptool.manage_pasteObjects(cb)\n
-  # as the preference changed, it\'s safer to clear the cache\n
-  from Products.ERP5Type.Cache import clearCache\n
-  clearCache()\n
+  \n
 pref.enable()\n
 \n
 # reset selections\n
@@ -171,8 +169,6 @@ return "Reset Successfully."\n
                             <string>str</string>
                             <string>ptool</string>
                             <string>cb</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>clearCache</string>
                             <string>stool</string>
                             <string>form</string>
                             <string>getattr</string>
