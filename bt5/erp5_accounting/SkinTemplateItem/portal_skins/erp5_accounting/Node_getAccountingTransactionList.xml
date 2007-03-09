@@ -87,6 +87,7 @@ if not from_date:\n
 if kw.get(\'no_from_date\') and from_date:\n
   from_date = None\n
 \n
+\n
 # this script can be used for Node, Section or Payment\n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
@@ -109,6 +110,7 @@ if from_date:\n
   get_inventory_kw[\'to_date\'] = from_date\n
   # TODO: using a list of section_uid \n
   # \'where_expression\': " section.portal_type = \'Organisation\' " \n
+  get_inventory_kw.pop(\'at_date\', None)\n
 \n
   # Get previous debit and credit\n
   getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
@@ -164,6 +166,7 @@ if from_date:\n
 \n
 if selection.getParams().get(\'hide_grouping\'):\n
   params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
+\n
 # We try not to convert to a list, hence the copy & paste\n
 return portal.portal_simulation.getMovementHistoryList(\n
                  from_date=from_date,\n
