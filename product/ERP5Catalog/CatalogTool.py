@@ -405,8 +405,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         a parameter named local_roles so that listed documents only include
         those documents for which the user (or the group) was
         associated one of the given local roles.
-
-        XXX allowedRolesAndUsers naming is wrong
+      
+        The use of getAllowedRolesAndUsers is deprecated, you should use
+        getSecurityQuery instead
       """
       user = _getAuthenticatedUser(self)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
@@ -452,9 +453,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declarePublic( 'getSecurityQuery' )
     def getSecurityQuery(self, query=None, **kw):
       """
-        Build a query based on allowed roles (DEPRECATED)
-        or on a list of security_uid values. The query takes into
-        account the fact that some roles are catalogued with columns.
+        Build a query based on allowed roles or on a list of security_uid
+        values. The query takes into account the fact that some roles are
+        catalogued with columns.
       """
       allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
       catalog = self.getSQLCatalog()
