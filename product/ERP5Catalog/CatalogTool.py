@@ -449,7 +449,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return allowedRolesAndUsers, role_column_dict
 
-    security.declarePrivate('getSecurityQuery')
+    security.declarePublic( 'getSecurityQuery' )
     def getSecurityQuery(self, query=None, **kw):
       """
         Build a query based on allowed roles (DEPRECATED)
