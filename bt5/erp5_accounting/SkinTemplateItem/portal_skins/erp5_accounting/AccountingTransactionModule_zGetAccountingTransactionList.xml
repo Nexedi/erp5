@@ -373,7 +373,9 @@ search_result_keys=\'\'</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -395,9 +397,8 @@ search_result_keys=\'\'</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let allowed_roles_and_users="portal_catalog.getAllowedRolesAndUsers(**selection_params)">\n
-<dtml-comment>do something to have a query without RolesAndUsers security for global stats</dtml-comment>\n
-<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **selection_params)">\n
+<dtml-comment>global stat ignores security (which is not always good, eg when using worklists with local_roles</dtml-comment>\n
+<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(), **selection_params)">\n
 <dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
 \n
@@ -541,7 +542,7 @@ WHERE\n
     <dtml-unless no_limit>LIMIT 1000</dtml-unless>\n
   </dtml-if>\n
 </dtml-unless>\n
-</dtml-let></dtml-let></dtml-let></dtml-let>\n
+</dtml-let></dtml-let></dtml-let>\n
 <dtml-comment> vim: syntax=dtml\n
 </dtml-comment>\n
 
@@ -582,9 +583,8 @@ WHERE\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let allowed_roles_and_users="portal_catalog.getAllowedRolesAndUsers(**selection_params)">\n
-<dtml-comment>do something to have a query without RolesAndUsers security for global stats</dtml-comment>\n
-<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **selection_params)">\n
+<dtml-comment>global stat ignores security (which is not always good, eg when using worklists with local_roles</dtml-comment>\n
+<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(), **selection_params)">\n
 <dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
 \n
@@ -728,7 +728,7 @@ WHERE\n
     <dtml-unless no_limit>LIMIT 1000</dtml-unless>\n
   </dtml-if>\n
 </dtml-unless>\n
-</dtml-let></dtml-let></dtml-let></dtml-let>\n
+</dtml-let></dtml-let></dtml-let>\n
 <dtml-comment> vim: syntax=dtml\n
 </dtml-comment>\n
 
