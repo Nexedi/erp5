@@ -71,8 +71,9 @@
             <value> <string>"""Clear the cache when validating a new account, for scripts showing a cached\n
 list of accounts.\n
 """\n
-from Products.ERP5Type.Cache import clearCache\n
-clearCache()\n
+from Products.CMFCore.utils import getToolByName\n
+portal_caches = getToolByName(sci.getPortal(), \'portal_caches\')\n
+portal_caches.clearCache()\n
 </string> </value>
         </item>
         <item>
@@ -116,8 +117,10 @@ clearCache()\n
                         <value>
                           <tuple>
                             <string>sci</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>clearCache</string>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
+                            <string>_getattr_</string>
+                            <string>portal_caches</string>
                           </tuple>
                         </value>
                     </item>
