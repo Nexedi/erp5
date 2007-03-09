@@ -114,12 +114,33 @@ if section_category:\n
   params[\'precision\'] = context.account_module\\\n
                             .getQuantityPrecisionFromResource(currency)\n
 \n
+# if we have a section uid, it haves priority\n
+section_uid = selection_params.get(\'section_uid\', None)\n
+if section_uid:\n
+  params.pop(\'section_category\', None)\n
+  params[\'section_uid\'] = section_uid\n
+\n
+# also if we have an explicit precision key, it has priority\n
+precision = selection_params.get(\'precision\', None)\n
+if precision is not None:\n
+  params[\'precision\'] = precision\n
+\n
+mirror_section_uid = selection_params.get(\'mirror_section_uid\', None)\n
+if mirror_section_uid:\n
+  params[\'mirror_section_uid\'] = mirror_section_uid\n
+\n
+payment_uid = selection_params.get(\'payment_uid\', None)\n
+if payment_uid:\n
+  params[\'payment_uid\'] = payment_uid\n
 \n
 simulation_state = selection_params.get(\'simulation_state\',\n
              preference.getPreferredAccountingTransactionSimulationStateList())\n
 if simulation_state:\n
   params[\'simulation_state\'] = simulation_state\n
 \n
+parent_portal_type = selection_params.get(\'parent_portal_type\', None)\n
+if parent_portal_type:\n
+  params[\'parent_portal_type\'] = parent_portal_type\n
 \n
 if not ignore_cache:\n
   context.REQUEST.other[\'ERP5Accounting_getParams\'] = params\n
@@ -182,7 +203,12 @@ return dict(params)\n
                             <string>at_date</string>
                             <string>section_category</string>
                             <string>currency</string>
+                            <string>section_uid</string>
+                            <string>precision</string>
+                            <string>mirror_section_uid</string>
+                            <string>payment_uid</string>
                             <string>simulation_state</string>
+                            <string>parent_portal_type</string>
                           </tuple>
                         </value>
                     </item>
