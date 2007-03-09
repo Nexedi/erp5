@@ -79,9 +79,17 @@ organisation = portal.restrictedTraverse(organisation)\n
 item_list = [(\'\', \'\')]\n
 for bank in organisation.contentValues(\n
                        portal_type=portal.getPortalPaymentNodeTypeList()):\n
-  item_list.append((\'%s - %s\' % (bank.getReference(),\n
-                                 bank.getTitle() or bank.getSourceFreeText()),\n
-                    bank.getRelativeUrl()))\n
+  if bank.getReference():\n
+    item_list.append((\'%s - %s\' % (bank.getReference(),\n
+                                   bank.getTitle() or \n
+                                   bank.getSourceFreeText() or\n
+                                   bank.getSourceTitle()),\n
+                      bank.getRelativeUrl()))\n
+  else:\n
+    item_list.append(( bank.getTitle() or \n
+                       bank.getSourceFreeText() or\n
+                       bank.getSourceTitle(),\n
+                       bank.getRelativeUrl() ))\n
 \n
 return item_list\n
 </string> </value>
