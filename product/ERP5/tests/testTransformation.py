@@ -56,7 +56,7 @@ from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
 
-class TestTransformation(TestOrderMixin,ERP5TypeTestCase):
+class TestTransformation(TestOrderMixin, ERP5TypeTestCase):
   """
     Test Transformations
   """
@@ -83,7 +83,6 @@ class TestTransformation(TestOrderMixin,ERP5TypeTestCase):
     Return if we should create (1) or not (0) an activity tool.
     """
     return 1
-
   
   def stepCreateComponentDict(self, sequence=None, sequence_list=None, \
                                  **kw):
@@ -101,7 +100,7 @@ class TestTransformation(TestOrderMixin,ERP5TypeTestCase):
     component_dict = {} 
     for component_info in components:
       component_name = component_info['name']
-      component = component_module.newContent()
+      component = component_module.newContent(title=component_name)
       component_dict[component_name] = component
       variation1 = component.newContent(
                           portal_type=self.component_variation_portal_type,
@@ -137,6 +136,7 @@ class TestTransformation(TestOrderMixin,ERP5TypeTestCase):
           supply_cell = supply_line.newCell(
                    'variation/apparel_component_module/%s/%d' % \
                                       (component.getId(),(i+1)), 
+                   portal_type='Supply Cell',
                    base_id='path')
           supply_cell.edit(
             membership_criterion_base_category = ['variation'],
@@ -718,5 +718,3 @@ class TestTransformation(TestOrderMixin,ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
-
-
