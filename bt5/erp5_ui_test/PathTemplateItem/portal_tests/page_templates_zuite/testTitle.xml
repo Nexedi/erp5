@@ -125,7 +125,7 @@
 </tr>\n
 <tr>\n
   <td>assertTitle</td>\n
-  <td tal:content="python:\'Validate Workflow Action | %s\' % site_title">Validate Workflow Action | ERP5</td>\n
+  <td tal:content="python:\'Dummy Workflow Action | %s\' % site_title">Dummy Workflow Action | ERP5</td>\n
   <td></td>\n
 </tr>\n
 \n
