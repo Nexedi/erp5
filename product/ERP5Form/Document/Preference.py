@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Core.Folder import Folder
-from Products.ERP5Type.Cache import clearCache
+from Products.CMFCore.utils import getToolByName
 
 class Priority:
   """ names for priorities """
@@ -68,7 +68,8 @@ class Preference( Folder ):
     """Clear caches used by methods of this preference
     # TODO: clear different caches according to the preference priority
     """
-    clearCache(cache_factory_list=('erp5_ui_short',))
+    portal_caches = getToolByName(self.getPortalObject(), 'portal_caches')
+    portal_caches.clearCache(cache_factory_list=('erp5_ui_short',))
 
   def _edit(self, **kw):
     """edit and clear all caches"""
