@@ -70,11 +70,20 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# get the list of movement we need to create\n
-\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
+request  = context.REQUEST\n
+message = N_("No+Lines+Created.")\n
+redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                              , \'portal_status_message=%s\' % message\n
+                              )\n
+\n
+# The fast input contain no line, just return.\n
+if listbox is None:\n
+  return request[ \'RESPONSE\' ].redirect( redirect_url )\n
+\n
+# get the list of movement we need to create\n
 # First call the first scripts wich check many things\n
 error_value = context.CheckDelivery_generateCheckDetailInputDialog(\n
                                      listbox=listbox,batch_mode=1,**kw)\n
@@ -143,14 +152,9 @@ for line in listbox:\n
     number_of_line_created += 1\n
     context.newContent(portal_type=line_portal_type,**line_kw_dict)\n
 \n
-\n
-\n
-\n
-request  = context.REQUEST\n
-message = N_("No+Lines+Created.")\n
 if number_of_line_created>0:\n
   message = N_("Lines+Created.")\n
-redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+  redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
                                 , \'portal_status_message=%s\' % message\n
                                 )\n
 request[ \'RESPONSE\' ].redirect( redirect_url )\n
@@ -218,10 +222,13 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
+                            <string>request</string>
+                            <string>message</string>
+                            <string>redirect_url</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
                             <string>_apply_</string>
                             <string>error_value</string>
-                            <string>request</string>
-                            <string>None</string>
                             <string>resource</string>
                             <string>previous_resource</string>
                             <string>line_portal_type</string>
@@ -233,7 +240,6 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>add_line</string>
-                            <string>_getitem_</string>
                             <string>quantity</string>
                             <string>price</string>
                             <string>price_currency</string>
@@ -247,8 +253,6 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>len</string>
                             <string>check_type_relative_url</string>
                             <string>check_type</string>
-                            <string>message</string>
-                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
