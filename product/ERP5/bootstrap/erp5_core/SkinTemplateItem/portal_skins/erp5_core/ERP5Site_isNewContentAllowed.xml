@@ -72,6 +72,7 @@
   TODO:\n
   Make consistent with ERP5Site_newContent\n
   User cache\n
+  XXX maybe it could/should use ERP5TypeInformation.isConstructionAllowed ???\n
 """\n
 \n
 portal_object = context.getPortalObject()\n
