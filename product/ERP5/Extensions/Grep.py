@@ -2,10 +2,12 @@ import re
 import cgi
 from Acquisition import aq_base
 
+skip_meta_types = ('Image', 'File')
+
 def traverse(ob, r, result, command_line_arguments):
   if command_line_arguments['r'] and \
                 hasattr(aq_base(ob), 'objectValues'):
-    for sub in ob.objectValues():
+    for sub in [o for o in ob.objectValues() if o.meta_type not in skip_meta_types]:
       traverse(sub, r, result, command_line_arguments)
   try:
     if hasattr(aq_base(ob), 'manage_FTPget'):
