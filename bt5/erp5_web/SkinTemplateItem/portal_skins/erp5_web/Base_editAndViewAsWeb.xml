@@ -76,7 +76,7 @@
 """\n
 # Retrieve the edit action\n
 edit_method = getattr(context, form_action)\n
-base_value = edit_method(form_id, editable_mode=0, ignore_layout=ignore_layout, **kw)\n
+return edit_method(form_id, editable_mode=0, ignore_layout=ignore_layout, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -135,7 +135,6 @@ base_value = edit_method(form_id, editable_mode=0, ignore_layout=ignore_layout, 
                             <string>context</string>
                             <string>edit_method</string>
                             <string>_apply_</string>
-                            <string>base_value</string>
                           </tuple>
                         </value>
                     </item>
