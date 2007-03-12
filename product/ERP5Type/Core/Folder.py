@@ -43,8 +43,10 @@ from Products.ERP5Type.Utils import sortValueList
 
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
+  from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
 except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
+  from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
 from AccessControl import getSecurityManager
 from Products.ERP5Type import Permissions
 from random import randint
@@ -332,7 +334,6 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
                    )
   # Declarative properties
   property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
                     )
@@ -344,6 +345,13 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   _edit = Base._edit
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
+
+
+  # Overload __init__ so that we do not take into account title
+  # This is required for test_23_titleIsNotDefinedByDefault
+  def __init__(self, id):
+    self.id = id
+    BTreeFolder2Base.__init__(self, id)
 
   # Override Zope default by folder id generation
   def _get_id(self, id):
