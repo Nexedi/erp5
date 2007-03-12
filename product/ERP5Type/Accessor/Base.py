@@ -179,5 +179,4 @@ class Tester(Method):
       self._storage_id = storage_id
 
     def __call__(self, instance, *args, **kw):
-      #return getattr(instance, self._key, None) not in self._null
-      return getattr(aq_base(instance), self._storage_id, None) is not None # No acquisition on properties
+      return aq_base(instance).__dict__.has_key(self._storage_id) # No acquisition on properties
