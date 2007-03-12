@@ -578,7 +578,6 @@ class Base( CopyContainer,
 
   psyco.bind(_aq_dynamic)
 
-
   # Constructor
   def __init__(self, id, uid=None, rid=None, sid=None, **kw):
     self.id = id
@@ -1920,13 +1919,37 @@ class Base( CopyContainer,
     with a type methode.
     """
     if self.hasShortTitle():
-      return self.getTranslatedShortTitle()
+      r = self.getShortTitle()
+      if r: return r
     if self.hasReference():
-      return self.getReference()
-    if self.hasTitle():
-      return self.getTranslatedTitle()
+      r = self.getReference()
+      if r: return r
+    r = self.getTitle() # No need to test existence since all Base instances have this method
+    if r: return r      # Also useful whenever title is calculated
     return self.getId()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCompactTranslatedTitle')
+  def getCompactTranslatedTitle(self):
+    """
+    Returns the translated short title or the reference or
+    the translated title or the ID by order of priority
+
+    NOTE: It could be useful to make this method overridable
+    with a type methode.
+    """
+    if self.hasShortTitle():
+      r = self.getTranslatedShortTitle()
+      if r: return r
+      r = self.getShortTitle()
+      if r: return r
+    if self.hasReference():
+      r = self.getReference()
+      if r: return r
+    r = self.getTranslatedTitle() # No need to test existence since all Base instances have this method
+    if r: return r                # Also useful whenever title is calculated
+    return self.getId()
+  
   # This method allows to sort objects in list is a more reasonable way
   security.declareProtected(Permissions.View, 'getIntId')
   def getIntId(self):
@@ -2525,7 +2548,7 @@ class Base( CopyContainer,
   def isWebMode(self):
     if self.getApplicableLayout() is None:
       return False
-    if getattr(self.REQUEST, 'ignore_layout', None) is not None:
+    if getattr(self.REQUEST, 'ignore_layout', 0):
       return False
     if getattr(self.REQUEST, 'editable_mode', 0):
       return False
