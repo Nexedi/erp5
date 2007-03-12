@@ -244,7 +244,9 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -261,7 +263,7 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -461,7 +463,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -577,12 +579,31 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(x, x) for x in here.getPortalPaymentNodeTypeList()]</string> </value>
+            <value> <string>python:\'Folder_viewContentList?\' + modules[\'ZTUtils\'].make_query(portal_type=[x[0] for x in field.get_value(\'portal_types\')])</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:[(x, x) for x in here.getPortalPaymentNodeTypeList()]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <tuple>

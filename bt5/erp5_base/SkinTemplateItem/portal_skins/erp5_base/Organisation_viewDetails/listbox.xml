@@ -436,7 +436,7 @@
                     <key> <string>list_action</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-Folder_viewContentList?reset=1&portal_type=Payment Receipt
+Folder_viewContentList?reset=1&portal_type=Accounting+Period
 
 ]]></string> </value>
                 </item>

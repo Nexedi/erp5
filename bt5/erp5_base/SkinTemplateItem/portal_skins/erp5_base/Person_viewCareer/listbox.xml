@@ -446,7 +446,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
+                    <value> <string>Folder_viewContentList?portal_type=Career</string> </value>
                 </item>
                 <item>
                     <key> <string>list_cookie</string> </key>
@@ -463,6 +463,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
