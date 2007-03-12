@@ -110,14 +110,6 @@ for id in id_list:\n
             <value> <string>id_list, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
