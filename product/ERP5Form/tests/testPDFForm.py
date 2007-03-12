@@ -39,7 +39,7 @@ class TestPDFForm(unittest.TestCase):
   def setUp(self):
     """Creates a PDFForm, and a document on which the PDF form is rendered.
     """
-    self.document = Document('doc_id', title='The Document')
+    self.document = Document('doc_id')
     pdf_file = open(os.path.join(os.path.dirname(__file__),
                                       'data', 'test_1.pdf'))
     self.pdf_form = PDFForm('test_pdf_form').__of__(self.document)
