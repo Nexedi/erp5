@@ -1124,6 +1124,19 @@ class TestPropertySheet:
       self.assertTrue('Auditor' in user.getRolesInContext(person))
       self.assertEquals(len(person_module.searchFolder()), 1)
 
+    def test_23_titleIsNotDefinedByDefault(self, quiet=quiet, run=run_all_test):
+      """
+      Tests that no title attribute is set on new content
+      """
+      if not run: return
+      portal = self.getPortal()
+      person_module = self.getPersonModule()
+      person = person_module.newContent(portal_type='Person')
+      self.assertFalse(person.hasTitle())
+      self.assertFalse(person.__dict__.has_key('title'))
+
+
+
 if __name__ == '__main__':
   framework()
 else:
