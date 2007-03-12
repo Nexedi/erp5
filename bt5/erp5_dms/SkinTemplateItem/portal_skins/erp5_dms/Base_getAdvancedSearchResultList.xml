@@ -97,14 +97,13 @@ else:\n
   if params:\n
     sstr = params.get(\'SearchableText\')\n
 \n
-context.log(sstr)\n
 if not sstr: return []\n
 \n
 args = context.parseSearchString(sstr)\n
 \n
 # if no portal type specified, take all\n
 if not args.has_key(\'portal_type\') or args[\'portal_type\'] == ():\n
-  args[\'portal_type\'] = context.Base_getSearchableTypeList()\n
+  args[\'portal_type\'] = context.getPortalDocumentTypeList()\n
 \n
 # process searching by category\n
 cats = []\n
@@ -145,7 +144,6 @@ if wheres != []:\n
 # now we search\n
 # any language?\n
 if args.get(\'language\') == \'0\': args.pop(\'language\')\n
-context.log(\'SEARCH:\',args)\n
 res = context.portal_catalog(**args)\n
 \n
 # user wants only his documents\n

@@ -68,7 +68,34 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getPortalDocumentTypeList() + (\'Conference\', \'Project\') # XXX-JPS What is this hardcoded stuff ?\n
+            <value> <string>"""\n
+  This method returns the list of searchable types\n
+  from a document management point of view.\n
+\n
+  The result is translated and cached.\n
+\n
+  NOTE: some hardcoded values need to be moved\n
+  to preferences\n
+"""\n
+def getSearchableTypeList(language):\n
+  type_list = list(context.getPortalDocumentTypeList())\n
+  # We add here hardcoded types\n
+  types_tools = context.portal_types\n
+  type_ids = types_tools.objectIds()\n
+  if \'Query\' in type_ids:\n
+    type_list.append(\'Query\')\n
+  if \'Project\' in type_ids:\n
+    type_list.append(\'Project\')\n
+  if \'Conference\' in type_ids:\n
+    type_list.append(\'Conference\')\n
+  type_list.sort()\n
+  return type_list\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+language = context.Localizer.get_selected_language()\n
+method = CachingMethod(getSearchableTypeList, (\'WebSite_getSearchableTypeList\'))\n
+\n
+return method(language)\n
 </string> </value>
         </item>
         <item>
@@ -117,8 +144,13 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>getSearchableTypeList</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>language</string>
+                            <string>method</string>
                           </tuple>
                         </value>
                     </item>
@@ -135,7 +167,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getSearchableTypeList</string> </value>
+            <value> <string>ERP5Site_getSearchableDocumentTypeList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

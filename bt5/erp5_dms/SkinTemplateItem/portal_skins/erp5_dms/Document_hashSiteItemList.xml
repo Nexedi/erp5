@@ -95,7 +95,10 @@ for i in range(1):\n
   z += 1\n
   sub_field_list.append(new_dict)\n
 \n
-section_list = context.getSiteList()\n
+# WARNING This code is very dangerous and ad hoc\n
+# But it was the only way to make parallel list field\n
+# work in this case \n
+section_list = context.aq_parent.aq_parent.getSiteList()\n
 section_list.reverse()\n
 for value in section_list:\n
   new_dict = default_sub_field_property_dict.copy()\n

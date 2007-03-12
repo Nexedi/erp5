@@ -78,7 +78,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>html_representation</string>
@@ -86,7 +86,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
@@ -102,7 +102,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list>
                         <string>my_reference</string>

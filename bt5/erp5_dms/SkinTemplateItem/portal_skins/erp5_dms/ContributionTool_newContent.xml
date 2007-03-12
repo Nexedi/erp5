@@ -90,8 +90,6 @@ if kw[\'portal_type\'] == \'\':\n
 \n
 doc = context.portal_contributions.newContent(file=file, **kw)\n
 \n
-context.log(doc.getId(), doc.getRelativeUrl())\n
-\n
 msg = translateString("${portal_type} created successfully.",  mapping = {\'portal_type\':doc.getPortalType()})\n
 return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':msg})\n
 \n

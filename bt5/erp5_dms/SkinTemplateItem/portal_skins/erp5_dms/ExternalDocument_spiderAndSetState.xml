@@ -75,6 +75,7 @@ depending on whether refresh was successful.\n
 This is called from interaction workflow, upon every edit\n
 can be called regularly from portal_alarms, or something like that.\n
 """\n
+context.resetTopObject()\n
 \n
 if context.getUrlProtocol() is None or context.getUrlString() is None:\n
   context.log("Incomplete url in %s" % context.getRelativeUrl(),context.getQualifiedUrl())\n
@@ -83,9 +84,9 @@ else:\n
   res = context.spiderSource()\n
 \n
 if res and context.getSimulationState() == \'draft\':\n
-  context.getPortalObject().portal_workflow.doActionFor(context, \'publish_action\')\n
+  context.publish()\n
 if not res and context.getSimulationState() == \'public\':\n
-  context.getPortalObject().portal_workflow.doActionFor(context, \'retract_action\')\n
+  context.retract()\n
 \n
 context.reindexObject()\n
 </string> </value>
@@ -105,6 +106,15 @@ context.reindexObject()\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>*args,**kwargs</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>

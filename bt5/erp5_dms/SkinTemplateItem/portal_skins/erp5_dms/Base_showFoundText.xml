@@ -90,7 +90,7 @@ try:\n
 except AttributeError:\n
   txt = \'\'\n
 \n
-argument_names = (\'SearchableText\', \'SearchableText_any\', \'SearchableText_all\', \'SearchableText_phrase\')\n
+argument_names = (\'advanced_search_text\', \'title\', \'reference\', \'SearchableText\', \'SearchableText_any\', \'SearchableText_all\', \'SearchableText_phrase\')\n
 \n
 # a quick hack because sometimes we get a list\n
 params = [selection.params.get(name, \'\') for name in argument_names]\n

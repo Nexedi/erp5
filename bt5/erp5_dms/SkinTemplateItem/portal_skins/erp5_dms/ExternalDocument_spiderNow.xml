@@ -74,7 +74,8 @@ Public interface to ExternalDocument_spiderAndSetState script.\n
 \n
 context.resetTopObject()\n
 context.ExternalDocument_spiderAndSetState()\n
-return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/view?portal_status_message=Done\')\n
+msg = context.Base_translateString(\'Done\')\n
+return context.Base_redirect(\'view\', keep_items=dict(portal_status_message=msg))\n
 </string> </value>
         </item>
         <item>
@@ -92,6 +93,14 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/view?portal
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,6 +128,8 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/view?portal
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>msg</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
