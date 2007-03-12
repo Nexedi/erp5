@@ -158,6 +158,8 @@ elif len(result) == 1:\n
 else:\n
   msg = Message(domain=\'ui\', message=\'Duplicate checks for the same check number\')\n
   raise ValidationFailed, (msg,)\n
+\n
+context.updateBankingOperation(state_change)\n
 
 
 ]]></string> </value>
