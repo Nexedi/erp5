@@ -55,7 +55,11 @@ Description:\n
 -->\n
 \n
 <tal:block metal:define-macro="main">\n
-  <tal:block metal:use-macro="here/global_definitions_au/macros/main"/>\n
+  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
+  <tal:block tal:condition="not:web_site_url">\n
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+  </tal:block>\n
+  \n
   <div class="tabber" id="mytabber1">\n
   \n
     <div class="tabbertab">\n
@@ -68,73 +72,86 @@ Description:\n
             <tal:block metal:define-macro="search_type_option_list">\n
               <option value="" selected value="" i18n:translate="" i18n:domain="ui">Everything</option>\n
               <option value="all" selected value="" i18n:translate="" i18n:domain="ui">All Documents</option>\n
-              <tal:block tal:repeat="portal_item here/ERP5Site_getSearchableDocumentTypeItemList">\n
-                <option tal:attributes="value python:portal_item[1]"\n
-                        tal:content="python:portal_item[0]">Standard Type</option>\n
+              <tal:block tal:repeat="ptype here/getPortalDocumentTypeList">\n
+                <option tal:attributes="value ptype"  tal:content="python:ptype"\n
+                        i18n:translate="" i18n:domain="ui">Standard Type</option>\n
               </tal:block>\n
               <option value="" i18n:translate="" i18n:domain="ui">-- Directory --</option>\n
               <option value="Person" i18n:translate="" i18n:domain="ui">Person</option>\n
               <option value="Organisation" i18n:translate="" i18n:domain="ui">Organisation</option>\n
               <option value="" i18n:translate="" i18n:domain="ui">-- Quick Search --</option>\n
-              <tal:block tal:repeat="portal_item here/ERP5Site_getQuickSearchableTypeItemList">\n
-                <option tal:attributes="value python:portal_item[1]"\n
-                        tal:content="python:portal_item[0]">Standard Type</option>\n
-              </tal:block>\n
+              <option tal:repeat="ptype here/ERP5Site_getQuickSearchableTypeList"\n
+                      tal:attributes="value ptype"  tal:content="python:ptype"\n
+                      i18n:translate="" i18n:domain="ui">Standard Type</option>\n
             </tal:block>\n
           </select>\n
-          <input type="submit" name="searches/WebSite_viewQuickSearchResultList:method" value="Search"/>\n
+          <input type="submit" name="search_area/WebSite_viewQuickSearchResultList:method" value="Search"/>\n
         </div>\n
         <div class="searchOptions">\n
-          <a tal:attributes="href string: ${site_url}/searches/WebSite_viewAdvancedSearch" i18n:translate="" i18n:domain="ui">Advanced Search</a> | <a href="javascript:void 0" onclick="javascript:openTips();" value="" i18n:translate="" i18n:domain="ui">Search Tips</a>\n
+          <a tal:attributes="href string: ${web_site_url}/search_area/WebSite_viewAdvancedSearch" i18n:translate="" i18n:domain="ui">Advanced Search</a> | <a href="javascript:void 0" onclick="javascript:openTips();" value="" i18n:translate="" i18n:domain="ui">Search Tips</a>\n
         </div>\n
       </div>\n
       <div class="clear"></div>\n
     </div>\n
   \n
-    <div class="tabbertab">\n
+    <div class="tabbertab"\n
+         tal:define="section_list python:here.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\');\n
+                     section_list python:filter(lambda x:x.isVisible(), section_list);\n
+                     half_count python:len(section_list) / 2">\n
       <h2 value="" i18n:translate="" i18n:domain="ui">Browse</h2>\n
   \n
-  <div style="width:250px;float:left;" class="tabbertabcont">\n
+    <div style="width:50%;float:left;" class="tabbertabcont">\n
+      <tal:block tal:repeat="section python:section_list[0:half_count]">\n
         <ul>\n
-          <li value="" i18n:translate="" i18n:domain="ui">Departments and Divisions:</li>\n
+          <li value="" i18n:translate=""\n
+              i18n:domain="ui" tal:content="section/getTitle">Departments and Divisions:</li>\n
           <ul>\n
-            <li tal:repeat="root_section here/group_section/contentValues">\n
-            <span tal:content="root_section/getTitle" onclick="toggleSection(this)" toggle="yes" style="cursor:pointer;"/>\n
-            <div style="display:none;visibility:hidden">\n
-              <ul>\n
-                <li tal:repeat="section root_section/contentValues"><a href="#" tal:content="section/getTitle"\n
-                    tal:attributes="href section/absolute_url">Theme</a></li>\n
-              </ul>\n
-            </div>\n
+            <li tal:repeat="root_section section/contentValues">\n
+              <a    tal:content="root_section/getTitle"\n
+                    tal:condition="python:not len(root_section.contentValues())"\n
+                    tal:attributes="href root_section/absolute_url"/>\n
+              <span tal:content="root_section/getTitle"\n
+                    tal:condition="python:len(root_section.contentValues())"\n
+                    onclick="toggleSection(this)" toggle="yes" style="cursor:pointer;"/>\n
+              <div style="display:none;visibility:hidden">\n
+                <ul>\n
+                  <li tal:repeat="section root_section/contentValues"><a href="#" tal:content="section/getTitle"\n
+                      tal:attributes="href section/absolute_url">Theme</a></li>\n
+                </ul>\n
+              </div>\n
             </li>\n
           </ul>\n
         </ul>\n
-  \n
+      </tal:block>\n
+    </div>\n
+    \n
+  <tal:block >\n
+    <div style="width:50%;float:right;" class="tabbertabcont">\n
+      <tal:block tal:repeat="section python:section_list[half_count:]">\n
         <ul>\n
-          <li value="" i18n:translate="" i18n:domain="ui">Programmes:</li>\n
-            <ul>\n
-              <li tal:repeat="section here/source_project_section/contentValues"><a href="#" tal:content="section/getTitle"\n
-              tal:attributes="href section/absolute_url">Theme</a></li>\n
-            </ul>\n
-        </ul>\n
-  </div>\n
-  <div style="width:250px;float:right;" class="tabbertabcont">\n
-        <ul>\n
-          <li value="" i18n:translate="" i18n:domain="ui">Offices:</li>\n
+          <li value="" i18n:translate=""\n
+              i18n:domain="ui" tal:content="section/getTitle">Departments and Divisions:</li>\n
           <ul>\n
-            <li tal:repeat="root_section here/site_section/contentValues">\n
-            <span tal:content="root_section/getTitle"  onclick="toggleSection(this)" toggle="yes" style="cursor:pointer;"/>\n
-            <div style="display:none;visibility:hidden">\n
-              <ul>\n
-                <li tal:repeat="section root_section/contentValues"><a href="#" tal:content="section/getTitle"\n
-                    tal:attributes="href section/absolute_url">Theme</a></li>\n
-              </ul>\n
-            </div>\n
+            <li tal:repeat="root_section section/contentValues">\n
+              <a    tal:content="root_section/getTitle"\n
+                    tal:condition="python:not len(root_section.contentValues())"\n
+                    tal:attributes="href root_section/absolute_url"/>\n
+              <span tal:content="root_section/getTitle"\n
+                    tal:condition="python:len(root_section.contentValues())"\n
+                    onclick="toggleSection(this)" toggle="yes" style="cursor:pointer;"/>\n
+              <div style="display:none;visibility:hidden">\n
+                <ul>\n
+                  <li tal:repeat="section root_section/contentValues"><a href="#" tal:content="section/getTitle"\n
+                      tal:attributes="href section/absolute_url">Theme</a></li>\n
+                </ul>\n
+              </div>\n
             </li>\n
           </ul>\n
         </ul>\n
-  </div>\n
-  \n
+      </tal:block>\n
+    </div>\n
+  </tal:block>\n
+\n
       <div class="clear"></div>\n
     </div>\n
   \n
@@ -145,9 +162,9 @@ Description:\n
         <tal:block i18n:translate="" i18n:domain="ui">in</tal:block>\n
         <select size="1" class="input" name="query_portal_type">\n
           <option value="all" selected value="" i18n:translate="" i18n:domain="ui">Any Documents</option>\n
-          <option tal:repeat="portal_type_item here/ERP5Site_getSearchableDocumentTypeItemList"\n
-                  tal:content="python:portal_type_item[0]"\n
-                  tal:attributes="value python:portal_type_item[1]"/>\n
+            <option tal:repeat="ptype here/getPortalDocumentTypeList"\n
+                    tal:attributes="value ptype"  tal:content="python:ptype"\n
+                    i18n:translate="" i18n:domain="ui">Standard Type</option>\n
         </select>\n
         <input type="submit" name="WebSite_postQueryWithType:method" value="Send Query to Expert"/>\n
         <div class="clear"></div>\n
@@ -155,7 +172,6 @@ Description:\n
     </div>\n
   \n
   </div>\n
-\n
 </tal:block>
 
 ]]></string> </value>

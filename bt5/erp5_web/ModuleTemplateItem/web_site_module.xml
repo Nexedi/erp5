@@ -151,6 +151,9 @@
    <name>Add Groups</name>
   </permission>
   <permission type='list'>
+   <name>Add KZMailmans</name>
+  </permission>
+  <permission type='list'>
    <name>Add LocalContents</name>
   </permission>
   <permission type='list'>
@@ -163,7 +166,13 @@
    <name>Add MailHost objects</name>
   </permission>
   <permission type='list'>
+   <name>Add Mailman List Member</name>
+  </permission>
+  <permission type='list'>
    <name>Add MessageCatalogs</name>
+  </permission>
+  <permission type='list'>
+   <name>Add MimetypesRegistry Tools</name>
   </permission>
   <permission type='list'>
    <name>Add Page Templates</name>
@@ -179,6 +188,9 @@
   </permission>
   <permission type='list'>
    <name>Add Plugin Registrys</name>
+  </permission>
+  <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
   </permission>
   <permission type='list'>
    <name>Add Python Scripts</name>
@@ -220,7 +232,7 @@
    <name>Add Z MySQL Database Connections</name>
   </permission>
   <permission type='list'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='list'>
    <name>Add ZCatalogs</name>
@@ -251,6 +263,9 @@
   </permission>
   <permission type='list'>
    <name>Add secure MailHost objects</name>
+  </permission>
+  <permission type='list'>
+   <name>Admin KZMailman</name>
   </permission>
   <permission type='list'>
    <name>Change Browser Id Manager</name>
@@ -284,6 +299,9 @@
   </permission>
   <permission type='list'>
    <name>Change Lock Information</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Mailman List Options</name>
   </permission>
   <permission type='list'>
    <name>Change Page Templates</name>
@@ -362,6 +380,9 @@
   </permission>
   <permission type='list'>
    <name>FTP access</name>
+  </permission>
+  <permission type='list'>
+   <name>Get Mailman List Members</name>
   </permission>
   <permission type='list'>
    <name>Import/Export objects</name>
@@ -451,6 +472,9 @@
    <name>Query Vocabulary</name>
   </permission>
   <permission type='list'>
+   <name>Remove Mailman List Member</name>
+  </permission>
+  <permission type='list'>
    <name>Reply to item</name>
   </permission>
   <permission type='list'>
@@ -514,6 +538,9 @@
   </permission>
   <permission type='list'>
    <name>View History</name>
+  </permission>
+  <permission type='list'>
+   <name>View KZMailman</name>
   </permission>
   <permission type='list'>
    <name>View ZMailMessage</name>

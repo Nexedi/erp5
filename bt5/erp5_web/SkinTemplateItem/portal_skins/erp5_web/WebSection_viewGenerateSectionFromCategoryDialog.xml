@@ -46,8 +46,14 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>WebSection_generateSectionFromCategory</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -55,16 +61,17 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left (Page Properties)</string>
-                <string>right (Publication)</string>
+                <string>left</string>
+                <string>right</string>
                 <string>center</string>
-                <string>bottom (Content)</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -73,41 +80,38 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom (Content)</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_text_content</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
                       <list>
-                        <string>my_description</string>
+                        <string>your_category</string>
+                        <string>your_section_id</string>
+                        <string>your_update_existing</string>
+                        <string>your_remove_missing</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left (Page Properties)</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_short_title</string>
-                        <string>my_reference</string>
-                        <string>my_int_index</string>
-                        <string>my_version</string>
-                        <string>my_language</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right (Publication)</string> </key>
-                    <value>
-                      <list>
-                        <string>my_publication_section_list</string>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -115,7 +119,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPage_view</string> </value>
+            <value> <string>WebSection_viewGenerateSectionFromCategoryDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -123,11 +127,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebPage_view</string> </value>
+            <value> <string>WebSite_viewGenerateSectionFromCategoryList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -139,7 +143,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Generate Web Section Structure from Category</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

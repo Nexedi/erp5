@@ -36,7 +36,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?validation_state=draft&reset=1
+Base_viewSearchResultList?validation_state=draft&portal_type=%(portal_type)s&reset=1
 
 ]]></string> </value>
         </item>

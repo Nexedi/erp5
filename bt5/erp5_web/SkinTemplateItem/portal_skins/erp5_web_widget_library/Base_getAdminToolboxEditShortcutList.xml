@@ -87,7 +87,7 @@ portal_type = context.getPortalType()\n
 request = context.REQUEST\n
 current_web_section = request.current_web_section\n
 current_web_section_pt = current_web_section.getPortalType()\n
-action_dict = request.get(\'actions\', {}) # actions needs to be renamed to action_dict\n
+action_dict = request.get(\'actions\', {}) # XXX actions needs to be renamed to action_dict\n
 exchange_action_list = action_dict.get(\'object_exchange\', [])\n
 button_action_list = action_dict.get(\'object_button\', [])\n
 portal_url = context.portal_url()\n
@@ -100,14 +100,20 @@ editable_absolute_url = getattr(context, \'editable_absolute_url\', absolute_url
 \n
 \n
 # Append a button to edit the current document\n
-if not request.form.get(\'editable_mode\', 0): result.append(dict(\n
+if not request.form.get(\'editable_mode\', 0):\n
+  # The title is called Edit only if the document can be edited\n
+  if context.portal_membership.checkPermission(\'Modify portal content\', context):\n
+    edit_title = translateString("Edit ${portal_type}", mapping=dict(portal_type=portal_type))\n
+  else:\n
+    edit_title = translateString("Access ${portal_type} details", mapping=dict(portal_type=portal_type))\n
+  result.append(dict(\n
   url   = "%s/view?editable_mode:int=1&%s" % (editable_absolute_url, http_parameters),\n
   icon  = context.getIcon() or \'file_icon.gif\',\n
-  title = translateString("Edit ${portal_type}", mapping=dict(portal_type=portal_type)),\n
+  title = edit_title,\n
   label = "%s Icon" % portal_type,\n
 ))\n
 else: result.append(dict(\n
-  url   = "%s/view?editable_mode=&%s" % (editable_absolute_url, http_parameters),\n
+  url   = "%s/view?editable_mode:int=0&%s" % (absolute_url, http_parameters),\n
   icon  = context.getIcon() or \'file_icon.gif\',\n
   title = translateString("View ${portal_type}", mapping=dict(portal_type=portal_type)),\n
   label = "%s Icon" % portal_type,\n
@@ -205,6 +211,7 @@ return result\n
                             <string>getattr</string>
                             <string>editable_absolute_url</string>
                             <string>dict</string>
+                            <string>edit_title</string>
                             <string>_getiter_</string>
                             <string>action</string>
                             <string>_getitem_</string>

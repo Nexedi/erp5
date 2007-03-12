@@ -96,14 +96,19 @@ portal_catalog = portal.portal_catalog\n
 valid_portal_type_list = [\'Web Page\', ]\n
 \n
 # Find the applicable language\n
-language = portal.Localizer.get_selected_language()\n
+if kw.has_key(\'language\'):\n
+  language = kw[\'language\']\n
+  del kw[\'language\']\n
+else:\n
+  language = portal.Localizer.get_selected_language()\n
 \n
 # Search the catalog for all documents matching the reference\n
 # this will only return documents which are accessible by the user\n
 web_page_list = portal_catalog(reference=name, portal_type=valid_portal_type_list,\n
                                language=language,\n
                                order_by=[(\'version\', \'descending\')],\n
-                               group_by=(\'reference\',))\n
+                               group_by=(\'reference\',),\n
+                               **kw)\n
 \n
 try:\n
   # Try to get the first page on the list\n
@@ -113,7 +118,8 @@ except IndexError:\n
   # Search again without the language\n
   web_page_list = portal_catalog(reference=name, portal_type=\'Web Page\', \n
                                  order_by=[(\'version\', \'descending\')],\n
-                                 group_by=(\'reference\',))\n
+                                 group_by=(\'reference\',),\n
+                                 **kw)\n
   try:\n
     # Try to get the first page on the list\n
     web_page = web_page_list[0]\n
@@ -146,7 +152,7 @@ return web_page\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>name,portal=None</string> </value>
+            <value> <string>name, portal=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -174,14 +180,17 @@ return web_page\n
                           <tuple>
                             <string>name</string>
                             <string>portal</string>
+                            <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_catalog</string>
                             <string>valid_portal_type_list</string>
-                            <string>language</string>
-                            <string>web_page_list</string>
                             <string>_getitem_</string>
+                            <string>language</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>web_page_list</string>
                             <string>web_page</string>
                             <string>IndexError</string>
                           </tuple>

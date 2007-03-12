@@ -74,11 +74,9 @@
   The view_document_url is used to define the URL to return to\n
   after editing the document.\n
 """\n
+# Retrieve the edit action\n
 edit_method = getattr(context, form_action)\n
-base_value = edit_method(form_id, **kw)\n
-\n
-redir="%s?editable_mode:int=0" % view_document_url\n
-context.REQUEST[\'RESPONSE\'].redirect(redir)\n
+base_value = edit_method(form_id, editable_mode=0, ignore_layout=ignore_layout, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -101,7 +99,7 @@ context.REQUEST[\'RESPONSE\'].redirect(redir)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, form_action, view_document_url, **kw</string> </value>
+            <value> <string>form_id, form_action, view_document_url, editable_mode=0, ignore_layout=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,7 +119,7 @@ context.REQUEST[\'RESPONSE\'].redirect(redir)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -130,15 +128,14 @@ context.REQUEST[\'RESPONSE\'].redirect(redir)\n
                             <string>form_id</string>
                             <string>form_action</string>
                             <string>view_document_url</string>
+                            <string>editable_mode</string>
+                            <string>ignore_layout</string>
                             <string>kw</string>
                             <string>getattr</string>
                             <string>context</string>
                             <string>edit_method</string>
                             <string>_apply_</string>
                             <string>base_value</string>
-                            <string>redir</string>
-                            <string>_getattr_</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -150,7 +147,10 @@ context.REQUEST[\'RESPONSE\'].redirect(redir)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>

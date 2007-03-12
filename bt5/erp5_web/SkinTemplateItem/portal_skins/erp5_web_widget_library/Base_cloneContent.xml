@@ -68,9 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   Create new Content by cloning an existing document\n
   or by creating a new document.\n
 \n
@@ -125,7 +123,6 @@ if clone:\n
   original_id = getattr(context, \'original_id\', None) or context.getId()\n
                     # This is required for objects acquired in Web Section\n
   clipboard = directory.manage_copyObjects(ids=[original_id])\n
-  #context.log("Kev test clipboard                  >>>>>", repr(clipboard))\n
   paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
   new_object = directory[paste_result[0][\'new_id\']]\n
   message_kind = \'clone\'\n
@@ -139,20 +136,20 @@ else:\n
   form_id = \'view\'\n
   message_kind = \'new\'\n
 \n
-# Clone properties to the new object\n
+# Set properties to the new object\n
 edit_kw = {}\n
 property_id_list = new_object.propertyIds()\n
+from Products.ERP5Type.Log import log\n
+log(\'propertyIds\', property_id_list)\n
 for (key, val) in form_data.items():\n
-  if key in ACCEPTABLE_FORM_ID_LIST and key in property_id_list:\n
-    edit_kw[key] = val\n
+  if key in ACCEPTABLE_FORM_ID_LIST and key[len(\'clone_\'):] in property_id_list:\n
+    edit_kw[key[len(\'clone_\'):]] = val\n
 new_object.edit(**edit_kw)\n
 \n
 if not editable_mode: form_id = \'view\'\n
 return new_object.Base_redirect(form_id, editable_mode=1,\n
         keep_items={\'portal_status_message\': translateString("Created %s ${portal_type} with reference \'${reference}\' and version \'${version} [${language}]\'." % message_kind, mapping = kw)})\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -169,6 +166,14 @@ return new_object.Base_redirect(form_id, editable_mode=1,\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>clone=1, form_id, editable_mode=0</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -221,9 +226,12 @@ return new_object.Base_redirect(form_id, editable_mode=1,\n
                             <string>module</string>
                             <string>edit_kw</string>
                             <string>property_id_list</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getiter_</string>
                             <string>key</string>
                             <string>val</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>

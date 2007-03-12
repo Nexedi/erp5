@@ -65,10 +65,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add CMF Calendar Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add CMF Core Tools</name>
    <role>Manager</role>
   </permission>
@@ -76,20 +72,15 @@
    <name>Add CMF Default Tools</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add CMF Groups Tools</name>
+  </permission>
   <permission type='tuple'>
    <name>Add CMF Report Tools</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add CMF Setup Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add CMF Sites</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add CMF Unique Id Tools</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -102,10 +93,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add CMFMailIn Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Configured CMF Sites</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -208,6 +195,18 @@
    <name>Add Formulator Forms</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add GroupUserFolder</name>
+  </permission>
+  <permission type='list'>
+   <name>Add GroupUserFolders</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Groups</name>
+  </permission>
+  <permission type='list'>
+   <name>Add KZMailmans</name>
+  </permission>
   <permission type='tuple'>
    <name>Add LocalContents</name>
    <role>Manager</role>
@@ -224,9 +223,15 @@
    <name>Add MailHost objects</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add Mailman List Member</name>
+  </permission>
   <permission type='tuple'>
    <name>Add MessageCatalogs</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add MimetypesRegistry Tools</name>
   </permission>
   <permission type='tuple'>
    <name>Add Page Templates</name>
@@ -247,6 +252,9 @@
   <permission type='tuple'>
    <name>Add Plugin Registrys</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
   </permission>
   <permission type='tuple'>
    <name>Add Python Scripts</name>
@@ -300,9 +308,8 @@
    <name>Add Z MySQL Database Connections</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>Add Z MySQL Database Deferred Connections</name>
-   <role>Manager</role>
+  <permission type='list'>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='tuple'>
    <name>Add ZCatalogs</name>
@@ -331,10 +338,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add portal events</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add portal folders</name>
    <role>Assignor</role>
    <role>Author</role>
@@ -347,6 +350,12 @@
   <permission type='tuple'>
    <name>Add portal topics</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add secure MailHost objects</name>
+  </permission>
+  <permission type='list'>
+   <name>Admin KZMailman</name>
   </permission>
   <permission type='tuple'>
    <name>Change Browser Id Manager</name>
@@ -391,6 +400,9 @@
   <permission type='tuple'>
    <name>Change Lock Information</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Change Mailman List Options</name>
   </permission>
   <permission type='tuple'>
    <name>Change Page Templates</name>
@@ -446,10 +458,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change portal events</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Change portal topics</name>
    <role>Manager</role>
   </permission>
@@ -459,6 +467,7 @@
   </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
+   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -472,6 +481,9 @@
   <permission type='tuple'>
    <name>Define permissions</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Delete Groups</name>
   </permission>
   <permission type='tuple'>
    <name>Delete objects</name>
@@ -497,6 +509,9 @@
   <permission type='tuple'>
    <name>FTP access</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Get Mailman List Members</name>
   </permission>
   <permission type='tuple'>
    <name>Import/Export objects</name>
@@ -571,6 +586,9 @@
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
+  </permission>
   <permission type='tuple'>
    <name>Manage languages</name>
    <role>Manager</role>
@@ -616,6 +634,9 @@
    <name>Query Vocabulary</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Remove Mailman List Member</name>
+  </permission>
   <permission type='tuple'>
    <name>Reply to item</name>
    <role>Manager</role>
@@ -639,6 +660,9 @@
   <permission type='tuple'>
    <name>Search for principals</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Set Group Ownership</name>
   </permission>
   <permission type='tuple'>
    <name>Set own password</name>
@@ -672,6 +696,9 @@
    <name>Use Factories</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Use external editor</name>
+  </permission>
   <permission type='tuple'>
    <name>Use mailhost services</name>
    <role>Manager</role>
@@ -685,6 +712,9 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>View Groups</name>
+  </permission>
   <permission type='tuple'>
    <name>View History</name>
    <role>Assignee</role>
@@ -693,6 +723,9 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>View KZMailman</name>
   </permission>
   <permission type='tuple'>
    <name>View ZMailMessage</name>

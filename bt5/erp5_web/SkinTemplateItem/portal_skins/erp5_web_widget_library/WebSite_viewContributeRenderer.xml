@@ -59,12 +59,16 @@
   <div class="tabbertab">\n
     <h2>Contribute</h2>\n
     <div class="fieldset">\n
-      <div tal:define="search_type_list here/ERP5Site_getSearchableDocumentTypeList">\n
+      <div>\n
         <label for="doctype" i18n:translate="" i18n:domain="ui">Type</label>\n
         <select size="1" name="doctype" id="doctype" onchange="toggleMakeTemplateButton(this);">\n
           <option value="" i18n:translate="" i18n:domain="ui">-- Select Document Type --</option>\n
-          <option value="Memo" value="" i18n:translate="" i18n:domain="ui">Memo</option>\n
-          <option value="Report" value="" i18n:translate="" i18n:domain="ui">Report</option>\n
+          <tal:block tal:repeat="ptype here/getPortalTemplateDocumentTypeList">\n
+            <option \n
+                  tal:content="ptype" tal:attributes="value ptype"\n
+                  value="" i18n:translate="" i18n:domain="ui">Report</option>\n
+          </tal:block>\n
+          <option value="" i18n:translate="" i18n:domain="ui">-- Any other Documents Type --</option>\n
         </select>\n
         <input type="file" name="datafile" size="30" />\n
       </div>\n
@@ -112,102 +116,52 @@
   </div>\n
   \n
   <div class="tabbertab"\n
-    tal:define="user here/ERP5Site_getCurrentUserValue"\n
-    >\n
+    tal:define="user here/ERP5Site_getCurrentUserValue">\n
     <h2 value="" i18n:translate="" i18n:domain="ui">File</h2>\n
-    \n
-    <div class="filebox" id="administration">\n
-      <ul>\n
-        <li class="listheader" value="" i18n:translate="" i18n:domain="ui">Administration:</li>\n
+\n
+    <tal:block tal:repeat="file_group python:[\n
+              dict(\n
+               portal_type_list = here.getPortalTicketTypeList(),\n
+               id = \'ticket\',\n
+               title = \'Forms and Requests:\',\n
+              ),\n
+              dict(\n
+               portal_type_list = here.getPortalNodeTypeList(),\n
+               id = \'node\',\n
+               title = \'People and Projects:\',\n
+              ),\n
+              dict(\n
+               portal_type_list = here.getPortalWebDocumentTypeList(),\n
+               id = \'web\',\n
+               title = \'Online Content:\',\n
+              ),\n
+              dict(\n
+               portal_type_list = here.getPortalFileDocumentTypeList() + here.getPortalTemplateDocumentTypeList(),\n
+               id = \'content\',\n
+               title = \'Offline Content:\',\n
+              ),\n
+              ]">\n
+\n
+      <div class="filebox" id="administration" tal:attributes="id file_group/id">\n
         <ul>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Medical Claim\', user)">\n
-            <span tal:define="impl python:False; title string:Medical Claim;">\n
-              <span metal:use-macro="here/au_macros/macros/file_feature">\n
-              </span>\n
-            </span>\n
-          </li>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Leave Request\', user)">\n
-            <span tal:define="impl python:False; title string:Leave Request;">\n
-              <span metal:use-macro="here/au_macros/macros/file_feature">\n
-              </span>\n
-            </span>\n
-          </li>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Travel Request\', user)">\n
-            <span tal:define="impl python:False; title string:Travel Request;">\n
-              <span metal:use-macro="here/au_macros/macros/file_feature">\n
-              </span>\n
-            </span>\n
-          </li>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Passport Request\', user)">\n
-            <span tal:define="impl python:False; title string:Passport Request;">\n
-              <span metal:use-macro="here/au_macros/macros/file_feature">\n
-              </span>\n
-            </span>\n
-          </li>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'External Library File\', user)">\n
-            <a href="ERP?portal_type=External Library File" value="" i18n:translate="" i18n:domain="ui">Library File</a>\n
-          </li>\n
+          <li class="listheader" value="" tal:content="file_group/title"\n
+              i18n:translate="" i18n:domain="ui">Forms and Requests:</li>\n
+          <ul tal:condition="not:file_group/portal_type_list">\n
+            <i i18n:translate="" i18n:domain="ui">Not available</i>\n
+          </ul>\n
+          <ul tal:condition="file_group/portal_type_list">\n
+            <tal:block tal:repeat="portal_type file_group/portal_type_list">\n
+              <li tal:condition="python:here.ERP5Site_isNewContentAllowed(portal_type, user)">\n
+                <a tal:content="portal_type"\n
+                  tal:attributes="href string:ERP5Site_newContent?portal_type=${portal_type}">Toto</a>\n
+              </li>\n
+            </tal:block>\n
+          </ul>\n
         </ul>\n
-      </ul>\n
-    </div>\n
-    \n
-    <div class="filebox" id="conference">\n
-      <ul>\n
-        <li class="listheader" value="" i18n:translate="" i18n:domain="ui">Conference:</li>\n
-        <ul>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Conference\', user)">\n
-            <span tal:define="impl python:True; title string:Conference;">\n
-              <span metal:use-macro="here/au_macros/macros/file_feature">\n
-              </span>\n
-            </span>\n
-          </li>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Event\', user)">\n
-            <span tal:define="impl python:False; title string:Event;">\n
-              <span metal:use-macro="here/au_macros/macros/file_feature">\n
-              </span>\n
-            </span>\n
-          </li>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Participant\', user)">\n
-            <span tal:define="impl python:False; title string:Participant;">\n
-              <span metal:use-macro="here/au_macros/macros/file_feature">\n
-              </span>\n
-            </span>\n
-          </li>\n
-        </ul>\n
-      </ul>\n
-    </div>\n
-    \n
-    <div class="filebox" id="web">\n
-      <ul>\n
-        <li class="listheader" value="" i18n:translate="" i18n:domain="ui">Web:</li>\n
-        <ul>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'News\', user)">\n
-            <span tal:define="impl python:True; title string:News;">\n
-              <span metal:use-macro="here/au_macros/macros/file_feature">\n
-              </span>\n
-            </span>\n
-          </li>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Web Page\', user)">\n
-            <a href="WebPage_createNewForGroup" value="" i18n:translate="" i18n:domain="ui">Web Page</a>\n
-          </li>\n
-        </ul>\n
-      </ul>\n
-    </div>\n
-    \n
-    <div class="filebox" id="contacs">\n
-      <ul>\n
-        <li class="listheader" value="" i18n:translate="" i18n:domain="ui">Contacts:</li>\n
-        <ul>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Organisation\', user)">\n
-            <a href="ERP5Site_newContent?portal_type=Organisation" value="" i18n:translate="" i18n:domain="ui">Organisation</a>\n
-          </li>\n
-          <li tal:condition="python:here.ERP5Site_isNewContentAllowed(\'Person\', user)">\n
-            <a href="ERP5Site_newContent?portal_type=Person" value="" i18n:translate="" i18n:domain="ui">Person</a>\n
-          </li>\n
-        </ul>\n
-      </ul>\n
-    </div>\n
-    \n
+      </div>\n
+      \n
+    </tal:block>\n
+       \n
     <div class="clear"></div>\n
   </div>\n
 </div>\n

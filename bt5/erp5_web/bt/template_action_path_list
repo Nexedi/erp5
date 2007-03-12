@@ -8,6 +8,7 @@ Web Page | send_email
 Web Page | view
 Web Page | view_editor
 Web Page | web_view
+Web Section | generate_section
 Web Section | history
 Web Section | list
 Web Section | metadata
@@ -20,7 +21,7 @@ Web Section | web_view
 Web Site Module | list_ui
 Web Site Module | sort_on
 Web Site Module | view
-Web Site | generate_site
+Web Site | generate_section
 Web Site | history
 Web Site | metadata
 Web Site | new_default_page

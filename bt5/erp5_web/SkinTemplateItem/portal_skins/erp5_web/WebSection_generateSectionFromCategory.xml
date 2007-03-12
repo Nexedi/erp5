@@ -69,16 +69,19 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This scripts browses recursively a selected list of base categories\n
-  to generate a mirror structure at the Web Site level in the for\n
-  of Web Sections.\n
+  This scripts browses recursively a to generate a mirror structure\n
+  within the current Web Section. It sets predicate parameters\n
+  on all categories excluding itself.\n
 \n
-  category_list -- list of categories to use\n
+  category -- the category to use\n
 """\n
+from ZODB.POSException import ConflictError\n
+\n
 translateString = context.Base_translateString\n
 category_tool = context.portal_categories\n
 global section_count\n
 section_count = 0\n
+failed_list = []\n
 \n
 valid_char = "abcdefghijklmnopqrstuvwxyz0123456789-_"\n
 \n
@@ -91,50 +94,90 @@ def getNiceID(s):\n
   s = s.replace(\'_\', \'-\')\n
   return s\n
 \n
-def createWebSectionFromCategoryValue(container, category):\n
+def createWebSectionFromCategoryValue(container, category, section_id=None):\n
   global section_count\n
-  # Create a nice URI\n
-  # If the ID is a number, use the title\n
-  if category.hasCodification():\n
-    section_id = getNiceID(category.getCodification())\\\n
-            or getNiceID(category.getTitle()) or getNiceID(category.getId())\n
-  else:\n
-    section_id = getNiceID(category.getTitle()) or getNiceID(category.getId())\n
+  if section_id is None:\n
+    try:\n
+      # Check if this category looks like an int\n
+      section_id = int(category.getId())\n
+      # Looks like an int, so it should be converted into\n
+      # something nicer based on the reference or on the title\n
+      if category.hasReference():\n
+        section_id = getNiceID(category.getReference())\\\n
+                  or getNiceID(category.getTitle()) or getNiceID(category.getId())\n
+      if category.hasShortTitle():\n
+        section_id = getNiceID(category.getShortTitle())\\\n
+                  or getNiceID(category.getTitle()) or getNiceID(category.getId())\n
+      else:\n
+        section_id = getNiceID(category.getTitle()) or getNiceID(category.getId())\n
+    except ValueError:\n
+      # It is not an int, so it can be used as is\n
+      section_id = category.getId()\n
   # Create a new Web Section if necessary\n
+  new_section = None\n
   if section_id not in container.contentIds():\n
     section_count += 1\n
-    new_section = container.newContent( portal_type = \'Web Section\'\n
-                                      , id          = section_id\n
-                                      , title       = category.getTitle()\n
-                                      , description = category.getDescription()\n
-                                      , visible     = True\n
-                                      , membership_criterion_base_category = (category.getBaseCategory().getId(),)\n
-                                      , membership_criterion_category      = (category.getRelativeUrl(),)\n
-                                      )\n
+    try:\n
+      # If we are not browsing a standard Category tree, we\n
+      # must add a trailing base_category_id\n
+      if category.getPortalType() not in (\'Category\', \'Base Category\'):\n
+        category_url = \'%s/%s\' % (base_category_id, category.getRelativeUrl())\n
+      else:\n
+        category_url = category.getRelativeUrl()\n
+      new_section = container.newContent( portal_type = \'Web Section\'\n
+                                        , id          = section_id\n
+                                        , title       = category.getTitle()\n
+                                        , description = category.getDescription()\n
+                                        , visible     = True\n
+                                        , membership_criterion_base_category = (base_category_id,)\n
+                                        , membership_criterion_category      = (category_url,)\n
+                                        )\n
+    except ConflictError:\n
+      raise\n
+    except:\n
+      failed_list.append(category.getRelativeUrl())\n
   else:\n
     new_section = container[section_id]\n
+    # If we are not browsing a standard Category tree, we\n
+    # must add a trailing base_category_id\n
+    if category.getPortalType() not in (\'Category\', \'Base Category\'):\n
+      category_url = \'%s/%s\' % (base_category_id, category.getRelativeUrl())\n
+    else:\n
+      category.getRelativeUrl()\n
     if update_existing:\n
       new_section.edit(title       = category.getTitle()\n
                      , description = category.getDescription()\n
                      , visible     = True\n
-                     , membership_criterion_base_category = (category.getBaseCategory().getId(),)\n
-                     , membership_criterion_category      = (category.getRelativeUrl(),)\n
+                     , membership_criterion_base_category = (base_category_id,)\n
+                     , membership_criterion_category      = (category_url,)\n
                      )\n
   # Call the function recursively\n
-  for sub_category in category.contentValues():\n
-    createWebSectionFromCategoryValue(new_section, sub_category)\n
+  if new_section is not None:\n
+    # It is possible to browse objects which are not categories\n
+    # ex. Projects\n
+    for sub_category in category.contentValues():\n
+      createWebSectionFromCategoryValue(new_section, sub_category)\n
   # Remove sections which have no counterpart in categories\n
   if remove_missing:\n
     # XXX Not implemented yet\n
     pass\n
 \n
 # Call the recursive section generator for each category\n
-for my_category in category_list:\n
-  createWebSectionFromCategoryValue(context, category_tool[my_category])\n
+my_category_value = category_tool.restrictedTraverse(category)\n
+base_category_id = my_category_value.getBaseCategory().getId()\n
+createWebSectionFromCategoryValue(context, my_category_value, section_id=section_id)\n
+\n
+# Warn about failures if any\n
+if failed_list:\n
+  return context.Base_redirect(form_id,\n
+    keep_items = dict(portal_status_message = translateString("Generated ${section_count} sections for the Web Site. Failed with ${failed_text}",\n
+    mapping = dict(section_count = section_count,\n
+                 failed_text = \', \'.join(failed_list)))))\n
+\n
 \n
 return context.Base_redirect(form_id,\n
   keep_items = dict(portal_status_message = translateString("Generated ${section_count} sections for the Web Site.",\n
-  mapping = dict(section_count = section_count))))\n
+    mapping = dict(section_count = section_count))))\n
 </string> </value>
         </item>
         <item>
@@ -157,7 +200,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>category_list, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
+            <value> <string>category, section_id, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -177,28 +220,32 @@ return context.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>category_list</string>
+                            <string>category</string>
+                            <string>section_id</string>
                             <string>update_existing</string>
                             <string>remove_missing</string>
                             <string>form_id</string>
                             <string>kw</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
                             <string>category_tool</string>
                             <string>section_count</string>
+                            <string>failed_list</string>
                             <string>valid_char</string>
                             <string>getNiceID</string>
+                            <string>None</string>
+                            <string>base_category_id</string>
                             <string>createWebSectionFromCategoryValue</string>
-                            <string>_getiter_</string>
-                            <string>my_category</string>
-                            <string>_getitem_</string>
+                            <string>my_category_value</string>
                             <string>dict</string>
                           </tuple>
                         </value>
@@ -220,7 +267,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_generateSectionFromCategoryList</string> </value>
+            <value> <string>WebSection_generateSectionFromCategory</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

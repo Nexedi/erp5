@@ -105,7 +105,12 @@ current_section = context.getWebSectionValue()\n
 reference_list = context.getAggregateReferenceList()\n
 if not reference_list: return None # Quick return\n
 \n
-return context.getDocumentValue(name=reference_list)\n
+# We should only display those documents which are shared\n
+# to some extend. This list takes into account some common\n
+# state IDs used in ERP5.\n
+return context.getDocumentValue(name=reference_list,\n
+            validation_state=[\'released\', \'published\', \'shared\',\n
+                              \'public\', \'validated\', ])\n
 </string> </value>
         </item>
         <item>

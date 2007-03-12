@@ -71,15 +71,16 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-  This script repeats publication section category items\n
+  This script repeats publication section items\n
   in such way that it is possible to select multiple\n
-  publication section categories for the same document\n
+  publication sections for a single web page.\n
 """\n
 # Initialise result\n
 sub_field_list = []\n
 \n
 # Maximum size of the MultiListField\n
 default_sub_field_property_dict.update({\n
+  \'title\': \'Publication\',\n
   \'required\': 0,\n
   \'field_type\': \'ListField\',\n
   \'size\': 1,\n
@@ -95,7 +96,11 @@ for i in range(1):\n
   z += 1\n
   sub_field_list.append(new_dict)\n
 \n
-section_list = context.getPublicationSectionList()\n
+\n
+# WARNING This code is very dangerous and ad hoc\n
+# But it was the only way to make parallel list field\n
+# work in this case \n
+section_list = context.aq_parent.aq_parent.getPublicationSectionList()\n
 section_list.reverse()\n
 for value in section_list:\n
   new_dict = default_sub_field_property_dict.copy()\n
@@ -105,7 +110,7 @@ for value in section_list:\n
   z += 1\n
   sub_field_list.append(new_dict)\n
 \n
-new_dict[\'title\'] = default_sub_field_property_dict[\'title\']\n
+new_dict[\'title\'] = \'Publication Section\'\n
 sub_field_list.reverse()\n
 return sub_field_list\n
 
@@ -169,7 +174,6 @@ return sub_field_list\n
                             <string>context</string>
                             <string>section_list</string>
                             <string>value</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
