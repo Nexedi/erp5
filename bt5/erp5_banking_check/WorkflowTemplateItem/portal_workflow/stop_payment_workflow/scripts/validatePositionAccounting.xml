@@ -104,6 +104,8 @@ if len(check_list)>0:\n
 \n
   # Then we will construct a new line for each check\n
   for item in check_list:\n
+    if not check.Check_isValid():\n
+      raise ValidationError, Message(domain=\'ui\', message=\'Check is in an invalid state\')\n
     delivery_line = transaction.newContent(portal_type=\'Checkbook Delivery Line\')\n
     item_dict = {}\n
     reference_range_min = None\n
@@ -251,6 +253,8 @@ if debit_required:\n
                             <string>x</string>
                             <string>id_list</string>
                             <string>item</string>
+                            <string>check</string>
+                            <string>ValidationError</string>
                             <string>delivery_line</string>
                             <string>item_dict</string>
                             <string>reference_range_min</string>

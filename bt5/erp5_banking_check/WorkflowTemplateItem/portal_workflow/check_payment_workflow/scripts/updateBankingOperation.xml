@@ -78,6 +78,8 @@ check_number = transaction.getAggregateFreeText()\n
 \n
 \n
 check = transaction.Base_checkOrCreateCheck(reference=check_number)\n
+if not check.Check_isValid():\n
+  raise ValidationError, Message(domain=\'ui\', message=\'Check is in an invalid state\')\n
 \n
 line = transaction.get(\'movement\')\n
 if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
@@ -150,6 +152,7 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
                             <string>bank_account</string>
                             <string>check_number</string>
                             <string>check</string>
+                            <string>ValidationError</string>
                             <string>line</string>
                             <string>None</string>
                           </tuple>
