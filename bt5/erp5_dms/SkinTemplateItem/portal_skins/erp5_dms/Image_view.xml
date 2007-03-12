@@ -114,7 +114,7 @@
                         <string>my_int_index</string>
                         <string>my_file</string>
                         <string>my_source_reference</string>
-                        <string>my_translated_portal_type</string>
+                        <string>image_view</string>
                         <string>my_translated_external_processing_state_title</string>
                         <string>my_revision</string>
                       </list>
@@ -147,7 +147,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>File_view</string> </value>
+            <value> <string>Image_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

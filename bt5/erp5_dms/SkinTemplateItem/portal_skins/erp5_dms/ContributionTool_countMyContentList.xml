@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Returns the list of documents which belong to\n
+  Counts the number of documents which belong to\n
   the current user or to the user provided as\n
   a parameter.\n
 \n
@@ -83,7 +83,7 @@ if user is None:\n
 \n
 kw[\'portal_type\'] = context.getPortalMyDocumentTypeList()\n
 kw[\'owner\'] = str(user)\n
-return context.portal_catalog(**kw)\n
+return context.portal_catalog.countResults(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -100,7 +100,7 @@ return context.portal_catalog(**kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>user=None, **kw</string> </value>
+            <value> <string>user=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,7 +155,7 @@ return context.portal_catalog(**kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ContributionTool_getMyContentList</string> </value>
+            <value> <string>ContributionTool_countMyContentList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

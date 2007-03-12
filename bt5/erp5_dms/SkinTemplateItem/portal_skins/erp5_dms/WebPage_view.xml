@@ -72,6 +72,7 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
+                <string>bottom (Preview)</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -80,6 +81,14 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key>                 <string>bottom (Preview)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_text_content</string>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
@@ -112,10 +121,6 @@
                         <string>my_version</string>
                         <string>my_language</string>
                         <string>my_int_index</string>
-                        <string>my_file</string>
-                        <string>my_source_reference</string>
-                        <string>my_translated_portal_type</string>
-                        <string>my_translated_external_processing_state_title</string>
                         <string>my_revision</string>
                       </list>
                     </value>
@@ -147,7 +152,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>File_view</string> </value>
+            <value> <string>WebPage_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
