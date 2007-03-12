@@ -68,9 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob = sci[\'object\']\n
+            <value> <string>"""\n
+This script updates the local roles on the document.\n
+It is called usually called after each update on\n
+a document which follows classification based security.\n
+"""\n
+ob = sci[\'object\']\n
 ob.assignRoleToSecurityGroup()\n
-ob.log(\'assigned\')\n
 </string> </value>
         </item>
         <item>

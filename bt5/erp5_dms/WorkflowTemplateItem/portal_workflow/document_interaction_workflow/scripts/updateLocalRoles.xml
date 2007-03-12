@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change.object.updateLocalRolesOnSecurityGroups()\n
+            <value> <string>state_change[\'object\'].updateLocalRolesOnSecurityGroups()\n
 </string> </value>
         </item>
         <item>
@@ -86,6 +86,14 @@
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -113,6 +121,7 @@
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

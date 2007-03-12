@@ -89,6 +89,9 @@
             <value>
               <tuple>
                 <string>document</string>
+                <string>file_document</string>
+                <string>recent_document</string>
+                <string>my_document</string>
               </tuple>
             </value>
         </item>

@@ -71,10 +71,16 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
+                <string>Drawing</string>
+                <string>File</string>
+                <string>Image</string>
+                <string>Organisation</string>
+                <string>PDF</string>
                 <string>Person</string>
                 <string>Presentation</string>
                 <string>Spreadsheet</string>
                 <string>Text</string>
+                <string>Web Page</string>
               </list>
             </value>
         </item>

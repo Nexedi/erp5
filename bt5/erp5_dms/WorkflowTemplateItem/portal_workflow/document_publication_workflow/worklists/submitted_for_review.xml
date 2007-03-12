@@ -30,19 +30,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Documents for review (%(count)s)</string> </value>
+            <value> <string>Documents submitted for review (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-document_module?simulation_state=submitted&local_roles=%(local_roles)s&reset=1&portal_type=Text&portal_type=Spreadsheet&portal_type=Presentation&portal_type=Drawing&portal_type=PDF&portal_type=File&portal_type=Image
+WebSite_viewAdvancedSearchResultList?validation_state=submitted&local_roles=%(local_roles)s&portal_type=%(portal_type)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Documents submitted for review</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -52,7 +52,7 @@ document_module?simulation_state=submitted&local_roles=%(local_roles)s&reset=1&p
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>docs_submitted_for_review</string> </value>
+            <value> <string>submitted_for_review</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -103,21 +103,7 @@ document_module?simulation_state=submitted&local_roles=%(local_roles)s&reset=1&p
             <value>
               <dictionary>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Text</string>
-                        <string>Spreadsheet</string>
-                        <string>Presentation</string>
-                        <string>Drawing</string>
-                        <string>PDF</string>
-                        <string>File</string>
-                        <string>Image</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>simulation_state</string> </key>
+                    <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
                         <string>submitted</string>

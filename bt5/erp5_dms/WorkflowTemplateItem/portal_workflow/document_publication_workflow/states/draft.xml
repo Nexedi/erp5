@@ -98,16 +98,9 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>Change Images and Files</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Assignee</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
@@ -116,10 +109,8 @@
                     <key> <string>Change local roles</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -128,6 +119,7 @@
                     <value>
                       <tuple>
                         <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
