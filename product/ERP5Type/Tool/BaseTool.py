@@ -60,8 +60,7 @@ class BaseTool (UniqueObject, Folder):
 
     # Filter content (ZMI))
     def __init__(self):
-        return Folder.__init__(self, self.__class__.id,
-                               getattr(self.__class__, 'title', ''))
+        return Folder.__init__(self, self.__class__.id)
 
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
