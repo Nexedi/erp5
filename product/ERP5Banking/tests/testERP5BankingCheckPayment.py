@@ -291,13 +291,26 @@ class TestERP5BankingCheckPaymentMixin:
   def stepCheckConsistency(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the consistency of the check payment
+    Enable automatic check creation before passing workflow transition, and
+    disable at the end of the test.
 
     FIXME: check if the transition fails when a category or property is invalid.
     """
+    check_creation_script = self.getPortal().Base_isAutomaticCheckCreationAllowed
+    original_script_source = check_creation_script._body
+    check_creation_script.ZPythonScript_edit(check_creation_script._params, 'return True')
     self.workflow_tool.doActionFor(self.check_payment, 'plan_action', wf_id='check_payment_workflow')
     self.assertNotEqual(self.check_payment.getAggregateValue(), None)
     self.assertEqual(self.check_payment.getSimulationState(), 'planned')
+    check_creation_script.ZPythonScript_edit(check_creation_script._params, original_script_source)
 
+  def stepTryCheckConsistencyWithoutAutomaticCheckCreation(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Do not enable automatic check creation and verify that validation fails.
+    """
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.check_payment, 'plan_action', wf_id='check_payment_workflow')
+    self.assertEqual(self.check_payment.getAggregateValue(), None)
+    self.assertNotEqual(self.check_payment.getSimulationState(), 'planned')
 
   def stepSendToCounter(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -376,6 +389,15 @@ class TestERP5BankingCheckPaymentMixin:
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
 
+  def stepCleanup(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Cleanup test remains
+    """
+    # Fetch all ids before deleting the objects, otherwise the iterator will
+    # skip objects as the list dynamicaly shrinks.
+    object_id_list = [x for x in self.check_payment_module.objectIds()]
+    for id in object_id_list:
+      self.check_payment_module.deleteContent(id)
 
 class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
                                   TestERP5BankingMixin, ERP5TypeTestCase):
@@ -401,8 +423,16 @@ class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
                       'stepValidateAnotherCheckPaymentFailsAgain Tic ' \
                       'InputCashDetails Tic ' \
                       'Pay Tic ' \
-                      'CheckFinalInventory '
+                      'CheckFinalInventory Cleanup Tic'
+    # sequence 2 : check if validating with non-exiting check fail if
+    # automatic check creation is disabled.
+    sequence_string_2 = 'Tic CheckObjects Tic CheckInitialInventory ' \
+                        'CreateCheckPayment Tic ' \
+                        'TryCheckConsistencyWithoutAutomaticCheckCreation Tic ' \
+                        'CheckConsistency Tic ' \
+                        'Cleanup Tic'
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string_2)
     # play the sequence
     sequence_list.play(self)
 
