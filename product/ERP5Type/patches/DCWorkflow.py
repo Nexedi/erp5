@@ -66,6 +66,23 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
     if not self.worklists:
       return None  # Optimization
 
+    # Prevent including this worklist if
+    # the workflow is not used by any portal type
+    def getPortalTypeListForWorkflow(workflow_id):
+      workflow_tool = getToolByName(self, 'portal_workflow')
+      result = []
+      for type_info in workflow_tool._listTypeInfo():
+        portal_type = type_info.id
+        if workflow_id in workflow_tool.getChainFor(portal_type):
+          result.append(portal_type)
+      return result
+
+    _getPortalTypeListForWorkflow = CachingMethod(getPortalTypeListForWorkflow,
+                            id='_getPortalTypeListForWorkflow', cache_factory = 'erp5_ui_long')
+    portal_type_list = _getPortalTypeListForWorkflow(self.id)
+    if not portal_type_list:
+      return None
+
     def _listGlobalActions(user=None, id=None, portal_path=None):
       sm = getSecurityManager()
       portal = self._getPortalRoot()
@@ -90,6 +107,11 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                       v = qdef.getVarMatch(k)
                       v_fmt = map(lambda x, info=info: x%info, v)
                       dict[k] = v_fmt
+                  # Patch to automatically filter workflists per portal type
+                  # so that the same state can be used for different
+                  # worklists and they are not merged
+                  if not dict.has_key('portal_type'):
+                    dict['portal_type'] = portal_type_list
                   # Patch for ERP5 by JP Smets in order
                   # to implement worklists and search of local roles
                   if not (guard is None or guard.check(sm, self, portal)):
@@ -103,6 +125,10 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                   fmt_data = TemplateDict()
                   fmt_data._push(info)
               fmt_data._push({'count': searchres_len})
+              # Patch for ERP5 by JP Smets in order to
+              # filter per portal type more easily (ie. without
+              # hardcoding it all)
+              fmt_data._push({'portal_type': ' OR '.join(portal_type_list)})
               # Patch for ERP5 by JP Smets in order
               # to implement worklists and search of local roles
               if dict.has_key('local_roles'):
