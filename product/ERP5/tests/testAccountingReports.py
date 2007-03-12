@@ -38,7 +38,17 @@ from Products.ERP5Form.Selection import Selection
 
 
 class TestAccountingReports(AccountingTestCase):
-  """Test Accounting reports"""
+  """Test Accounting reports
+  
+  Test basic cases of gathering data to render reports, the purpose of those
+  tests is to exercise basic reporting features to make sure no regression
+  happen. Input data used for tests usually contain edge cases, for example:
+    * movements at the boundaries of the period.
+    * movements with other simulation states.
+    * movements with node in the section_category we want to exclude (Persons).
+    * movements with source & destination for other sections.
+    ...
+  """
 
   # utility methods for ERP5 Report
   def getReportSectionList(self, report_name):
@@ -62,7 +72,13 @@ class TestAccountingReports(AccountingTestCase):
     report_section.popReport(self.portal)
     return result
 
-
+  def checkLineProperties(self, line, **kw):
+    """Check properties of a report line.
+    """
+    for k, v in kw.items():
+      self.assertEquals(v, line.getColumnProperty(k),
+          '`%s`: expected: %r actual: %r' % (k, v, line.getColumnProperty(k)))
+    
   def testJournal(self):
     # Journal report.
     # this will be a journal for 2006/02/02, for Sale Invoice Transaction
@@ -366,6 +382,378 @@ class TestAccountingReports(AccountingTestCase):
     self.failUnless(stat_line.isStatLine())
     self.assertEquals(100, stat_line.getColumnProperty('debit'))
     self.assertEquals(100, stat_line.getColumnProperty('credit'))
+
+
+  def createAccountStatementDataSet(self):
+    """Create transactions for Account statement report.
+    """
+    account_module = self.account_module
+
+    bank1 = self.section.newContent(portal_type='Bank Account')
+    bank1.validate()
+    
+    # before
+    t1 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 1',
+              source_reference='1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 1),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=100.0),
+                     dict(source_value=account_module.payable,
+                          source_credit=100.0)))
+    
+    t2 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 2',
+              source_reference='2',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 1, 0, 1),
+              lines=(dict(source_value=account_module.payable,
+                          source_debit=200.0),
+                     dict(source_value=account_module.receivable,
+                          source_credit=200.0)))
+    
+    # in the period
+    t3 = self._makeOne(
+              portal_type='Payment Transaction',
+              title='Transaction 3',
+              source_reference='3',
+              simulation_state='delivered',
+              source_payment_value=bank1,
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2, 0, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=300.0),
+                     dict(source_value=account_module.bank,
+                          source_credit=300.0)))
+    
+    t4 = self._makeOne(
+              portal_type='Payment Transaction',
+              title='Transaction 4',
+              destination_reference='4',
+              simulation_state='delivered',
+              destination_section_value=self.section,
+              destination_payment_value=bank1,
+              source_section_value=self.organisation_module.client_2,
+              stop_date=DateTime(2006, 2, 2, 0, 3),
+              start_date=DateTime(2006, 2, 1),
+              lines=(dict(destination_value=account_module.receivable,
+                          destination_debit=400.0),
+                     dict(destination_value=account_module.bank,
+                          destination_credit=400.0)))
+    
+    t5 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 5',
+              source_reference='5',
+              simulation_state='delivered',
+              destination_section_value=self.person_module.john_smith,
+              start_date=DateTime(2006, 2, 2, 0, 4),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=500.0),
+                     dict(source_value=account_module.bank,
+                          source_credit=500.0)))
+    
+    t6 = self._makeOne(
+              portal_type='Purchase Invoice Transaction',
+              title='Transaction 6',
+              destination_reference='6',
+              simulation_state='delivered',
+              source_section_value=self.organisation_module.client_1,
+              stop_date=DateTime(2006, 2, 2, 0, 5),
+              lines=(dict(destination_value=account_module.receivable,
+                          destination_debit=600.0),
+                     dict(destination_value=account_module.bank,
+                          destination_credit=600.0)))
+    
+    # another simulation state                 
+    t7 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 7',
+              source_reference='7',
+              simulation_state='stopped',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2, 0, 6),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=700.0),
+                     dict(source_value=account_module.bank,
+                          source_credit=700.0)))
+    
+    # after the period
+    t8 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 8',
+              source_reference='8',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 3),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=800.0),
+                     dict(source_value=account_module.bank,
+                          source_credit=800.0)))
+    
+    return bank1, (t1, t2, t3, t4, t5, t6, t7, t8)
+
+
+  def testAccountStatement(self):
+    # Simple Account Statement for "Receivable" account
+    self.createAccountStatementDataSet()
+    
+    # set request variables and render                 
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    # precision is set in the REQUEST (so that fields know how to format)
+    precision = self.portal.REQUEST.get('precision')
+    self.assertEquals(2, precision)
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # we have 6 transactions, because 7th is after
+    self.assertEquals(6, len(data_line_list))
+    
+    # test columns values
+    line = data_line_list[0]
+    self.assertEquals(line.column_id_list,
+        ['Movement_getSpecificReference', 'date',
+         'Movement_getExplanationTitle', 'Movement_getMirrorSectionTitle',
+         'debit', 'credit', 'running_total_price'])
+    
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='1',
+                             date=DateTime(2006, 2, 1),
+                             Movement_getExplanationTitle='Transaction 1',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=100,
+                             credit=0,
+                             running_total_price=100)
+    
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='2',
+                             date=DateTime(2006, 2, 1, 0, 1),
+                             Movement_getExplanationTitle='Transaction 2',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=0,
+                             credit=200,
+                             running_total_price=-100)
+    
+    self.checkLineProperties(data_line_list[2],
+                             Movement_getSpecificReference='3',
+                             date=DateTime(2006, 2, 2, 0, 2),
+                             Movement_getExplanationTitle='Transaction 3',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=300,
+                             credit=0,
+                             running_total_price=200)
+
+    self.checkLineProperties(data_line_list[3],
+                             Movement_getSpecificReference='4',
+                             date=DateTime(2006, 2, 2, 0, 3),
+                             Movement_getExplanationTitle='Transaction 4',
+                             Movement_getMirrorSectionTitle='Client 2',
+                             debit=400,
+                             credit=0,
+                             running_total_price=600)
+
+    self.checkLineProperties(data_line_list[4],
+                             Movement_getSpecificReference='5',
+                             date=DateTime(2006, 2, 2, 0, 4),
+                             Movement_getExplanationTitle='Transaction 5',
+                             Movement_getMirrorSectionTitle='John Smith',
+                             debit=500,
+                             credit=0,
+                             running_total_price=1100)
+
+    self.checkLineProperties(data_line_list[5],
+                             Movement_getSpecificReference='6',
+                             date=DateTime(2006, 2, 2, 0, 5),
+                             Movement_getExplanationTitle='Transaction 6',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=600,
+                             credit=0,
+                             running_total_price=1700)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+                             Movement_getSpecificReference=None,
+                             date=None,
+                             Movement_getExplanationTitle=None,
+                             Movement_getMirrorSectionTitle=None,
+                             debit=1900,
+                             credit=200,
+                             running_total_price=None)
+
+
+  def testAccountStatementFromDateSummary(self):
+    # A from date summary shows balance at the beginning of the period
+    self.createAccountStatementDataSet()
+    
+    # set request variables and render                 
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 2, 2)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # we have 1 summary line and 4 transactions
+    self.assertEquals(5, len(data_line_list))
+ 
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='Previous Balance',
+                             date=DateTime(2006, 2, 2),
+                             Movement_getExplanationTitle='',
+                             Movement_getMirrorSectionTitle='',
+                             debit=100,
+                             credit=200,
+                             running_total_price=-100)
+    
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='3',
+                             date=DateTime(2006, 2, 2, 0, 2),
+                             Movement_getExplanationTitle='Transaction 3',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=300,
+                             credit=0,
+                             running_total_price=200)
+
+    self.checkLineProperties(data_line_list[2],
+                             Movement_getSpecificReference='4',
+                             date=DateTime(2006, 2, 2, 0, 3),
+                             Movement_getExplanationTitle='Transaction 4',
+                             Movement_getMirrorSectionTitle='Client 2',
+                             debit=400,
+                             credit=0,
+                             running_total_price=600)
+
+    self.checkLineProperties(data_line_list[3],
+                             Movement_getSpecificReference='5',
+                             date=DateTime(2006, 2, 2, 0, 4),
+                             Movement_getExplanationTitle='Transaction 5',
+                             Movement_getMirrorSectionTitle='John Smith',
+                             debit=500,
+                             credit=0,
+                             running_total_price=1100)
+
+    self.checkLineProperties(data_line_list[4],
+                             Movement_getSpecificReference='6',
+                             date=DateTime(2006, 2, 2, 0, 5),
+                             Movement_getExplanationTitle='Transaction 6',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=600,
+                             credit=0,
+                             running_total_price=1700)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=1900, credit=200,)
+
+
+  def testAccountStatementFromDateSummaryEmpty(self):
+    # A from date summary shows balance at the beginning of the period, but
+    # avoids showing a '0' line
+    self.createAccountStatementDataSet()
+    
+    # set request variables and render                 
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2000, 2, 2)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertNotEquals('Previous Balance',
+          data_line_list[0].getColumnProperty('Movement_getSpecificReference'))
+
+    
+  def testAccountStatementMirrorSection(self):
+    # 'Mirror Section' parameter is taken into account.
+    self.createAccountStatementDataSet()
+    
+    # set request variables and render                 
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['mirror_section'] = \
+                self.portal.organisation_module.client_2.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 2, 2)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                                    'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='4',
+                             date=DateTime(2006, 2, 2, 0, 3),
+                             Movement_getExplanationTitle='Transaction 4',
+                             Movement_getMirrorSectionTitle='Client 2',
+                             debit=400,
+                             credit=0,
+                             running_total_price=400)
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=400, credit=0)
+
+
+  def testAccountStatementSimulationState(self):
+    # Simulation State parameter is taken into account.
+    self.createAccountStatementDataSet()
+    
+    # set request variables and render                 
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                  self.portal.account_module.receivable.getRelativeUrl()
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['stopped', 'confirmed']
+
+    report_section_list = self.getReportSectionList(
+                                    'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='7',
+                             date=DateTime(2006, 2, 2, 0, 6),
+                             Movement_getExplanationTitle='Transaction 7',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=700,
+                             credit=0,
+                             running_total_price=700)
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=700, credit=0)
 
 
 def test_suite():
