@@ -389,18 +389,32 @@ class ERP5Site(FolderMixIn, CMFSite):
   def _getPortalGroupedTypeList(self, group):
     """
     Return a list of portal types classified to a specific group.
+    The result is sorted by language (using the user language
+    as default)
     """
     def getTypeList(group):
       type_list = []
       for pt in self.portal_types.objectValues():
         if group in getattr(pt, 'group_list', ()):
           type_list.append(pt.getId())
+
+      def sortByTranslation(a, b):
+        return cmp(localizer_tool.translate('ui', a),
+                   localizer_tool.translate('ui', b))
+
+      type_list.sort(sortByTranslation)
       return tuple(type_list)
 
+    localizer_tool = getToolByName(self, 'Localizer')
+    language = localizer_tool.get_selected_language()
+    # language should be cached in Transaction Cache if performance issue
+
     getTypeList = CachingMethod(getTypeList,
-                                id=('_getPortalGroupedTypeList', group),
+                                id=(('_getPortalGroupedTypeList', language), group),
                                 cache_factory='erp5_content_medium')
-    return getTypeList(group)
+
+    return getTypeList(group) # Although this method is called get*List, it
+                              # returns a tuple - renaming to be considered
 
   def _getPortalGroupedCategoryList(self, group):
     """
@@ -611,6 +625,38 @@ class ERP5Site(FolderMixIn, CMFSite):
       Return web page types.
     """
     return self._getPortalGroupedTypeList('web_document')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalFileDocumentTypeList')
+  def getPortalFileDocumentTypeList(self):
+    """
+      Return web page types.
+    """
+    return self._getPortalGroupedTypeList('file_document')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalRecentDocumentTypeList')
+  def getPortalRecentDocumentTypeList(self):
+    """
+      Return web page types.
+    """
+    return self._getPortalGroupedTypeList('recent_document')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalTemplateDocumentTypeList')
+  def getPortalTemplateDocumentTypeList(self):
+    """
+      Return web page types.
+    """
+    return self._getPortalGroupedTypeList('template_document')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalMyDocumentTypeList')
+  def getPortalMyDocumentTypeList(self):
+    """
+      Return web page types.
+    """
+    return self._getPortalGroupedTypeList('my_document')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalSupplyPathTypeList')
