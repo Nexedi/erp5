@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+This scripts parses a long string and does the following:\n
+- processes arguments for searching by any category\n
+- selects search mode\n
+- adds creation and modification date clauses\n
+- searches\n
+- if requested, filters result so that only the user\'s docs are returned\n
+- if requested, filters result to return only the newest versions\n
+"""\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
+\n
+if not sstr: return None\n
+\n
+args = context.parseSearchString(sstr)\n
+query_list = []\n
+\n
+# process searching by category\n
+cats = []\n
+bases = context.portal_categories.getBaseCategoryList()\n
+for k,v in args.items():\n
+  if k in bases:\n
+    args[k + \'_relative_url\'] = k + \'/\' + v\n
+\n
+# expand simplified notation of search mode\n
+mode = args.get(\'mode\')\n
+modemap = { \'natural\' : 0,\n
+            \'boolean\' : \'in_boolean_mode\',\n
+            \'expanded\': \'with_query_expansion\'}\n
+if mode and modemap.has_key(mode):\n
+  args[\'SearchableText\'] = dict(query=args[\'SearchableText\'], search_mode=modemap[mode])\n
+\n
+# a hack because SQLCatalog wants table.key now \n
+# dunno if it is a bug or a feature\n
+if args.has_key(\'SearchableText\'):\n
+  args[\'full_text.SearchableText\'] = args[\'SearchableText\']\n
+  args.pop(\'SearchableText\')\n
+\n
+cf = kw.get(\'creation_from\')\n
+ct = kw.get(\'creation_to\')\n
+mf = kw.get(\'modification_from\')\n
+mt = kw.get(\'modification_to\')\n
+\n
+wheres = []\n
+if cf:\n
+  wheres.append(\'creation_date >"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
+if ct:\n
+  wheres.append(\'creation_date <"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
+if mf:\n
+  wheres.append(\'modification_date >"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
+if mt:\n
+  wheres.append(\'modification_date <"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
+if wheres != []:\n
+  args[\'where_expression\'] = \' AND \'.join(wheres)\n
+\n
+# We search in any language by default\n
+if args.get(\'language\') == \'0\': args.pop(\'language\')\n
+\n
+# User wants only his documents\n
+if args.get(\'mine\'): \n
+  sm = getSecurityManager()\n
+  u = sm.getUser()\n
+  args[\'owner\'] = u\n
+\n
+query_list = []\n
+for k, v in args.items():\n
+  query_list.append(Query(**{k:v}))\n
+\n
+if args.get(\'newest\'):\n
+  return ComplexQuery(*query_list, **dict(operator = \'AND\',\n
+                                          order_by = \'reference\')) \n
+\n
+return ComplexQuery(*query_list, **dict(operator = \'AND\')) \n
+\n
+####################################\n
+# NOT SUPPORTED YET VERY WELL\n
+\n
+#...and now we check for only the newest versions\n
+# but we need to preserve order\n
+if args.get(\'newest\'):\n
+  idx = {} # for keeping the last version of every reference\n
+  # this way we do reduce the number of docs very fast (without calling catalog)\n
+  newest = [] # for keeping order as it was\n
+  counter = 0\n
+  for r in res:\n
+    ref = r.getReference()\n
+    try:\n
+      ver = int(r.getVersion())\n
+    except ValueError:\n
+      continue\n
+    if idx.has_key(ref):\n
+      if idx[ref][0] >= ver:\n
+        continue\n
+      else:\n
+        del newest[idx[ref][1]]\n
+        counter -= 1\n
+    newest.append(r)\n
+    idx[ref] = (ver, counter)\n
+    counter += 1\n
+  # now that we have only one per reference, we can play with languages and revisions\n
+  res = [doc.getLatestVersionValue() for doc in newest]\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>sstr, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>sstr</string>
+                            <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>ComplexQuery</string>
+                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>args</string>
+                            <string>query_list</string>
+                            <string>cats</string>
+                            <string>bases</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>_write_</string>
+                            <string>mode</string>
+                            <string>modemap</string>
+                            <string>dict</string>
+                            <string>_getitem_</string>
+                            <string>cf</string>
+                            <string>ct</string>
+                            <string>mf</string>
+                            <string>mt</string>
+                            <string>wheres</string>
+                            <string>getSecurityManager</string>
+                            <string>sm</string>
+                            <string>u</string>
+                            <string>_apply_</string>
+                            <string>idx</string>
+                            <string>newest</string>
+                            <string>counter</string>
+                            <string>res</string>
+                            <string>r</string>
+                            <string>ref</string>
+                            <string>int</string>
+                            <string>ver</string>
+                            <string>ValueError</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>doc</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SQLCatalog_makeAdvancedSearchQuery</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
