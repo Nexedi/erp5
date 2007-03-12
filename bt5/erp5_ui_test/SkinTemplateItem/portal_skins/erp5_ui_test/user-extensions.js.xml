@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts70003122.2</string> </value>
+            <value> <string>ts73479596.95</string> </value>
         </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
@@ -52,8 +52,8 @@
 Selenium.prototype.assertFloat = function(locator, text) {\n
     var actualValueText = getText(this.page().findElement(locator));\n
     var actualValue = parseFloat(actualValueText\n
-                          .replace(/ /, "").replace(/&nbsp;/, ""));\n
-    var expectedValue = parseFloat(text.replace(/ /, "").replace(/&nbsp;/, ""));\n
+                          .replace(/ /g, "").replace(/&nbsp;/g, ""));\n
+    var expectedValue = parseFloat(text.replace(/ /g, "").replace(/&nbsp;/g, ""));\n
 \n
     if (isNaN(actualValue)) {\n
         Assert.fail("Actual value "+ actualValueText +\n
@@ -69,8 +69,8 @@ Selenium.prototype.assertFloat = function(locator, text) {\n
 Selenium.prototype.assertFloatValue = function(locator, text) {\n
     var actualValueText = getInputValue(this.page().findElement(locator));\n
     var actualValue = parseFloat(actualValueText\n
-                            .replace(/ /, "").replace(/&nbsp;/, ""));\n
-    var expectedValue = parseFloat(text.replace(/ /, "").replace(/&nbsp;/, ""));\n
+                            .replace(/ /g, "").replace(/&nbsp;/g, ""));\n
+    var expectedValue = parseFloat(text.replace(/ /g, "").replace(/&nbsp;/g, ""));\n
 \n
     if (isNaN(actualValue)) {\n
         Assert.fail("Actual value "+ actualValueText +\n
@@ -99,7 +99,7 @@ Selenium.prototype.assertPortalStatusMessage = function(text) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>1671</long> </value>
+            <value> <int>1679</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
