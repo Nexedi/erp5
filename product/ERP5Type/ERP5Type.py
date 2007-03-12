@@ -147,13 +147,39 @@ class ERP5TypeInformation( FactoryTypeInformation,
     permission = ''
 
     # Groups are used to classify portal types (e.g. resource).
+    # IMPLEMENTATION NOTE
+    # The current implementation is practical but not modular at all
+    # Providing extensible document groups will be desirable at some point
+    # Implementation could consist for example in allowing to define
+    # the list of groups at the level of ERP5Site either
+    # with a default value or with a user specified value. Accessors
+    # to portal type groups should then be generated dynamically through
+    # _aq_dynamic. This would provide limitless group definition.
+    # The main issue in providing too much flexibility at this level
+    # is to reduce standardisation. New groups should therefore be handled
+    # with great care.
     defined_group_list = (
-      'accounting_transaction', 'accounting_movement', 'alarm',
-      'balance_transaction_line', 'container', 'container_line', 'delivery',
-      'delivery_movement', 'discount', 'invoice', 'invoice_movement', 'item',
-      'order', 'order_movement', 'node', 'payment_node', 'payment_condition',
-      'resource', 'supply', 'supply_path', 'transformation', 'variation',
-      'sub_variation', 'event', 'ticket', 'document', 'web_document',
+      # Framework
+      'alarm',
+      # ERP5 UBM (5 Classes)
+      'resource', 'node', 'item', 
+      'delivery', 'delivery_movement',
+      'order', 'order_movement',
+      'container', 'container_line',
+      # Trade
+      'discount',  'payment_condition', 'payment_node',
+      'supply', 'supply_path',
+      # PDM
+      'transformation', 'variation', 'sub_variation',
+      # Accounting
+      'accounting_transaction', 'accounting_movement',
+      'invoice', 'invoice_movement', 'balance_transaction_line',
+      # CRM
+      'event', 'ticket',
+      # DMS
+      'document', 'web_document', 'file_document',
+      'recent_document', 'my_document', 'template_document',
+      # MRP
       'divergence_tester', 'calendar_period'
     )
     group_list = ()
