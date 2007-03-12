@@ -96,6 +96,11 @@ from_date = request.get(\'from_date\', None)\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
 parent_portal_type = request.get(\'portal_type\')\n
 \n
+# Also get the currency, to know the precision\n
+currency = context.Base_getCurrencyForSection(request[\'section_category\'])\n
+precision = context.account_module.getQuantityPrecisionFromResource(currency)\n
+# we set the precision in request, for formatting on editable fields\n
+request.set(\'precision\', precision)\n
 \n
 params = dict(at_date=at_date,\n
               section_uid=section_uid,\n
@@ -194,6 +199,8 @@ return [ ReportSection(\n
                             <string>from_date</string>
                             <string>omit_grouping_reference</string>
                             <string>parent_portal_type</string>
+                            <string>currency</string>
+                            <string>precision</string>
                             <string>dict</string>
                             <string>params</string>
                             <string>_write_</string>
