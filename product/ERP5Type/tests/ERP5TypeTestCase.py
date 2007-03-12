@@ -650,9 +650,6 @@ def setupERP5Site( business_template_list=(),
         else:
           get_transaction().commit()
           ZopeTestCase.close(app)
-      else:
-        # Display which test is run when loading for the 1st time
-        ZopeTestCase._print('Ran Unit test of %s\n' % title)
 
       if os.environ.get('erp5_load_data_fs'):
         # Import local PropertySheets, Documents
