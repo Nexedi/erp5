@@ -247,18 +247,24 @@ try:\n
 except ActivityPendingError,e:\n
   message = N_("%s" % e)\n
 \n
-if not(ignore_layout) and context.getApplicableLayout() :\n
-  redirect_url = \'%s/%s?editable_mode=1\' % (context.REQUEST.URL1, form_id)\n
-elif not selection_index:\n
-  redirect_url = \'%s/%s?portal_status_message=%s\' % (context.absolute_url(),\n
-                                                     form_id,\n
-                                                     message)\n
+ignore_layout = int(ignore_layout)\n
+editable_mode = int(editable_mode)\n
+\n
+if not selection_index:\n
+  redirect_url = \'%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s\' % (\n
+                                  context.absolute_url(),\n
+                                  form_id,\n
+                                  ignore_layout,\n
+                                  editable_mode,\n
+                                  message)\n
 else:\n
-  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&portal_status_message=%s\' % (\n
+  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s\' % (\n
                               context.absolute_url(),\n
                               form_id,\n
                               selection_index,\n
                               selection_name,\n
+                              ignore_layout,\n
+                              editable_mode,\n
                               message)\n
 \n
 return request[\'RESPONSE\'].redirect(redirect_url)\n
@@ -280,7 +286,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=None</string> </value>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -300,7 +306,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -311,6 +317,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>selection_name</string>
                             <string>dialog_id</string>
                             <string>ignore_layout</string>
+                            <string>editable_mode</string>
                             <string>Products.Formulator.Errors</string>
                             <string>FormValidationError</string>
                             <string>Products.CMFActivity.Errors</string>
@@ -344,6 +351,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>_apply_</string>
                             <string>encapsulated_editor</string>
                             <string>e</string>
+                            <string>int</string>
                           </tuple>
                         </value>
                     </item>
@@ -359,7 +367,8 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                 <int>0</int>
                 <string></string>
                 <string></string>
-                <none/>
+                <int>0</int>
+                <int>1</int>
               </tuple>
             </value>
         </item>

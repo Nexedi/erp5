@@ -81,10 +81,10 @@ category_list = []\n
 \n
 for item in mixed_list:\n
   if item==\'destination_region\':\n
-    item = \'region\'\n
-    category_list += [\'destination_region/\' + x for x in context.portal_categories[item].getCategoryChildRelativeUrlList()]\n
+    item = \'region\' # This must be made more generic\n
+    category_list += [\'destination_region/\' + x for x in context.portal_categories[item].getCategoryChildCompactLogicalPathItemList(base=1)]\n
   else:\n
-    category_list += context.portal_categories[item].getCategoryChildRelativeUrlList()\n
+    category_list += context.portal_categories[item].getCategoryChildCompactLogicalPathItemList(base=1)\n
 \n
 return category_list\n
 </string> </value>

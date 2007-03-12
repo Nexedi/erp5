@@ -83,7 +83,8 @@ new_object = module.newContent(portal_type=portal_type)\n
 \n
 # Redirect to new content with translated message\n
 portal_status_message = translateString("New ${portal_type} created.", mapping = dict(portal_type = portal_type))\n
-return new_object.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message))\n
+return new_object.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message,\n
+                                                          editable_mode=1))\n
 </string> </value>
         </item>
         <item>
