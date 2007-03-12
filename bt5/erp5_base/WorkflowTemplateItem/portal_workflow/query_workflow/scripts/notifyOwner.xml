@@ -69,28 +69,58 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-WARNING: this script requires proxy manager\n
-\n
-This script tries to acquire category values from other objects\n
-\n
-base_category_list - list of category values we need to retrieve\n
-object             - object which we want to assign roles to.\n
+This script tries to send a message to the appropriate recipient\n
+from the appropriate sender. It uses portal_notifications\n
+and the getObject API of ERP5Catalog.\n
 """\n
-category_dict = {}\n
+from Products.ERP5Type.Log import log\n
 \n
-if object is None:\n
-  return []\n
+object = sci[\'object\']\n
+translateString = context.Base_translateString\n
+portal_catalog = object.portal_catalog\n
 \n
-for base_category in base_category_list:\n
-  for o in object.getValueList(base_category):\n
-    for user, role_list in o.get_local_roles():\n
-      for role in role_list:\n
-        category_dict.setdefault(role, []).append(user)\n
+# Get the owner\n
+owner = object.getViewPermissionOwner()\n
+owner_value = portal_catalog.getResultValue(portal_type=\'Person\', reference=owner)\n
 \n
-# By returning a dict, we force force ERP5Type\n
-# to interprete the result as a mapping from\n
-# roles to existing security groups \n
-return category_dict\n
+# Get the authenticated user\n
+user = context.portal_membership.getAuthenticatedMember().getUserName()\n
+user_value = portal_catalog.getResultValue(portal_type=\'Person\', reference=user)\n
+\n
+# If users are not defined, we need to log and return\n
+if not owner or owner_value is None:\n
+  # We keep a trace because this is the best we\n
+  # can do (preventing answers is even worse)\n
+  log("ERP5 Query Workflow", "No owner defined")\n
+  return\n
+if not user or user_value is None:\n
+  # We keep a trace because this is the best we\n
+  # can do (preventing answers is even worse)\n
+  log("ERP5 Query Workflow", "Current user is not defined")\n
+  return\n
+\n
+# Build the message and translate it\n
+subject = translateString("Query was answered")\n
+msg = """The Query ID ${id} which you posted has been answered by ${user}\n
+\n
+Question:\n
+\n
+${question}\n
+\n
+Answer:\n
+\n
+${answer}\n
+""" \n
+msg = translateString(msg, \n
+             mapping=dict(id=object.getId(),\n
+                          subject=subject,\n
+                          user=user_value.getTitle(),\n
+                          question=object.getDescription(),\n
+                          answer=object.getTextContent())\n
+            )\n
+\n
+# We can now notify the owner through the notification tool\n
+context.portal_notifications.sendMessage(sender=user, recipient=owner, subject=subject, message=msg)\n
 </string> </value>
         </item>
         <item>
@@ -113,7 +143,7 @@ return category_dict\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category_list, user_name, object, portal_type</string> </value>
+            <value> <string>sci</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -141,25 +171,29 @@ return category_dict\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>base_category_list</string>
-                            <string>user_name</string>
+                            <string>sci</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
+                            <string>_getitem_</string>
                             <string>object</string>
-                            <string>portal_type</string>
-                            <string>category_dict</string>
-                            <string>None</string>
-                            <string>_getiter_</string>
-                            <string>base_category</string>
                             <string>_getattr_</string>
-                            <string>o</string>
+                            <string>context</string>
+                            <string>translateString</string>
+                            <string>portal_catalog</string>
+                            <string>owner</string>
+                            <string>owner_value</string>
                             <string>user</string>
-                            <string>role_list</string>
-                            <string>role</string>
+                            <string>user_value</string>
+                            <string>None</string>
+                            <string>subject</string>
+                            <string>msg</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -176,7 +210,7 @@ return category_dict\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_acquireSecurityFromCategory</string> </value>
+            <value> <string>notifyOwner</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

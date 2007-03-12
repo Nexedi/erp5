@@ -109,6 +109,14 @@ return description\n
             <value> <string>dialog_id=None,form_id=None,description=None,cancel_url=\'\'</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
