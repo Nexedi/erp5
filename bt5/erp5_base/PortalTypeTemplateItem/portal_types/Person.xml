@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>document_icon.gif</string> </value>
+            <value> <string>person_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -98,6 +98,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
