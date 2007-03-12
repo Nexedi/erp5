@@ -264,7 +264,7 @@ class WebSection(Domain):
 
     # WebSection API
     security.declareProtected(Permissions.View, 'getDocumentValue')
-    def getDocumentValue(self, name=None, portal=None):
+    def getDocumentValue(self, name=None, portal=None, **kw):
       """
         Return the default document with the given
         name. The name parameter may represent anything
@@ -274,6 +274,9 @@ class WebSection(Domain):
         If name is not provided, the method defaults
         to returning the default document by calling
         getDefaultDocumentValue.
+
+        kw parameters can be useful to filter content
+        (ex. force a given validation state)
 
         This method must be implemented through a
         portal type dependent script:
@@ -297,7 +300,7 @@ class WebSection(Domain):
       if cache is not None:
         if not cache.has_key(key): cache[key] = method
 
-      return method(name, portal=portal)
+      return method(name, portal=portal, **kw)
 
     security.declareProtected(Permissions.View, 'getDefaultDocumentValue')
     def getDefaultDocumentValue(self):
