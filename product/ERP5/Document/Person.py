@@ -197,6 +197,9 @@ class Person(XMLObject):
     def getAvailableTime(self, *args, **kw):
       """
       Calculate available time for a person
+
+      XXX What are the parameters - documentation needed
+      What is the result ?
       """
       assignment_list = self.contentValues(portal_type='Assignment')
       calendar_uid_list = []
@@ -212,6 +215,9 @@ class Person(XMLObject):
     def getAvailableTimeSequence(self, *args, **kw):
       """
       Calculate available time for a person in a sequence
+
+      XXX What are the parameters - documentation needed
+      What is the result ?
       """
       assignment_list = self.contentValues(portal_type='Assignment')
       calendar_uid_list = []
@@ -222,3 +228,20 @@ class Person(XMLObject):
       # Call getSequence
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getAvailableTimeSequence(*args, **kw)
+
+    # Notifiation API
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'notifyMessage')
+    def notifyMessage(self, message):
+      """
+      This method can only be called with proxy roles.
+
+      A per user preference allows for deciding how to be notified.
+      - by email
+      - by SMS (if meaningful)
+      - daily
+      - weekly
+      - instantly
+
+      notification is handled as an activity
+      """
