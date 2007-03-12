@@ -133,8 +133,8 @@ if from_date:\n
         uid=\'new_000\',\n
         date=from_date,\n
         simulation_state_title="",\n
-        Movement_getCreditPrice=previous_total_credit,\n
-        Movement_getDebitPrice=previous_total_debit,\n
+        credit_price=previous_total_credit,\n
+        debit_price=previous_total_debit,\n
         total_price=net_balance,\n
         running_total_price=net_balance,\n
         is_previous_balance=True,\n

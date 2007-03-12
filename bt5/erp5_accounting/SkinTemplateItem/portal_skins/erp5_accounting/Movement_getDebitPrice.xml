@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return max(brain.total_price, 0)\n
+            <value> <string>return getattr(brain, \'debit_price\', max(brain.total_price, 0))\n
 </string> </value>
         </item>
         <item>
@@ -120,6 +120,7 @@
                             <string>brain</string>
                             <string>selection</string>
                             <string>kwd</string>
+                            <string>getattr</string>
                             <string>max</string>
                             <string>_getattr_</string>
                           </tuple>
