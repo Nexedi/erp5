@@ -64,6 +64,7 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
   # Different variables used for this test
   item_portal_type = 'Apparel Fabric Item'
   packing_list_portal_type = 'Purchase Packing List'
+  packing_list_line_portal_type = 'Purchase Packing List Line'
   internal_packing_list_portal_type = 'Internal Packing List'
   sale_packing_list_portal_type = 'Sale Packing List'
   inventory_portal_type = 'Inventory'
@@ -133,7 +134,8 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
       This user will be used to initialize data in the method afterSetup
     """
     all_roles = ['Manager','Assignor','Assignee','Author','Associate','Auditor']
-    self.getUserFolder()._doAddUser('manager', '', all_roles, [])
+    if not "manager" in [x.id for x in self.getUserFolder().objectValues()]:
+      self.getUserFolder()._doAddUser('manager', '', all_roles, [])
     self.login('manager')
     self.assignPASRolesToUser('test_user_1_', all_roles)
     
@@ -320,8 +322,9 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     Create a category tree
     """
     for category, codification, new_tree in category_tree:
-      new_category = current_category.newContent(portal_type='Category', id=category, codification=codification)
-      self.createCategoryTree(new_category, new_tree)
+      if category not in current_category.objectIds():
+        new_category = current_category.newContent(portal_type='Category', id=category, codification=codification)
+        self.createCategoryTree(new_category, new_tree)
   
   def createCategorySiteTree(self, current_category, category_tree):
     """
