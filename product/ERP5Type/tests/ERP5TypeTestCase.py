@@ -258,7 +258,8 @@ class ERP5TypeTestCase(PortalTestCase):
       Most of the time, we need to login before doing anything
       """
       uf = self.getPortal().acl_users
-      uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member'], [])
+      uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
+          'Assignor', 'Author', 'Auditor', 'Associate'], [])
       user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
       newSecurityManager(None, user)
 
