@@ -178,6 +178,7 @@ class TestERP5BankingCheckPaymentMixin:
     self.check_5 = self.createCheck(id='check_5',
                                     reference='54',
                                     checkbook=self.checkbook_1)
+    self.non_existant_check_reference = '55'
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -299,16 +300,30 @@ class TestERP5BankingCheckPaymentMixin:
     check_creation_script = self.getPortal().Base_isAutomaticCheckCreationAllowed
     original_script_source = check_creation_script._body
     check_creation_script.ZPythonScript_edit(check_creation_script._params, 'return True')
+    self.assertTrue(self.getPortal().Base_isAutomaticCheckCreationAllowed())
     self.workflow_tool.doActionFor(self.check_payment, 'plan_action', wf_id='check_payment_workflow')
     self.assertNotEqual(self.check_payment.getAggregateValue(), None)
     self.assertEqual(self.check_payment.getSimulationState(), 'planned')
     check_creation_script.ZPythonScript_edit(check_creation_script._params, original_script_source)
 
+  def stepAggregateToInnexistantCheck(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Set the aggrate relation to direct to an innexistant object, thus
+      requiring the test process to generate one.
+    """
+    self.check_payment.setAggregateFreeText(self.non_existant_check_reference)
+    self.assertEqual(self.check_payment.getAggregateValue(), None)
+
   def stepTryCheckConsistencyWithoutAutomaticCheckCreation(self, sequence=None, sequence_list=None, **kwd):
     """
       Do not enable automatic check creation and verify that validation fails.
     """
+    self.assertFalse(self.getPortal().Base_isAutomaticCheckCreationAllowed())
+    self.assertEqual(self.check_payment.getAggregateValue(), None)
+    self.assertNotEqual(self.check_payment.getSimulationState(), 'planned')
+
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.check_payment, 'plan_action', wf_id='check_payment_workflow')
+
     self.assertEqual(self.check_payment.getAggregateValue(), None)
     self.assertNotEqual(self.check_payment.getSimulationState(), 'planned')
 
@@ -428,11 +443,18 @@ class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
     # automatic check creation is disabled.
     sequence_string_2 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                         'CreateCheckPayment Tic ' \
+                        'AggregateToInnexistantCheck Tic ' \
                         'TryCheckConsistencyWithoutAutomaticCheckCreation Tic ' \
+                        'Cleanup Tic'
+    # sequence 3 : check is validating with non-existing check succeeds if
+    # automatic check creation is enabled.
+    sequence_string_3 = 'Tic CheckObjects Tic CheckInitialInventory ' \
+                        'CreateCheckPayment Tic ' \
                         'CheckConsistency Tic ' \
                         'Cleanup Tic'
     sequence_list.addSequenceString(sequence_string)
     sequence_list.addSequenceString(sequence_string_2)
+    sequence_list.addSequenceString(sequence_string_3)
     # play the sequence
     sequence_list.play(self)
 
