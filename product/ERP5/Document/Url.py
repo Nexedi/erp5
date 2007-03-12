@@ -82,7 +82,7 @@ class Url(Coordinate, Base):
     """
     return ("http://www.erp5.org","mailto:info@erp5.org")
 
-
+  security.declareProtected(Permissions.UseMailhostServices, 'send')
   def send(self, from_url=None, to_url=None, msg=None, subject=None,  attachment_list=None):
     """
     This method was previously named 'SendMail' and is used to send email
@@ -103,7 +103,7 @@ class Url(Coordinate, Base):
         to_url = self.getUrlString(None)
       if from_url is None or to_url is None:
         raise AttributeError, "No mail defined"
-      
+
       # Create multi-part MIME message.
       message = StringIO()
       writer = MimeWriter(message)
