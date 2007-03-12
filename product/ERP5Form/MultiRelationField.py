@@ -288,6 +288,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
   def render_view(self, field, value):
     """
     Render read only field.
+
+    XXX Improved rendering required
     """
     html_string = self.default_widget_rendering_instance.render_view(
                                                       field, value)
