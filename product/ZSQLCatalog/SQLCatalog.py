@@ -106,6 +106,12 @@ def manage_addSQLCatalog(self, id, title,
   if REQUEST is not None:
     return self.manage_main(self, REQUEST,update_menu=1)
 
+def isSimpleType(value):
+  return isinstance(value, basestring) or \
+         isinstance(value, int) or \
+         isinstance(value, long) or \
+         isinstance(value, float)
+
 
 class UidBuffer(TM):
   """Uid Buffer class caches a list of reserved uids in a transaction-safe way."""
@@ -222,6 +228,17 @@ class Query(QueryMixin):
   def getSearchMode(self):
     return self.search_mode
 
+  def asSearchTextExpression(self):
+    # This will be the standard way to represent
+    # complex values in listbox. Some fixed
+    # point must be garanteed
+    value = self.value
+    if isSimpleType(value) or isinstance(value, DateTime):
+      return str(value)
+    elif isinstance(value, (list, tuple)):
+      value = map(lambda x:str(x), value)
+      return (' %s ' % self.operator).join(value)
+
   def asSQLExpression(self, key_alias_dict=None,
                             keyword_search_keys=None,
                             full_text_search_keys=None,
@@ -263,10 +280,16 @@ class Query(QueryMixin):
         where_expression.append("%s >= '%s' and %s <= '%s'" % (key, query_min, key, query_max))
       elif range_value == 'ngt' :
         where_expression.append("%s <= '%s'" % (key, query_max))
-    elif isinstance(value, basestring) or isinstance(value, DateTime) \
+    elif isSimpleType(value) or isinstance(value, DateTime) \
         or isinstance(value, (list, tuple)):
+      # Convert into lists any value which contain a ;
+      # Refer to _listGlobalActions DCWorkflow patch
+      # for example of use
+      if isinstance(value, basestring):
+        value = value.split('OR')
+        value = map(lambda x:x.strip(), value)
       value_list = value
-      if isinstance(value, basestring) or isinstance(value, DateTime):
+      if isSimpleType(value) or isinstance(value, DateTime):
         value_list = [value]
       # For security.
       for value in value_list:
