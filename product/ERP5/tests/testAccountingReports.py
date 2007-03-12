@@ -34,7 +34,6 @@ import unittest
 from DateTime import DateTime
 
 from Products.ERP5.tests.testAccounting import AccountingTestCase
-from Products.ERP5Form.Selection import Selection
 
 
 class TestAccountingReports(AccountingTestCase):
@@ -189,102 +188,89 @@ class TestAccountingReports(AccountingTestCase):
          'mirror_section_title', 'debit', 'credit'])
     
     # First Transaction
-    line = data_line_list[0]
-    self.assertEquals(first.getSourceReference(),
-                      line.getColumnProperty('specific_reference'))
-    self.assertEquals(DateTime(2006, 2, 2),
-                      line.getColumnProperty('date'))
-    self.assertEquals('First One', line.getColumnProperty('title'))
-    self.assertEquals('41', line.getColumnProperty('node_title'))
-    self.assertEquals('Client 1',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(119.60, line.getColumnProperty('debit'))
-    self.assertEquals(0, line.getColumnProperty('credit'))
-    line = data_line_list[1]
+    self.checkLineProperties(data_line_list[0],
+                            specific_reference=first.getSourceReference(),
+                            date=DateTime(2006, 2, 2),
+                            title='First One',
+                            node_title='41',
+                            mirror_section_title='Client 1',
+                            debit=119.60,
+                            credit=0)
     # some values are only present when we display the first line of the
     # transaction (this is a way to see different transactions)
-    self.failIf(line.getColumnProperty('specific_reference'))
-    self.failIf(line.getColumnProperty('date'))
-    self.failIf(line.getColumnProperty('title'))
-    self.assertEquals('4457', line.getColumnProperty('node_title'))
-    self.assertEquals('Client 1',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(0, line.getColumnProperty('debit'))
-    self.assertEquals(19.60, line.getColumnProperty('credit'))
-    line = data_line_list[2]
-    self.failIf(line.getColumnProperty('specific_reference'))
-    self.failIf(line.getColumnProperty('date'))
-    self.failIf(line.getColumnProperty('title'))
-    self.assertEquals('7', line.getColumnProperty('node_title'))
-    self.assertEquals('Client 1',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(0, line.getColumnProperty('debit'))
-    self.assertEquals(100.00, line.getColumnProperty('credit'))
+    self.checkLineProperties(data_line_list[1],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='4457',
+                            mirror_section_title='Client 1',
+                            debit=0,
+                            credit=19.60)
+    self.checkLineProperties(data_line_list[2],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='7',
+                            mirror_section_title='Client 1',
+                            debit=0,
+                            credit=100)
 
     # Second Transaction
-    line = data_line_list[3]
-    self.assertEquals(second.getSourceReference(),
-                      line.getColumnProperty('specific_reference'))
-    self.assertEquals(DateTime(2006, 2, 2), line.getColumnProperty('date'))
-    self.assertEquals('Second One', line.getColumnProperty('title'))
-    self.assertEquals('41', line.getColumnProperty('node_title'))
-    self.assertEquals('Client 2',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(239.20, line.getColumnProperty('debit'))
-    self.assertEquals(0, line.getColumnProperty('credit'))
-    line = data_line_list[4]
-    self.failIf(line.getColumnProperty('specific_reference'))
-    self.failIf(line.getColumnProperty('date'))
-    self.failIf(line.getColumnProperty('title'))
-    self.assertEquals('4457', line.getColumnProperty('node_title'))
-    self.assertEquals('Client 2',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(0, line.getColumnProperty('debit'))
-    self.assertEquals(39.20, line.getColumnProperty('credit'))
-    line = data_line_list[5]
-    self.failIf(line.getColumnProperty('specific_reference'))
-    self.failIf(line.getColumnProperty('date'))
-    self.failIf(line.getColumnProperty('title'))
-    self.assertEquals('7', line.getColumnProperty('node_title'))
-    self.assertEquals('Client 2',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(0, line.getColumnProperty('debit'))
-    self.assertEquals(200, line.getColumnProperty('credit'))
+    self.checkLineProperties(data_line_list[3],
+                            specific_reference=second.getSourceReference(),
+                            date=DateTime(2006, 2, 2),
+                            title='Second One',
+                            node_title='41',
+                            mirror_section_title='Client 2',
+                            debit=239.20,
+                            credit=0)
+    self.checkLineProperties(data_line_list[4],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='4457',
+                            mirror_section_title='Client 2',
+                            debit=0,
+                            credit=39.20)
+    self.checkLineProperties(data_line_list[5],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='7',
+                            mirror_section_title='Client 2',
+                            debit=0,
+                            credit=200)
 
     # Third Transaction
-    line = data_line_list[6]
-    self.assertEquals(third.getSourceReference(),
-                      line.getColumnProperty('specific_reference'))
-    self.assertEquals(DateTime(2006, 2, 2, 2, 2), # 2006/02/02 will be
-                              # displayed, but this rendering level cannot be
-                              # tested with this framework
-                      line.getColumnProperty('date'))
-    self.assertEquals('Third One', line.getColumnProperty('title'))
-    self.assertEquals('41', line.getColumnProperty('node_title'))
-    self.assertEquals('John Smith',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(358.80, line.getColumnProperty('debit'))
-    self.assertEquals(0, line.getColumnProperty('credit'))
-    line = data_line_list[7]
-    self.failIf(line.getColumnProperty('specific_reference'))
-    self.failIf(line.getColumnProperty('date'))
-    self.failIf(line.getColumnProperty('title'))
-    self.assertEquals('4457', line.getColumnProperty('node_title'))
-    self.assertEquals('John Smith',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(0, line.getColumnProperty('debit'))
-    self.assertEquals(58.80, line.getColumnProperty('credit'))
-    line = data_line_list[8]
-    self.failIf(line.getColumnProperty('specific_reference'))
-    self.failIf(line.getColumnProperty('date'))
-    # If a title is set on the line, we can see it on this report
-    self.assertEquals('Line Title', line.getColumnProperty('title'))
-    self.assertEquals('7', line.getColumnProperty('node_title'))
-    self.assertEquals('John Smith',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(0, line.getColumnProperty('debit'))
-    self.assertEquals(300.0, line.getColumnProperty('credit'))
-
+    self.checkLineProperties(data_line_list[6],
+                            specific_reference=third.getSourceReference(),
+                            date=DateTime(2006, 2, 2, 2, 2),# 2006/02/02 will
+                              # be displayed, but this rendering level cannot
+                              # be tested with this framework
+                            title='Third One',
+                            node_title='41',
+                            mirror_section_title='John Smith',
+                            debit=358.80,
+                            credit=0)
+    self.checkLineProperties(data_line_list[7],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='4457',
+                            mirror_section_title='John Smith',
+                            debit=0,
+                            credit=58.80)
+    self.checkLineProperties(data_line_list[8],
+                            specific_reference='',
+                            date=None,
+                            # If a title is set on the line, we can see it on
+                            # this report
+                            title='Line Title',
+                            node_title='7',
+                            mirror_section_title='John Smith',
+                            debit=0,
+                            credit=300)
+    
     # Stat Line
     stat_line = line_list[-1]
     self.failUnless(stat_line.isStatLine())
@@ -354,34 +340,26 @@ class TestAccountingReports(AccountingTestCase):
     # we have 1 transactions with 2 lines
     self.assertEquals(2, len(data_line_list))
     
-    line = data_line_list[0]
-    self.assertEquals(transaction.getSourceReference(),
-                      line.getColumnProperty('specific_reference'))
-    self.assertEquals(DateTime(2006, 2, 2),
-                      line.getColumnProperty('date'))
-    self.assertEquals('Good One', line.getColumnProperty('title'))
-    self.assertEquals('41', line.getColumnProperty('node_title'))
-    self.assertEquals('Client 1',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(100.00, line.getColumnProperty('debit'))
-    self.assertEquals(0, line.getColumnProperty('credit'))
-    line = data_line_list[1]
-    # some values are only present when we display the first line of the
-    # transaction (this is a way to see different transactions)
-    self.failIf(line.getColumnProperty('specific_reference'))
-    self.failIf(line.getColumnProperty('date'))
-    self.failIf(line.getColumnProperty('title'))
-    self.assertEquals('5', line.getColumnProperty('node_title'))
-    self.assertEquals('Client 1',
-                      line.getColumnProperty('mirror_section_title'))
-    self.assertEquals(0, line.getColumnProperty('debit'))
-    self.assertEquals(100.00, line.getColumnProperty('credit'))
+    self.checkLineProperties(data_line_list[0],
+                            specific_reference=transaction.getSourceReference(),
+                            date=DateTime(2006, 2, 2),
+                            title='Good One',
+                            node_title='41',
+                            mirror_section_title='Client 1',
+                            debit=100,
+                            credit=0)
+    self.checkLineProperties(data_line_list[1],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='5',
+                            mirror_section_title='Client 1',
+                            debit=0,
+                            credit=100)
     
     # Stat Line
-    stat_line = line_list[-1]
-    self.failUnless(stat_line.isStatLine())
-    self.assertEquals(100, stat_line.getColumnProperty('debit'))
-    self.assertEquals(100, stat_line.getColumnProperty('credit'))
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=100, credit=100)
 
 
   def createAccountStatementDataSet(self):
