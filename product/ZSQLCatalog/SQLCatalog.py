@@ -2351,6 +2351,7 @@ class Catalog( Folder,
             'isDelivery':   ob.isDelivery, # XXX
             'isMovement':   ob.isMovement, # XXX
             'isPredicate':  ob.isPredicate, # XXX
+            'isDocument':   ob.isDocument, # XXX
             }
         return getEngine().getContext(data)
 
