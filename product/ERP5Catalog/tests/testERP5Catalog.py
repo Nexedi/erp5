@@ -1329,11 +1329,18 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       message = 'Test Limit'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    #Create 1002 Organisations
-    for i in xrange(1002):
-      self._makeOrganisation(title='abc%s' % (i),description='abc')
-    self.assertEqual(1000,len(self.getCatalogTool()(portal_type='Organisation')))
-    self.assertEqual(1002,len(self.getCatalogTool()(portal_type='Organisation',limit=None)))
+
+    ctool = self.getCatalogTool()
+    old_default_result_limit = cool.default_result_limit
+    max_ = 10
+    #Create max + 2 Organisations
+    for i in xrange(max_ + 2):
+      self._makeOrganisation(title='abc%s' % (i), description='abc')
+    self.assertEqual(max_,
+                     len(self.getCatalogTool()(portal_type='Organisation')))
+    self.assertEqual(max + 2,
+            len(self.getCatalogTool()(portal_type='Organisation', limit=None)))
+    ctool.default_result_limit = old_default_result_limit
 
   def playActivityList(self, method_id_list):
     get_transaction().commit()

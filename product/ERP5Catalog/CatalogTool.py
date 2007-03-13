@@ -73,8 +73,6 @@ try:
 except ImportError:
   pass
 
-DEFAULT_RESULT_LIMIT = 1000
-
 def getSecurityProduct(acl_users):
   """returns the security used by the user folder passed.
   (NuxUserGroup, ERP5Security, or None if anything else).
@@ -183,7 +181,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     id = 'portal_catalog'
     meta_type = 'ERP5 Catalog'
     security = ClassSecurityInfo()
-
+    default_result_limit = 1000
+    
     manage_options = ( { 'label' : 'Overview', 'action' : 'manage_overview' },
                      ) + ZCatalog.manage_options
 
@@ -511,7 +510,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
         query = self.getSecurityQuery(query=query, **kw)
-        kw.setdefault('limit', DEFAULT_RESULT_LIMIT)
+        kw.setdefault('limit', self.default_result_limit)
         return ZCatalog.searchResults(self, query=query, **kw)
 
     __call__ = searchResults
@@ -520,7 +519,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     def unrestrictedSearchResults(self, REQUEST=None, **kw):
         """Calls ZSQLCatalog.searchResults directly without restrictions.
         """
-        kw.setdefault('limit', DEFAULT_RESULT_LIMIT)
+        kw.setdefault('limit', self.default_result_limit)
         return ZCatalog.searchResults(self, REQUEST, **kw)
 
     # We use a string for permissions here due to circular reference in import
@@ -551,7 +550,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
         query = self.getSecurityQuery(query=query, **kw)
-        kw.setdefault('limit', DEFAULT_RESULT_LIMIT)
+        kw.setdefault('limit', self.default_result_limit)
         return ZCatalog.countResults(self, query=query, **kw)
     
     security.declarePrivate('unrestrictedCountResults')
