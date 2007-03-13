@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2007 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -30,120 +30,126 @@ from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Metho
 from Products.ERP5Type.PsycoWrapper import psyco
 
 class DefaultGetter(Method):
+  """
+  Gets a default reference object
+  """
+  _need__name__=1
+
+  # Generic Definition of Method Object
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
+
+  def __init__(self, id, key, warning=0):
+    """ 
+    'warning' argument means that this category is deprecated in the
+    property sheet, so the generated method will also be deprecated 
     """
-      Gets a default reference object
-    """
-    _need__name__=1
+    self._id = id
+    self.__name__ = id
+    self._key = key
+    self._warning = warning
 
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', )
-    func_code.co_argcount = 1
-    func_defaults = ()
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getDefaultRelatedValue(
+                            self._key,
+                            spec=kw.get('spec',()),
+                            filter=kw.get('filter', None),
+                            portal_type=kw.get('portal_type',()),
+                            strict_membership=kw.get('strict_membership',
+                            kw.get('strict', None))) # 'strict' is deprecated
 
-    def __init__(self, id, key, warning=0):
-      """ 'warning' argument means that this category is deprecated in the
-            property sheet, so the generated method will also be deprecated """
-      self._id = id
-      self.__name__ = id
-      self._key = key
-      self._warning = warning
-
-    def __call__(self, instance, *args, **kw):
-      if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      return instance._getDefaultRelatedValue(self._key,
-                                              spec=kw.get('spec',()),
-                                              filter=kw.get('filter', None),
-                                              portal_type=kw.get('portal_type',()),
-                                              strict_membership=kw.get('strict_membership',
-                                                kw.get('strict', None))) # 'strict' is deprecated
-
-    psyco.bind(__call__)
+  psyco.bind(__call__)
 
 Getter = DefaultGetter
 
 class ListGetter(Method):
+  """
+  Gets a list of reference objects
+  """
+  _need__name__=1
+
+  # Generic Definition of Method Object
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
+
+  def __init__(self, id, key, warning=0):
     """
-      Gets a list of reference objects
+    'warning' argument means that this category is deprecated in the
+    property sheet, so the generated method will also be deprecated 
     """
-    _need__name__=1
+    self._id = id
+    self.__name__ = id
+    self._key = key
+    self._warning = warning
 
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', )
-    func_code.co_argcount = 1
-    func_defaults = ()
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getRelatedValueList(
+                           self._key,
+                           spec=kw.get('spec',()),
+                           filter=kw.get('filter', None),
+                           portal_type=kw.get('portal_type',()),
+                           strict_membership=kw.get('strict_membership', 
+                           kw.get('strict', None))) # 'strict' is deprecated
 
-    def __init__(self, id, key, warning=0):
-      """ 'warning' argument means that this category is deprecated in the
-            property sheet, so the generated method will also be deprecated """
-      self._id = id
-      self.__name__ = id
-      self._key = key
-      self._warning = warning
-
-    def __call__(self, instance, *args, **kw):
-      if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      return instance._getRelatedValueList(self._key,
-                                           spec=kw.get('spec',()),
-                                           filter=kw.get('filter', None),
-                                           portal_type=kw.get('portal_type',()),
-                                           strict_membership=kw.get('strict_membership', 
-                                             kw.get('strict', None))) # 'strict' is deprecated
-
-    psyco.bind(__call__)
+  psyco.bind(__call__)
 
 class SetGetter(ListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = ListGetter.__call__(self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
-
+  """
+  Gets a category value set
+  """
+  def __call__(self, instance, *args, **kw):
+    result_list = ListGetter.__call__(self, instance, *args, **kw)
+    result_set = dict([(x, 0) for x in result_list]).keys()
+    return result_set
 
 class DefaultIdGetter(Method):
-    """
-      Gets a default reference object
-    """
-    _need__name__=1
+  """
+  Gets a default reference object
+  """
+  _need__name__=1
 
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', )
-    func_code.co_argcount = 1
-    func_defaults = ()
+  # Generic Definition of Method Object
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
 
-    def __init__(self, id, key, warning=0):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-      self._warning = warning
+  def __init__(self, id, key, warning=0):
+    self._id = id
+    self.__name__ = id
+    self._key = key
+    self._warning = warning
 
-    def __call__(self, instance, *args, **kw):
-      if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      return instance._getDefaultRelatedProperty(self._key, 'id',
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 strict_membership=kw.get('strict_membership', 
-                                                   kw.get('strict', None))) # 'strict' is deprecated
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getDefaultRelatedProperty(
+                           self._key, 'id',
+                           spec=kw.get('spec',()),
+                           filter=kw.get('filter', None),
+                           portal_type=kw.get('portal_type',()),
+                           strict_membership=kw.get('strict_membership', 
+                           kw.get('strict', None))) # 'strict' is deprecated
 
 
-    psyco.bind(__call__)
+  psyco.bind(__call__)
 
 IdGetter = DefaultIdGetter
 
 class IdListGetter(Method):
     """
-      Gets a list of reference objects
+    Gets a list of reference objects
     """
     _need__name__=1
 
@@ -163,165 +169,169 @@ class IdListGetter(Method):
     def __call__(self, instance, *args, **kw):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      return instance._getRelatedPropertyList(self._key, 'id',
-                                              spec=kw.get('spec',()),
-                                              filter=kw.get('filter', None),
-                                              portal_type=kw.get('portal_type',()),
-                                              strict_membership=kw.get('strict_membership', 
-                                                kw.get('strict', None))) # 'strict' is deprecated
+      return instance._getRelatedPropertyList(
+                           self._key, 'id',
+                           spec=kw.get('spec',()),
+                           filter=kw.get('filter', None),
+                           portal_type=kw.get('portal_type',()),
+                           strict_membership=kw.get('strict_membership', 
+                           kw.get('strict', None))) # 'strict' is deprecated
 
     psyco.bind(__call__)
 
 class IdSetGetter(IdListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = IdListGetter.__call__(self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
+  """
+  Gets a category value set
+  """
+  def __call__(self, instance, *args, **kw):
+    result_list = IdListGetter.__call__(self, instance, *args, **kw)
+    result_set = dict([(x, 0) for x in result_list]).keys()
+    return result_set
 
 class DefaultTitleGetter(Method):
-    """
-      Gets a default reference object
-    """
-    _need__name__=1
+  """
+  Gets a default reference object
+  """
+  _need__name__=1
 
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', )
-    func_code.co_argcount = 1
-    func_defaults = ()
+  # Generic Definition of Method Object
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
 
-    def __init__(self, id, key, warning=0):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-      self._warning = warning
+  def __init__(self, id, key, warning=0):
+    self._id = id
+    self.__name__ = id
+    self._key = key
+    self._warning = warning
 
-    def __call__(self, instance, *args, **kw):
-      if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      return instance._getDefaultRelatedProperty(self._key, 'title',
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 strict_membership=kw.get('strict_membership', 
-                                                   kw.get('strict', None))) # 'strict' is deprecated
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getDefaultRelatedProperty(
+                         self._key, 'title',
+                         spec=kw.get('spec',()),
+                         filter=kw.get('filter', None),
+                         portal_type=kw.get('portal_type',()),
+                         strict_membership=kw.get('strict_membership', 
+                         kw.get('strict', None))) # 'strict' is deprecated
 
-    psyco.bind(__call__)
+  psyco.bind(__call__)
 
 TitleGetter = DefaultTitleGetter
 
 class TitleListGetter(Method):
-    """
-      Gets a list of reference objects
-    """
-    _need__name__=1
+  """
+  Gets a list of reference objects
+  """
+  _need__name__=1
 
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', )
-    func_code.co_argcount = 1
-    func_defaults = ()
+  # Generic Definition of Method Object
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
 
-    def __init__(self, id, key, warning=0):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-      self._warning = warning
+  def __init__(self, id, key, warning=0):
+    self._id = id
+    self.__name__ = id
+    self._key = key
+    self._warning = warning
 
-    def __call__(self, instance, *args, **kw):
-      if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      return instance._getRelatedPropertyList(self._key, 'title',
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 strict_membership=kw.get('strict_membership', 
-                                                   kw.get('strict', None))) # 'strict' is deprecated
-    psyco.bind(__call__)
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getRelatedPropertyList(
+                        self._key, 'title',
+                        spec=kw.get('spec',()),
+                        filter=kw.get('filter', None),
+                        portal_type=kw.get('portal_type',()),
+                        strict_membership=kw.get('strict_membership', 
+                        kw.get('strict', None))) # 'strict' is deprecated
+  psyco.bind(__call__)
 
 class TitleSetGetter(TitleListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = TitleListGetter.__call__(self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
-
+  """
+  Gets a category value set
+  """
+  def __call__(self, instance, *args, **kw):
+    result_list = TitleListGetter.__call__(self, instance, *args, **kw)
+    result_set = dict([(x, 0) for x in result_list]).keys()
+    return result_set
 
 class DefaultPropertyGetter(Method):
-    """
-      Gets a default reference object
-    """
-    _need__name__=1
+  """
+  Gets a default reference object
+  """
+  _need__name__=1
 
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', )
-    func_code.co_argcount = 1
-    func_defaults = ()
+  # Generic Definition of Method Object
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
 
-    def __init__(self, id, key, warning=0):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-      self._warning = warning
+  def __init__(self, id, key, warning=0):
+    self._id = id
+    self.__name__ = id
+    self._key = key
+    self._warning = warning
 
-    def __call__(self, instance, key, *args, **kw):
-      if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      return instance._getDefaultRelatedProperty(self._key, key,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 strict_membership=kw.get('strict_membership', 
-                                                   kw.get('strict', None))) # 'strict' is deprecated
-    psyco.bind(__call__)
+  def __call__(self, instance, key, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getDefaultRelatedProperty(
+                         self._key, key,
+                         spec=kw.get('spec',()),
+                         filter=kw.get('filter', None),
+                         portal_type=kw.get('portal_type',()),
+                         strict_membership=kw.get('strict_membership', 
+                         kw.get('strict', None))) # 'strict' is deprecated
+  psyco.bind(__call__)
 
 PropertyGetter = DefaultPropertyGetter
 
 class PropertyListGetter(Method):
-    """
-      Gets a list of reference objects
-    """
-    _need__name__=1
+  """
+  Gets a list of reference objects
+  """
+  _need__name__=1
 
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', )
-    func_code.co_argcount = 1
-    func_defaults = ()
+  # Generic Definition of Method Object
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
 
-    def __init__(self, id, key, warning=0):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-      self._warning = warning
+  def __init__(self, id, key, warning=0):
+    self._id = id
+    self.__name__ = id
+    self._key = key
+    self._warning = warning
 
-    def __call__(self, instance, key, *args, **kw):
-      if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      return instance._getRelatedPropertyList(self._key, key,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 strict_membership=kw.get('strict_membership', 
-                                                   kw.get('strict', None))) # 'strict' is deprecated
-    psyco.bind(__call__)
+  def __call__(self, instance, key, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getRelatedPropertyList(
+                           self._key, key,
+                           spec=kw.get('spec',()),
+                           filter=kw.get('filter', None),
+                           portal_type=kw.get('portal_type',()),
+                           strict_membership=kw.get('strict_membership', 
+                           kw.get('strict', None))) # 'strict' is deprecated
+  psyco.bind(__call__)
 
 class PropertySetGetter(PropertyListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = PropertyListGetter.__call__(self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
+  """
+  Gets a category value set
+  """
+  def __call__(self, instance, *args, **kw):
+    result_list = PropertyListGetter.__call__(self, instance, *args, **kw)
+    result_set = dict([(x, 0) for x in result_list]).keys()
+    return result_set
 
