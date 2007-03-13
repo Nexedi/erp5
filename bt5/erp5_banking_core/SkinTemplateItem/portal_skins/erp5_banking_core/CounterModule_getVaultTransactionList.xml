@@ -117,8 +117,15 @@ if kw.has_key("explanation_uid"):\n
   inventory_kw[\'explanation_uid\'] = kw[\'explanation_uid\']\n
   if len(kw[\'explanation_uid\'])==0:\n
     return total_inventory_list\n
-if kw.has_key("cash_status"):\n
-  inventory_kw[\'variation_text\'] = "%%cash_status/%s%%" % kw[\'cash_status\']\n
+kw_has_cash_status = kw.has_key("cash_status")\n
+kw_has_emission_letter = kw.has_key("emission_letter")\n
+if kw_has_cash_status or kw_has_emission_letter:\n
+  variation_text_list = [\'%\']\n
+  if kw_has_cash_status:\n
+    variation_text_list.append("cash_status/%s%%" % kw[\'cash_status\'])\n
+  if kw_has_emission_letter:\n
+    variation_text_list.append("emission_letter/%s%%" % kw[\'emission_letter\'])\n
+  inventory_kw[\'variation_text\'] = \'\'.join(variation_text_list)\n
 \n
 if at_date is not None:\n
   # XXX this make sure we look at the end of the day\n
@@ -317,6 +324,9 @@ return repr([x for x in total_inventory_list])\n
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>len</string>
+                            <string>kw_has_cash_status</string>
+                            <string>kw_has_emission_letter</string>
+                            <string>variation_text_list</string>
                             <string>column_list</string>
                             <string>_getiter_</string>
                             <string>_apply_</string>
