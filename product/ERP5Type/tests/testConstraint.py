@@ -155,7 +155,7 @@ class TestConstraint(PropertySheetTestCase):
     """
     object = sequence.get('object')
     object_title = self.object_title
-    object.edit(title=object_title)
+    object.setTitle(object_title)
 
   def stepSetObjectNoneTitle(self, sequence=None, 
                              sequence_list=None, **kw):
@@ -163,8 +163,9 @@ class TestConstraint(PropertySheetTestCase):
       Set a different title value
     """
     object = sequence.get('object')
-    object_title = self.object_title
-    object.edit(title=None)
+    # Do not call edit, as we want to explicitely modify the property
+    # (and edit modify only if value is different)
+    object.setTitle(None)
 
   def stepSetObjectEmptyTitle(self, sequence=None,
                               sequence_list=None, **kw):
@@ -172,8 +173,9 @@ class TestConstraint(PropertySheetTestCase):
       Set a different title value
     """
     object = sequence.get('object')
-    object_title = self.object_title
-    object.edit(title='')
+    # Do not call edit, as we want to explicitely modify the property
+    # (and edit modify only if value is different)
+    method = object.setTitle('')
 
   def stepSetObjectIntTitle(self, sequence=None,
                             sequence_list=None, **kw):
@@ -251,7 +253,7 @@ class TestConstraint(PropertySheetTestCase):
   def stepCallRelatedCheckConsistency(self, sequence=None, 
                                       sequence_list=None, **kw):
     """
-      Call checkConsistency of a Constraint.
+    Call checkConsistency of a Constraint.
     """
     object = sequence.get('group')
     constraint = sequence.get('constraint')
@@ -264,20 +266,20 @@ class TestConstraint(PropertySheetTestCase):
   def stepCheckIfConstraintSucceeded(self, sequence=None, 
                                      sequence_list=None, **kw):
     """
-      Call checkConsistency of a Constraint.
+    Check that checkConsistency returns an empty list
     """
     error_list = sequence.get('error_list')
     self.failIfDifferentSet(error_list, [],
-          "error_list : %s" % error_list)
+          "error_list : %s" % [x.message for x in error_list])
 
   def stepCheckIfConstraintFailed(self, sequence=None, 
                                   sequence_list=None, **kw):
     """
-      Call checkConsistency of a Constraint.
+    Check that checkConsistency does not return an empty list
     """
     error_list = sequence.get('error_list')
     self.failUnless(error_list != [],
-          "error_list : %s" % error_list)
+                    "error_list : %s" % error_list)
 
   def stepCreateConstraint(self, sequence=None, 
                            sequence_list=None, **kw):
@@ -403,14 +405,26 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
+
+    # Test Constraint without title property
+    # on object
+    sequence_string = '\
+              CreateObject \
+              CreatePropertyExistence2 \
+              CallCheckConsistency \
+              CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
     # Test Constraint with property defined on object
     # With None value
+    # None is considered as a NULL value for string
+    # and so, is considered as a data
     sequence_string = '\
               CreateObject \
               SetObjectNoneTitle \
               CreatePropertyExistence2 \
               CallCheckConsistency \
-              CheckIfConstraintFailed \
+              CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
     # Test Constraint with property defined on object
