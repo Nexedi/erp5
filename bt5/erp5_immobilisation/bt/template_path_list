@@ -1,2 +1,3 @@
 portal_deliveries/amortisation_transaction_builder
 portal_rules/default_amortisation_rule
+portal_rules/default_amortisation_rule/**
