@@ -241,6 +241,30 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection_object = Selection(params=params)
       self.setSelectionFor(selection_name, selection_object, REQUEST)
 
+    security.declareProtected(ERP5Permissions.View, 'setSelectionDomainDictFor')
+    def getSelectionDomainDictFor(self, selection_name, REQUEST=None):
+      """
+        Returns the Domain dict for a given selection_name
+      """
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        try:
+          return selection.getDomain().asDomainDict
+        except AttributeError:
+          return {}
+
+    security.declareProtected(ERP5Permissions.View, 'setSelectionDomainDictFor')
+    def getSelectionReportDictFor(self, selection_name, REQUEST=None):
+      """
+        Returns the Report dict for a given selection_name
+      """
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        try:
+          return selection.getReport().asDomainDict
+        except AttributeError:
+          return {}
+
     security.declareProtected(ERP5Permissions.View, 'setSelectionCheckedUidsFor')
     def setSelectionCheckedUidsFor(self, selection_name, checked_uids, REQUEST=None):
       """
@@ -346,6 +370,15 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         selection.edit(invert_mode=invert_mode)
+
+    security.declareProtected(ERP5Permissions.View, 'getSelectionInvertModeFor')
+    def getSelectionInvertModeUidListFor(self, selection_name, REQUEST=None):
+      """Get the 'invert_mode' parameter of a selection.
+      """
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        return selection.getInvertModeUidList()
+      return 0
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionToIds')
     def setSelectionToIds(self, selection_name, selection_uids, REQUEST=None):

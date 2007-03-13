@@ -34,13 +34,11 @@ if __name__ == '__main__':
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-from AccessControl.SecurityManagement import newSecurityManager,\
-                                             getSecurityManager
-from zLOG import LOG
-from DateTime import DateTime
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Form.Document.Preference import Priority
+from AccessControl.SecurityManagement import newSecurityManager
+from zLOG import LOG
+from Testing import ZopeTestCase
+from Products.ERP5Type.Utils import get_request
 from Products.ERP5Form.Selection import Selection
 
 
@@ -80,6 +78,136 @@ class TestSelectionTool(ERP5TypeTestCase):
     if not run: return
     self.assertEquals({'key':'value'},
                       self.portal_selections.getSelectionParamsFor('test_selection'))
+
+  def testCallSelectionFor(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals(None,
+                      self.portal_selections.callSelectionFor('not_found_selection'))
+    # XXX more tests needed
+
+  def testCheckedUids(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals([],
+                      self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
+    self.portal_selections.setSelectionCheckedUidsFor('test_selection',
+                                                      ['foo'])
+    self.assertEquals(['foo'],
+                      self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
+    self.portal_selections.updateSelectionCheckedUidList('test_selection',
+                                                         ['foo'], ['bar'])
+    self.assertEquals(['bar'],
+                      self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
+    self.portal_selections.checkAll('test_selection',
+                                    ['foo', 'baz'])
+    self.assertEquals(sorted(['foo', 'bar', 'baz']),
+                      sorted(self.portal_selections.getSelectionCheckedUidsFor('test_selection')))
+    self.portal_selections.uncheckAll('test_selection',
+                                    ['foo', 'bar'])
+    self.assertEquals(['baz'],
+                      self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
+
+  def testGetSelectionListUrlFor(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals('',
+                      self.portal_selections.getSelectionListUrlFor('test_selection'))
+
+  def testInvertMode(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.portal_selections.setSelectionInvertModeFor('test_selection', 1)
+    self.assertEquals(1,
+                      self.portal_selections.getSelectionInvertModeFor('test_selection'))
+    self.assertEquals([],
+                      self.portal_selections.getSelectionInvertModeUidListFor('test_selection'))
+
+  def testSetSelectionToAll(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.portal_selections.checkAll('test_selection',
+                                    ['foo', 'bar'])
+    self.portal_selections.setSelectionToAll('test_selection')
+    self.assertEquals(0,
+                      self.portal_selections.getSelectionInvertModeFor('test_selection'))
+    self.assertEquals({},
+                      self.portal_selections.getSelectionParamsFor('test_selection'))
+    self.assertEquals([],
+                      self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
+
+  def testSortOrder(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.portal_selections.setSelectionSortOrder('test_selection',
+                                                 [('title', 'ascending')])
+    self.assertEquals([('title', 'ascending')],
+                      self.portal_selections.getSelectionSortOrder('test_selection'))
+    self.portal_selections.setSelectionQuickSortOrder('test_selection',
+                                                      'title')
+    self.assertEquals([('title', 'descending')],
+                      self.portal_selections.getSelectionSortOrder('test_selection'))
+    self.portal_selections.setSelectionQuickSortOrder('test_selection',
+                                                      'date')
+    self.assertEquals([('date', 'ascending')],
+                      self.portal_selections.getSelectionSortOrder('test_selection'))
+
+  def testColumns(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals([],
+                      self.portal_selections.getSelectionColumns('test_selection'))
+    self.assertEquals([('default_key', 'default_val')],
+                      self.portal_selections.getSelectionColumns('test_selection', [('default_key', 'default_val')]))
+    self.portal_selections.setSelectionColumns('test_selection',
+                                                 [('key', 'val')])
+    self.assertEquals([('key', 'val')],
+                      self.portal_selections.getSelectionColumns('test_selection'))
+    self.assertEquals([('key', 'val')],
+                      self.portal_selections.getSelectionColumns('test_selection', [('default_key', 'default_val')]))
+
+  def testStats(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals([' ', ' ', ' ', ' ', ' ', ' '],
+                      self.portal_selections.getSelectionStats('test_selection'))
+    self.portal_selections.setSelectionStats('test_selection',
+                                                 [])
+    self.assertEquals([],
+                      self.portal_selections.getSelectionStats('test_selection'))
+
+  def testView(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    # XXX tests should be added
+
+  def testPage(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    # XXX tests should be added
+
+  def testDomainSelection(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals('',
+                      self.portal_selections.buildSQLJoinExpressionFromDomainSelection({}))
+    self.assertEquals('',
+                      self.portal_selections.buildSQLExpressionFromDomainSelection({}))
+    from Products.ERP5Form.Selection import DomainSelection
+    self.assertEquals('',
+                      self.portal_selections.buildSQLJoinExpressionFromDomainSelection(DomainSelection({}).__of__(self.portal_selections)))
+    category_tool = self.getCategoryTool()
+    base = category_tool.newContent(portal_type = 'Base Category',
+                                   id='test_base_cat')
+    base_uid = base.getUid()
+    self.assertEquals('category AS test_base_cat_category',
+                      self.portal_selections.buildSQLJoinExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat')}))
+    self.assertEquals('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d) )' % (base_uid, base_uid),
+                      self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat')}))
+    test = base.newContent(portal_type = 'Category', id = 'test_cat')
+    test_uid = test.getUid()
+    self.assertEquals('category AS test_base_cat_category',
+                      self.portal_selections.buildSQLJoinExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}))
+    self.assertEquals('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d) )' % (test_uid, base_uid),
+                      self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}))
+    self.assertEquals('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d AND test_base_cat_category.category_strict_membership = 1) )' % (test_uid, base_uid),
+                      self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}, strict_membership = 1))
+
+  def testDict(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals({},
+                      self.portal_selections.getSelectionDomainDictFor('test_selection'))
+    self.assertEquals({},
+                      self.portal_selections.getSelectionReportDictFor('test_selection'))
 
 if __name__ == '__main__':
   framework()
