@@ -326,6 +326,8 @@ class SQLDict(RAMDict):
             if len(uid_list):
               activity_tool.SQLDict_assignMessage(uid = uid_list, 
                                                   processing_node = INVOKE_ERROR_STATE)
+              LOG('SQLDict', WARNING, 'Error in ActivityTool.invoke', e=sys.exc_info())
+
         get_transaction().commit()
         return 0
 

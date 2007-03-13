@@ -122,7 +122,7 @@ class SQLQueue(RAMQueue):
           return 0
 
         # Try to invoke
-        activity_tool.invoke(m) # Try to invoke the message - what happens if read conflict error restarts transaction ?
+        activity_tool.invoke(m) # Try to invoke the message
         if m.is_executed:                                          # Make sure message could be invoked
           get_transaction().commit()                                        # If successful, commit
       except:
@@ -142,6 +142,8 @@ class SQLQueue(RAMQueue):
           # For the other exceptions, put it into an error state.
           activity_tool.SQLQueue_assignMessage(uid = line.uid, 
                                                processing_node = INVOKE_ERROR_STATE)
+          LOG('SQLQueue', WARNING, 'Error in ActivityTool.invoke', e=sys.exc_info())
+
         get_transaction().commit()
         return 0
 
