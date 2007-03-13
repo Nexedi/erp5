@@ -1550,3 +1550,45 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql = person_module.searchFolder(src__=1, sort_on=[('title','ascending')])
     self.failUnless('use index' in sql)
 
+  def test_50_LocalRolesArgument(self, quiet=quiet, run=run_all_test):
+    """test local_roles= argument
+    """
+    if not run: return
+    if not quiet:
+      message = 'local_roles= argument'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    login = PortalTestCase.login
+
+    uf = self.getPortal().acl_users
+    uf._doAddUser('bob', '', ['Member'], [])
+
+    # create two documents, one with Assignee local roles, one without
+    folder = self.getOrganisationModule()
+    ob1 = folder.newContent(title='Object Title')
+    ob1.manage_permission('View', ['Member'], 1)
+    ob2 = folder.newContent(title='Object Title')
+    ob2.manage_addLocalRoles('bob', ['Assignee'])
+    get_transaction().commit()
+    self.tic()
+    
+    # by default bob can see those 2 documents
+    login(self, 'bob')
+    ctool = self.getCatalogTool()
+    self.assertEquals(2, len(ctool.searchResults(title='Object Title')))
+    self.assertEquals(2, ctool.countResults(title='Object Title')[0][0])
+    
+    # if we specify local_roles= it will only returns documents on with bob has
+    # a local roles
+    self.assertEquals(1,
+                len(ctool.unrestrictedSearchResults(title='Object Title',
+                                                    local_roles='Assignee')))
+    self.assertEquals(1,
+                ctool.unrestrictedCountResults(title='Object Title',
+                                               local_roles='Assignee')[0][0])
+    # this also work for searchFolder and countFolder
+    self.assertEquals(1, len(folder.searchFolder(title='Object Title',
+                                             local_roles='Assignee')))
+    self.assertEquals(1, folder.countFolder(title='Object Title',
+                                             local_roles='Assignee')[0][0])
+    
