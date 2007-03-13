@@ -96,6 +96,12 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>item_uid_list=[], at_date=None</string> </value>
         </item>

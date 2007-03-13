@@ -1,4 +1,9 @@
 Accounting Transaction Module | build_amortisation
+Accounting Transaction Module | select_items_to_build_amortisation_transactions
+Amortisation Rule | history
+Amortisation Rule | metadata
+Amortisation Rule | print
+Amortisation Rule | view
 Amortisation Transaction Line | history
 Amortisation Transaction Line | metadata
 Amortisation Transaction Line | print

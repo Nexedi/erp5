@@ -70,10 +70,10 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>Immobilisation</string>
                 <string>Internal Packing List</string>
-                <string>Inventory</string>
                 <string>Purchase Packing List</string>
+                <string>Reevaluation Packing List</string>
+                <string>Restoration Packing List</string>
                 <string>Sale Packing List</string>
               </list>
             </value>

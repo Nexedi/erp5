@@ -68,10 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>immobilisation_content = state_change[\'object\']\n
-immobilisation = immobilisation_content.getRootDeliveryValue()\n
-if immobilisation.getImmobilisationState() != \'calculating\':\n
-  immobilisation.calculate_immobilisation_validity()\n
+            <value> <string>movement_content = state_change[\'object\']\n
+movement = movement_content.getRootDeliveryValue()\n
+if movement.getImmobilisationState() != \'calculating\':\n
+  movement.calculate_immobilisation_validity()\n
+else:\n
+  movement.updateImmobilisationState()\n
 </string> </value>
         </item>
         <item>
@@ -82,6 +84,12 @@ if immobilisation.getImmobilisationState() != \'calculating\':\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -126,9 +134,9 @@ if immobilisation.getImmobilisationState() != \'calculating\':\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getitem_</string>
-                            <string>immobilisation_content</string>
+                            <string>movement_content</string>
                             <string>_getattr_</string>
-                            <string>immobilisation</string>
+                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>

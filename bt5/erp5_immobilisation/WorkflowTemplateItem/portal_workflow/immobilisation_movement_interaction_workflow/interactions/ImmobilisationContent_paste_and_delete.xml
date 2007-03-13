@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -56,15 +62,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ImmobilisationContent_delete_or_paste</string> </value>
+            <value> <string>ImmobilisationContent_paste_and_delete</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>manage_beforeDelete</string>
                 <string>manage_afterAdd</string>
                 <string>manage_afterClone</string>
+                <string>manage_beforeDelete</string>
               </list>
             </value>
         </item>

@@ -68,8 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context = state_change[\'object\']\n
-for movement in context.getAggregatedItemsNextImmobilisationMovementValueList():\n
+            <value> <string>pl = state_change[\'object\']\n
+for movement in pl.getAggregatedItemsNextImmobilisationMovementValueList():\n
   if movement.getImmobilisationState() != \'calculating\':\n
     movement.calculate_immobilisation_validity()\n
 context.ImmobilisationDelivery_expandAggregatedItems()\n
@@ -88,17 +88,19 @@ context.ImmobilisationDelivery_expandAggregatedItems()\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change,**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -128,10 +130,11 @@ context.ImmobilisationDelivery_expandAggregatedItems()\n
                             <string>state_change</string>
                             <string>kw</string>
                             <string>_getitem_</string>
-                            <string>context</string>
+                            <string>pl</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>movement</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

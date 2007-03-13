@@ -2,6 +2,9 @@
  <portal_type id="Accounting Transaction Module">
   <item>Amortisation Transaction</item>
  </portal_type>
+ <portal_type id="Amortisation Rule">
+  <item>Category Divergence Tester</item>
+ </portal_type>
  <portal_type id="Amortisation Transaction">
   <item>Amortisation Transaction Line</item>
  </portal_type>

@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_extra_cost_price</string> </value>
         </item>
@@ -171,7 +177,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>figure</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -211,7 +217,7 @@
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
-                    <value> <string>-1234.5</string> </value>
+                    <value> <string>-1 234.5</string> </value>
                 </item>
                 <item>
                     <key> <string>precision</string> </key>

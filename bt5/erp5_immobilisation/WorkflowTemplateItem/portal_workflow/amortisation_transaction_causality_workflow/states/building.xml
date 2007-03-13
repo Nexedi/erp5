@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -72,15 +78,49 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Access contents information</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Auditor</string>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Delete objects</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>View</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Auditor</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>

@@ -68,8 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>object = state_change.object\n
-context.log(\'propaging edit on delivery\', object.getRootDeliveryValue().getRelativeUrl())\n
+            <value> <string>object = state_change[\'object\']\n
+#object.log(\'propaging edit on delivery\', object.getRootDeliveryValue().getRelativeUrl())\n
 object.getRootDeliveryValue().edit()\n
 </string> </value>
         </item>
@@ -81,6 +81,12 @@ object.getRootDeliveryValue().edit()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -114,9 +120,9 @@ object.getRootDeliveryValue().edit()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>object</string>
-                            <string>context</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

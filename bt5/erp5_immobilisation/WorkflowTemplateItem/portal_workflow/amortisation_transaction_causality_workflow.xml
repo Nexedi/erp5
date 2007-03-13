@@ -50,6 +50,9 @@
               <tuple>
                 <string>Modify portal content</string>
                 <string>Add portal content</string>
+                <string>Delete objects</string>
+                <string>View</string>
+                <string>Access contents information</string>
               </tuple>
             </value>
         </item>

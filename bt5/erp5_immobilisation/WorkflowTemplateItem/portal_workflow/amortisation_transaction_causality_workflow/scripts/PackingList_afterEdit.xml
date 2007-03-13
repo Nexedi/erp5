@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context = state_change.object\n
+            <value> <string>context = state_change[\'object\']\n
 if context.getSimulationState()!=\'draft\':\n
   context.activate().updateCausalityState()\n
 </string> </value>
@@ -81,6 +81,12 @@ if context.getSimulationState()!=\'draft\':\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -115,8 +121,9 @@ if context.getSimulationState()!=\'draft\':\n
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

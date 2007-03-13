@@ -86,7 +86,7 @@ returned_dict = {}\n
 delivery_related_list = transaction_line.getDeliveryRelatedValueList()\n
 \n
 for simulation_movement in delivery_related_list:\n
-  applied_rule = simulation_movement.getParent()\n
+  applied_rule = simulation_movement.getParentValue()\n
   item_value = applied_rule.getCausalityValue()\n
   item_uid = item_value.getUid()\n
 \n
@@ -129,6 +129,12 @@ return returned_value\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

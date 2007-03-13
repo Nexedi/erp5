@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -77,6 +83,8 @@
                 <string>Inventory Line</string>
                 <string>Purchase Packing List Cell</string>
                 <string>Purchase Packing List Line</string>
+                <string>Reevaluation Packing List Line</string>
+                <string>Restoration Packing List Line</string>
                 <string>Sale Packing List Cell</string>
                 <string>Sale Packing List Line</string>
               </list>
@@ -85,9 +93,7 @@
         <item>
             <key> <string>script_name</string> </key>
             <value>
-              <list>
-                <string>ImmobilisationContent_updateImmobilisationState</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>

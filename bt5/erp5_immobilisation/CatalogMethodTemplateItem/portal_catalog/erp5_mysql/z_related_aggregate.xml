@@ -62,6 +62,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>

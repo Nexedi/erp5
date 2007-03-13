@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -63,7 +69,7 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>bottom</string>
+                <string>center</string>
                 <string>list</string>
                 <string>hidden</string>
               </list>
@@ -74,7 +80,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list>
                         <string>my_input_account</string>

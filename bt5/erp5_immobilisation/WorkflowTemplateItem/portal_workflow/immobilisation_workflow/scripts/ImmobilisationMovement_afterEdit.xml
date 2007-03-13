@@ -68,21 +68,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context = state_change[\'object\']\n
-context.activate().updateImmobilisationState()\n
+            <value> <string>pl = state_change[\'object\']\n
+pl.activate().updateImmobilisationState()\n
 \n
 # It is done before and after because stop_date may have change\n
-for movement in context.getAggregatedItemsNextImmobilisationMovementValueList():\n
+for movement in pl.getAggregatedItemsNextImmobilisationMovementValueList():\n
   if movement.getImmobilisationState() != \'calculating\':\n
     movement.calculate_immobilisation_validity()\n
 \n
-movement_list = context.getImmobilisationMovementList()\n
+movement_list = pl.getImmobilisationMovementList()\n
 movement_path_list = [x.getPath() for x in movement_list]\n
-\n
-context.activate(\n
-   after_path_and_method_id=(\n
-      movement_path_list, [\'immediateReindexObject\', \'recursiveImmediateReindexObject\'])\n
-   ).ImmobilisationDelivery_expandAggregatedItems()\n
+#pl.log(\'immobilisation_workflow after edit, movement_path_list\',movement_path_list)\n
+pl.activate(after_path_and_method_id=(movement_path_list, [\'immediateReindexObject\', \'recursiveImmediateReindexObject\'])).ImmobilisationDelivery_expandAggregatedItems()\n
 </string> </value>
         </item>
         <item>
@@ -98,17 +95,19 @@ context.activate(\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change,**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -138,7 +137,7 @@ context.activate(\n
                             <string>state_change</string>
                             <string>kw</string>
                             <string>_getitem_</string>
-                            <string>context</string>
+                            <string>pl</string>
                             <string>_getattr_</string>
                             <string>_getiter_</string>
                             <string>movement</string>

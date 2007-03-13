@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = state_change.object\n
+            <value> <string>packing_list = state_change[\'object\']\n
 if packing_list.getSimulationState()!=\'draft\':\n
   packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImmediateReindexObject\')).updateAppliedRule(rule_id=\'default_delivery_rule\')\n
 \n
@@ -94,8 +94,22 @@ if packing_list.getSimulationState()!=\'draft\':\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,8 +137,9 @@ if packing_list.getSimulationState()!=\'draft\':\n
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

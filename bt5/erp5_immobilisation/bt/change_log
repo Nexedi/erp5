@@ -1,3 +1,5 @@
+2006-09-18 Nicolas
+* Use amortisation_transaction_builder instead amortisation_transaction_builder
 2006-03-10 Guillaume
 * Translated amortisation method titles
 

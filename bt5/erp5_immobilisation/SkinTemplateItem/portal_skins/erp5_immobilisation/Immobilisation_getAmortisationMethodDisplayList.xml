@@ -72,13 +72,16 @@
                (context.Base_translateString(\'Unimmobilise\', \'content\'), \'unimmobilise\')]\n
 \n
 amortisation_method_list = context.Immobilisation_getAmortisationMethodList()\n
+\n
 for method in amortisation_method_list:\n
+  #For BCEAO we use only linear Amortisation Method or no_amortisation\n
   id = method[1].getId()\n
-  display = method[1].title or id\n
-  display = context.Base_translateString(display, \'content\')\n
-  return_list.append( (\'(%s) %s\' % (method[0], display), \'%s/%s\' % (method[0], id) ) )\n
+  if id in [\'linear\',\'no_amortisation\']:\n
+    display = method[1].title or id\n
+    display = context.Base_translateString(display, \'content\')\n
+    return_list.append( (\'(%s) %s\' % (method[0], display), \'%s/%s\' % (method[0], id) ) )\n
     \n
-return [(\'\',\'\')] + return_list\n
+return [(context.Base_translateString(\'Default Amortisation Data\'),\'\')] + return_list\n
 </string> </value>
         </item>
         <item>
@@ -89,6 +92,12 @@ return [(\'\',\'\')] + return_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

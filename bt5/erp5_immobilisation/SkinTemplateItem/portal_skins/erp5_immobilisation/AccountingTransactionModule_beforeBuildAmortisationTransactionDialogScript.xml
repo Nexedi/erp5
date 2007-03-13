@@ -108,6 +108,12 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_name=None,uids=None,listbox_uid=(),form_id=None,cancel_url=\'\',**kw</string> </value>
         </item>

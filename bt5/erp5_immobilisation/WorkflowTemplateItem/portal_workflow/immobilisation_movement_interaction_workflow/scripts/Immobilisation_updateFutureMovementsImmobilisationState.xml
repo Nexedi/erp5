@@ -73,10 +73,6 @@
 for movement in context.getAggregatedItemsNextImmobilisationMovementValueList():\n
   if movement.getImmobilisationState() != \'calculating\':\n
     movement.calculate_immobilisation_validity()\n
-\n
-movement_list = context.getImmobilisationMovementList()\n
-movement_uid_list = [\'%s\' % x.getUid() for x in movement_list]\n
-movement_uid_list.append(\'%s\' % context.getUid())\n
 context.ImmobilisationDelivery_expandAggregatedItems()\n
 </string> </value>
         </item>
@@ -143,11 +139,6 @@ context.ImmobilisationDelivery_expandAggregatedItems()\n
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>movement</string>
-                            <string>movement_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>movement_uid_list</string>
                           </tuple>
                         </value>
                     </item>

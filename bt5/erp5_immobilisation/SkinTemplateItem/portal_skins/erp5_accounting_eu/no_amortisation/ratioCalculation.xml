@@ -86,6 +86,12 @@ return None\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>initial_remaining_annuities=None, start_remaining_annuities=None, stop_remaining_annuities=None, current_annuity=None, start_remaining_durability=None, stop_remaining_durability=None, **kw</string> </value>
         </item>

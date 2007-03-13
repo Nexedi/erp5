@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transaction = state_change.object\n
+            <value> <string>transaction = state_change[\'object\']\n
 transaction.log(\'after add on transaction\',transaction)\n
 </string> </value>
         </item>
@@ -80,6 +80,12 @@ transaction.log(\'after add on transaction\',transaction)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -113,8 +119,9 @@ transaction.log(\'after add on transaction\',transaction)\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

@@ -75,7 +75,7 @@ causality_value_list = []\n
 for movement in context.getMovementList():\n
   simulation_movement_list = movement.getDeliveryRelatedValueList()\n
   for simulation_movement in simulation_movement_list:\n
-    applied_rule = simulation_movement.getParent()\n
+    applied_rule = simulation_movement.getParentValue()\n
     item_list = applied_rule.getCausalityValueList()\n
     if len(item_list) > 0:\n
       item = item_list[0]\n
@@ -98,7 +98,9 @@ for movement in context.getMovementList():\n
 context.edit(causality_value_list = causality_value_list)\n
 \n
 # Update causality state\n
-context.startBuilding()\n
+#Test Add by Nicolas\n
+if hasattr(context, \'startBuilding\'):\n
+  context.startBuilding()\n
 context.activate(after_tag=\'after_amortisation_build\').updateCausalityState()\n
 
 
@@ -112,6 +114,12 @@ context.activate(after_tag=\'after_amortisation_build\').updateCausalityState()\
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -158,6 +166,7 @@ context.activate(after_tag=\'after_amortisation_build\').updateCausalityState()\
                             <string>_getitem_</string>
                             <string>item</string>
                             <string>total_quantity</string>
+                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>

@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -77,6 +83,7 @@
                 <string>Inventory</string>
                 <string>Purchase Packing List</string>
                 <string>Reevaluation Packing List</string>
+                <string>Restoration Packing List</string>
                 <string>Sale Packing List</string>
               </list>
             </value>

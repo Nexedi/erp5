@@ -72,7 +72,7 @@
 if start_remaining_annuities is None or stop_remaining_annuities is None \\\n
      or start_remaining_durability is None or stop_remaining_durability is None \\\n
      or initial_durability is None:\n
-  context.log(\'Error for actual use ratio calculation : one of theses properties is None : start_remaining_annuities, stop_remaining_annuities, start_remaining_durability, stop_remaining_durability, or initial_durability :\' % (\n
+  context.log(\'Error for actual use ratio calculation : one of theses properties is None : start_remaining_annuities : %s, stop_remaining_annuities : %s, start_remaining_durability : %s, stop_remaining_durability : %s, or initial_durability : %s\' % (\n
      repr(start_remaining_annuities), repr(stop_remaining_annuities), repr(start_remaining_durability), repr(stop_remaining_durability), repr(initial_durability)),\'\')\n
   return None\n
 \n
@@ -96,6 +96,12 @@ except ZeroDivisionError:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

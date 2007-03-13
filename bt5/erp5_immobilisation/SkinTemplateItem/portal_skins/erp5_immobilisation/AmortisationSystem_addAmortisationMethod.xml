@@ -140,6 +140,12 @@ return printed\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>amortisation_method=None</string> </value>
         </item>

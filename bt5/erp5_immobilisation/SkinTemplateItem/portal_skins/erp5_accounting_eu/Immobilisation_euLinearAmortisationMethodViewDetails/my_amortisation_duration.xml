@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_amortisation_duration</string> </value>
         </item>
@@ -191,7 +197,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>figure</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>

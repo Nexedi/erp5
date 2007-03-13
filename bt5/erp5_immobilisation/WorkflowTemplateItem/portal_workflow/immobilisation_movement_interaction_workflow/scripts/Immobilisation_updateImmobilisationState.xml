@@ -69,8 +69,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>immobilisation = state_change[\'object\']\n
+immobilisation.log(\'immoState\',immobilisation.getImmobilisationState())\n
 if immobilisation.getImmobilisationState() != \'calculating\':\n
   immobilisation.calculate_immobilisation_validity()\n
+else:\n
+  immobilisation.updateImmobilisationState()\n
 </string> </value>
         </item>
         <item>
@@ -81,6 +84,12 @@ if immobilisation.getImmobilisationState() != \'calculating\':\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

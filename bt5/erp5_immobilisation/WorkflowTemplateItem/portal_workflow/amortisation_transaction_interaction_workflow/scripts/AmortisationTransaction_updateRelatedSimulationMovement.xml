@@ -87,13 +87,22 @@ for line in delivery.getMovementList():\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Auditor</string>
+                <string>Member</string>
+              </tuple>
             </value>
         </item>
         <item>

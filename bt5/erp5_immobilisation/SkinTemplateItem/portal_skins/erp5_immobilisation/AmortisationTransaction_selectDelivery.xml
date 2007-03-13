@@ -71,9 +71,10 @@
             <value> <string>kw = { \'portal_type\':\'Amortisation Transaction\',\n
        \'simulation_state\': context.getPortalUpdatableAmortisationTransactionStateList() }\n
 \n
-return_list = context.portal_catalog(**kw)\n
-for line in return_list:\n
-  t = line.getObject()\n
+return_list = [line.getObject() for line in context.portal_catalog(**kw)]\n
+#for line in return_list:\n
+#  t = line.getObject()\n
+#context.log(\'return_list\',return_list)\n
 return return_list\n
 </string> </value>
         </item>
@@ -85,6 +86,12 @@ return return_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -121,11 +128,12 @@ return return_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>kw</string>
-                            <string>_apply_</string>
-                            <string>return_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>_apply_</string>
                             <string>line</string>
-                            <string>t</string>
+                            <string>return_list</string>
                           </tuple>
                         </value>
                     </item>

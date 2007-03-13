@@ -70,6 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string>kw[\'parent_specialise_portal_type\'] = \'Amortisation Rule\'\n
 movement_list = [x.getObject() for x in context.portal_catalog(**kw)]\n
+#kw[\'src__\']=1\n
+#sql = context.portal_catalog(**kw)\n
+#context.log(\'sql\',sql)\n
+#context.log(\'movement_list\',movement_list)\n
 return filter(lambda x: len(x.getDeliveryValueList())==0, movement_list)\n
 </string> </value>
         </item>
@@ -81,6 +85,12 @@ return filter(lambda x: len(x.getDeliveryValueList())==0, movement_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

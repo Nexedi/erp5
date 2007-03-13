@@ -25,6 +25,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_aliases</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_roles</string> </key>
             <value>
               <list/>

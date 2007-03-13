@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_expr</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -77,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:state_change.kwargs.get(\'start_date\',state_change.object.getStartDate())</string> </value>
+            <value> <string>python:state_change.kwargs.get(\'start_date\',state_change[\'object\'].getStartDate())</string> </value>
         </item>
       </dictionary>
     </pickle>
