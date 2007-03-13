@@ -17,6 +17,7 @@ profile_dir = '%s/profile' % instance_home
 
 def main():
   setPreference()
+  unsubscribeFromTimerService()
   status = getStatus()
   xvfb_pid = None
   firefox_pid = None
@@ -82,6 +83,9 @@ def getStatus():
 
 def setPreference():
   urllib2.urlopen('http://%s:%d/%s/BTZuite_setPreference?__ac_name=ERP5TypeTestCase&__ac_password=' % (host, port, portal_name))
+
+def unsubscribeFromTimerService():
+  urllib2.urlopen('http://%s:%d/%s/portal_activities/?unsubscribe:method=&__ac_name=ERP5TypeTestCase&__ac_password=' % (host, port, portal_name))
 
 def sendResult():
   result_uri = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults' % (host, port, portal_name)).readline()
