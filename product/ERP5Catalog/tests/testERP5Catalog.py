@@ -1331,8 +1331,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
 
     ctool = self.getCatalogTool()
-    old_default_result_limit = cool.default_result_limit
-    max_ = 10
+    old_default_result_limit = ctool.default_result_limit
+    max_ = ctool.default_result_limit = 3
     #Create max + 2 Organisations
     for i in xrange(max_ + 2):
       self._makeOrganisation(title='abc%s' % (i), description='abc')
