@@ -70,19 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
 \n
-if start_number == None and stop_number == None:\n
-\n
-  try:\n
-     # when clicking on the button\n
-     start_number = int(request[\'start_number\'])\n
-     stop_number = int(request[\'stop_number\'])\n
-  except:\n
-     # when hitting the enter key\n
-     start_number = int(request[\'field_my_start_number\'])\n
-     stop_number = int(request[\'field_my_stop_number\'])\n
-\n
 context.setTitle(\'%s - %s\' % (start_number, stop_number))\n
-for i in range(int(start_number), int(stop_number) + 1):\n
+for i in xrange(int(start_number), int(stop_number) + 1):\n
   newline = context.newContent(portal_type=\'Check\', title=str(i))\n
   newline.setDestination(context.getDestinationSection())\n
   newline.setStartDate(context.getStartDate())\n
@@ -110,7 +99,7 @@ request.RESPONSE.redirect(context.absolute_url())\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>start_number = 0, stop_number = 0</string> </value>
+            <value> <string>start_number, stop_number</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -141,11 +130,9 @@ request.RESPONSE.redirect(context.absolute_url())\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>None</string>
-                            <string>int</string>
-                            <string>_getitem_</string>
                             <string>_getiter_</string>
-                            <string>range</string>
+                            <string>xrange</string>
+                            <string>int</string>
                             <string>i</string>
                             <string>str</string>
                             <string>newline</string>
@@ -160,10 +147,7 @@ request.RESPONSE.redirect(context.absolute_url())\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
