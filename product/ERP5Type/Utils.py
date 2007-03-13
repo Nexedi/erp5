@@ -331,8 +331,6 @@ class DocumentConstructor(Method):
 
     def __call__(self, folder, id, REQUEST=None,
                  activate_kw=None, is_indexable=None, **kw):
-#       o = self.klass(id, title=None)
-      # XXX Is it safe to set the title to None ?
       o = self.klass(id)
       if activate_kw is not None:
         o._v_activate_kw = activate_kw
@@ -1734,8 +1732,9 @@ def createDefaultAccessors(property_holder, id, prop = None,
   else:
     # Create getters for a simple property
     accessor_name = 'get' + UpperCase(id)
-    accessor = Base.Getter(accessor_name, id, prop['type'], default = prop.get('default'),
-                                                 storage_id = prop.get('storage_id'))
+    accessor = Base.Getter(accessor_name, id, 
+                           prop['type'], default=prop.get('default'),
+                           storage_id = prop.get('storage_id'))
     if not hasattr(property_holder, accessor_name) or prop.get('override',0):
       setattr(property_holder, accessor_name, accessor)
       property_holder.security.declareProtected( read_permission, accessor_name )
@@ -2504,203 +2503,139 @@ def createRelatedValueAccessors(property_holder, id,
     read_permission=Permissions.AccessContentsInformation,
     write_permission=Permissions.ModifyPortalContent):
 
+  upper_case_id = UpperCase(id)
   # Related Values (ie. reverse relation getters)
 
   # We are not generating here all the related stuff we need
   property_holder = BaseClass
 
-  accessor_name = UpperCase(id) + 'RelatedValues'
-  accessor_name = string.lower(accessor_name[0]) + accessor_name[1:]
-  accessor = RelatedValue.ListGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'RelatedValueList'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedValueList'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+  # AccessorClass: (accessor_name, )
+  accessor_dict = {
+    # List getter
+    RelatedValue.ListGetter: (
+      '%s%sRelatedValues' % (upper_case_id[0].lower(),
+                             upper_case_id[1:]),
+      'get%sRelatedValueList' % upper_case_id,
+      '_categoryGet%sRelatedValueList' % upper_case_id,
+    ),
 
-  accessor_name = 'get' + UpperCase(id) + 'RelatedValueSet'
-  accessor = RelatedValue.SetGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedValueSet'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Set getter
+    RelatedValue.SetGetter: (
+      'get%sRelatedValueSet' % upper_case_id,
+      '_categoryGet%sRelatedValueSet' % upper_case_id,
+    ),
 
-  accessor_name = 'getDefault' + UpperCase(id) + 'RelatedValue'
-  accessor = RelatedValue.DefaultGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'RelatedValue'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'RelatedValue'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedValue'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Default value getter
+    RelatedValue.DefaultGetter: (
+      'getDefault%sRelatedValue' % upper_case_id,
+      'get%sRelatedValue' % upper_case_id,
+      '_categoryGetDefault%sRelatedValue' % upper_case_id,
+      '_categoryGet%sRelatedValue' % upper_case_id,
+    ),
 
-  # Related Relative Url (ie. reverse relation getters)
-  property_holder = BaseClass
+    # Related Relative Url
+    Related.ListGetter: (
+      'get%sRelatedList' % upper_case_id,
+      '_categoryGet%sRelatedList' % upper_case_id,
+    ),
 
-  accessor_name = 'get' + UpperCase(id) + 'RelatedList'
-  accessor = Related.ListGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedList'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Related as Set
+    Related.SetGetter: (
+      'get%sRelatedSet' % upper_case_id,
+      '_categoryGet%sRelatedSet' % upper_case_id,
+    ),
 
-  accessor_name = 'get' + UpperCase(id) + 'RelatedSet'
-  accessor = Related.SetGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedSet'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Default getter
+    Related.DefaultGetter: (
+      'getDefault%sRelated' % upper_case_id,
+      'get%sRelated' % upper_case_id,
+      '_categoryGetDefault%sRelated' % upper_case_id,
+      '_categoryGet%sRelated' % upper_case_id,
+    ),
 
-  accessor_name = 'getDefault' + UpperCase(id) + 'Related'
-  accessor = Related.DefaultGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'Related'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'Related'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-  accessor_name = '_categoryGet' + UpperCase(id) + 'Related'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Related Ids (ie. reverse relation getters)
+    RelatedValue.IdListGetter: (
+      '%s%sRelatedIds' % (upper_case_id[0].lower(),
+                          upper_case_id[1:]),
+      'get%sRelatedIdList' % upper_case_id,
+      '_categoryGet%sRelatedIdList' % upper_case_id,
+    ),
 
-  # Related Ids (ie. reverse relation getters)
-  property_holder = BaseClass
+    # Related Ids as Set
+    RelatedValue.IdSetGetter: (
+      'get%sRelatedIdSet' % upper_case_id,
+      '_categoryGet%sRelatedIdSet' % upper_case_id,
+    ),
 
-  accessor_name = UpperCase(id) + 'RelatedIds'
-  accessor_name = string.lower(accessor_name[0]) + accessor_name[1:]
-  accessor = RelatedValue.IdListGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'RelatedIdList'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedIdList'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Default Id getter
+    RelatedValue.DefaultIdGetter: (
+      'getDefault%sRelatedId' % upper_case_id,
+      'get%sRelatedId' % upper_case_id,
+      '_categoryGetDefault%sRelatedId' % upper_case_id,
+      '_categoryGet%sRelatedId' % upper_case_id,
+    ),
 
-  accessor_name = 'get' + UpperCase(id) + 'RelatedIdSet'
-  accessor = RelatedValue.IdSetGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedIdSet'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Related Title list
+    RelatedValue.TitleListGetter: (
+      'get%sRelatedTitleList' % upper_case_id,
+      '_categoryGet%sRelatedTitleList' % upper_case_id,
+    ),
 
-  accessor_name = 'getDefault' + UpperCase(id) + 'RelatedId'
-  accessor = RelatedValue.DefaultIdGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'RelatedId'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'RelatedId'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedId'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Related Title Set
+    RelatedValue.TitleSetGetter: (
+      'get%sRelatedTitleSet' % upper_case_id,
+      '_categoryGet%sRelatedTitleSet' % upper_case_id,
+    ),
 
-  # Related Ids (ie. reverse relation getters)
-  property_holder = BaseClass
+    # Related default title
+    RelatedValue.DefaultTitleGetter: (
+      'getDefault%sRelatedTitle' % upper_case_id,
+      'get%sRelatedTitle' % upper_case_id,
+      '_categoryGetDefault%sRelatedTitle' % upper_case_id,
+      '_categoryGet%sRelatedTitle' % upper_case_id,
+    ),
 
-  accessor_name = 'get' + UpperCase(id) + 'RelatedTitleList'
-  accessor = RelatedValue.TitleListGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedTitleList'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Related Property list
+    RelatedValue.PropertyListGetter: (
+      'get%sRelatedPropertyList' % upper_case_id,
+      '_categoryGet%sRelatedPropertyList' % upper_case_id,
+    ),
 
-  accessor_name = 'get' + UpperCase(id) + 'RelatedTitleSet'
-  accessor = RelatedValue.TitleSetGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedTitleSet'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Related Property Set
+    RelatedValue.PropertySetGetter: (
+      'get%sRelatedPropertySet' % upper_case_id,
+      '_categoryGet%sRelatedPropertySet' % upper_case_id,
+    ),
 
-  accessor_name = 'getDefault' + UpperCase(id) + 'RelatedTitle'
-  accessor = RelatedValue.DefaultTitleGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'RelatedTitle'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'RelatedTitle'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedTitle'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # Related default title
+    RelatedValue.DefaultPropertyGetter: (
+      'getDefault%sRelatedProperty' % upper_case_id,
+      'get%sRelatedProperty' % upper_case_id,
+      '_categoryGetDefault%sRelatedProperty' % upper_case_id,
+      '_categoryGet%sRelatedProperty' % upper_case_id,
+    ),
+  }
 
-  # Related Ids (ie. reverse relation getters)
-  property_holder = BaseClass
+  permission = read_permission
+  for accessor_class, accessor_name_list in accessor_dict.items():
 
-  accessor_name = 'get' + UpperCase(id) + 'RelatedPropertyList'
-  accessor = RelatedValue.PropertyListGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedPropertyList'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    # First element is the original accessor
+    accessor_name = accessor_name_list[0]
+    accessor = accessor_class(accessor_name, id)
+    if not hasattr(property_holder, accessor_name):
+      setattr(property_holder, accessor_name, accessor)
+      # Declare the security of method which doesn't start with _
+      if accessor_name[0] != '_':
+        property_holder.security.declareProtected(permission, accessor_name)
 
-  accessor_name = 'get' + UpperCase(id) + 'RelatedPropertySet'
-  accessor = RelatedValue.PropertySetGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedPropertySet'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'RelatedProperty'
-  accessor = RelatedValue.DefaultPropertyGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor)
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'RelatedProperty'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-    property_holder.security.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'RelatedProperty'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-  accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedProperty'
-  if not hasattr(property_holder, accessor_name):
-    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
-
+    # Others are dummy copies
+    for accessor_name in accessor_name_list[1:]:
+      if not hasattr(property_holder, accessor_name):
+        setattr(property_holder, accessor_name, 
+                accessor.dummy_copy(accessor_name))
+        # Declare the security of method which doesn't start with _
+        if accessor_name[0] != '_':
+          property_holder.security.declareProtected(permission, accessor_name)
 
 def createTranslationAccessors(property_holder, id,
     read_permission=Permissions.AccessContentsInformation,
