@@ -1338,7 +1338,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       self._makeOrganisation(title='abc%s' % (i), description='abc')
     self.assertEqual(max_,
                      len(self.getCatalogTool()(portal_type='Organisation')))
-    self.assertEqual(max + 2,
+    self.assertEqual(max_ + 2,
             len(self.getCatalogTool()(portal_type='Organisation', limit=None)))
     ctool.default_result_limit = old_default_result_limit
 
