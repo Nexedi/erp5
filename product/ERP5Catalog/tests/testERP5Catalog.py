@@ -1581,14 +1581,32 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # if we specify local_roles= it will only returns documents on with bob has
     # a local roles
     self.assertEquals(1,
-                len(ctool.unrestrictedSearchResults(title='Object Title',
-                                                    local_roles='Assignee')))
+                len(ctool.searchResults(title='Object Title',
+                                        local_roles='Assignee')))
     self.assertEquals(1,
-                ctool.unrestrictedCountResults(title='Object Title',
-                                               local_roles='Assignee')[0][0])
+                ctool.countResults(title='Object Title',
+                                   local_roles='Assignee')[0][0])
+
     # this also work for searchFolder and countFolder
     self.assertEquals(1, len(folder.searchFolder(title='Object Title',
                                              local_roles='Assignee')))
     self.assertEquals(1, folder.countFolder(title='Object Title',
                                              local_roles='Assignee')[0][0])
     
+    # and local_roles can be a list, then this a OR (ie. you must have at least
+    # one role).
+    self.assertEquals(1,
+                len(ctool.searchResults(title='Object Title',
+                                       local_roles=['Assignee', 'Auditor'])))
+    self.assertEquals(1,
+                ctool.countResults(title='Object Title',
+                                   local_roles=['Assignee', 'Auditor'])[0][0])
+
+    # this list can also be given in ; form, for worklists URL
+    self.assertEquals(1,
+                len(ctool.searchResults(title='Object Title',
+                                       local_roles='Assignee;Auditor')))
+    self.assertEquals(1,
+                ctool.countResults(title='Object Title',
+                                   local_roles='Assignee;Auditor')[0][0])
+
