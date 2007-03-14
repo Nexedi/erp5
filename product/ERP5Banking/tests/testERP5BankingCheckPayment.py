@@ -275,16 +275,21 @@ class TestERP5BankingCheckPaymentMixin:
     self.workflow_tool.doActionFor(new_payment, 'plan_action', 
                                    wf_id='check_payment_workflow')
     self.assertEqual(new_payment.getSimulationState(), 'planned')
+    get_transaction().commit()
     if will_fail:
       self.assertRaises(ValidationFailed,self.workflow_tool.doActionFor, 
                         new_payment, 'confirm_action', 
                         wf_id='check_payment_workflow')
+      self.assertEqual(new_payment.getSimulationState(), 'planned')
+      get_transaction().commit()
       self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
                                      wf_id='check_payment_workflow')
     else:
       self.workflow_tool.doActionFor( 
                         new_payment, 'confirm_action', 
                         wf_id='check_payment_workflow')
+      self.assertEqual(new_payment.getSimulationState(), 'confirmed')
+      get_transaction().commit()
       self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
                                      wf_id='check_payment_workflow')
 
@@ -292,19 +297,12 @@ class TestERP5BankingCheckPaymentMixin:
   def stepCheckConsistency(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the consistency of the check payment
-    Enable automatic check creation before passing workflow transition, and
-    disable at the end of the test.
 
     FIXME: check if the transition fails when a category or property is invalid.
     """
-    check_creation_script = self.getPortal().Base_isAutomaticCheckCreationAllowed
-    original_script_source = check_creation_script._body
-    check_creation_script.ZPythonScript_edit(check_creation_script._params, 'return True')
-    self.assertTrue(self.getPortal().Base_isAutomaticCheckCreationAllowed())
     self.workflow_tool.doActionFor(self.check_payment, 'plan_action', wf_id='check_payment_workflow')
     self.assertNotEqual(self.check_payment.getAggregateValue(), None)
     self.assertEqual(self.check_payment.getSimulationState(), 'planned')
-    check_creation_script.ZPythonScript_edit(check_creation_script._params, original_script_source)
 
   def stepAggregateToInnexistantCheck(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -326,6 +324,23 @@ class TestERP5BankingCheckPaymentMixin:
 
     self.assertEqual(self.check_payment.getAggregateValue(), None)
     self.assertNotEqual(self.check_payment.getSimulationState(), 'planned')
+
+  def stepTryCheckConsistencyWithAutomaticCheckCreation(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Enable automatic check creation and verify that validation succeeds.
+    """
+    check_creation_script = self.getPortal().Base_isAutomaticCheckCreationAllowed
+    original_script_source = check_creation_script._body
+    check_creation_script.ZPythonScript_edit(check_creation_script._params, 'return True')
+    self.assertTrue(self.getPortal().Base_isAutomaticCheckCreationAllowed())
+    self.assertEqual(self.check_payment.getAggregateValue(), None)
+    self.assertNotEqual(self.check_payment.getSimulationState(), 'planned')
+
+    self.workflow_tool.doActionFor(self.check_payment, 'plan_action', wf_id='check_payment_workflow')
+
+    self.assertNotEqual(self.check_payment.getAggregateValue(), None)
+    self.assertEqual(self.check_payment.getSimulationState(), 'planned')
+    check_creation_script.ZPythonScript_edit(check_creation_script._params, original_script_source)
 
   def stepSendToCounter(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -450,7 +465,8 @@ class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
     # automatic check creation is enabled.
     sequence_string_3 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                         'CreateCheckPayment Tic ' \
-                        'CheckConsistency Tic ' \
+                        'AggregateToInnexistantCheck Tic ' \
+                        'TryCheckConsistencyWithAutomaticCheckCreation Tic ' \
                         'Cleanup Tic'
     sequence_list.addSequenceString(sequence_string)
     sequence_list.addSequenceString(sequence_string_2)
