@@ -64,6 +64,7 @@
   <author>ERP5</author>\n
   <subject>Print Example</subject>\n
   <content tal:define="group_list python: form.get_groups(include_empty=1);\n
+                       report_item_list python:report_method();\n
                        field_errors python: request.get(\'field_errors\',{});\n
                        dummy python: request.set(\'here\',here); ">\n
 \n
@@ -144,7 +145,7 @@
 \n
 \n
 <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
-<tal:block tal:repeat="report_item python:report_method()">\n
+<tal:block tal:repeat="report_item report_item_list">\n
   <tal:block tal:define="here python:report_item.getObject(portal_object);\n
                          dummy python:report_item.pushReport(portal_object)">\n
   <tal:block tal:condition="report_item/getTitle | report_item/getTranslatedTitle">\n
