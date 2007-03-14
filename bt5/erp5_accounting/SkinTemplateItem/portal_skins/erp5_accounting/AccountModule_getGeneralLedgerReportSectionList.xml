@@ -118,8 +118,8 @@ account_columns = (\n
       (\'running_total_price\', \'Net\'), )\n
 \n
 if gap:\n
-  gap_value_list = [cat_tool.gap.restrictedTraverse(gap)] + \\\n
-              cat_tool.gap.restrictedTraverse(gap).getCategoryChildValueList()\n
+  gap_value_list = cat_tool.gap.restrictedTraverse(gap)\\\n
+                       .getCategoryChildValueList(is_self_excluded=0)\n
 else:\n
   cat = \'gap/%s\' % (\n
     context.portal_preferences.getPreferredAccountingTransactionGap()\n
