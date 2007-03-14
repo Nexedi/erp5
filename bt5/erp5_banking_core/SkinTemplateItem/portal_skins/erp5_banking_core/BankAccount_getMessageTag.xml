@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return \'bank_account_%s\' % (bank_account.getReference(), )\n
+            <value> <string>reference = bank_account.getReference()\n
+if not same_type(reference, \'\'):\n
+  raise TypeError, \'Reference is not a string: %s.getReference() == %s\' % (repr(reference), repr(bank_account))\n
+return \'bank_account_%s\' % (reference, )\n
 </string> </value>
         </item>
         <item>
@@ -119,6 +122,10 @@
                           <tuple>
                             <string>bank_account</string>
                             <string>_getattr_</string>
+                            <string>reference</string>
+                            <string>same_type</string>
+                            <string>TypeError</string>
+                            <string>repr</string>
                           </tuple>
                         </value>
                     </item>
