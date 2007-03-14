@@ -706,7 +706,7 @@ class TestAccountingReports(AccountingTestCase):
     # Simulation State parameter is taken into account.
     self.createAccountStatementDataSet()
     
-    # set request variables and render                 
+    # set request variables and render
     request_form = self.portal.REQUEST.form
     request_form['node'] = \
                   self.portal.account_module.receivable.getRelativeUrl()
@@ -732,6 +732,28 @@ class TestAccountingReports(AccountingTestCase):
     
     self.failUnless(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=700, credit=0)
+
+
+  def testTrialBalance(self):
+    # Simple test of trial balance
+    # we will use the same data set as account statement
+    self.createAccountStatementDataSet()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['stopped']
+
+    report_section_list = self.getReportSectionList(
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # all accounts are present
+    self.assertEquals(len(portal.account_module.objectIds()),
+                      len(data_line_list))
 
 
 def test_suite():
