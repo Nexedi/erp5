@@ -286,7 +286,7 @@ class Query(QueryMixin):
       # Refer to _listGlobalActions DCWorkflow patch
       # for example of use
       if isinstance(value, basestring):
-        value = value.split('OR')
+        value = value.split(' OR ')
         value = map(lambda x:x.strip(), value)
       value_list = value
       if isSimpleType(value) or isinstance(value, DateTime):

@@ -823,7 +823,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     self.assertNotEquals([], self.getCatalogTool().searchResults(
-                                          portal_type='Person', title=u'A Person'))
+                                     portal_type='Person', title=u'A Person'))
+    
   def test_23_DeleteObjectRaiseErrorWhenQueryFail(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -1616,4 +1617,32 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(1,
                 ctool.countResults(title='Object Title',
                                    local_roles='Assignee;Auditor')[0][0])
+
+  def test_51_SearchWithKeyWords(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test searching with SQL keywords'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+    and_ = person_module.newContent(portal_type='Person', title='AND')
+    or_ = person_module.newContent(portal_type='Person', title='OR')
+    like_ = person_module.newContent(portal_type='Person', title='LIKE')
+    select_ = person_module.newContent(portal_type='Person', title='SELECT')
+
+    get_transaction().commit()
+    self.tic()
+    ctool = self.getCatalogTool()
+    self.assertEquals([and_], [x.getObject() for x in
+                                   ctool(portal_type='Person', title='AND')])
+
+    self.assertEquals([or_], [x.getObject() for x in
+                                   ctool(portal_type='Person', title='OR')])
+
+    self.assertEquals([like_], [x.getObject() for x in
+                                   ctool(portal_type='Person', title='LIKE')])
+
+    self.assertEquals([select_], [x.getObject() for x in
+                                   ctool(portal_type='Person', title='SELECT')])
 
