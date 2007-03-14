@@ -722,6 +722,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(organisation.getGroupValue(), group_nexedi_category)
     organisation2 = module.newContent(portal_type='Organisation',)
     organisation2.setGroup('storever')
+    organisation2.setTitle('Organisation 2')
     self.assertEquals(organisation2.getGroupValue(), group_nexedi_category2)
     # Flush message queue
     get_transaction().commit()
@@ -734,7 +735,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(default_group_title='Nexedi')]
     self.assertEquals(organisation_list,[organisation])
-    # Try to get the organisation with the group id nexedi
+    # Try to get the organisation with the group id 
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(group_id='storever')]
     self.assertEquals(organisation_list,[organisation2])
@@ -759,6 +760,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation_list = [x.getObject() for x in 
                  module.searchFolder(group_uid=group_nexedi_category.getUid())]
     self.assertEquals(organisation_list, [organisation])
+    # Try to get the organisation with the group id AND title of the document
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(group_id='storever',
+                                             title='Organisation 2')]
+    self.assertEquals(organisation_list,[organisation2])
+
 
   def test_21_SearchFolderWithDynamicStrictRelatedKey(self,
                                   quiet=quiet, run=run_all_test):
