@@ -636,6 +636,7 @@ class TestERP5BankingMixin:
     self.simulation_tool = self.getSimulationTool()
     # get the currency module
     self.currency_module = self.getCurrencyModule()
+    self.checkbook_model_module = self.portal.checkbook_model_module
     # a default date
     self.date = DateTime()
 
@@ -728,7 +729,7 @@ class TestERP5BankingMixin:
     """
     model =  self.checkbook_model_module.newContent(id = id,
                                             portal_type = 'Checkbook Model',
-                                            )
+                                            title='Generic')
     model.newContent(id='variant_1',portal_type='Checkbook Model Check Amount Variation',
                      quantity=25,title='25')
     model.newContent(id='variant_2',portal_type='Checkbook Model Check Amount Variation',
