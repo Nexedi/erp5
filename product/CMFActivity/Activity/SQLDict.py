@@ -120,12 +120,12 @@ class SQLDict(RAMDict):
 
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
     uid_set = activity_buffer.getUidSet(self)
-    return (tuple(m.object_path), m.method_id) in uid_set
+    return (tuple(m.object_path), m.method_id, m.activity_kw.get('tag')) in uid_set
 
   def registerMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = 1
     uid_set = activity_buffer.getUidSet(self)
-    uid_set.add((tuple(m.object_path), m.method_id))
+    uid_set.add((tuple(m.object_path), m.method_id, m.activity_kw.get('tag')))
     message_list = activity_buffer.getMessageList(self)
     message_list.append(m)
 
@@ -133,7 +133,7 @@ class SQLDict(RAMDict):
     m.is_registered = 0 # This prevents from inserting deleted messages into the queue
     class_name = self.__class__.__name__
     uid_set = activity_buffer.getUidSet(self)
-    uid_set.discard((tuple(m.object_path), m.method_id))
+    uid_set.discard((tuple(m.object_path), m.method_id, m.activity_kw.get('tag')))
 
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
     message_list = activity_buffer.getMessageList(self)

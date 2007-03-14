@@ -784,6 +784,58 @@ class TestCMFActivity(ERP5TypeTestCase):
       DB.query = DB.original_query
       del DB.original_query
 
+  def checkIsMessageRegisteredMethod(self, activity):
+    activity_tool = self.getPortal().portal_activities
+    object_a = self.getOrganisationModule()
+    if not object_a.hasContent(self.company_id):
+      object_a.newContent(id=self.company_id)
+    object_b = object_a._getOb(self.company_id)
+    activity_tool.manageClearActivities(keep=0)
+    get_transaction().commit()
+    # First case: creating the same activity twice must only register one.
+    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    object_a.activate(activity=activity).getId()
+    object_a.activate(activity=activity).getId()
+    get_transaction().commit()
+    self.assertEquals(len(activity_tool.getMessageList()), 1)
+    activity_tool.manageClearActivities(keep=0)
+    get_transaction().commit()
+    # Second case: creating activity with same tag must only register one.
+    # This behaviour is actually the same as the no-tag behaviour.
+    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    object_a.activate(activity=activity, tag='foo').getId()
+    object_a.activate(activity=activity, tag='foo').getId()
+    get_transaction().commit()
+    self.assertEquals(len(activity_tool.getMessageList()), 1)
+    activity_tool.manageClearActivities(keep=0)
+    get_transaction().commit()
+    # Third case: creating activities with different tags must register both.
+    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    object_a.activate(activity=activity, tag='foo').getId()
+    object_a.activate(activity=activity, tag='bar').getId()
+    get_transaction().commit()
+    self.assertEquals(len(activity_tool.getMessageList()), 2)
+    activity_tool.manageClearActivities(keep=0)
+    get_transaction().commit()
+    # Fourth case: creating activities on different objects must register
+    # both.
+    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    object_a.activate(activity=activity).getId()
+    object_b.activate(activity=activity).getId()
+    get_transaction().commit()
+    self.assertEquals(len(activity_tool.getMessageList()), 2)
+    activity_tool.manageClearActivities(keep=0)
+    get_transaction().commit()
+    # Fifth case: creating activities with different method must register
+    # both.
+    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    object_a.activate(activity=activity).getId()
+    object_a.activate(activity=activity).getTitle()
+    get_transaction().commit()
+    self.assertEquals(len(activity_tool.getMessageList()), 2)
+    activity_tool.manageClearActivities(keep=0)
+    get_transaction().commit()
+
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -1687,6 +1739,17 @@ class TestCMFActivity(ERP5TypeTestCase):
     activity_tool.flush(p, invoke=0)
     get_transaction().commit()
     self.assertEqual(len(activity_tool.getMessageList()), 0)
+
+  def test_78_IsMessageRegisteredSQLDict(self, quiet=0, run=run_all_test):
+    """
+      This test tests behaviour of IsMessageRegistered method.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest IsMessageRegistered behaviour with SQLDict'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.checkIsMessageRegisteredMethod('SQLDict')
 
 if __name__ == '__main__':
     framework()

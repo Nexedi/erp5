@@ -35,6 +35,6 @@ WHERE
 <dtml-if path>AND path = <dtml-sqlvar path type="string"> </dtml-if>
 <dtml-if method_id> AND method_id = <dtml-sqlvar method_id type="string"> </dtml-if>
 GROUP BY
-     path, method_id, processing_node, processing
+     path, method_id, tag, processing_node, processing
 ORDER BY
      priority, date
