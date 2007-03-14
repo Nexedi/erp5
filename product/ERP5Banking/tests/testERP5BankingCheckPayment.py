@@ -179,7 +179,7 @@ class TestERP5BankingCheckPaymentMixin:
                                     reference='54',
                                     checkbook=self.checkbook_1)
     self.non_existant_check_reference = '55'
-    self.createCheckbookModel()
+    self.createCheckbookModel(id='checkbook_model')
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
