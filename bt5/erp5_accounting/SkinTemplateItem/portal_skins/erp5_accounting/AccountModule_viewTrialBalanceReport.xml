@@ -79,10 +79,11 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
+                        <string>period_start_date</string>
                         <string>from_date</string>
                         <string>at_date</string>
-                        <string>transaction_section_category</string>
-                        <string>transaction_simulation_state</string>
+                        <string>section_category</string>
+                        <string>simulation_state</string>
                       </list>
                     </value>
                 </item>

@@ -195,6 +195,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hidden_day_is_last_day</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_day</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>input_order</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
@@ -466,7 +474,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/REQUEST/from_date | nothing</string> </value>
+            <value> <string>request/from_date | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>

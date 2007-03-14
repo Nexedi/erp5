@@ -68,75 +68,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-""" Trial balance.\n
-"""\n
-from Products.ERP5Form.Report import ReportSection\n
+            <value> <string>from Products.PythonScripts.standard import Object\n
+request = container.REQUEST\n
 \n
-request = context.REQUEST\n
-portal  = context.portal_url.getPortalObject()\n
-N_ = portal.Base_translateString\n
+initial_debit_balance = request[\'TrialBalance.total_initial_debit_balance\']\n
+initial_credit_balance = request[\'TrialBalance.total_initial_credit_balance\']\n
+debit = request[\'TrialBalance.debit\']\n
+credit = request[\'TrialBalance.credit\']\n
 \n
-at_date  = request[\'at_date\']\n
-from_date = request.get(\'from_date\', None)\n
-simulation_state = request[\'simulation_state\']\n
-expand_accounts = request.get(\'expand_accounts\', False)\n
-show_empty_accounts = request[\'show_empty_accounts\']\n
-\n
-section_uid = portal.Base_getSectionUidListForSectionCategory(\n
-                                   request[\'section_category\'])\n
-# XXX for now we guess period start date from the first organisation having\n
-# accounting periods\n
-period_start_date = None\n
-valid_accounting_period = dict(portal_type=\'Accounting Period\',\n
-                               simulation_state=(\'planned\', \'confirmed\',\n
-                                      \'stopped\', \'closing\', \'delivered\'))\n
-date = from_date or at_date\n
-for uid in section_uid:\n
-  section = portal.portal_catalog.getObject(uid)\n
-  for ap in section.contentValues(filter=valid_accounting_period):\n
-    if ap.getStartDate() <= date <= ap.getStopDate():\n
-      period_start_date = ap.getStartDate().earliestTime()\n
-  if period_start_date:\n
-    break\n
-else:\n
-  period_start_date = DateTime(date.year(), 1, 1)\n
-request.set(\'period_start_date\', period_start_date)\n
-\n
-if not from_date:\n
-  from_date = period_start_date\n
-from_date = (from_date - 1).latestTime()\n
-\n
-# currency precision\n
-currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
-precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
-request.set(\'precision\', precision)\n
-\n
-request.set(\'is_accounting_report\', True)\n
-\n
-# flat_mode is a boolean that indicate wether we should use a report tree or a\n
-# flat list of all accounts.\n
-if request.get(\'tree_mode\', False): # TODO\n
-  raise \'Tree mode no longer supported\'\n
-\n
-return [ ReportSection(\n
-            path=portal.account_module.getPhysicalPath(),\n
-            title=N_(\'Trial Balance\'),\n
-            level=1,\n
-            form_id=\'AccountModule_viewAccountListForTrialBalance\',\n
-            selection_name=\'trial_balance_selection\',\n
-            selection_params=dict(show_empty_accounts=show_empty_accounts,\n
-                                  expand_accounts=expand_accounts,\n
-                                  at_date=at_date,\n
-                                  from_date=from_date,\n
-                                  period_start_date=period_start_date,\n
-                                  section_uid=section_uid,\n
-                                  simulation_state=simulation_state,\n
-                                  precision=precision ),) ]\n
-
-
-]]></string> </value>
+return [ Object( initial_debit_balance=initial_debit_balance,\n
+                 initial_credit_balance=initial_credit_balance,\n
+                 debit=debit,\n
+                 credit=credit,\n
+                 final_debit_balance=initial_debit_balance + debit,\n
+                 final_credit_balance=initial_credit_balance + credit ) ]\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -151,8 +97,14 @@ return [ ReportSection(\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -178,34 +130,17 @@ return [ ReportSection(\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Form.Report</string>
-                            <string>ReportSection</string>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>container</string>
                             <string>request</string>
-                            <string>portal</string>
-                            <string>N_</string>
                             <string>_getitem_</string>
-                            <string>at_date</string>
-                            <string>None</string>
-                            <string>from_date</string>
-                            <string>simulation_state</string>
-                            <string>False</string>
-                            <string>expand_accounts</string>
-                            <string>show_empty_accounts</string>
-                            <string>section_uid</string>
-                            <string>period_start_date</string>
-                            <string>dict</string>
-                            <string>valid_accounting_period</string>
-                            <string>date</string>
-                            <string>_getiter_</string>
-                            <string>uid</string>
-                            <string>section</string>
-                            <string>ap</string>
-                            <string>DateTime</string>
-                            <string>currency</string>
-                            <string>precision</string>
-                            <string>True</string>
+                            <string>initial_debit_balance</string>
+                            <string>initial_credit_balance</string>
+                            <string>debit</string>
+                            <string>credit</string>
                           </tuple>
                         </value>
                     </item>
@@ -222,7 +157,7 @@ return [ ReportSection(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountModule_getTrialBalanceReportSectionList</string> </value>
+            <value> <string>AccountModule_statAccountListForTrialBalance</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_show_parent_accounts</string> </value>
+            <value> <string>your_show_empty_accounts</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -163,7 +163,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Show Parents Accounts</string> </value>
+                    <value> <string>Show Accounts Without Transactions</string> </value>
                 </item>
               </dictionary>
             </value>
