@@ -262,8 +262,8 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     self.logout()
     self.login('manager')
 
-    #simulation_id_list = [r for r in self.getPortal().portal_simulation.objectIds()]
-    #self.getPortal().portal_simulation.manage_delObjects(simulation_id_list)
+    simulation_id_list = [r for r in self.getPortal().portal_simulation.objectIds()]
+    self.getPortal().portal_simulation.manage_delObjects(simulation_id_list)
 
     item_id_list = [r for r in self.getItemModule().objectIds()]
 
