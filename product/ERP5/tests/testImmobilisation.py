@@ -253,7 +253,7 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     
     self.workflow_tool = self.getWorkflowTool()
     self.checkUserFolderType()
-    
+
   def beforeTearDown(self):
     """
     Delete all Objects in PL & M Module
@@ -266,9 +266,8 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     self.getPortal().portal_simulation.manage_delObjects(simulation_id_list)
 
     item_id_list = [r for r in self.getItemModule().objectIds()]
-
-    #LOG('item_id_list before',0,item_id_list)
     self.getItemModule().manage_delObjects(item_id_list)
+
     #LOG('item_id_list after',0,[r for r in self.getPortal().material_module.objectIds()])
     #item_catalog = [(r.uid,r.path) for r in self.getPortal().portal_catalog(portal_type = 'Material')]
     #LOG('item_catalog after',0,item_catalog)
@@ -288,34 +287,33 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     """
     # Create group categories
     category_tool = self.getCategoryTool()
-    if len(category_tool.group.contentValues())==0:
-      self.createCategoryTree(category_tool.group,
-                      [
-                        ("group A","GA",
-                          [
-                            ("group Aa","GAa",
-                              [
-                                ("group Aa1","GAa1",[]),
-                                ("group Aa2","GAa2",[])
-                              ]
-                            ),
-                            ("group Ab","GAb",
-                              [
-                                ("group Ab1","GAb1",[]),
-                                ("group Ab2","GAb2",[])
-                              ]
-                            )
-                          ]
-                        ),
-                        ("group B","GB",
-                          [
-                            ("group Ba","GBa", []),
-                            ("group Bb","GBb", [])
-                          ],
-                        ),
-                        ("group C","GC", []),
-                      ]
-                   )
+    self.createCategoryTree(category_tool.group,
+                    [
+                      ("group A","GA",
+                        [
+                          ("group Aa","GAa",
+                            [
+                              ("group Aa1","GAa1",[]),
+                              ("group Aa2","GAa2",[])
+                            ]
+                          ),
+                          ("group Ab","GAb",
+                            [
+                              ("group Ab1","GAb1",[]),
+                              ("group Ab2","GAb2",[])
+                            ]
+                          )
+                        ]
+                      ),
+                      ("group B","GB",
+                        [
+                          ("group Ba","GBa", []),
+                          ("group Bb","GBb", [])
+                        ],
+                      ),
+                      ("group C","GC", []),
+                    ]
+                 )
 
   def createCategoryTree(self, current_category, category_tree):
     """
