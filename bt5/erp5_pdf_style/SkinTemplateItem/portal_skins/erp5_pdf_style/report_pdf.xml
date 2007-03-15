@@ -57,13 +57,15 @@
 <?xml version="1.0" encoding="utf-8" ?>\n
 <template filename="default.pdf"\n
           pagesize="A4"\n
-          landscape="0"\n
+          landscape="1"\n
           showboundary="1"\n
           leftmargin="1cm"\n
           rightmargin="1cm"\n
           topmargin="1cm"\n
           bottommargin="1cm"\n
-          allowsplitting="1">\n
+          allowsplitting="1"\n
+          tal:define="landscape python: int(request.get(\'landscape\', 0) or 0)"\n
+          tal:attributes="landscape landscape">\n
 \n
  <stylesheet>\n
 \n
@@ -164,14 +166,31 @@
 \n
   </stylesheet>\n
 \n
-\n
-  <pagetemplate id="FirstPage" nextid="FirstPage" startframe="content">\n
+  <pagetemplate tal:condition="landscape" id="FirstPage" nextid="FirstPage" startframe="content">\n
     <static>\n
-      <infostring align="left" x="1cm" y= "29cm" size="8" font="Helvetica" color="(0,0,0)"\n
+      <infostring align="left" x="1cm" y= "20cm" size="8" font="Helvetica" color="(0,0,0)"\n
+                  tal:content="python: here.Localizer.erp5_ui.gettext(\'Printed by %(user)s at %(date)s\') % {\'user\':user.getUserName(), \'date\':DateTime()}" >Printed by</infostring>\n
+      <infostring align="left" x="26.5cm" y= "0.5cm" size="10" font="Helvetica" color="(0,0,0)" >Page %(page)s</infostring>\n
+    </static>\n
+    <frame id="content"\n
+           nextid="content"\n
+           x="1.8cm"\n
+           y="0.6cm"\n
+           width="26cm"\n
+           height="19.5cm"\n
+           leftpadding="0.1cm"\n
+           rightpadding="0.1cm"\n
+           toppadding="0.2cm"\n
+           bottompadding="0.5cm"\n
+           showBoundary="1"/>\n
+  </pagetemplate>\n
+\n
+  <pagetemplate tal:condition="not: landscape" id="FirstPage" nextid="FirstPage" startframe="content">\n
+    <static>\n
+        <infostring align="left" x="1cm" y= "29cm" size="8" font="Helvetica" color="(0,0,0)"\n
                   tal:content="python: here.Localizer.erp5_ui.gettext(\'Printed by %(user)s at %(date)s\') % {\'user\':user.getUserName(), \'date\':DateTime()}" >Printed by</infostring>\n
       <infostring align="left" x="18cm" y= "0.5cm" size="10" font="Helvetica" color="(0,0,0)" >Page %(page)s</infostring>\n
     </static>\n
-\n
     <frame id="content"\n
            nextid="content"\n
            x="1cm"\n
@@ -183,7 +202,6 @@
            toppadding="0cm"\n
            bottompadding="0cm"\n
            showBoundary="0"/>\n
-\n
   </pagetemplate>\n
 \n
 </template>\n
