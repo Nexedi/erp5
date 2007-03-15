@@ -366,15 +366,12 @@ class TestDomainTool(ERP5TypeTestCase):
     self.supply_line.setBasePrice(23)
     self.supply_line.setPricedQuantity(1)
     self.supply_line.setDefaultResourceValue(self.resource)
-    #self.supply_line.setMultimembershipCriterionBaseCategoryList(['resource']) # Do we need to add 'variation' ???
     self.supply_line.setMappedValuePropertyList(['base_price','priced_quantity'])
-    #self.supply_line.setMembershipCriterionCategoryList(['resource/%s' % self.resource.getRelativeUrl()])
-    #self.supply_line.setPVariationBaseCategoryList(['variation'])
     self.resource.setPVariationBaseCategoryList(['variation'])
     self.supply_line.updateCellRange(base_id='path')
     cell_range = self.supply_line.SupplyLine_asCellRange()
     for range in cell_range[0]:
-      cell = self.supply_line.newCell(range,base_id='path')
+      cell = self.supply_line.newCell(range,base_id='path',portal_type='Supply Cell')
       cell.setMappedValuePropertyList(['base_price','priced_quantity'])
       cell.setMultimembershipCriterionBaseCategoryList(['resource','variation'])
       LOG('test, range',0,range)
@@ -385,6 +382,10 @@ class TestDomainTool(ERP5TypeTestCase):
       if range.find('red')>=0:
         cell.setMembershipCriterionCategoryList([range])
         cell.setBasePrice(26)
+
+    right_price_list = [45,26]
+    price_list = [x.getBasePrice() for x in self.supply_line.objectValues()]
+    self.failIfDifferentSet(price_list,right_price_list)
 
     def sort_method(x,y):
       # make sure we get cell before
@@ -401,13 +402,28 @@ class TestDomainTool(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     domain_tool = self.getDomainTool()
-    context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/blue' % self.resource.getRelativeUrl()])
+    context = self.resource.asContext(
+                     categories=['resource/%s' % self.resource.getRelativeUrl(),
+                     'variation/%s/blue' % self.resource.getRelativeUrl()])
     mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
     self.assertEquals(mapped_value.getProperty('base_price'),45)
-    context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/red' % self.resource.getRelativeUrl()])
+    context = self.resource.asContext(
+                     categories=['resource/%s' % self.resource.getRelativeUrl(),
+                     'variation/%s/red' % self.resource.getRelativeUrl()])
     mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
     self.assertEquals(mapped_value.getProperty('base_price'),26)
     # Now check the price
-    self.assertEquals(self.resource.getPrice(context=self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/blue' % self.resource.getRelativeUrl()]),sort_method=sort_method),45)
+    self.assertEquals(self.resource.getPrice(context=self.resource.asContext(
+                     categories=['resource/%s' % self.resource.getRelativeUrl(),
+                     'variation/%s/blue' % self.resource.getRelativeUrl()]),
+                     sort_method=sort_method),45)
 
+if __name__ == '__main__':
+    framework()
+else:
+    import unittest
+    def test_suite():
+        suite = unittest.TestSuite()
+        suite.addTest(unittest.makeSuite(TestDomainTool))
+        return suite
 
