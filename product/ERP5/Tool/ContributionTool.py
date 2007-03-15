@@ -341,7 +341,7 @@ class ContributionTool(BaseTool):
     uid = str(id).split('-')[-1]
     object = self.getPortalObject().portal_catalog.unrestrictedGetResultValue(uid=uid)
     if object is not None:
-      return object.getObject()
+      return object.getObject() # Make sure this does not break security. XXX
 
     # Fallback to default method
     if default is _marker:
