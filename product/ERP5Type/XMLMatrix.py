@@ -226,29 +226,30 @@ class XMLMatrix(Folder):
             # create a movement in dimension i between old_place and new_place
             movement[base_id][i][old_place] = new_place
 
-      # Rename every 'object_name' by 'temp_object_name'
+      # Rename every 'object_id' by 'temp_object_id'
       object_id_list = []
-      for object in self.objectValues():
-        if object.id.find(base_id) == 0:
+      for obj in self.objectValues():
+        object_id = obj.getId()
+        if object_id.find(base_id) == 0:
           # We want to make sure we have only base_id, ex: foo_0_0 and
           # not foo_bar_0_0
-          if (object.id) > len(base_id):
+          if (object_id) > len(base_id):
             try:
-              int(object.id[len(base_id)+1:].split('_')[0])
-              test = self._getOb(object.id) # If the object was created
+              int(object_id[len(base_id)+1:].split('_')[0])
+              test = self._getOb(object_id) # If the object was created
                                             # during this transaction,
                                             # then we do not need to
                                             # work on it
-              object_id_list += [object.id]
+              object_id_list += [object_id]
             except ValueError, KeyError:
               pass
 
       for object_id in object_id_list:
         new_name = 'temp_' + object_id
-        object = self._getOb(object_id)
-        object.isIndexable = 0 # block reindexing at this time
-        object.id = new_name
-        self._setObject(new_name, aq_base(object))
+        obj = self._getOb(object_id)
+        obj.isIndexable = 0 # block reindexing at this time
+        obj.id = new_name
+        self._setObject(new_name, aq_base(obj))
         self._delObject(object_id)
 
       for object_id in object_id_list:
@@ -661,13 +662,14 @@ class XMLMatrix(Folder):
       if not hasattr(self, 'index'):
         self.index = PersistentMapping()
       # We will check each cell of the matrix the matrix
-      for object in self.objectValues():
-        # obect.id is equal to something like 'something_quantity_3_2'
+      for obj in self.objectValues():
+        object_id = obj.getId()
+        # obect_id is equal to something like 'something_quantity_3_2'
         # So we need to check for every object.id if the value
         # looks like good or not. We split the name
         # check each key in index
         # First we make sure this is a cell
-        object_id_split = object.id.split('_')
+        object_id_split = object_id.split('_')
         # We try to find the first split id which is an int
         base_id_len = len(object_id_split)
         is_int = 1
@@ -690,8 +692,8 @@ class XMLMatrix(Folder):
               error_message = "There is no index for base_id %s" % base_id
               if fixit: error_message += ' (fixed)'
               errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
-              if object.id not in to_delete:
-                to_delete += [object.id]
+              if object_id not in to_delete:
+                to_delete += [object_id]
             else:
               # Check empty indices.
               empty_list = []
@@ -711,16 +713,16 @@ class XMLMatrix(Folder):
                                                                             - base_id_len, len_id)
                 if fixit: error_message += ' (fixed)'
                 errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
-                if object.id not in to_delete:
-                  to_delete += [object.id]
+                if object_id not in to_delete:
+                  to_delete += [object_id]
               else :
                 for i in range(len_id):
                   if int(object_id_split[i+base_id_len]) >= len(self.index[base_id][i]):
-                    error_message = "Cell %s is out of bound" % object.id
+                    error_message = "Cell %s is out of bound" % object_id
                     if fixit: error_message += ' (fixed)'
                     errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
-                    if object.id not in to_delete:
-                      to_delete += [object.id]
+                    if object_id not in to_delete:
+                      to_delete += [object_id]
 
       if fixit and len(to_delete) > 0:
         self.manage_delObjects(to_delete)
