@@ -270,13 +270,11 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
 
     #LOG('item_id_list after',0,[r for r in self.getPortal().material_module.objectIds()])
     #item_catalog = [(r.uid,r.path) for r in self.getPortal().portal_catalog(portal_type = 'Material')]
-    #LOG('item_catalog after',0,item_catalog)
-    get_transaction().commit()
-    self.tic()
     pl_id_list = [r for r in self.getPortal().purchase_packing_list_module.objectIds()]
-
-    #LOG('pl_id_list before',0,pl_id_list)
     self.getPortal().purchase_packing_list_module.manage_delObjects(pl_id_list)
+
+    item_id_list = [r for r in self.getAccountingModule().objectIds()]
+    self.getAccountingModule().manage_delObjects(item_id_list)
     
     get_transaction().commit()
     self.tic()
