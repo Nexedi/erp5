@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
+from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -87,6 +88,24 @@ class TextDocument(Document, TextContent):
     security.declareProtected(Permissions.View, 'manage_FTPget')
     manage_FTPget = TextContent.manage_FTPget
 
+    # File handling
+    security.declarePrivate( '_edit' )
+    def _edit(self, **kw):
+      """\
+        This is used to edit files which contain HTML content.
+      """
+      if kw.has_key('file'):
+        file = kw.get('file')
+        text_content = file.read()
+        headers, body, format = self.handleText(text=text_content)
+        kw.setdefault('text_format', format)
+        kw.setdefault('text_content', text_content)
+        del kw['file']
+      Document._edit(self, **kw)
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
+    edit = WorkflowMethod( _edit )
+    
     # Default Display
     security.declareProtected(Permissions.View, 'index_html')
     def index_html(self, REQUEST, RESPONSE, format=None, **kw):
