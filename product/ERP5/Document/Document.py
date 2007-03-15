@@ -179,6 +179,21 @@ class Document(XMLObject):
       searchable text, explicit relations, implicit relations,
       metadata, versions, languages, etc.
 
+      Documents may either store their content directly or
+      cache content which is retrieved from a specified URL.
+      The second case if often referred as "External Document".
+      Standalone "External Documents" may be created by specifying
+      a URL to the contribution tool which is in charge of initiating
+      the download process and selecting the appropriate document type.
+      Groups of "External Documents" may also be generated from
+      so-called "External Source" (refer to ExternalSource class
+      for more information).
+
+      External Documents may be downloaded once or at
+      regular interval. The later can be useful to update the content
+      of an external source. Previous versions may be stored
+      in place or kept in a separate file. 
+
       There are currently two types of Document subclasses:
 
       * File for binary file based documents. File
@@ -188,7 +203,10 @@ class Document(XMLObject):
 
       * TextDocument for text based documents. TextDocument
         has subclasses such as Wiki to implement specific
-        methods.
+        methods. TextDocument itself has a subclass
+        (XSLTDocument) which provides XSLT based analysis
+        and transformation of XML content based on XSLT
+        templates. 
 
       Document classes which implement conversion should use
       the ConversionCacheMixin class so that converted values are
@@ -371,6 +389,13 @@ class Document(XMLObject):
         formats require certain permission
     """
     pass
+
+  security.declareProtected(Permissions.View, 'asText')
+  def asText(self):
+    """
+      Converts the content of the document to a textual representation.
+    """
+    return self.convert('text')
 
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
@@ -787,7 +812,8 @@ class Document(XMLObject):
     kw = {}
     for id in self.propertyIds():
       # We should not consider file data
-      if id is not 'data' and self.hasProperty(id):
+      if id not in ('data', 'categories_list', 'uid', 'id', 'text_content', ) \
+            and self.hasProperty(id):
         kw[id] = self.getProperty(id)
     self._backup_input = kw # We could use volatile and pass kw in activate
                             # if we are garanteed that _backup_input does not
@@ -843,6 +869,7 @@ class Document(XMLObject):
       del(kw['portal_type'])
     except KeyError:
       pass
+
     self.edit(**kw)
 
     # Finish in second stage

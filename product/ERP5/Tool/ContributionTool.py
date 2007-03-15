@@ -27,9 +27,9 @@
 ##############################################################################
 
 import cStringIO
-import pdb
 import re
 import string
+import urllib2
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass, DTMLFile
@@ -41,8 +41,6 @@ from zLOG import LOG
 from DateTime import DateTime
 from Acquisition import aq_base
 
-NO_DISCOVER_METADATA_KEY = '_v_no_discover_metadata'
-USER_NAME_KEY = '_v_document_user_login'
 TEMP_NEW_OBJECT_KEY = '_v_new_object'
 
 _marker = []  # Create a new marker object.
@@ -50,16 +48,17 @@ _marker = []  # Create a new marker object.
 class ContributionTool(BaseTool):
   """
     ContributionTool provides an abstraction layer to unify the contribution
-    of documents into an ERP5Site.
+    of documents into an ERP5 Site.
 
-    ContributionTool is configured in portal_types in
-    such way that it can store Text, Spreadsheet, PDF, etc.
+    ContributionTool needs to be configured in portal_types (allowed contents) so
+    that it can store Text, Spreadsheet, PDF, etc. 
 
-    The method to use is portal_contributions.newContent, which should receive
-    either a portal type or a file name from which type can be derived or a file from which
-    content type can be derived, otherwise it will fail.
+    The main method of ContributionTool is newContent. This method can
+    be provided various parameters from which the portal type and document
+    metadata can be derived. 
 
     Configuration Scripts:
+  
       - ContributionTool_getPropertyDictFromFileName: receives file name and a 
         dict derived from filename by regular expression, and does any necesary
         operations (e.g. mapping document type id onto a real portal_type).
@@ -68,7 +67,6 @@ class ContributionTool(BaseTool):
   id = 'portal_contributions'
   meta_type = 'ERP5 Contribution Tool'
   portal_type = 'Contribution Tool'
-  allowed_types = ('File', 'Image', 'Text') # XXX Is this really needed ?
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -77,17 +75,17 @@ class ContributionTool(BaseTool):
   manage_overview = DTMLFile( 'explainContributionTool', _dtmldir )
 
   security.declarePrivate('findTypeName')
-  def findTypeName(self, file_name, ob):
+  def findTypeName(self, file_name, document):
     """
       Finds the appropriate portal type based on the file name
-      or if necessary the content of ob
+      or if necessary the content of the document.
     """
     portal_type = None
     # We should only consider those portal_types which share the
     # same meta_type with the current object
     valid_portal_type_list = []
     for pt in self.portal_types.objectValues():
-      if pt.meta_type == ob.meta_type:
+      if pt.meta_type == document.meta_type:
         valid_portal_type_list.append(pt.id)
 
     # Check if the filename tells which portal_type this is
@@ -100,7 +98,7 @@ class ContributionTool(BaseTool):
     # to check which of the candidates is suitable
     if portal_type is None:
       # The document is now responsible of telling all its properties
-      portal_type = ob.getPropertyDictFromContent().get('portal_type', None)
+      portal_type = document.getPropertyDictFromContent().get('portal_type', None)
       if portal_type is not None:
         # we check if it matches the candidate list, if there were any
         if len(portal_type_list)>1 and portal_type not in portal_type_list:
@@ -113,8 +111,8 @@ class ContributionTool(BaseTool):
 
     if portal_type is None:
       # We can not do anything anymore
-      return ob.portal_type
-      #return None
+      #return document.portal_type # XXX Wrong
+      return None
 
     if portal_type not in valid_portal_type_list:
       # We will not be able to migrate ob to portal_type
@@ -124,7 +122,7 @@ class ContributionTool(BaseTool):
     return portal_type
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None,
+  def newContent(self, id=None, portal_type=None, url=None,
                        discover_metadata=1, temp_object=0,
                        user_login=None, **kw):
     """
@@ -134,7 +132,8 @@ class ContributionTool(BaseTool):
       the content.
 
       user_login is the name under which the content will be created
-      XXX - Is this a security hole ?
+      XXX - this is a security hole which needs to be fixed by
+      making sure only Manager can use this parameter
 
       NOTE:
         We always generate ID. So, we must prevent using the one
@@ -147,20 +146,32 @@ class ContributionTool(BaseTool):
 
     # Try to find the file_name
     file_name = None
-    # check if file was provided
-    file = kw.get('file', None)
-    if file is not None:
-      file_name = file.filename
+    mime_type = None
+    if url is None:
+      # check if file was provided
+      file = kw.get('file', None)
+      if file is not None:
+        file_name = file.filename
+      else:
+        # some channels supply data and file-name separately
+        # this is the case for example for email ingestion
+        # in this case, we build a file wrapper for it
+        data = kw.get('data', None)
+        if data is not None:
+          file_name = kw.get('file_name', None)
+          if file_name is not None:
+            file = cStringIO.StringIO()
+            file.write(data)
+            file.seek(0)
     else:
-      # some channels supply data and file name separately
-      # we have to build an object
-      data = kw.get('data', None)
-      if data is not None:
-        file_name = kw.get('file_name', None)
-        if file_name is not None:
-          file = cStringIO.StringIO()
-          file.write(data)
-          file.seek(0)
+      # build a new file from the url
+      file = urllib2.urlopen(url)
+      file_name = url.split('/')[-1]
+      if hasattr(file, 'headers'):
+        headers = file.headers
+        if hasattr(headers, 'type'):
+          mime_type = headers.type
+      kw['file'] = file
 
     # If the portal_type was provided, we can go faster
     if portal_type is not None and portal_type != '':
@@ -178,11 +189,11 @@ class ContributionTool(BaseTool):
       raise ValueError, "could not determine portal type"
 
     # So we will simulate WebDAV to get an empty object
-    # with PUT_factory
-    ob = self.PUT_factory( file_name, None, None )
+    # with PUT_factory - we provide the mime_type as
+    # parameter
+    ob = self.PUT_factory( file_name, mime_type, None )
 
     # Raise an error if we could not guess the portal type
-    # XXX Maybe we should try to pass the typ param
     if ob is None:
       raise ValueError, "Could not determine the document type"
 
@@ -197,9 +208,7 @@ class ContributionTool(BaseTool):
     BaseTool._delObject(self, file_name)
 
     # Move the document to where it belongs
-    if not discover_metadata: setattr(self, NO_DISCOVER_METADATA_KEY, 1)
-    setattr(ob, USER_NAME_KEY, user_login)
-    document = self._setObject(file_name, ob)
+    document = self._setObject(file_name, ob, user_login=user_login)
 
     # Time to empty the cache
     if hasattr(self, '_v_document_cache'):
@@ -209,7 +218,7 @@ class ContributionTool(BaseTool):
     # Reindex it and return the document
     # XXX seems we have to commit now, otherwise it is not reindexed properly later
     # dunno why
-    get_transaction().commit()
+    get_transaction().commit() # XXX-JPS - WHAT IS THIS ?????????????????????
     document.reindexObject()
     return document
 
@@ -241,9 +250,9 @@ class ContributionTool(BaseTool):
     method = self._getTypeBasedMethod('getPropertyDictFromFileName', 
         fallback_script_id = 'ContributionTool_getPropertyDictFromFileName')
     property_dict = method(file_name, property_dict)
-    if property_dict.has_key('portal_type'):
+    if property_dict.has_key('portal_type') and property_dict['portal_type']:
       # we have to return portal_type as a tuple
-      # because we can allow for having multiple types (candidates)
+      # because we should allow for having multiple candidate types
       property_dict['portal_type'] = (property_dict['portal_type'],)
     else:
       # we have to find candidates by file extenstion
@@ -279,30 +288,41 @@ class ContributionTool(BaseTool):
 
       Refer to: NullResource.PUT
     """
-    # Find the portal type based on file name and content
-    # We provide ob in the context of self to make sure scripting is possible
-    portal_type = self.findTypeName(name, ob.__of__(self))
-    if portal_type is None:
-      raise TypeError, "Unable to determine portal type"
-    
-    # We know the portal_type, let us find the module
-    module = self.getDefaultModule(portal_type)
+    # _setObject is called by constructInstance at a time
+    # when the object has no portal_type defined yet. It
+    # will be removed later on. We can safely store the
+    # document inside us at this stage. Else we
+    # must find out where to store it.
+    if not ob.__dict__.has_key('portal_type'):
+      BaseTool._setObject(self, name, ob)
+      document = self[name]
+    else:
+      # We give the system a last chance to analyse the
+      # portal_type based on the document content
+      # (ex. a Memo is a kind of Text which can be identified
+      # by the fact it includes some specific content)
+      portal_type = self.findTypeName(name, ob.__of__(self))
+      if portal_type is None: portal_type = ob.portal_type
+      ob._setPortalTypeName(portal_type) # This is redundant with finishConstruction
+                                       # but necessary to move objects to appropriate
+                                       # location based on their content. Since the
+                                       # object is already constructed here, we
+                                       # can safely change its portal_type
+      # Now we know the portal_type, let us find the module
+      # to which we should move the document to
+      module = self.getDefaultModule(ob.portal_type)
+      new_id = module.generateNewId()
+      ob.id = new_id
+      module._setObject(new_id, ob)
 
-    # Set the object on the module and fix the portal_type and id
-    new_id = module.generateNewId()
-    ob.portal_type = portal_type
-    ob.id = new_id
-    module._setObject(new_id, ob)
+      # We can now discover metadata
+      document = module[new_id]
+      document.discoverMetadata(file_name=name, user_login=user_login)
 
-    # We can now discover metadata unless NO_DISCOVER_METADATA_KEY was set on ob
-    document = module[new_id]
-    user_login = getattr(self, USER_NAME_KEY, None)
-    if not getattr(ob, NO_DISCOVER_METADATA_KEY, 0): document.discoverMetadata(file_name=name, user_login=user_login)
-
-    # Keep the document close to us
-    if not hasattr(self, '_v_document_cache'):
-      self._v_document_cache = {}
-    self._v_document_cache[name] = document.getRelativeUrl()
+      # Keep the document close to us
+      if not hasattr(self, '_v_document_cache'):
+        self._v_document_cache = {}
+      self._v_document_cache[name] = document.getRelativeUrl()
 
     # Return document to newContent method
     return document
