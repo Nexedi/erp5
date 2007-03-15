@@ -341,7 +341,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
 
       try:
         aspect_ratio = float(picture.width) / float(picture.height)
-      except TypeError:
+      except (TypeError, ZeroDivisionError):
         aspect_ratio = float(picture.width()) / float(picture.height())
       # fix a default value and correct the aspect
       if h is None:
