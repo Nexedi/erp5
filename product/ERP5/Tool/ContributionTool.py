@@ -337,6 +337,13 @@ class ContributionTool(BaseTool):
       if document_url is not None:
         return self.getPortalObject().unrestrictedTraverse(document_url)
 
+    # Try first to return an object listed bv listDAVObjects
+    uid = str(id).split('-')[-1]
+    object = self.getPortalObject().portal_catalog.unrestrictedGetResultValue(uid=uid)
+    if object is not None:
+      return object.getObject()
+
+    # Fallback to default method
     if default is _marker:
       return BaseTool._getOb(self, id)
     else:
@@ -358,19 +365,30 @@ class ContributionTool(BaseTool):
     return BaseTool._delOb(self, id)
 
   def listDAVObjects(self):
-   """
-     Get all docs contributed by the current user
-     XXX you can only list them this way, but they're not accessible
-     to make it fully usable we should set their id's with module name
-     and possibly something nicer to display
-   """
-   sm = getSecurityManager()
-   u = sm.getUser()
-   kw = {}
-   res = self.portal_catalog(portal_type=self.getPortalDocumentTypeList())
-   res = [r.getObject() for r in res]
-   res = [o for o in res if u.allowed(o, ('Owner',))] # XXX terrible - needs to use portal_catalog
-   return res
+    """
+      Get all contents contributed by the current user. This is
+      delegated to a script in order to help customisation.
+    """
+    method = getattr(self, 'ContributionTool_getMyContentList', None)
+    if method is not None:
+      object_list = method()
+    else:
+      sm = getSecurityManager()
+      user = sm.getUser()
+      object_list = self.portal_catalog(portal_type=self.getPortalMyDocumentTypeList(),
+                                        owner=str(user))
+
+    def wrapper(o_list):
+      for o in o_list:
+        o = o.getObject()
+        reference = o.getReference()
+        if reference:
+          id = '%s-%s' % (reference, o.getUid())
+        else:
+          id = '%s' % o.getUid()
+        yield o.getObject().asContext(id=id)
+
+    return wrapper(object_list)
 
 InitializeClass(ContributionTool)
 

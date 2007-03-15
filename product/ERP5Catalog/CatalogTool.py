@@ -535,7 +535,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           return result[0].getObject()
         except IndexError:
           return None
-    
+
+    security.declarePrivate('unrestrictedGetResultValue')
+    def unrestrictedGetResultValue(self, query=None, **kw):
+        """
+        A method to factor common code used to search a single
+        object in the database. Same as getResultValue but without
+        taking into account security.
+        """
+        result = self.unrestrictedSearchResults(query=query, **kw)
+        try:
+          return result[0].getObject()
+        except IndexError:
+          return None
+
     def countResults(self, query=None, **kw):
         """
             Calls ZCatalog.countResults with extra arguments that
