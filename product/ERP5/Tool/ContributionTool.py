@@ -199,7 +199,7 @@ class ContributionTool(BaseTool):
 
     # Then put the file inside ourselves for a short while
     BaseTool._setObject(self, file_name, ob)
-    document = self[file_name]
+    document = BaseTool._getOb(self, file_name)
 
     # Then edit the document contents (so that upload can happen)
     document._edit(**kw)
@@ -209,16 +209,9 @@ class ContributionTool(BaseTool):
 
     # Move the document to where it belongs
     document = self._setObject(file_name, ob, user_login=user_login)
-
-    # Time to empty the cache
-    if hasattr(self, '_v_document_cache'):
-      if self._v_document_cache.has_key(file_name):
-        del self._v_document_cache[file_name]
+    document = self._getOb(file_name) # Call _getOb to purge cache
 
     # Reindex it and return the document
-    # XXX seems we have to commit now, otherwise it is not reindexed properly later
-    # dunno why
-    get_transaction().commit() # XXX-JPS - WHAT IS THIS ?????????????????????
     document.reindexObject()
     return document
 
@@ -319,22 +312,26 @@ class ContributionTool(BaseTool):
       document = module[new_id]
       document.discoverMetadata(file_name=name, user_login=user_login)
 
-      # Keep the document close to us
+      # Keep the document close to us - this is only useful for
+      # file upload from webdav
       if not hasattr(self, '_v_document_cache'):
         self._v_document_cache = {}
       self._v_document_cache[name] = document.getRelativeUrl()
 
     # Return document to newContent method
     return document
-    
+
   def _getOb(self, id, default=_marker):
     """
     Check for volatile temp object info first
     and try to find it
     """
+    # Use the document cache if possible and return result immediately
+    # this is only useful for webdav
     if hasattr(self, '_v_document_cache'):
       document_url = self._v_document_cache.get(id, None)
       if document_url is not None:
+        del self._v_document_cache[id]
         return self.getPortalObject().unrestrictedTraverse(document_url)
 
     # Try first to return an object listed bv listDAVObjects
@@ -348,21 +345,6 @@ class ContributionTool(BaseTool):
       return BaseTool._getOb(self, id)
     else:
       return BaseTool._getOb(self, id, default=default)
-
-  def _delOb(self, id):
-    """
-    We don't need to delete, since we never set here
-    """
-    if hasattr(self, '_v_document_cache'):
-      document_url = self._v_document_cache.get(id, None)
-      if document_url is not None:
-        document = self.getPortalObject().unrestrictedTraverse(document_url)
-        if document is not None:
-          document.getParentValue()._delOb(document.getId())
-          del self._v_document_cache[id]
-          return
-
-    return BaseTool._delOb(self, id)
 
   def listDAVObjects(self):
     """
@@ -391,5 +373,3 @@ class ContributionTool(BaseTool):
     return wrapper(object_list)
 
 InitializeClass(ContributionTool)
-
-# vim: filetype=python syntax=python shiftwidth=2 
