@@ -276,7 +276,11 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     pl_id_list = [r for r in self.getPortal().purchase_packing_list_module.objectIds()]
     self.getPortal().purchase_packing_list_module.manage_delObjects(pl_id_list)
 
-    item_id_list = [r for r in self.getAccountingModule().objectIds()]
+    transaction_id_list = []
+    for transaction in self.getAccountingModule().objectValues():
+      transaction_id_list.append(transaction.getId())
+      transaction.workflow_history = {}
+      
     self.getAccountingModule().manage_delObjects(item_id_list)
     
     get_transaction().commit()
