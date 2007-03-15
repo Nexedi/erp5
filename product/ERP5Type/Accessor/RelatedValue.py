@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import func_code, type_definition, list_types, \
+                 ATTRIBUTE_PREFIX, Method
 from Products.ERP5Type.PsycoWrapper import psyco
 
 class DefaultGetter(Method):
@@ -67,6 +68,26 @@ class DefaultGetter(Method):
 
 Getter = DefaultGetter
 
+class RestrictedDefaultGetter(DefaultGetter):
+  """
+  Gets a default reference object
+  """
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getDefaultRelatedValue(
+                            self._key,
+                            spec=kw.get('spec',()),
+                            filter=kw.get('filter', None),
+                            portal_type=kw.get('portal_type',()),
+                            strict_membership=kw.get('strict_membership',
+                            kw.get('strict', None)), # 'strict' is deprecated
+                            query=instance.portal_catalog.getSecurityQuery(),)
+
+  psyco.bind(__call__)
+
+RestrictedGetter = RestrictedDefaultGetter
+
 class ListGetter(Method):
   """
   Gets a list of reference objects
@@ -103,12 +124,39 @@ class ListGetter(Method):
 
   psyco.bind(__call__)
 
+class RestrictedListGetter(ListGetter):
+  """
+  Gets a list of reference objects
+  """
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getRelatedValueList(
+                           self._key,
+                           spec=kw.get('spec',()),
+                           filter=kw.get('filter', None),
+                           portal_type=kw.get('portal_type',()),
+                           strict_membership=kw.get('strict_membership', 
+                           kw.get('strict', None)), # 'strict' is deprecated
+                           query=instance.portal_catalog.getSecurityQuery(),)
+
+  psyco.bind(__call__)
+
 class SetGetter(ListGetter):
   """
   Gets a category value set
   """
   def __call__(self, instance, *args, **kw):
     result_list = ListGetter.__call__(self, instance, *args, **kw)
+    result_set = dict([(x, 0) for x in result_list]).keys()
+    return result_set
+
+class RestrictedSetGetter(RestrictedListGetter):
+  """
+  Gets a category value set
+  """
+  def __call__(self, instance, *args, **kw):
+    result_list = RestrictedListGetter.__call__(self, instance, *args, **kw)
     result_set = dict([(x, 0) for x in result_list]).keys()
     return result_set
 
@@ -147,6 +195,27 @@ class DefaultIdGetter(Method):
 
 IdGetter = DefaultIdGetter
 
+class RestrictedDefaultIdGetter(DefaultIdGetter):
+  """
+  Gets a default reference object
+  """
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getDefaultRelatedProperty(
+                           self._key, 'id',
+                           spec=kw.get('spec',()),
+                           filter=kw.get('filter', None),
+                           portal_type=kw.get('portal_type',()),
+                           strict_membership=kw.get('strict_membership', 
+                           kw.get('strict', None)), # 'strict' is deprecated
+                           query=instance.portal_catalog.getSecurityQuery(),)
+
+
+  psyco.bind(__call__)
+
+RestrictedIdGetter = RestrictedDefaultIdGetter
+
 class IdListGetter(Method):
     """
     Gets a list of reference objects
@@ -179,12 +248,39 @@ class IdListGetter(Method):
 
     psyco.bind(__call__)
 
+class RestrictedIdListGetter(IdListGetter):
+    """
+    Gets a list of reference objects
+    """
+    def __call__(self, instance, *args, **kw):
+      if self._warning:
+        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      return instance._getRelatedPropertyList(
+                           self._key, 'id',
+                           spec=kw.get('spec',()),
+                           filter=kw.get('filter', None),
+                           portal_type=kw.get('portal_type',()),
+                           strict_membership=kw.get('strict_membership', 
+                           kw.get('strict', None)), # 'strict' is deprecated
+                           query=instance.portal_catalog.getSecurityQuery(),)
+
+    psyco.bind(__call__)
+
 class IdSetGetter(IdListGetter):
   """
   Gets a category value set
   """
   def __call__(self, instance, *args, **kw):
     result_list = IdListGetter.__call__(self, instance, *args, **kw)
+    result_set = dict([(x, 0) for x in result_list]).keys()
+    return result_set
+
+class RestrictedIdSetGetter(RestrictedIdListGetter):
+  """
+  Gets a category value set
+  """
+  def __call__(self, instance, *args, **kw):
+    result_list = RestrictedIdListGetter.__call__(self, instance, *args, **kw)
     result_set = dict([(x, 0) for x in result_list]).keys()
     return result_set
 
@@ -222,6 +318,26 @@ class DefaultTitleGetter(Method):
 
 TitleGetter = DefaultTitleGetter
 
+class RestrictedDefaultTitleGetter(DefaultTitleGetter):
+  """
+  Gets a default reference object
+  """
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getDefaultRelatedProperty(
+                         self._key, 'title',
+                         spec=kw.get('spec',()),
+                         filter=kw.get('filter', None),
+                         portal_type=kw.get('portal_type',()),
+                         strict_membership=kw.get('strict_membership', 
+                         kw.get('strict', None)), # 'strict' is deprecated
+                         query=instance.portal_catalog.getSecurityQuery(),)
+
+  psyco.bind(__call__)
+
+RestrictedTitleGetter = RestrictedDefaultTitleGetter
+
 class TitleListGetter(Method):
   """
   Gets a list of reference objects
@@ -253,12 +369,40 @@ class TitleListGetter(Method):
                         kw.get('strict', None))) # 'strict' is deprecated
   psyco.bind(__call__)
 
+class RestrictedTitleListGetter(TitleListGetter):
+  """
+  Gets a list of reference objects
+  """
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getRelatedPropertyList(
+                        self._key, 'title',
+                        spec=kw.get('spec',()),
+                        filter=kw.get('filter', None),
+                        portal_type=kw.get('portal_type',()),
+                        strict_membership=kw.get('strict_membership', 
+                        kw.get('strict', None)), # 'strict' is deprecated
+                        query=instance.portal_catalog.getSecurityQuery(),)
+
+  psyco.bind(__call__)
+
 class TitleSetGetter(TitleListGetter):
   """
   Gets a category value set
   """
   def __call__(self, instance, *args, **kw):
     result_list = TitleListGetter.__call__(self, instance, *args, **kw)
+    result_set = dict([(x, 0) for x in result_list]).keys()
+    return result_set
+
+class RestrictedTitleSetGetter(RestrictedTitleListGetter):
+  """
+  Gets a category value set
+  """
+  def __call__(self, instance, *args, **kw):
+    result_list = RestrictedTitleListGetter.__call__(self, instance, 
+                                                     *args, **kw)
     result_set = dict([(x, 0) for x in result_list]).keys()
     return result_set
 
@@ -295,6 +439,26 @@ class DefaultPropertyGetter(Method):
 
 PropertyGetter = DefaultPropertyGetter
 
+class RestrictedDefaultPropertyGetter(DefaultPropertyGetter):
+  """
+  Gets a default reference object
+  """
+  def __call__(self, instance, key, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getDefaultRelatedProperty(
+                         self._key, key,
+                         spec=kw.get('spec',()),
+                         filter=kw.get('filter', None),
+                         portal_type=kw.get('portal_type',()),
+                         strict_membership=kw.get('strict_membership', 
+                         kw.get('strict', None)), # 'strict' is deprecated
+                         query=instance.portal_catalog.getSecurityQuery(),)
+
+  psyco.bind(__call__)
+
+RestrictedPropertyGetter = RestrictedDefaultPropertyGetter
+
 class PropertyListGetter(Method):
   """
   Gets a list of reference objects
@@ -326,12 +490,40 @@ class PropertyListGetter(Method):
                            kw.get('strict', None))) # 'strict' is deprecated
   psyco.bind(__call__)
 
+class RestrictedPropertyListGetter(PropertyListGetter):
+  """
+  Gets a list of reference objects
+  """
+  def __call__(self, instance, key, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+    return instance._getRelatedPropertyList(
+                           self._key, key,
+                           spec=kw.get('spec',()),
+                           filter=kw.get('filter', None),
+                           portal_type=kw.get('portal_type',()),
+                           strict_membership=kw.get('strict_membership', 
+                           kw.get('strict', None)), # 'strict' is deprecated
+                           query=instance.portal_catalog.getSecurityQuery(),)
+
+  psyco.bind(__call__)
+
 class PropertySetGetter(PropertyListGetter):
   """
   Gets a category value set
   """
   def __call__(self, instance, *args, **kw):
     result_list = PropertyListGetter.__call__(self, instance, *args, **kw)
+    result_set = dict([(x, 0) for x in result_list]).keys()
+    return result_set
+
+class RestrictedPropertySetGetter(RestrictedPropertyListGetter):
+  """
+  Gets a category value set
+  """
+  def __call__(self, instance, *args, **kw):
+    result_list = RestrictedPropertyListGetter.__call__(self, instance, 
+                                                        *args, **kw)
     result_set = dict([(x, 0) for x in result_list]).keys()
     return result_set
 
