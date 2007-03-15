@@ -42,6 +42,7 @@ from Products.CMFCategory import _dtmldir
 from Products.CMFCore.PortalFolder import ContentFilter
 from Products.CMFCategory.Renderer import Renderer
 from OFS.Traversable import NotFound
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 import re
 
@@ -1268,7 +1269,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRelatedValueList' )
     def getRelatedValueList(self, context, base_category_list=None,
-                           spec=(), filter=None, base=1, **kw):
+                            spec=(), filter=None, base=1, 
+                            query=None, **kw):
       """
         This methods returns the list of objects related to the context
         with the given base_category_list.
@@ -1278,7 +1280,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       if isinstance(portal_type, str):
         portal_type = [portal_type]
-      if spec is (): spec = None # We do not want to care about spec
+      if spec is (): 
+        # We do not want to care about spec
+        spec = None
 
       # Base Category may not be related, besides sub categories
       if context.getPortalType() == 'Base Category':
@@ -1292,10 +1296,22 @@ class CategoryTool( UniqueObject, Folder, Base ):
         for base_category in base_category_list:
           category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
 
+      if portal_type is not None:
+        portal_type_query = Query(portal_type=portal_type)
+        if query is None:
+          query = portal_type_query
+        else:
+          query = ComplexQuery(query, portal_type_query, operator='AND')
+
+      # XXX Is Base_zSearchRelatedObjectsByCategoryList still usefull ?
+      # It may possible to call portal catalog directly
+      # Base_zSearchRelatedObjectsByCategoryList add a dependency to ERP5
+      query = self.portal_catalog.buildSQLQuery(query=query)
       brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
-                           category_list = category_list,
-                           portal_type = portal_type,
-                           strict_membership = strict_membership )
+                           category_list=category_list,
+                           strict_membership=strict_membership,
+                           where_expression=query['where_expression'],
+                           order_by_expression=query['order_by_expression'],)
 
       result = []
       for b in brain_result:
@@ -1311,15 +1327,17 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRelatedPropertyList' )
     def getRelatedPropertyList(self, context, base_category_list=None,
-                          property_name=None, spec=(), filter=None, base=1, **kw):
+                               property_name=None, spec=(), 
+                               filter=None, base=1, query=None, **kw):
       """
         This methods returns the list of property_name on  objects
         related to the context with the given base_category_list.
       """
       result = []
-      for o in self.getRelatedValueList(context=context,
+      for o in self.getRelatedValueList(
+                          context=context,
                           base_category_list=base_category_list, spec=spec,
-                          filter=filter, base=base, **kw) :
+                          filter=filter, base=base, query=query, **kw):
         result.append(o.getProperty(property_name, None))
       return result
 
