@@ -329,11 +329,12 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     Create a category tree
     """
     for category, codification, vault_type, new_tree in category_tree:
-      new_category = current_category.newContent(portal_type='Category',
-                                                 id=category,
-                                                 codification=codification)
-      new_category.setVaultType(vault_type)
-      self.createCategorySiteTree(new_category, new_tree)
+      if category not in current_category.objectIds():
+        new_category = current_category.newContent(portal_type='Category',
+                                                   id=category,
+                                                   codification=codification)
+        new_category.setVaultType(vault_type)
+        self.createCategorySiteTree(new_category, new_tree)
    
   def createCurrency(self):
     currency_module = self.getCurrencyModule()
