@@ -1575,60 +1575,72 @@ class Base( CopyContainer,
 
   security.declareProtected( Permissions.View, '_getDefaultRelatedValue' )
   def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=(),
-                              strict_membership=0, strict="deprecated"):
+                              strict_membership=0, strict="deprecated",
+                              query=None):
     # backward compatibility to keep strict keyword working
-    if strict != "deprecated" : strict_membership = strict
-    value_list =self._getRelatedValueList(id, spec=spec, filter=filter,
+    if strict != "deprecated" : 
+      strict_membership = strict
+    value_list =self._getRelatedValueList(
+                                id, spec=spec, filter=filter,
                                 portal_type=portal_type,
-                                strict_membership=strict_membership)
+                                strict_membership=strict_membership,
+                                query=query)
     try:
       return value_list[0]
     except IndexError:
       return None
 
-  security.declareProtected( Permissions.View, 'getDefaultRelatedValue' )
+  security.declareProtected(Permissions.View, 'getDefaultRelatedValue')
   getDefaultRelatedValue = _getDefaultRelatedValue
 
   security.declareProtected( Permissions.View, '_getRelatedValueList' )
   def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=(),
-                           strict_membership=0, strict="deprecated"):
+                           strict_membership=0, strict="deprecated", 
+                           query=None):
     # backward compatibility to keep strict keyword working
-    if strict != "deprecated" : strict_membership = strict
-    return self._getCategoryTool().getRelatedValueList(self, id,
+    if strict != "deprecated" : 
+      strict_membership = strict
+    return self._getCategoryTool().getRelatedValueList(
+                          self, id,
                           spec=spec, filter=filter, portal_type=portal_type,
-                          strict_membership=strict_membership)
+                          strict_membership=strict_membership,
+                          query=query)
 
-  security.declareProtected( Permissions.View, 'getRelatedValueList' )
+  security.declareProtected(Permissions.View, 'getRelatedValueList')
   getRelatedValueList = _getRelatedValueList
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             '_getDefaultRelatedProperty' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            '_getDefaultRelatedProperty')
   def _getDefaultRelatedProperty(self, id, property_name, spec=(), filter=None,
-                                      portal_type=(), strict_membership=0):
+                                 portal_type=(), strict_membership=0,
+                                 query=None):
     property_list = self._getCategoryTool().getRelatedPropertyList(self, id,
                           property_name=property_name,
                           spec=spec, filter=filter,
                           portal_type=portal_type,
-                          strict_membership=strict_membership)
+                          strict_membership=strict_membership,
+                          query=query)
     try:
       return property_list[0]
     except IndexError:
       return None
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDefaultRelatedProperty' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDefaultRelatedProperty')
   getDefaultRelatedProperty = _getDefaultRelatedProperty
 
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             '_getRelatedPropertyList' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            '_getRelatedPropertyList')
   def _getRelatedPropertyList(self, id, property_name, spec=(), filter=None,
-                                      portal_type=(), strict_membership=0):
+                              portal_type=(), strict_membership=0,
+                              query=None):
     return self._getCategoryTool().getRelatedPropertyList(self, id,
                           property_name=property_name,
                           spec=spec, filter=filter,
                           portal_type=portal_type,
-                          strict_membership=strict_membership)
+                          strict_membership=strict_membership,
+                          query=query)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getRelatedPropertyList' )
