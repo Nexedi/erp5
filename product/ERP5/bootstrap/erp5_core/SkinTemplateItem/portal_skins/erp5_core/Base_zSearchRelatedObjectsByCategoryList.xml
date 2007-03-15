@@ -39,13 +39,19 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>portal_type</string> </key>
+                                <key> <string>order_by_expression</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>strict_membership</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>where_expression</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -57,9 +63,10 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>category_list</string>
-                            <string>portal_type</string>
-                            <string>strict_membership</string>
+<string>category_list</string>
+<string>strict_membership</string>
+<string>where_expression</string>
+<string>order_by_expression</string>
                           </list>
                         </value>
                     </item>
@@ -77,8 +84,9 @@
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>category_list\r\n
-portal_type\r\n
-strict_membership</string> </value>
+strict_membership\r\n
+where_expression\r\n
+order_by_expression</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -94,7 +102,9 @@ strict_membership</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -116,23 +126,19 @@ strict_membership</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-if portal_type>\n
-SELECT DISTINCT catalog.uid, catalog.path, catalog.relative_url, portal_type\n
-FROM catalog, category\n
-WHERE (<dtml-in portal_type><dtml-unless sequence-start> OR </dtml-unless>catalog.portal_type=\'<dtml-var sequence-item>\'</dtml-in>)\n
-AND catalog.uid = category.uid\n
-AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
-<dtml-if strict_membership>\n
-  AND category.category_strict_membership = 1\n
-</dtml-if>\n
-<dtml-else>\n
 SELECT DISTINCT catalog.uid, catalog.path, portal_type\n
 FROM catalog, category\n
 WHERE catalog.uid = category.uid\n
-AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
-<dtml-if strict_membership>\n
-  AND category.category_strict_membership = 1\n
-</dtml-if>\n
+  AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
+  <dtml-if strict_membership>\n
+    AND category.category_strict_membership = 1\n
+  </dtml-if>\n
+  <dtml-if where_expression>\n
+    AND <dtml-var where_expression>\n
+  </dtml-if>\n
+<dtml-if order_by_expression>\n
+ORDER BY\n
+  <dtml-var order_by_expression>\n
 </dtml-if>
 
 ]]></string> </value>
@@ -171,23 +177,19 @@ AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-if portal_type>\n
-SELECT DISTINCT catalog.uid, catalog.path, catalog.relative_url, portal_type\n
-FROM catalog, category\n
-WHERE (<dtml-in portal_type><dtml-unless sequence-start> OR </dtml-unless>catalog.portal_type=\'<dtml-var sequence-item>\'</dtml-in>)\n
-AND catalog.uid = category.uid\n
-AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
-<dtml-if strict_membership>\n
-  AND category.category_strict_membership = 1\n
-</dtml-if>\n
-<dtml-else>\n
 SELECT DISTINCT catalog.uid, catalog.path, portal_type\n
 FROM catalog, category\n
 WHERE catalog.uid = category.uid\n
-AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
-<dtml-if strict_membership>\n
-  AND category.category_strict_membership = 1\n
-</dtml-if>\n
+  AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
+  <dtml-if strict_membership>\n
+    AND category.category_strict_membership = 1\n
+  </dtml-if>\n
+  <dtml-if where_expression>\n
+    AND <dtml-var where_expression>\n
+  </dtml-if>\n
+<dtml-if order_by_expression>\n
+ORDER BY\n
+  <dtml-var order_by_expression>\n
 </dtml-if>
 
 ]]></string> </value>
