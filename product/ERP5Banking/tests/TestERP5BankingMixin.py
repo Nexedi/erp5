@@ -681,6 +681,15 @@ class TestERP5BankingMixin:
                                      portal_type = 'Bank Account',
                                      price_currency_value = currency,
                                      **kw)
+    if not kw.has_key('reference') and bank_account.getReference() is None:
+      # If there is no automatic getter-time calculation of the reference and
+      # no reference has been explicitely set, generate one composed of all
+      # bank codes and a static prefix - to avoid collisions as much as
+      # possible.
+      bank_account.edit(reference='ref_%s%s%s%s%s' % (kw['bank_country_code'],
+        kw['bank_code'], kw['branch'], kw['bank_account_number'],
+        kw['bank_account_key']))
+      
     # validate this bank account for payment
     bank_account.validate()
     if amount == 0:
