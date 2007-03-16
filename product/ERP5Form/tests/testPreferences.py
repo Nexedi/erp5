@@ -26,19 +26,15 @@
 #
 ##############################################################################
 
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
+import unittest
 
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-from AccessControl.SecurityManagement import newSecurityManager,\
-                                             getSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import noSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
 from Testing import ZopeTestCase
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.Document.Preference import Priority
 
@@ -52,15 +48,16 @@ class TestPreferences(ERP5TypeTestCase):
 
   def afterSetUp(self):
     uf = self.getPortal().acl_users
-    uf._doAddUser('manager', '', ['Manager', 'Assignor'], [])
+    uf._doAddUser('manager', '', ['Manager', 'Assignor', ], [])
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
     self.createPreferences()
-  
+
   def beforeTearDown(self):
     portal_preferences = self.getPreferenceTool()
     portal_preferences.manage_delObjects(list(portal_preferences.objectIds()))
     get_transaction().commit()
+    self.tic()
 
   def createPreferences(self) :
     """ create some preferences objects  """
@@ -126,13 +123,13 @@ class TestPreferences(ERP5TypeTestCase):
     portal_workflow.doActionFor(
        site, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(person1.getPreferenceState(), 'enabled')
-    self.assertEquals(site.getPreferenceState(),    'enabled')
+    self.assertEquals(site.getPreferenceState(),    'global')
 
     portal_workflow.doActionFor(
        group, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(person1.getPreferenceState(), 'enabled')
     self.assertEquals(group.getPreferenceState(),   'enabled')
-    self.assertEquals(site.getPreferenceState(),    'enabled')
+    self.assertEquals(site.getPreferenceState(),    'global')
       
     portal_workflow.doActionFor(
        person2, 'enable_action', wf_id='preference_workflow')
@@ -140,7 +137,7 @@ class TestPreferences(ERP5TypeTestCase):
     # enabling a preference disable all other of the same level
     self.assertEquals(person1.getPreferenceState(), 'disabled')
     self.assertEquals(group.getPreferenceState(),   'enabled')
-    self.assertEquals(site.getPreferenceState(),    'enabled')
+    self.assertEquals(site.getPreferenceState(),    'global')
 
   def test_GetPreference(self, quiet=quiet, run=run_all_tests):
     """ checks that getPreference returns the good preferred value"""
@@ -162,7 +159,7 @@ class TestPreferences(ERP5TypeTestCase):
        site, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(person1.getPreferenceState(), 'enabled')
     self.assertEquals(group.getPreferenceState(),   'enabled')
-    self.assertEquals(site.getPreferenceState(),    'enabled')
+    self.assertEquals(site.getPreferenceState(),    'global')
     person1.setPreferredAccountingTransactionSimulationState([])
     self.assertEquals(
       person1.getPreferredAccountingTransactionSimulationState(), None)
@@ -227,7 +224,7 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(group.getPreferenceState(),    'enabled')
     portal_workflow.doActionFor(
        site, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(site.getPreferenceState(),     'enabled')
+    self.assertEquals(site.getPreferenceState(),     'global')
     group.setPreferredAccountingTransactionSimulationStateList(['cancelled'])
     
     self.assertNotEquals( None,
@@ -347,11 +344,22 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(user_b_1.getPreferenceState(), 'enabled')
     self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestPreferences))
-    return suite
+  def test_GlobalPreference(self):
+    # globally enabled preference are preference for anonymous users.
+    ptool = self.getPreferenceTool()
+    ptool.site.setPreferredAccountingTransactionSimulationStateList(
+                          ['this_is_visible_by_anonymous'])
+    self.getPortal().portal_workflow.doActionFor(
+                  ptool.site, 'enable_action', wf_id='preference_workflow')
+    self.assertEquals('global', ptool.site.getPreferenceState())
+    get_transaction().commit()
+    self.tic()
+    noSecurityManager()
+    self.assertEquals(['this_is_visible_by_anonymous'],
+        ptool.getPreferredAccountingTransactionSimulationStateList())
+ 
+    
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestPreferences))
+  return suite
