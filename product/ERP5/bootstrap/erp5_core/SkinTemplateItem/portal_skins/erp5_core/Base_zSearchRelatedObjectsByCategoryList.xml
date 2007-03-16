@@ -45,6 +45,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>portal_type</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>strict_membership</string> </key>
                                 <value>
                                   <dictionary/>
@@ -64,6 +70,7 @@
                         <value>
                           <list>
 <string>category_list</string>
+<string>portal_type</string>
 <string>strict_membership</string>
 <string>where_expression</string>
 <string>order_by_expression</string>
@@ -84,6 +91,7 @@
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>category_list\r\n
+portal_type\r\n
 strict_membership\r\n
 where_expression\r\n
 order_by_expression</string> </value>
@@ -129,6 +137,13 @@ order_by_expression</string> </value>
 SELECT DISTINCT catalog.uid, catalog.path, portal_type\n
 FROM catalog, category\n
 WHERE catalog.uid = category.uid\n
+  <dtml-if portal_type>\n
+    AND\n
+    (<dtml-in portal_type>\n
+      <dtml-unless sequence-start> OR </dtml-unless>\n
+        catalog.portal_type=\'<dtml-var sequence-item>\'\n
+    </dtml-in>)\n
+  </dtml-if>\n
   AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
   <dtml-if strict_membership>\n
     AND category.category_strict_membership = 1\n
@@ -180,6 +195,13 @@ ORDER BY\n
 SELECT DISTINCT catalog.uid, catalog.path, portal_type\n
 FROM catalog, category\n
 WHERE catalog.uid = category.uid\n
+  <dtml-if portal_type>\n
+    AND\n
+    (<dtml-in portal_type>\n
+      <dtml-unless sequence-start> OR </dtml-unless>\n
+        catalog.portal_type=\'<dtml-var sequence-item>\'\n
+    </dtml-in>)\n
+  </dtml-if>\n
   AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
   <dtml-if strict_membership>\n
     AND category.category_strict_membership = 1\n
