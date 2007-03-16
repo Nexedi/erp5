@@ -42,7 +42,6 @@ from Products.CMFCategory import _dtmldir
 from Products.CMFCore.PortalFolder import ContentFilter
 from Products.CMFCategory.Renderer import Renderer
 from OFS.Traversable import NotFound
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 import re
 
@@ -1296,22 +1295,22 @@ class CategoryTool( UniqueObject, Folder, Base ):
         for base_category in base_category_list:
           category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
 
-      if portal_type is not None:
-        portal_type_query = Query(portal_type=portal_type)
-        if query is None:
-          query = portal_type_query
-        else:
-          query = ComplexQuery(query, portal_type_query, operator='AND')
-
-      # XXX Is Base_zSearchRelatedObjectsByCategoryList still usefull ?
-      # It may possible to call portal catalog directly
-      # Base_zSearchRelatedObjectsByCategoryList add a dependency to ERP5
-      query = self.portal_catalog.buildSQLQuery(query=query)
-      brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
-                           category_list=category_list,
-                           strict_membership=strict_membership,
-                           where_expression=query['where_expression'],
-                           order_by_expression=query['order_by_expression'],)
+      if query is not None:
+        query = self.portal_catalog.buildSQLQuery(query=query)
+        # XXX Is Base_zSearchRelatedObjectsByCategoryList still usefull ?
+        # It may possible to call portal catalog directly
+        # Base_zSearchRelatedObjectsByCategoryList add a dependency to ERP5
+        brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
+                             category_list=category_list,
+                             portal_type=portal_type,
+                             strict_membership=strict_membership,
+                             where_expression=query['where_expression'],
+                             order_by_expression=query['order_by_expression'],)
+      else:
+        brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
+                             category_list=category_list,
+                             portal_type=portal_type,
+                             strict_membership=strict_membership)
 
       result = []
       for b in brain_result:
