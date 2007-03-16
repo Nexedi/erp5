@@ -114,7 +114,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
       if query_string is not None:
         LOG('SelectionTool', 0, 'DEPRECATED: _redirectToOriginalForm got called with a query_string. The variables must be passed in REQUEST.form.')
-
       context = REQUEST['PARENTS'][0]
       form_id = dialog_id or REQUEST.get('dialog_id', None) or form_id or REQUEST.get('form_id', 'view')
       return getattr(context, form_id)()
@@ -1318,7 +1317,7 @@ class TreeListLine:
 def makeTreeList(here, form, root_dict, report_path, base_category, 
 		  depth, unfolded_list, form_id, selection_name, 
 		  report_depth, is_report_opened=1, list_method=None,
-		  sort_on = (('id', 'ASC'),)):
+		  filtered_portal_types=[] ,sort_on = (('id', 'ASC'),)):
   """
     (object, is_pure_summary, depth, is_open, select_domain_dict)
 
@@ -1374,7 +1373,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
         # If this is a folder, try to browse the hierarchy
         object_list = root.searchFolder(sort_on=sort_on)
     elif hasattr(aq_base(root), list_method.__name__ ):
-      object_list = list_method()
+      object_list = list_method(portal_type=filtered_portal_types)
     else:      
       object_list = []
     for zo in object_list:

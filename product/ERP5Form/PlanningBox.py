@@ -1003,7 +1003,6 @@ class PlanningBoxWidget(Widget.Widget):
       params = selection.getParams()
     except (AttributeError,KeyError):
       params = {}
-
     ###### CALL CLASS METHODS TO BUILD BASIC STRUCTURE ######
     # creating BasicStructure instance (and initializing its internal values)
     self.basic = BasicStructure(here=here,form=form, field=field,
@@ -1203,7 +1202,9 @@ class BasicStructure:
                                     unfolded_list=selection_report_current,
                                     selection_name=self.selection_name,
                                     report_depth=report_depth,
-				    list_method=self.list_method,
+                                    list_method=self.list_method,
+				    filtered_portal_types= \
+                                                self.filtered_portal_types,
                                     is_report_opened=is_report_opened,
                                     sort_on=self.selection.sort_on,
                                     form_id=self.form.id)
@@ -1664,6 +1665,7 @@ class BasicStructure:
         # updating position_informations
         position +=1
         # recovering usefull informations, basic_structure
+	# XXX should be used title_lines method 
         title = report_group_object.getObject().getTitle()
         name = report_group_object.getObject().getTitle()
         depth = report_group_object.getDepth()
@@ -2121,7 +2123,6 @@ class PlanningStructure:
     else:
       axis_stop = (self.secondary_axis.stop)
       axis_start = (self.secondary_axis.start)
-
 
     axis_script=getattr(basic_structure.here,
                        basic_structure.field.get_value('sec_axis_script'),None)
