@@ -346,7 +346,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>preference_state</string>
+                          <string>translated_preference_state_title</string>
                           <string>Active</string>
                         </tuple>
                         <tuple>
@@ -460,6 +460,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -491,20 +495,7 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>preference_state</string>
-                          <string>Active</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -529,24 +520,7 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>preference_level_title</string>
-                          <string>Level</string>
-                        </tuple>
-                        <tuple>
-                          <string>preference_state</string>
-                          <string>Active</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

@@ -76,7 +76,6 @@
                       <list>
                         <string>my_title</string>
                         <string>my_description</string>
-                        <string>my_translated_preference_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -87,6 +86,7 @@
                         <string>my_priority</string>
                         <string>my_preferred_section_category</string>
                         <string>my_preferred_date_order</string>
+                        <string>my_translated_preference_state_title</string>
                       </list>
                     </value>
                 </item>
