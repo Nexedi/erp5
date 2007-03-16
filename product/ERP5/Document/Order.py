@@ -149,6 +149,8 @@ class Order(Delivery):
       """
       Reindex children and simulation
       """
+      # XXX Fixme: recursiveReindexObject is called during object creation
+      # It makes object creation slow, because it calls the catalog each time
       # Now the applied rule is expanded
       Delivery.recursiveReindexObject(self, activate_kw=activate_kw, *k, **kw)
       self.expandAppliedRuleRelatedToOrder(activate_kw=activate_kw, **kw)
@@ -158,6 +160,7 @@ class Order(Delivery):
       Expand the applied rule related 
       """
       applied_rule = None
+      # XXX getCausalityRelatedValueList can use portal_type parameter
       order_causality_list = self.getCausalityRelatedValueList()
       for order_causality in order_causality_list:
         if order_causality.getPortalType() == 'Applied Rule':
