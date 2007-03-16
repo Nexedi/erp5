@@ -46,6 +46,7 @@ from AccessControl.SecurityManagement import getSecurityManager
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
 from Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
+from Acquisition import aq_inner
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ActivityBuffer import ActivityBuffer
 
@@ -537,7 +538,7 @@ class ActivityTool (Folder, UniqueObject):
       # Call distribute on each queue
       for activity in activity_list:
         try:
-          activity.distribute(self, node_count)
+          activity.distribute(aq_inner(self), node_count)
         except ConflictError:
           raise
         except:
@@ -564,19 +565,23 @@ class ActivityTool (Folder, UniqueObject):
 
       # Initialize if needed
       if not is_initialized: self.initialize()
-
+      
+      inner_self = aq_inner(self)
+      
       # If this is the first tic after zope is started, reset the processing
       # flag for activities of this node
       if first_run:
-        self.SQLDict_clearProcessingFlag(processing_node=processing_node)
-        self.SQLQueue_clearProcessingFlag(processing_node=processing_node)
+        inner_self.SQLDict_clearProcessingFlag(
+                                processing_node=processing_node)
+        inner_self.SQLQueue_clearProcessingFlag(
+                                processing_node=processing_node)
         first_run = 0
 
       try:
         # Wakeup each queue
         for activity in activity_list:
           try:
-            activity.wakeup(self, processing_node)
+            activity.wakeup(inner_self, processing_node)
           except ConflictError:
             raise
           except:
@@ -588,9 +593,8 @@ class ActivityTool (Folder, UniqueObject):
           has_awake_activity = 0
           for activity in activity_list:
             try:
-              activity.tic(self, processing_node) # Transaction processing is the responsability of the activity
-              has_awake_activity = has_awake_activity or activity.isAwake(self, processing_node)
-              #LOG('ActivityTool tic', 0, 'has_awake_activity = %r, activity = %r, activity.isAwake(self, processing_node) = %r' % (has_awake_activity, activity, activity.isAwake(self, processing_node)))
+              activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
+              has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)
             except ConflictError:
               raise
             except:
@@ -609,7 +613,7 @@ class ActivityTool (Folder, UniqueObject):
       else:
         obj = self
       for activity in activity_list:
-        if activity.hasActivity(self, obj, **kw):
+        if activity.hasActivity(aq_inner(self), obj, **kw):
           return 1
       return 0
 
@@ -633,13 +637,14 @@ class ActivityTool (Folder, UniqueObject):
       activity_buffer = getattr(self, '_v_activity_buffer', None)
       if activity_buffer is not None:
         activity_buffer._register() # This is required if flush flush is called outside activate
-        return activity.getRegisteredMessageList(self._v_activity_buffer, self)
+        return activity.getRegisteredMessageList(self._v_activity_buffer,
+                                                 aq_inner(self))
       else:
         return []
 
     def unregisterMessage(self, activity, message):
       self._v_activity_buffer._register() # Required if called by flush, outside activate
-      return activity.unregisterMessage(self._v_activity_buffer, self, message)
+      return activity.unregisterMessage(self._v_activity_buffer, aq_inner(self), message)
 
     def flush(self, obj, invoke=0, **kw):
       global is_initialized
@@ -651,19 +656,19 @@ class ActivityTool (Folder, UniqueObject):
       else:
         object_path = obj.getPhysicalPath()
       for activity in activity_list:
-        activity.flush(self, object_path, invoke=invoke, **kw)
+        activity.flush(aq_inner(self), object_path, invoke=invoke, **kw)
 
     def start(self, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
       for activity in activity_list:
-        activity.start(self, **kw)
+        activity.start(aq_inner(self), **kw)
 
     def stop(self, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
       for activity in activity_list:
-        activity.stop(self, **kw)
+        activity.stop(aq_inner(self), **kw)
 
     def invoke(self, message):
       message(self)
@@ -772,7 +777,7 @@ class ActivityTool (Folder, UniqueObject):
       if not is_initialized: self.initialize()
       if getattr(self, '_v_activity_buffer', None) is None:
         self._v_activity_buffer = ActivityBuffer(activity_tool=self)
-      activity_dict[activity].queueMessage(self,
+      activity_dict[activity].queueMessage(aq_inner(self),
         Message(path, active_process, activity_kw, method_id, args, kw))
 
     security.declareProtected( CMFCorePermissions.ManagePortal, 'manageInvoke' )
@@ -846,7 +851,7 @@ class ActivityTool (Folder, UniqueObject):
       # Reactivate the messages.
       for m in message_list:
         try:
-          m.reactivate(self)
+          m.reactivate(aq_inner(self))
         except ConflictError:
           raise
         except:
@@ -869,7 +874,7 @@ class ActivityTool (Folder, UniqueObject):
       message_list = []
       for activity in activity_list:
         try:
-          message_list += activity.getMessageList(self,**kw)
+          message_list += activity.getMessageList(aq_inner(self),**kw)
         except AttributeError:
           LOG('getMessageList, could not get message from Activity:',0,activity)
       return message_list
@@ -881,7 +886,7 @@ class ActivityTool (Folder, UniqueObject):
       """
       message_count = 0
       for activity in activity_list:
-        message_count += activity.countMessageWithTag(self, value)
+        message_count += activity.countMessageWithTag(aq_inner(self), value)
       return message_count
 
     security.declarePublic('countMessage')
@@ -898,7 +903,7 @@ class ActivityTool (Folder, UniqueObject):
       """
       message_count = 0
       for activity in activity_list:
-        message_count += activity.countMessage(self, **kw)
+        message_count += activity.countMessage(aq_inner(self), **kw)
       return message_count
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
@@ -920,8 +925,8 @@ class ActivityTool (Folder, UniqueObject):
       for activity in activity_list:
         method_id = "_validate_%s" % validator_id
         if hasattr(activity, method_id):
-#           LOG('CMFActivity: ', 0, 'validateOrder calling method_id %s' % method_id)
-          if getattr(activity,method_id)(self, message, validation_value):
+          if getattr(activity,method_id)(aq_inner(self),
+                     message, validation_value):
             return 1
       return 0
 
@@ -930,6 +935,6 @@ class ActivityTool (Folder, UniqueObject):
       global is_initialized
       if not is_initialized: self.initialize()
       for activity in activity_list:
-        activity.timeShift(self, delay)
+        activity.timeShift(aq_inner(self), delay)
 
 InitializeClass(ActivityTool)
