@@ -744,16 +744,90 @@ class TestAccountingReports(AccountingTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 12, 31)
     request_form['section_category'] = 'group/demo_group'
-    request_form['simulation_state'] = ['stopped']
+    request_form['simulation_state'] = ['stopped', 'delivered']
+    request_form['show_empty_accounts'] = 1
+    request_form['expand_accounts'] = 0
 
     report_section_list = self.getReportSectionList(
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
+    
     # all accounts are present
-    self.assertEquals(len(portal.account_module.objectIds()),
-                      len(data_line_list))
+    self.assertEquals(
+          len(self.portal.account_module.contentValues(portal_type='Account')),
+          len(data_line_list))
+    
+    self.assertEquals(['node_id', 'node_title',
+           'initial_debit_balance', 'debit', 'final_debit_balance',
+           'initial_credit_balance', 'credit', 'final_credit_balance',
+           'final_balance_if_debit', 'final_balance_if_credit'],
+           data_line_list[0].column_id_list)
+    
+    # account are sorted by GAP Id
+    self.checkLineProperties(data_line_list[0], node_id='1',
+        node_title='Equity', initial_debit_balance=0, initial_credit_balance=0,
+        debit=0, credit=0, final_debit_balance=0, final_credit_balance=0,
+        final_balance_if_debit=0, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[1], node_id='2',
+        node_title='Fixed Assets', initial_debit_balance=0, initial_credit_balance=0,
+        debit=0, credit=0, final_debit_balance=0, final_credit_balance=0,
+        final_balance_if_debit=0, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[2], node_id='3',
+        # XXX isn't "Inventory" a better name here ?
+        node_title='Stocks', initial_debit_balance=0, initial_credit_balance=0,
+        debit=0, credit=0, final_debit_balance=0, final_credit_balance=0,
+        final_balance_if_debit=0, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[3], node_id='40',
+        node_title='Payable', initial_debit_balance=0, initial_credit_balance=0,
+        debit=200, credit=100, final_debit_balance=200, final_credit_balance=100,
+        final_balance_if_debit=100, final_balance_if_credit=0,)
+    
+    self.checkLineProperties(data_line_list[4], node_id='41',
+        node_title='Receivable', initial_debit_balance=0,
+        initial_credit_balance=0, debit=3400, credit=200,
+        final_debit_balance=3400, final_credit_balance=200,
+        final_balance_if_debit=3200, final_balance_if_credit=0,)
+    
+    self.checkLineProperties(data_line_list[5], node_id='4456',
+        node_title='Refundable VAT 10%', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=0, final_debit_balance=0,
+        final_credit_balance=0, final_balance_if_debit=0,
+        final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[6], node_id='4457',
+        node_title='Collected VAT 10%', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=0, final_debit_balance=0,
+        final_credit_balance=0, final_balance_if_debit=0,
+        final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[7], node_id='5',
+        node_title='Bank', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=3300, final_debit_balance=0,
+        final_credit_balance=3300, final_balance_if_debit=0,
+        final_balance_if_credit=3300,)
+    
+    self.checkLineProperties(data_line_list[8], node_id='6',
+        node_title='Goods Purchase', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=0, final_debit_balance=0,
+        final_credit_balance=0, final_balance_if_credit=0,
+        final_balance_if_debit=0)
+    
+    self.checkLineProperties(data_line_list[9], node_id='7',
+        node_title='Goods Sales', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=0, final_debit_balance=0,
+        final_credit_balance=0, final_balance_if_debit=0,
+        final_balance_if_credit=0)
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=0, initial_credit_balance=0, debit=3600,
+        credit=3600, final_debit_balance=3600, final_credit_balance=3600,
+        final_balance_if_debit=None, final_balance_if_credit=None)
 
 
 def test_suite():
