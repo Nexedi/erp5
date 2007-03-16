@@ -27,7 +27,6 @@
 ##############################################################################
 
 from Globals import InitializeClass
-from Globals import DevelopmentMode
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.CMFCore.utils import getToolByName
@@ -65,18 +64,6 @@ class AccountingTransaction(Delivery):
                       , PropertySheet.Reference
                       , PropertySheet.PaymentCondition
                       )
-
-    def manage_beforeDelete(self, item, container):
-      """
-          Accounting transactions can only be deleted 
-          in draft or cancelled state
-      """
-      if not DevelopmentMode:
-        if self.getSimulationState() not in ("draft", "cancelled"):
-          from OFS.ObjectManager import BeforeDeleteException
-          raise BeforeDeleteException, \
-              "%s can only be deleted in draft or cancelled states." % self.getPortalType()
-      Delivery.manage_beforeDelete(self, item, container)
 
 # Compatibility
 # It may be necessary to create an alias after removing the Transaction class

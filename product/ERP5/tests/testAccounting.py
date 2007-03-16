@@ -184,7 +184,6 @@ class AccountingTestCase(ERP5TypeTestCase):
     """Remove all documents, except the default ones.
     """
     get_transaction().abort()
-    allowAccountingTransactionDeletion()
     self.accounting_module.manage_delObjects(
                       list(self.accounting_module.objectIds()))
     self.organisation_module.manage_delObjects([x for x in 
@@ -213,24 +212,6 @@ class AccountingTestCase(ERP5TypeTestCase):
     """Returns list of BT to be installed."""
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
             'erp5_accounting_ui_test')
-
-
-def manage_beforeDelete(self, item, container):
-  Delivery.manage_beforeDelete(self, item, container)
-
-def allowAccountingTransactionDeletion():
-  from Products.ERP5.Document.AccountingTransaction \
-      import AccountingTransaction
-  old_manage_beforeDelete = AccountingTransaction.manage_beforeDelete 
-  AccountingTransaction.manage_beforeDelete = manage_beforeDelete
-  try:
-    from Products.ERP5Type.Document.AccountingTransaction \
-        import AccountingTransaction
-    AccountingTransaction.manage_beforeDelete = manage_beforeDelete
-  except ImportError:
-    # ERP5Type version of this class is only available when ERP5Type document
-    # registry has been initialized.
-    pass
 
 
 class TestAccounting(ERP5TypeTestCase):
@@ -300,7 +281,6 @@ class TestAccounting(ERP5TypeTestCase):
     All tests uses the same accounts and same entities, so we just cleanup
     accounting module and simulation. """
     get_transaction().abort()
-    allowAccountingTransactionDeletion()
     for folder in (self.accounting_module, self.portal.portal_simulation):
       folder.manage_delObjects([i for i in folder.objectIds()])
     get_transaction().commit()
