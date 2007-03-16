@@ -68,13 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Amortisation Rule\'\n
-movement_list = [x.getObject() for x in context.portal_catalog(**kw)]\n
-#kw[\'src__\']=1\n
-#sql = context.portal_catalog(**kw)\n
-#context.log(\'sql\',sql)\n
-#context.log(\'movement_list\',movement_list)\n
-return filter(lambda x: len(x.getDeliveryValueList())==0, movement_list)\n
+            <value> <string>kw[\'parent_specialise_portal_type\'] = [\'Amortisation Rule\']\n
+kw[\'portal_type\']             = \'Simulation Movement\'\n
+\n
+kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+\n
+context.log(\'AmortisationTransaction_selectMovement\', \'SQL\\n%s\' % context.AmortisationTransaction_zSelectMovement(src__=1, **kw))\n
+\n
+if src__==0:\n
+  movement_list = [x.getObject() for x in context.AmortisationTransaction_zSelectMovement(**kw)]\n
+  #context.log(\'SaleOrder_selectMovement\', \'mvt : %s\' % movement_list)\n
+  return movement_list\n
+else:\n
+  return context.AmortisationTransaction_zSelectMovement(src__=1, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -97,7 +103,7 @@ return filter(lambda x: len(x.getDeliveryValueList())==0, movement_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,23 +123,23 @@ return filter(lambda x: len(x.getDeliveryValueList())==0, movement_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>src__</string>
                             <string>kw</string>
                             <string>_write_</string>
+                            <string>_getattr_</string>
+                            <string>_apply_</string>
+                            <string>context</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>_apply_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>x</string>
                             <string>movement_list</string>
-                            <string>filter</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,7 +151,9 @@ return filter(lambda x: len(x.getDeliveryValueList())==0, movement_list)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
