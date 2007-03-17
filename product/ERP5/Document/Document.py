@@ -843,14 +843,12 @@ class Document(XMLObject, UrlMixIn):
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
     order_list = list(method())
-
-    # Start with everything until content
-    content_index = order_list.index('content')
+    order_list.reverse()
 
     # Start with everything until content - build a dictionnary according to the order
+    content_index = order_list.index('content')
     kw = {}
     first_list = order_list[:content_index]
-    first_list.reverse()
     for order_id in first_list:
       if order_id not in VALID_ORDER_KEY_LIST:
         # Prevent security attack or bad preferences
@@ -875,10 +873,10 @@ class Document(XMLObject, UrlMixIn):
     self.edit(**kw)
 
     # Finish in second stage
-    self.activate().finishMetadataDiscovery()
+    self.activate().finishMetadataDiscovery(user_login=user_login)
     
   security.declareProtected(Permissions.ModifyPortalContent, 'finishMetadataDiscovery')
-  def finishMetadataDiscovery(self):
+  def finishMetadataDiscovery(self, user_login):
     """
       This is called by portal_activities, to leave time-consuming procedures
       for later. It converts what needs conversion to base, and
@@ -890,13 +888,14 @@ class Document(XMLObject, UrlMixIn):
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
     order_list = list(method())
+    order_list.reverse()
 
-    # Start with everything until content
+    # do content and everything after content
     content_index = order_list.index('content')
+    second_list = order_list[content_index:]
 
-    # do content and everything that is later
     kw = {}
-    for order_id in order_list[content_index:]:
+    for order_id in second_list:
       if order_id not in VALID_ORDER_KEY_LIST:
         # Prevent security attack or bad preferences
         raise AttributeError, "%s is not in valid order key list" % order_id
@@ -904,23 +903,23 @@ class Document(XMLObject, UrlMixIn):
       method = getattr(self, method_id)
       if order_id == 'file_name':
         result = method(self.getSourceReference())
-      # XXX a problem - if user_login was explicitly supplied 
-      # we don't have it here (volatile attr would have been lost by now)
-      # so we can't have user_login after content
-      #elif order_id == 'user_login':
-        #result = method(user_login)
       elif order_id == 'user_login':
-        raise AttributeError, "user_login can not be done in second stage"
+        result = method(user_login)
       else:
         result = method()
       if result is not None:
         kw.update(result)
       
     # Edit content
+    try:
+      del(kw['portal_type'])
+    except KeyError:
+      pass
     self.edit(**kw)
 
     # Erase backup attributes
-    delattr(self, '_backup_input')
+    if hasattr(self, '_backup_input'):
+      delattr(self, '_backup_input')
 
     # Finish ingestion by calling method
     self.finishIngestion()
