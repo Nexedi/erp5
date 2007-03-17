@@ -163,9 +163,15 @@ class ContributionTool(BaseTool):
             file = cStringIO.StringIO()
             file.write(data)
             file.seek(0)
+            kw['file'] = file
+            del kw['data']
+            del kw['file_name']
     else:
       # build a new file from the url
-      file = urllib2.urlopen(url)
+      data = urllib2.urlopen(url).read()
+      file = cStringIO.StringIO()
+      file.write(data)
+      file.seek(0)
       file_name = url.split('/')[-1]
       if hasattr(file, 'headers'):
         headers = file.headers
@@ -189,7 +195,7 @@ class ContributionTool(BaseTool):
       raise ValueError, "could not determine portal type"
 
     # So we will simulate WebDAV to get an empty object
-    # with PUT_factory - we provide the mime_type as
+    # with PUT_factory - we provid<e the mime_type as
     # parameter
     ob = self.PUT_factory( file_name, mime_type, None )
 
@@ -202,7 +208,9 @@ class ContributionTool(BaseTool):
     document = BaseTool._getOb(self, file_name)
 
     # Then edit the document contents (so that upload can happen)
+    kw.setdefault('source_reference', file_name)
     document._edit(**kw)
+    if url: document.fromURL(url)
 
     # Remove the object from ourselves
     BaseTool._delObject(self, file_name)
