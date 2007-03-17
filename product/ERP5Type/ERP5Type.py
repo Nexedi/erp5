@@ -246,6 +246,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
         if not (hasattr(container, 'isTempObject') and container.isTempObject())\
                and not self.isConstructionAllowed(container):
             raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
+
+        # Then keep on the construction process
         ob = self._constructInstance(container, id, *args, **kw)
         ob = self._finishConstruction(ob)
 
