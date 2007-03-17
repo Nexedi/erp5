@@ -43,7 +43,7 @@ class UrlMixIn:
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   no_host_protocol_list = ['mailto', 'news', ]
-  default_protocol_dict = { 'Email' : 'mailto:',
+  default_protocol_dict = { 'Email' : 'mailto',
                           }
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -57,7 +57,7 @@ class UrlMixIn:
       # A quick fix for all objects which did not
       # define protocol such as email addresses
       ptype = self.getPortalType()
-      if UrlMixIn.default_protocol_dict.has_key():
+      if UrlMixIn.default_protocol_dict.has_key(ptype):
         protocol = UrlMixIn.default_protocol_dict[ptype]
       else:
         protocol = 'http'
@@ -69,11 +69,19 @@ class UrlMixIn:
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   def fromURL(self, url):
     """
-    Analyses a URL and splits it into two parts.
+    Analyses a URL and splits it into two parts. URLs
+    normally follow RFC 1738. However, we accept URLs
+    without the protocol a.k.a. scheme part (http, mailto, etc.). In this
+    case only the url_string a.k.a. scheme-specific-part is taken
+    into account. asURL will then generate the full URL.
     """
-    protocol, url_string = url.split(':')
-    if url_string.startswith('//'): url_string = url_string[2:]
-    self._setUrlProtocol(protocol)
+    if ':' in url:
+      # This is the normal case (protocol specified in the URL)
+      protocol, url_string = url.split(':')
+      if url_string.startswith('//'): url_string = url_string[2:]
+      self._setUrlProtocol(protocol)
+    else:
+      url_string = url
     self.setUrlString(url_string)
 
 class Url(Coordinate, Base, UrlMixIn):
@@ -102,22 +110,27 @@ class Url(Coordinate, Base, UrlMixIn):
                             'asText')
   def asText(self):
     """
-    Returns a text representation of the Url
+    Returns a text representation of the url_string a.k.a. scheme-specific-part
+    This method is useful to handled emails, web pages of companies, etc.
+    in the same way as for other coordinates (ex. telephones). Most
+    users just enter www.erp5.com or info@erp5.com rather than
+    http://www.erp5.com or mailto:info@erp5.com
     """
-    return self.asURL()
+    return self.getUrlString()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   def fromText(self, text):
     """
-    set the Url from its text representation
+    Sets url_string a.k.a. scheme-specific-part of a URL
     """
-    self.fromURL(text)
+    self.setUrlString(text)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'standardTextFormat')
   def standardTextFormat(self):
     """
-    Returns the standard text formats for urls
+    Returns the standard text formats for urls. The purpose
+    of this method is unknown.
     """
     return ("http://www.erp5.org", "mailto:info@erp5.org")
 
