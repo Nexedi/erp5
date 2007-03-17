@@ -115,12 +115,6 @@ class File(Document, CMFFile, ConversionCacheMixin):
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
   edit = WorkflowMethod( _edit )
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_upload')
-  def manage_upload(self, file='', REQUEST=''):
-    res = CMFFile.manage_upload(self, file, REQUEST)
-    self.setSourceReference(file.filename)
-    return res
-
   # Copy support needs to be implemented by ExtFile
   ################################
   # Special management methods   #
