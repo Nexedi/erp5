@@ -36,8 +36,47 @@ from base64 import encode
 from mimetools import choose_boundary
 from mimetypes import guess_type
 
+class UrlMixIn:
 
-class Url(Coordinate, Base):
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  no_host_protocol_list = ['mailto', 'news', ]
+  default_protocol_dict = { 'Email' : 'mailto:',
+                          }
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'asURL')
+  def asURL(self):
+    """
+    Returns a text representation of the Url
+    """
+    protocol = self.getUrlProtocol()
+    if not protocol:
+      # A quick fix for all objects which did not
+      # define protocol such as email addresses
+      ptype = self.getPortalType()
+      if UrlMixIn.default_protocol_dict.has_key():
+        protocol = UrlMixIn.default_protocol_dict[ptype]
+      else:
+        protocol = 'http'
+    url_string = self.getUrlString()
+    if protocol in UrlMixIn.no_host_protocol_list or url_string.startswith('//'):
+      return '%s:%s' % (protocol, url_string)
+    return '%s://%s' % (protocol, url_string)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  def fromURL(self, url):
+    """
+    Analyses a URL and splits it into two parts.
+    """
+    protocol, url_string = url.split(':')
+    if url_string.startswith('//'): url_string = url_string[2:]
+    self._setUrlProtocol(protocol)
+    self.setUrlString(url_string)
+
+class Url(Coordinate, Base, UrlMixIn):
   """
   A Url is allows to represent in a standard way coordinates
   such as web sites, emails, ftp sites, etc.
@@ -54,7 +93,7 @@ class Url(Coordinate, Base):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Default Properties
-  property_sheets = ( PropertySheet.Base
+  property_sheets = (   PropertySheet.Base
                       , PropertySheet.SimpleItem
                       , PropertySheet.Url
                       )
@@ -65,14 +104,14 @@ class Url(Coordinate, Base):
     """
     Returns a text representation of the Url
     """
-    return self.url_string
+    return self.asURL()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   def fromText(self, text):
     """
     set the Url from its text representation
     """
-    self.url_string = text
+    self.fromURL(text)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'standardTextFormat')
@@ -80,7 +119,7 @@ class Url(Coordinate, Base):
     """
     Returns the standard text formats for urls
     """
-    return ("http://www.erp5.org","mailto:info@erp5.org")
+    return ("http://www.erp5.org", "mailto:info@erp5.org")
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
   def send(self, from_url=None, to_url=None, msg=None, subject=None,  attachment_list=None):
