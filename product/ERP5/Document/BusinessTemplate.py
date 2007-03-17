@@ -804,6 +804,9 @@ class ObjectTemplateItem(BaseTemplateItem):
       object_id = relative_url.split('/')[-1]
       try:
         container = portal.unrestrictedTraverse(container_path)
+        object = container[object_id] # We force access to the object to be sure
+                                      # that appropriate exception is thrown
+                                      # in case object is already backup and/or removed
         if trash and trashbin is not None:
           self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
         container.manage_delObjects([object_id])
