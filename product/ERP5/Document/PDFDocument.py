@@ -107,7 +107,7 @@ class PDFDocument(File, ConversionCacheMixin):
     z = zipfile.ZipFile(f, 'a')
     for fname in glob.glob(to.replace('.', '*')):
       base = os.path.basename(fname)
-      pg = re.match('.*(\d+)\.'+format, base).groups()
+      pg = re.match('.*?(\d*)\.'+format, base).groups()
       if pg:
         pg = pg[0]
         arcname = '%s/page-%s.%s' % (format, pg, format)
