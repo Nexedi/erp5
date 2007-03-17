@@ -41,6 +41,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.WebDAVSupport import TextContent
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
+from Products.ERP5.Document.Url import UrlMixIn
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -172,7 +173,7 @@ if ever was the file produced
     return s
 
 
-class Document(XMLObject):
+class Document(XMLObject, UrlMixIn):
   """
       Document is an abstract class with all methods
       related to document management in ERP5. This includes
@@ -331,6 +332,7 @@ class Document(XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Document
+                    , PropertySheet.Url
                     )
 
   # Declarative interfaces
@@ -827,7 +829,7 @@ class Document(XMLObject):
     """
       This is the main metadata discovery function - controls the process
       of discovering data from various sources. The discovery itself is
-      delegated to scripts or uses preferences-configurable regexps.
+      delegated to scripts or uses preference-configurable regexps.
 
       file_name - this parameter is a file name of the form "AA-BBB-CCC-223-en"
 
