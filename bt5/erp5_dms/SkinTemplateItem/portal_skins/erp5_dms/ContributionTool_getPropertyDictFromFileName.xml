@@ -80,7 +80,15 @@
   Type-based.\n
 """\n
 \n
-return property_dict\n
+new_dict = {}\n
+\n
+for k, v in property_dict.items():\n
+  if v:\n
+    if k == \'language\':\n
+      v = v.lower()\n
+    new_dict[k] = v\n
+\n
+return new_dict\n
 </string> </value>
         </item>
         <item>
@@ -131,6 +139,12 @@ return property_dict\n
                           <tuple>
                             <string>file_name</string>
                             <string>property_dict</string>
+                            <string>new_dict</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>

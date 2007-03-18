@@ -86,6 +86,7 @@
                         <string>my_version</string>
                         <string>my_language</string>
                         <string>my_int_index</string>
+                        <string>url_text</string>
                       </list>
                     </value>
                 </item>

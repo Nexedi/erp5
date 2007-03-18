@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:here.getDefaultModuleId(here.getPortalType()) != here.getParentValue().getId()</string> </value>
+            <value> <string>python:here.getParentValue().getId() != \'portal_contributions\' and here.getDefaultModuleId(here.getPortalType()) != here.getParentValue().getId()</string> </value>
         </item>
       </dictionary>
     </pickle>
