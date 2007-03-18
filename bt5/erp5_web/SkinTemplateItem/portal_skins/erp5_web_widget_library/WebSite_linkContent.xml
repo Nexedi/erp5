@@ -68,24 +68,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  A method invoked with parameters provided by the \n
-  contribute widget.\n
+            <value> <string># Do some processing of parameters cause we do not use ERP5 Form here\n
+if link_classification:\n
+  kw[\'classification\'] = link_classification\n
 \n
-  **kw -- remaining params passed to the constructor\n
-"""\n
-# Do some processing of parameters cause we do not use ERP5 Form here\n
-if contribute_classification:\n
-  kw[\'classification\'] = contribute_classification\n
+if link_source_project:\n
+  kw[\'source_project\'] = link_source_project\n
 \n
-if contribute_source_project:\n
-  kw[\'source_project\'] = contribute_source_project\n
+if link_portal_type:\n
+  kw[\'portal_type\'] = link_portal_type\n
 \n
-if contribute_portal_type:\n
-  kw[\'portal_type\'] = contribute_portal_type\n
+if link_description:\n
+  kw[\'description\'] = link_description\n
 \n
-if contribute_file is not None:\n
-  kw[\'file\'] = contribute_file\n
+if link_url:\n
+  kw[\'url\'] = link_url\n
 \n
 #try:\n
 if 1:\n
@@ -116,8 +113,14 @@ return target.Base_redirect(\'view\', keep_items=dict(portal_status_message=msg,
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>contribute_file=None, contribute_classification=None, contribute_source_project=None, contribute_portal_type=None, **kw</string> </value>
+            <value> <string>link_url=None, link_description=None, link_classification=None, link_source_project=None, link_portal_type=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -137,19 +140,19 @@ return target.Base_redirect(\'view\', keep_items=dict(portal_status_message=msg,
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>contribute_file</string>
-                            <string>contribute_classification</string>
-                            <string>contribute_source_project</string>
-                            <string>contribute_portal_type</string>
+                            <string>link_url</string>
+                            <string>link_description</string>
+                            <string>link_classification</string>
+                            <string>link_source_project</string>
+                            <string>link_portal_type</string>
                             <string>kw</string>
                             <string>_write_</string>
-                            <string>None</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -176,12 +179,13 @@ return target.Base_redirect(\'view\', keep_items=dict(portal_status_message=msg,
                 <none/>
                 <none/>
                 <none/>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_contributeContent</string> </value>
+            <value> <string>WebSite_linkContent</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -60,8 +66,8 @@
     <h2>Contribute</h2>\n
     <div class="fieldset">\n
       <div>\n
-        <label for="doctype" i18n:translate="" i18n:domain="ui">Type</label>\n
-        <select size="1" name="doctype" id="doctype" onchange="toggleMakeTemplateButton(this);">\n
+        <label for="contribute_portal_type" i18n:translate="" i18n:domain="ui">Type</label>\n
+        <select size="1" name="contribute_portal_type" id="portal_type" onchange="toggleMakeTemplateButton(this);">\n
           <option value="" i18n:translate="" i18n:domain="ui">-- Select Document Type --</option>\n
           <tal:block tal:repeat="ptype here/getPortalTemplateDocumentTypeList">\n
             <option \n
@@ -70,15 +76,16 @@
           </tal:block>\n
           <option value="" i18n:translate="" i18n:domain="ui">-- Any other Documents Type --</option>\n
         </select>\n
-        <input type="file" name="datafile" size="30" />\n
+        <input type="file" name="contribute_file" size="30" />\n
       </div>\n
       <!--<a onclick="setMailString();" id="mail_contribute_button" href="mailto:dms@dms.nexedi.com?subject=Contribution&body=">\n
         <img src="au_icons/kmail.png" align="right" alt="contribute by mail" title="contribute by mail"/>\n
       </a>-->\n
-      <div style="float:left">\n
-      <div metal:use-macro="here/au_macros/macros/contribute_properties">\n
-        Theme\n
-      </div>\n
+      <div style="float:left"\n
+           tal:define="contribute_prefix string:contribute_">\n
+        <div metal:use-macro="here/au_macros/macros/contribute_properties">\n
+          Theme\n
+        </div>\n
       </div>\n
       \n
       <div style="float:right; margin-top:10px;">\n
@@ -104,11 +111,17 @@
     <div class="fieldset">\n
       <div>\n
         <label for="url" value="" i18n:translate="" i18n:domain="ui">Url</label>\n
-        <input type="text" name="url" id="url" size="80" value="http://" />\n
+        <input type="text" name="link_url" id="url" size="80" value="http://" />\n
         <a href="" target="_blank" onclick="return setLink(this)" value="" i18n:translate="" i18n:domain="ui">preview</a>\n
       </div>\n
-      <div metal:use-macro="here/au_macros/macros/contribute_properties">\n
-        Theme\n
+      <tal:block tal:define="contribute_prefix string:link_">\n
+        <div metal:use-macro="here/au_macros/macros/contribute_properties">\n
+          Theme\n
+        </div>\n
+      </tal:block>\n
+      <div>\n
+        <label for="link_description" value="" i18n:translate="" i18n:domain="ui">Description</label>\n
+        <textarea cols="80" rows="2" name="link_description"></textarea>\n
       </div>\n
     </div>\n
     <input style="float:right" type="submit" name="WebSite_linkContent:method" value="Contribute"/>\n
@@ -159,9 +172,9 @@
           </ul>\n
         </ul>\n
       </div>\n
-      \n
+\n
     </tal:block>\n
-       \n
+\n
     <div class="clear"></div>\n
   </div>\n
 </div>\n
