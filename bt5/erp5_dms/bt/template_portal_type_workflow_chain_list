@@ -6,10 +6,12 @@ External Web Page | edit_workflow
 External Web Page | external_document_interaction_workflow
 External Web Page | external_document_publication_workflow
 External Web Page | processing_status_workflow
+File | -edit_workflow
 File | document_interaction_workflow
 File | document_publication_workflow
 File | local_permission_interaction_workflow
 File | processing_status_workflow
+Image | -edit_workflow
 Image | document_interaction_workflow
 Image | document_publication_workflow
 Image | local_permission_interaction_workflow
@@ -33,3 +35,6 @@ Text | document_interaction_workflow
 Text | document_publication_workflow
 Text | local_permission_interaction_workflow
 Text | processing_status_workflow
+Web Page | -publication_workflow
+Web Page | document_publication_workflow
+Web Page | local_permission_interaction_workflow
