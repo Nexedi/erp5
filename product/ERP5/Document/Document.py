@@ -334,6 +334,7 @@ class Document(XMLObject, UrlMixIn):
                     , PropertySheet.Document
                     , PropertySheet.Url
                     , PropertySheet.Snapshot
+                    , PropertySheet.Periodicity
                     )
 
   # Declarative interfaces
@@ -998,10 +999,12 @@ class Document(XMLObject, UrlMixIn):
       about any file format.
 
       Other possible applications: conversion of HTML
-      text to tiddie HTML such as described here:
+      text to tiddy HTML such as described here:
       http://www.xml.com/pub/a/2004/09/08/pyxml.html
       so that resulting text can be processed more
-      easily by XSLT parsers.
+      easily by XSLT parsers. Conversion of internal
+      links to images of an HTML document to local
+      links (in combindation with populate).
     """
     raise NotImplementedError
 
@@ -1034,3 +1037,38 @@ class Document(XMLObject, UrlMixIn):
       del(self.snapshot_data)
     except AttributeError:
       pass
+
+  # Transformation API
+  def populateContent(self):
+    """
+      Populates the Document with subcontent based on the
+      document base data.
+
+      This can be used for example to transform the XML
+      of an RSS feed into a single piece per news or
+      to transform an XML export from a database into
+      individual records. Other application: populate
+      an HTML text document with its images, used in
+      conversion with convertToBaseFormat.
+
+      NOTE: to be implemented as typed base method.
+    """
+    pass
+
+  # Crawling API
+  def getContentURLList(self):
+    """
+      Returns a list of URLs referenced by the content of this document.
+
+      NOTE: to be implemented as typed base method or
+      by subclass.
+    """
+    pass
+
+  def updateContentFromURL(self):
+    """
+      Download and update content of this document from its source URL.
+
+      NOTE: to be implemented here.
+    """
+    pass
