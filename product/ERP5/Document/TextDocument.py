@@ -120,6 +120,13 @@ class TextDocument(Document, TextContent):
       if format is None:
         # The default is to use ERP5 Forms to render the page
         return self.view()
+      return self.convert(format=format)
+
+    security.declareProtected(Permissions.View, 'convert')
+    def convert(self, format, **kw):
+      """
+        Convert text using portal_transforms
+      """
       # Accelerate rendering in Web mode
       _setCacheHeaders(self, {'format' : format})
       # Return the raw content
