@@ -31,6 +31,13 @@ class Document:
   """
 
   _properties = (
+    { 'id'              : 'base_data',
+      'description'     : 'An object (string, stream, etc.) which contains raw data'
+                          'to store the converted content of the document in its base format',
+      'type'            : 'object',
+      'default'         : '',
+      'read_permission' : 'Manage properties',
+      'mode'            : 'w' },
   )
 
   _categories = ('similar', 'predecessor', 'successor', 'contributor', 'classification',
@@ -44,15 +51,4 @@ class Document:
                  # and removed from here
                  'publication_section', 'function', 'group', 'site')
 
-  # XXX Romain: constraint should be used by default only if
-  # it is necessary from a system point of view
-#   _constraints = (
-#       {
-#       'id'          :   'unique_reference',
-#       'description' :   'The reference, language and version should be unique',
-#       'type'        :   'DocumentReferenceConstraint'},
-#     )
- 
-
-# vim: shiftwidth=2
 
