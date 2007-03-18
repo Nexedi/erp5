@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>icon_word</string> </value>
+            <value> <string>text_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>

@@ -31,6 +31,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_roles</string> </key>
             <value>
               <list/>
@@ -54,7 +60,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>icon_pdf</string> </value>
+            <value> <string>pdf_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
