@@ -299,7 +299,7 @@ class TestIngestion(ERP5TypeTestCase):
       filename = 'TEST-en-002.' + format
       f = makeFileUpload(filename)
       context.edit(file=f)
-      context.convertToBase()
+      context.convertToBaseFormat()
       context.reindexObject(); get_transaction().commit(); self.tic()
       self.failUnless(context.hasFile())
       if context.getPortalType() in ('Image', 'File'): # these are not subject to conversion
@@ -318,7 +318,7 @@ class TestIngestion(ERP5TypeTestCase):
     filename = 'TEST-en-002.' + format
     f = makeFileUpload(filename)
     context.edit(file=f)
-    context.convertToBase()
+    context.convertToBaseFormat()
     context.reindexObject(); get_transaction().commit(); self.tic()
     clearCache()
     target_list = [x[1] for x in context.getTargetFormatItemList()]

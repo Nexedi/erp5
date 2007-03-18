@@ -149,7 +149,7 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     self.log(format, force)
     if (not self.hasOOFile()) or force:
-      self.convertToBase()
+      self.convertToBaseFormat()
     if format is None:
       result = self.getOOFile()
       mime = self.getMimeType()
@@ -261,7 +261,7 @@ class OOoDocument(File, ConversionCacheMixin):
     return True # XXX why return ? - why not?
 
   security.declarePrivate('_convertToBase')
-  def _convertToBase(self):
+  def _convertToBaseFormat(self):
     """
       Converts the original document into ODF
       by invoking the conversion server. Store the result
@@ -423,7 +423,7 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     # first check if we have base
     if not self.hasOOFile():
-      self.convertToBase()
+      self.convertToBaseFormat()
     if not self.isAllowed(format):
       if REQUEST is not None:
         return self.returnMessage('can not convert to ' + format + ' for some reason',1)
