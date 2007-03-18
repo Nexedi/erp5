@@ -333,6 +333,7 @@ class Document(XMLObject, UrlMixIn):
                     , PropertySheet.Version
                     , PropertySheet.Document
                     , PropertySheet.Url
+                    , PropertySheet.Snapshot
                     )
 
   # Declarative interfaces
@@ -376,28 +377,6 @@ class Document(XMLObject, UrlMixIn):
         to prevent denial of service attack
     """
     pass
-
-  security.declareProtected(Permissions.View, 'convert')
-  def convert(self, format, **kw):
-    """
-      Main content conversion function, returns result which should
-      be returned and stored in cache.
-      format - the format specied in the form of an extension
-      string (ex. jpeg, html, text, txt, etc.)
-      **kw can be various things - e.g. resolution
-
-      TODO:
-      - implement guards API so that conversion to certain
-        formats require certain permission
-    """
-    pass
-
-  security.declareProtected(Permissions.View, 'asText')
-  def asText(self):
-    """
-      Converts the content of the document to a textual representation.
-    """
-    return self.convert('text')
 
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
@@ -882,7 +861,7 @@ class Document(XMLObject, UrlMixIn):
       for later. It converts what needs conversion to base, and
       does things that can be done only after it is converted).
     """
-    self.convertToBase()
+    self.convertToBaseFormat()
     # Get the order from preferences
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
@@ -932,20 +911,68 @@ class Document(XMLObject, UrlMixIn):
     return self._getTypeBasedMethod('finishIngestion',
         fallback_script_id='Document_finishIngestion')
 
-  security.declareProtected(Permissions.View, 'convertToBase')
-  def convertToBase(self, REQUEST=None):
+  # Conversion methods
+  security.declareProtected(Permissions.ModifyPortalContent, 'convert')
+  def convert(self, format, **kw):
     """
-      This is run upon upload of the file to make the first
-      conversion; calls _convertToBase which be default does
-      nothing.
-      Records the result in processing_status_workflow
-      In OOo documents it converts into ODF format so that we can easily
-      convert into other formats, play with metadata and such.
-      In PDF doc it converts to plain text, so that we don't have to
-      reconvert every time we reindex the object.
+      Main content conversion function, returns result which should
+      be returned and stored in cache.
+      format - the format specied in the form of an extension
+      string (ex. jpeg, html, text, txt, etc.)
+      **kw can be various things - e.g. resolution
+
+      TODO:
+      - implement guards API so that conversion to certain
+        formats require certain permission
+    """
+    pass
+
+  security.declareProtected(Permissions.View, 'asText')
+  def asText(self):
+    """
+      Converts the content of the document to a textual representation.
+    """
+    return self.convert(format='txt')
+
+  security.declareProtected(Permissions.View, 'asHTML')
+  def asHTML(self):
+    """
+      Returns a complete HTML representation of the document
+      (with body tags, etc.).
+    """
+    return self.convert(format='html')
+
+  security.declareProtected(Permissions.View, 'asStrippedHTML')
+  def asStrippedHTML(self):
+    """
+      Returns a stipped HTML representation of the document
+      (without body tags, etc.) which can be used to inline
+      a preview of the document.
+    """
+    return self.convert(format='html')
+
+  # Base format support
+  security.declareProtected(Permissions.View, 'convertToBase')
+  def convertToBaseFormat(self, REQUEST=None):
+    """
+      Converts the content of the document to a base format
+      which is later used for all conversions. This method
+      is common to all kinds of documents and handles
+      exceptions in a unified way.
+
+      Implementation is delegated to _convertToBaseFormat which
+      must be overloaded by subclasses of Document which
+      need a base format.
+
+      convertToBaseFormat is called upon file upload, document
+      ingestion by the processing_status_workflow.
+
+      NOTE: the data of the base format conversion should be stored
+      using the base_data property. Refer to Document.py propertysheet.
+      Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
     """
     try:
-      msg = self._convertToBase()
+      msg = self._convertToBaseFormat()
       if msg is None:
         msg = 'Converted to %s.' % self.base_format
       self.convertFile(comment=msg) # Invoke workflow method
@@ -962,14 +989,48 @@ class Document(XMLObject, UrlMixIn):
       self.processFile(comment=msg)
     return msg
 
-
-  def _convertToBase(self):
+  def _convertToBaseFormat(self):
     """
-      API method - some subclasses store data in a certain 'base' format
-      (e.g. OOoDocument uses ODF)
+      Placeholder method. Must be subclassed by classes
+      which need a base format. Refer to OOoDocument
+      for an example of ODF base format which is used
+      as a way to convert about any file format into
+      about any file format.
 
-      XXX-JPS What is this ? Explain. Name unclear
+      Other possible applications: conversion of HTML
+      text to tiddie HTML such as described here:
+      http://www.xml.com/pub/a/2004/09/08/pyxml.html
+      so that resulting text can be processed more
+      easily by XSLT parsers.
     """
     raise NotImplementedError
 
-# vim: filetype=python syntax=python shiftwidth=2
+  # Snapshot methods - XXX since this can be useful beyond
+  # documents, it should be moved to MixIn class which may
+  # be used, for example, to take a snapshot of an invoice.
+  security.declareProtected(Permissions.ModifyPortalContent, 'createSnapshot')
+  def createSnapshot(self):
+    """
+      Create a snapshot (PDF). This is the normal way to modifiy
+      snapshot_data. Once a snapshot is taken, a new snapshot
+      can not be taken.
+
+      NOTE: use getSnapshotData and hasSnapshotData accessors
+      to access a snapshot.
+
+      NOTE2: implementation of createSnapshot should probably
+      be delegated to a types base method since this it
+      is configuration dependent.
+    """
+    pass
+
+  security.declareProtected(Permissions.ManagePortal, 'deleteSnapshot')
+  def deleteSnapshot(self):
+    """
+      Deletes the snapshot - in theory this should never be done.
+      It is there for programmers and system administrators.
+    """
+    try:
+      del(self.snapshot_data)
+    except AttributeError:
+      pass
