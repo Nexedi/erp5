@@ -133,8 +133,11 @@ class TextDocument(Document, TextContent):
       if format == 'raw':
         return self.getTextContent()
       mime_type = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
+      src_mimetype = self.getTextFormat()
+      if not src_mimetype.startswith('text/'):
+        src_mimetype = 'text/%s' % src_mimetype
       return getToolByName(self, 'portal_transforms').convertTo(mime_type,
-                           self.getTextContent(), object=self, mimetype=self.getTextFormat())
+                           self.getTextContent(), object=self, mimetype=src_mimetype)
 
     def __call__(self):
       _setCacheHeaders(self, {})
