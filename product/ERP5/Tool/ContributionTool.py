@@ -122,7 +122,7 @@ class ContributionTool(BaseTool):
     return portal_type
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, url=None,
+  def newContent(self, id=None, portal_type=None, url=None, container=None,
                        discover_metadata=1, temp_object=0,
                        user_login=None, **kw):
     """
@@ -134,6 +134,12 @@ class ContributionTool(BaseTool):
       user_login is the name under which the content will be created
       XXX - this is a security hole which needs to be fixed by
       making sure only Manager can use this parameter
+
+      container -- if specified, it is possible to define
+      where to contribute the content. Else, ContributionTool
+      tries to guess.
+
+      url -- if specified, content is download from the URL.
 
       NOTE:
         We always generate ID. So, we must prevent using the one
@@ -216,7 +222,7 @@ class ContributionTool(BaseTool):
     BaseTool._delObject(self, file_name)
 
     # Move the document to where it belongs
-    document = self._setObject(file_name, ob, user_login=user_login)
+    document = self._setObject(file_name, ob, user_login=user_login, container=container)
     document = self._getOb(file_name) # Call _getOb to purge cache
 
     # Reindex it and return the document
@@ -267,7 +273,7 @@ class ContributionTool(BaseTool):
     return property_dict
 
   # WebDAV virtual folder support
-  def _setObject(self, name, ob, user_login=None):
+  def _setObject(self, name, ob, user_login=None, container=None):
     """
       The strategy is to let NullResource.PUT do everything as
       usual and at the last minute put the object in a different
@@ -311,7 +317,10 @@ class ContributionTool(BaseTool):
                                        # can safely change its portal_type
       # Now we know the portal_type, let us find the module
       # to which we should move the document to
-      module = self.getDefaultModule(ob.portal_type)
+      if container is None:
+        module = self.getDefaultModule(ob.portal_type)
+      else:
+        module = container
       new_id = module.generateNewId()
       ob.id = new_id
       module._setObject(new_id, ob)
