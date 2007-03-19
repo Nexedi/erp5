@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>document_site = context.getDeliveryValue().getBaobabSourceValue()\n
 site_url = context.Baobab_getVaultSite(document_site).getRelativeUrl()\n
-if context.getEmissionLetter() in context.Baobab_getUserEmissionLetterList():\n
+if context.getEmissionLetter() in context.Baobab_getEmissionLetterList(site_list=[site_url, ]):\n
   return \'%s/caveau/serre/encaisse_des_billets_retires_de_la_circulation\' % site_url\n
 else:\n
   return \'%s/caveau/auxiliaire/encaisse_des_externes\' % site_url\n
