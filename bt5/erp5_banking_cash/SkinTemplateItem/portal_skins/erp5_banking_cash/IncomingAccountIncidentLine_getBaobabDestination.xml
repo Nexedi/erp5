@@ -68,7 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(context.getSource(),)\n
+            <value> <string>root_counter_path = \'%s/surface/caisse_courante\' % (context.getSource(), )\n
+resource = context.getParent().getResourceValue() # Get the currency on the Account Incident\n
+if resource is None:\n
+  return None\n
+if resource.getId() == context.Baobab_getPortalReferenceCurrencyID():\n
+  return \'%s/encaisse_des_billets_et_monnaies\' % (root_counter_path, )\n
+# Transform "Dollars USA" into "dollars_usa". OutgoingCashToCurrencySaleLine_getBaobabSource uses the same string transformation\n
+return \'%s/encaisse_des_devises/%s\' % (root_counter_path, resource.getTitle().lower().replace(" ", "_"))\n
 </string> </value>
         </item>
         <item>
@@ -121,6 +128,9 @@
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>root_counter_path</string>
+                            <string>resource</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
