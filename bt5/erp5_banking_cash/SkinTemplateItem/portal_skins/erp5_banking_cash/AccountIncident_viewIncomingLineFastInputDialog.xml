@@ -71,7 +71,7 @@
             <value> <string>request = context.REQUEST\n
 \n
 cash_detail_dict = {\'line_portal_type\'           : \'Incoming Account Incident Line\'\n
-                    , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
+                    , \'operation_currency\'       : context.getResourceId()\n
                     , \'cash_status_list\'         : None\n
                     , \'emission_letter_list\'     : None\n
                     , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=1)\n

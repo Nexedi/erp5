@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_source</string> </value>
         </item>
@@ -247,7 +253,7 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

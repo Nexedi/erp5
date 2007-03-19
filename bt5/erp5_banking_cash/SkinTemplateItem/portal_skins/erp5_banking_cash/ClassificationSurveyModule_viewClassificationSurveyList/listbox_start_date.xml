@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_delivery_start_date</string> </value>
+            <value> <string>listbox_start_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -287,7 +287,7 @@
                 </item>
                 <item>
                     <key> <string>input_order</string> </key>
-                    <value> <string>ymd</string> </value>
+                    <value> <string>dmy</string> </value>
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
@@ -295,7 +295,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>start_datetime</string> </key>

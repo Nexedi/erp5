@@ -365,10 +365,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>source_reference</string>
                           <string>Reference</string>
                         </tuple>
@@ -377,7 +373,7 @@
                           <string>Vault</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -443,7 +439,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -591,28 +587,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>source_reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>delevery.start_date</string>
+                          <string>start_date</string>
                           <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_logical_path</string>
-                          <string>Counter</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_total_asset_price</string>
-                          <string>Amount</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>

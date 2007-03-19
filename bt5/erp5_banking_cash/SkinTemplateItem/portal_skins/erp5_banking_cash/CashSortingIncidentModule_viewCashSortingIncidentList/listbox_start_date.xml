@@ -13,14 +13,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_delivery_start_date</string> </value>
+            <value> <string>listbox_start_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -200,7 +194,9 @@
                 </item>
                 <item>
                     <key> <string>input_order</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
@@ -291,7 +287,7 @@
                 </item>
                 <item>
                     <key> <string>input_order</string> </key>
-                    <value> <string>dmy</string> </value>
+                    <value> <string>ymd</string> </value>
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
@@ -299,7 +295,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>start_datetime</string> </key>
@@ -352,37 +348,37 @@
                 <item>
                     <key> <string>ampm</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>day</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>hour</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>minute</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>month</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>year</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -455,6 +451,25 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>preferences/getPreferredDateOrder | string:ymd</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <tuple>
@@ -717,7 +732,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <tuple>
         <tuple>
@@ -972,7 +987,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <tuple>
@@ -1227,7 +1242,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
         <tuple>
@@ -1482,7 +1497,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <tuple>
         <tuple>
@@ -1737,7 +1752,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <tuple>
         <tuple>

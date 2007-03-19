@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_delivery_start_date</string> </value>
+            <value> <string>listbox_start_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -257,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>default_now</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -287,7 +287,7 @@
                 </item>
                 <item>
                     <key> <string>input_order</string> </key>
-                    <value> <string>dmy</string> </value>
+                    <value> <string>ymd</string> </value>
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
@@ -295,7 +295,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>start_datetime</string> </key>
@@ -464,7 +464,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreferredDateOrder()</string> </value>
+            <value> <string>preferences/getPreferredDateOrder | string:ymd</string> </value>
         </item>
       </dictionary>
     </pickle>

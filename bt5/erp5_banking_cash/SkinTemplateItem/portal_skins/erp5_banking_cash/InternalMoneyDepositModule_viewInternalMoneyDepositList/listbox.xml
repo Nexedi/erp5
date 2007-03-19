@@ -330,15 +330,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>source_reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -399,7 +395,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                           <string>delivery.start_date</string>
                         </tuple>
                         <tuple>
@@ -504,7 +500,20 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

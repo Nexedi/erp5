@@ -88,10 +88,10 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_delivery_start_date</string>
                         <string>listbox_excess_price</string>
                         <string>listbox_deficit_price</string>
                         <string>listbox_source_logical_path</string>
+                        <string>listbox_start_date</string>
                       </list>
                     </value>
                 </item>
