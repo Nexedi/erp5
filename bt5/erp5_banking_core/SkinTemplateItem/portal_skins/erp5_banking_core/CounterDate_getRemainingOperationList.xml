@@ -85,7 +85,16 @@ if site_uid is not None:\n
   append = operation_list.append\n
   for document in document_list:\n
     # Stop Payment and Cash Movement in started state must not block counter day closing.\n
-    if not (document.getPortalType() in (\'Stop Payment\', \'Cash Movement\') and document.getSimulationState()==\'started\'):\n
+    # Mutilated Banknotes in planned state or in finished state with siege as source must nogt block either.\n
+    portal_type = document.getPortalType()\n
+    simulation_state = document.getSimulationState()\n
+    if not (   (portal_type in (\'Stop Payment\', \'Cash Movement\') and simulation_state == \'started\')\n
+            or (portal_type == \'Mutilated Banknote\' and \n
+                 (simulation_state == \'planned\' or \n
+                   (simulation_state == \'finished\' and \'siege\' in here.getSource(\'\'))\n
+                 )\n
+               )\n
+           ):\n
       append(document)\n
 \n
 def operation_sort(a,b):\n
@@ -161,6 +170,9 @@ return operation_list\n
                             <string>portal_type_list</string>
                             <string>document_list</string>
                             <string>document</string>
+                            <string>portal_type</string>
+                            <string>simulation_state</string>
+                            <string>here</string>
                             <string>operation_sort</string>
                           </tuple>
                         </value>
