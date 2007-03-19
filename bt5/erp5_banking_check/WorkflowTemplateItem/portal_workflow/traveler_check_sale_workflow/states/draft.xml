@@ -42,9 +42,17 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>
