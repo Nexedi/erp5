@@ -3621,6 +3621,35 @@ class TestImmobilisation(TestImmobilisationMixin):
     for line in pl.contentValues():
       line.edit(amortisation_account=self.extra_account_dict['amortisation_account'])
 
+  def stepTestAccountingSectionStatistics(self, sequence=None, sequence_list=None, **kw):
+    # First we must make sure that the preference is well defined
+    preference_tool = self.getPreferenceTool()
+    preference = preference_tool.default_site_preference
+    preference.edit(preferred_accounting_transaction_simulation_state=\
+                      ('delivered', 'confirmed', 'draft', 'planned', 'cancelled', 'stopped'),
+                    preferred_accounting_transaction_section_category=\
+                        'group/group A',
+                    preferred_accounting_transaction_currency=\
+                        'currency_module/EUR')
+    wf_tool = self.getWorkflowTool()
+    wf_tool.doActionFor(preference,'enable_action',wf_id='preference_workflow')
+    get_transaction().commit()
+    self.tic()
+    # Now we can check several Accounting methods
+    account = self.getPortal().account_module.account3
+    self.assertEquals(20000,account.AccountModule_getTotalSourceDebit(brain=account))
+    self.assertEquals(20000,account.AccountModule_getTotalSourceCredit(brain=account))
+    preference.edit(preferred_accounting_transaction_section_category=\
+                        'group/group B')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals('group/group B',
+        preference_tool.getPreferredAccountingTransactionSectionCategory())
+    # Make sure to not use the cache
+    self.portal.REQUEST['ERP5Accounting_getParams'] = None
+    self.assertEquals(10000,account.AccountModule_getTotalSourceDebit(brain=account))
+    self.assertEquals(0,account.AccountModule_getTotalSourceCredit(brain=account))
+
   def test_19_TestAccountingBuildingAndDivergence(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
@@ -3669,6 +3698,34 @@ class TestImmobilisation(TestImmobilisationMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)    
 
+  def test_19BIS_TestAccountingBuildAndOwngerChange(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Accounting Build And Divergence Behavior'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest19SequenceData \
+                       DeleteAccounting \
+                       Tic \
+                       DeleteAllPackingLists \
+                       Tic \
+                       TestAllAppliedRulesAreEmpty \
+                       CreatePackingList \
+                       DeliverPackingList \
+                       AggregateItems \
+                       Tic \
+                       SetTest19SequenceData2 \
+                       CreatePackingList \
+                       DeliverPackingList \
+                       AggregateItems \
+                       Tic \
+                       BuildAccounting \
+                       Tic \
+                       TestAccountingSectionStatistics \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
 
   def stepSetTest20SequenceData(self, sequence=None, sequence_list=None, **kw):
     item_list = ['item1']
