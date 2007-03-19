@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>comfirmed</string> </value>
+            <value> <string>comfirmed (Checkbook Reception)</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -51,6 +51,12 @@
                 <string>deliver</string>
                 <string>deliver_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>

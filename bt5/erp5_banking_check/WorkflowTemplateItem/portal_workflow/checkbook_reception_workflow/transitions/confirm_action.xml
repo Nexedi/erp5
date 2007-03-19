@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Confirmer</string> </value>
+            <value> <string>Send to Vault Controler</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
