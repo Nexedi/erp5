@@ -90,7 +90,6 @@
                     <key>                 <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
@@ -100,9 +99,10 @@
                     <value>
                       <list>
                         <string>my_source_reference</string>
-                        <string>my_source_logical_path</string>
-                        <string>my_start_date</string>
+                        <string>my_destination_payment_reference</string>
+                        <string>my_destination_payment_title</string>
                         <string>my_source</string>
+                        <string>my_source_logical_path</string>
                       </list>
                     </value>
                 </item>
@@ -110,8 +110,8 @@
                     <key>                 <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_payment_reference</string>
-                        <string>my_destination_payment_title</string>
+                        <string>my_start_date</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>

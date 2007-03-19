@@ -68,7 +68,7 @@
             <value>
               <list>
                 <string>left</string>
-                <string>rigth</string>
+                <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
@@ -88,9 +88,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -105,22 +103,23 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_resource_title</string>
                         <string>my_quantity</string>
                         <string>my_destination_payment_reference</string>
                         <string>my_price_currency_title</string>
-                        <string>my_reference_range_max</string>
                         <string>my_reference_range_min</string>
+                        <string>my_reference_range_max</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>rigth</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_resource_title</string>
-                        <string>my_check_amount_title</string>
                         <string>my_check_type_title</string>
                         <string>my_aggregate_title_list</string>
+                        <string>my_description</string>
+                        <string>my_check_amount_title</string>
                       </list>
                     </value>
                 </item>

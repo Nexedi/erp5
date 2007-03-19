@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Start Number</string> </value>
+                    <value> <string>Stop Number</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

@@ -90,7 +90,7 @@
                       <list>
                         <string>listbox_source_logical_path</string>
                         <string>listbox_destination_logical_path</string>
-                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_start_date</string>
                       </list>
                     </value>
                 </item>
