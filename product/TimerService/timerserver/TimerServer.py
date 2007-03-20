@@ -6,7 +6,7 @@ __version__ = 'TimerServer for Zope 0.1'
 import traceback
 
 import thread
-import sys, os, errno, time, socket, urllib
+import sys, os, errno, time, socket
 from StringIO import StringIO
 from zLOG import LOG, INFO
 
@@ -55,12 +55,15 @@ class TimerServer:
         # To be very sure, try to connect to the HTTPServer
         # and only start after we are able to connect
         while 1:
-            time.sleep(5)
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(5)
             try:
-                urllib.urlopen('http://%s:%s' %(ip, port))
-            except IOError:
+                s.connect((ip, port))
+            except (socket.error, socket.timeout):
+                s.close()
                 continue
             break
+        s.close()
 
         module = self.module
         interval = self.interval
