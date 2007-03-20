@@ -563,7 +563,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     self.recursiveReindexObject()
 
   security.declarePublic( 'recursiveReindexObject' )
-  def recursiveReindexObject(self, activate_kw={}, *args, **kw):
+  def recursiveReindexObject(self, activate_kw=None, **kw):
     """
       Fixes the hierarchy structure (use of Base class)
       XXXXXXXXXXXXXXXXXXXXXXXX
@@ -575,7 +575,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
       self.activate(group_method_id='portal_catalog/catalogObjectList',
                     expand_method_id='getIndexableChildValueList',
                     alternate_method_id='alternateReindexObject',
-                    **activate_kw).recursiveImmediateReindexObject(*args, **kw)
+                    **activate_kw).recursiveImmediateReindexObject(**kw)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getIndexableChildValueList' )
@@ -592,23 +592,19 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     return value_list
 
   security.declarePublic( 'recursiveImmediateReindexObject' )
-  def recursiveImmediateReindexObject(self, *args, **kw):
+  def recursiveImmediateReindexObject(self, **kw):
       """
         Applies immediateReindexObject recursively
       """
       # Reindex self
       root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
       if self.isIndexable and root_indexable:
-        # This might create a recursive lock
-        self.flushActivity(invoke=0, method_id='immediateReindexObject')
-        # This might create a recursive lock
-        self.flushActivity(invoke=0, method_id='recursiveImmediateReindexObject')
-        self.immediateReindexObject(*args, **kw)
+        self.immediateReindexObject(**kw)
       # Reindex contents
       for c in self.objectValues():
         if getattr(aq_base(c),
                    'recursiveImmediateReindexObject', None) is not None:
-          c.recursiveImmediateReindexObject(*args, **kw)
+          c.recursiveImmediateReindexObject(**kw)
 
   security.declareProtected( Permissions.ModifyPortalContent,
                              'recursiveMoveObject' )

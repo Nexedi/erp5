@@ -2205,13 +2205,17 @@ class Base( CopyContainer,
     """
     self._reindexObject(*args, **kw)
 
-  def _reindexObject(self, *args, **kw):
+  def _reindexObject(self, activate_kw=None, **kw):
     # When the activity supports group methods, portal_catalog/catalogObjectList is called instead of
     # immediateReindexObject.
     # Do not check if root is indexable, it is done into catalogObjectList,
     # so we will save time
+    if activate_kw is None:
+      activate_kw = {}
     if self.isIndexable:
-      self.activate(group_method_id='portal_catalog/catalogObjectList', alternate_method_id='alternateReindexObject', **kw).immediateReindexObject(*args, **kw)
+      self.activate(group_method_id='portal_catalog/catalogObjectList', 
+                    alternate_method_id='alternateReindexObject', 
+                    **activate_kw).immediateReindexObject(**kw)
 
   security.declarePublic('recursiveReindexObject')
   recursiveReindexObject = reindexObject
