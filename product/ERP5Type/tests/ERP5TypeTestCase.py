@@ -500,10 +500,10 @@ class ERP5TypeTestCase(PortalTestCase):
         If error_message is provided, it is asserted to be equal to the last
         workflow history error message.
       """
-      reference_history_length = len(self.workflow_tool.getInfoFor(ob=self.account_incident, name='history', wf_id=workflow_id))
+      reference_history_length = len(self.workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id))
       reference_workflow_state = object.getSimulationState()
-      self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.account_incident, transition_id, wf_id=workflow_id)
-      workflow_history = self.workflow_tool.getInfoFor(ob=self.account_incident, name='history', wf_id=workflow_id)
+      self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, object, transition_id, wf_id=workflow_id)
+      workflow_history = self.workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id)
       self.assertEqual(len(workflow_history), reference_history_length + 1)
       if error_message is not None:
         self.assertEqual(str(workflow_history[-1]['error_message']), error_message)
