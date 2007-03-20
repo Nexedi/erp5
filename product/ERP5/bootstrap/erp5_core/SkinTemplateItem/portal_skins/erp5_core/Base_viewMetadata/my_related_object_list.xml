@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>LinesField</string>
+          <string>Products.ERP5Form.MultiLinkField</string>
+          <string>MultiLinkField</string>
         </tuple>
         <none/>
       </tuple>
@@ -19,28 +19,7 @@
         <item>
             <key> <string>message_values</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <string>line_too_long</string> </key>
-                    <value> <string>A line was too long.</string> </value>
-                </item>
-                <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>You entered too many characters.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_many_lines</string> </key>
-                    <value> <string>You entered too many lines.</string> </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
         <item>
@@ -72,15 +51,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -88,19 +63,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -108,19 +71,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>view_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -157,15 +108,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -173,39 +120,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>view_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -235,51 +160,33 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>20</int> </value>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Related Objects</string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>view_separator</string> </key>
@@ -288,14 +195,6 @@
 <br />
 
 ]]></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -317,11 +216,26 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: [\'<a href="%s">%s</a>\' % (x.absolute_url(), x.getPath()) for x in here.portal_categories.getRelatedValueList(here)]
-
-]]></string> </value>
+            <value> <string>python: [x.absolute_url() for x in here.portal_categories.getRelatedValueList(here)]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(x.getPath(), x.absolute_url()) for x in here.portal_categories.getRelatedValueList(here)]</string> </value>
         </item>
       </dictionary>
     </pickle>
