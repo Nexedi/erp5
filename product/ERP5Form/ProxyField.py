@@ -318,6 +318,10 @@ class ProxyField(ZMIField):
     tales.update(result)
     self.tales = tales
     self.delegated_list = surcharge_list
+    # Put a default value on not delegated parameter
+    for key in result.keys():
+      if not self.values.has_key(key):
+        self.values[key] = self.get_recursive_orig_value(key, include=0)
 
   def getTemplateField(self):
     """
