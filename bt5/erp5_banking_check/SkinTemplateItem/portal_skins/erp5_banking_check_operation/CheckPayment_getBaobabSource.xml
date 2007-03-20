@@ -68,32 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># first get the source of the document,\n
-# we will need to add the counter\n
-source = context.getSource()\n
-baobab_source = None\n
-context.log(\'baobab_source\', baobab_source)\n
-# Get the history of the workflow\n
-user_id=\'None\'\n
-context.log(\'workflow_item_list:\',context.Base_getWorkflowHistoryItemList(\'check_payment_workflow\',display=0))\n
-for workflow_item in context.Base_getWorkflowHistoryItemList(\'check_payment_workflow\',display=0):\n
-  context.log(\'workflow_item.getProperty(action)\',workflow_item.getProperty(\'action\'))\n
-  if workflow_item.getProperty(\'action\')==\'deliver_action\':\n
-    user_id=workflow_item.getProperty(\'actor\')\n
-context.log(\'user_id\',user_id)\n
+            <value> <string>user_id = context.Base_getLastUserIdByTransition(workflow_id=\'check_payment_workflow\', transition_id=\'deliver_action\')\n
+if user_id is None:\n
+  return None\n
 site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-context.log(\'CheckPayment_getBaobabSource site_list\',site_list)\n
+source = context.getSource()\n
 for site in site_list:\n
   site_value = context.portal_categories.getCategoryValue(site)\n
-  context.log(\'site\', site)\n
   if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
-    baobab_source = site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
-    break\n
-  context.log(\'baobab_source\', baobab_source)\n
-  \n
-  \n
-context.log(\'baobab_source\', baobab_source)\n
-return baobab_source\n
+    return site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -145,13 +129,11 @@ return baobab_source\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>source</string>
-                            <string>None</string>
-                            <string>baobab_source</string>
                             <string>user_id</string>
-                            <string>_getiter_</string>
-                            <string>workflow_item</string>
+                            <string>None</string>
                             <string>site_list</string>
+                            <string>source</string>
+                            <string>_getiter_</string>
                             <string>site</string>
                             <string>site_value</string>
                           </tuple>
