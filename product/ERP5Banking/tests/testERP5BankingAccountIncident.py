@@ -177,6 +177,25 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # open counter date
     self.openCounterDate(site=self.paris)
 
+  def genericAssertWorkflowTransitionFails(self, object, workflow_id, transition_id, error_message=None):
+    """
+      Check that passing given transition from given workflow on given object
+      raises ValidationFailed.
+      Do sanity checks (workflow history length increased by one, simulation
+      state unchanged).
+      If error_message is provided, it will be asserted equal to the last
+      workflow history error message.
+    """
+    reference_history_length = len(self.workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id))
+    reference_workflow_state = object.getSimulationState()
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, object, transition_id, wf_id=workflow_id)
+    workflow_history = self.workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id)
+    self.assertEqual(len(workflow_history), reference_history_length + 1)
+    if error_message is not None:
+      self.assertEqual(str(workflow_history[-1]['error_message']), error_message)
+    self.assertEqual(object.getSimulationState(), reference_workflow_state)
+    
+
   def stepCleanupObjects(self, sequence=None, sequence_list=None, **kwd):
     """
     Cleanup account_incident_module after a sequence execution so that
@@ -350,21 +369,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
     self.account_incident.setSourceTotalAssetPrice('172400.0')
-    # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition 
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.account_incident, 'confirm_action', wf_id='account_incident_workflow')
-    # execute tic
-    self.stepTic()
-    # get state of the cash transfer
-    state = self.account_incident.getSimulationState()
-    # check the state is draft
-    self.assertEqual(state, 'draft')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.account_incident, name='history', wf_id='account_incident_workflow')
-    # check its len is 2
-    self.assertEqual(len(workflow_history), 2)
-    # check we get an "Insufficient balance" message in the workflow history because of the invalid line
-    msg = workflow_history[-1]['error_message']
-    self.assertEqual("You can't have excess and deficit on the document.", "%s" %(msg,))
+    self.genericAssertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="You can't have excess and deficit on the document.")
 
 
   def stepDelOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
@@ -379,22 +384,17 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     Try to confirm the cash transfer with a bad cash transfer line and
     check the try of confirm the cash transfer with the invalid line has failed
     """
-    # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition 
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.account_incident, 'confirm_action', wf_id='account_incident_workflow')
-    # execute tic
-    self.stepTic()
-    # get state of the cash transfer
-    state = self.account_incident.getSimulationState()
-    # check the state is draft
-    self.assertEqual(state, 'draft')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.account_incident, name='history', wf_id='account_incident_workflow')
-    # check its len is 2
-    self.assertEqual(len(workflow_history), 3)
-    # check we get an "Insufficient balance" message in the workflow history because of the invalid line
-    msg = workflow_history[-1]['error_message']
-    self.assertEqual("Price differs between document and resource.", "%s" %(msg,))
+    self.genericAssertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="Price differs between document and resource.")
 
+  def stepTryConfirmAccountIncidentWithNoResource(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Check that confirming with no resource defined fails.
+    """
+    original_resource_path = self.account_incident.getResource()
+    self.account_incident.setResource('')
+    self.assertEqual(self.account_incident.getResourceValue(), None)
+    self.genericAssertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="No resource defined.")
+    self.account_incident.setResource(original_resource_path)
 
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -417,17 +417,8 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.account_incident.setSourceTotalAssetPrice('50000.0')
     # do the Workflow action
     self.workflow_tool.doActionFor(self.account_incident, 'confirm_action', wf_id='account_incident_workflow')
-    # execute tic
-    self.stepTic()
-    # get state
-    state = self.account_incident.getSimulationState()
     # check state is confirmed
-    self.assertEqual(state, 'confirmed')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.account_incident, name='history', wf_id='account_incident_workflow')
-    # check len of workflow history is 4
-    self.assertEqual(len(workflow_history), 5)
-
+    self.assertEqual(self.account_incident.getSimulationState(), 'confirmed')
 
   def stepDeliverAccountIncident(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -436,16 +427,8 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # do the workflow transition "archive_action"
     self.workflow_tool.doActionFor(self.account_incident, 'deliver_action', wf_id='account_incident_workflow')
-    # execute tic
-    self.stepTic()
-    # get state of cash transfer
-    state = self.account_incident.getSimulationState()
     # check that state is archiveed
-    self.assertEqual(state, 'delivered')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.account_incident, name='history', wf_id='account_incident_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 7)
+    self.assertEqual(self.account_incident.getSimulationState(), 'delivered')
     
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -478,12 +461,13 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateAccountIncident ' \
                     + 'CreateIncomingLine CheckSubTotal ' \
-                    + 'CreateOutgoingLine ' \
+                    + 'CreateOutgoingLine Tic ' \
                     + 'TryConfirmAccountIncidentWithTwoDifferentLines DelOutgoingLine Tic ' \
                     + 'TryConfirmAccountIncidentWithBadPrice ' \
+                    + 'TryConfirmAccountIncidentWithNoResource ' \
                     + 'Tic CheckTotal ' \
-                    + 'ConfirmAccountIncident ' \
-                    + 'DeliverAccountIncident ' \
+                    + 'ConfirmAccountIncident Tic ' \
+                    + 'DeliverAccountIncident Tic ' \
                     + 'CheckFinalInventory '
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
