@@ -328,19 +328,19 @@ class ZCatalog(Folder, Persistent, Implicit):
     result = catalog_object.readRecordedObjectList(catalog=catalog)
     if len(result):
       for o in result:
-        try:
-          obj = self.resolve_path(o.path)
-        except ConflictError:
-          raise
-        except:
-          obj = None
-        if obj is not None:
-          if catalog == 0:
-            self.uncatalog_object(o.path, sql_catalog_id=sql_catalog_id)
-          elif catalog == 1:
+        if catalog==0:
+          self.uncatalog_object(uid=o.path, sql_catalog_id=sql_catalog_id)
+        elif catalog==1:
+          try:
+            obj = self.resolve_path(o.path)
+          except ConflictError:
+            raise
+          except:
+            obj = None
+          if obj is not None:
             obj.reindexObject(sql_catalog_id=sql_catalog_id)
-          else:
-            raise ValueError, '%s is not a valid value for "catalog".' % (catalog, )
+        else:
+          raise ValueError, '%s is not a valid value for "catalog".' % (catalog, )
       catalog_object.deleteRecordedObjectList(uid_list=[o.uid for o in result])
       # Re-schedule the same action in case there are remaining rows in the
       # table. This can happen if the database connector limits the number
