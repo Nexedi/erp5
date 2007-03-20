@@ -197,7 +197,7 @@ class PreferenceTool(BaseTool):
     for pref in self.searchFolder(portal_type='Preference') :
       pref = pref.getObject()
       if pref is not None and pref.getProperty('preference_state',
-                                               'broken') == 'enabled' :
+                                'broken') in ('enabled', 'global'):
         # XXX quick workaround so that manager only see user preference
         # they actually own.
         if user_is_manager and pref.getPriority() == Priority.USER :
