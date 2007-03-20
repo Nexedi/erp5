@@ -74,9 +74,10 @@ use.\n
 \'\'\'\n
 N_ = context.Base_translateString\n
 context.newContent(portal_type=portal_type)\n
-return context.REQUEST.RESPONSE.redirect(\n
-        \'%s/view?portal_status_message=%s\'\n
-        % (context.absolute_url(), N_(\'Accounting Transaction Line added.\') ))\n
+return context.Base_redirect(\'view\', keep_items=dict(\n
+       portal_status_message=N_(\'Accounting Transaction Line added.\'),\n
+       selection_name=selection_name,\n
+       selection_index=selection_index))\n
 </string> </value>
         </item>
         <item>
@@ -93,7 +94,7 @@ return context.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=\'Accounting Transaction Line\'</string> </value>
+            <value> <string>portal_type=\'Accounting Transaction Line\', selection_name=\'\', selection_index=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -113,16 +114,19 @@ return context.REQUEST.RESPONSE.redirect(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>portal_type</string>
+                            <string>selection_name</string>
+                            <string>selection_index</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>N_</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,6 +140,8 @@ return context.REQUEST.RESPONSE.redirect(\n
             <value>
               <tuple>
                 <string>Accounting Transaction Line</string>
+                <string></string>
+                <int>0</int>
               </tuple>
             </value>
         </item>
