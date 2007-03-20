@@ -584,10 +584,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       for axis_element in axis_group.axis_element_list:
         for activity in axis_element.activity_list:
           # for each activity, saving its properties into a dict
-          if activity.link.startswith('/erp5'):
-            pass
-          else:
-            activity.link = '/erp5/' + activity.link
           if activity.link in object_dict.keys():
             object_dict[activity.link].append(
                        { 'activity_name' : activity.name,
@@ -983,10 +979,13 @@ class PlanningBoxWidget(Widget.Widget):
     ####### DATA DEFINITION #######
     self.build_error_list = None
     # recovering usefull planning properties
-    form = field.aq_parent # getting form
-    list_method = field.get_value('list_method') # method used to list objects
-    report_root_list = field.get_value('report_root_list') # list of domains
-    portal_types = field.get_value('portal_types') # Portal Types of objects
+    # getting form
+    form = field.aq_parent
+    list_method = field.get_value('list_method')
+    title_line = field.get_value('title_line')
+    # list of domain
+    report_root_list = field.get_value('report_root_list')
+    portal_types = field.get_value('portal_types')
     # selection name used to store selection params
     selection_name = field.get_value('selection_name')
     # getting sorting keys and order (list)
@@ -1009,6 +1008,7 @@ class PlanningBoxWidget(Widget.Widget):
                                 REQUEST=REQUEST, list_method=list_method,
                                 selection=selection, params = params,
                                 selection_name=selection_name,
+                                title_line=title_line,
                                 report_root_list=report_root_list,
                                 portal_types=portal_types, sort=sort,
                                 list_error=list_error)
@@ -1045,7 +1045,7 @@ class BasicStructure:
 
   def __init__ (self, here='', form='', field='', REQUEST='', list_method='',
     selection=None, params = '', selection_name='', report_root_list='',
-    portal_types='', sort=None, list_error=None):
+    title_line='', portal_types='', sort=None, list_error=None):
     """ init main internal parameters """
     self.here = here
     self.form = form
@@ -1055,6 +1055,7 @@ class BasicStructure:
     self.selection = selection
     self.params = params
     self.list_method = list_method
+    self.title_line = title_line
     self.selection_name = selection_name
     self.report_root_list = report_root_list
     self.portal_types = portal_types
@@ -1646,7 +1647,7 @@ class BasicStructure:
 
   def buildGroupStructure(self):
       """
-      this procedure builds BasicGroup instances corresponding to the
+      This procedure builds BasicGroup instances corresponding to the
       report_group_objects returned from the ERP5 request.
       """
       position = 0
@@ -1665,9 +1666,15 @@ class BasicStructure:
         # updating position_informations
         position +=1
         # recovering usefull informations, basic_structure
-	# XXX should be used title_lines method 
-        title = report_group_object.getObject().getTitle()
-        name = report_group_object.getObject().getTitle()
+	if self.title_line not in (None,''):
+	  title_line_method = getattr(report_group_object.getObject(), \
+			                               self.title_line, None)
+        else:
+          title_line_method = getattr(report_group_object.getObject(), \
+                                                       'getTitle', None) 
+        if title_line_method is not None:
+          title = title_line_method()
+          name = title_line_method()
         depth = report_group_object.getDepth()
         is_open = report_group_object.getIsOpen()
         is_pure_summary = report_group_object.getIsPureSummary()
@@ -1692,7 +1699,6 @@ class BasicStructure:
                                  secondary_axis_start = group_start,
                                  secondary_axis_stop  = group_stop,
                                  property_dict = property_dict)
-
 
         if object_list != None:
           child_group.setBasicActivities(object_list,self.list_error,
@@ -2431,7 +2437,6 @@ class Activity:
     else:
       return 2
 
-
   def addBlocs(self, main_axis_start=None, main_axis_stop=None,
                secondary_axis_start=None, secondary_axis_stop=None,
                secondary_axis_range=None, planning=None, warning=0,
@@ -2844,7 +2849,7 @@ class AxisGroup:
   def addActivity(self, activity=None, axis_element_already_insered= 0):
     """
     Procedure that permits to add activity to the corresponding AxisElement in
-    an AxisGroup. can create new Axis Element in the actual Axisgroup if
+    an AxisGroup. This can create new Axis Element in the actual AxisGroup if
     necessary. Permits representation of MULTITASKING
     """
 
@@ -2853,7 +2858,6 @@ class AxisGroup:
     try:
       # iterating each axis_element of the axis_group
       for axis_element in self.axis_element_list:
-
         can_add = 1
         # recovering all activity properties of the actual axis_element and
         # iterating through them to check if one of them crosses the new one
@@ -3017,7 +3021,6 @@ class AxisGroup:
         block.position_main.relative_range = final_range
     return 1
 
-
 class AxisElement:
   """
   Represents a line in an item. In most cases, an AxisGroup element will
@@ -3053,7 +3056,7 @@ class Info:
   security.declarePublic('edit')
   def edit(self, info=None):
      """
-     special method allowing to update Info content from an external script
+     Special method allowing to update Info content from an external script
      """
      self.info = info
 
