@@ -69,28 +69,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>source = context.getSource()\n
-if source != None:\n
+if source is not None:\n
   return source\n
-else:\n
-  # calculate the source\n
-  user_site = None\n
-  # must use owner to know site letter\n
-  group_list = context.get_local_roles()\n
-  for group, role_list in group_list:\n
-    if \'Owner\' in role_list:\n
-      user_id = group\n
-\n
-  site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-  for site in site_list:\n
-    site_value = context.portal_categories.getCategoryValue(site)\n
-    context.log(\'site_value\',site_value)\n
-    if site_value.getVaultType().endswith(\'guichet\'):\n
-      user_site = site\n
-  if site is None:\n
-    from Products.ERP5Type.Message import Message\n
-    message = Message(domain="ui", message="The owner is not assigned to the right vault.")\n
-    raise ValueError,message\n
-  return site\n
+# calculate the source\n
+# must use owner to know site letter\n
+site_list = context.Baobab_getUserAssignedSiteList(user_id=context.Base_getOwnerId())\n
+for site in site_list:\n
+  if context.portal_categories.getCategoryValue(site).getVaultType().endswith(\'guichet\'):\n
+    return site\n
+from Products.ERP5Type.Message import Message\n
+message = Message(domain="ui", message="The owner is not assigned to the right vault.")\n
+raise ValueError,message\n
 </string> </value>
         </item>
         <item>
@@ -145,15 +134,9 @@ else:\n
                             <string>context</string>
                             <string>source</string>
                             <string>None</string>
-                            <string>user_site</string>
-                            <string>group_list</string>
-                            <string>_getiter_</string>
-                            <string>group</string>
-                            <string>role_list</string>
-                            <string>user_id</string>
                             <string>site_list</string>
+                            <string>_getiter_</string>
                             <string>site</string>
-                            <string>site_value</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>message</string>

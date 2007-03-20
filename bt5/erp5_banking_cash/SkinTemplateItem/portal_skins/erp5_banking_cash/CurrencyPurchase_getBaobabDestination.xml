@@ -71,7 +71,6 @@
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-\n
 var_ressource_title = context.getResourceTitle().lower()\n
 var_ressource_title = var_ressource_title.replace(" ", "_")\n
 encaisse_devise = "/encaisse_des_devises/%s/entrante" %(var_ressource_title)\n
@@ -80,32 +79,18 @@ encaisse_devise = "/encaisse_des_devises/%s/entrante" %(var_ressource_title)\n
 \n
 # first get the source of the document,\n
 # we will need to add the counter\n
-destination = context.getSource()\n
-baobab_destination = None\n
-\n
 # Get the history of the workflow\n
-user_id=\'None\'\n
-for workflow_item in context.Base_getWorkflowHistoryItemList(\'currency_purchase_workflow\',display=0):\n
-  \n
-  if workflow_item.getProperty(\'action\')==\'deliver_action\':\n
-    user_id=workflow_item.getProperty(\'actor\')\n
-\n
+user_id = context.Base_getLastUserIdByTransition(workflow_id=\'currency_purchase_workflow\', transition_id=\'deliver_action\')\n
+if user_id is None:\n
+  return None\n
 site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-\n
+destination = context.getSource()\n
 for site in site_list:\n
   site_value = context.portal_categories.getCategoryValue(site)\n
-  \n
   if site_value.getVaultType().endswith(\'guichet\') and destination in site:\n
-    baobab_destination = site + encaisse_devise\n
-    found = 1\n
-    \n
-    break\n
-\n
-  if not found:\n
-    msg = Message(domain=\'ui\', message=\'Your user is not well assigned\')\n
-    raise ValidationFailed, (msg,)\n
-\n
-return baobab_destination\n
+    return site + encaisse_devise\n
+msg = Message(domain=\'ui\', message=\'Your user is not well assigned\')\n
+raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -164,16 +149,13 @@ return baobab_destination\n
                             <string>context</string>
                             <string>var_ressource_title</string>
                             <string>encaisse_devise</string>
-                            <string>destination</string>
-                            <string>None</string>
-                            <string>baobab_destination</string>
                             <string>user_id</string>
-                            <string>_getiter_</string>
-                            <string>workflow_item</string>
+                            <string>None</string>
                             <string>site_list</string>
+                            <string>destination</string>
+                            <string>_getiter_</string>
                             <string>site</string>
                             <string>site_value</string>
-                            <string>found</string>
                             <string>msg</string>
                           </tuple>
                         </value>

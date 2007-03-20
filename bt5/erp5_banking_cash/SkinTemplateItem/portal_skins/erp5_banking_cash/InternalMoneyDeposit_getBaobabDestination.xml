@@ -68,37 +68,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string>destination = context.getDestination()\n
+if destination is None:\n
+  return None\n
+user_id = context.Base_getLastUserIdByTransition(workflow_id=\'currency_purchase_workflow\', transition_id=\'deliver_action\')\n
+if user_id is None:\n
+  return None\n
+site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+for site in site_list:\n
+  if context.portal_categories.getCategoryValue(site).getVaultType().endswith(\'guichet\') and (destination in site or site in destination):\n
+    return site + \'/encaisse_des_billets_et_monnaies/entrante\'\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-\n
-destination = context.getDestination()\n
-context.log(\'destination\',destination)\n
-baobab_destination = None\n
-# Get the history of the workflow\n
-user_id=None\n
-for workflow_item in context.Base_getWorkflowHistoryItemList(\'internal_money_deposit_workflow\',display=0):\n
-  context.log(\'workflow_item.getProperty(action)\',workflow_item.getProperty(\'action\'))\n
-  if workflow_item.getProperty(\'action\')==\'deliver_action\':\n
-    user_id=workflow_item.getProperty(\'actor\')\n
-\n
-if user_id is not None:\n
-  site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-  context.log(\'InternalMoneyDeposit_getBaobabDestination site_list\',site_list)\n
-  found = 0\n
-  for site in site_list:\n
-    context.log(\'site\',site)\n
-    site_value = context.portal_categories.getCategoryValue(site)\n
-    if site_value.getVaultType().endswith(\'guichet\') and (destination in site or site in destination):\n
-      baobab_destination = site + \'/encaisse_des_billets_et_monnaies/entrante\'\n
-      found = 1\n
-      context.log(\'baobab_destination\',baobab_destination)\n
-      break\n
-\n
-  if not found:\n
-    msg = Message(domain=\'ui\', message=\'Your user is not well assigned\')\n
-    raise ValidationFailed, (msg,)\n
-\n
-return baobab_destination\n
+msg = Message(domain=\'ui\', message=\'Your user is not well assigned\')\n
+raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -149,22 +132,18 @@ return baobab_destination\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>destination</string>
                             <string>None</string>
-                            <string>baobab_destination</string>
                             <string>user_id</string>
-                            <string>_getiter_</string>
-                            <string>workflow_item</string>
                             <string>site_list</string>
-                            <string>found</string>
+                            <string>_getiter_</string>
                             <string>site</string>
-                            <string>site_value</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>msg</string>
                           </tuple>
                         </value>
