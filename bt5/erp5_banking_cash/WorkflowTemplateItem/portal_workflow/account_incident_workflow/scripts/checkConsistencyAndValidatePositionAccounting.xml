@@ -77,6 +77,9 @@ from Products.ERP5Type.Message import Message\n
 transaction = state_change[\'object\']\n
 date = transaction.getStartDate()\n
 \n
+if transaction.getResourceValue() is None:\n
+  raise ValidationFailed, Message(domain="ui", message="No resource defined.")\n
+\n
 user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()\n
 site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
 # context.log(\'validateVaultBalance site_list\',site_list)\n
@@ -214,11 +217,11 @@ if debit:\n
                             <string>transaction</string>
                             <string>_getattr_</string>
                             <string>date</string>
+                            <string>None</string>
                             <string>user_id</string>
                             <string>context</string>
                             <string>site_list</string>
                             <string>source</string>
-                            <string>None</string>
                             <string>baobab_source</string>
                             <string>_getiter_</string>
                             <string>site</string>
