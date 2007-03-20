@@ -1413,6 +1413,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     module = portal.getDefaultModule('Organisation')
     self.organisation2 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
+    first_deleted_url = self.organisation2.getRelativeUrl()
     get_transaction().commit()
     self.tic()
     path_list = [self.organisation.getRelativeUrl()]
@@ -1454,6 +1455,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                          'immediateReindexObject',
                          'Folder_reindexObjectList',
                          'unindexObject',
+                         'recursiveImmediateReindexObject'))
+    # try to delete objects in double indexing state
+    module.manage_delObjects(ids=[self.organisation2.getId()])
+    self.playActivityList(('immediateReindexObject',
+                         'unindexObject',
                          'recursiveImmediateReindexObject',
                          'playBackRecordedObjectList',
                          'getId',
@@ -1473,10 +1479,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     module.manage_delObjects(ids=[self.next_deleted_organisation.getId()])
     get_transaction().commit()
     self.tic()
+    self.assertEquals(portal_catalog.getHotReindexingState(),
+                      HOT_REINDEXING_FINISHED_STATE)
     path_list = [self.organisation3.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
-    path_list = [deleted_url,next_deleted_url]
+    path_list = [first_deleted_url,deleted_url,next_deleted_url]
     self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.new_connection_id)
     self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.original_connection_id)
     
@@ -1645,4 +1653,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     self.assertEquals([select_], [x.getObject() for x in
                                    ctool(portal_type='Person', title='SELECT')])
+
+
+if __name__ == '__main__':
+    framework()
+else:
+    import unittest
+    def test_suite():
+        suite = unittest.TestSuite()
+        suite.addTest(unittest.makeSuite(TestERP5Catalog))
+        return suite
 
