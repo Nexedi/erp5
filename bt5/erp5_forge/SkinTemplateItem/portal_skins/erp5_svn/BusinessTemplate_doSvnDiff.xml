@@ -86,7 +86,7 @@ if modified != \'none\':\n
     print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
-      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
+      print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
     print \'</span><br/>\'\n
     print context.getPortalObject()["portal_subversion"].diffHTML(f, context)\n
     print \'<hr/><br/>\'\n
@@ -98,7 +98,7 @@ if added != \'none\':\n
     print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
-      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
+      print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
     print \'</span><br/>\'\n
     print "<span style=\'color: green;\'>File Added</span><br/><br/><hr/><br/>"\n
 \n
@@ -109,7 +109,7 @@ if removed != \'none\':\n
     print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
-      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
+      print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
     print \'</span><br/>\'\n
     print "<span style=\'color: red;\'>File Removed</span><br/><br/><hr/><br/>"\n
 \n

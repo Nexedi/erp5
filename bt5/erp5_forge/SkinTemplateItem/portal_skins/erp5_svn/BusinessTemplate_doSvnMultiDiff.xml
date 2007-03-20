@@ -84,7 +84,7 @@ if len(revisions_list) != 2:\n
 \n
 revisions_list.sort()\n
 \n
-diff = "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+context.getPortalObject()["portal_subversion"].relativeToAbsolute(file, context)+"\'>"+context.getPortalObject()["portal_subversion"].relativeToAbsolute(file, context)+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, file)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br/>"\n
+diff = "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+context.getPortalObject()["portal_subversion"].relativeToAbsolute(file, context)+"\'>"+context.getPortalObject()["portal_subversion"].relativeToAbsolute(file, context)+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, file)+"\'><img src=\'ERP5Subversion_imgs/edit.png\' border=\'0\'></a><br/>"\n
 diff += \'<hr/></b>\'\n
 diff += context.getPortalObject()["portal_subversion"].diffHTML(file, context, revision1=revisions_list[0], revision2=revisions_list[1])\n
 diff += \'</font>\'\n
