@@ -491,6 +491,24 @@ class ERP5TypeTestCase(PortalTestCase):
       self.assertEquals(len(a), len(b), msg)
     assertSameSet = failIfDifferentSet
 
+    def assertWorkflowTransitionFails(self, object, workflow_id, transition_id, error_message=None):
+      """
+        Check that passing given transition from given workflow on given object
+        raises ValidationFailed.
+        Do sanity checks (workflow history length increased by one, simulation
+        state unchanged).
+        If error_message is provided, it is asserted to be equal to the last
+        workflow history error message.
+      """
+      reference_history_length = len(self.workflow_tool.getInfoFor(ob=self.account_incident, name='history', wf_id=workflow_id))
+      reference_workflow_state = object.getSimulationState()
+      self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.account_incident, transition_id, wf_id=workflow_id)
+      workflow_history = self.workflow_tool.getInfoFor(ob=self.account_incident, name='history', wf_id=workflow_id)
+      self.assertEqual(len(workflow_history), reference_history_length + 1)
+      if error_message is not None:
+        self.assertEqual(str(workflow_history[-1]['error_message']), error_message)
+      self.assertEqual(object.getSimulationState(), reference_workflow_state)
+
 def setupERP5Site( business_template_list=(),
                    app=None,
                    portal_name=portal_name,
