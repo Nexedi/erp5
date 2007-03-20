@@ -223,7 +223,8 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
                                           portal_type='Account Incident', 
                                           source_total_asset_price=52400.0,
                                           description='test',
-                                          destination_payment_value=self.bank_account_1)
+                                          destination_payment_value=self.bank_account_1,
+                                          resource_value=self.currency_1)
     # execute tic
     self.stepTic()
     # set source reference
