@@ -142,7 +142,8 @@ class SQLQueue(RAMQueue):
           # For the other exceptions, put it into an error state.
           activity_tool.SQLQueue_assignMessage(uid = line.uid, 
                                                processing_node = INVOKE_ERROR_STATE)
-          LOG('SQLQueue', WARNING, 'Error in ActivityTool.invoke', e=sys.exc_info())
+          LOG('SQLQueue', WARNING,
+              'Error in ActivityTool.invoke', error=sys.exc_info())
 
         get_transaction().commit()
         return 0
