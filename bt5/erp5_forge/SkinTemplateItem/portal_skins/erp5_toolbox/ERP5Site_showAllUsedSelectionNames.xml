@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># This tool is able to check, if selection_name in listboxes in forms\n
+# are unique "enough".\n
+# It shall print nothing on properly made site, which will mean\n
+# that one selection_name is set in unique named form.\n
+# Script supports same-named form in many portal_skins.\n
+# but only if selection name appears more then once.\n
+# It is based on ERP5Site_checkXhtmlForm\n
+# To check your installation run it as:\n
+#  portal_skins/ERP5Site_showAllUsedSelectionNames\n
+#   default invocation\n
+#  portal_skins/ERP5Site_showAllUsedSelectionNames?all_selections=1\n
+#   will show even proper selections, you can check if selection_name\n
+#   is same in other skins for some form\n
+\n
+o = context\n
+\n
+def recurse(o, callback, seldict):\n
+  for obj in o.objectValues():\n
+    if obj.meta_type == \'ERP5 Form\':\n
+      callback(obj,seldict)\n
+    elif obj.meta_type == \'Folder\':\n
+      recurse(obj, callback, seldict)\n
+\n
+def callback(o,seldict):\n
+  pt = o.pt\n
+  listbox_count = 0\n
+  if len(o.get_fields()) != 0:\n
+    if pt not in (\'documentation_template\', \'sort_list_dialog\', \'configure_list_dialog\'):\n
+      for group in o.get_groups(include_empty = 1):\n
+        fields = o.get_fields_in_group(group)\n
+        for field in fields:\n
+          if field.meta_type == \'ListBox\':\n
+            listbox_count = listbox_count + 1\n
+            form_name = o.absolute_url() # TODO it could be done much better\n
+            # assumes that name of form is unique enough\n
+            form_name = form_name[form_name.rfind(\'/\')+1:]\n
+            if seldict.has_key(field.get_value(\'selection_name\')):\n
+              old_list = seldict[field.get_value(\'selection_name\')]\n
+              if form_name not in old_list:\n
+                old_list.append(form_name)\n
+              seldict[field.get_value(\'selection_name\')] = old_list # TODO update to reimplement\n
+            else:\n
+              old_list = [form_name]\n
+              seldict[field.get_value(\'selection_name\')] = old_list\n
+\n
+seldict = {}\n
+recurse(o, callback, seldict)\n
+\n
+for selection_name in seldict.keys():\n
+  if len(seldict[selection_name]) != 1 or all_selections:\n
+    print "\'%s\' [%s]"%(selection_name,len(seldict[selection_name]))\n
+    for form_name in seldict[selection_name]:\n
+      print "\\t%s"%(form_name,)\n
+return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>all_selections=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>all_selections</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>context</string>
+                            <string>o</string>
+                            <string>recurse</string>
+                            <string>callback</string>
+                            <string>seldict</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>selection_name</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>form_name</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_showAllUsedSelectionNames</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
