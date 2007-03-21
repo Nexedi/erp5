@@ -77,7 +77,25 @@ if len(user_site_list)>0:\n
   context.setSite(site_url)\n
 \n
 from DateTime import DateTime\n
-context.setStartDate(DateTime(DateTime().Date()))\n
+start_date = DateTime(DateTime().Date())\n
+context.setStartDate(start_date)\n
+\n
+# Set a reference\n
+site_id = context.getSiteId()\n
+\n
+counter_date_list = [x.getObject() for x  in context.portal_catalog(\n
+                                           portal_type=\'Counter Date\',site_id=site_id,\n
+                                           so_order=[(\'start_date\',\'descending\')],limit=10,\n
+                                           simulation_state=(\'open\',\'closed\'))]\n
+previous_reference = None\n
+if len(counter_date_list)>0:\n
+  previous_counter_date = counter_date_list[0]\n
+  previous_reference = previous_counter_date.getReference()\n
+if previous_reference not in (\'\',None):\n
+  reference = \'%i\' % (int(previous_reference)+1)\n
+else:\n
+  reference = \'1\'\n
+context.setReference(reference)\n
 
 
 ]]></string> </value>
@@ -137,6 +155,18 @@ context.setStartDate(DateTime(DateTime().Date()))\n
                             <string>site</string>
                             <string>site_url</string>
                             <string>DateTime</string>
+                            <string>start_date</string>
+                            <string>site_id</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>counter_date_list</string>
+                            <string>None</string>
+                            <string>previous_reference</string>
+                            <string>previous_counter_date</string>
+                            <string>int</string>
+                            <string>reference</string>
                           </tuple>
                         </value>
                     </item>

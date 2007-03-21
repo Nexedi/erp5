@@ -105,8 +105,6 @@ if vault_report_type is None or vault_report_type==\'inventory\':\n
 # add to get by portal type inventory\n
 if kw.has_key("portal_type"):\n
   inventory_kw[\'portal_type\'] = kw[\'portal_type\']\n
-if kw.has_key("explanation_portal_type"):\n
-  inventory_kw[\'explanation_portal_type\'] = kw[\'explanation_portal_type\']\n
 if kw.has_key("omit_input"):\n
   inventory_kw[\'omit_input\'] = kw[\'omit_input\']\n
 if kw.has_key("omit_output"):\n

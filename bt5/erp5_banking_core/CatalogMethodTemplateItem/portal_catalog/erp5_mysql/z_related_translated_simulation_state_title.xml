@@ -45,7 +45,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>table_0</string>
+<string>table_0</string>
                           </list>
                         </value>
                     </item>
@@ -106,7 +106,7 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.original_message = catalog.simulation_state_title\n
+<dtml-var table_0>.original_message = catalog.simulation_state\n
  AND <dtml-var table_0>.message_context = "simulation_state_title"\n
  AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">
 
@@ -146,7 +146,7 @@
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.original_message = catalog.simulation_state_title\n
+<dtml-var table_0>.original_message = catalog.simulation_state\n
  AND <dtml-var table_0>.message_context = "simulation_state_title"\n
  AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">
 

@@ -19,12 +19,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>The date is open to customers</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>open</string> </value>
+            <value> <string>deleted</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -34,15 +40,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Open</string> </value>
+            <value> <string>Deleted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>close</string>
-                <string>close_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -71,12 +74,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>AccessContentsInformation</string> </key>
+                    <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>
@@ -90,9 +91,7 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>

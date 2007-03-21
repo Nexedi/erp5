@@ -85,7 +85,7 @@ requested_dict = {}\n
 # test all movement\n
 tmp_list = context.contentValues(filter={\'portal_type\': portal_type})\n
 #context.log(\'tmp_list\', str((tmp_list, portal_type, context)))\n
-#context.log(\'source\',source)\n
+context.log(\'source\',source)\n
 line_list = []\n
 for l in tmp_list :\n
   # The source can be different for every line (due to getBaobabSource approach)\n
@@ -114,18 +114,20 @@ for line in line_list :\n
     for cell in line.objectValues() :\n
       variation_text = cell.getVariationText()\n
       #context.log(\'check cell : \', str((source_counter, line_resource, variation_text)))\n
-      inventory_value = context.portal_simulation.getFutureInventory(node=source_counter, resource = line_resource,\n
+      inventory_value = context.portal_simulation.getCurrentInventory(node=source_counter, resource = line_resource,\n
           variation_text = variation_text)\n
       #context.log(\'cell quantity\', cell.getQuantity())\n
       #context.log(\'inventory value\', inventory_value)\n
       if inventory_value - cell.getQuantity() < 0:\n
+        context.log(\'bad value for:\',context.portal_simulation.getCurrentInventory(node=source_counter, resource = line_resource,\n
+            variation_text = variation_text,src__=1))\n
         msg = Message(domain=\'ui\', message=\'Insufficient balance for $resource, letter $letter, status $status and variation $variation\', mapping={\'resource\':cell.getResourceTranslatedTitle(),\n
                                                                                                                         \'letter\': cell.getEmissionLetterTitle(),\n
                                                                                                                         \'status\': cell.getCashStatusTranslatedTitle(),\n
                                                                                                                         \'variation\':cell.getVariationTitle()})\n
         raise ValidationFailed, (msg,)\n
   else :\n
-    inventory_value = context.portal_simulation.getFutureInventory(section=source_counter, resource=line_resource)\n
+    inventory_value = context.portal_simulation.getCurrentInventory(section=source_counter, resource=line_resource)\n
     if inventory_value - line.getQuantity() < 0 :\n
       msg = Message(domain=\'ui\', message=\'Insufficient balance for $resource, letter $letter, status $status and variation $variation\', mapping={\'resource\':line.getResourceTranslatedTitle(),\n
                                                                                                                       \'letter\': line.getEmissionLetterTitle(),\n
