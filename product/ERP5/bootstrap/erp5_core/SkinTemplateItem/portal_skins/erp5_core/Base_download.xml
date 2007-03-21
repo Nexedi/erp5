@@ -73,7 +73,8 @@ if hasattr(context,\'getContentType\'):\n
   request.RESPONSE.setHeader(\'Content-type\', context.getContentType())\n
 else:\n
   request.RESPONSE.setHeader(\'Content-type\', context.getFormat())\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % context.title_or_id())\n
+file_name = context.getTitle() or context.getSourceReference()\n
+request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % file_name)\n
 return context.manage_FTPget()\n
 </string> </value>
         </item>
@@ -121,6 +122,7 @@ return context.manage_FTPget()\n
                             <string>context</string>
                             <string>request</string>
                             <string>hasattr</string>
+                            <string>file_name</string>
                           </tuple>
                         </value>
                     </item>
