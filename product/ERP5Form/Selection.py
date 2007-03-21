@@ -4,10 +4,10 @@
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -174,7 +174,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
               setattr(self, k, v)
 
     def __call__(self, method = None, context=None, REQUEST=None):
-        #LOG("Selection", 0, str((self.__dict__))
+        #LOG("Selection", 0, str((self.__dict__)))
         #LOG("Selection", 0, str(method))
         #LOG('Selection', 0, "self.invert_mode = %s" % repr(self.invert_mode))
         kw = self.params.copy()
