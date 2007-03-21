@@ -38,6 +38,7 @@
  </portal_type>
  <portal_type id="Counter Date">
   <item>Task</item>
+  <item>Reference</item>
  </portal_type>
  <portal_type id="Preference">
   <item>RenderingPreference</item>
