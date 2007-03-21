@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-params = portal.ERP5Accounting_getParams(selection)\n
+params = portal.ERP5Accounting_getParams(selection_name)\n
 params[\'omit_input\'] = omit_input\n
 params[\'omit_output\'] = omit_output\n
 \n
@@ -95,7 +95,7 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, omit_input=0, omit_output=0, **kw</string> </value>
+            <value> <string>brain=None, selection=None, omit_input=0, omit_output=0, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -115,7 +115,7 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -125,6 +125,7 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
                             <string>selection</string>
                             <string>omit_input</string>
                             <string>omit_output</string>
+                            <string>selection_name</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -148,6 +149,7 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
                 <none/>
                 <int>0</int>
                 <int>0</int>
+                <none/>
               </tuple>
             </value>
         </item>

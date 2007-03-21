@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-params = portal.ERP5Accounting_getParams(selection)\n
+params = portal.ERP5Accounting_getParams(selection_name)\n
 \n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
@@ -99,7 +99,7 @@ if kw.get(\'from_date_summary\', 0) and params.has_key(\'from_date\'):\n
 return portal.portal_simulation.getInventoryAssetPrice(\n
               omit_input=omit_input,\n
               omit_output=omit_output,\n
-              selection_domain=selection.getDomain(),\n
+              selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
               **params)\n
 </string> </value>
         </item>
@@ -117,7 +117,7 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, omit_input=0, omit_output=0, **kw</string> </value>
+            <value> <string>selection=None, omit_input=0, omit_output=0, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -145,7 +145,7 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -154,6 +154,7 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
                             <string>selection</string>
                             <string>omit_input</string>
                             <string>omit_output</string>
+                            <string>selection_name</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -174,8 +175,10 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <int>0</int>
                 <int>0</int>
+                <none/>
               </tuple>
             </value>
         </item>

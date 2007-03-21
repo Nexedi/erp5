@@ -89,7 +89,14 @@ if not ignore_cache:\n
 \n
 params = {}\n
 selection_params = {}\n
-if selection is not None:\n
+if selection_name is not None:\n
+  # check if first parameter is used for selection instance\n
+  if not isinstance(selection_name, str):\n
+    context.log(\'Using selection parameter is deprecated. Please use selection_name instead.\')\n
+    selection_name = selection_name.getName()\n
+  selection_params = context.portal_selections.getSelectionParamsFor(selection_name)\n
+elif selection is not None:\n
+  context.log(\'Using selection parameter is deprecated. Please use selection_name instead.\')\n
   selection_params = selection.getParams()\n
 preference = context.getPortalObject().portal_preferences\n
 \n
@@ -161,7 +168,7 @@ return dict(params)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, wants_from_date=0, ignore_cache=0</string> </value>
+            <value> <string>selection_name=None, wants_from_date=0, ignore_cache=0, selection=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -181,15 +188,16 @@ return dict(params)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>selection</string>
+                            <string>selection_name</string>
                             <string>wants_from_date</string>
                             <string>ignore_cache</string>
+                            <string>selection</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
@@ -197,6 +205,8 @@ return dict(params)\n
                             <string>dict</string>
                             <string>params</string>
                             <string>selection_params</string>
+                            <string>isinstance</string>
+                            <string>str</string>
                             <string>preference</string>
                             <string>from_date</string>
                             <string>_write_</string>
@@ -224,6 +234,7 @@ return dict(params)\n
                 <none/>
                 <int>0</int>
                 <int>0</int>
+                <none/>
               </tuple>
             </value>
         </item>

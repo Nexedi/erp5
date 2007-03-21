@@ -72,7 +72,7 @@
 
 from Products.ERP5Type.Message import Message\n
 portal = context.getPortalObject()\n
-params = portal.ERP5Accounting_getParams(selection)\n
+params = portal.ERP5Accounting_getParams(selection_name)\n
 N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 \n
 if params.get(\'precision\', None) is not None:\n
@@ -151,20 +151,20 @@ if from_date:\n
       previous_balance.edit(Movement_getExplanationTitle=\'\')\n
 \n
     new_result = [previous_balance]\n
-    if selection.getParams().get(\'hide_grouping\'):\n
+    if context.portal_selections.getSelectionParamsFor(selection_name).get(\'hide_grouping\'):\n
       params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
     new_result.extend(\n
       portal.portal_simulation.getMovementHistoryList(\n
                    from_date=from_date,\n
                    initial_running_total_price=net_balance,\n
                    # initial_running_quantity=net_balance, TODO\n
-                   selection_domain=selection.getDomain(),\n
+                   selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
                    selection_domain_join_column=\'section_uid\',\n
                    sort_on=sort_on,\n
                    **params))\n
     return new_result\n
 \n
-if selection.getParams().get(\'hide_grouping\'):\n
+if context.portal_selections.getSelectionParamsFor(selection_name).get(\'hide_grouping\'):\n
   params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
 \n
 # We try not to convert to a list, hence the copy & paste\n
@@ -172,7 +172,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                  from_date=from_date,\n
                  initial_running_total_price=net_balance,\n
                  # initial_running_quantity=net_balance, TODO\n
-                 selection_domain=selection.getDomain(),\n
+                 selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
                  selection_domain_join_column=\'section_uid\',\n
                  sort_on=sort_on,\n
                  **params)\n
@@ -194,7 +194,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, **kw</string> </value>
+            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -214,7 +214,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -225,6 +225,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>node_category</string>
                             <string>node_category_strict_membership</string>
                             <string>from_date</string>
+                            <string>selection_name</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
@@ -261,6 +262,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
               <tuple>
                 <none/>
                 <list/>
+                <none/>
                 <none/>
                 <none/>
                 <none/>

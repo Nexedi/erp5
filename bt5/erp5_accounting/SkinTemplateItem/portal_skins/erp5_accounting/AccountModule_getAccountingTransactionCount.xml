@@ -68,22 +68,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kwd = context.ERP5Accounting_getParams(selection)\n
+            <value> <string>kwd = context.ERP5Accounting_getParams(selection_name)\n
 \n
 # XXX missing :(\n
 # this may fail if we have movements on something else than accounts\n
 #kwd[\'where_expression\'] = \'node.parent_uid = %s\' context.account_module.getUid()\n
 \n
 if kw.get(\'stat\'):\n
-  selection_params = selection.getParams()\n
-  if selection.getDomain():\n
-    kwd[\'selection_domain\'] = selection.getDomain()\n
-  if selection.getReport():\n
-    kwd[\'selection_report\'] = selection.getReport()\n
+  selection_params = context.portal_selections.getSelectionParamsFor(selection_name)\n
+  selection_domain = context.portal_selections.getSelectionDomainDictFor(selection_name)\n
+  selection_report = context.portal_selections.getSelectionReportDictFor(selection_name)\n
+  if selection_domain:\n
+    kwd[\'selection_domain\'] = selection_domain\n
+  if selection_report:\n
+    kwd[\'selection_report\'] = selection_report\n
   if selection_params.get(\'closed_summary\'):\n
     kwd[\'closed_summary\'] = selection_params[\'closed_summary\']\n
-  if selection.isInvertMode():\n
-    kwd[\'stock.node_uid\'] = selection.getInvertModeUidList()\n
+  if context.portal_selections.getSelectionInvertModeFor(selection_name):\n
+    kwd[\'stock.node_uid\'] = context.portal_selections.getSelectionInvertModeUidListFor(selection_name)\n
   # is list filtered ?\n
   elif \'title\' in selection_params or \\\n
      \'preferred_gap_id\' in selection_params or\\\n
@@ -91,7 +93,7 @@ if kw.get(\'stat\'):\n
      \'transalated_validation_state_title\' in selection_params:\n
     # if yes, apply the same filter here\n
     kwd[\'stock.node_uid\'] = [x.uid for x in\n
-                         context.portal_catalog(**selection.getParams())]\n
+                         context.portal_catalog(**selection_params)]\n
   return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
 \n
 kwd[\'stock.node_uid\'] = brain.uid\n
@@ -113,7 +115,7 @@ return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, brain, **kw</string> </value>
+            <value> <string>selection=None, brain=None, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -133,7 +135,7 @@ return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -141,11 +143,14 @@ return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
                           <tuple>
                             <string>selection</string>
                             <string>brain</string>
+                            <string>selection_name</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>kwd</string>
                             <string>selection_params</string>
+                            <string>selection_domain</string>
+                            <string>selection_report</string>
                             <string>_write_</string>
                             <string>_getitem_</string>
                             <string>append</string>
@@ -164,7 +169,11 @@ return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

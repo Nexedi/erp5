@@ -83,7 +83,7 @@ if not id:\n
 kwd[\'select_expression\'] = "\'%s\' AS accounting_transaction_line_currency" % id\n
 \n
 # precision for editable fields\n
-params = context.ERP5Accounting_getParams(selection)\n
+params = context.ERP5Accounting_getParams(selection_name)\n
 if params.get(\'precision\', None) is not None:\n
   context.REQUEST.set(\'precision\', params[\'precision\'])\n
 \n
@@ -117,7 +117,7 @@ return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sort_on=None, selection=None, **kwd</string> </value>
+            <value> <string>sort_on=None, selection=None, selection_name=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -137,7 +137,7 @@ return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -145,6 +145,7 @@ return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
                           <tuple>
                             <string>sort_on</string>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>kwd</string>
                             <string>_getitem_</string>
                             <string>currency</string>
@@ -171,6 +172,7 @@ return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
               </tuple>
