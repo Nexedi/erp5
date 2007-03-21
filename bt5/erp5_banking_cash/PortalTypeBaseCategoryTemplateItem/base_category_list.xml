@@ -2,6 +2,9 @@
  <portal_type id="Account Incident">
   <item>source_decision</item>
  </portal_type>
+ <portal_type id="Bank Account">
+  <item>site</item>
+ </portal_type>
  <portal_type id="Cash Container Item">
   <item>aggregate</item>
  </portal_type>
