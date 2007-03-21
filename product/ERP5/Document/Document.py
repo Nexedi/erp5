@@ -953,7 +953,7 @@ class Document(XMLObject, UrlMixIn):
     return self.convert(format='html')
 
   # Base format support
-  security.declareProtected(Permissions.View, 'convertToBase')
+  security.declareProtected(Permissions.View, 'convertToBaseFormat')
   def convertToBaseFormat(self, REQUEST=None):
     """
       Converts the content of the document to a base format
