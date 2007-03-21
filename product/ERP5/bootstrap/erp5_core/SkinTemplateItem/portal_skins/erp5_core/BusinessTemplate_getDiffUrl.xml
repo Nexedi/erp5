@@ -101,7 +101,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection</string> </value>
+            <value> <string>brain, selection, selection_name</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,7 +121,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -129,6 +129,7 @@ else:\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>_getattr_</string>
                             <string>hasattr</string>
                             <string>_getitem_</string>

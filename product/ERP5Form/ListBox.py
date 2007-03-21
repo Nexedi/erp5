@@ -4,10 +4,10 @@
 #                    Yoshinori Okuji <yo@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -1375,7 +1375,8 @@ class ListBoxRenderer:
       else:
         if callable(stat_method):
           try:
-            original_value = stat_method(selection = selection)
+            original_value = stat_method(selection = selection,
+                                         selection_name = selection.getName())
             processed_value = original_value
           except (ConflictError, RuntimeError):
             raise
@@ -1810,7 +1811,8 @@ class ListBoxRendererLine:
               new_param_dict['closed_summary'] = not self.isOpen()
               selection.edit(params = new_param_dict, report = self.getDomainSelection())
               try:
-                original_value = stat_method(selection = selection)
+                original_value = stat_method(selection = selection,
+                                             selection_name = selection.getName())
                 processed_value = original_value
               except (ConflictError, RuntimeError):
                 raise
@@ -1870,7 +1872,9 @@ class ListBoxRendererLine:
       if callable(original_value):
         try:
           try:
-            original_value = original_value(brain = self.getBrain(), selection = selection)
+            original_value = original_value(brain = self.getBrain(),
+                                            selection = selection,
+                                            selection_name = selection.getName())
             processed_value = original_value
           except TypeError:
             original_value = original_value()
@@ -1962,7 +1966,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
 
       if url_method is not None:
         try:
-          url = url_method(brain = brain, selection = selection)
+          url = url_method(brain = brain, selection = selection,
+                           selection_name = selection.getName())
         except (ConflictError, RuntimeError):
           raise
         except:
