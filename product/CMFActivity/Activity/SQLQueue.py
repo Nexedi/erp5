@@ -125,7 +125,7 @@ class SQLQueue(RAMQueue):
         activity_tool.invoke(m) # Try to invoke the message
         if m.is_executed:                                          # Make sure message could be invoked
           get_transaction().commit()                                        # If successful, commit
-      except:
+      except Exception, exc:
         # If an exception occurs, abort the transaction to minimize the impact,
         try:
           get_transaction().abort()
@@ -134,7 +134,7 @@ class SQLQueue(RAMQueue):
           LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
           pass
 
-        if issubclass(sys.exc_info()[0], ConflictError):
+        if issubclass(exc, ConflictError):
           # If a conflict occurs, delay the operation.
           activity_tool.SQLQueue_setPriority(uid = line.uid, date = next_processing_date,
                                              priority = line.priority)

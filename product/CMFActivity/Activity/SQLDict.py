@@ -305,7 +305,7 @@ class SQLDict(RAMDict):
             break
         else:
           get_transaction().abort()
-      except:
+      except Exception, exc:
         # If an exception occurs, abort the transaction to minimize the impact,
         try:
           get_transaction().abort()
@@ -313,7 +313,7 @@ class SQLDict(RAMDict):
           # Unfortunately, database adapters may raise an exception against abort.
           LOG('SQLDict', WARNING, 'abort failed, thus some objects may be modified accidentally')
           pass
-        if issubclass(sys.exc_info()[0], ConflictError):
+        if issubclass(exc, ConflictError):
           # For a conflict error, simply delay the operations.
           for uid_list in uid_list_list:
             if len(uid_list):
