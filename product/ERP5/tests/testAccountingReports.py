@@ -362,13 +362,21 @@ class TestAccountingReports(AccountingTestCase):
     self.checkLineProperties(line_list[-1], debit=100, credit=100)
 
 
-  def createAccountStatementDataSet(self):
+  def createAccountStatementDataSet(self, use_two_bank_accounts=1):
     """Create transactions for Account statement report.
+
+    use_two_bank_accounts -- use two different bank accounts, otherwise always
+    use one bank account for all created transactions.
     """
     account_module = self.account_module
-
-    bank1 = self.section.newContent(portal_type='Bank Account')
+    bank1 = self.section.newContent(portal_type='Bank Account', title='Bank1')
     bank1.validate()
+    if use_two_bank_accounts:
+      bank2 = self.section.newContent(portal_type='Bank Account',
+                                      title='Bank2')
+      bank2.validate()
+    else:
+      bank2 = bank1
     
     # before
     t1 = self._makeOne(
@@ -429,6 +437,7 @@ class TestAccountingReports(AccountingTestCase):
               title='Transaction 5',
               source_reference='5',
               simulation_state='delivered',
+              source_payment_value=bank2,
               destination_section_value=self.person_module.john_smith,
               start_date=DateTime(2006, 2, 2, 0, 4),
               lines=(dict(source_value=account_module.receivable,
@@ -441,6 +450,7 @@ class TestAccountingReports(AccountingTestCase):
               title='Transaction 6',
               destination_reference='6',
               simulation_state='delivered',
+              destination_payment_value=bank2,
               source_section_value=self.organisation_module.client_1,
               stop_date=DateTime(2006, 2, 2, 0, 5),
               lines=(dict(destination_value=account_module.receivable,
@@ -454,6 +464,7 @@ class TestAccountingReports(AccountingTestCase):
               title='Transaction 7',
               source_reference='7',
               simulation_state='stopped',
+              source_payment_value=bank2,
               destination_section_value=self.organisation_module.client_1,
               start_date=DateTime(2006, 2, 2, 0, 6),
               lines=(dict(source_value=account_module.receivable,
@@ -467,6 +478,7 @@ class TestAccountingReports(AccountingTestCase):
               title='Transaction 8',
               source_reference='8',
               simulation_state='delivered',
+              source_payment_value=bank2,
               destination_section_value=self.organisation_module.client_1,
               start_date=DateTime(2006, 2, 3),
               lines=(dict(source_value=account_module.receivable,
@@ -737,7 +749,7 @@ class TestAccountingReports(AccountingTestCase):
   def testTrialBalance(self):
     # Simple test of trial balance
     # we will use the same data set as account statement
-    self.createAccountStatementDataSet()
+    self.createAccountStatementDataSet(use_two_bank_accounts=0)
 
     # set request variables and render
     request_form = self.portal.REQUEST.form
@@ -772,9 +784,10 @@ class TestAccountingReports(AccountingTestCase):
         final_balance_if_debit=0, final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[1], node_id='2',
-        node_title='Fixed Assets', initial_debit_balance=0, initial_credit_balance=0,
-        debit=0, credit=0, final_debit_balance=0, final_credit_balance=0,
-        final_balance_if_debit=0, final_balance_if_credit=0)
+        node_title='Fixed Assets', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=0, final_debit_balance=0,
+        final_credit_balance=0, final_balance_if_debit=0,
+        final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[2], node_id='3',
         # XXX isn't "Inventory" a better name here ?
@@ -806,7 +819,7 @@ class TestAccountingReports(AccountingTestCase):
         final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[7], node_id='5',
-        node_title='Bank', initial_debit_balance=0,
+        node_title='Bank (Bank1)', initial_debit_balance=0,
         initial_credit_balance=0, debit=0, credit=3300, final_debit_balance=0,
         final_credit_balance=3300, final_balance_if_debit=0,
         final_balance_if_credit=3300,)
@@ -829,7 +842,177 @@ class TestAccountingReports(AccountingTestCase):
         credit=3600, final_debit_balance=3600, final_credit_balance=3600,
         final_balance_if_debit=None, final_balance_if_credit=None)
 
+    
+  def testTrialBalanceExpandAccounts(self):
+    # Test of "expand accounts" feature of trial balance
+    self.createAccountStatementDataSet()
 
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 1
+
+    report_section_list = self.getReportSectionList(
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+ 
+    self.assertEquals(6, len(data_line_list))
+
+    # account are sorted by GAP Id
+    self.checkLineProperties(data_line_list[0], node_id='40',
+        node_title='Payable (Client 1)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=200, credit=100,
+        final_debit_balance=200, final_credit_balance=100,
+        final_balance_if_debit=100, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[1], node_id='41',
+        node_title='Receivable (Client 1)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=1000, credit=200,
+        final_debit_balance=1000, final_credit_balance=200,
+        final_balance_if_debit=800, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[2], node_id='41',
+        node_title='Receivable (Client 2)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=400, credit=0, final_debit_balance=400,
+        final_credit_balance=0, final_balance_if_debit=400,
+        final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[3], node_id='41',
+        node_title='Receivable (John Smith)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=500, credit=0,
+        final_debit_balance=500, final_credit_balance=0,
+        final_balance_if_debit=500, final_balance_if_credit=0,)
+    
+    self.checkLineProperties(data_line_list[4], node_id='5',
+        node_title='Bank (Bank1)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=700,
+        final_debit_balance=0, final_credit_balance=700,
+        final_balance_if_debit=0, final_balance_if_credit=700,)
+    
+    self.checkLineProperties(data_line_list[5], node_id='5',
+        node_title='Bank (Bank2)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=1100,
+        final_debit_balance=0, final_credit_balance=1100,
+        final_balance_if_debit=0, final_balance_if_credit=1100,)
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=0, initial_credit_balance=0, debit=2100,
+        credit=2100, final_debit_balance=2100, final_credit_balance=2100,
+        final_balance_if_debit=None, final_balance_if_credit=None)
+
+
+  def testTrialBalancePreviousPeriod(self):
+    # Test of trial balance and previous period
+    self.createAccountStatementDataSet(use_two_bank_accounts=0)
+    account_module = self.portal.account_module
+    # previous period
+    self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction -1',
+              source_reference='-1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2005, 2, 2),
+              lines=(dict(source_value=account_module.goods_purchase,
+                          source_debit=600.0),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=600.0),))
+  
+    # balance transaction
+    self._makeOne(
+              portal_type='Balance Transaction',
+              title='Transaction 0',
+              source_reference='0',
+              simulation_state='delivered',
+              start_date=DateTime(2006, 1, 1),
+              lines=(dict(source_value=account_module.payable,
+                          source_credit=600.0,
+                          destination_section_value=
+                              self.organisation_module.client_1,),
+                     dict(source_value=account_module.receivable,
+                          source_debit=400.0,
+                          destination_section_value=
+                              self.organisation_module.client_2,),
+                     dict(source_value=account_module.equity,
+                          source_debit=200)))
+    
+    # one more transaction in the period, because our testing data does not
+    # include the sales
+    self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Transaction 0.5',
+              source_reference='0.5',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_2,
+              start_date=DateTime(2006, 1, 1),
+              lines=(dict(source_value=account_module.goods_sales,
+                          source_credit=50.0),
+                     dict(source_value=account_module.receivable,
+                          source_debit=50.0),))
+    
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+
+    report_section_list = self.getReportSectionList(
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+ 
+    self.assertEquals(5, len(data_line_list))
+
+    # account are sorted by GAP Id
+    # TODO: sort by "gap normalized path"
+    self.checkLineProperties(data_line_list[0], node_id='1',
+        node_title='Equity', initial_debit_balance=200,
+        initial_credit_balance=0, debit=0, credit=0,
+        final_debit_balance=200, final_credit_balance=0,
+        final_balance_if_debit=200, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[1], node_id='40',
+        node_title='Payable', initial_debit_balance=0,
+        initial_credit_balance=600, debit=200, credit=100,
+        final_debit_balance=200, final_credit_balance=700,
+        final_balance_if_debit=0, final_balance_if_credit=500)
+    
+    self.checkLineProperties(data_line_list[2], node_id='41',
+        node_title='Receivable', initial_debit_balance=400,
+        initial_credit_balance=0, debit=1950, credit=200,
+        final_debit_balance=2350, final_credit_balance=200,
+        final_balance_if_debit=2150, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[3], node_id='5',
+        node_title='Bank (Bank1)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=1800,
+        final_debit_balance=0, final_credit_balance=1800,
+        final_balance_if_debit=0, final_balance_if_credit=1800,)
+    
+    self.checkLineProperties(data_line_list[4], node_id='7',
+        node_title='Goods Sales', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=50,
+        final_debit_balance=0, final_credit_balance=50,
+        final_balance_if_debit=0, final_balance_if_credit=50,)
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=600, initial_credit_balance=600, debit=2150,
+        credit=2150, final_debit_balance=2750, final_credit_balance=2750,
+        final_balance_if_debit=None, final_balance_if_credit=None)
+
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccountingReports))
