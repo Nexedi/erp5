@@ -1135,7 +1135,103 @@ class TestPropertySheet:
       self.assertFalse(person.hasTitle())
       self.assertFalse(person.__dict__.has_key('title'))
 
+    def test_24_relatedValueAccessor(self, quiet=quiet, run=run_all_test):
+      """
+      The purpose of this test is to make sure that category related 
+      accessors work as expected.
 
+      The test is implemented for both Category and Value
+      accessors.
+
+      Test that checked_permission is well configured for View permission
+      """
+      if not run: return
+
+      if not quiet:
+        message = 'Test Related Value Accessors'
+        ZopeTestCase._print('\n '+message)
+        LOG('Testing... ', 0, message)
+
+      # Create a few categories
+      region_category = self.getPortal().portal_categories.region
+      alpha = region_category.newContent(
+              portal_type = "Category",
+              id =          "alpha",
+              title =       "Alpha System", )
+      alpha_path = alpha.getRelativeUrl()
+
+      self.assertEquals(alpha.getRelativeUrl(), 'region/alpha')
+
+      # Create a new person
+      module = self.getPersonModule()
+      doo = module.newContent(portal_type='Person', title='Doo')
+      bar = module.newContent(portal_type='Person', title='Bar')
+      foo = module.newContent(portal_type='Person', title='Foo')
+
+      doo.setDefaultRegionValue(alpha)
+      doo_path = doo.getRelativeUrl()
+      bar.setDefaultRegionValue(alpha)
+      bar_path = bar.getRelativeUrl()
+      foo.setDefaultRegionValue(alpha)
+      foo.manage_permission('View', roles=[], acquire=0)
+      foo_path = foo.getRelativeUrl()
+
+      # Make sure categories are reindexed
+      get_transaction().commit()
+      self.tic() 
+
+      # Related accessor
+      self.assertSameSet(alpha.getRegionRelatedList(), 
+                        [alpha_path, doo_path, bar_path, foo_path])
+      self.assertSameSet(alpha.getRegionRelatedList(
+                                              checked_permission="View"), 
+                        [alpha_path, doo_path, bar_path, ])
+      self.assertSameSet(alpha.getRegionRelatedList(portal_type='Person'), 
+                        [doo_path, bar_path, foo_path])
+      self.assertSameSet(
+                   alpha.getRegionRelatedList(portal_type='Person',
+                                              checked_permission="View"), 
+                   [doo_path, bar_path, ])
+
+      # Related value accessor
+      self.assertSameSet(alpha.getRegionRelatedValueList(), 
+                        [alpha, doo, bar, foo])
+      self.assertSameSet(alpha.getRegionRelatedValueList(
+                                              checked_permission="View"), 
+                        [alpha, doo, bar, ])
+      self.assertSameSet(alpha.getRegionRelatedValueList(portal_type='Person'),
+                        [doo, bar, foo])
+      self.assertSameSet(
+             alpha.getRegionRelatedValueList(portal_type='Person',
+                                             checked_permission="View"), 
+             [doo, bar, ])
+
+      # Related id accessor
+      self.assertSameSet(alpha.getRegionRelatedIdList(), 
+                        [alpha.getId(), doo.getId(), bar.getId(), foo.getId()])
+      self.assertSameSet(alpha.getRegionRelatedIdList(
+                                             checked_permission="View"),
+                        [alpha.getId(), doo.getId(), bar.getId(), ])
+      self.assertSameSet(alpha.getRegionRelatedIdList(portal_type='Person'), 
+                        [doo.getId(), bar.getId(), foo.getId()])
+      self.assertSameSet(
+             alpha.getRegionRelatedIdList(portal_type='Person',
+                                          checked_permission="View"), 
+             [doo.getId(), bar.getId(), ])
+
+      # Related title accessor
+      self.assertSameSet(
+            alpha.getRegionRelatedTitleList(), 
+            [alpha.getTitle(), doo.getTitle(), bar.getTitle(), foo.getTitle()])
+      self.assertSameSet(alpha.getRegionRelatedTitleList(
+                                          checked_permission="View"), 
+                        [alpha.getTitle(), doo.getTitle(), bar.getTitle(), ])
+      self.assertSameSet(alpha.getRegionRelatedTitleList(portal_type='Person'), 
+                        [doo.getTitle(), bar.getTitle(), foo.getTitle()])
+      self.assertSameSet(
+             alpha.getRegionRelatedTitleList(portal_type='Person', 
+                                             checked_permission="View"), 
+             [doo.getTitle(), bar.getTitle(), ])
 
 if __name__ == '__main__':
   framework()
