@@ -296,7 +296,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(here.Base_translateString(t), t) for t in here.getPortalAccountingTransactionTypeList() if t not in here.portal_types.getTypeInfo(\'Accounting Transaction Module\').hidden_content_type_list]</string> </value>
+            <value> <string>python: [(here.Base_translateString(t), t) for t in here.getPortalAccountingTransactionTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
