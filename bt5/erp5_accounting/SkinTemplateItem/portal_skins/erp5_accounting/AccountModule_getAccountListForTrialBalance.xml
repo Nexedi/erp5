@@ -74,8 +74,15 @@ from Products.PythonScripts.standard import Object\n
 from ZTUtils import LazyFilter\n
 \n
 request = container.REQUEST\n
-getInventoryList = context.portal_simulation.getInventoryList\n
-getInventory = context.portal_simulation.getInventoryAssetPrice\n
+portal = context.getPortalObject()\n
+getInventoryList = portal.portal_simulation.getInventoryList\n
+getInventory = portal.portal_simulation.getInventoryAssetPrice\n
+N_ = portal.Base_translateString\n
+\n
+balance_movement_type_list = [\'Balance Transaction Line\']\n
+accounting_movement_type_list = [ t for t in\n
+                                  portal.getPortalAccountingMovementTypeList()\n
+                                  if t not in balance_movement_type_list ]\n
 \n
 inventory_params = dict(section_uid=section_uid,\n
                         simulation_state=simulation_state,\n
@@ -85,6 +92,9 @@ MARKER = Object()\n
 # a dictionary (node_relative_url, mirror_section_uid, payment_uid)\n
 #                        -> dict(debit=, credit=)\n
 line_per_account = {}\n
+# a dictionnary node_relative_url -> boolean "do we have transactions for this\n
+# account ?"\n
+account_used = {}\n
 \n
 account_type_to_group_by_node = [\n
                   \'account_type/asset\',\n
@@ -98,6 +108,8 @@ profit_and_loss_account_type = [\n
                   \'account_type/expense\',\n
                   \'account_type/income\',]\n
 \n
+account_type_to_group_by_payment = [ \'account_type/asset/cash/bank\' ]\n
+\n
 if expand_accounts:\n
   account_type_to_group_by_mirror_section = [\n
                   \'account_type/asset/receivable\',\n
@@ -105,10 +117,8 @@ if expand_accounts:\n
 else:\n
   account_type_to_group_by_node.extend([\n
                   \'account_type/asset/receivable\',\n
-                  \'account_type/liability/payable\', ])\n
+                  \'account_type/liability/payable\' ])\n
   account_type_to_group_by_mirror_section = []\n
-\n
-account_type_to_group_by_payment = [ \'account_type/asset/cash/bank\' ]\n
 \n
 total_debit = 0\n
 total_credit = 0\n
@@ -122,7 +132,9 @@ for node in getInventoryList(\n
                 omit_output=1,\n
                 from_date=from_date,\n
                 at_date=at_date,\n
+                portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
+  account_used[node[\'node_relative_url\']] = 1\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
@@ -135,7 +147,9 @@ for node in getInventoryList(\n
                 omit_input=1,\n
                 from_date=from_date,\n
                 at_date=at_date,\n
+                portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
+  account_used[node[\'node_relative_url\']] = 1\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
@@ -150,7 +164,9 @@ for node in getInventoryList(\n
                 group_by_node=1,\n
                 omit_output=1,\n
                 at_date=at_date,\n
+                portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
+  account_used[node[\'node_relative_url\']] = 1\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
@@ -163,7 +179,9 @@ for node in getInventoryList(\n
                 group_by_node=1,\n
                 omit_input=1,\n
                 at_date=at_date,\n
+                portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
+  account_used[node[\'node_relative_url\']] = 1\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
@@ -181,7 +199,9 @@ if account_type_to_group_by_mirror_section:\n
                   omit_output=1,\n
                   from_date=from_date,\n
                   at_date=at_date,\n
+                  portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
+    account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
@@ -196,7 +216,9 @@ if account_type_to_group_by_mirror_section:\n
                   omit_input=1,\n
                   from_date=from_date,\n
                   at_date=at_date,\n
+                  portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
+    account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
@@ -205,36 +227,41 @@ if account_type_to_group_by_mirror_section:\n
 # }}}\n
 \n
 # bank accounts {{{\n
-for node in getInventoryList(\n
-                node_category_strict_membership=\n
-                        account_type_to_group_by_payment,\n
-                group_by_payment=1,\n
-                group_by_node=1,\n
-                omit_output=1,\n
-                from_date=from_date,\n
-                at_date=at_date,\n
-                **inventory_params):\n
-  account_props = line_per_account.setdefault(\n
-                (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
-                dict(debit=0, credit=0))\n
-  account_props[\'debit\'] = node[\'total_price\']\n
-  total_debit += round(node[\'total_price\'], precision)\n
+if account_type_to_group_by_payment:\n
+  for node in getInventoryList(\n
+                  node_category_strict_membership=\n
+                          account_type_to_group_by_payment,\n
+                  group_by_payment=1,\n
+                  group_by_node=1,\n
+                  omit_output=1,\n
+                  from_date=from_date,\n
+                  at_date=at_date,\n
+                  portal_type=accounting_movement_type_list,\n
+                  **inventory_params):\n
+    account_used[node[\'node_relative_url\']] = 1\n
+    account_props = line_per_account.setdefault(\n
+                  (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
+                  dict(debit=0, credit=0))\n
+    account_props[\'debit\'] = node[\'total_price\']\n
+    total_debit += round(node[\'total_price\'], precision)\n
 \n
-for node in getInventoryList(\n
-                node_category_strict_membership=\n
-                        account_type_to_group_by_payment,\n
-                group_by_payment=1,\n
-                group_by_node=1,\n
-                omit_input=1,\n
-                from_date=from_date,\n
-                at_date=at_date,\n
-                **inventory_params):\n
-  account_props = line_per_account.setdefault(\n
-                (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
-                dict(debit=0, credit=0))\n
-  account_props[\'credit\'] = - node[\'total_price\']\n
-  total_credit -= round(node[\'total_price\'], precision)\n
-# }}}\n
+  for node in getInventoryList(\n
+                  node_category_strict_membership=\n
+                          account_type_to_group_by_payment,\n
+                  group_by_payment=1,\n
+                  group_by_node=1,\n
+                  omit_input=1,\n
+                  from_date=from_date,\n
+                  at_date=at_date,\n
+                  portal_type=accounting_movement_type_list,\n
+                  **inventory_params):\n
+    account_used[node[\'node_relative_url\']] = 1\n
+    account_props = line_per_account.setdefault(\n
+                  (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
+                  dict(debit=0, credit=0))\n
+    account_props[\'credit\'] = - node[\'total_price\']\n
+    total_credit -= round(node[\'total_price\'], precision)\n
+  # }}}\n
 \n
 \n
 traverse = context.getPortalObject().restrictedTraverse\n
@@ -254,8 +281,12 @@ def getNodeTitleAndId(node_relative_url):\n
 # include all accounts, even those not selected before (no movements in the\n
 # period)\n
 for node in LazyFilter(context.account_module.contentValues(), skip=\'\'):\n
-  line_per_account.setdefault((node.getRelativeUrl(), MARKER, MARKER),\n
+  if node.getRelativeUrl() not in account_used:\n
+    line_per_account.setdefault((node.getRelativeUrl(), MARKER, MARKER),\n
                               dict(debit=0, credit=0))\n
+\n
+\n
+initial_balance_date = (from_date - 1).earliestTime()\n
 \n
 line_list = []\n
 for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
@@ -267,91 +298,166 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
       # receivable account without specifying the third party. This should not\n
       # happen, but as you can still change account type after creation, we\n
       # handle this case explicitly.\n
+      node_title = \'%s (%s)\' % ( node_title, N_(\'None\'))\n
       initial_debit_balance = getInventory(\n
                        node_uid=node_uid,\n
                        where_expression=\'stock.mirror_section_uid is NULL\',\n
                        omit_output=1,\n
-                       at_date=from_date,\n
-                       **inventory_params)\n
-      initial_credit_balance = - getInventory(\n
+                       at_date=initial_balance_date,\n
+                       portal_type=accounting_movement_type_list,\n
+                       **inventory_params ) + getInventory(\n
+                       node_uid=node_uid,\n
+                       where_expression=\'stock.mirror_section_uid is NULL\',\n
+                       omit_output=1,\n
+                       at_date=from_date + 1,\n
+                       portal_type=balance_movement_type_list,\n
+                       **inventory_params )\n
+      initial_credit_balance = - (getInventory(\n
                        node_uid=node_uid,\n
                        where_expression=\'stock.mirror_section_uid is NULL\',\n
                        omit_input=1,\n
-                       at_date=from_date,\n
-                       **inventory_params)\n
+                       at_date=initial_balance_date,\n
+                       portal_type=accounting_movement_type_list,\n
+                       **inventory_params) + getInventory(\n
+                       node_uid=node_uid,\n
+                       where_expression=\'stock.mirror_section_uid is NULL\',\n
+                       omit_input=1,\n
+                       at_date=from_date + 1,\n
+                       portal_type=balance_movement_type_list,\n
+                       **inventory_params)) or 0\n
     else:\n
       third_party = getObject(mirror_section_uid)\n
       node_title = "%s (%s)" % ( node_title, third_party.getTitle() )\n
       initial_debit_balance = getInventory(\n
-                                     node_uid=node_uid,\n
-                                     mirror_section_uid=mirror_section_uid,\n
-                                     omit_output=1,\n
-                                     at_date=from_date,\n
-                                     **inventory_params)\n
-      initial_credit_balance = - getInventory(\n
-                                     node_uid=node_uid,\n
-                                     mirror_section_uid=mirror_section_uid,\n
-                                     omit_input=1,\n
-                                     at_date=from_date,\n
-                                     **inventory_params)\n
+                                  node_uid=node_uid,\n
+                                  mirror_section_uid=mirror_section_uid,\n
+                                  omit_output=1,\n
+                                  at_date=initial_balance_date,\n
+                                  portal_type=accounting_movement_type_list,\n
+                                  **inventory_params) + getInventory(\n
+                                  node_uid=node_uid,\n
+                                  mirror_section_uid=mirror_section_uid,\n
+                                  omit_output=1,\n
+                                  at_date=from_date + 1,\n
+                                  portal_type=balance_movement_type_list,\n
+                                  **inventory_params)\n
+      initial_credit_balance = - (getInventory(\n
+                                  node_uid=node_uid,\n
+                                  mirror_section_uid=mirror_section_uid,\n
+                                  omit_input=1,\n
+                                  at_date=initial_balance_date,\n
+                                  portal_type=accounting_movement_type_list,\n
+                                  **inventory_params) + getInventory(\n
+                                  node_uid=node_uid,\n
+                                  mirror_section_uid=mirror_section_uid,\n
+                                  omit_input=1,\n
+                                  at_date=from_date + 1,\n
+                                  portal_type=balance_movement_type_list,\n
+                                  **inventory_params)) or 0\n
   elif payment_uid is not MARKER:\n
     if payment_uid is None:\n
       # as above\n
+      node_title = \'%s (%s)\' % ( node_title, N_(\'None\'))\n
       initial_debit_balance = getInventory(\n
                        node_uid=node_uid,\n
                        where_expression=\'stock.payment_uid is NULL\',\n
                        omit_output=1,\n
-                       at_date=from_date,\n
+                       at_date=initial_balance_date,\n
+                       portal_type=accounting_movement_type_list,\n
+                       **inventory_params) + getInventory(\n
+                       node_uid=node_uid,\n
+                       where_expression=\'stock.payment_uid is NULL\',\n
+                       omit_output=1,\n
+                       at_date=from_date + 1,\n
+                       portal_type=balance_movement_type_list,\n
                        **inventory_params)\n
-      initial_credit_balance = - getInventory(\n
+      initial_credit_balance = - ( getInventory(\n
                        node_uid=node_uid,\n
                        where_expression=\'stock.payment_uid is NULL\',\n
                        omit_input=1,\n
-                       at_date=from_date,\n
-                       **inventory_params)\n
+                       at_date=initial_balance_date,\n
+                       portal_type=accounting_movement_type_list,\n
+                       **inventory_params) + getInventory(\n
+                       node_uid=node_uid,\n
+                       where_expression=\'stock.payment_uid is NULL\',\n
+                       omit_input=1,\n
+                       at_date=from_date + 1,\n
+                       portal_type=balance_movement_type_list,\n
+                       **inventory_params) ) or 0\n
     else:\n
       payment = getObject(payment_uid)\n
       node_title = "%s (%s)" % ( node_title, payment.getTitle() )\n
       initial_debit_balance = getInventory(node_uid=node_uid,\n
                                  payment_uid=payment_uid,\n
                                  omit_output=1,\n
-                                 at_date=from_date,\n
-                                 **inventory_params)\n
-      initial_credit_balance = - getInventory(node_uid=node_uid,\n
+                                 at_date=initial_balance_date,\n
+                                 portal_type=accounting_movement_type_list,\n
+                                 **inventory_params) + getInventory(\n
+                                 node_uid=node_uid,\n
                                  payment_uid=payment_uid,\n
-                                 omit_input=1,\n
-                                 at_date=from_date,\n
-                                 **inventory_params)\n
+                                 omit_output=1,\n
+                                 at_date=from_date + 1,\n
+                                 portal_type=balance_movement_type_list,\n
+                                 **inventory_params )\n
+      initial_credit_balance = - ( getInventory(node_uid=node_uid,\n
+                                   payment_uid=payment_uid,\n
+                                   omit_input=1,\n
+                                   at_date=initial_balance_date,\n
+                                   portal_type=accounting_movement_type_list,\n
+                                   **inventory_params) + getInventory(node_uid=node_uid,\n
+                                   payment_uid=payment_uid,\n
+                                   omit_input=1,\n
+                                   at_date=from_date + 1,\n
+                                   portal_type=balance_movement_type_list,\n
+                                   **inventory_params) ) or 0\n
   else:\n
     account = traverse(node_relative_url)\n
     if \'account_type/%s\' % account.getAccountType() in (\n
                                   profit_and_loss_account_type):\n
       initial_debit_balance = getInventory(node_uid=node_uid,\n
                                  omit_output=1,\n
-                                 from_date=min(period_start_date, from_date),\n
-                                 at_date=max(period_start_date, from_date),\n
+                                 from_date=min(period_start_date,\n
+                                               initial_balance_date),\n
+                                 at_date=initial_balance_date,\n
+                                 portal_type=accounting_movement_type_list,\n
                                  **inventory_params)\n
       initial_credit_balance = - getInventory(node_uid=node_uid,\n
                                  omit_input=1,\n
-                                 from_date=min(period_start_date, from_date),\n
-                                 at_date=max(period_start_date, from_date),\n
-                                 **inventory_params)\n
+                                 from_date=min(period_start_date,\n
+                                               initial_balance_date),\n
+                                 at_date=initial_balance_date,\n
+                                 portal_type=accounting_movement_type_list,\n
+                                 **inventory_params) or 0\n
     else:\n
       initial_debit_balance = getInventory(node_uid=node_uid,\n
                                  omit_output=1,\n
-                                 at_date=from_date,\n
+                                 at_date=initial_balance_date,\n
+                                 portal_type=accounting_movement_type_list,\n
+                                 **inventory_params) + getInventory(\n
+                                 node_uid=node_uid,\n
+                                 omit_output=1,\n
+                                 at_date=from_date + 1,\n
+                                 portal_type=balance_movement_type_list,\n
                                  **inventory_params)\n
-      initial_credit_balance = - getInventory(node_uid=node_uid,\n
+      initial_credit_balance = - ( getInventory(node_uid=node_uid,\n
                                  omit_input=1,\n
-                                 at_date=from_date,\n
-                                 **inventory_params)\n
+                                 at_date=initial_balance_date,\n
+                                 portal_type=accounting_movement_type_list,\n
+                                 **inventory_params) +\n
+                                 getInventory(node_uid=node_uid,\n
+                                 omit_input=1,\n
+                                 at_date=from_date + 1,\n
+                                 portal_type=balance_movement_type_list,\n
+                                 **inventory_params) ) or 0\n
   \n
   total_initial_debit_balance += round(initial_debit_balance, precision)\n
   total_initial_credit_balance += round(initial_credit_balance, precision)\n
 \n
   final_debit_balance = initial_debit_balance + data[\'debit\']\n
   final_credit_balance = initial_credit_balance + data[\'credit\']\n
+  \n
   closing_balance = final_debit_balance - final_credit_balance\n
+  \n
   line_list.append(Object(uid=\'new_\',\n
                           node_id=node_id,\n
                           node_title=node_title,\n
@@ -361,7 +467,8 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
                           credit=data[\'credit\'],\n
                           final_debit_balance=final_debit_balance,\n
                           final_credit_balance=final_credit_balance,\n
-                          closing_balance=closing_balance))\n
+                          final_balance_if_debit=max(closing_balance, 0),\n
+                          final_balance_if_credit=max(-closing_balance, 0) or 0,))\n
 \n
 if not show_empty_accounts:\n
   line_list = [ line for line in line_list\n
@@ -375,14 +482,14 @@ def getStringIndex(obj):\n
   return \'%-10s %s\' % (obj.node_id, obj.node_title)\n
 line_list.sort(key=getStringIndex)\n
 \n
+\n
 # cache values for stat\n
 request.set(\'TrialBalance.total_initial_debit_balance\',\n
             total_initial_debit_balance)\n
 request.set(\'TrialBalance.total_initial_credit_balance\',\n
             total_initial_credit_balance)\n
-request.set(\'TrialBalance.debit\', total_initial_debit_balance)\n
-request.set(\'TrialBalance.credit\', total_initial_credit_balance)\n
-\n
+request.set(\'TrialBalance.debit\', total_debit)\n
+request.set(\'TrialBalance.credit\', total_credit)\n
 return line_list\n
 # vim: foldmethod=marker\n
 
@@ -446,12 +553,21 @@ return line_list\n
                             <string>container</string>
                             <string>request</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>getInventoryList</string>
                             <string>getInventory</string>
+                            <string>N_</string>
+                            <string>balance_movement_type_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>t</string>
+                            <string>accounting_movement_type_list</string>
                             <string>dict</string>
                             <string>inventory_params</string>
                             <string>MARKER</string>
                             <string>line_per_account</string>
+                            <string>account_used</string>
                             <string>account_type_to_group_by_node</string>
                             <string>profit_and_loss_account_type</string>
                             <string>account_type_to_group_by_mirror_section</string>
@@ -460,18 +576,18 @@ return line_list\n
                             <string>total_credit</string>
                             <string>total_initial_debit_balance</string>
                             <string>total_initial_credit_balance</string>
-                            <string>_getiter_</string>
                             <string>_apply_</string>
                             <string>node</string>
+                            <string>_write_</string>
                             <string>_getitem_</string>
                             <string>account_props</string>
-                            <string>_write_</string>
                             <string>round</string>
                             <string>max</string>
                             <string>traverse</string>
                             <string>getObject</string>
                             <string>node_title_and_id_cache</string>
                             <string>getNodeTitleAndId</string>
+                            <string>initial_balance_date</string>
                             <string>line_list</string>
                             <string>node_relative_url</string>
                             <string>mirror_section_uid</string>
@@ -490,8 +606,6 @@ return line_list\n
                             <string>final_debit_balance</string>
                             <string>final_credit_balance</string>
                             <string>closing_balance</string>
-                            <string>append</string>
-                            <string>$append0</string>
                             <string>line</string>
                             <string>getStringIndex</string>
                           </tuple>

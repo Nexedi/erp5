@@ -334,36 +334,44 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>node_id</string>
+                          <string>GAP Account ID</string>
                         </tuple>
                         <tuple>
-                          <string>id</string>
-                          <string>GAP No</string>
+                          <string>node_title</string>
+                          <string>Account Name</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>initial_debit_balance</string>
+                          <string>Initial Debit Balance</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getAccountingTransactionCount</string>
-                          <string>Count</string>
+                          <string>debit</string>
+                          <string>Debit Transactions</string>
                         </tuple>
                         <tuple>
-                          <string>opening_balance</string>
-                          <string>Openning Balance</string>
+                          <string>final_debit_balance</string>
+                          <string>Final Debit Balance</string>
                         </tuple>
                         <tuple>
-                          <string>debit_movement</string>
-                          <string>Debit Movements</string>
+                          <string>initial_credit_balance</string>
+                          <string>Initial Credit Balance</string>
                         </tuple>
                         <tuple>
-                          <string>credit_movement</string>
-                          <string>Credit Movements</string>
+                          <string>credit</string>
+                          <string>Credit Transactions</string>
                         </tuple>
                         <tuple>
-                          <string>closing_balance</string>
-                          <string>Closing Balance</string>
+                          <string>final_credit_balance</string>
+                          <string>Final Credit Balance</string>
+                        </tuple>
+                        <tuple>
+                          <string>final_balance_if_debit</string>
+                          <string>Final Balance (Debit)</string>
+                        </tuple>
+                        <tuple>
+                          <string>final_balance_if_credit</string>
+                          <string>Final Balance (Credit)</string>
                         </tuple>
                       </list>
                     </value>
@@ -407,7 +415,40 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>initial_debit_balance</string>
+                          <string>Initial Debit Balance</string>
+                        </tuple>
+                        <tuple>
+                          <string>initial_credit_balance</string>
+                          <string>Initial Credit Balance</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit</string>
+                          <string>Debit Transactions</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>Credit Transactions</string>
+                        </tuple>
+                        <tuple>
+                          <string>final_debit_balance</string>
+                          <string>Final Debit Balance</string>
+                        </tuple>
+                        <tuple>
+                          <string>final_credit_balance</string>
+                          <string>Final Credit Balance</string>
+                        </tuple>
+                        <tuple>
+                          <string>final_balance_if_debit</string>
+                          <string>Final Balance (Debit)</string>
+                        </tuple>
+                        <tuple>
+                          <string>final_balance_if_credit</string>
+                          <string>Final Balance  (Credit)</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -449,14 +490,13 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Account</string>
-                          <string>Account</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -490,12 +530,7 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -507,16 +542,7 @@
                 <item>
                     <key> <string>stat_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>debit_movement</string>
-                          <string>AccountModule_statTotalSourceDebit</string>
-                        </tuple>
-                        <tuple>
-                          <string>credit_movement</string>
-                          <string>AccountModule_statTotalSourceCredit</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -574,7 +600,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
+            <value> <string>AccountModule_statAccountListForTrialBalance</string> </value>
         </item>
       </dictionary>
     </pickle>

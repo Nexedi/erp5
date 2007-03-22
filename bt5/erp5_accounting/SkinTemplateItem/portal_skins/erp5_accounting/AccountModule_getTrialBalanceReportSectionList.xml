@@ -122,15 +122,15 @@ if request.get(\'tree_mode\', False): # TODO\n
 \n
 return [ ReportSection(\n
             path=portal.account_module.getPhysicalPath(),\n
-            title=N_(\'Trial Balance\'),\n
             level=1,\n
             form_id=\'AccountModule_viewAccountListForTrialBalance\',\n
             selection_name=\'trial_balance_selection\',\n
             selection_params=dict(show_empty_accounts=show_empty_accounts,\n
                                   expand_accounts=expand_accounts,\n
-                                  at_date=at_date,\n
-                                  from_date=from_date,\n
-                                  period_start_date=period_start_date,\n
+                                  at_date=at_date.latestTime(),\n
+                                  from_date=from_date.earliestTime(),\n
+                                  period_start_date=\n
+                                          period_start_date.earliestTime(),\n
                                   section_uid=section_uid,\n
                                   simulation_state=simulation_state,\n
                                   precision=precision ),) ]\n

@@ -61,10 +61,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -73,19 +71,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
@@ -93,9 +79,18 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_credit</string>
+                        <string>listbox_debit</string>
+                        <string>listbox_initial_credit_balance</string>
+                        <string>listbox_initial_debit_balance</string>
+                        <string>listbox_final_credit_balance</string>
+                        <string>listbox_final_debit_balance</string>
+                        <string>listbox_final_balance_if_credit</string>
+                        <string>listbox_final_balance_if_debit</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
