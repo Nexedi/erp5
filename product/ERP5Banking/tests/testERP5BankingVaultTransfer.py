@@ -168,6 +168,18 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createCashInventory(source=None, destination=self.auxiliaire, currency=self.currency_1,
                              line_list=line_list)
     self.salle_tri = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
+    # Create an Organisation that will be used for users assignment
+    self.checkUserFolderType()
+    self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
+                          function='banking', group='baobab',  site='testsite/paris')
+    # define the user
+    user_dict = {
+        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies']
+      }
+    # call method to create this user
+    self.createERP5Users(user_dict)
+    self.logout()
+    self.login('super_user')
     self.openCounterDate(site=self.paris)
 
 

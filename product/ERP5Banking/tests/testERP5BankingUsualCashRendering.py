@@ -164,6 +164,18 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     self.auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=None, destination=self.caisse_courante, currency=self.currency_1,
                              line_list=line_list)
+    # Create an Organisation that will be used for users assignment
+    self.checkUserFolderType()
+    self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
+                          function='banking', group='baobab',  site='testsite/paris')
+    # define the user
+    user_dict = {
+        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1']
+      }
+    # call method to create this user
+    self.createERP5Users(user_dict)
+    self.logout()
+    self.login('super_user')
     self.openCounterDate(site=self.paris)
 
 
