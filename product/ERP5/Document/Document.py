@@ -190,10 +190,13 @@ class Document(XMLObject, UrlMixIn):
       so-called "External Source" (refer to ExternalSource class
       for more information).
 
-      External Documents may be downloaded once or at
+      External Documents may be downloaded once or updated at
       regular interval. The later can be useful to update the content
       of an external source. Previous versions may be stored
-      in place or kept in a separate file. 
+      in place or kept in a separate file. This feature
+      is known as the crawling API. It is mostly implemented
+      in ContributionTool with wrappers in the Document class.
+      It can be useful for create a small search engine.
 
       There are currently two types of Document subclasses:
 
@@ -212,9 +215,12 @@ class Document(XMLObject, UrlMixIn):
       Document classes which implement conversion should use
       the ConversionCacheMixin class so that converted values are
       stored inside ZODB and do not need to be recalculated.
-
-      XXX IDEA - ISSUE: generic API for conversion.
-        converted_document = document.convert(...)
+      More generally, conversion should be achieved through
+      the convert method and other methods of the conversion
+      API (convertToBaseFormat, etc.). Moreover, any Document
+      subclass must ne able to convert documents to text
+      (asText method) and HTML (asHTML method). Text is required
+      for full text indexing. HTML is required for crawling.
 
       Instances can be created directly, or via portal_contributions tool
       which manages document ingestion process whereby a file can be uploaded
@@ -254,7 +260,7 @@ class Document(XMLObject, UrlMixIn):
 
         getSearchableReferenceList (Base)
         getSearchableText (Base)
-        index_html (Document)
+        index_html (overriden in Document subclasses)
 
       Methods for handling relations are implemented either in 
       Document class or in Base class:
@@ -304,8 +310,14 @@ class Document(XMLObject, UrlMixIn):
         on this document. Implementation depends on revision numbering policy which
         can be very different. Interaction workflow should call setNewRevision method.
 
+      * Document_populateContent - analyses the document content and produces
+        subcontent based on it (ex. images, news, etc.). This scripts can
+        involve for example an XSLT transformation to process XML.
+
       Subcontent: documents may include subcontent (files, images, etc.)
-      so that publication of rich content can be path independent.
+      so that publication of rich content can be path independent. Subcontent
+      can also be used to help the rendering in HTML of complex documents
+      such as ODF documents.
 
     Consistency checking:
       Default implementation uses DocumentReferenceConstraint to check if the 
@@ -321,6 +333,9 @@ class Document(XMLObject, UrlMixIn):
   isDocument = 1
   __dav_collection__=0
 
+  # Regular expressions
+  href_parser = re.compile('<a[^>]*href=[\'"](.*?)[\'"]',re.IGNORECASE)
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -332,8 +347,9 @@ class Document(XMLObject, UrlMixIn):
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Document
-                    , PropertySheet.Url
                     , PropertySheet.Snapshot
+                    , PropertySheet.ExternalDocument
+                    , PropertySheet.Url
                     , PropertySheet.Periodicity
                     )
 
@@ -623,7 +639,7 @@ class Document(XMLObject, UrlMixIn):
     """
       Returns true if no other document of the same
       portal_type and reference has the same version and language
-      
+
       XXX should delegate to script with proxy roles
       XXX-JPS revision ?
     """
@@ -805,7 +821,7 @@ class Document(XMLObject, UrlMixIn):
 
   ### Metadata disovery and ingestion methods
   security.declareProtected(Permissions.ModifyPortalContent, 'discoverMetadata')
-  def discoverMetadata(self, file_name, user_login=None):
+  def discoverMetadata(self, file_name, user_login=None): # XXX Was filename always there ? at least make it optional
     """
       This is the main metadata discovery function - controls the process
       of discovering data from various sources. The discovery itself is
@@ -814,18 +830,19 @@ class Document(XMLObject, UrlMixIn):
       file_name - this parameter is a file name of the form "AA-BBB-CCC-223-en"
 
       user_login - this is a login string of a person; can be None if the user is
-        currently logged in, then we'll get him from session
+                   currently logged in, then we'll get him from session
     """
 
     # Get the order
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
-    self.setSourceReference(file_name)
+    self._setSourceReference(file_name) # XXX Who added this ???
+                                       # filename is often undefined....
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
     order_list = list(method())
     order_list.reverse()
 
-    # Start with everything until content - build a dictionnary according to the order
+    # Start with everything until content - build a dictionary according to the order
     content_index = order_list.index('content')
     kw = {}
     first_list = order_list[:content_index]
@@ -843,7 +860,7 @@ class Document(XMLObject, UrlMixIn):
         result = method()
       if result is not None:
         kw.update(result)
-      
+
     # Edit content
     try:
       del(kw['portal_type'])
@@ -953,7 +970,7 @@ class Document(XMLObject, UrlMixIn):
     return self.convert(format='html')
 
   # Base format support
-  security.declareProtected(Permissions.View, 'convertToBaseFormat')
+  security.declareProtected(Permissions.ModifyPortalContent, 'convertToBaseFormat')
   def convertToBaseFormat(self, REQUEST=None):
     """
       Converts the content of the document to a base format
@@ -1039,6 +1056,7 @@ class Document(XMLObject, UrlMixIn):
       pass
 
   # Transformation API
+  security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
   def populateContent(self):
     """
       Populates the Document with subcontent based on the
@@ -1050,25 +1068,62 @@ class Document(XMLObject, UrlMixIn):
       individual records. Other application: populate
       an HTML text document with its images, used in
       conversion with convertToBaseFormat.
-
-      NOTE: to be implemented as typed base method.
     """
-    pass
+    try:
+      method = self._getTypeBasedMethod('populateContent')
+    except KeyError, AttributeError:
+      method = None
+    if method is not None: method()
 
   # Crawling API
+  security.declareProtected(Permissions.AccessContentsInformation, 'getContentURLList')
   def getContentURLList(self):
     """
       Returns a list of URLs referenced by the content of this document.
-
-      NOTE: to be implemented as typed base method or
-      by subclass.
+      Default implementation consists in analysing the document
+      converted to HTML. Subclasses may overload this method
+      if necessary. However, it is better to extend the conversion
+      methods in order to produce valid HTML, which is useful to
+      many people, rather than overload this method which is only
+      useful for crawling.
     """
-    pass
+    html_content = self.asStrippedHTML()
+    return re.findall(self.href_parser, str(html_content))
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateContentFromURL')
   def updateContentFromURL(self):
     """
       Download and update content of this document from its source URL.
-
-      NOTE: to be implemented here.
+      Implementation is handled by ContributionTool.
     """
-    pass
+    self.portal_contributions.updateContentFromURL(self)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'crawlContent')
+  def crawlContent(self):
+    """
+      Initialises the crawling process on the current document.
+    """
+    self.portal_contributions.crawlContent(self)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
+  def getContentBaseURL(self):
+    """
+      Returns the content base URL based on the actual content or
+      on its URL.
+    """
+    # XXX TODO - try to retrive base URL from content
+    # If no base_url defined, define the base URL from our URL
+    base_url = self.asURL()
+    base_url_list = base_url.split('/')
+    if len(base_url_list): base_url = '/'.join(base_url_list[:-1])
+    return base_url
+
+  # Alarm date calculation
+  security.declareProtected(Permissions.AccessContentsInformation, 'getNextAlarmDate')
+  def getNextAlarmDate(self):
+    """
+    This method is only there to have something to test.
+    Serious refactory of Alarm, Periodicity and CalendarPeriod
+    classes is needed.
+    """
+    return DateTime() + .01
