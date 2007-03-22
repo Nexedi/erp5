@@ -35,6 +35,8 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Document import Document
 from Products.ERP5Type.WebDAVSupport import TextContent
 
+import re
+
 class TextDocument(Document, TextContent):
     """
         A Document contains text which can be formatted using
@@ -75,6 +77,9 @@ class TextDocument(Document, TextContent):
                       , PropertySheet.DublinCore
                       , PropertySheet.Version
                       , PropertySheet.Document
+                      , PropertySheet.Snapshot
+                      , PropertySheet.ExternalDocument
+                      , PropertySheet.Url
                       , PropertySheet.TextDocument
                       )
 
