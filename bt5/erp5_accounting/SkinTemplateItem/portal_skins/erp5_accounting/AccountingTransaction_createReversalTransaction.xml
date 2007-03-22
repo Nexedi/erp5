@@ -123,10 +123,13 @@ for line in line_list:\n
   new_line.edit(\n
     source=line.getSource(portal_type=\'Account\'),\n
     destination=line.getDestination(portal_type=\'Account\'),\n
-    quantity= - line.getQuantity(),\n
-    source_total_asset_price= - (line.getSourceTotalAssetPrice() or 0),\n
-    destination_total_asset_price=\n
-                - (line.getDestinationTotalAssetPrice() or 0))\n
+    quantity= - line.getQuantity(), )\n
+\n
+  if line.getSourceTotalAssetPrice():\n
+    new_line.setSourceTotalAssetPrice( - line.getSourceTotalAssetPrice() )\n
+  if line.getDestinationTotalAssetPrice():\n
+    new_line.setDestinationTotalAssetPrice(\n
+                                  - line.getDestinationTotalAssetPrice() )\n
   \n
   # copy some values if they are defined explicitly on line\n
   for prop in [ \'source_section\', \'destination_section\',\n
