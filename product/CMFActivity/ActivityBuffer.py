@@ -33,6 +33,10 @@ try:
 except ImportError:
   pass
 
+# python2.3 compatibility
+if not hasattr(globals()['__builtins__'], 'set'):
+  from sets import Set as set
+
 # This variable is used to store thread-local buffered information.
 # This must be RAM-based, because the use of a volatile attribute does
 # not guarantee that the information persists until the end of a
