@@ -31,13 +31,7 @@
 
 """
 
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -122,6 +116,16 @@ class TestPredicates(ERP5TypeTestCase):
     self.failUnless('Predicate' in [x.id for x in
                     predicate_folder.allowedContentTypes()])
     return predicate_folder
+
+  def createPredicate(self, **kw):
+    """Generic method to create a predicate"""
+    return self.getPredicateFolder().newContent(
+                        portal_type = 'Predicate', **kw)
+  
+  def createDocument(self, **kw):
+    """Creates a document."""
+    return self.getOrganisationModule().newContent(
+                             portal_type='Organisation', **kw)
     
   def stepCreatePredicateTrueScript(self, sequence=None, **kw) :
     """Creates a script that always return true"""
@@ -135,11 +139,6 @@ class TestPredicates(ERP5TypeTestCase):
                            'Predicate_false', '', """return 0""")
     sequence.edit(test_method_id = 'Predicate_false')
     
-  def createPredicate(self, **kw):
-    """Generic method to create a predicate"""
-    return self.getPredicateFolder().newContent(
-                        portal_type = 'Predicate', **kw)
-  
   def stepCreateTestMethodIdPredicate(self, sequence=None, **kw) :
     """Creates a predicate with a test method_id"""
     sequence.edit(predicate = self.createPredicate(
@@ -264,71 +263,121 @@ class TestPredicates(ERP5TypeTestCase):
     doc = sequence.get('doc')
     predicate = sequence.get('predicate')
     self.assertFalse(predicate.test(doc))
-  
+
   ############################################################################
   ## Test Methods ############################################################
   ############################################################################
   
-  def test_Interface(self, quiet=QUIET, run=RUN_ALL_TESTS):
+  def test_Interface(self):
     """Test Predicate implements Predicate interface."""
-    if not run : return
     from Products.ERP5Type.Interface import Predicate as IPredicate
     from Products.ERP5Type.Document.Predicate import Predicate
     predicate = self.createPredicate()
     self.failUnless(IPredicate.isImplementedBy(predicate))
     from Interface.Verify import verifyClass
     verifyClass(IPredicate, Predicate)
-  
-  def test_CategoryMembership(self, quiet=QUIET, run=RUN_ALL_TESTS):
-    """Test basic category membership"""
-    if not run : return
-    self.playSequence("""
-      stepCreateDocument
-      stepSetDocumentFranceRegionMembership
-      stepSetDocumentStoreverGroupMembership
-      stepCreateRegionFrancePredicate
-      stepAssertPredicateTrue
-      stepCreateGroupStoreverPredicate
-      stepAssertPredicateTrue
-      stepCreateGroupStoreverRegionFrancePredicate
-      stepAssertPredicateTrue
-      stepSetDocumentGermanyRegionMembership
-      stepAssertPredicateFalse
-      stepCreateRegionFrancePredicate
-      stepAssertPredicateFalse
-    """)
-  
-  def test_EmptyPredicates(self, quiet=QUIET, run=RUN_ALL_TESTS):
-    """Test empty and always false predicates."""
-    if not run : return
-    self.playSequence("""
-      stepCreateDocument
-      stepCreateEmptyPredicate
-      stepAssertPredicateTrue
-      stepCreateAlwaysFalsePredicate
-      stepAssertPredicateFalse
-    """)
 
-  def test_TestMethodId(self, quiet=QUIET, run=RUN_ALL_TESTS):
-    """Test test_method_id attribute."""
-    if not run : return
-    self.playSequence("""
-      stepCreateDocument
-      stepSetDocumentFranceRegionMembership
-      stepCreateRegionFrancePredicate
-      stepAssertPredicateTrue
-      stepCreatePredicateTrueScript
-      stepCreateTestMethodIdPredicate
-      stepAssertPredicateTrue
-      stepCreateRegionFrancePredicateTruePredicate
-      stepAssertPredicateTrue
-      stepCreatePredicateFalseScript
-      stepCreateTestMethodIdPredicate
-      stepAssertPredicateFalse
-      stepCreateRegionFrancePredicateFalsePredicate
-      stepAssertPredicateFalse
-    """)
+
+  def test_BasicCategoryMembership(self):
+    # Predicates can test that a document is member of a category
+    doc = self.createDocument(region='europe/western_europe/france',)
+    pred = self.createPredicate(
+        membership_criterion_base_category_list=['region'],
+        membership_criterion_category_list=
+                      ['region/europe/western_europe/france'])
+    # our document is member of france region, so the predicate is true
+    self.assertTrue(pred.test(doc))
+
+
+  def test_BasicCategoryMembershipNotStrict(self):
+    # Predicates are not only true for strict membership, but can also be used
+    # with a parent category
+    doc = self.createDocument(region='europe/western_europe/france',)
+    pred = self.createPredicate(
+        membership_criterion_base_category_list=['region'],
+        membership_criterion_category_list=['region/europe'])
+    self.assertTrue(pred.test(doc))
+
+
+  def test_BasicCategoryNonMembership(self):
+    # if the document is not member of the category, the predicate returns
+    # false
+    doc = self.createDocument(region='europe/western_europe/france',)
+    pred = self.createPredicate(
+        membership_criterion_base_category_list=['region'],
+        membership_criterion_category_list=
+                ['region/europe/western_europe/germany'])
+    self.assertFalse(pred.test(doc))
+
+
+  def test_NonExistantCategoryMembership(self):
+    # the predicate also return false for non existant category and no error is
+    # raised.
+    doc = self.createDocument()
+    pred = self.createPredicate(
+        membership_criterion_base_category_list=['not_exist'],
+        membership_criterion_category_list=['not_exist/nothing'])
+    self.assertFalse(pred.test(doc))
+
+
+  def test_EmptyPredicates(self):
+    # empty predicate are true
+    doc = self.createDocument()
+    pred = self.createPredicate()
+    self.assertTrue(pred.test(doc))
+
+
+  def test_TestMethodId(self):
+    doc = self.createDocument(region='europe/western_europe/france',)
+    calls = []
+    def true_method():
+      calls.append(True)
+      return True
+    doc.true_method = true_method
+    def false_method():
+      calls.append(False)
+      return False
+    doc.false_method = false_method
+    
+    # predicates can also be created with a test method id, which will be the
+    # id of a method to call on the document (of course it can be a python
+    # script). This method must return a boolean value.
+    pred = self.createPredicate(test_method_id='true_method')
+    self.assertTrue(pred.test(doc))
+    self.assertEquals([True], calls)
+
+    pred = self.createPredicate(test_method_id='false_method')
+    self.assertFalse(pred.test(doc))
+    self.assertEquals([True, False], calls)
   
+    # the use of method id can be mixed with category membership, both will
+    # have to be true for the predicate to be true.
+    pred = self.createPredicate(
+        test_method_id='true_method',
+        membership_criterion_base_category_list=['region'],
+        membership_criterion_category_list=
+                      ['region/europe/western_europe/france'])
+    self.assertTrue(pred.test(doc))
+    self.assertEquals([True, False, True], calls)
+    
+    pred = self.createPredicate(
+        test_method_id='false_method',
+        membership_criterion_base_category_list=['region'],
+        membership_criterion_category_list=
+                      ['region/europe/western_europe/france'])
+    self.assertFalse(pred.test(doc))
+    self.assertEquals([True, False, True, False], calls)
+
+    pred = self.createPredicate(
+        test_method_id='true_method',
+        membership_criterion_base_category_list=['region'],
+        membership_criterion_category_list=['region/other'])
+    self.assertFalse(pred.test(doc))
+    # Note that if the document is not member of the category, the test_method
+    # is not called.
+    self.assertEquals([True, False, True, False], calls)
+  
+
   def test_PredicateFusion(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Test simple predicates fusion.
     New predicate act as a logical AND between predicates
@@ -419,16 +468,13 @@ class TestPredicates(ERP5TypeTestCase):
 
 # TODO :
 #  multi membership category
+#  asPredicate scripts
 #  predicate range
 #  predicate + category fusion using setPredicateCategoryList
 #  predicate matrix ?
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestPredicates))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestPredicates))
+  return suite
 
