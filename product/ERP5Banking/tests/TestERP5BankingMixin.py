@@ -481,14 +481,14 @@ class TestERP5BankingMixin:
     self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category',codification='TEST',vault_type='site')
     if len(site_list) != 0:
       if 'paris' in site_list:
-        self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P1',  vault_type='site')
+        self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
       if 'madrid' in site_list:
-        self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S1',  vault_type='site')
+        self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
       if 'siege' in site_list:
         self.siege = self.testsite.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
     else:
-      self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P1',  vault_type='site')
-      self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S1',  vault_type='site')
+      self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
+      self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
       self.siege = self.testsite.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
 
     self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
