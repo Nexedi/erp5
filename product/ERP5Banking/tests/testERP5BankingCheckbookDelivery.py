@@ -120,10 +120,10 @@ class TestERP5BankingCheckbookDeliveryMixin:
                                                  account_id='bank_account_1',
                                                  currency=self.currency_1,
                                                  amount=100000)
-    # open counter date and counter
-    self.openCounterDate(site=self.paris)
     self.logout()
     self.login('super_user')
+    # open counter date and counter
+    self.openCounterDate(site=self.paris)
     # this is required in order to have some items
     # in the source
     self.createCheckbookReception()

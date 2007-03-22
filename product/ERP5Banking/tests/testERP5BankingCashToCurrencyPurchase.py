@@ -151,10 +151,6 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     self.createCashInventory(source=None, destination=self.guichet_sortante, currency=self.currency_1,
                              line_list=line_list_sortante)
 
-
-    # open counter date and counter
-    self.openCounterDate(site=self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante)
-
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
     # Create an Organisation that will be used for users assignment
@@ -169,6 +165,8 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+    # open counter date and counter
+    self.openCounterDate(site=self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante)
 
 
 

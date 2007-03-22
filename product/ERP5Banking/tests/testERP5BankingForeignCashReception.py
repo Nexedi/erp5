@@ -116,9 +116,9 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
       }
     # call method to create this user
     self.createERP5Users(user_dict)
-    self.openCounterDate(site=self.paris)
     self.logout()
     self.login('super_user')
+    self.openCounterDate(site=self.paris)
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):

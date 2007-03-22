@@ -107,8 +107,6 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.hq_mutilated_banknote_vault = self.siege.surface.caisse_courante.billets_mutiles
     self.hq_usual_vault = self.siege.surface.caisse_courante.encaisse_des_billets_et_monnaies
     
-    self.openCounterDate(site=self.paris)
-    self.openCounterDate(site=self.siege, id='counter_date_2')
     self.createCashInventory(source=None, destination=self.usual_vault, currency=self.currency_1,
                              line_list=line_list)
     self.createCashInventory(source=None, destination=self.hq_usual_vault, currency=self.currency_1,
@@ -130,6 +128,8 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+    self.openCounterDate(site=self.paris)
+    self.openCounterDate(site=self.siege, id='counter_date_2')
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
