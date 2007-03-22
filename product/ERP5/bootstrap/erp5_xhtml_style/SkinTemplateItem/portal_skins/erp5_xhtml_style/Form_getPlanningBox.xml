@@ -70,9 +70,9 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# Return first listbox in a form that is enabled and not hidden\n
+# Return first planningbox in a form that is enabled and not hidden\n
 # Christophe Dumez <christophe@nexedi.com>\n
-# This script should be used to detect a listbox without having to name it "listbox"\n
+# This script should be used to detect a listbox planningbox having to name it "planningbox"\n
 \n
 form=context\n
 \n
@@ -80,7 +80,7 @@ if form.meta_type != \'ERP5 Form\':\n
   return None\n
 \n
 # we start with \'bottom\' because most of the time\n
-# the listbox is there.\n
+# the planningbox is there.\n
 for group in (\'bottom\', \'center\', \'left\', \'right\'):\n
   for field in form.get_fields_in_group(group):\n
      if field.meta_type == \'PlanningBox\' and not(field[\'hidden\']) and field[\'enabled\']:\n

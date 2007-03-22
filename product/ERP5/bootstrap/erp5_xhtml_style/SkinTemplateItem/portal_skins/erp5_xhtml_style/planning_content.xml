@@ -90,8 +90,8 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
   <tr><td><h3><span tal:replace="structure python:struct.basic.field.get_value(\'title\')"/>\n
   </h3></td>\n
   <td>\n
-    <select name="report_root_url" onChange="submitAction(this.form,\'/portal_selections/setReportRoot\')"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setReportRoot\')">\n
+    <select name="report_root_url" onChange="submitAction(this.form,\'/setReportRoot\')"\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/setReportRoot\')">\n
       <tal:block tal:condition="python:basic.selection is None"\n
                 tal:define="global selection_report_path python:basic.report_root_list[0][0]"/>\n
       <tal:block tal:condition="python:basic.selection is not None"\n
@@ -147,8 +147,8 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
    </td>\n
    <b tal:replace="nothing"><!-- report path selection --></b>\n
   <td>\n
-    <select name="report_root_url" onChange="submitAction(this.form,\'/portal_selections/setReportRoot\')"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${address}/portal_selections/setReportRoot\')">\n
+    <select name="report_root_url" onChange="submitAction(this.form,\'/setReportRoot\')"\n
+            tal:attributes="onChange string:submitAction(this.form,\'${address}/setReportRoot\')">\n
       <tal:block tal:condition="python:basic.selection is None"\n
                 tal:define="global selection_report_path python:basic.report_root_list[0][0]"/>\n
       <tal:block tal:condition="python:basic.selection is not None"\n
@@ -451,13 +451,13 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
                 tal:attributes="href python:block.info[area].link;\n
                                 class python:\'planning_box_\' + info_area">\n
               </a>\n
-              <!--\n
+              \n
               <a tal:condition="python:block.info[area].info == \'__\'"\n
                 tal:attributes="href python:block.info[area].link;\n
                                 class python:\'planning_box_\' + info_area">\n
                 <img tal:attributes="src python:basic.here.getUrl() + \'/images/question.png\'"\n
                     height="15" width="15">\n
-              </a> -->\n
+              </a>\n
             </tal:block>\n
             <tal:block tal:condition="python:info_area==\'center\'" >\n
               <div tal:attributes="class python:\'planning_box_\' + info_area">\n
