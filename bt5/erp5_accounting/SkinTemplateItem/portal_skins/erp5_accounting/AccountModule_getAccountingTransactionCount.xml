@@ -68,7 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kwd = context.ERP5Accounting_getParams(selection_name)\n
+            <value> <string>kwd = context.ERP5Accounting_getParams(selection_name=selection_name,\n
+                                       selection=selection)\n
 \n
 # XXX missing :(\n
 # this may fail if we have movements on something else than accounts\n

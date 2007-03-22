@@ -72,7 +72,8 @@
 
 from Products.ERP5Type.Message import Message\n
 portal = context.getPortalObject()\n
-params = portal.ERP5Accounting_getParams(selection_name)\n
+params = portal.ERP5Accounting_getParams(selection_name=selection_name,\n
+                                         selection=selection)\n
 N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 \n
 if params.get(\'precision\', None) is not None:\n
