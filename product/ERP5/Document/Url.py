@@ -36,15 +36,16 @@ from base64 import encode
 from mimetools import choose_boundary
 from mimetypes import guess_type
 
+no_crawl_protocol_list = ['mailto', 'javascript', ]
+no_host_protocol_list = ['mailto', 'news', 'javascript',]
+default_protocol_dict = { 'Email' : 'mailto',
+                        }
+
 class UrlMixIn:
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  no_host_protocol_list = ['mailto', 'news', ]
-  default_protocol_dict = { 'Email' : 'mailto',
-                          }
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asURL')
@@ -57,12 +58,12 @@ class UrlMixIn:
       # A quick fix for all objects which did not
       # define protocol such as email addresses
       ptype = self.getPortalType()
-      if UrlMixIn.default_protocol_dict.has_key(ptype):
-        protocol = UrlMixIn.default_protocol_dict[ptype]
+      if default_protocol_dict.has_key(ptype):
+        protocol = default_protocol_dict[ptype]
       else:
         protocol = 'http'
     url_string = self.getUrlString()
-    if protocol in UrlMixIn.no_host_protocol_list or url_string.startswith('//'):
+    if protocol in no_host_protocol_list or url_string.startswith('//'):
       return '%s:%s' % (protocol, url_string)
     return '%s://%s' % (protocol, url_string)
 
