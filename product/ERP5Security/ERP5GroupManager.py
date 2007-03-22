@@ -161,10 +161,11 @@ class ERP5GroupManager(BasePlugin):
             security_category_dict.items():
           for category_dict in category_value_list:
             try:
-              group_id_list = group_id_list_generator(category_order=base_category_list,
+              group_id_list = group_id_list_generator(
+                                        category_order=base_category_list,
                                         **category_dict)
-              LOG('group_id_list', 0, str(group_id_list))
-              if isinstance(group_id_list, str): group_id_list = [group_id_list]
+              if isinstance(group_id_list, str):
+                group_id_list = [group_id_list]
               security_group_list.extend(group_id_list)
             except ConflictError:
               raise
