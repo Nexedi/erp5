@@ -804,7 +804,8 @@ class TestPropertySheet:
       self.assertEquals(person.getProperty(property_name, 'foo'), 'foo')
       self.assertEquals(person.getProperty(property_name, d='foo'), 'foo')
 
-    def test_15b_DefaultValueDefinedOnPropertySheet(self,quiet=quiet, run=run_all_test):
+    def test_15b_DefaultValueDefinedOnPropertySheet(self, quiet=quiet, 
+                                                    run=run_all_test):
       """Tests that the default value is returned correctly when a default
       value is defined using the property sheet.
       """
@@ -834,6 +835,20 @@ class TestPropertySheet:
       self.assertEquals(value, person.getDummyPsProp('default'))
       self.assertEquals(value, person.getProperty('dummy_ps_prop'))
       self.assertEquals(value, person.getProperty('dummy_ps_prop', d='default'))
+
+    def test_15c_getDescriptionDefaultValue(self):
+      """
+      Tests that the default value of getDescription is returned correctly
+      """
+      portal = self.getPortal()
+      module = self.getPersonModule()
+      person = module.newContent(portal_type='Person')
+
+      # test default value of getDescription accessor
+      # as defined in the DublinCore PropertySheet
+      self.assertEquals(None, person.getDescription())
+      self.assertEquals('foo', 
+                        person.getDescription('foo'))
 
     def test_16_SimpleStringAccessor(self,quiet=quiet, run=run_all_test):
       """Tests a simple string accessor.
