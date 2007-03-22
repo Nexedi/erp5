@@ -1,0 +1,449 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>getBaobabDestinationFunctionUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabDestinationPaymentUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabDestinationProjectUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabDestinationSectionUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabDestinationUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabDestinationVariationText</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabSourceFunctionUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabSourcePaymentUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabSourceProjectUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabSourceSectionUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabSourceUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabSourceVariationText</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getDestinationInventoriatedTotalAssetPrice</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getInventoriatedQuantity</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getPortalType</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getResourceUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getSimulationState</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getSourceInventoriatedTotalAssetPrice</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getStartDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getStopDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getSubVariationText</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>isAccountable</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>isMovement</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+                            <string>uid</string>
+                            <string>getResourceUid</string>
+                            <string>getInventoriatedQuantity</string>
+                            <string>getBaobabSourceUid</string>
+                            <string>getBaobabDestinationUid</string>
+                            <string>getBaobabSourceSectionUid</string>
+                            <string>getBaobabDestinationSectionUid</string>
+                            <string>isMovement</string>
+                            <string>getBaobabSourcePaymentUid</string>
+                            <string>getBaobabDestinationPaymentUid</string>
+                            <string>getBaobabSourceFunctionUid</string>
+                            <string>getBaobabDestinationFunctionUid</string>
+                            <string>getBaobabSourceProjectUid</string>
+                            <string>getBaobabDestinationProjectUid</string>
+                            <string>getSimulationState</string>
+                            <string>getSourceInventoriatedTotalAssetPrice</string>
+                            <string>getDestinationInventoriatedTotalAssetPrice</string>
+                            <string>getStartDate</string>
+                            <string>getStopDate</string>
+                            <string>isAccountable</string>
+                            <string>getPortalType</string>
+                            <string>getBaobabDestinationVariationText</string>
+                            <string>getBaobabSourceVariationText</string>
+                            <string>getSubVariationText</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>uid\r\n
+getResourceUid\r\n
+getInventoriatedQuantity\r\n
+getBaobabSourceUid\r\n
+getBaobabDestinationUid\r\n
+getBaobabSourceSectionUid\r\n
+getBaobabDestinationSectionUid\r\n
+isMovement\r\n
+getBaobabSourcePaymentUid\r\n
+getBaobabDestinationPaymentUid\r\n
+getBaobabSourceFunctionUid\r\n
+getBaobabDestinationFunctionUid\r\n
+getBaobabSourceProjectUid\r\n
+getBaobabDestinationProjectUid\r\n
+getSimulationState\r\n
+getSourceInventoriatedTotalAssetPrice\r\n
+getDestinationInventoriatedTotalAssetPrice\r\n
+getStartDate\r\n
+getStopDate\r\n
+isAccountable\r\n
+getPortalType\r\n
+getBaobabDestinationVariationText\r\n
+getBaobabSourceVariationText\r\n
+getSubVariationText</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>z_catalog_stock_list</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+DELETE FROM\n
+  stock\n
+WHERE\n
+<dtml-in uid>\n
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+</dtml-in>\n
+;\n
+\n
+<dtml-var "\'\\0\'">\n
+\n
+<dtml-let row_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
+    <dtml-if "isMovement[loop_item]">\n
+      <dtml-if "isAccountable[loop_item]">\n
+        <dtml-if "getResourceUid[loop_item]">\n
+          <dtml-if "getBaobabDestinationUid[loop_item]">\n
+            <dtml-call expr="row_list.append([uid[loop_item], getBaobabDestinationUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationPaymentUid[loop_item], getBaobabDestinationFunctionUid[loop_item], getBaobabDestinationProjectUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourceUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getDestinationInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabDestinationVariationText[loop_item],getSubVariationText[loop_item]])">\n
+          </dtml-if>\n
+          <dtml-if "getBaobabSourceUid[loop_item]">\n
+            <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourcePaymentUid[loop_item], getBaobabSourceFunctionUid[loop_item], getBaobabSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationUid[loop_item], getResourceUid[loop_item], -(getInventoriatedQuantity[loop_item] or 0), getStartDate[loop_item], getSourceInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabSourceVariationText[loop_item], getSubVariationText[loop_item]])">\n
+          </dtml-if>\n
+        </dtml-if>\n
+      </dtml-if>\n
+    </dtml-if>\n
+  </dtml-in>  \n
+  \n
+  <dtml-if "row_list">\n
+INSERT INTO\n
+  stock\n
+VALUES\n
+    <dtml-in prefix="row" expr="row_list">\n
+(\n
+  <dtml-sqlvar expr="row_item[0]" type="int">,\n
+  <dtml-sqlvar expr="row_item[1]" type="int">,  \n
+  <dtml-sqlvar expr="row_item[2]" type="int" optional>, \n
+  <dtml-sqlvar expr="row_item[3]" type="int" optional>, \n
+  <dtml-sqlvar expr="row_item[4]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[5]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[6]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[7]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[8]" type="int">, \n
+  <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
+  <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[11]" type="float" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
+)\n
+<dtml-if sequence-end><dtml-else>,</dtml-if>\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+DELETE FROM\n
+  stock\n
+WHERE\n
+<dtml-in uid>\n
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+</dtml-in>\n
+;\n
+\n
+<dtml-var "\'\\0\'">\n
+\n
+<dtml-let row_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
+    <dtml-if "isMovement[loop_item]">\n
+      <dtml-if "isAccountable[loop_item]">\n
+        <dtml-if "getResourceUid[loop_item]">\n
+          <dtml-if "getBaobabDestinationUid[loop_item]">\n
+            <dtml-call expr="row_list.append([uid[loop_item], getBaobabDestinationUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationPaymentUid[loop_item], getBaobabDestinationFunctionUid[loop_item], getBaobabDestinationProjectUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourceUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getDestinationInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabDestinationVariationText[loop_item],getSubVariationText[loop_item]])">\n
+          </dtml-if>\n
+          <dtml-if "getBaobabSourceUid[loop_item]">\n
+            <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourcePaymentUid[loop_item], getBaobabSourceFunctionUid[loop_item], getBaobabSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationUid[loop_item], getResourceUid[loop_item], -(getInventoriatedQuantity[loop_item] or 0), getStartDate[loop_item], getSourceInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabSourceVariationText[loop_item], getSubVariationText[loop_item]])">\n
+          </dtml-if>\n
+        </dtml-if>\n
+      </dtml-if>\n
+    </dtml-if>\n
+  </dtml-in>  \n
+  \n
+  <dtml-if "row_list">\n
+INSERT INTO\n
+  stock\n
+VALUES\n
+    <dtml-in prefix="row" expr="row_list">\n
+(\n
+  <dtml-sqlvar expr="row_item[0]" type="int">,\n
+  <dtml-sqlvar expr="row_item[1]" type="int">,  \n
+  <dtml-sqlvar expr="row_item[2]" type="int" optional>, \n
+  <dtml-sqlvar expr="row_item[3]" type="int" optional>, \n
+  <dtml-sqlvar expr="row_item[4]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[5]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[6]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[7]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[8]" type="int">, \n
+  <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
+  <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[11]" type="float" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
+)\n
+<dtml-if sequence-end><dtml-else>,</dtml-if>\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

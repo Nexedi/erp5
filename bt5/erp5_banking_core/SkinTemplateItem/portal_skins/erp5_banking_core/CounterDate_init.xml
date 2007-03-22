@@ -70,22 +70,20 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-user_site_list = context.Baobab_getUserAssignedSiteList()\n
-if len(user_site_list)>0:\n
-  site = context.Baobab_getVaultSite(user_site_list[0])\n
-  site_url = site.getRelativeUrl()\n
-  context.setSite(site_url)\n
-\n
 from DateTime import DateTime\n
-start_date = DateTime(DateTime().Date())\n
-context.setStartDate(start_date)\n
+\n
+user_site_list = context.Baobab_getUserAssignedSiteList()\n
+if len(user_site_list) == 0:\n
+  raise ValueError, "You cannot create a CounterDate if you don\'t have an assignment."\n
+\n
+site = context.Baobab_getVaultSite(user_site_list[0])\n
+context.setSiteValue(site)\n
+context.setStartDate(DateTime(DateTime().Date()))\n
 \n
 # Set a reference\n
-site_id = context.getSiteId()\n
-\n
 counter_date_list = [x.getObject() for x  in context.portal_catalog(\n
-                                           portal_type=\'Counter Date\',site_id=site_id,\n
-                                           so_order=[(\'start_date\',\'descending\')],limit=10,\n
+                                           portal_type=\'Counter Date\',site_id=site.getSiteId(),\n
+                                           so_order=[(\'start_date\',\'descending\')],limit=1,\n
                                            simulation_state=(\'open\',\'closed\'))]\n
 previous_reference = None\n
 if len(counter_date_list)>0:\n
@@ -147,16 +145,14 @@ context.setReference(reference)\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>user_site_list</string>
                             <string>len</string>
+                            <string>ValueError</string>
                             <string>_getitem_</string>
                             <string>site</string>
-                            <string>site_url</string>
-                            <string>DateTime</string>
-                            <string>start_date</string>
-                            <string>site_id</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>

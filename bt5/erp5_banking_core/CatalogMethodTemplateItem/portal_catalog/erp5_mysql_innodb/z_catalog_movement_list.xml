@@ -1,0 +1,333 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>getBaobabDestinationUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getBaobabSourceUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getExplanationUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getInventoriatedQuantity</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getPrice</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getResourceUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getStartDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getStopDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getVariationText</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>isAccountable</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>isDeliverable</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>isDivergent</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>isMovement</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>isOrderable</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+                            <string>isMovement</string>
+                            <string>uid</string>
+                            <string>getExplanationUid</string>
+                            <string>getBaobabSourceUid</string>
+                            <string>getBaobabDestinationUid</string>
+                            <string>getResourceUid</string>
+                            <string>getInventoriatedQuantity</string>
+                            <string>getStartDate</string>
+                            <string>getStopDate</string>
+                            <string>getPrice</string>
+                            <string>isAccountable</string>
+                            <string>isOrderable</string>
+                            <string>isDeliverable</string>
+                            <string>isDivergent</string>
+                            <string>getVariationText</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>isMovement\r\n
+uid\r\n
+getExplanationUid\r\n
+getBaobabSourceUid\r\n
+getBaobabDestinationUid\r\n
+getResourceUid\r\n
+getInventoriatedQuantity\r\n
+getStartDate\r\n
+getStopDate\r\n
+getPrice\r\n
+isAccountable\r\n
+isOrderable\r\n
+isDeliverable\r\n
+isDivergent\r\n
+getVariationText</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>z_catalog_movement_list</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>1000</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<dtml-let movement_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
+    <dtml-if "isMovement[loop_item]">\n
+      <dtml-call expr="movement_list.append(loop_item)">\n
+    </dtml-if>\n
+  </dtml-in>\n
+  <dtml-if expr="_.len(movement_list) > 0">\n
+REPLACE INTO\n
+  movement\n
+VALUES\n
+    <dtml-in prefix="loop" expr="movement_list">\n
+( \n
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="getExplanationUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getBaobabSourceUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getBaobabDestinationUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getInventoriatedQuantity[loop_item]" type="float" optional>,\n
+  <dtml-sqlvar expr="getStartDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getPrice[loop_item]" type="float" optional>,\n
+  <dtml-sqlvar expr="isAccountable[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="isOrderable[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="isDeliverable[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="isDivergent[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>\n
+)\n
+<dtml-if sequence-end><dtml-else>,</dtml-if>\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<dtml-let movement_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
+    <dtml-if "isMovement[loop_item]">\n
+      <dtml-call expr="movement_list.append(loop_item)">\n
+    </dtml-if>\n
+  </dtml-in>\n
+  <dtml-if expr="_.len(movement_list) > 0">\n
+REPLACE INTO\n
+  movement\n
+VALUES\n
+    <dtml-in prefix="loop" expr="movement_list">\n
+( \n
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="getExplanationUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getBaobabSourceUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getBaobabDestinationUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getInventoriatedQuantity[loop_item]" type="float" optional>,\n
+  <dtml-sqlvar expr="getStartDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getPrice[loop_item]" type="float" optional>,\n
+  <dtml-sqlvar expr="isAccountable[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="isOrderable[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="isDeliverable[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="isDivergent[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>\n
+)\n
+<dtml-if sequence-end><dtml-else>,</dtml-if>\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
