@@ -69,7 +69,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>user_site = context.Baobab_getUserAssignedRootSiteList()[0]\n
-context.edit(source=user_site)\n
+if user_site in (None, \'\'):\n
+  raise ValueError, "Unable to determine user site"\n
+else:\n
+  context.edit(source=user_site)\n
 </string> </value>
         </item>
         <item>
@@ -122,8 +125,10 @@ context.edit(source=user_site)\n
                             <string>kw</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>user_site</string>
+                            <string>None</string>
+                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>

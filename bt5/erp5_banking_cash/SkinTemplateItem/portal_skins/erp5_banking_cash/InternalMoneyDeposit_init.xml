@@ -68,13 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># create a default banking operation line that will be updated later\n
-#context.edit(external_software=\'star\')\n
-\n
-transaction = context\n
-\n
-# XXX it might be better to set resource according to source_payment.\n
-transaction.setResource(\'currency_module/\' + context.Baobab_getPortalReferenceCurrencyID())\n
+            <value> <string>context.setResource(\'currency_module/\' + context.Baobab_getPortalReferenceCurrencyID())\n
 \n
 context.setDestination(context.getBaobabDestination())\n
 \n
@@ -132,9 +126,8 @@ movement = context.newContent(portal_type=\'Banking Operation Line\',\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>context</string>
-                            <string>transaction</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>movement</string>
                           </tuple>
                         </value>

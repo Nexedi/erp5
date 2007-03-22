@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>site_list = context.Baobab_getUserAssignedSiteList()\n
 if len(site_list) == 0:\n
-  context.log("ClassificationSurvey_init", "unabled to determine site")\n
+  raise ValueError, "Unable to determine site"\n
 \n
 site = site_list[0]\n
 site = context.Baobab_getVaultSite(site)\n
@@ -123,6 +123,7 @@ context.setSource("%s/caveau/auxiliaire/encaisse_des_billets_ventiles_et_detruit
                             <string>context</string>
                             <string>site_list</string>
                             <string>len</string>
+                            <string>ValueError</string>
                             <string>_getitem_</string>
                             <string>site</string>
                           </tuple>
