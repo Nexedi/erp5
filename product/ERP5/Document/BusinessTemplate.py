@@ -804,9 +804,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       object_id = relative_url.split('/')[-1]
       try:
         container = portal.unrestrictedTraverse(container_path)
-        if container.aq_parent.meta_type != 'ERP5 Catalog':
-          # __getitem__ on a catalog wait for an uid
-          object = container[object_id] # We force access to the object to be sure
+        object = container._getOb(object_id) # We force access to the object to be sure
                                         # that appropriate exception is thrown
                                         # in case object is already backup and/or removed
         if trash and trashbin is not None:
@@ -815,7 +813,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if container.aq_parent.meta_type == 'ERP5 Catalog' and len(container.objectIds()) == 0:
           # We are removing a ZSQLMethod, remove the SQLCatalog if empty
           container.getParentValue().manage_delObjects([container.id])
-      except (NotFound, KeyError, BadRequest):
+      except (NotFound, KeyError, BadRequest, AttributeError):
         # object is already backup and/or removed
         pass
     BaseTemplateItem.uninstall(self, context, **kw)
