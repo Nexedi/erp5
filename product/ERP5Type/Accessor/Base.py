@@ -143,8 +143,9 @@ class Getter(Method):
         default = args[0]
       else:
         default = self._default
-      value = getattr(aq_base(instance), self._storage_id, None) # No acquisition on properties
-      if value is not None:
+      # No acquisition on properties
+      value = getattr(aq_base(instance), self._storage_id, self._null[0])
+      if value not in self._null:
         if self._is_tales_type and kw.get('evaluate', 1):
           return evaluateTales(instance, value)
         else:
