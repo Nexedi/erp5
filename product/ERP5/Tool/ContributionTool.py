@@ -29,14 +29,15 @@
 import cStringIO
 import re
 import string
-import urllib2
+import urllib2, urllib
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
-from Products.ERP5.Document.BusinessTemplate import getChainByType
+from Products.ERP5.Document.Url import no_crawl_protocol_list, no_host_protocol_list
+
 from zLOG import LOG
 from DateTime import DateTime
 from Acquisition import aq_base
@@ -58,15 +59,24 @@ class ContributionTool(BaseTool):
     metadata can be derived. 
 
     Configuration Scripts:
-  
+
       - ContributionTool_getPropertyDictFromFileName: receives file name and a 
         dict derived from filename by regular expression, and does any necesary
         operations (e.g. mapping document type id onto a real portal_type).
+
+    Problems which are not solved
+
+      - handling of relative links in HTML contents (or others...)
+        some text rewriting is necessary.
+
   """
   title = 'Contribution Tool'
   id = 'portal_contributions'
   meta_type = 'ERP5 Contribution Tool'
   portal_type = 'Contribution Tool'
+
+  # Regular expressions
+  simple_normaliser = re.compile('#.*')
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -79,14 +89,35 @@ class ContributionTool(BaseTool):
     """
       Finds the appropriate portal type based on the file name
       or if necessary the content of the document.
+
+      NOTE: XXX This implementation can be greatly accelerated by
+      caching a dict resulting which combines getContentTypeRegistryTypeDict
+      and valid_portal_type_list
     """
+    def getContentTypeRegistryTypeDict():
+      result = {}
+      for id, pred in self.content_type_registry.listPredicates():
+        (p, type) = pred
+        result[type] = None
+      return result
+
     portal_type = None
     # We should only consider those portal_types which share the
-    # same meta_type with the current object
+    # same constructor with the current object and which are not
+    # part of the definitions of content_type_registry. For
+    # example if content type registry has a definition for
+    # RSS feed, then there is no reason to consider this type
+    # whenever receiving some text/html content although both
+    # types share the same constructor. However, if Memo has
+    # same constructor as Text and Memo is not in content_type_registry
+    # then it should be considered.
     valid_portal_type_list = []
-    for pt in self.portal_types.objectValues():
-      if pt.meta_type == document.meta_type:
-        valid_portal_type_list.append(pt.id)
+    content_registry_type_dict = getContentTypeRegistryTypeDict()
+    portal_type_tool = self.portal_types
+    for pt in portal_type_tool.objectValues():
+      if hasattr(pt, 'factory') and pt.factory == portal_type_tool[document.getPortalType()].factory:
+        if not content_registry_type_dict.has_key(pt.id):
+          valid_portal_type_list.append(pt.id)
 
     # Check if the filename tells which portal_type this is
     portal_type_list = self.getPropertyDictFromFileName(file_name).get('portal_type', [])
@@ -111,7 +142,7 @@ class ContributionTool(BaseTool):
 
     if portal_type is None:
       # We can not do anything anymore
-      #return document.portal_type # XXX Wrong
+      #return document.portal_type # XXX Wrong or maybe right ?
       return None
 
     if portal_type not in valid_portal_type_list:
@@ -123,6 +154,7 @@ class ContributionTool(BaseTool):
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, url=None, container=None,
+                       container_path=None,
                        discover_metadata=1, temp_object=0,
                        user_login=None, **kw):
     """
@@ -138,6 +170,9 @@ class ContributionTool(BaseTool):
       container -- if specified, it is possible to define
       where to contribute the content. Else, ContributionTool
       tries to guess.
+
+      container_path -- if specified, defines the container path
+      and has precedence over container
 
       url -- if specified, content is download from the URL.
 
@@ -178,7 +213,8 @@ class ContributionTool(BaseTool):
       file = cStringIO.StringIO()
       file.write(data)
       file.seek(0)
-      file_name = url.split('/')[-1]
+      file_name = url.split('/')[-1] or url.split('/')[-2]
+      file_name = self._encodeURL(file_name)
       if hasattr(file, 'headers'):
         headers = file.headers
         if hasattr(headers, 'type'):
@@ -201,9 +237,9 @@ class ContributionTool(BaseTool):
       raise ValueError, "could not determine portal type"
 
     # So we will simulate WebDAV to get an empty object
-    # with PUT_factory - we provid<e the mime_type as
+    # with PUT_factory - we provide the mime_type as
     # parameter
-    ob = self.PUT_factory( file_name, mime_type, None )
+    ob = self.PUT_factory(file_name, mime_type, None)
 
     # Raise an error if we could not guess the portal type
     if ob is None:
@@ -214,7 +250,7 @@ class ContributionTool(BaseTool):
     document = BaseTool._getOb(self, file_name)
 
     # Then edit the document contents (so that upload can happen)
-    kw.setdefault('source_reference', file_name)
+    kw.setdefault('source_reference', file_name) # XXX redundant with discoverMetadata
     document._edit(**kw)
     if url: document.fromURL(url)
 
@@ -222,11 +258,17 @@ class ContributionTool(BaseTool):
     BaseTool._delObject(self, file_name)
 
     # Move the document to where it belongs
-    document = self._setObject(file_name, ob, user_login=user_login, container=container)
+    if container_path is not None:
+      container = self.getPortalObject().restrictedTraverse(container_path)
+    document = self._setObject(file_name, ob, user_login=user_login, container=container, id=id)
     document = self._getOb(file_name) # Call _getOb to purge cache
+
+    # Notify workflows
+    document.notifyWorkflowCreated()
 
     # Reindex it and return the document
     document.reindexObject()
+    if document.getCrawlingDepth() > 0: document.activate().crawlContent()
     return document
 
   security.declareProtected( Permissions.AddPortalContent, 'newXML' )
@@ -273,7 +315,7 @@ class ContributionTool(BaseTool):
     return property_dict
 
   # WebDAV virtual folder support
-  def _setObject(self, name, ob, user_login=None, container=None):
+  def _setObject(self, name, ob, user_login=None, container=None, id=None):
     """
       The strategy is to let NullResource.PUT do everything as
       usual and at the last minute put the object in a different
@@ -321,7 +363,10 @@ class ContributionTool(BaseTool):
         module = self.getDefaultModule(ob.portal_type)
       else:
         module = container
-      new_id = module.generateNewId()
+      if id is None:
+        new_id = module.generateNewId()
+      else:
+        new_id = id
       ob.id = new_id
       module._setObject(new_id, ob)
 
@@ -388,5 +433,123 @@ class ContributionTool(BaseTool):
         yield o.getObject().asContext(id=id)
 
     return wrapper(object_list)
+
+  # Crawling methods
+  def _normaliseURL(self, url, base_url=None):
+    """
+      Returns a normalised version of the url so
+      that we do not download twice the same content.
+      URL normalisation is an important part in crawlers.
+      The current implementation is obviously simplistic.
+      Refer to http://en.wikipedia.org/wiki/Web_crawler
+      and study Harvestman for more ideas.
+    """
+    url = self.simple_normaliser.sub('', url)
+    url_split = url.split(':')
+    url_protocol = url_split[0]
+    if url_protocol in no_host_protocol_list:
+      return url
+    if base_url and len(url_split) == 1:
+      # Make relative URL absolute
+      url = '%s/%s' % (base_url, url)
+    return url
+
+  def _encodeURL(self, url):
+    """
+    Returns the URL as an ID. ID should be chosen in such
+    way that it is optimal with HBTreeFolder (ie. so that
+    distribution of access time on a cluster is possible)
+
+    NOTE: alternate approach is based on a url table
+    and catalog lookup. It is faster ? Not sure. Since
+    we must anyway insert objects in btrees and this
+    is simimar in cost to accessing them.
+    """
+    url = urllib.quote(url, safe='')
+    url = url.replace('_', '__')
+    url = url.replace('%', '_')
+    return url
+
+  security.declareProtected(Permissions.AddPortalContent, 'crawlContent')
+  def crawlContent(self, content):
+    """
+      Analyses content and download linked pages
+
+      XXX: missing is the conversion of content local href to something
+      valid.
+    """
+    depth = content.getCrawlingDepth()
+    if depth <= 0:
+      # Do nothing if crawling depth is reached
+      return
+    base_url = content.getContentBaseURL()
+    url_list = map(lambda url: self._normaliseURL(url, base_url), set(content.getContentURLList()))
+    for url in set(url_list):
+      # Some url protocols should not be crawled
+      if url.split(':')[0] in no_crawl_protocol_list:
+        continue
+      #if content.getParentValue()
+      # in place of not ?
+      container = content.getParentValue()
+      # Calculate the id under which content will be stored
+      id = self._encodeURL(url)
+      # Try to access the document if it already exists
+      document = container.get(id, None)
+      if document is None:
+        # XXX - This call is not working due to missing group_method_id
+        # therefore, multiple call happen in parallel and eventually fail
+        # (the same URL is created multiple times)
+        self.activate(activity="SQLQueue").newContentFromURL(container_path=container.getRelativeUrl(),
+                                                      id=id, url=url, crawling_depth=depth - 1)
+      else:
+        # Update depth to the max. of the two values
+        new_depth = max(depth - 1, document.getCrawlingDepth())
+        document._setCrawlingDepth(new_depth)
+        # And activate updateContentFromURL on existing document
+        next_date = document.getNextAlarmDate() 
+        document.activate(at_date=next_date).updateContentFromURL()
+
+  security.declareProtected(Permissions.AddPortalContent, 'updateContentFromURL')
+  def updateContentFromURL(self, content):
+    """
+      Updates an existing content.
+    """
+    # Step 1: download new content
+    url = content.asURL()
+    data = urllib2.urlopen(url).read()
+    file = cStringIO.StringIO()
+    file.write(data)
+    file.seek(0)
+    # Step 2: compare and update if necessary (md5)
+    # do here some md5 stuff to compare contents...
+    if 1:
+      content._edit(file=file)
+      # Step 3: convert to base format
+      content.convertToBaseFormat()
+      # Step 4: activate populate (unless interaction workflow does it)
+      content.activate().populateContent()
+      # Step 5: activate crawlContent
+      content.activate().crawlContent()
+    else:
+      # XXX
+      # We must handle the case for which content type has changed in between
+      pass
+    # Step 6: activate updateContentFromURL at next period
+    next_date = content.getNextAlarmDate()
+    content.activate(at_date=next_date).updateContentFromURL()
+
+  security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
+  def newContentFromURL(self, **kw):
+    """
+      A wrapper method for newContent which provides extra safety
+      in case or errors (ie. download, access, conflict, etc.).
+      The method is able to handle a certain number of exceptions
+      and can postpone itself through an activity based on
+      the type of exception (ex. for a 404, postpone 1 day), using
+      the at_date parameter and some standard values.
+
+      NOTE: implementation needs to be done.
+    """
+    return self.newContent(**kw)
 
 InitializeClass(ContributionTool)
