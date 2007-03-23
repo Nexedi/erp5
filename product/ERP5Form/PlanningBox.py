@@ -810,27 +810,27 @@ class PlanningBoxWidget(Widget.Widget):
       required=0)
 
   title_line = fields.StringField('title_line',
-      title="specific method which fetches the title of each line",
-      description=("specific method for inserting title in line"),
+      title="Specific method which fetches the title of each line",
+      description=("Method for inserting title in line"),
       default='',
       required=0)
 
   x_start_bloc = fields.StringField('x_start_bloc',
-      title='specific property to get start of blocks (ex. start_date)',
+      title='Specific property to get start of blocks (ex. start_date)',
       description=('Property for building X-Axis such as start_date\
       objects'),
       default='start_date',
       required=0)
 
   x_stop_bloc = fields.StringField('x_stop_bloc',
-      title='specific property to get stop of blocks (ex. stop_date)',
+      title='Specific property to get stop of blocks (ex. stop_date)',
       description=('Property for building X-Axis such as stop_date\
       objects'),
       default='stop_date',
       required=0)
 
   y_size_block = fields.StringField('y_size_block',
-      title='specific property to get height of blocks (ex.quantity)',
+      title='Specific property to get height of blocks (ex.quantity)',
       description=('Method for building height of blocks objects'),
       default='quantity',
       required=0)
@@ -842,25 +842,25 @@ class PlanningBoxWidget(Widget.Widget):
       required=1)
 
   stat_method = fields.StringField('stat_method',
-      title="name of script generating statistics",
+      title="Name of script generating statistics",
       description=("script for statistics"),
       default='',
       required=0)
 
   split_method = fields.StringField('split_method',
-      title='name of script splitting activities into blocks',
+      title='Name of script splitting activities into blocks',
       description=("script for splitting activities into multiple blocks"),
       default='',
       required=0)
 
   color_script = fields.StringField('color_script',
-      title='name of script colorizing blocks',
+      title='Name of script colorizing blocks',
       description=('script for block colors object'),
       default='',
       required=0)
 
   round_script = fields.StringField('round_script',
-      title='name of script rounding blocks during validation (ex.\
+      title='Name of script rounding blocks during validation (ex.\
             Planning_roundBoundToDay)',
       description=('script for block bounds rounding when validating'),
       default='',
@@ -868,14 +868,14 @@ class PlanningBoxWidget(Widget.Widget):
 
 
   sec_axis_script = fields.StringField('sec_axis_script',
-      title='name of script building secondary axis (ex.\
+      title='Name of script building secondary axis (ex.\
             Planning_generateAxis)',
-      description=('script for building secondary axis'),
+      description=('Script for building secondary axis'),
       default='Planning_generateAxis',
       required=1)
 
   info_center = fields.StringField('info_center',
-      title='specific method of data called for inserting info in\
+      title='Specific method of data called for inserting info in\
       block center',
       description=('Method for displaying info in the center of a\
       block object'),
@@ -883,7 +883,7 @@ class PlanningBoxWidget(Widget.Widget):
       required=0)
 
   info_topright = fields.StringField('info_topright',
-      title='specific method of data called for inserting info in\
+      title='Specific method of data called for inserting info in\
       block topright',
       description=('Method for displaying info in the topright of a block\
       object'),
@@ -891,7 +891,7 @@ class PlanningBoxWidget(Widget.Widget):
       required=0)
 
   info_topleft = fields.StringField('info_topleft',
-      title='specific method of data called for inserting info in\
+      title='Specific method of data called for inserting info in\
       block topleft',
       description=('Method for displaying info in the topleft corner\
       of a block object'),
@@ -899,7 +899,7 @@ class PlanningBoxWidget(Widget.Widget):
       required=0)
 
   info_backleft = fields.StringField('info_backleft',
-      title='specific method of data called for inserting info in\
+      title='Specific method of data called for inserting info in\
       block backleft',
       description=('Method for displaying info in the backleft of a\
       block object'),
@@ -907,7 +907,7 @@ class PlanningBoxWidget(Widget.Widget):
       required=0)
 
   info_backright = fields.StringField('info_backright',
-      title='specific method of data called for inserting info in\
+      title='Specific method of data called for inserting info in\
       block backright',
       description=('Method for displaying info in the backright of a\
       block object'),
@@ -915,7 +915,7 @@ class PlanningBoxWidget(Widget.Widget):
       required=0)
 
   security_index = fields.IntegerField('security_index',
-      title='variable depending on the type of web browser :',
+      title='Variable depending on the type of web browser :',
       description=("This variable is used because the rounds of each\
       web browser seem to work differently"),
       default=2,
@@ -1044,9 +1044,11 @@ class BasicStructure:
   """
 
   def __init__ (self, here='', form='', field='', REQUEST='', list_method='',
-    selection=None, params = '', selection_name='', report_root_list='',
-    title_line='', portal_types='', sort=None, list_error=None):
-    """ init main internal parameters """
+              selection=None, params = '', selection_name='', report_root_list='',
+              title_line='', portal_types='', sort=None, list_error=None):
+    """ 
+    Init main internal parameters 
+    """
     self.here = here
     self.form = form
     self.field = field
@@ -1062,17 +1064,15 @@ class BasicStructure:
     self.basic_group_list = None
     self.report_groups= '' # needed to generate groups
     self.list_error = list_error
-
     self.secondary_axis_occurence = []
     self.render_format = '' # 'list' in case output is a list containing the
                             # full planning structure without any selection
     self.main_axis_info = {}
     self.secondary_axis_info = {}
 
-
   def build(self):
     """
-    build BasicStructure from given parameters, and for that do the
+    Build BasicStructure from given parameters, and for that do the
     specified processes :
     1 - define variables
     2 - building query
@@ -1204,7 +1204,7 @@ class BasicStructure:
                                     selection_name=self.selection_name,
                                     report_depth=report_depth,
                                     list_method=self.list_method,
-				    filtered_portal_types= \
+                                    filtered_portal_types= \
                                                 self.filtered_portal_types,
                                     is_report_opened=is_report_opened,
                                     sort_on=self.selection.sort_on,
@@ -1235,8 +1235,6 @@ class BasicStructure:
     # now iterating through report_tree_list
     for object_tree_line in report_tree_list:
       # prepare query by defining selection report object
-      
-
       # defining info_dict, holding all information about the current object.
       info_dict = None
       info_dict = {}
@@ -1280,7 +1278,7 @@ class BasicStructure:
           self.selection.edit(exception_uid_list= \
              object_tree_line.getExceptionUidList())
           object_list = self.selection(method = self.list_method,
-             context=self.here, REQUEST=self.REQUEST)
+                        context=self.here, REQUEST=self.REQUEST)
         else:
           # no list_method found
           # XXX seems to be buggy :
@@ -1541,17 +1539,17 @@ class BasicStructure:
           axis_dict['bound_end'] == None) and occurence[1] != None:
         axis_dict['bound_end'] = occurence[1]
 
-    if axis_dict['bound_end']==None or axis_dict['bound_begin']==None:
+    if axis_dict['bound_end']== None or axis_dict['bound_begin'] == None:
       # ERROR
       # no bounds over the secondary axis have been defined
       # can append if bad property has been selected
       message = 'can not find secondary axis bounds for planning view :\
       No object has good start & stop properties, please check your objects \
       and their corresponding properties'
-      return [(Message(domain=None, message=message,mapping=None))]
+      return 1 #[(Message(domain=None, message=message,mapping=None))]
 
 
-    axis_dict['bound_range'] = axis_dict['bound_end']-axis_dict['bound_begin']
+    axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
     # now start and stop have the extreme values of the second axis bound.
     # this represents in fact the size of the Planning's secondary axis
 
@@ -1651,7 +1649,6 @@ class BasicStructure:
       report_group_objects returned from the ERP5 request.
       """
       position = 0
-
       # iterating each element
       for (report_group_object, object_list, property_dict) in \
            self.report_groups:
@@ -1666,8 +1663,8 @@ class BasicStructure:
         # updating position_informations
         position +=1
         # recovering usefull informations, basic_structure
-	if self.title_line not in (None,''):
-	  title_line_method = getattr(report_group_object.getObject(), \
+        if self.title_line not in (None,''):
+	        title_line_method = getattr(report_group_object.getObject(), \
 			                               self.title_line, None)
         else:
           title_line_method = getattr(report_group_object.getObject(), \
@@ -1691,14 +1688,15 @@ class BasicStructure:
           secondary_axis_bounds['bound_stop']  = group_stop
         else:
           secondary_axis_bounds = self.secondary_axis_info
+
         child_group = BasicGroup(title=title, name=name, url=url,
-                                 constraints=None, depth=depth,
-                                 position=position, field =self.field,
-                                 object=report_group_object, is_open=is_open,
-                                 is_pure_summary=is_pure_summary,
-                                 secondary_axis_start = group_start,
-                                 secondary_axis_stop  = group_stop,
-                                 property_dict = property_dict)
+                                constraints=None, depth=depth,
+                                position=position, field =self.field,
+                                object=report_group_object, is_open=is_open,
+                                is_pure_summary=is_pure_summary,
+                                secondary_axis_start = group_start,
+                                secondary_axis_stop  = group_stop,
+                                property_dict = property_dict)
 
         if object_list != None:
           child_group.setBasicActivities(object_list,self.list_error,
@@ -1725,9 +1723,9 @@ class BasicGroup:
   ReportTree mode to handle child groups.
   """
 
-  def __init__ (self, title='', name='',url='', constraints='', depth=0,
+  def __init__ (self, title='', name='',url='', constraints='', depth=0, 
                 position=0, field = None, object = None, is_open=0,
-                is_pure_summary=1, secondary_axis_start=None,
+                is_pure_summary=1, secondary_axis_start=None, 
                 secondary_axis_stop=None, property_dict = {}):
     self.title = title
     self.name = name
@@ -1752,7 +1750,7 @@ class BasicGroup:
 
   def setBasicActivities(self,activity_list, list_error,secondary_axis_info):
     """
-    link a list of activities to the current object.
+    Link a list of activities to the current object.
     *Recover group properties. Used in case activity is built from Group
      itself
     *create a BasicActivity for each activity referenced in the list if
@@ -1877,7 +1875,6 @@ class BasicGroup:
                info['info_botright']=str(info_botright_method())
 
             title = info['info_center']
-
             color_script = getattr(activity_content.getObject(),
                                    self.field.get_value('color_script'),None)
             # calling color script if exists to set up activity_color
@@ -1924,8 +1921,6 @@ class BasicGroup:
           # incrementing indic used for differenciating activities in the same 
           # group (used for Activity naming)
           indic += 1
-
-
 
     else:
       # specific color script
@@ -2082,7 +2077,6 @@ class PlanningStructure:
     self.X.name = 'axis_x'
     self.Y.name = 'axis_y'
 
-
     # recovering secondary_axis_ bounds
     # Used in case of non calendar mode
     self.secondary_axis.start = \
@@ -2090,9 +2084,7 @@ class PlanningStructure:
     self.secondary_axis.stop = \
                       basic_structure.secondary_axis_info['bound_stop']
 
-
     self.main_axis.size =  self.buildGroups(basic_structure=basic_structure)
-
     # call method to build secondary axis structure
     # need start_bound, stop_bound and number of groups to build
     # used in non calendar mode
@@ -2115,7 +2107,6 @@ class PlanningStructure:
       return status
     # everything is fine, returning 'true' flag.
     return 1
-
 
   def buildSecondaryAxis(self,basic_structure, field):
     """
@@ -2188,9 +2179,7 @@ class PlanningStructure:
 
     return 1
 
-
-
-  def completeAxis (self):
+  def completeAxis(self):
     """
     complete axis infomations (and more precisely axis position objects) thanks
     to the actual planning structure
@@ -2230,20 +2219,18 @@ class PlanningStructure:
     # returning 'true' flag at the end of the process
     return 1
 
-
-
-  def buildGroups (self, basic_structure=None):
+  def buildGroups(self, basic_structure=None):
     """
-    build groups from activities saved in the structure groups.
+    Build groups from activities saved in the structure groups.
     """
     axis_group_number = 0
     axis_element_already_present=0
     for basic_group_object in basic_structure.basic_group_list:
-      axis_group_number += 1
       if basic_structure.calendar_mode == 1:
         secondary_axis_range = basic_structure.calendar_range
       else:
         secondary_axis_range = None
+      axis_group_number += 1
       axis_group= AxisGroup(name='Group_' + str(axis_group_number),
                             title=basic_group_object.title,
                             object=basic_group_object.object,
@@ -2256,6 +2243,7 @@ class PlanningStructure:
                             secondary_axis_stop  = basic_group_object.secondary_axis_stop,
                             secondary_axis_range = secondary_axis_range,
                             property_dict = basic_group_object.property_dict)
+
       if self.calendar_view == 0:
         axis_group.position_y = axis_group.position_main
         axis_group.position_x = axis_group.position_secondary
@@ -2270,8 +2258,8 @@ class PlanningStructure:
       axis_group.fixProperties(form_id = basic_structure.form.id,
                                selection_name = basic_structure.selection_name)
       # updating start value
-      axis_group.axis_element_start = axis_element_already_present + 1
       activity_number = 0
+      axis_group.axis_element_start = axis_element_already_present + 1
       if basic_group_object.basic_activity_list != None:
         # need to check if activity list is not empty : possible in case zoom
         # selection is used over the secondary axis
@@ -2281,9 +2269,9 @@ class PlanningStructure:
           for basic_activity_object in basic_group_object.basic_activity_list:
             activity_number += 1
             # create new activity in the PlanningStructure
-            activity=Activity(name='Group_%s_Activity_%s' %(
-                                            str(axis_group_number),
-                                            str(activity_number)),
+            activity=Activity(name='Group_%s_Activity_%s' % (
+                              str(axis_group_number),
+                              str(activity_number)),
                               title=basic_activity_object.title,
                               object=basic_activity_object.object,
                               color=basic_activity_object.color,
@@ -2831,13 +2819,13 @@ class AxisGroup:
       self.info_title.link = 'foldReport?report_url=' + \
                               '%s&form_id=%s&list_selection_name=%s' %(
                               self.url, form_id, selection_name)
-      self.info_title.info = '[-] ' + self.info_title.info
+      self.info_title.info = '[-] ' + str(self.info_title.info)
     else:
       # current report is fold, action 'unfold'
       self.info_title.link = 'unfoldReport?report_url=' + \
                              '%s&form_id=%s&list_selection_name=%s' %(
                               self.url, form_id, selection_name)
-      self.info_title.info = '[+] ' + self.info_title.info
+      self.info_title.info = '[+] ' + str(self.info_title.info)
 
     #for i in range(self.depth):
     #  self.title = '| ' + self.title
