@@ -143,9 +143,12 @@ class Getter(Method):
         default = args[0]
       else:
         default = self._default
-      # No acquisition on properties
-      value = getattr(aq_base(instance), self._storage_id, self._null[0])
-      if value not in self._null:
+      # No acquisition on properties but inheritance.
+      # Instead of using getattr, which use inheritance from SuperClass
+      # why not use __dict__.get directly ?
+      # It seems slower when property is defined, but much more faster if not
+      value = getattr(aq_base(instance), self._storage_id, None)
+      if value is not None:
         if self._is_tales_type and kw.get('evaluate', 1):
           return evaluateTales(instance, value)
         else:

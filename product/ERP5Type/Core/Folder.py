@@ -349,6 +349,9 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   _edit = Base._edit
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
+  # XXX Prevent inheritance from PortalFolderBase
+  description = None
+
 
   # Overload __init__ so that we do not take into account title
   # This is required for test_23_titleIsNotDefinedByDefault
