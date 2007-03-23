@@ -115,7 +115,7 @@ for line in context.getMovementList(\n
     key = (node_value.getRelativeUrl(), mirror_section)\n
     total_payable_price_per_node_section[key] =\\\n
           total_payable_price_per_node_section.get(key, 0) + amount\n
-    accounts_in_context.append(line)\n
+    accounts_in_context.append(node_value)\n
     if line.getGroupingReference():\n
       # we rememeber this line to check if there is any line grouped with it\n
       groupped_line_list.append(line)\n
