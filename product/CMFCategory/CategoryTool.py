@@ -1295,36 +1295,30 @@ class CategoryTool( UniqueObject, Folder, Base ):
         for base_category in base_category_list:
           category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
 
-      # XXX TODO Only 'View' permission filtering is implemented now
-      query = None
-      if checked_permission is not None:
-        if isinstance(checked_permission, str):
-          checked_permission = (checked_permission, )
-        if 'View' in checked_permission:
-          # Use catalog for checking the View permission
-          query = self.portal_catalog.getSecurityQuery()
-      if query is not None:
-        query = self.portal_catalog.buildSQLQuery(query=query)
-        # XXX Is Base_zSearchRelatedObjectsByCategoryList still usefull ?
-        # It may possible to call portal catalog directly
-        # Base_zSearchRelatedObjectsByCategoryList add a dependency to ERP5
-        brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
-                             category_list=category_list,
-                             portal_type=portal_type,
-                             strict_membership=strict_membership,
-                             where_expression=query['where_expression'],
-                             order_by_expression=query['order_by_expression'],)
-      else:
-        brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
-                             category_list=category_list,
-                             portal_type=portal_type,
-                             strict_membership=strict_membership)
+      brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
+                           category_list=category_list,
+                           portal_type=portal_type,
+                           strict_membership=strict_membership)
 
       result = []
-      for b in brain_result:
-        o = b.getObject()
-        if o is not None:
-          result.append(o)
+      if checked_permission is None:
+        # No permission to check
+        for b in brain_result:
+          o = b.getObject()
+          if o is not None:
+            result.append(o)
+      else:
+        # Check permissions on object
+        if isinstance(checked_permission, str):
+          checked_permission = (checked_permission, )
+          checkPermission = self.portal_membership.checkPermission
+          for b in brain_result:
+            obj = b.getObject()
+            if obj is not None:
+              for permission in checked_permission:
+                if not checkPermission(permission, obj):
+                  break
+                result.append(obj)
 
       return result
       # XXX missing filter and **kw stuff
