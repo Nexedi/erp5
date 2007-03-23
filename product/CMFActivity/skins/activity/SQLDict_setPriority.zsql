@@ -32,10 +32,8 @@ SET
 WHERE
   1 = 1
 <dtml-if uid>
-  AND (
-  <dtml-in uid>
-    uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-  </dtml-in>
+  AND uid IN (
+  <dtml-in uid><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
   )
 </dtml-if>
 <dtml-if processing_node>

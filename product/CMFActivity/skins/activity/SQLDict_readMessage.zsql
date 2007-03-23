@@ -13,7 +13,7 @@ to_date
 to_processing_date
 group_method_id
 order_validation_text</params>
-SELECT DISTINCT * FROM
+SELECT <dtml-if group_method_id>DISTINCT</dtml-if> * FROM
     message
 WHERE
     processing <> 1
@@ -22,11 +22,12 @@ WHERE
 <dtml-if to_date>AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>
 <dtml-if group_method_id>AND group_method_id = <dtml-sqlvar group_method_id type="string"> </dtml-if>
 <dtml-if order_validation_text>AND order_validation_text = <dtml-sqlvar order_validation_text type="string"> </dtml-if>
-
+<dtml-if group_method_id>
 GROUP BY
     path, method_id
+</dtml-if>
 ORDER BY
-    priority, date
+    priority, date, uid
 <dtml-if group_method_id>
 LIMIT 100
 <dtml-else>

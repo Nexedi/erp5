@@ -17,11 +17,13 @@ SET
   processing_node=<dtml-sqlvar processing_node type="int">,
   processing=0
 WHERE
+  processing_node = -1
 <dtml-if uid>
-<dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>
- OR </dtml-if></dtml-in>
+  AND uid IN (
+<dtml-in uid><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
+)
 <dtml-else>
-  path = <dtml-sqlvar path type="string">
+  AND path = <dtml-sqlvar path type="string">
 <dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
 </dtml-if>
 <dtml-if broadcast>
