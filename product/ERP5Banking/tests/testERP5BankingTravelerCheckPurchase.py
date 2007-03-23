@@ -196,8 +196,8 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
     self.line_1 = self.traveler_check_purchase.newContent(quantity=1,
                                  resource_value=self.traveler_check_model,
                                  check_type_value=self.traveler_check_model.variant_1,
-                                 reference_range_min=52,
-                                 reference_range_max=52,
+                                 reference_range_min="abcd123456",
+                                 reference_range_max="abcd123456",
                                  aggregate_value=self.traveler_check,
                                  price_currency_value=self.currency_2
                                  )

@@ -95,8 +95,8 @@ class TestERP5BankingCheckbookVaultTransferMixin:
     self.line_2 = self.checkbook_reception.newContent(quantity=1,
                              resource_value=self.traveler_check_model,
                              check_type_value=self.traveler_check_model.variant_1,
-                             reference_range_min=52,
-                             reference_range_max=52,
+                             reference_range_min="abcd123456",
+                             reference_range_max="abcd123456",
                              price_currency_value=self.currency_2
                              )
     self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action', 
