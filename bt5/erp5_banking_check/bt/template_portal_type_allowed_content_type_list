@@ -14,6 +14,7 @@ Checkbook Vault Transfer | Checkbook Delivery Line
 Stop Payment Module | Stop Payment
 Stop Payment | Checkbook Delivery Line
 Traveler Check Purchase Module | Traveler Check Purchase
+Traveler Check Purchase | Banking Operation Line
 Traveler Check Purchase | Checkbook Delivery Line
 Traveler Check Sale Module | Traveler Check Sale
 Traveler Check Sale | Banking Operation Line

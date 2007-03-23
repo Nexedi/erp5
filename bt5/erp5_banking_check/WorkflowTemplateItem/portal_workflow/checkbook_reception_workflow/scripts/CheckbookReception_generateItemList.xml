@@ -201,9 +201,10 @@ for line in line_list:\n
       start_date = transaction.getStartDate()\n
       destination_section = item.getDestinationSection()\n
       item.setStartDate(start_date)\n
-      for j in xrange(reference_to_int(reference_range_min), last_reference_value + 1):\n
+      reference_list = xrange(reference_to_int(reference_range_min), last_reference_value + 1)\n
+      checkReferenceUniqueness(reference_list, model)\n
+      for j in reference_list:\n
         reference = int_to_reference(j, reference_range_min)\n
-        checkReferenceUniqueness(reference, model)\n
         check = item.newContent(portal_type=\'Check\', title=str(reference), activate_kw={\'tag\': \'check_%s_%s\' % (model, reference)})\n
         check.setDestination(destination_section)\n
         check.setStartDate(start_date)\n
@@ -321,6 +322,7 @@ for line in line_list:\n
                             <string>reference_range_max</string>
                             <string>start_date</string>
                             <string>destination_section</string>
+                            <string>reference_list</string>
                             <string>j</string>
                             <string>reference</string>
                             <string>str</string>

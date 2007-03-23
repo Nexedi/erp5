@@ -43,6 +43,7 @@
   <item>Stop Payment</item>
  </portal_type>
  <portal_type id="Traveler Check Purchase">
+  <item>Banking Operation Line</item>
   <item>Checkbook Delivery Line</item>
  </portal_type>
  <portal_type id="Traveler Check Purchase Module">
