@@ -95,7 +95,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     # Create a user and login as manager to populate the erp5 portal with objects for tests.
     self.createManagerAndLogin()
 
-    self.createFunctionGroupSiteCategory()
+    self.createFunctionGroupSiteCategory(site_list=('paris',))
     self.createBanknotesAndCoins()
 
 
@@ -121,10 +121,10 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
     self.encaisse_tri = self.paris.surface.salle_tri.encaisse_des_billets_recus_pour_ventilation.madrid
     self.encaisse_reserve = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
-    self.encaisse_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
-    #self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_recus_pour_ventilation.madrid
-    self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
-    self.encaisse_ventilation = self.paris.caveau.auxiliaire.encaisse_des_billets_recus_pour_ventilation.madrid
+    self.encaisse_aux_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
+    #self.encaisse_aux_bm = self.paris.caveau.auxiliaire.encaisse_des_billets_recus_pour_ventilation.madrid
+    self.encaisse_aux_bm = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
+    self.encaisse_aux_ventil_madrid = self.paris.caveau.auxiliaire.encaisse_des_billets_recus_pour_ventilation.madrid
 
     self.createCashInventory(source=None, destination=self.encaisse_tri, currency=self.currency_1,
                              line_list=line_list)
@@ -197,33 +197,33 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     # check we don't have banknotes of 10000
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
 
     # check we don't have coins of 200
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
 
     # check for banknote of 5000
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
 
 
   def stepCreateCashSorting(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a cash sorting document and check it
     """
-    # Cash sorting has encaisse_paris for source, encaisse_externe for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 1000 + (5+7) * 200 )
+    # Cash sorting has encaisse_paris for source, encaisse_aux_externe for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.cash_sorting = self.cash_sorting_module.newContent(
                                id='cash_sorting_1', 
                                portal_type='Cash Sorting', 
@@ -246,7 +246,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_sorting.getPortalType(), 'Cash Sorting')
     # check that its source is encaisse_paris
     self.assertEqual(self.cash_sorting.getSource(), 'site/testsite/paris/surface/salle_tri/encaisse_des_billets_recus_pour_ventilation/madrid')
-    # check that its destination is encaisse_externe
+    # check that its destination is encaisse_aux_externe
     self.assertEqual(self.cash_sorting.getDestination(), None)
 
 
@@ -284,7 +284,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       # check the source vault is encaisse_paris
       self.assertEqual(cell.getSourceValue(), self.encaisse_tri)
-      # check the destination vault is encaisse_externe
+      # check the destination vault is encaisse_aux_externe
       self.assertEqual(cell.getDestinationValue(), None)
       if cell.getId() == 'movement_0_0_0':
         # check the quantity of banknote for year 1992 is 2
@@ -324,7 +324,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
       self.assertEqual(cell.getResourceValue(), self.billet_200)
       # check the source vault is encaisse_paris
       self.assertEqual(cell.getSourceValue(), self.encaisse_tri)
-      # check the destination vault is encaisse_externe
+      # check the destination vault is encaisse_aux_externe
       self.assertEqual(cell.getDestinationValue(), None)
       if cell.getId() == 'movement_0_0_0':
         # check the quantity of banknote for year 1992 is 2
@@ -364,7 +364,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
       self.assertEqual(cell.getResourceValue(), self.billet_5000)
       # check the source vault is encaisse_paris
       self.assertEqual(cell.getSourceValue(), self.encaisse_tri)
-      # check the destination vault is encaisse_externe
+      # check the destination vault is encaisse_aux_externe
       self.assertEqual(cell.getDestinationValue(), None)
       if cell.getId() == 'movement_0_0_0':
         # check the quantity of banknote for year 1992 is 2
@@ -394,7 +394,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # create the line
     self.addCashLineToDelivery(self.cash_sorting, 'valid_outgoing_line_1', 'Outgoing Cash Sorting Line', self.billet_10000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
     self.stepTic()
@@ -414,7 +414,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.valid_outgoing_line.objectValues()), 2)
     for variation in self.variation_list:
       # get the delivery  cell
-      cell = self.valid_outgoing_line.getCell('emission_letter/not_defined', variation, 'cash_status/to_sort')
+      cell = self.valid_outgoing_line.getCell('emission_letter/p', variation, 'cash_status/valid')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Outgoing Cash Sorting Cell')
       if cell.getId() == 'movement_0_0_0':
@@ -574,20 +574,24 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepCheckDestinationCreditPlanned(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault encaisse_externe is right after confirm and before deliver
+    Check that compution of inventory at vault encaisse_aux_externe is right after confirm and before deliver
     """
     # check we have 0 banknote of 10000 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_ventilation.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_ventil_madrid.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we will have 5 banknotes of 10000 after deliver
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_ventilation.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_ventil_madrid.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we have 0 banknote of 10000 currently
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we will have 5 banknotes of 10000 after deliver
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 0 coin of 200 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 0.0)
     # check we will have 12 coins of 200 after deliver
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     # check for banknote of 5000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
     # check we will have 12 coins of 200 after deliver
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
 
 
   def stepDeliverCashSorting(self, sequence=None, sequence_list=None, **kwd):
@@ -627,17 +631,22 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepCheckDestinationCredit(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check inventory at destination (vault encaisse_externe) after deliver of the cash sorting
+    Check inventory at destination (vault encaisse_aux_externe) after deliver of the cash sorting
     """
     # check we have 5 banknotes of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_ventilation.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_ventilation.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_ventil_madrid.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_ventil_madrid.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we have 0 banknote of 10000 currently
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    # check we will have 5 banknotes of 10000 after deliver
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_reserve.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+
     # check we have 12 coins of 200
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     # check we have 24 banknotes of 5000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
 
 
   ##################################
