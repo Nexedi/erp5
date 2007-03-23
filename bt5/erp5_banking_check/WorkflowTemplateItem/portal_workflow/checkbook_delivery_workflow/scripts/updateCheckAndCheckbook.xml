@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># We will need to create all checks for all checkbooks\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# XXX: this script is not used any more, since checks are already\n
+# generated when checks & checkbooks are received.\n
+\n
+# We will need to create all checks for all checkbooks\n
 # Then all of them should be set as confirmed\n
 transaction = state_change[\'object\']\n
 \n
@@ -88,7 +93,9 @@ for line in line_list:\n
     elif aggregate.getPortalType()==\'Check\':\n
       aggregate.setStartDate(transaction.getStartDate())\n
       aggregate.confirm()\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>

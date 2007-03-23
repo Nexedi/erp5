@@ -49,6 +49,7 @@
   <item>Traveler Check Purchase</item>
  </portal_type>
  <portal_type id="Traveler Check Sale">
+  <item>Banking Operation Line</item>
   <item>Checkbook Delivery Line</item>
  </portal_type>
  <portal_type id="Traveler Check Sale Module">

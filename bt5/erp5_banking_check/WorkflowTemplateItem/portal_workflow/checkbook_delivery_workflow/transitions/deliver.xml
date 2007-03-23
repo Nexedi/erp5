@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>updateCheckAndCheckbook</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
