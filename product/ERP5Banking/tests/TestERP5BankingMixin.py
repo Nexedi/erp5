@@ -27,6 +27,7 @@
 ##############################################################################
 
 from DateTime import DateTime
+from zLOG import LOG
 
 
 def isSameSet(a, b):
@@ -440,10 +441,12 @@ class TestERP5BankingMixin:
          price_currency_value=self.currency_2, variation_list=('not_defined',),
          quantity_unit_value=self.unit)
 
-  def createFunctionGroupSiteCategory(self, no_site=0, site_list=[]):
+  def createFunctionGroupSiteCategory(self, no_site=0, site_list=None):
     """
     Create site group function category that can be used for security
     """
+    if site_list is None:
+      site_list = ["paris"]
     # add category unit in quantity_unit which is the unit that will be used for banknotes and coins
     self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
     self.unit = self.variation_base_category.newContent(id='unit', title='Unit')
@@ -491,10 +494,6 @@ class TestERP5BankingMixin:
         self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
       if 'siege' in site_list:
         self.siege = self.testsite.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
-    else:
-      self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
-      self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
-      self.siege = self.testsite.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
 
     self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
     site_vault_type = self.vault_type_base_category.newContent(id='site')
@@ -528,7 +527,7 @@ class TestERP5BankingMixin:
           elif s == 'gros_paiement':
             vault_codification += 'GP'
           s = surface.newContent(id='%s' %(s,), portal_type='Category', codification=vault_codification,  vault_type='site/surface/%s' %(s,))
-          for ss in ['guichet_1', 'guichet_2', 'guichet_3']:
+          for ss in ['guichet_1', 'guichet_2']:
             final_vault_codification = vault_codification + ss[-1]
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification=final_vault_codification,  vault_type='site/surface/%s/guichet' %(s.getId(),))
             for sss in ['encaisse_des_billets_et_monnaies',]:
