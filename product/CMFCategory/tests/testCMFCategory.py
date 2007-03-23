@@ -627,10 +627,13 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     #test _getDefaultRelatedProperty Accessor
     person = self.getPortal().person_module.newContent(id='person_test')
-    org = self.getPortal().organisation_module.newContent(id='organisation_test',destination='person_module/person_test')
+    org = self.getPortal().organisation_module.newContent(
+                                  id='organisation_test',
+                                  destination='person_module/person_test')
     get_transaction().commit()
     self.tic()
-    self.assertEquals(person.getDefaultDestinationRelated(),'organisation_module/organisation_test' )
+    self.assertEquals(person.getDefaultDestinationRelated(),
+                                  'organisation_module/organisation_test' )
 
   def test_17_CategoriesAndDomainSelection(self, quiet=quiet,
       run=run_all_test):
@@ -796,7 +799,8 @@ class TestCMFCategory(ERP5TypeTestCase):
       p1.setCareerSubordination(o1)
     except Exception, e:
       self.failUnless(isinstance(e, TypeError))
-      self.assertEqual(e.args[0], 'Category must be of string, tuple of string or list of string type.')
+      self.assertEqual(e.args[0], 'Category must be of string, tuple of '
+                                  'string or list of string type.')
 
 if __name__ == '__main__':
     framework()
