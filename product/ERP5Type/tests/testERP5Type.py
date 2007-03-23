@@ -840,14 +840,12 @@ class TestPropertySheet:
       """
       Tests that the default value of getDescription is returned correctly
       """
-      portal = self.getPortal()
-      module = self.getPersonModule()
-      person = module.newContent(portal_type='Person')
+      person = self.getPersonModule().newContent(portal_type='Person')
 
       # test default value of getDescription accessor
       # as defined in the DublinCore PropertySheet
-      self.assertEquals(None, person.getDescription())
-      self.assertEquals('foo', 
+      self.assertEquals('', person.getDescription())
+      self.assertEquals('foo',
                         person.getDescription('foo'))
 
     def test_16_SimpleStringAccessor(self,quiet=quiet, run=run_all_test):

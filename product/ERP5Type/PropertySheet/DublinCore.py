@@ -48,6 +48,7 @@ class DublinCore:
             'mode'        : 'w' },
         {   'id'          : 'description',
             'description' : '',
+            'default'     : '',
             'type'        : 'text',
             'mode'        : 'w' },
         {   'id'          : 'contributor',
