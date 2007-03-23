@@ -129,9 +129,9 @@ def assertReferenceMatchListEmpty(match_list):\n
     matched_reference_list = []\n
     for match in match_list:\n
       matched_reference_list.append(match.getReference())\n
-    raise ValidationError, \'The following references are already allocated : %s\' % (matched_reference_list, )\n
+    raise ValidationFailed, \'The following references are already allocated : %s\' % (matched_reference_list, )\n
 \n
-portal_activities = conetxt.getPortalObject().portal_activities\n
+portal_activities = context.getPortalObject().portal_activities\n
 def checkReferenceUniqueness(reference, model):\n
   """\n
     Check the given reference not to already exist.\n
@@ -139,7 +139,7 @@ def checkReferenceUniqueness(reference, model):\n
   match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference)\n
   assertReferenceMatchListEmpty(match_list)\n
   if portal_activities.countMessageWithTag(\'check_%s_%s\' % (model, reference)) != 0:\n
-    raise ValidationError, \'This reference is alredy scheduled for indexing, and so is already allocated : %s\' % (reference, )\n
+    raise ValidationFailed, \'This reference is alredy scheduled for indexing, and so is already allocated : %s\' % (reference, )\n
 \n
 # Check getBaobabSource and getBaobabDestination\n
 transaction.Base_checkBaobabSourceAndDestination()\n
@@ -291,12 +291,11 @@ for line in line_list:\n
                             <string>getTravelerCheckReferencePrefix</string>
                             <string>generateTravelerCheckReference</string>
                             <string>assertReferenceMatchListEmpty</string>
-                            <string>conetxt</string>
+                            <string>context</string>
                             <string>portal_activities</string>
                             <string>portal</string>
                             <string>checkReferenceUniqueness</string>
                             <string>delivery</string>
-                            <string>context</string>
                             <string>line_list</string>
                             <string>_getiter_</string>
                             <string>line</string>
