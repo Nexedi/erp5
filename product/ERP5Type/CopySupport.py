@@ -240,7 +240,7 @@ class CopyContainer:
 
     # Give the Owner local role to the current user, zope only does this if no
     # local role has been defined on the object, which breaks ERP5Security
-    if getattr(self_base, '__ac_local_roles__', _marker) is not _marker:
+    if getattr(self_base, '__ac_local_roles__', None) is None:
       user=getSecurityManager().getUser()
       if user is not None:
         userid=user.getId()
