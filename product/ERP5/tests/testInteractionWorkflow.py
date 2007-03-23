@@ -221,14 +221,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "description = context.getDescription()\n" +\
-           "if description is None:\n" +\
-           "  description = ''\n" +\
            "context.setDescription(description + 'a')"
     self.script.ZPythonScript_edit(params,body)
     self.createData()
     organisation = self.organisation
-    organisation.setDescription(None)
-    self.assertEquals(organisation.getDescription(),None)
     organisation.edit()
     self.assertEquals(organisation.getDescription(),'a')
     organisation.edit()
@@ -268,14 +264,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "description = context.getDescription()\n" +\
-           "if description is None:\n" +\
-           "  description = ''\n" +\
            "context.setDescription(description + 'a')"
     self.script.ZPythonScript_edit(params,body)
     self.createData()
     organisation = self.organisation
-    organisation.setDescription(None)
-    self.assertEquals(organisation.getDescription(), None)
     organisation.setCorporateName('corp')
     self.assertEquals(organisation.getDescription(),'a')
     organisation.setActivityCode('acode')
@@ -299,16 +291,12 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     body = "context = sci.object\n" +\
            "context.log('InteractionWF.test_09 in script', 'a')\n" +\
            "description = context.getDescription()\n" +\
-           "if description is None:\n" +\
-           "  description = ''\n" +\
            "context.setDescription(description + 'a')"
     self.scriptA.ZPythonScript_edit(params, body)
     self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
     
     self.createData()
     organisation = self.organisation
-    organisation.setDescription(None)
-    self.assertEquals(organisation.getDescription(), None)
     organisation.edit()
     self.assert_(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
@@ -332,16 +320,12 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     body = "context = sci.object\n" +\
            "context.log('InteractionWF.test_10 in script', 'a')\n" +\
            "description = context.getDescription()\n" +\
-           "if description is None:\n" +\
-           "  description = ''\n" +\
            "context.setDescription(description + 'a')"
     self.scriptA.ZPythonScript_edit(params, body)
     self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
     
     self.createData()
     organisation = self.organisation
-    organisation.setDescription(None)
-    self.assertEquals(organisation.getDescription(), None)
     organisation.edit()
     self.assert_(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
@@ -370,8 +354,6 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     body = "context = sci.object\n" +\
            "context.log('InteractionWF.test_10 in script', 'a')\n" +\
            "description = context.getDescription()\n" +\
-           "if description is None:\n" +\
-           "  description = ''\n" +\
            "context.setDescription(description + 'a')"
     self.scriptA.ZPythonScript_edit(params, body)
     self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
