@@ -1473,7 +1473,7 @@ class Catalog( Folder,
 
         #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
         method = getattr(self, method_name)
-        if method.meta_type in ["Z SQL Method", "LDIf Method"]:
+        if method.meta_type in ["Z SQL Method", "LDIF Method"]:
           # Build the dictionnary of values
           arguments = method.arguments_src
           for arg in split(arguments):
