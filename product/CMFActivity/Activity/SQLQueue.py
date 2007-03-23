@@ -134,7 +134,7 @@ class SQLQueue(RAMQueue):
           LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
           pass
 
-        if issubclass(exc, ConflictError):
+        if isinstance(exc, ConflictError):
           # If a conflict occurs, delay the operation.
           activity_tool.SQLQueue_setPriority(uid = line.uid, date = next_processing_date,
                                              priority = line.priority)

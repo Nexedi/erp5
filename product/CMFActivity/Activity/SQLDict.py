@@ -313,7 +313,7 @@ class SQLDict(RAMDict):
           # Unfortunately, database adapters may raise an exception against abort.
           LOG('SQLDict', WARNING, 'abort failed, thus some objects may be modified accidentally')
           pass
-        if issubclass(exc, ConflictError):
+        if isinstance(exc, ConflictError):
           # For a conflict error, simply delay the operations.
           for uid_list in uid_list_list:
             if len(uid_list):
