@@ -131,8 +131,8 @@ for related_transaction in context.getCausalityRelatedValueList(\n
   # if we have a payment related to multiple invoices, we cannot say the\n
   # remaining price on those invoices.\n
   for other_invoice in [ tr for tr in related_transaction.getCausalityValueList(\n
-                         portal_type=context.getPortalAccountingTransactionTypeList())\n
-                         if tr != context ]:\n
+             portal_type=context.getPortalAccountingTransactionTypeList())\n
+             if tr != context ]:\n
     other_invoice_is_source = \\\n
                     other_invoice.AccountingTransaction_isSourceView()\n
     for other_line in other_invoice.getMovementList(\n
@@ -168,8 +168,9 @@ for related_transaction in context.getCausalityRelatedValueList(\n
     \n
     if node_value is not None and \\\n
         node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
-      key = (node_value.getRelativeUrl(), mirror_section)\n
-      total_payable_price_per_node_section[key] =\\\n
+      if node_value in accounts_in_context:\n
+        key = (node_value.getRelativeUrl(), mirror_section)\n
+        total_payable_price_per_node_section[key] =\\\n
             total_payable_price_per_node_section.get(key, 0) + amount\n
 \n
 if detailed:\n
