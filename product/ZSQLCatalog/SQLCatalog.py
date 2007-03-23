@@ -874,7 +874,7 @@ class Catalog( Folder,
 
   def _clearSecurityCache(self):
     self.security_uid_dict = OIBTree()
-    self.security_uid_index = 0
+    self.security_uid_index = Length()
 
   security.declarePrivate('getSecurityUid')
   def getSecurityUid(self, wrapped_object):
@@ -895,9 +895,10 @@ class Catalog( Folder,
       self._clearSecurityCache()
     if self.security_uid_dict.has_key(allowed_roles_and_users):
       return (self.security_uid_dict[allowed_roles_and_users], None)
-    self.security_uid_index = self.security_uid_index + 1
-    self.security_uid_dict[allowed_roles_and_users] = self.security_uid_index
-    return (self.security_uid_index, allowed_roles_and_users)
+    self.security_uid_index.change(1)
+    security_uid = self.security_uid_index()
+    self.security_uid_dict[allowed_roles_and_users] = security_uid
+    return (security_uid, allowed_roles_and_users)
 
   def clear(self):
     """
