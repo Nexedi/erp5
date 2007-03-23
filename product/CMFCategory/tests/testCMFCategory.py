@@ -802,6 +802,39 @@ class TestCMFCategory(ERP5TypeTestCase):
       self.assertEqual(e.args[0], 'Category must be of string, tuple of '
                                   'string or list of string type.')
 
+  def test_23_getCategoryChildValueList(self, quiet=quiet, run=run_all_test) :
+    if not run: return
+    if not quiet:
+      message = 'Test getCategoryChildValueList and arguments'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ', 0, message)
+
+    pc = self.getCategoriesTool()
+    bc = pc.newContent(portal_type='Base Category', id='child_test')
+    c1 = bc.newContent(portal_type='Category', id='1')
+    c11 = c1.newContent(portal_type='Category', id='1.1')
+    c111 = c11.newContent(portal_type='Category', id='1.1.1')
+    c2 = bc.newContent(portal_type='Category', id='2')
+    
+    self.assertSameSet(bc.getCategoryChildValueList(), (c1, c11, c111, c2))
+    self.assertSameSet(c1.getCategoryChildValueList(), (c11, c111,))
+    
+    # recursive
+    self.assertSameSet(bc.getCategoryChildValueList(recursive=0), (c1, c2))
+    self.assertSameSet(c1.getCategoryChildValueList(recursive=0), (c11, ))
+
+    # only leaves
+    self.assertSameSet(bc.getCategoryChildValueList(include_if_child=0),
+                                                    (c111, c2))
+    self.assertSameSet(c1.getCategoryChildValueList(include_if_child=0),
+                                                    (c111, ))
+    # including self
+    self.assertSameSet(bc.getCategoryChildValueList(is_self_excluded=0),
+                                                    (bc, c1, c11, c111, c2))
+    self.assertSameSet(c1.getCategoryChildValueList(is_self_excluded=0),
+                                                    (c1, c11, c111))
+
+
 if __name__ == '__main__':
     framework()
 else:

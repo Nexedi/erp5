@@ -214,7 +214,7 @@ class Category(Folder):
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
     def getCategoryChildValueList(self, recursive=1, include_if_child=1,
-                                  is_self_excluded=0, sort_on=None,
+                                  is_self_excluded=1, sort_on=None,
                                   sort_order=None, **kw):
       """
           List the child objects of this category and all its subcategories.
@@ -245,6 +245,7 @@ class Category(Folder):
           # Do not pass sort parameters intentionally, because sorting
           # needs to be done only at the end of recursive calls.
           value_list.extend(c.getCategoryChildValueList(recursive=1,
+                                       is_self_excluded=0,
                                        include_if_child=include_if_child))
       else:
         for c in self.objectValues(self.allowed_types):
@@ -310,7 +311,7 @@ class Category(Folder):
       given list of base categories. Uses title_and_id as default method
       """
       return self.getCategoryChildItemList(recursive=recursive,
-                                          display_id='title_and_id', base=base, **kw)
+                                    display_id='title_and_id', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                        'getCategoryChildCompactTitleItemList')
@@ -377,7 +378,7 @@ class Category(Folder):
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
 
-        (c.relative_url,c.display_id())
+        (c.relative_url, c.display_id())
 
       base -- if set to 1, relative_url will start with the base category id
               if set to 0 and if base_category is a single id, relative_url
@@ -668,12 +669,14 @@ class BaseCategory(Category):
                         ...
 
       """
-      value_list = []
-      if not is_self_excluded:
+      if is_self_excluded:
+        value_list = []
+      else:
         value_list = [self]
       if recursive:
         for c in self.objectValues(self.allowed_types):
           value_list.extend(c.getCategoryChildValueList(recursive=1,
+                                        is_self_excluded=0,
                                         include_if_child=include_if_child))
       else:
         for c in self.objectValues(self.allowed_types):
