@@ -82,7 +82,7 @@ UID_BUFFER_SIZE = 300
 RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit',
                      'format', 'search_mode', 'operator', 'selection_domain', 'selection_report')
 
-valid_method_meta_type_list = ('Z SQL Method', 'Script (Python)')
+valid_method_meta_type_list = ('Z SQL Method', 'LDIF Method', 'Script (Python)')
 
 full_text_search_modes = { 'natural': '',
                            'in_boolean_mode': 'IN BOOLEAN MODE',
@@ -1473,7 +1473,7 @@ class Catalog( Folder,
 
         #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
         method = getattr(self, method_name)
-        if method.meta_type == "Z SQL Method":
+        if method.meta_type in ["Z SQL Method", "LDIf Method"]:
           # Build the dictionnary of values
           arguments = method.arguments_src
           for arg in split(arguments):
