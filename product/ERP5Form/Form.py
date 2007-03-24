@@ -120,7 +120,13 @@ def get_value(self, id, **kw):
                 form = self.aq_parent
                 ob = getattr(form, 'aq_parent', None)
                 key = self.id[3:]
-                value = ob.getProperty(key, d=value)
+                if value not in (None, ''):
+                  # If a default value is defined on the field, it has precedence
+                  value = ob.getProperty(key, d=value)
+                else:
+                  # else we should give a chance to the accessor to provide
+                  # a default value (including None)
+                  value = ob.getProperty(key)
               except (KeyError, AttributeError):
                 value = None
             # For the 'editable' value, we try to get a default value
