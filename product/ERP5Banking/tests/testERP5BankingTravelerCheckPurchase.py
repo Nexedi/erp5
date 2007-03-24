@@ -50,27 +50,6 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
-#class TestERP5BankingTravelerCheckPurchaseMixin:
-#
-#  def createTravelerCheckSale(self, sequence=None, sequence_list=None, **kwd):
-#    """
-#    Create a traveler check sale
-#    """
-#    # We will do the transfer ot two items.
-#    self.traveler_check_sale = self.traveler_check_sale_module.newContent(
-#                     id='traveler_check_sale', portal_type='Traveler Check Sale',
-#                     source_value=self.traveler_check_source, destination_value=None,
-#                     destination_payment_value=self.bank_account_1,
-#                     resource_value=self.currency_1,
-#                     start_date=self.date)
-#    # check its portal type
-#    self.assertEqual(self.traveler_check_sale.getPortalType(), 'Traveler Check Sale')
-#    # check source
-#    self.assertEqual(self.traveler_check_sale.getBaobabSource(), 
-#               'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
-#    # check destination
-#    self.assertEqual(self.traveler_check_sale.getBaobabDestination(), None)
-
 class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTransferMixin,
                                        TestERP5BankingTravelerCheckSaleMixin,
                                        TestERP5BankingMixin, ERP5TypeTestCase):
@@ -93,22 +72,6 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
       Return the title of the test
     """
     return "ERP5BankingTravelerCheckPurchase"
-
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates we need to run the test.
-      This method is called during the initialization of the unit test by
-      the unit test framework in order to know which business templates
-      need to be installed to run the test on.
-    """
-    return ('erp5_base',
-            'erp5_trade',
-            'erp5_accounting',
-            'erp5_banking_core',
-            'erp5_banking_inventory',
-            'erp5_banking_check',
-            )
 
   def getTravelerCheckPurchaseModule(self):
     """

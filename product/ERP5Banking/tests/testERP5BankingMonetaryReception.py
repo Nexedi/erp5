@@ -69,22 +69,6 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     return "ERP5BankingMonetaryReception"
 
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates we need to run the test.
-      This method is called during the initialization of the unit test by
-      the unit test framework in order to know which business templates
-      need to be installed to run the test on.
-    """
-    return ('erp5_base',
-            'erp5_trade',
-            'erp5_accounting',
-            'erp5_banking_core',
-            'erp5_banking_cash'
-            )
-
-
   def getMonetaryReceptionModule(self):
     """
     Return the Cash Inventory Module

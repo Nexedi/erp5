@@ -92,22 +92,6 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     return "ERP5BankingCounterRendering"
 
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates we need to run the test.
-      This method is called during the initialization of the unit test by
-      the unit test framework in order to know which business templates
-      need to be installed to run the test on.
-    """
-    return ('erp5_base'
-           , 'erp5_trade'
-           , 'erp5_accounting'
-           , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
-           , 'erp5_banking_inventory'
-           , 'erp5_banking_cash' # erp5_banking_cash contains all method for counter rendering
-           )
-
   def getCounterRenderingModule(self):
     """
     Return the Cash Transer Module
