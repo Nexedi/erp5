@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

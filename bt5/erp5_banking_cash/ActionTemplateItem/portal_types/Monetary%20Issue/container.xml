@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.CMFCore.ActionInformation</string>
-          <string>ActionInformation</string>
-        </tuple>
-        <none/>
+        <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
