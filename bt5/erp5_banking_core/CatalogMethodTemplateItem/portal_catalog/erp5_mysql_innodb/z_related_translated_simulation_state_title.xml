@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -45,13 +42,19 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>table_0</string>
+                            <string>table_0</string>
                           </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -78,7 +81,9 @@
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -90,11 +95,11 @@
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
-            <value> <int>15</int> </value>
+            <value> <int>100</int> </value>
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>15</int> </value>
+            <value> <int>1000</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
@@ -111,9 +116,11 @@
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>

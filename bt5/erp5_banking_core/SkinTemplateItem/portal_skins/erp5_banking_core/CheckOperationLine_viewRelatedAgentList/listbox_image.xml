@@ -3,15 +3,18 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ImageField</string>
-          <string>ImageField</string>
-        </tuple>
-        <none/>
+        <global name="ImageField" module="Products.ERP5Form.ImageField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>listbox_image</string> </value>

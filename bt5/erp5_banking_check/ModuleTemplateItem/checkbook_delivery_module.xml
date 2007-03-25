@@ -111,12 +111,6 @@
    <name>Add Cookie Crumblers</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Add DCOracle2 Database Connections</name>
-  </permission>
-  <permission type='list'>
-   <name>Add DCOracle2 Stored Procedures</name>
-  </permission>
   <permission type='tuple'>
    <name>Add Database Methods</name>
    <role>Manager</role>
@@ -278,10 +272,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add Versions</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Virtual Host Monsters</name>
    <role>Manager</role>
   </permission>
@@ -302,14 +292,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add ZCatalogs</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add ZMailIn Clients</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add ZMailMessages</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -345,9 +327,6 @@
   <permission type='tuple'>
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Change DCOracle2 Stored Procedures</name>
   </permission>
   <permission type='tuple'>
    <name>Change DTML Documents</name>
@@ -407,14 +386,6 @@
   </permission>
   <permission type='tuple'>
    <name>Change Versions</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change ZMailIn</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change ZMailMessages</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -491,9 +462,6 @@
   </permission>
   <permission type='list'>
    <name>Edit target</name>
-  </permission>
-  <permission type='list'>
-   <name>Execute DCOracle2 Stored Procedures</name>
   </permission>
   <permission type='tuple'>
    <name>FTP access</name>
@@ -607,10 +575,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Post mail to ZMailIn</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Query Vocabulary</name>
    <role>Manager</role>
   </permission>
@@ -695,10 +659,6 @@
    <role>Associate</role>
    <role>Auditor</role>
    <role>Author</role>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>View ZMailMessage</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>

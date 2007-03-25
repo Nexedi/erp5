@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -201,7 +198,7 @@ for line in line_list:\n
       start_date = transaction.getStartDate()\n
       destination_section = item.getDestinationSection()\n
       item.setStartDate(start_date)\n
-      reference_list = xrange(reference_to_int(reference_range_min), last_reference_value + 1)\n
+      reference_list = range(reference_to_int(reference_range_min), last_reference_value + 1)\n
       checkReferenceUniqueness(reference_list, model)\n
       for j in reference_list:\n
         reference = int_to_reference(j, reference_range_min)\n
@@ -322,6 +319,7 @@ for line in line_list:\n
                             <string>reference_range_max</string>
                             <string>start_date</string>
                             <string>destination_section</string>
+                            <string>range</string>
                             <string>reference_list</string>
                             <string>j</string>
                             <string>reference</string>

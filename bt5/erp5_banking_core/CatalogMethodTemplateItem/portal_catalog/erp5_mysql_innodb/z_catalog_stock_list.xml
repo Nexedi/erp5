@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -183,36 +180,42 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid</string>
-                            <string>getResourceUid</string>
-                            <string>getInventoriatedQuantity</string>
-                            <string>getBaobabSourceUid</string>
-                            <string>getBaobabDestinationUid</string>
-                            <string>getBaobabSourceSectionUid</string>
-                            <string>getBaobabDestinationSectionUid</string>
-                            <string>isMovement</string>
-                            <string>getBaobabSourcePaymentUid</string>
-                            <string>getBaobabDestinationPaymentUid</string>
-                            <string>getBaobabSourceFunctionUid</string>
-                            <string>getBaobabDestinationFunctionUid</string>
-                            <string>getBaobabSourceProjectUid</string>
-                            <string>getBaobabDestinationProjectUid</string>
-                            <string>getSimulationState</string>
-                            <string>getSourceInventoriatedTotalAssetPrice</string>
-                            <string>getDestinationInventoriatedTotalAssetPrice</string>
-                            <string>getStartDate</string>
-                            <string>getStopDate</string>
-                            <string>isAccountable</string>
-                            <string>getPortalType</string>
-                            <string>getBaobabDestinationVariationText</string>
-                            <string>getBaobabSourceVariationText</string>
-                            <string>getSubVariationText</string>
+<string>uid</string>
+<string>getResourceUid</string>
+<string>getInventoriatedQuantity</string>
+<string>getBaobabSourceUid</string>
+<string>getBaobabDestinationUid</string>
+<string>getBaobabSourceSectionUid</string>
+<string>getBaobabDestinationSectionUid</string>
+<string>isMovement</string>
+<string>getBaobabSourcePaymentUid</string>
+<string>getBaobabDestinationPaymentUid</string>
+<string>getBaobabSourceFunctionUid</string>
+<string>getBaobabDestinationFunctionUid</string>
+<string>getBaobabSourceProjectUid</string>
+<string>getBaobabDestinationProjectUid</string>
+<string>getSimulationState</string>
+<string>getSourceInventoriatedTotalAssetPrice</string>
+<string>getDestinationInventoriatedTotalAssetPrice</string>
+<string>getStartDate</string>
+<string>getStopDate</string>
+<string>isAccountable</string>
+<string>getPortalType</string>
+<string>getBaobabDestinationVariationText</string>
+<string>getBaobabSourceVariationText</string>
+<string>getSubVariationText</string>
                           </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -302,10 +305,10 @@ WHERE\n
       <dtml-if "isAccountable[loop_item]">\n
         <dtml-if "getResourceUid[loop_item]">\n
           <dtml-if "getBaobabDestinationUid[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getBaobabDestinationUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationPaymentUid[loop_item], getBaobabDestinationFunctionUid[loop_item], getBaobabDestinationProjectUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourceUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getDestinationInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabDestinationVariationText[loop_item],getSubVariationText[loop_item]])">\n
+            <dtml-call expr="row_list.append([uid[loop_item], getBaobabDestinationUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationPaymentUid[loop_item], getBaobabDestinationFunctionUid[loop_item], getBaobabDestinationProjectUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourceUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getStartDate[loop_item], getDestinationInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabDestinationVariationText[loop_item],getSubVariationText[loop_item]])">\n
           </dtml-if>\n
           <dtml-if "getBaobabSourceUid[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourcePaymentUid[loop_item], getBaobabSourceFunctionUid[loop_item], getBaobabSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationUid[loop_item], getResourceUid[loop_item], -(getInventoriatedQuantity[loop_item] or 0), getStartDate[loop_item], getSourceInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabSourceVariationText[loop_item], getSubVariationText[loop_item]])">\n
+            <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourcePaymentUid[loop_item], getBaobabSourceFunctionUid[loop_item], getBaobabSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationUid[loop_item], getResourceUid[loop_item], -(getInventoriatedQuantity[loop_item] or 0), getStartDate[loop_item], getStopDate[loop_item], getSourceInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabSourceVariationText[loop_item], getSubVariationText[loop_item]])">\n
           </dtml-if>\n
         </dtml-if>\n
       </dtml-if>\n
@@ -329,11 +332,12 @@ VALUES\n
   <dtml-sqlvar expr="row_item[8]" type="int">, \n
   <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="row_item[11]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[12]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n
@@ -348,9 +352,11 @@ VALUES\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -393,10 +399,10 @@ WHERE\n
       <dtml-if "isAccountable[loop_item]">\n
         <dtml-if "getResourceUid[loop_item]">\n
           <dtml-if "getBaobabDestinationUid[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getBaobabDestinationUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationPaymentUid[loop_item], getBaobabDestinationFunctionUid[loop_item], getBaobabDestinationProjectUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourceUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getDestinationInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabDestinationVariationText[loop_item],getSubVariationText[loop_item]])">\n
+            <dtml-call expr="row_list.append([uid[loop_item], getBaobabDestinationUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationPaymentUid[loop_item], getBaobabDestinationFunctionUid[loop_item], getBaobabDestinationProjectUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourceUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getStartDate[loop_item], getDestinationInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabDestinationVariationText[loop_item],getSubVariationText[loop_item]])">\n
           </dtml-if>\n
           <dtml-if "getBaobabSourceUid[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourcePaymentUid[loop_item], getBaobabSourceFunctionUid[loop_item], getBaobabSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationUid[loop_item], getResourceUid[loop_item], -(getInventoriatedQuantity[loop_item] or 0), getStartDate[loop_item], getSourceInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabSourceVariationText[loop_item], getSubVariationText[loop_item]])">\n
+            <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getBaobabSourcePaymentUid[loop_item], getBaobabSourceFunctionUid[loop_item], getBaobabSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getBaobabDestinationUid[loop_item], getResourceUid[loop_item], -(getInventoriatedQuantity[loop_item] or 0), getStartDate[loop_item], getStopDate[loop_item], getSourceInventoriatedTotalAssetPrice[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getBaobabSourceVariationText[loop_item], getSubVariationText[loop_item]])">\n
           </dtml-if>\n
         </dtml-if>\n
       </dtml-if>\n
@@ -420,11 +426,12 @@ VALUES\n
   <dtml-sqlvar expr="row_item[8]" type="int">, \n
   <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="row_item[11]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[12]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n

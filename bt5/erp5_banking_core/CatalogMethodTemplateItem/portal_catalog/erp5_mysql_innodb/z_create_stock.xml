@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -43,6 +40,12 @@
                   </dictionary>
                 </state>
               </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -107,6 +110,7 @@ CREATE TABLE `stock` (\n
   `resource_uid` BIGINT UNSIGNED,\n
   `quantity` real ,\n
   `date` datetime,\n
+  `mirror_date` datetime,\n
   `total_price` real ,\n
   `portal_type` VARCHAR(255),\n
   `simulation_state` varchar(255) default \'\',\n
@@ -133,9 +137,11 @@ CREATE TABLE `stock` (\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -176,6 +182,7 @@ CREATE TABLE `stock` (\n
   `resource_uid` BIGINT UNSIGNED,\n
   `quantity` real ,\n
   `date` datetime,\n
+  `mirror_date` datetime,\n
   `total_price` real ,\n
   `portal_type` VARCHAR(255),\n
   `simulation_state` varchar(255) default \'\',\n

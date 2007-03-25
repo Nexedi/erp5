@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -387,11 +384,11 @@ simulation_state_list:list</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
-            <value> <int>100</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>1000</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
@@ -413,8 +410,8 @@ FROM\n
     <dtml-if expr="table_key != \'item\'">, <dtml-var table_item> AS <dtml-var table_key></dtml-if>\n
   </dtml-in>\n
 </dtml-if>\n
-<dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
-<dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
+<dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
+<dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
 , item\n
 \n
 \n
@@ -462,10 +459,11 @@ WHERE\n
 \n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'item\', join_column=\'node_uid\')">\n
+  AND <dtml-var "selection_domain.asSqlExpression(join_table=\'item\',\n
+                                                  join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
+  AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
 </dtml-if>\n
 \n
 <dtml-if group_by_expression>\n
@@ -486,9 +484,11 @@ ORDER BY item.date DESC\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -531,8 +531,8 @@ FROM\n
     <dtml-if expr="table_key != \'item\'">, <dtml-var table_item> AS <dtml-var table_key></dtml-if>\n
   </dtml-in>\n
 </dtml-if>\n
-<dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
-<dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
+<dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
+<dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
 , item\n
 \n
 \n
@@ -580,10 +580,11 @@ WHERE\n
 \n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'item\', join_column=\'node_uid\')">\n
+  AND <dtml-var "selection_domain.asSqlExpression(join_table=\'item\',\n
+                                                  join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
+  AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
 </dtml-if>\n
 \n
 <dtml-if group_by_expression>\n
