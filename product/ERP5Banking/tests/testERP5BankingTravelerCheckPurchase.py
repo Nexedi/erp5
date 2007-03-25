@@ -157,6 +157,7 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
 
     # Add a line for check
     self.line_1 = self.traveler_check_purchase.newContent(quantity=1,
+                                 portal_type='Checkbook Delivery Line',
                                  resource_value=self.traveler_check_model,
                                  check_type_value=self.traveler_check_model.variant_1,
                                  reference_range_min="abcd123456",
@@ -184,6 +185,7 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
     workflow_history = self.workflow_tool.getInfoFor(ob=self.traveler_check_purchase, 
                             name='history', wf_id='traveler_check_purchase_workflow')
     self.assertEqual(len(workflow_history), 3)
+    self.assertEqual(self.traveler_check_purchase.movement.getQuantity(), 32500)
 
 
   def stepCheckFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
