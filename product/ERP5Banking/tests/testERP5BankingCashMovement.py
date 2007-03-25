@@ -122,7 +122,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createManagerAndLogin()
 
     # create categories
-    self.createFunctionGroupSiteCategory()
+    self.createFunctionGroupSiteCategory(site_list=['paris','madrid'])
 
     # create resources
     self.createBanknotesAndCoins()
