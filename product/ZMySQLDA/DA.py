@@ -141,7 +141,7 @@ class Connection(DABase.Connection):
         # marker to know if connection was successfull.
         self._v_connected = DateTime()
       finally:
-          database_connection_pool_lock.release()
+        database_connection_pool_lock.release()
       return self
 
     def sql_quote__(self, v, escapes={}):
