@@ -156,8 +156,6 @@ def int_or_long(s):
     try: return int(s)
     except: return long(s)
 
-FINISH_OR_ABORT_CALLED_ID = '_finish_or_abort_called'
-
 class DB(TM):
 
     Database_Connection=_mysql.connect
@@ -188,6 +186,7 @@ class DB(TM):
         self.connection=connection
         self.kwargs = self._parse_connection_string(connection)
         self.db = {}
+        self._finished_or_aborted = {}
         db = self.getConnection()
         transactional = db.server_capabilities & CLIENT.TRANSACTIONS
         if self._try_transactions == '-':
@@ -198,6 +197,19 @@ class DB(TM):
         if self._mysql_lock:
             self._use_TM = 1
 
+    def __del__(self):
+      self.cleanupConnections()
+
+    def getFinishedOrAborted(self):
+      return self._finished_or_aborted[get_ident()]
+    
+    def setFinishedOrAborted(self, value):
+      self._finished_or_aborted[get_ident()] = value
+
+    def cleanupConnections(self):
+      for db in self.db:
+        db.close()
+
     def forceReconnection(self):
       db = apply(self.Database_Connection, (), self.kwargs)
       self.db[get_ident()] = db
@@ -207,6 +219,8 @@ class DB(TM):
       ident = get_ident()
       db = self.db.get(ident)
       if db is None:
+        if len(self.db) != 0:
+          self.cleanupConnections()
         db = self.forceReconnection()
       return db
 
@@ -372,40 +386,36 @@ class DB(TM):
             LOG('ZMySQLDA', ERROR, "exception during _begin",
                 error=sys.exc_info())
             raise
-        setattr(self, FINISH_OR_ABORT_CALLED_ID, False)
+        self.setFinishedOrAborted(False)
         
     def _finish(self, *ignored):
-        if getattr(self, FINISH_OR_ABORT_CALLED_ID, False):
+        if self.getFinishedOrAborted():
             return
-        try:
-            try:
-                db = self.getConnection()
-                if self._mysql_lock:
-                    db.query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
-                    db.store_result()
-                if self._transactions:
-                    db.query("COMMIT")
-                db.store_result()
-            except:
-                LOG('ZMySQLDA', ERROR, "exception during _finish",
-                    error=sys.exc_info())
-                raise
-        finally:
-            setattr(self, FINISH_OR_ABORT_CALLED_ID, True)
-
-    def _abort(self, *ignored):
-        if getattr(self, FINISH_OR_ABORT_CALLED_ID, False):
-            return
+        self.setFinishedOrAborted(True)
         try:
             db = self.getConnection()
             if self._mysql_lock:
                 db.query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
                 db.store_result()
             if self._transactions:
-                db.query("ROLLBACK")
-                db.store_result()
-            else:
-                LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
-        finally:
-            setattr(self, FINISH_OR_ABORT_CALLED_ID, True)
+                db.query("COMMIT")
+            db.store_result()
+        except:
+            LOG('ZMySQLDA', ERROR, "exception during _finish",
+                error=sys.exc_info())
+            raise
+
+    def _abort(self, *ignored):
+        if self.getFinishedOrAborted():
+            return
+        self.setFinishedOrAborted(True)
+        db = self.getConnection()
+        if self._mysql_lock:
+            db.query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
+            db.store_result()
+        if self._transactions:
+            db.query("ROLLBACK")
+            db.store_result()
+        else:
+            LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
 
