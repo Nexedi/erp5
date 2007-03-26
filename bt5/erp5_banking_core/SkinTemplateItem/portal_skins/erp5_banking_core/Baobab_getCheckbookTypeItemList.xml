@@ -71,7 +71,9 @@ def getCheckbookTypeItemList():\n
   return [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl())\n
     for x in context.checkbook_type_module.objectValues()]\n
 \n
-getCheckbookTypeItemList = CachingMethod(getCheckbookTypeItemList, id = \'Baobab_getCheckbookTypeItemList\', cache_duration = 3600)\n
+getCheckbookTypeItemList = CachingMethod(getCheckbookTypeItemList, \n
+                                         id = \'Baobab_getCheckbookTypeItemList\', \n
+                                         cache_factory = \'erp5_ui_medium\')\n
 return getCheckbookTypeItemList()\n
 </string> </value>
         </item>

@@ -85,7 +85,7 @@ def getSiteList(user_id=user_id):\n
       site_list.append(new_site)\n
   return site_list\n
 \n
-getSiteList = CachingMethod(getSiteList, id=\'Baobab_getUserAssignedSiteList\', cache_duration=300)\n
+getSiteList = CachingMethod(getSiteList, id=\'Baobab_getUserAssignedSiteList\', cache_factory=\'erp5_ui_short\')\n
 return getSiteList(user_id=user_id)\n
 </string> </value>
         </item>

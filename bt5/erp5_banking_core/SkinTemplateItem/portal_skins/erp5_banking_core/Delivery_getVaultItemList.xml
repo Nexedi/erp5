@@ -77,10 +77,10 @@
 #                      Delivery_getVaultItemList utilis\xc3\xa9 dans le TALES de my_source dans le formulaire\n
 # user_site = 1 : Permet de s\xc3\xa9lectionner uniquement les encaisses des sites auquels l\'user est affect\xc3\xa9,\n
 #                 au lieu des encaisses de tous le sites\n
-# exclude_user_site = 0 : Permet de ne pas s\xe9lectionner les encaisses du site auquel appartient l\'utilisateur\n
+# exclude_user_site = 0 : Permet de ne pas s\xef\xbf\xbdlectionner les encaisses du site auquel appartient l\'utilisateur\n
 # owner_site = 1 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites auquels le propri\xc3\xa9taire du document est affect\xc3\xa9,\n
 #                 au lieu des encaisses de tous le sites\n
-# main_agency = 0 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites qui appartiennent \xe0 une agence principale,\n
+# main_agency = 0 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites qui appartiennent \xef\xbf\xbd une agence principale,\n
 # leaf_node = 1 : S\xc3\xa9lectionne uniquement les noeuds qui sont des feuilles de l\'arbre (qui n\'ont pas de sous-cat\xc3\xa9gories)\n
 # strict_membership = 0 : Appartenance stricte. Si vault_type=\'site\', on s\xc3\xa9lectionnera \'site/agence/principale/paris\',\n
 #                         mais pas \'site/agence/principale/paris/caveau\', \'site/agence/principale/paris/surface\' et\n
@@ -216,7 +216,8 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
   vault_list.sort()\n
   return vault_list\n
 \n
-getVaultItemList = CachingMethod(getVaultItemList, id=(\'Delivery_getVaultItemList\', \'getVaultItemList\'), cache_duration=None)\n
+getVaultItemList = CachingMethod(getVaultItemList, id=(\'Delivery_getVaultItemList\', \'getVaultItemList\'), \n
+                                 cache_factory=\'erp5_ui_long\')\n
 \n
 if vault_type is None:\n
   assignment_list = context.Baobab_getUserAssignmentList()\n

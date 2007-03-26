@@ -85,7 +85,9 @@ def getResourceVintageList(banknote=0, coin=0):\n
     return variation_list.keys()\n
 \n
 \n
-getResourceVintageList = CachingMethod(getResourceVintageList, id=\'Baobab_getResourceVintageList\', cache_duration=360000)\n
+getResourceVintageList = CachingMethod(getResourceVintageList, \n
+                                       id=\'Baobab_getResourceVintageList\', \n
+                                       cache_factory="erp5_ui_long")\n
 \n
 return getResourceVintageList(banknote, coin)\n
 </string> </value>

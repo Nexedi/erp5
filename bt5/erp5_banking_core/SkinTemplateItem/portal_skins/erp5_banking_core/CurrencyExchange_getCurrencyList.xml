@@ -78,7 +78,8 @@ def getCurrencyList(exclude_reference_currency=0):\n
   currency_list.insert(0, (\'\',\'\'))\n
   return currency_list\n
 \n
-getCurrencyList = CachingMethod(getCurrencyList, id = \'CurrencyExchange_getCurrencyList\', cache_duration = 3600)\n
+getCurrencyList = CachingMethod(getCurrencyList, id = \'CurrencyExchange_getCurrencyList\', \n
+                                cache_factory = "erp5_ui_medium")\n
 return getCurrencyList(exclude_reference_currency=exclude_reference_currency)\n
 </string> </value>
         </item>

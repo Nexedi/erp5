@@ -74,7 +74,8 @@ def Movement_lookupPrice():\n
   else:\n
     return None\n
 \n
-return CachingMethod(Movement_lookupPrice, (\'erp5_banking_core/Movement_lookupPrice\', context.getResource()), cache_duration=None)()\n
+return CachingMethod(Movement_lookupPrice, (\'erp5_banking_core/Movement_lookupPrice\', context.getResource()), \n
+                     cache_factory="erp5_ui_long")()\n
 </string> </value>
         </item>
         <item>
@@ -128,8 +129,7 @@ return CachingMethod(Movement_lookupPrice, (\'erp5_banking_core/Movement_lookupP
                             <string>CachingMethod</string>
                             <string>Movement_lookupPrice</string>
                             <string>_getattr_</string>
-<string>context</string>
-                            <string>None</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

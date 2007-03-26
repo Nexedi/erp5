@@ -67,13 +67,11 @@
             <key> <string>_body</string> </key>
             <value> <string># This script will try to guess what is the current currency\n
 # for the particular vault\n
-from Products.ERP5Type.Cache import CachingMethod\n
 \n
 vault_list = vault.split(\'/\')\n
 currency_id = None\n
 # Well, this is not a nice way of doing, we should have\n
 # a mapping or something instead\n
-context.log(\'Baobab_getVaultCurrency vault_list\',vault_list)\n
 if \'encaisse_des_devises\' in vault_list:\n
   vault_currency_title = vault_list[vault_list.index(\'encaisse_des_devises\')+1]\n
   for currency in context.currency_module.objectValues():\n
@@ -131,16 +129,14 @@ return context.currency_module[context.Baobab_getPortalReferenceCurrencyID()].ge
                           <tuple>
                             <string>vault</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
                             <string>_getattr_</string>
                             <string>vault_list</string>
                             <string>None</string>
                             <string>currency_id</string>
-                            <string>context</string>
                             <string>_getitem_</string>
                             <string>vault_currency_title</string>
                             <string>_getiter_</string>
+                            <string>context</string>
                             <string>currency</string>
                             <string>currency_title</string>
                           </tuple>
