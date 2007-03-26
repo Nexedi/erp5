@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:object.hasBaseData()</string> </value>
+            <value> <string>python:object.hasSnapshotData()</string> </value>
         </item>
       </dictionary>
     </pickle>

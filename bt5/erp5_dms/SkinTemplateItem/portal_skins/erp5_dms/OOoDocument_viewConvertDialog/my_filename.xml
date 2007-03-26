@@ -268,15 +268,18 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:\'%s-%s-%s\' % (here.getReference(), here.Language(), here.getVersion())</string> </value>
+            <value> <string>here/getStandardFileName</string> </value>
         </item>
       </dictionary>
     </pickle>

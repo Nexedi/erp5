@@ -69,14 +69,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-Public interface to getOOoFile API method - sets headers and returns\n
-output (an ODF file).\n
+Public interface to getBaseData API method - invokes index_html\n
+to return the file in the base-data format.\n
 """\n
-\n
 request = context.REQUEST\n
-request.RESPONSE.setHeader(\'Content-type\', context.getContentType())\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % context.title_or_id())\n
-return context.getOOFile()\n
+response = request.RESPONSE\n
+response.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % context.getStandardFileName())\n
+return context.index_html(request, response, format=\'base-data\')\n
 </string> </value>
         </item>
         <item>
@@ -122,6 +121,7 @@ return context.getOOFile()\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>response</string>
                           </tuple>
                         </value>
                     </item>

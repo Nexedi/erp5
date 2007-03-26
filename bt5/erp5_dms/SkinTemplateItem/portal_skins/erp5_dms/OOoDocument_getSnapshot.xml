@@ -73,12 +73,10 @@ Public interface to getSnapshot API method - sets headers and returns\n
 output (a pdf file which is generated only once and never changes, even if\n
 file data change).\n
 """\n
-\n
 request = context.REQUEST\n
-request.RESPONSE.setHeader(\'Content-type\', \'application/pdf\')\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s.pdf"\' % context.title_or_id())\n
-\n
-return context.getSnapshot()\n
+request.RESPONSE.setHeader(\'Content-type\', context.getSnapshotContentType())\n
+request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s.pdf"\' % context.getStandardFileName())\n
+return context.getSnapshotData()\n
 </string> </value>
         </item>
         <item>
