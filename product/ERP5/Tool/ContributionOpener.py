@@ -54,7 +54,7 @@ class DirectoryFileHandler(FileHandler):
             try:
               file_list = dircache.listdir(localfile)
               s = StringIO()
-              s.write('<html><head><base href="%s"/></head><body>' % 'file:' + file)
+              s.write('<html><head><base href="%s"/></head><body>' % ('file:' + file))
               for f in file_list:
                 s.write('<p><a href="%s/">%s</a></p>\n' % (urllib.quote(f), f))
               s.write('</body></html>')
