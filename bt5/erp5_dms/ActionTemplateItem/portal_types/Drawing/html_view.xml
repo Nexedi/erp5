@@ -26,13 +26,11 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_exchange</string> </value>
+            <value> <string>object_view</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -44,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>download_snapshot</string> </value>
+            <value> <string>html_view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -56,11 +54,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>30.0</float> </value>
+            <value> <float>32.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Download Snapshot</string> </value>
+            <value> <string>Preview</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -83,26 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/OOoDocument_viewSnapshotDialog</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:object.hasSnapshotData()</string> </value>
+            <value> <string>string:${object_url}/Drawing_viewAsWeb</string> </value>
         </item>
       </dictionary>
     </pickle>

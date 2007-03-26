@@ -16,6 +16,7 @@ Drawing | download_snapshot
 Drawing | export
 Drawing | file_upload
 Drawing | history
+Drawing | html_view
 Drawing | jump_to_all_related
 Drawing | jump_to_predecessor
 Drawing | jump_to_similar
@@ -77,6 +78,7 @@ Presentation | download_snapshot
 Presentation | export
 Presentation | file_upload
 Presentation | history
+Presentation | html_view
 Presentation | jump_to_all_related
 Presentation | jump_to_predecessor
 Presentation | jump_to_similar
