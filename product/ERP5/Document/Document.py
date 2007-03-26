@@ -1160,3 +1160,22 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     classes is needed.
     """
     return DateTime() + 10
+
+  # Standard File Naming
+  security.declareProtected(Permissions.AccessContentsInformation, 'getStandardFileName')
+  def getStandardFileName(self):
+    """
+    Returns the document coordinates as a standard file name.
+
+    NOTE: this method must be overloadable by types base method with fallback
+    """
+    if self.getReference():
+      file_name = self.getReference()
+    else:
+      file_name = self.getTitleOrId()
+    if self.getVersion():
+      file_name = file_name + '-%s' % self.getVersion()
+    if self.getLanguage():
+      file_name = file_name + '-%s' % self.getLanguage()
+    return file_name
+  
