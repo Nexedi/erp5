@@ -147,8 +147,9 @@ class OOoDocument(File, ConversionCacheMixin):
     if not self.hasBaseData():
       self.convertToBaseFormat()
     # Else try to convert the document and return it
-    result = self.convert(format=format)
-    mime = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format) # XXX Sad we can not get the mimetype from the conversion cache
+    mime, result = self.convert(format=format)
+    if not mime:
+      mime = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
     RESPONSE.setHeader('Content-Length', len(result))
     RESPONSE.setHeader('Content-Type', mime)
     RESPONSE.setHeader('Accept-Ranges', 'bytes')
@@ -227,14 +228,14 @@ class OOoDocument(File, ConversionCacheMixin):
     if format == 'text-content':
       # Extract text from the ODF file
       cs = cStringIO.StringIO()
-      cs.write(self._unpackData(self.oo_data))
+      cs.write(self._unpackData(self.getBaseData()))
       z = zipfile.ZipFile(cs)
       s = z.read('content.xml')
       s = self.rx_strip.sub(" ", s) # strip xml
       s = self.rx_compr.sub(" ", s) # compress multiple spaces
       cs.close()
       z.close()
-      return 'text/text', s
+      return 'text/plain', s
     server_proxy = self._mkProxy()
     kw = server_proxy.run_generate(self.getId(),
                                    enc(self._unpackData(self.getBaseData())),
@@ -251,6 +252,9 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     # Make sure we can support html and pdf by default
     is_html = 0
+    if format == 'base-data':
+      if not self.hasBaseData(): self.convertToBaseFormat()
+      return self.getBaseContentType(), self.getBaseData()
     if format == 'pdf':
       format_list = [x for x in self.getTargetFormatList() if x.endswith('pdf')]
       format = format_list[0]
@@ -258,6 +262,16 @@ class OOoDocument(File, ConversionCacheMixin):
       format_list = [x for x in self.getTargetFormatList() if x.startswith('html')]
       format = format_list[0]
       is_html = 1
+    elif format in ('txt', 'text', 'text-content'):
+      format_list = self.getTargetFormatList()
+      if format in format_list:
+        format = format_list[format_list.index(format)]
+      if 'txt' in format_list:
+        format = format_list[format_list.index('txt')]
+      elif 'text' in format_list:
+        format = format_list[format_list.index('text')]
+      else:
+        return 'text/plain', self.asTextContent()
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
       raise ConversionError, 'Target format %s is not supported' % format
@@ -293,7 +307,7 @@ class OOoDocument(File, ConversionCacheMixin):
       This is the simplest way, the most universal and it is compatible
       will all formats.
     """
-    return self.convert(format='text-content')
+    return self._convert(format='text-content')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
   def populateContent(self, zip_file=None):
