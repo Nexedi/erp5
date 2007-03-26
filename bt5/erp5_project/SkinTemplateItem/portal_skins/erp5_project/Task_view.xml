@@ -99,7 +99,6 @@
                         <string>my_source_title</string>
                         <string>my_source_project_title</string>
                         <string>my_trade_condition_title</string>
-                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -116,6 +115,7 @@
                         <string>my_task_line_quantity_unit</string>
                         <string>my_task_line_price</string>
                         <string>total_price</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
