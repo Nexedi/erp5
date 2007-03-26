@@ -29,6 +29,8 @@
 import cStringIO
 import re
 import string
+import socket
+import md5
 import urllib2, urllib
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
@@ -42,7 +44,18 @@ from zLOG import LOG
 from DateTime import DateTime
 from Acquisition import aq_base
 
+# Install openers
+import ContributionOpener
+opener = urllib2.build_opener(ContributionOpener.DirectoryFileHandler)
+urllib2.install_opener(opener)
+
+# A temporary hack until urllib2 supports timeout setting - XXX
+import socket
+socket.setdefaulttimeout(60) # 1 minute timeout
+
+# Global parameters
 TEMP_NEW_OBJECT_KEY = '_v_new_object'
+MAX_REPEAT = 10
 
 _marker = []  # Create a new marker object.
 
@@ -111,46 +124,52 @@ class ContributionTool(BaseTool):
     # types share the same constructor. However, if Memo has
     # same constructor as Text and Memo is not in content_type_registry
     # then it should be considered.
-    valid_portal_type_list = []
+    extra_valid_portal_type_list = []
     content_registry_type_dict = getContentTypeRegistryTypeDict()
     portal_type_tool = self.portal_types
     for pt in portal_type_tool.objectValues():
       if hasattr(pt, 'factory') and pt.factory == portal_type_tool[document.getPortalType()].factory:
         if not content_registry_type_dict.has_key(pt.id):
-          valid_portal_type_list.append(pt.id)
+          extra_valid_portal_type_list.append(pt.id)
+
+    if not extra_valid_portal_type_list:
+      # There is really no ambiguity here
+      # The portal_type set by PUT_factory is appropriate
+      # This is the best case we can get
+      # LOG('findTypeName no ambiguity', 0, document.portal_type)
+      return document.portal_type
+
+    valid_portal_type_list = [document.portal_type] + extra_valid_portal_type_list
 
     # Check if the filename tells which portal_type this is
     portal_type_list = self.getPropertyDictFromFileName(file_name).get('portal_type', [])
+    if isinstance(portal_type_list, str): portal_type_list = [portal_type_list]
+    portal_type_list = filter(lambda x: x in valid_portal_type_list, portal_type_list)
+    if not portal_type_list:
+      portal_type_list = valid_portal_type_list
     if len(portal_type_list) == 1:
       # if we have only one, then this is it
+      # LOG('findTypeName single portal_type_list', 0, portal_type_list[0])
       return portal_type_list[0]
 
     # If it is still None, we need to read the document
     # to check which of the candidates is suitable
-    if portal_type is None:
-      # The document is now responsible of telling all its properties
-      portal_type = document.getPropertyDictFromContent().get('portal_type', None)
-      if portal_type is not None:
-        # we check if it matches the candidate list, if there were any
-        if len(portal_type_list)>1 and portal_type not in portal_type_list:
-          raise TypeError('%s not in the list of %s' % (portal_type, str(portal_type_list)))
-        return portal_type
-      else:
-        # if not found but the candidate list is there, return the first
-        if len(portal_type_list)>0:
-          return portal_type_list[0]
+    # Let us give a chance to getPropertyDictFromContent to
+    # tell us what is the portal type of this document
+    content_portal_type_list = document.getPropertyDictFromContent().get('portal_type', None)
+    if content_portal_type_list:
+      if isinstance(portal_type, str):
+        content_portal_type_list = [content_portal_type_list]
+      # Filter valid candidates
+      content_portal_type_list = filter(lambda x: x in portal_type_list, content_portal_type_list)
+      if content_portal_type_list:
+        # if we have more than one, then return the first one
+        # LOG('findTypeName from content', 0, content_portal_type_list[0])
+        return content_portal_type_list[0]
 
-    if portal_type is None:
-      # We can not do anything anymore
-      #return document.portal_type # XXX Wrong or maybe right ?
-      return None
-
-    if portal_type not in valid_portal_type_list:
-      # We will not be able to migrate ob to portal_type
-      #return ob.portal_type
-      return None
-
-    return portal_type
+    # If portal_type_list is not empty, return the first one
+    # LOG('findTypeName from first portal_type_list', 0, portal_type_list[0])
+    return portal_type_list[0]
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, url=None, container=None,
@@ -209,28 +228,37 @@ class ContributionTool(BaseTool):
             del kw['file_name']
     else:
       # build a new file from the url
-      data = urllib2.urlopen(url).read()
+      url_file = urllib2.urlopen(url)
+      data = url_file.read() # time out must be set or ... too long XXX
       file = cStringIO.StringIO()
       file.write(data)
       file.seek(0)
+      # Create a file name based on the URL and quote it
       file_name = url.split('/')[-1] or url.split('/')[-2]
-      file_name = self._encodeURL(file_name)
-      if hasattr(file, 'headers'):
-        headers = file.headers
+      file_name = urllib.quote(file_name, safe='')
+      file_name = file_name.replace('%', '')
+      # For URLs, we want an id by default equal to the encoded URL 
+      if id is None: id = self._encodeURL(url)
+      if hasattr(url_file, 'headers'):
+        headers = url_file.headers
         if hasattr(headers, 'type'):
           mime_type = headers.type
       kw['file'] = file
 
     # If the portal_type was provided, we can go faster
-    if portal_type is not None and portal_type != '':
-      # We know the portal_type, let us find the module
-      module = self.getDefaultModule(portal_type)
+    if portal_type and container is None:
+      # We know the portal_type, let us find the default module
+      # and use it as container
+      container = self.getDefaultModule(portal_type)
 
-      # And return a document
+    if portal_type and container is not None:
+      # We could simplify things here and return a document immediately
       # NOTE: we use the module ID generator rather than the provided ID
-      document = module.newContent(portal_type=portal_type, **kw)
-      if discover_metadata: document.discoverMetadata(file_name=file_name, user_login=user_login)
-      return document
+      #document = module.newContent(portal_type=portal_type, **kw)
+      #if discover_metadata:
+      #  document.activate().discoverMetadata(file_name=file_name, user_login=user_login)
+      #return document
+      pass # XXX - This needs to be implemented once the rest is stable
 
     # From here, there is no hope unless a file was provided    
     if file is None:
@@ -239,6 +267,7 @@ class ContributionTool(BaseTool):
     # So we will simulate WebDAV to get an empty object
     # with PUT_factory - we provide the mime_type as
     # parameter
+    # LOG('new content', 0, "%s -- %s" % (file_name, mime_type))
     ob = self.PUT_factory(file_name, mime_type, None)
 
     # Raise an error if we could not guess the portal type
@@ -250,7 +279,6 @@ class ContributionTool(BaseTool):
     document = BaseTool._getOb(self, file_name)
 
     # Then edit the document contents (so that upload can happen)
-    kw.setdefault('source_reference', file_name) # XXX redundant with discoverMetadata
     document._edit(**kw)
     if url: document.fromURL(url)
 
@@ -260,15 +288,15 @@ class ContributionTool(BaseTool):
     # Move the document to where it belongs
     if container_path is not None:
       container = self.getPortalObject().restrictedTraverse(container_path)
-    document = self._setObject(file_name, ob, user_login=user_login, container=container, id=id)
+    document = self._setObject(file_name, ob, user_login=user_login,
+                               container=container, id=id, discover_metadata=discover_metadata)
     document = self._getOb(file_name) # Call _getOb to purge cache
 
     # Notify workflows
-    document.notifyWorkflowCreated()
+    #document.notifyWorkflowCreated()
 
     # Reindex it and return the document
     document.reindexObject()
-    if document.getCrawlingDepth() > 0: document.activate().crawlContent()
     return document
 
   security.declareProtected( Permissions.AddPortalContent, 'newXML' )
@@ -315,7 +343,7 @@ class ContributionTool(BaseTool):
     return property_dict
 
   # WebDAV virtual folder support
-  def _setObject(self, name, ob, user_login=None, container=None, id=None):
+  def _setObject(self, name, ob, user_login=None, container=None, id=None, discover_metadata=1):
     """
       The strategy is to let NullResource.PUT do everything as
       usual and at the last minute put the object in a different
@@ -368,11 +396,27 @@ class ContributionTool(BaseTool):
       else:
         new_id = id
       ob.id = new_id
-      module._setObject(new_id, ob)
-
-      # We can now discover metadata
-      document = module[new_id]
-      document.discoverMetadata(file_name=name, user_login=user_login)
+      existing_document = module.get(new_id, None)
+      if existing_document is None:
+        # There is no preexisting document - we can therefore
+        # set the new object
+        module._setObject(new_id, ob)
+        # We can now discover metadata
+        document = module[new_id]
+        if discover_metadata:
+          # Metadata disovery is done as an activity by default
+          # If we need to discoverMetadata synchronously, it must
+          # be for user interface and should thus be handled by
+          # ZODB scripts
+          document.activate().discoverMetadata(file_name=name, user_login=user_login)
+      else:
+        document = existing_document
+        if document.isExternalDocument():
+          # If this is an external document, update its content
+          document.activate().updateContentFromURL()
+        else:
+          # This is where we may have to implement revision support
+          raise NotImplementedError
 
       # Keep the document close to us - this is only useful for
       # file upload from webdav
@@ -465,13 +509,30 @@ class ContributionTool(BaseTool):
     we must anyway insert objects in btrees and this
     is simimar in cost to accessing them.
     """
+    # Produce an MD5 from the URL
+    hex_md5 = md5.md5(url).hexdigest()
+    # Take the first part in the URL which is not empty
+    # LOG("_encodeURL", 0, url)
+    url_segment = url.split(':')[1]
+    url_segment_list = url_segment.split('/')
+    url_domain = None
+    for url_part in url_segment_list:
+      if url_part:
+        url_domain = url_part
+        break
+    # Return encoded url
+    if url_domain:
+      url_domain = urllib.quote(url_domain, safe='')
+      url_domain = url_domain.replace('%', '')
+      return "%s-%s" % (url_domain, hex_md5)
+    return hex_md5
     url = urllib.quote(url, safe='')
     url = url.replace('_', '__')
     url = url.replace('%', '_')
     return url
 
   security.declareProtected(Permissions.AddPortalContent, 'crawlContent')
-  def crawlContent(self, content):
+  def crawlContent(self, content, container=None):
     """
       Analyses content and download linked pages
 
@@ -485,12 +546,14 @@ class ContributionTool(BaseTool):
     base_url = content.getContentBaseURL()
     url_list = map(lambda url: self._normaliseURL(url, base_url), set(content.getContentURLList()))
     for url in set(url_list):
+      # LOG('trying to crawl', 0, url)
       # Some url protocols should not be crawled
       if url.split(':')[0] in no_crawl_protocol_list:
         continue
-      #if content.getParentValue()
-      # in place of not ?
-      container = content.getParentValue()
+      if container is None:
+        #if content.getParentValue()
+        # in place of not ?
+        container = content.getParentValue()
       # Calculate the id under which content will be stored
       id = self._encodeURL(url)
       # Try to access the document if it already exists
@@ -499,6 +562,7 @@ class ContributionTool(BaseTool):
         # XXX - This call is not working due to missing group_method_id
         # therefore, multiple call happen in parallel and eventually fail
         # (the same URL is created multiple times)
+        # LOG('activate newContentFromURL', 0, url)
         self.activate(activity="SQLQueue").newContentFromURL(container_path=container.getRelativeUrl(),
                                                       id=id, url=url, crawling_depth=depth - 1)
       else:
@@ -506,28 +570,35 @@ class ContributionTool(BaseTool):
         new_depth = max(depth - 1, document.getCrawlingDepth())
         document._setCrawlingDepth(new_depth)
         # And activate updateContentFromURL on existing document
-        next_date = document.getNextAlarmDate() 
-        document.activate(at_date=next_date).updateContentFromURL()
+        next_date = document.getNextAlarmDate() # This should prevent doing the update too often
+        # LOG('activate updateContentFromURL', 0, url)
+        document.activate(at_date=next_date).updateContentFromURL(crawling_depth=depth - 1)
 
   security.declareProtected(Permissions.AddPortalContent, 'updateContentFromURL')
-  def updateContentFromURL(self, content):
+  def updateContentFromURL(self, content, repeat=MAX_REPEAT, crawling_depth=0):
     """
       Updates an existing content.
     """
+    # Step 0: update crawling_depth if required
+    if crawling_depth > content.getCrawlingDepth():
+      content._setCrawlingDepth(crawling_depth)
     # Step 1: download new content
-    url = content.asURL()
-    data = urllib2.urlopen(url).read()
-    file = cStringIO.StringIO()
-    file.write(data)
-    file.seek(0)
+    try:
+      url = content.asURL()
+      data = urllib2.urlopen(url).read()
+      file = cStringIO.StringIO()
+      file.write(data)
+      file.seek(0)
+    except socket.error, msg: # repeat multiple times in case of socket error
+      content.updateContentFromURL(repeat=repeat - 1)
     # Step 2: compare and update if necessary (md5)
     # do here some md5 stuff to compare contents...
     if 1:
-      content._edit(file=file)
+      # content._edit(file=file) # Commented for testing
       # Step 3: convert to base format
-      content.convertToBaseFormat()
+      # content.convertToBaseFormat() # Commented for testing
       # Step 4: activate populate (unless interaction workflow does it)
-      content.activate().populateContent()
+      # content.activate().populateContent() # Commented for testing
       # Step 5: activate crawlContent
       content.activate().crawlContent()
     else:
@@ -539,7 +610,7 @@ class ContributionTool(BaseTool):
     content.activate(at_date=next_date).updateContentFromURL()
 
   security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
-  def newContentFromURL(self, **kw):
+  def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT, **kw):
     """
       A wrapper method for newContent which provides extra safety
       in case or errors (ie. download, access, conflict, etc.).
@@ -550,6 +621,33 @@ class ContributionTool(BaseTool):
 
       NOTE: implementation needs to be done.
     """
-    return self.newContent(**kw)
+    # First of all, make sure do not try to create an existing document
+    if container_path is not None and id is not None:
+      container = self.restrictedTraverse(container_path)
+      document = container.get(id, None)
+      if document is not None:
+        # Document aleardy exists: no need to keep on crawling
+        return
+    try:
+      document = self.newContent(container_path=container_path, id=id, **kw)
+      if document.getCrawlingDepth() > 0: document.activate().crawlContent()
+      document.activate(at_date=document.getNextAlarmDate()).updateContentFromURL()
+    except urllib2.HTTPError, error:
+      # Catch any HTTP error
+      self.activate(at_date=DateTime() + 1).newContentFromURL(
+                        container_path=container_path, id=id,
+                        repeat=repeat - 1, **kw)
+    except urllib2.URLError, error:
+      if error.reason.args[0] == -3:
+        # Temporary failure in name resolution - try again in 1 day
+        self.activate(at_date=DateTime() + 1).newContentFromURL(
+                        container_path=container_path, id=id,
+                        repeat=repeat - 1, **kw)
+      else:
+        # Unknown errror - to be extended
+        raise
+    except:
+      # Pass exception to Zope (ex. conflict errors)
+      raise
 
 InitializeClass(ContributionTool)
