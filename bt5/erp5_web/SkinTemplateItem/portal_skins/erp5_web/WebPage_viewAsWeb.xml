@@ -74,7 +74,8 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_text_content</string>
+                        <string>iframe_content</string>
+                        <string>text_content</string>
                       </list>
                     </value>
                 </item>

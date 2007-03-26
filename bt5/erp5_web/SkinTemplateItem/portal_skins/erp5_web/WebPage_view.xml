@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -76,7 +82,8 @@
                     <key> <string>bottom (Content)</string> </key>
                     <value>
                       <list>
-                        <string>my_text_content</string>
+                        <string>iframe_content</string>
+                        <string>text_content</string>
                       </list>
                     </value>
                 </item>

@@ -84,9 +84,12 @@ if link_description:\n
 if link_url:\n
   kw[\'url\'] = link_url\n
 \n
+kw[\'discover_metadata\'] = 0 # We want to discover metadata synchronously\n
+\n
 #try:\n
 if 1:\n
   new_content = context.portal_contributions.newContent(**kw)\n
+  new_content.discoverMetadata() # Consider putting an exception handler\n
   msg = context.Base_translateString(\'Document successfully created\')\n
   target = new_content\n
   editable_mode = 1\n
