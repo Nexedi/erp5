@@ -1,4 +1,3 @@
-
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -31,23 +30,20 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Image import Image
-from Products.ERP5.Document.File import File, stripHtml
 from Products.ERP5.Document.Document import ConversionCacheMixin
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 
-import tempfile, os, glob, zipfile, cStringIO, re
+import tempfile, os, cStringIO
 
-
-class PDFDocument(File, ConversionCacheMixin):
+class PDFDocument(Image, ConversionCacheMixin):
   """
-  PdfDocument - same as file, but has its own getSearchableText method
-  (converts via pdftotext)
-  in effect it has two separate caches - from CachingMixin for txt and html
-  and for image formats from Image
+  PDFDocument is a subclass of Image which is able to
+  extract text content from a PDF file either as text
+  or as HTML.
   """
   # CMF Type Definition
-  meta_type = 'ERP5 PDF'
+  meta_type = 'ERP5 PDF Document'
   portal_type = 'PDF'
   isPortalContent = 1
   isRADContent = 1
@@ -58,17 +54,20 @@ class PDFDocument(File, ConversionCacheMixin):
 
   # Default Properties
   property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Reference
                     , PropertySheet.Document
-                    , PropertySheet.TextDocument
                     , PropertySheet.Data
+                    , PropertySheet.ExternalDocument
+                    , PropertySheet.Url
+                    , PropertySheet.Periodicity
                     )
 
-
-  def index_html(self, REQUEST, RESPONSE, format=None, force=0):
+  security.declareProtected(Permissions.View, 'index_html')
+  def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75, resolution=None):
     """
       Returns data in the appropriate format (graphical)
       it is always a zip because multi-page pdfs are converted into a zip
@@ -77,126 +76,92 @@ class PDFDocument(File, ConversionCacheMixin):
     if format is None:
       RESPONSE.setHeader('Content-Type', 'application/pdf')
       return self._unpackData(self.data)
+    if format in ('html', 'txt', 'text'):
+      mime, data = self.convert(format)
+      RESPONSE.setHeader('Content-Length', len(data))
+      RESPONSE.setHeader('Content-Type', '%s;charset=UTF-8' % mime)
+      RESPONSE.setHeader('Accept-Ranges', 'bytes')
+      return data
+    return Image.index_html(self, REQUEST, RESPONSE, display=display,
+                            format=format, quality=quality, resolution=resolution)
+
+  # Conversion API
+  security.declareProtected(Permissions.ModifyPortalContent, 'convert')
+  def convert(self, format, **kw):
+    """
+    Implementation of conversion for PDF files
+    """
     if format == 'html':
-      RESPONSE.setHeader('Content-Type', 'text/html;charset=UTF-8')
-      return self.getHtmlRepresentation(force)
-    if format == 'txt':
-      RESPONSE.setHeader('Content-Type', 'text/plain;charset=UTF-8')
-      self._convertToText(force)
-      return self.getTextContent()
-    mime = 'image/'+format.lower()
-    if force or not self.hasConversion(format = format):
-      self.setConversion(self._makeFile(format), 'application/zip', format=format)
-    RESPONSE.setHeader('Content-Type', 'application/zip')
-    return self.getConversion(format = format)
+      if not self.hasConversion(format=format):
+        data = self._convertToHTML()
+        self.setConversion(data, mime='text/html', format=format)
+      return self.getConversion(format=format)
+    elif format in ('txt', 'text'):
+      if not self.hasConversion(format='txt'):
+        data = self._convertToText()
+        self.setConversion(data, mime='text/plain', format='txt')
+      return self.getConversion(format=format)
+    else:
+      return Image.convert(self, format, **kw)
 
-  def _makeFile(self,format):
-    tempfile.tempdir = os.path.join(os.getenv('INSTANCE_HOME'), 'tmp')
-    os.putenv('TMPDIR', '/tmp') # because if we run zope as root, we have /root/tmp here and convert goes crazy
-    if not os.path.exists(tempfile.tempdir):
-      os.mkdir(tempfile.tempdir, 0775)
-    fr = tempfile.mktemp(suffix='.pdf')
-    to = tempfile.mktemp(suffix = '.' + format)
-    file_fr = open(fr, 'w')
-    file_fr.write(self._unpackData(self.data))
-    file_fr.close()
-    cmd = 'convert %s %s' % (fr, to)
-    os.system(cmd)
-    # pack it
-    f = cStringIO.StringIO()
-    z = zipfile.ZipFile(f, 'a')
-    for fname in glob.glob(to.replace('.', '*')):
-      base = os.path.basename(fname)
-      pg = re.match('.*?(\d*)\.'+format, base).groups()
-      if pg:
-        pg = pg[0]
-        arcname = '%s/page-%s.%s' % (format, pg, format)
-      else:
-        arcname = base
-      z.write(fname, arcname)
-    z.close()
-    f.seek(0)
-    return f.read()
-
-  searchable_property_list = File.searchable_property_list + ('text_content',)
-
-  ### Content indexing methods
-  security.declareProtected(Permissions.View, 'getSearchableText')
-  def getSearchableText(self, md=None, force=0):
+  security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
+  def populateContent(self):
     """
-      Used by the catalog for basic full text indexing
-      conditionally convert pdf to text
+      Convert each page to an Image and populate the
+      PDF directory with converted images. May be useful
+      to provide online PDF reader
     """
-    self._convertToText(force)
-    return File.getSearchableText(self, md)
+    raise NotImplementedError
 
   security.declarePrivate('_convertToText')
-  def _convertToText(self, force):
+  def _convertToText(self):
     """
-      Private implementation method.
-      If we don't have txt cache or we are forced to convert, we try to do it
-      using system pdftotext utility. We set the result as text_content property.
-      We mark it in cache as done, even if we fail, so we don't keep trying if it
-      doesn't work.
+      Convert the PDF text content to text with pdftotext
     """
-    if hasattr(self, 'data') and (force == 1 or not self.hasConversion(format = 'txt')):
-      # XXX-JPS accessing attribute data is bad
-      self.log('PdfDocument', 'regenerating txt')
-      try:
-        try:
-          tmp = tempfile.NamedTemporaryFile()
-          tmp.write(self._unpackData(self.data))
-          tmp.seek(0)
-          cmd = 'pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
-          r = os.popen(cmd)
-          self.setTextContent(r.read().replace('\n', ' '))
-          tmp.close()
-          r.close()
-        except Exception, e:
-          self.log(str(e))
-          msg = 'Conversion to text failed: ' + str(e)
-        else:
-          msg = 'Converted to text'
-      finally:
-        self.processFile(comment=msg)
-        # we don't need to store it twice, just mark we have it (or rather we already tried)
-        # we try only once
-        self.setConversion('empty', format = 'txt') 
+    tmp = tempfile.NamedTemporaryFile()
+    tmp.write(self._unpackData(self.data))
+    tmp.seek(0)
+    cmd = 'pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
+    r = os.popen(cmd)
+    h = r.read()
+    tmp.close()
+    r.close()
+    return h
 
-  SearchableText=getSearchableText
+  security.declarePrivate('_convertToHTML')
+  def _convertToHTML(self):
+    """
+    Convert the PDF text content to HTML with pdftohtml
+    """
+    tmp = tempfile.NamedTemporaryFile()
+    tmp.write(self._unpackData(self.data))
+    tmp.seek(0)
+    cmd = 'pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
+    r = os.popen(cmd)
+    h = r.read()
+    tmp.close()
+    r.close()
+    h = h.replace('<BODY bgcolor="#A0A0A0"', '<BODY ') # Quick hack to remove bg color - XXX
+    return h
 
-  security.declarePrivate('_convertToBase')
-  def _convertToBase(self):
-    self._convertToText(force=1)
-
-  security.declareProtected(Permissions.View, 'getHtmlRepresentation')
-  def getHtmlRepresentation(self, force=0):
-    '''
-    get simplified html version to display
-    If we fail to convert, we set workflow message and put error message
-    as html preview so that the user knows what's going on
-    '''
-    portal_workflow = getToolByName(self, 'portal_workflow')
-    if not hasattr(self, 'data'):
-      return 'no data'
-    if force==1 or not self.hasConversion(format = 'html'):
-      try:
-        self.log('PDF', 'regenerating html')
-        tmp = tempfile.NamedTemporaryFile()
-        tmp.write(self._unpackData(self.data))
-        tmp.seek(0)
-        cmd = 'pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
-        r = os.popen(cmd)
-        h = r.read()
-        tmp.close()
-        r.close()
-        h = stripHtml(h)
-      except Exception, e:
-        msg = 'Could not convert to html: ' + str(e)
-        h = msg
-        portal_workflow.doActionFor(self, 'process', comment=msg)
-      self.setConversion(h, format = 'html')
-    return self.getConversion(format = 'html')[1]
-
-# vim: syntax=python shiftwidth=2 
-
+  security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
+  def getContentInformation(self):
+    """
+    Returns the information about the PDF document with
+    pdfinfo.
+    """
+    tmp = tempfile.NamedTemporaryFile()
+    tmp.write(self._unpackData(self.data))
+    tmp.seek(0)
+    cmd = 'pdfinfo -meta -box %s' % tmp.name
+    r = os.popen(cmd)
+    h = r.read()
+    tmp.close()
+    r.close()
+    result = {}
+    for line in h.splitlines():
+      item_list = line.split(':')
+      key = item_list[0].strip()
+      value = ':'.join(item_list[1:]).strip()
+      result[key] = value
+    return result
