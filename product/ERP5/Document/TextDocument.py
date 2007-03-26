@@ -151,3 +151,15 @@ class TextDocument(Document, TextContent):
     def __call__(self):
       _setCacheHeaders(self, {})
       return Document.__call__(self)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
+    def getContentBaseURL(self):
+      """
+        Returns the content base URL based on the actual content
+        (in HTML)
+      """
+      html = self.asHTML()
+      base_list = re.findall(self.base_parser, str(html))
+      if base_list:
+        return base_list[0]
+      return Document.getContentBaseURL(self)
