@@ -1752,58 +1752,6 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.checkIsMessageRegisteredMethod('SQLDict')
 
-  def TryGroupMethodId(self, activity):
-    """
-    We will try to see if it is possible to give arguments
-    to methods wich use group_method_id
-    """
-    portal = self.getPortal()
-    portal_catalog = self.getCatalogTool()
-    def setDescriptionObjectList(self,object_list,description=None,**kw):
-      failed_object_list = []
-      nb = len(object_list)
-      for o in object_list:
-        o.setDescription('%s_%s' % (nb,description))
-      object_list[:] = failed_object_list[:]
-    from Products.ERP5Catalog.CatalogTool import CatalogTool
-    CatalogTool.setDescriptionObjectList = setDescriptionObjectList
-    organisation_module = self.getOrganisationModule()
-    if not organisation_module.hasContent(self.company_id):
-      organisation_module.newContent(id=self.company_id)
-    if not organisation_module.hasContent(self.company_id2):
-      organisation_module.newContent(id=self.company_id2)
-    if not organisation_module.hasContent(self.company_id3):
-      organisation_module.newContent(id=self.company_id3)
-    org1 = organisation_module._getOb(self.company_id)
-    org2 = organisation_module._getOb(self.company_id2)
-    org3 = organisation_module._getOb(self.company_id3)
-    org1.setDescription('?')
-    org2.setDescription('?')
-    org3.setDescription('?')
-    org2 = organisation_module._getOb(self.company_id2)
-    org1.activate(activity=activity,
-                  group_method_id='portal_catalog/setDescriptionObjectList',
-                  ).edit(description='a')
-    org2.activate(activity=activity,
-                  group_method_id='portal_catalog/setDescriptionObjectList',
-                  ).edit(description='b')
-    org3.activate(activity=activity,
-                  group_method_id='portal_catalog/setDescriptionObjectList',
-                  ).edit(description='b')
-    get_transaction().commit()
-    self.tic()
-    self.assertEquals(org1.getDescription(),'1_a')
-    self.assertEquals(org2.getDescription(),'2_b')
-    self.assertEquals(org3.getDescription(),'2_b')
-
-  def test_79_TryGroupMethodIdWithSQLDict(self, quiet=0, run=run_all_test):
-    # Test if after_tag can be used
-    if not run: return
-    if not quiet:
-      message = '\nTry Group Method Id With SQL Dict'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryGroupMethodId('SQLDict')
 if __name__ == '__main__':
     framework()
 else:
