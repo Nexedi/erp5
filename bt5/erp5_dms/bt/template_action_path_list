@@ -35,9 +35,7 @@ External Web Page | history
 External Web Page | metadata
 External Web Page | spider
 External Web Page | view
-File | download
 File | file_upload
-File | history
 File | jump_to_all_related
 File | jump_to_predecessor
 File | jump_to_similar
@@ -45,16 +43,12 @@ File | jump_to_similarity_cloud
 File | jump_to_successor
 File | jump_to_wiki_predecessor
 File | local_permission
-File | metadata
 File | related_document
-File | view
 Image Module | list_ui
 Image Module | sort_on
 Image Module | view
 Image | export
 Image | file_upload
-Image | fullsize_view
-Image | history
 Image | jump_to_all_related
 Image | jump_to_predecessor
 Image | jump_to_similar
@@ -62,10 +56,7 @@ Image | jump_to_similarity_cloud
 Image | jump_to_successor
 Image | jump_to_wiki_predecessor
 Image | local_permission
-Image | metadata
-Image | print
 Image | related_document
-Image | view
 PDF | download
 PDF | file_upload
 PDF | history

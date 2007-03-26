@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>o=state_change.object\n
+            <value> <string>o = state_change[\'object\']\n
 \n
 o.ExternalDocument_spiderAndSetState()\n
 </string> </value>
@@ -122,8 +122,9 @@ o.ExternalDocument_spiderAndSetState()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>o</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
