@@ -250,9 +250,17 @@ class SQLDict(RAMDict):
                                 to_date = now_date, group_method_id = group_method_id,
                                 order_validation_text = order_validation_text)
             #LOG('SQLDict dequeueMessage', 0, 'result = %d' % (len(result)))
+            path_and_method_id_dict = {}
             for line in result:
               path = line.path
               method_id = line.method_id
+
+              # Prevent using the same pair of a path and a method id.
+              key = (path, method_id)
+              if key in path_and_method_id_dict:
+                continue
+              path_and_method_id_dict[key] = 1
+
               uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
                                                             processing_node = None, to_date = now_date,
                                                             order_validation_text = order_validation_text)
