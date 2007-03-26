@@ -238,6 +238,9 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     state = self.checkbook_delivery.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
+    # check that checks are issued
+    check = self.checkbook_1.objectValues()[0]
+    self.assertEqual(check.getSimulationState(),'confirmed')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_delivery, 
                             name='history', wf_id='checkbook_delivery_workflow')
