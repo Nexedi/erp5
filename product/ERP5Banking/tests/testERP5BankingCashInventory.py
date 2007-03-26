@@ -93,7 +93,6 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # check that Categories were created
     self.assertEqual(self.paris.getPortalType(), 'Category')
-    self.assertEqual(self.madrid.getPortalType(), 'Category')
 
     # check that Resources were created
     # check portal type of billet_10000
