@@ -896,15 +896,18 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     # Start with everything until content - build a dictionary according to the order
     kw = {}
     for order_id in order_list:
+      result = None
       if order_id not in VALID_ORDER_KEY_LIST:
         # Prevent security attack or bad preferences
         raise AttributeError, "%s is not in valid order key list" % order_id
       method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
       method = getattr(self, method_id)
       if order_id == 'file_name':
-        if file_name is not None: result = method(file_name)
+        if file_name is not None:
+          result = method(file_name)
       elif order_id == 'user_login':
-        if user_login is not None: result = method(user_login)
+        if user_login is not None:
+          result = method(user_login)
       else:
         result = method()
       if result is not None:
@@ -1146,4 +1149,4 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     Serious refactoring of Alarm, Periodicity and CalendarPeriod
     classes is needed.
     """
-    return DateTime() + .1
+    return DateTime() + 10
