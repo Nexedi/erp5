@@ -1138,7 +1138,10 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     # If no base_url defined, define the base URL from our URL
     base_url = self.asURL()
     base_url_list = base_url.split('/')
-    if len(base_url_list): base_url = '/'.join(base_url_list[:-1])
+    if len(base_url_list):
+      if base_url_list[-1]:
+        # Cut the trailing part in http://www.some.site/at/trailing.html
+        base_url = '/'.join(base_url_list[:-1])
     return base_url
 
   # Alarm date calculation
