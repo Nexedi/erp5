@@ -2,6 +2,7 @@
  <portal_type id="Account Incident">
   <item>Outgoing Account Incident Line</item>
   <item>Incoming Account Incident Line</item>
+  <item>Banking Operation Line</item>
  </portal_type>
  <portal_type id="Account Incident Module">
   <item>Account Incident</item>
