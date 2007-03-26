@@ -207,7 +207,7 @@ class DB(TM):
       self._finished_or_aborted[get_ident()] = value
 
     def cleanupConnections(self):
-      for db in self.db:
+      for db in self.db.itervalues():
         db.close()
 
     def forceReconnection(self):
