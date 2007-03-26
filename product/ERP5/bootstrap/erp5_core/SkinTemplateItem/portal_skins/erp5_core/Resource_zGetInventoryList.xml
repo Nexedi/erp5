@@ -146,20 +146,20 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>from_table_list</string>
-                            <string>where_expression</string>
-                            <string>order_by_expression</string>
-                            <string>group_by_expression</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>ignore_variation</string>
-                            <string>standardize</string>
-                            <string>omit_simulation</string>
-                            <string>section_filtered</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>input_simulation_state</string>
-                            <string>output_simulation_state</string>
+<string>from_table_list</string>
+<string>where_expression</string>
+<string>order_by_expression</string>
+<string>group_by_expression</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>ignore_variation</string>
+<string>standardize</string>
+<string>omit_simulation</string>
+<string>section_filtered</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>input_simulation_state</string>
+<string>output_simulation_state</string>
                           </list>
                         </value>
                     </item>
@@ -205,7 +205,9 @@ output_simulation_state:list</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -279,14 +281,16 @@ WHERE\n
   AND ( stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL )\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
   AND ( stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL )\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
 </dtml-if>\n
 \n
 <dtml-if input_simulation_state>\n
@@ -419,14 +423,16 @@ WHERE\n
   AND ( stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL )\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
   AND ( stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL )\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
 </dtml-if>\n
 \n
 <dtml-if input_simulation_state>\n

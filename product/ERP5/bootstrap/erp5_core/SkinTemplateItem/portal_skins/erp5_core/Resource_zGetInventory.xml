@@ -283,14 +283,16 @@ WHERE\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL )\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL )\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
 </dtml-if>\n
 \n
 <dtml-if input_simulation_state>\n
@@ -419,14 +421,16 @@ WHERE\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL )\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL )\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
 </dtml-if>\n
 \n
 <dtml-if input_simulation_state>\n

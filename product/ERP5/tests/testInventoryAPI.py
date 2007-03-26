@@ -88,10 +88,14 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     self.folder = self.portal.testing_folder
     
     self.section = self._makeOrganisation(title='Section')
+    self.other_section = self._makeOrganisation(title='Other Section')
     self.node = self._makeOrganisation(title='Node')
     self.other_node = self._makeOrganisation(title='Other Node')
     self.payment_node = self.section.newContent(
                                   title='Payment Node',
+                                  portal_type='Bank Account')
+    self.other_payment_node = self.section.newContent(
+                                  title='Other Payment Node',
                                   portal_type='Bank Account')
     self.mirror_section = self._makeOrganisation(title='Mirror Section')
     self.mirror_node = self._makeOrganisation(title='Mirror Node')
@@ -509,6 +513,93 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(0, getInventoryAssetPrice(precision=2,
                                                 node_uid=self.node.getUid()))
     
+  def test_OmitInputOmitOutput(self):
+    getInventory = self.getSimulationTool().getInventory
+    self._makeMovement(quantity=1, price=1)
+    self._makeMovement(quantity=-1, price=1)
+    # omit input ignores movement comming to this node
+    self.assertEquals(-1, getInventory(node_uid=self.node.getUid(),
+                                       omit_input=1))
+    # omit output ignores movement going to this node
+    self.assertEquals(1, getInventory(node_uid=self.node.getUid(),
+                                      omit_output=1))
+    # omit_output & omit_input return nothing in that case
+    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
+                                      omit_input=1,
+                                      omit_output=1))
+    # this also work with movements without source or without destination
+    self._makeMovement(quantity=-2, price=1, source_value=None)
+    self.assertEquals(-3, getInventory(node_uid=self.node.getUid(),
+                                       omit_input=1))
+    self.assertEquals(1, getInventory(node_uid=self.node.getUid(),
+                                      omit_output=1))
+    # and with movements without source section / desination sections
+    self._makeMovement(quantity=2, price=1, source_section_value=None)
+    self.assertEquals(-3, getInventory(node_uid=self.node.getUid(),
+                                       omit_input=1))
+    self.assertEquals(3, getInventory(node_uid=self.node.getUid(),
+                                      omit_output=1))
+    
+  def test_OmitInputOmitOutputWithDifferentSections(self):
+    getInventory = self.getSimulationTool().getInventory
+    self._makeMovement(quantity=2, price=1)
+    self._makeMovement(quantity=-3, price=1,
+                       destination_section_value=self.other_section )
+    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
+                                      section_uid=self.section.getUid(),
+                                      omit_input=1))
+    self.assertEquals(-3, getInventory(node_uid=self.node.getUid(),
+                                      section_uid=self.other_section.getUid(),
+                                      omit_input=1))
+    self.assertEquals(2, getInventory(node_uid=self.node.getUid(),
+                                      section_uid=self.section.getUid(),
+                                      omit_output=1))
+    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
+                                      section_uid=self.other_section.getUid(),
+                                      omit_output=1))
+    
+  def test_OmitInputOmitOutputWithDifferentPayment(self):
+    getInventory = self.getSimulationTool().getInventory
+    # simple case
+    self._makeMovement(quantity=2, price=1,
+                       destination_payment_value=self.payment_node )
+    self._makeMovement(quantity=-3, price=1,
+                       destination_payment_value=self.other_payment_node )
+    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
+                                      section_uid=self.section.getUid(),
+                                      payment_uid=self.payment_node.getUid(),
+                                      omit_input=1))
+    self.assertEquals(-3, getInventory(node_uid=self.node.getUid(),
+                                  section_uid=self.section.getUid(),
+                                  payment_uid=self.other_payment_node.getUid(),
+                                  omit_input=1))
+    self.assertEquals(2, getInventory(node_uid=self.node.getUid(),
+                                  section_uid=self.section.getUid(),
+                                  payment_uid=self.payment_node.getUid(),
+                                  omit_output=1))
+    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
+                                  section_uid=self.other_section.getUid(),
+                                  payment_uid=self.other_payment_node.getUid(),
+                                  omit_output=1))
+
+  def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
+    getInventory = self.getSimulationTool().getInventory
+    self._makeMovement(quantity=2, price=1,
+                       source_value=self.node,
+                       destination_value=self.node,
+                       source_section_value=self.section,
+                       destination_section_value=self.section,
+                       source_payment_value=self.other_payment_node,
+                       destination_payment_value=self.payment_node )
+    self.assertEquals(2, getInventory(node_uid=self.node.getUid(),
+                                       section_uid=self.section.getUid(),
+                                       payment_uid=self.payment_node.getUid(),
+                                       omit_output=1))
+    self.assertEquals(-2, getInventory(node_uid=self.node.getUid(),
+                           section_uid=self.section.getUid(),
+                           payment_uid=self.other_payment_node.getUid(),
+                           omit_input=1))
+
 
 class TestInventoryList(InventoryAPITestCase):
   """Tests getInventoryList methods.
@@ -601,6 +692,53 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEquals([r for r in inventory_list if r.payment_uid ==
                        self.payment_node.getUid()][0].inventory, 200)
 
+  def test_OmitInputOmitOutput(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=1, price=1)
+    self._makeMovement(quantity=-1, price=1)
+    # omit input ignores movement comming to this node
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      omit_input=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(-1, inventory_list[0].total_price)
+    self.assertEquals(-1, inventory_list[0].total_quantity)
+
+    # omit output ignores movement going to this node
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      omit_output=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(1, inventory_list[0].total_price)
+    self.assertEquals(1, inventory_list[0].total_quantity)
+
+    # omit_output & omit_input return nothing in that case
+    self.assertEquals(0, len(getInventoryList(node_uid=self.node.getUid(),
+                                              omit_input=1,
+                                              omit_output=1)))
+    
+  def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=2, price=1,
+                       source_value=self.node,
+                       destination_value=self.node,
+                       source_section_value=self.section,
+                       destination_section_value=self.section,
+                       source_payment_value=self.other_payment_node,
+                       destination_payment_value=self.payment_node )
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      section_uid=self.section.getUid(),
+                                      payment_uid=self.payment_node.getUid(),
+                                      omit_output=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(2, inventory_list[0].total_price)
+    self.assertEquals(2, inventory_list[0].total_quantity)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                section_uid=self.section.getUid(),
+                                payment_uid=self.other_payment_node.getUid(),
+                                omit_input=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(-2, inventory_list[0].total_price)
+    self.assertEquals(-2, inventory_list[0].total_quantity)
 
 
 class TestMovementHistoryList(InventoryAPITestCase):
@@ -1107,11 +1245,60 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals(0, mvt_history_list[-1].running_total_quantity)
     self.assertEquals(0, mvt_history_list[-1].running_total_price)
 
+  def test_OmitInputOmitOutput(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=1, price=1)
+    self._makeMovement(quantity=-1, price=1)
+    # omit input ignores movement comming to this node
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              omit_input=1)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(-1, mvt_history_list[0].total_price)
+    self.assertEquals(-1, mvt_history_list[0].total_quantity)
+
+    # omit output ignores movement going to this node
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              omit_output=1)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(1, mvt_history_list[0].total_price)
+    self.assertEquals(1, mvt_history_list[0].total_quantity)
+
+    self.assertEquals(0, len(getMovementHistoryList(
+                                              node_uid=self.node.getUid(),
+                                              omit_input=1,
+                                              omit_output=1)))
+    
+  def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=2, price=1,
+                       source_value=self.node,
+                       destination_value=self.node,
+                       source_section_value=self.section,
+                       destination_section_value=self.section,
+                       source_payment_value=self.other_payment_node,
+                       destination_payment_value=self.payment_node )
+    movement_history_list = getMovementHistoryList(
+                                      node_uid=self.node.getUid(),
+                                      section_uid=self.section.getUid(),
+                                      payment_uid=self.payment_node.getUid(),
+                                      omit_output=1)
+    self.assertEquals(1, len(movement_history_list))
+    self.assertEquals(2, movement_history_list[0].total_price)
+    self.assertEquals(2, movement_history_list[0].total_quantity)
+
+    movement_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                   section_uid=self.section.getUid(),
+                                   payment_uid=self.other_payment_node.getUid(),
+                                   omit_input=1)
+    self.assertEquals(1, len(movement_history_list))
+    self.assertEquals(-2, movement_history_list[0].total_price)
+    self.assertEquals(-2, movement_history_list[0].total_quantity)
+
 
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
   """
-
+  # TODO
 
 if __name__ == '__main__':
   framework()
