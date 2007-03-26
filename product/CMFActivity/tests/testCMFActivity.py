@@ -1726,8 +1726,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       p.activate(activity="SQLDict").updateDesc()
       get_transaction().commit()
 
-    # len is 1 because of group by
-    self.assertEqual(len(activity_tool.getMessageList()), 1)
+    self.assertEqual(len(activity_tool.getMessageList()), 10)
     self.tic()
     self.assertEqual(p.getDescription(), "a")
 
@@ -1735,8 +1734,8 @@ class TestCMFActivity(ERP5TypeTestCase):
     for i in xrange(10):
       p.activate(activity="SQLDict").updateDesc()
       get_transaction().commit()
-    # len is 1 because of group by
-    self.assertEqual(len(activity_tool.getMessageList()), 1)
+
+    self.assertEqual(len(activity_tool.getMessageList()), 10)
     activity_tool.flush(p, invoke=0)
     get_transaction().commit()
     self.assertEqual(len(activity_tool.getMessageList()), 0)
