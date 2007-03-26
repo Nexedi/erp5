@@ -42,6 +42,9 @@ from Products.ERP5Type.WebDAVSupport import TextContent
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5.Document.Url import UrlMixIn
+from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
+
+from zLOG import LOG
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -50,6 +53,47 @@ def makeSortedTuple(kw):
   items = kw.items()
   items.sort()
   return tuple(items)
+
+class SnapshotMixin:
+  """
+    This class provides a generic API to store in the ZODB
+    PDF snapshots of objects and documents with the
+    goal to keep a facsimile copy of documents as they
+    were at a given date.
+  """
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'createSnapshot')
+  def createSnapshot(self):
+    """
+      Create a snapshot (PDF). This is the normal way to modifiy
+      snapshot_data. Once a snapshot is taken, a new snapshot
+      can not be taken.
+
+      NOTE: use getSnapshotData and hasSnapshotData accessors
+      to access a snapshot.
+
+      NOTE2: implementation of createSnapshot should probably
+      be delegated to a types base method since this it
+      is configuration dependent.
+    """
+    if self.hasSnapshotData():
+      raise ConversionError('This document already has a snapshot.')
+    self._setSnapshotData(self.convert(format='pdf'))
+
+  security.declareProtected(Permissions.ManagePortal, 'deleteSnapshot')
+  def deleteSnapshot(self):
+    """
+      Deletes the snapshot - in theory this should never be done.
+      It is there for programmers and system administrators.
+    """
+    try:
+      del(self.snapshot_data)
+    except AttributeError:
+      pass
 
 class ConversionError(Exception):pass
 
@@ -107,8 +151,7 @@ class ConversionCacheMixin:
   security.declareProtected(Permissions.View, 'getCacheTime')
   def getCacheTime(self, **format):
     """
-      Checks when 
-if ever was the file produced
+      Checks when if ever was the file produced
     """
     self.updateConversionCache()
     return self._cached_time.get(makeSortedTuple(format), 0)
@@ -148,7 +191,7 @@ if ever was the file produced
     tformat = makeSortedTuple(format)
     return self._cached_mime.get(tformat, ''), self._cached_data.get(tformat, '')
 
-  security.declareProtected(Permissions.View, 'getConversionCacheInfo')
+  security.declareProtected(Permissions.ViewManagementScreens, 'getConversionCacheInfo')
   def getConversionCacheInfo(self):
     """
     Get cache details as string (for debugging)
@@ -173,7 +216,7 @@ if ever was the file produced
     return s
 
 
-class Document(XMLObject, UrlMixIn):
+class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
   """
       Document is an abstract class with all methods
       related to document management in ERP5. This includes
@@ -239,7 +282,7 @@ class Document(XMLObject, UrlMixIn):
 
       input      -   data supplied with http request or set on the object during (2) (e.g.
                      discovered from email text)
-      file_name  -    data which might be encoded in file name
+      file_name  -   data which might be encoded in file name
       user_login -   information about user who is contributing the file
       content    -   data which might be derived from document content
 
@@ -335,6 +378,8 @@ class Document(XMLObject, UrlMixIn):
 
   # Regular expressions
   href_parser = re.compile('<a[^>]*href=[\'"](.*?)[\'"]',re.IGNORECASE)
+  body_parser = re.compile('<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
+  title_parser = re.compile('<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -347,25 +392,25 @@ class Document(XMLObject, UrlMixIn):
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Document
-                    , PropertySheet.Snapshot
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
+                    , PropertySheet.Snapshot
                     )
 
   # Declarative interfaces
   __implements__ = ()
 
-  searchable_property_list = ('title', 'description', 'id', 'reference',
-                              'version', 'short_title', 'keyword',
-                              'subject', 'source_reference', 'source_project_title')
+  searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
+                              'version', 'short_title',
+                              'subject', 'source_reference', 'source_project_title',)
 
   data = '' # some day this will be in property sheets
   base_format = 'base storage format'
 
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, format=None, force=0, **kw):
+  def index_html(self, REQUEST, RESPONSE, format=None, **kw):
     """
       We follow here the standard Zope API for files and images
       and extend it to support format conversion. The idea
@@ -382,16 +427,14 @@ class Document(XMLObject, UrlMixIn):
       Should return appropriate format (calling convert
       if necessary) and set headers.
 
-      format - the format specied in the form of an extension
+      format -- the format specied in the form of an extension
       string (ex. jpeg, html, text, txt, etc.)
-      force - convert doc even if it has a cached version which seems to be up2date
-      **kw can be various things - e.g. resolution
+
+      **kw -- can be various things - e.g. resolution
 
       TODO:
       - implement guards API so that conversion to certain
         formats require certain permission
-      - force parameter should be somehow restricted
-        to prevent denial of service attack
     """
     pass
 
@@ -421,6 +464,7 @@ class Document(XMLObject, UrlMixIn):
       else:
         val = list(val)
       return val
+
     searchable_text = reduce(add, map(lambda x: getPropertyListOrValue(x),
                                                 self.searchable_property_list))
     searchable_text = ' '.join(searchable_text)
@@ -429,23 +473,30 @@ class Document(XMLObject, UrlMixIn):
   # Compatibility with CMF Catalog
   SearchableText = getSearchableText
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isExternalDocument')
+  def isExternalDocument(self):
+    """
+    Return true if this document was obtained from an external source
+    """
+    return bool(self.getUrlString())
+
   ### Relation getters
+  security.declareProtected(Permissions.View, 'getSearchableReferenceList')
   def getSearchableReferenceList(self):
     """
-      Public Method
-      
       This method returns a list of dictionaries which can
       be used to find objects by reference. It uses for
       that a regular expression defined at system level
       preferences.
     """
-    text = self.getSearchableText()
+    text = self.getSearchableText() # XXX getSearchableText or asText ?
     regexp = self.portal_preferences.getPreferredDocumentReferenceRegularExpression()
     try:
       rx_search = re.compile(regexp)
     except TypeError: # no regexp in preference
-      self.log('please set document reference regexp in preferences')
-      return []
+      LOG('ERP5/Document/Document.getSearchableReferenceList', 0,
+          'Document regular expression must be set in portal preferences')
+      return ()
     res = rx_search.finditer(text)
     res = [(r.group(), r.groupdict()) for r in res]
     return res
@@ -785,8 +836,8 @@ class Document(XMLObject, UrlMixIn):
       Based on the document content, find out as many properties as needed.
       returns properties which should be set on the document
     """
-    # XXX this method should first make sure we have text content
-    # or do a conversion
+    if not self.hasBaseData():
+      self.convertToBaseFormat()
     method = self._getTypeBasedMethod('getPropertyDictFromContent',
         fallback_script_id='Document_getPropertyDictFromContent')
     return method()
@@ -821,7 +872,7 @@ class Document(XMLObject, UrlMixIn):
 
   ### Metadata disovery and ingestion methods
   security.declareProtected(Permissions.ModifyPortalContent, 'discoverMetadata')
-  def discoverMetadata(self, file_name, user_login=None): # XXX Was filename always there ? at least make it optional
+  def discoverMetadata(self, file_name=None, user_login=None):
     """
       This is the main metadata discovery function - controls the process
       of discovering data from various sources. The discovery itself is
@@ -843,88 +894,39 @@ class Document(XMLObject, UrlMixIn):
     order_list.reverse()
 
     # Start with everything until content - build a dictionary according to the order
-    content_index = order_list.index('content')
     kw = {}
-    first_list = order_list[:content_index]
-    for order_id in first_list:
+    for order_id in order_list:
       if order_id not in VALID_ORDER_KEY_LIST:
         # Prevent security attack or bad preferences
         raise AttributeError, "%s is not in valid order key list" % order_id
       method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
       method = getattr(self, method_id)
       if order_id == 'file_name':
-        result = method(file_name)
+        if file_name is not None: result = method(file_name)
       elif order_id == 'user_login':
-        result = method(user_login)
+        if user_login is not None: result = method(user_login)
       else:
         result = method()
       if result is not None:
+        # LOG('discoverMetadata %s' % order_id, 0, repr(result))
         kw.update(result)
 
-    # Edit content
+    # Prepare the content edit parameters - portal_type should not be changed
     try:
       del(kw['portal_type'])
     except KeyError:
       pass
 
-    self.edit(**kw)
-
-    # Finish in second stage
-    self.activate().finishMetadataDiscovery(user_login=user_login)
-    
-  security.declareProtected(Permissions.ModifyPortalContent, 'finishMetadataDiscovery')
-  def finishMetadataDiscovery(self, user_login):
-    """
-      This is called by portal_activities, to leave time-consuming procedures
-      for later. It converts what needs conversion to base, and
-      does things that can be done only after it is converted).
-    """
-    self.convertToBaseFormat()
-    # Get the order from preferences
-    # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
-    method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
-        fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
-    order_list = list(method())
-    order_list.reverse()
-
-    # do content and everything after content
-    content_index = order_list.index('content')
-    second_list = order_list[content_index:]
-
-    kw = {}
-    for order_id in second_list:
-      if order_id not in VALID_ORDER_KEY_LIST:
-        # Prevent security attack or bad preferences
-        raise AttributeError, "%s is not in valid order key list" % order_id
-      method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
-      method = getattr(self, method_id)
-      if order_id == 'file_name':
-        result = method(self.getSourceReference())
-      elif order_id == 'user_login':
-        result = method(user_login)
-      else:
-        result = method()
-      if result is not None:
-        kw.update(result)
-      
-    # Edit content
-    try:
-      del(kw['portal_type'])
-    except KeyError:
-      pass
-    self.edit(**kw)
-
-    # Erase backup attributes
-    if hasattr(self, '_backup_input'):
-      delattr(self, '_backup_input')
-
-    # Finish ingestion by calling method
-    self.finishIngestion()
+    self._edit(**kw) # Try not to invoke an automatic transition here
+    self.finishIngestion() # Finish ingestion by calling method
+    self.reindexObject()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'finishIngestion')
   def finishIngestion(self):
     """
-      Finish the ingestion process by calling the appropriate script
+      Finish the ingestion process by calling the appropriate script. This
+      script can for example allocate a reference number automatically if
+      no reference was defined.
     """
     return self._getTypeBasedMethod('finishIngestion',
         fallback_script_id='Document_finishIngestion')
@@ -939,39 +941,86 @@ class Document(XMLObject, UrlMixIn):
       string (ex. jpeg, html, text, txt, etc.)
       **kw can be various things - e.g. resolution
 
+      Default implementation returns an empty string (html, text)
+      or raises an error.
+
       TODO:
       - implement guards API so that conversion to certain
         formats require certain permission
     """
-    pass
+    if format == 'html':
+      return 'text/html', ''
+    if format in ('text', 'txt'):
+      return 'text/plain', ''
+    raise NotImplementedError
 
   security.declareProtected(Permissions.View, 'asText')
   def asText(self):
     """
       Converts the content of the document to a textual representation.
     """
-    return self.convert(format='txt')
+    mime, data = self.convert(format='txt')
+    return data
 
   security.declareProtected(Permissions.View, 'asHTML')
   def asHTML(self):
     """
       Returns a complete HTML representation of the document
-      (with body tags, etc.).
+      (with body tags, etc.). Adds if necessary a base
+      tag so that the document can be displayed in an iframe
+      or standalone.
     """
-    return self.convert(format='html')
+    if self.hasConversion(format='base-html'):
+      mime, data = self.getConversion(format='base-html')
+      return data
+    mime, html = self.convert(format='html')
+    if self.getUrlString():
+      # If a URL is defined, add the base tag
+      # if base is defined yet.
+      html = str(html)
+      if not html.find('<base') >= 0:
+        base = '<base href="%s">' % self.getContentBaseURL()
+        html = html.replace('<head>', '<head>%s' % base)
+      # We do not implement cache yet since it increases ZODB
+      # for probably no reason. More research needed
+      # self.setConversion(html, mime='text/html', format='base-html')
+    return html
 
   security.declareProtected(Permissions.View, 'asStrippedHTML')
   def asStrippedHTML(self):
     """
-      Returns a stipped HTML representation of the document
-      (without body tags, etc.) which can be used to inline
+      Returns a stripped HTML representation of the document
+      (without html and body tags, etc.) which can be used to inline
       a preview of the document.
     """
-    return self.convert(format='html')
+    if self.hasConversion(format='stripped-html'):
+      mime, data = self.getConversion(format='stripped-html')
+      return data
+    mime, html = self.convert(format='html')
+    body_list = re.findall(self.body_parser, str(html))
+    if len(body_list):
+      return body_list[0]
+    return html
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
+  def getContentInformation(self):
+    """
+    Returns the content information from the HTML conversion.
+    The default implementation tries to build a dictionnary
+    from the HTML conversion of the document and extract
+    the document title.
+    """
+    result = {}
+    html = self.asHTML()
+    if not html: return result
+    title_list = re.findall(self.title_parser, str(html))
+    if title_list:
+      result['title'] = title_list[0]
+    return result
 
   # Base format support
   security.declareProtected(Permissions.ModifyPortalContent, 'convertToBaseFormat')
-  def convertToBaseFormat(self, REQUEST=None):
+  def convertToBaseFormat(self):
     """
       Converts the content of the document to a base format
       which is later used for all conversions. This method
@@ -990,7 +1039,8 @@ class Document(XMLObject, UrlMixIn):
       Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
     """
     try:
-      msg = self._convertToBaseFormat()
+      msg = self._convertToBaseFormat() # Call implemetation method
+      self.clearConversionCache() # Conversion cache is now invalid
       if msg is None:
         msg = 'Converted to %s.' % self.base_format
       self.convertFile(comment=msg) # Invoke workflow method
@@ -1024,36 +1074,6 @@ class Document(XMLObject, UrlMixIn):
       links (in combindation with populate).
     """
     raise NotImplementedError
-
-  # Snapshot methods - XXX since this can be useful beyond
-  # documents, it should be moved to MixIn class which may
-  # be used, for example, to take a snapshot of an invoice.
-  security.declareProtected(Permissions.ModifyPortalContent, 'createSnapshot')
-  def createSnapshot(self):
-    """
-      Create a snapshot (PDF). This is the normal way to modifiy
-      snapshot_data. Once a snapshot is taken, a new snapshot
-      can not be taken.
-
-      NOTE: use getSnapshotData and hasSnapshotData accessors
-      to access a snapshot.
-
-      NOTE2: implementation of createSnapshot should probably
-      be delegated to a types base method since this it
-      is configuration dependent.
-    """
-    pass
-
-  security.declareProtected(Permissions.ManagePortal, 'deleteSnapshot')
-  def deleteSnapshot(self):
-    """
-      Deletes the snapshot - in theory this should never be done.
-      It is there for programmers and system administrators.
-    """
-    try:
-      del(self.snapshot_data)
-    except AttributeError:
-      pass
 
   # Transformation API
   security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
@@ -1091,12 +1111,12 @@ class Document(XMLObject, UrlMixIn):
     return re.findall(self.href_parser, str(html_content))
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateContentFromURL')
-  def updateContentFromURL(self):
+  def updateContentFromURL(self, repeat=MAX_REPEAT, crawling_depth=0):
     """
       Download and update content of this document from its source URL.
       Implementation is handled by ContributionTool.
     """
-    self.portal_contributions.updateContentFromURL(self)
+    self.portal_contributions.updateContentFromURL(self, repeat=repeat, crawling_depth=crawling_depth)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'crawlContent')
   def crawlContent(self):
@@ -1111,7 +1131,7 @@ class Document(XMLObject, UrlMixIn):
       Returns the content base URL based on the actual content or
       on its URL.
     """
-    # XXX TODO - try to retrive base URL from content
+    # XXX TODO - try to retrieve base URL from content
     # If no base_url defined, define the base URL from our URL
     base_url = self.asURL()
     base_url_list = base_url.split('/')
@@ -1123,7 +1143,7 @@ class Document(XMLObject, UrlMixIn):
   def getNextAlarmDate(self):
     """
     This method is only there to have something to test.
-    Serious refactory of Alarm, Periodicity and CalendarPeriod
+    Serious refactoring of Alarm, Periodicity and CalendarPeriod
     classes is needed.
     """
-    return DateTime() + .01
+    return DateTime() + .1

@@ -125,7 +125,11 @@ class TextDocument(Document, TextContent):
       if format is None:
         # The default is to use ERP5 Forms to render the page
         return self.view()
-      return self.convert(format=format)
+      mime, data = self.convert(format=format) 
+      RESPONSE.setHeader('Content-Length', len(data))
+      RESPONSE.setHeader('Content-Type', mime)
+      RESPONSE.setHeader('Accept-Ranges', 'bytes')
+      return data
 
     security.declareProtected(Permissions.View, 'convert')
     def convert(self, format, **kw):
@@ -136,30 +140,14 @@ class TextDocument(Document, TextContent):
       _setCacheHeaders(self, {'format' : format})
       # Return the raw content
       if format == 'raw':
-        return self.getTextContent()
+        return 'text/plain', self.getTextContent()
       mime_type = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
       src_mimetype = self.getTextFormat()
       if not src_mimetype.startswith('text/'):
         src_mimetype = 'text/%s' % src_mimetype
-      return getToolByName(self, 'portal_transforms').convertTo(mime_type,
+      return mime_type, getToolByName(self, 'portal_transforms').convertTo(mime_type,
                            self.getTextContent(), object=self, mimetype=src_mimetype)
 
     def __call__(self):
       _setCacheHeaders(self, {})
       return Document.__call__(self)
-
-    ### Content indexing methods
-    security.declareProtected(Permissions.View, 'getSearchableText')
-    def getSearchableText(self, md=None):
-        """\
-        Used by the catalog for basic full text indexing
-        We should try to do some kind of file conversion here so that getTextContent
-        returns something more readable.
-        """
-        searchable_text = "%s %s %s %s %s" %  (self.getTitle(), self.getShortTitle(),
-                                               self.getDescription(),
-                                               self.getId(), self.getTextContent())
-        return searchable_text
-
-    # Compatibility with CMF Catalog / CPS sites
-    SearchableText = getSearchableText # XXX-JPS - Here wa have a security issue - ask seb what to do

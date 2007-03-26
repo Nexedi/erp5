@@ -42,18 +42,6 @@ from DateTime import DateTime
 
 mimetypes.init()
 
-rs=[]
-rs.append(re.compile('<HEAD>.*</HEAD>',re.DOTALL|re.MULTILINE|re.IGNORECASE))
-rs.append(re.compile('<!DOCTYPE[^>]*>'))
-rs.append(re.compile('<.?(HTML|BODY)[^>]*>',re.DOTALL|re.MULTILINE|re.IGNORECASE))
-
-
-def stripHtml(txt): # XXX-JPS to be moved to TextDocument
-  for r in rs:
-    txt=r.sub('',txt)
-  return txt
-
-
 class File(Document, CMFFile, ConversionCacheMixin):
   """
       A File can contain raw data which can be uploaded and downloaded.
@@ -86,15 +74,18 @@ class File(Document, CMFFile, ConversionCacheMixin):
 
   # Default Properties
   property_sheets = ( PropertySheet.Base
-    , PropertySheet.CategoryCore
-    , PropertySheet.DublinCore
-    , PropertySheet.Version
-    , PropertySheet.Reference
-    , PropertySheet.Document
-    , PropertySheet.Data
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Version
+                    , PropertySheet.Reference
+                    , PropertySheet.Document
+                    , PropertySheet.Data
+                    , PropertySheet.ExternalDocument
+                    , PropertySheet.Url
+                    , PropertySheet.Periodicity
     )
-  
-  
+
   # Declarative interfaces
   #__implements__ = ( , )
 
@@ -152,7 +143,7 @@ class File(Document, CMFFile, ConversionCacheMixin):
     self.reindexObject()
 
   security.declarePrivate('_unpackData')
-  def _unpackData(self,data):
+  def _unpackData(self, data):
     """
     Unpack Pdata into string
     """
@@ -178,11 +169,9 @@ class File(Document, CMFFile, ConversionCacheMixin):
     return content_type
 
   security.declareProtected(Permissions.ModifyPortalContent,'PUT')
-  def PUT(self,REQUEST,RESPONSE):
+  def PUT(self, REQUEST, RESPONSE):
     self.clearConversionCache()
-    CMFFile.PUT(self,REQUEST,RESPONSE)
-    self.discoverMetadata(fname=self.getId())
-
+    CMFFile.PUT(self, REQUEST, RESPONSE)
 
   # DAV Support
   index_html = CMFFile.index_html 
@@ -191,5 +180,3 @@ class File(Document, CMFFile, ConversionCacheMixin):
   manage_FTPget = CMFFile.manage_FTPget
   manage_FTPlist = CMFFile.manage_FTPlist
   manage_FTPstat = CMFFile.manage_FTPstat
-
-# vim: syntax=python shiftwidth=2 

@@ -94,12 +94,16 @@ class Image(File, OFSImage):
 
   # Default Properties
   property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Reference
                     , PropertySheet.Document
                     , PropertySheet.Data
+                    , PropertySheet.ExternalDocument
+                    , PropertySheet.Url
+                    , PropertySheet.Periodicity
                     )
 
   #
@@ -188,7 +192,7 @@ class Image(File, OFSImage):
           if not self.hasConversion(display=display, format=format,
                                     quality=quality, resolution=resolution):
               # Generate photo on-the-fly
-              self._makeDisplayPhoto(display, 1, format=format, quality=quality, resolution=resolution)
+              self._makeDisplayPhoto(display, format=format, quality=quality, resolution=resolution)
           mime, image = self.getConversion(display=display, format=format,
                                      quality=quality ,resolution=resolution)
           width, height = (image.width, image.height)
@@ -290,10 +294,11 @@ class Image(File, OFSImage):
           if not self.hasConversion(display=display, format=format,
                                     quality=quality,resolution=resolution):
               # Generate photo on-the-fly
-              self._makeDisplayPhoto(display, 1, format=format, quality=quality,resolution=resolution)
+              self._makeDisplayPhoto(display, format=format, quality=quality,resolution=resolution)
           # Return resized image
           mime, image = self.getConversion(display=display, format=format,
                                      quality=quality ,resolution=resolution)
+          RESPONSE.setHeader('Content-Type', mime)
           return image.index_html(REQUEST, RESPONSE)
 
       # Return original image
@@ -307,7 +312,6 @@ class Image(File, OFSImage):
   def _resize(self, display, width, height, quality=75, format='', resolution=None):
       """Resize and resample photo."""
       newimg = StringIO()
-      os.putenv('TMPDIR', '/tmp') # because if we run zope as root, we have /root/tmp here and convert goes crazy
 
       if sys.platform == 'win32':
           from win32pipe import popen2
@@ -324,8 +328,9 @@ class Image(File, OFSImage):
             imgout, imgin = popen2('convert -quality %s -geometry %sx%s - -'
                                   % (quality, width, height))
           else:
-            LOG('Resolution',0,str(resolution))
-            cmd = 'convert -density %sx%s -quality %s -geometry %sx%s - -' % (resolution, resolution, quality, width, height)
+            # LOG('Resolution',0,str(resolution))
+            cmd = 'convert -density %sx%s -quality %s -geometry %sx%s - -' % (resolution,
+                                                        resolution, quality, width, height)
             imgout, imgin = popen2(cmd)
 
       imgin.write(str(self.getData()))
@@ -357,9 +362,9 @@ class Image(File, OFSImage):
                                                                  quality=quality,resolution=resolution))
       return image
 
-  def _makeDisplayPhoto(self, display, force=0, format='', quality=75, resolution=None):
+  def _makeDisplayPhoto(self, display, format='', quality=75, resolution=None):
       """Create given display."""
-      if not self.hasConversion(display=display, format=format, quality=quality,resolution=resolution) or force:
+      if not self.hasConversion(display=display, format=format, quality=quality,resolution=resolution):
           image = self._getDisplayPhoto(display, format=format, quality=quality, resolution=resolution)
           self.setConversion(image,  mime=image.content_type,
                                      display=display, format=format,
