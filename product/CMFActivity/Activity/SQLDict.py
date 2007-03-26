@@ -43,7 +43,7 @@ try:
 except ImportError:
   pass
 
-from zLOG import LOG, TRACE, WARNING
+from zLOG import LOG, TRACE, WARNING, ERROR
 
 MAX_PRIORITY = 5
 MAX_GROUPED_OBJECTS = 500
@@ -206,7 +206,7 @@ class SQLDict(RAMDict):
       # If the result is still empty, shift the dates so that SQLDict can dispatch pending active
       # objects quickly.
       self.timeShift(activity_tool, VALIDATION_ERROR_DELAY, processing_node,retry=1)
-    elif len(result) > 0:
+    else:
       #LOG('SQLDict dequeueMessage', 100, 'result = %r' % (list(result)))
       line = result[0]
       path = line.path
@@ -321,57 +321,71 @@ class SQLDict(RAMDict):
           # Unfortunately, database adapters may raise an exception against abort.
           LOG('SQLDict', WARNING, 'abort failed, thus some objects may be modified accidentally')
           pass
-        if isinstance(exc, ConflictError):
-          # For a conflict error, simply delay the operations.
-          for uid_list in uid_list_list:
-            if len(uid_list):
-              activity_tool.SQLDict_setPriority(uid = uid_list, 
-                                                delay = VALIDATION_ERROR_DELAY,
-                                                retry = 1)
-        else:
-          # For other exceptions, put the messages to an invalid state immediately.
-          for uid_list in uid_list_list:
-            if len(uid_list):
-              activity_tool.SQLDict_assignMessage(uid = uid_list, 
-                                                  processing_node = INVOKE_ERROR_STATE)
-              LOG('SQLDict', WARNING,
-                  'Error in ActivityTool.invoke', error=sys.exc_info())
-
-        get_transaction().commit()
-        return 0
-
-      for i in xrange(len(message_list)):
-        m = message_list[i]
-        uid_list = uid_list_list[i]
-        priority = priority_list[i]
-        if m.is_executed:
-          if len(uid_list) > 0:
-            activity_tool.SQLDict_delMessage(uid = uid_list)                # Delete it
-          get_transaction().commit()                                        # If successful, commit
-          if m.active_process:
-            active_process = activity_tool.unrestrictedTraverse(m.active_process)
-            if not active_process.hasActivity():
-              # No more activity
-              m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
-        else:
-          if type(m.exc_type) is ClassType and issubclass(m.exc_type, ConflictError):
-            # If this is a conflict error, do not lower the priority but only delay.
-            activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
-                                              retry = 1)
-            get_transaction().commit() # Release locks before starting a potentially long calculation
-          elif priority > MAX_PRIORITY:
-            # This is an error
-            if len(uid_list) > 0:
-              activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)
-                                                                              # Assign message back to 'error' state
-            m.notifyUser(activity_tool)                                       # Notify Error
-            get_transaction().commit()                                        # and commit
+        try:
+          if isinstance(exc, ConflictError):
+            # For a conflict error, simply delay the operations.
+            for uid_list in uid_list_list:
+              if len(uid_list):
+                activity_tool.SQLDict_setPriority(uid = uid_list, 
+                                                  delay = VALIDATION_ERROR_DELAY,
+                                                  retry = 1)
           else:
-            # Lower priority
+            # For other exceptions, put the messages to an invalid state immediately.
+            for uid_list in uid_list_list:
+              if len(uid_list):
+                activity_tool.SQLDict_assignMessage(uid = uid_list, 
+                                                    processing_node = INVOKE_ERROR_STATE)
+                LOG('SQLDict', WARNING,
+                    'Error in ActivityTool.invoke', error=sys.exc_info())
+  
+          get_transaction().commit()
+        except:
+          LOG('SQLDict', ERROR, 'SQLDict.dequeueMessage raised, and cannot even set processing to zero due to an exception',
+              error=sys.exc_info())
+          raise
+        return 0
+      except:
+        LOG('SQLDict', ERROR, 'SQLDict.dequeueMessage raised an exception which is not a subclass of Exception',
+            error=sys.exc_info())
+        raise
+
+      try:
+        for i in xrange(len(message_list)):
+          m = message_list[i]
+          uid_list = uid_list_list[i]
+          priority = priority_list[i]
+          if m.is_executed:
             if len(uid_list) > 0:
+              activity_tool.SQLDict_delMessage(uid = uid_list)                # Delete it
+            get_transaction().commit()                                        # If successful, commit
+            if m.active_process:
+              active_process = activity_tool.unrestrictedTraverse(m.active_process)
+              if not active_process.hasActivity():
+                # No more activity
+                m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
+          else:
+            if type(m.exc_type) is ClassType and issubclass(m.exc_type, ConflictError):
+              # If this is a conflict error, do not lower the priority but only delay.
               activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
-                                                priority = priority + 1, retry = 1)
+                                                retry = 1)
               get_transaction().commit() # Release locks before starting a potentially long calculation
+            elif priority > MAX_PRIORITY:
+              # This is an error
+              if len(uid_list) > 0:
+                activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)
+                                                                                # Assign message back to 'error' state
+              m.notifyUser(activity_tool)                                       # Notify Error
+              get_transaction().commit()                                        # and commit
+            else:
+              # Lower priority
+              if len(uid_list) > 0:
+                activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
+                                                  priority = priority + 1, retry = 1)
+                get_transaction().commit() # Release locks before starting a potentially long calculation
+      except:
+        LOG('SQLDict', ERROR, 'SQLDict.dequeueMessage raised an exception during checking for the results of processed messages',
+            error=sys.exc_info())
+        raise
 
       return 0
     get_transaction().commit() # Release locks before starting a potentially long calculation
