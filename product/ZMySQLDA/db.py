@@ -219,8 +219,6 @@ class DB(TM):
       ident = get_ident()
       db = self.db.get(ident)
       if db is None:
-        if len(self.db) != 0:
-          self.cleanupConnections()
         db = self.forceReconnection()
       return db
 
