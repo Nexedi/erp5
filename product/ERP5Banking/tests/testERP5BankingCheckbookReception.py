@@ -200,8 +200,15 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
         self.checkbook_1 = aggregate_value
       elif aggregate_value.getPortalType()=='Check':
         self.check_1 = aggregate_value
+        # Make sure new check is in draft mode
+        self.assertEquals(self.check_1.getSimulationState(),'draft')
     self.assertNotEquals(None,self.checkbook_1)
     self.assertNotEquals(None,self.check_1)
+    # Make sure that all checks inside checkbook are create
+    self.assertEquals(len(self.checkbook_1.objectValues()),50)
+    # Make sure that all checks inside checkbook are not issued yet
+    self.assertEquals(self.checkbook_1.objectValues()[0].getSimulationState(),
+                      'draft')
 
   def stepConfirmCheckbookReception(self, sequence=None, sequence_list=None, **kwd):
     """

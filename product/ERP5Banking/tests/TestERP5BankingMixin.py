@@ -758,11 +758,11 @@ class TestERP5BankingMixin:
                                             portal_type = 'Checkbook Model',
                                             title='Generic')
     model.newContent(id='variant_1',portal_type='Checkbook Model Check Amount Variation',
-                     quantity=25,title='25')
+                     quantity=50,title='50')
     model.newContent(id='variant_2',portal_type='Checkbook Model Check Amount Variation',
-                     quantity=25,title='50')
+                     quantity=100,title='100')
     model.newContent(id='variant_3',portal_type='Checkbook Model Check Amount Variation',
-                     quantity=25,title='100')
+                     quantity=200,title='200')
     return model
 
 
