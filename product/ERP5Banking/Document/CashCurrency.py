@@ -99,7 +99,7 @@ class CashCurrency(Resource):
     """
       We will create cells by the same time
     """
-    LOG('_setVariationList, value',0,value)
+    #LOG('_setVariationList, value',0,value)
     self._categorySetVariationList(value)
     self.setVariationBaseCategoryList(('cash_status','emission_letter','variation'))
     #all_variation_list = self.OrderLine_getMatrixItemList()
