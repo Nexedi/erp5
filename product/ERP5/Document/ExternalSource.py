@@ -123,7 +123,7 @@ class ExternalSource(XMLObject, UrlMixIn):
     """
     Creates the initial content from the URL by crawling the root
     """
-    self.portal_contributions.crawlContent(self)
+    self.portal_contributions.crawlContent(self, container=self)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentURLList')
   def getContentURLList(self):
