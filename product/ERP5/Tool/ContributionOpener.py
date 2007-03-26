@@ -55,7 +55,7 @@ class DirectoryFileHandler(FileHandler):
               file_list = dircache.listdir(localfile)
               s = StringIO()
               for f in file_list:
-                s.write('<p><a href="%s">%s</a></p>\n' % (urllib.quote(f), f))
+                s.write('<p><a href="%s/">%s</a></p>\n' % (urllib.quote(f), f))
               s.seek(0)
               headers = mimetools.Message(StringIO(
                   'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
