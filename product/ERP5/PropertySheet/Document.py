@@ -38,6 +38,11 @@ class Document:
       'default'         : '',
       'read_permission' : 'Manage properties',
       'mode'            : 'w' },
+    { 'id'              : 'base_content_type',
+      'description'     : 'A string which represents the mime type of the base data',
+      'type'            : 'string',
+      'read_permission' : 'Manage properties',
+      'mode'            : 'w' },
   )
 
   _categories = ('similar', 'predecessor', 'successor', 'contributor', 'classification',
