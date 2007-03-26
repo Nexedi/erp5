@@ -44,6 +44,8 @@
                 <string>archive_action</string>
                 <string>hide</string>
                 <string>hide_action</string>
+                <string>reject</string>
+                <string>reject_action</string>
               </tuple>
             </value>
         </item>

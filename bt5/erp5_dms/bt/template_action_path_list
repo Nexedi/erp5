@@ -30,11 +30,6 @@ Drawing | related_document
 Drawing | view
 Drawing | web_view
 External Source Module | view
-External Web Page | externalsite_subpages
-External Web Page | history
-External Web Page | metadata
-External Web Page | spider
-External Web Page | view
 File | file_upload
 File | jump_to_all_related
 File | jump_to_predecessor

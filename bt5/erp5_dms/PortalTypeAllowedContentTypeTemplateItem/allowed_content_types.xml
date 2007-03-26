@@ -22,7 +22,8 @@
   <item>Image</item>
  </portal_type>
  <portal_type id="External Source Module">
-  <item>External Web Page</item>
+  <item>RSS Feed</item>
+  <item>URL Crawler</item>
  </portal_type>
  <portal_type id="File">
   <item>Role Definition</item>

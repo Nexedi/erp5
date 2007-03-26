@@ -46,6 +46,8 @@
                 <string>hide_action</string>
                 <string>publish</string>
                 <string>publish_action</string>
+                <string>reject</string>
+                <string>reject_action</string>
               </tuple>
             </value>
         </item>

@@ -106,6 +106,13 @@ object = object or context\n
 \n
 ptype = ptype or context.getPortalType()\n
 \n
+# Erase titles which are meaningless\n
+title = result.get(\'title\', None)\n
+if title:\n
+  if title.startswith(\'Microsoft Word\'):\n
+    # Probably a file generated from MS Word\n
+    del result[\'title\']\n
+\n
 return result\n
 </string> </value>
         </item>
@@ -173,6 +180,7 @@ return result\n
                             <string>p</string>
                             <string>None</string>
                             <string>contributor</string>
+                            <string>title</string>
                           </tuple>
                         </value>
                     </item>

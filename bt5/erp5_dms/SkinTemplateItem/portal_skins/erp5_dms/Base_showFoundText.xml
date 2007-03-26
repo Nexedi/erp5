@@ -86,7 +86,7 @@ trail = 5\n
 maxlines = 5\n
 \n
 try:\n
-  txt = brain.getObject().getTextContent() or \'\'\n
+  txt = context.asText() or \'\'\n
 except AttributeError:\n
   txt = \'\'\n
 \n
@@ -129,6 +129,12 @@ return \' \'.join(map(str, res))\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain,selection</string> </value>
         </item>
@@ -162,6 +168,7 @@ return \' \'.join(map(str, res))\n
                             <string>trail</string>
                             <string>maxlines</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>txt</string>
                             <string>AttributeError</string>
                             <string>argument_names</string>
@@ -174,7 +181,6 @@ return \' \'.join(map(str, res))\n
                             <string>hasattr</string>
                             <string>search_string</string>
                             <string>_getitem_</string>
-                            <string>context</string>
                             <string>search_argument_list</string>
                             <string>search_words</string>
                             <string>None</string>

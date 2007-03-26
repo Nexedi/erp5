@@ -91,6 +91,12 @@ return context.Base_redirect(\'view\', keep_items=dict(portal_status_message=msg
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
