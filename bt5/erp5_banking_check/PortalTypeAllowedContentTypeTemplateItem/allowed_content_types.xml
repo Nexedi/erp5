@@ -1,7 +1,7 @@
 <allowed_content_type_list>
  <portal_type id="Check Payment">
-  <item>Banking Operation Line</item>
   <item>Cash Delivery Line</item>
+  <item>Banking Operation Line</item>
  </portal_type>
  <portal_type id="Check Payment Module">
   <item>Check Payment</item>
@@ -38,13 +38,14 @@
  </portal_type>
  <portal_type id="Stop Payment">
   <item>Checkbook Delivery Line</item>
+  <item>Banking Operation Line</item>
  </portal_type>
  <portal_type id="Stop Payment Module">
   <item>Stop Payment</item>
  </portal_type>
  <portal_type id="Traveler Check Purchase">
-  <item>Banking Operation Line</item>
   <item>Checkbook Delivery Line</item>
+  <item>Banking Operation Line</item>
  </portal_type>
  <portal_type id="Traveler Check Purchase Module">
   <item>Traveler Check Purchase</item>
