@@ -2968,6 +2968,8 @@ class TempBase(Base):
 
   security.declarePublic('setProperty')
 
+  security.declarePublic('edit')
+
 def newTempDocumentationHelper(folder, id, REQUEST=None, **kw):
   o = TempDocumentationHelper(id)
   o = o.__of__(folder)
