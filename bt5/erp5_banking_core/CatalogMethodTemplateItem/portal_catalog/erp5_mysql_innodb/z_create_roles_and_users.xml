@@ -82,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_create_catalog</string> </value>
+            <value> <string>z_create_roles_and_users</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -94,43 +94,12 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string># Host:\n
-# Database: test\n
-# Table: \'catalog\'\n
-#\n
-CREATE TABLE `catalog` (\n
-  `uid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,\n
-  `security_uid` INT UNSIGNED,\n
-  `path` varchar(255) NOT NULL default \'\',\n
-  `relative_url` varchar(255) NOT NULL default \'\',\n
-  `parent_uid` BIGINT UNSIGNED default \'0\',\n
-  `id` varchar(255) default \'\',\n
-  `description` text,\n
-  `title` varchar(255) default \'\',\n
-  `portal_type` varchar(255) default \'\',\n
-  `validation_state` varchar(255) default \'\',\n
-  `simulation_state` varchar(255) default \'\',\n
-  `simulation_state_title` varchar(255) default \'\',\n
-  `reference` varchar(255) default \'\',\n
-  `source_reference` varchar(255) default \'\',\n
-  `string_index` varchar(255),\n
-  `int_index` INT,\n
-  `has_cell_content` bool,\n
-  `creation_date` datetime,\n
-  `modification_date` datetime,\n
-  `start_date` datetime,\n
-  `stop_date` datetime,\n
-  PRIMARY KEY  (`uid`),\n
-  KEY `security_uid` (`security_uid`),\n
-  KEY `Parent` (`parent_uid`, `portal_type`, `security_uid`),\n
-  KEY `Type1` (`portal_type`),\n
-  KEY `validation_state` (`validation_state`, `portal_type`, `security_uid`),\n
-  KEY `simulation_state` (`simulation_state`, `portal_type`, `security_uid`),\n
-  KEY `simulation_state_title` (`simulation_state_title`, `portal_type`, `security_uid`),\n
-  KEY `source_reference` (`parent_uid`, `source_reference`),\n
-  KEY `start_date` (`parent_uid`, `start_date`),\n
-  KEY `reference` (`portal_type`, `reference`)\n
-) TYPE=InnoDB;\n
+            <value> <string>CREATE TABLE roles_and_users (\n
+  uid INT UNSIGNED NOT NULL,\n
+  allowedRolesAndUsers VARCHAR(255) NOT NULL,\n
+  KEY `uid` (`uid`),\n
+  KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`)\n
+)  TYPE=InnoDB; \n
 </string> </value>
         </item>
         <item>
@@ -167,43 +136,12 @@ CREATE TABLE `catalog` (\n
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string># Host:\n
-# Database: test\n
-# Table: \'catalog\'\n
-#\n
-CREATE TABLE `catalog` (\n
-  `uid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,\n
-  `security_uid` INT UNSIGNED,\n
-  `path` varchar(255) NOT NULL default \'\',\n
-  `relative_url` varchar(255) NOT NULL default \'\',\n
-  `parent_uid` BIGINT UNSIGNED default \'0\',\n
-  `id` varchar(255) default \'\',\n
-  `description` text,\n
-  `title` varchar(255) default \'\',\n
-  `portal_type` varchar(255) default \'\',\n
-  `validation_state` varchar(255) default \'\',\n
-  `simulation_state` varchar(255) default \'\',\n
-  `simulation_state_title` varchar(255) default \'\',\n
-  `reference` varchar(255) default \'\',\n
-  `source_reference` varchar(255) default \'\',\n
-  `string_index` varchar(255),\n
-  `int_index` INT,\n
-  `has_cell_content` bool,\n
-  `creation_date` datetime,\n
-  `modification_date` datetime,\n
-  `start_date` datetime,\n
-  `stop_date` datetime,\n
-  PRIMARY KEY  (`uid`),\n
-  KEY `security_uid` (`security_uid`),\n
-  KEY `Parent` (`parent_uid`, `portal_type`, `security_uid`),\n
-  KEY `Type1` (`portal_type`),\n
-  KEY `validation_state` (`validation_state`, `portal_type`, `security_uid`),\n
-  KEY `simulation_state` (`simulation_state`, `portal_type`, `security_uid`),\n
-  KEY `simulation_state_title` (`simulation_state_title`, `portal_type`, `security_uid`),\n
-  KEY `source_reference` (`parent_uid`, `source_reference`),\n
-  KEY `start_date` (`parent_uid`, `start_date`),\n
-  KEY `reference` (`portal_type`, `reference`)\n
-) TYPE=InnoDB;\n
+                        <value> <string>CREATE TABLE roles_and_users (\n
+  uid INT UNSIGNED NOT NULL,\n
+  allowedRolesAndUsers VARCHAR(255) NOT NULL,\n
+  KEY `uid` (`uid`),\n
+  KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`)\n
+)  TYPE=InnoDB; \n
 </string> </value>
                     </item>
                   </dictionary>

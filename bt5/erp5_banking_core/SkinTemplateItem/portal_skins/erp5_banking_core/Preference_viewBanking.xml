@@ -64,7 +64,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
+<string></string>
               </list>
             </value>
         </item>
@@ -73,10 +73,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string></string> </key>
                     <value>
                       <list>
                         <string>my_preferred_usual_cash_max_rendering_price</string>
+                        <string>my_preferred_sica_directory</string>
+                        <string>my_preferred_star_directory</string>
                       </list>
                     </value>
                 </item>

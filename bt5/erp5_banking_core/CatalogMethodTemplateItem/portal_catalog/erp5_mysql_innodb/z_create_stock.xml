@@ -110,7 +110,6 @@ CREATE TABLE `stock` (\n
   `resource_uid` BIGINT UNSIGNED,\n
   `quantity` real ,\n
   `date` datetime,\n
-  `mirror_date` datetime,\n
   `total_price` real ,\n
   `portal_type` VARCHAR(255),\n
   `simulation_state` varchar(255) default \'\',\n
@@ -182,7 +181,6 @@ CREATE TABLE `stock` (\n
   `resource_uid` BIGINT UNSIGNED,\n
   `quantity` real ,\n
   `date` datetime,\n
-  `mirror_date` datetime,\n
   `total_price` real ,\n
   `portal_type` VARCHAR(255),\n
   `simulation_state` varchar(255) default \'\',\n

@@ -30,19 +30,7 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>causality_state</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>event_state</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>getCorporateRegistrationCode</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -66,19 +54,7 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>getEan13Code</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>getFloatIndex</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>getGroupingReference</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -192,19 +168,7 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>invoice_state</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>meta_type</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>opportunity_state</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -244,19 +208,13 @@
 <string>getTitle</string>
 <string>meta_type</string>
 <string>getPortalType</string>
-<string>opportunity_state</string>
-<string>getCorporateRegistrationCode</string>
-<string>getEan13Code</string>
 <string>getSimulationState</string>
 <string>getSimulationStateTitle</string>
-<string>causality_state</string>
-<string>invoice_state</string>
 <string>getValidationState</string>
 <string>getValidationStateTitle</string>
 <string>payment_state</string>
 <string>event_state</string>
 <string>getReference</string>
-<string>getGroupingReference</string>
 <string>getSourceReference</string>
 <string>getDestinationReference</string>
 <string>getStringIndex</string>
@@ -299,19 +257,13 @@ getDescription\r\n
 getTitle\r\n
 meta_type\r\n
 getPortalType\r\n
-opportunity_state\r\n
-getCorporateRegistrationCode\r\n
-getEan13Code\r\n
 getSimulationState\r\n
 getSimulationStateTitle\r\n
-causality_state\r\n
-invoice_state\r\n
 getValidationState\r\n
 getValidationStateTitle\r\n
 payment_state\r\n
 event_state\r\n
 getReference\r\n
-getGroupingReference\r\n
 getSourceReference\r\n
 getDestinationReference\r\n
 getStringIndex\r\n
@@ -361,7 +313,7 @@ getStopDate</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-REPLACE INTO\n
+ REPLACE INTO\n
   catalog\n
 VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
@@ -374,26 +326,14 @@ VALUES\n
   <dtml-sqlvar expr="id[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getDescription[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getTitle[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="meta_type[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getPortalType[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="opportunity_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getEan13Code[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getValidationState[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getValidationStateTitle[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationStateTitle[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="payment_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="event_state[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getReference[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getGroupingReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSourceReference[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getDestinationReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getStringIndex[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getIntIndex[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getFloatIndex[loop_item]" type="float" optional>,\n
   <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getCreationDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getModificationDate[loop_item]" type="datetime" optional>,\n
@@ -401,8 +341,7 @@ VALUES\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
-</dtml-in>\n
-
+</dtml-in>
 
 ]]></string> </value>
         </item>
@@ -442,7 +381,7 @@ VALUES\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-REPLACE INTO\n
+ REPLACE INTO\n
   catalog\n
 VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
@@ -455,26 +394,14 @@ VALUES\n
   <dtml-sqlvar expr="id[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getDescription[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getTitle[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="meta_type[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getPortalType[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="opportunity_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getEan13Code[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getValidationState[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getValidationStateTitle[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationStateTitle[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="payment_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="event_state[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getReference[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getGroupingReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSourceReference[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getDestinationReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getStringIndex[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getIntIndex[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getFloatIndex[loop_item]" type="float" optional>,\n
   <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getCreationDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getModificationDate[loop_item]" type="datetime" optional>,\n
@@ -482,8 +409,7 @@ VALUES\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
-</dtml-in>\n
-
+</dtml-in>
 
 ]]></string> </value>
                     </item>
