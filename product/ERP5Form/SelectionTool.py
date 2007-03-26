@@ -1372,10 +1372,8 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
       if hasattr(aq_base(root), 'objectValues'):
         # If this is a folder, try to browse the hierarchy
         object_list = root.searchFolder(sort_on=sort_on)
-    elif hasattr(aq_base(root), list_method.__name__ ):
+    else:
       object_list = list_method(portal_type=filtered_portal_types)
-    else:      
-      object_list = []
     for zo in object_list:
       o = zo.getObject()
       if o is not None:
