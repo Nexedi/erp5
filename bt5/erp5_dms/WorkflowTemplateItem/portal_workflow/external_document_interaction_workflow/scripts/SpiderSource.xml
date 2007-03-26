@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>o=state_change.object\n
-o.resetTopObject()\n
+\n
 o.ExternalDocument_spiderAndSetState()\n
 </string> </value>
         </item>
@@ -88,6 +88,14 @@ o.ExternalDocument_spiderAndSetState()\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Owner</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>

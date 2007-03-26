@@ -1,6 +1,7 @@
 <hidden_content_type_list>
  <portal_type id="Contribution Tool">
   <item>Text</item>
+  <item>Web Page</item>
   <item>Drawing</item>
   <item>PDF</item>
   <item>Spreadsheet</item>

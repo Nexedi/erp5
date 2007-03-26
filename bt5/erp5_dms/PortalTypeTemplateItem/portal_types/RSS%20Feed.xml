@@ -31,6 +31,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_roles</string> </key>
             <value>
               <list/>
@@ -54,20 +60,19 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>icon_www</string> </value>
+            <value> <string>web_page.png</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 External Web Page</string> </value>
+            <value> <string>ERP5 Text Document</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>  caching sources from outside\n
-</string> </value>
+            <value> <string>An RSS feed is a text document which can populate itself with news extracted from its own content.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addExternalWebPage</string> </value>
+            <value> <string>addTextDocument</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -87,11 +92,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>External Web Page</string> </value>
+            <value> <string>RSS Feed</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>WebPage_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>

@@ -5,12 +5,14 @@ Contribution Tool | PDF
 Contribution Tool | Presentation
 Contribution Tool | Spreadsheet
 Contribution Tool | Text
+Contribution Tool | Web Page
 Document Module | Drawing
 Document Module | File
 Document Module | PDF
 Document Module | Presentation
 Document Module | Spreadsheet
 Document Module | Text
+Drawing | Image
 Drawing | Role Definition
 External Source Module | External Web Page
 File | Role Definition
@@ -18,6 +20,16 @@ File | Role Definition
 Image Module | Image
 Image | Role Definition
 PDF | Role Definition
+Presentation | Image
 Presentation | Role Definition
 Spreadsheet | Role Definition
+Text | Image
 Text | Role Definition
+URL Crawler | Drawing
+URL Crawler | File
+URL Crawler | Image
+URL Crawler | PDF
+URL Crawler | Presentation
+URL Crawler | Spreadsheet
+URL Crawler | Text
+URL Crawler | Web Page

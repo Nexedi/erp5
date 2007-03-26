@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>  PdfDocument - same as DMS File, but has its own getSearchableText method\n
-  (converts via pdftotext)</string> </value>
+            <value> <string>PDF documents stored PDF files and can convert them to HTML, Text as well as to the same formats as Image.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

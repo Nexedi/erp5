@@ -68,8 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change.object.uploadFile()\n
-state_change.object.activate().convertToBase()\n
+            <value> <string>state_change[\'object\'].uploadFile()\n
+state_change[\'object\'].activate().convertToBaseFormat()\n
 </string> </value>
         </item>
         <item>
@@ -120,6 +120,7 @@ state_change.object.activate().convertToBase()\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

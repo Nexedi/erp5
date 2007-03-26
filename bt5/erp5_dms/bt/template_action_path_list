@@ -28,6 +28,7 @@ Drawing | metadata
 Drawing | print
 Drawing | related_document
 Drawing | view
+Drawing | web_view
 External Source Module | view
 External Web Page | externalsite_subpages
 External Web Page | history
@@ -80,6 +81,7 @@ PDF | local_permission
 PDF | metadata
 PDF | related_document
 PDF | view
+PDF | web_view
 Preference | dms_preferences
 Presentation | convert
 Presentation | create_snapshot
@@ -101,6 +103,12 @@ Presentation | metadata
 Presentation | print
 Presentation | related_document
 Presentation | view
+Presentation | web_view
+RSS Feed | crawl
+RSS Feed | crawled_content
+RSS Feed | history
+RSS Feed | metadata
+RSS Feed | view
 Role Definition | history
 Role Definition | metadata
 Role Definition | print
@@ -126,6 +134,7 @@ Spreadsheet | metadata
 Spreadsheet | print
 Spreadsheet | related_document
 Spreadsheet | view
+Spreadsheet | web_view
 Text | create_snapshot
 Text | download
 Text | download_ooo
@@ -147,3 +156,9 @@ Text | print
 Text | related_document
 Text | suggest_reference
 Text | view
+Text | web_view
+URL Crawler | crawl
+URL Crawler | crawled_content
+URL Crawler | history
+URL Crawler | metadata
+URL Crawler | view

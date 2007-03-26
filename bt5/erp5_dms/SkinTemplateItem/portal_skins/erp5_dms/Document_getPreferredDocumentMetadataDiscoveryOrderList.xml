@@ -77,13 +77,13 @@ interface, for example), supplied in the email text or submitted\n
 from the contribute form.\n
 """\n
 \n
-order = (\n
+order = [\n
   \'file_name\',\n
   \'input\',\n
   \'user_login\',\n
-  \'content\'\n
-)\n
+  \'content\' ]\n
 \n
+order.reverse()\n
 return order\n
 </string> </value>
         </item>
@@ -136,6 +136,7 @@ return order\n
                             <string>fname</string>
                             <string>user_name</string>
                             <string>order</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This script analyzes the document content (text_content) to find properties that might\n
+This script analyzes the document content (text_content) to find properties that might\n
 be somehow encoded in the text. It is called by Document.getPropertyDictFromContent\n
 method.\n
 \n
@@ -78,17 +78,35 @@ to use re) that would analyze text content of the doc\n
 and return a dictionary of properties.\n
 """\n
 \n
-ob = ob or context\n
+information = context.getContentInformation()\n
+result = {}\n
+property_id_list = context.propertyIds()\n
+for k, v in information.items():  \n
+  key = k.lower()\n
+  if v:\n
+    if isinstance(v, unicode): v = v.encode(\'utf-8\')\n
+    if key in property_id_list:\n
+      if key == \'reference\':\n
+        pass # XXX - We can not trust reference on getContentInformation\n
+      else:\n
+        result[key] = v\n
+    elif key == \'author\':\n
+      p = context.portal_catalog.getResultValue(title = v)\n
+      if p is not None:\n
+        result[contributor] = p.getRelativeUrl()\n
+    elif key == \'keywords\':\n
+      result[\'subject_list\'] = v.split()\n
 \n
-try:\n
-  content = content or context.getTextContent()\n
-except AttributeError:\n
-  return {}\n
+object = object or context\n
+\n
+#try:\n
+#  content = content or context.asText()\n
+#except AttributeError:\n
+#  return result\n
 \n
 ptype = ptype or context.getPortalType()\n
-# do some analysis\n
 \n
-return {}\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -111,7 +129,7 @@ return {}\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>ob=None, content=None, ptype=None</string> </value>
+            <value> <string>object=None, content=None, ptype=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -137,12 +155,24 @@ return {}\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>ob</string>
+                            <string>object</string>
                             <string>content</string>
                             <string>ptype</string>
-                            <string>context</string>
                             <string>_getattr_</string>
-                            <string>AttributeError</string>
+                            <string>context</string>
+                            <string>information</string>
+                            <string>result</string>
+                            <string>property_id_list</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>key</string>
+                            <string>isinstance</string>
+                            <string>unicode</string>
+                            <string>_write_</string>
+                            <string>p</string>
+                            <string>None</string>
+                            <string>contributor</string>
                           </tuple>
                         </value>
                     </item>

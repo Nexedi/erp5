@@ -4,16 +4,12 @@
   <workflow>local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow</workflow>
  </chain>
  <chain>
-  <type>External Web Page</type>
-  <workflow>processing_status_workflow, edit_workflow, external_document_publication_workflow, external_document_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>File</type>
   <workflow>-edit_workflow, document_publication_workflow, document_interaction_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
   <type>Image</type>
-  <workflow>-edit_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>-edit_workflow, document_interaction_workflow, document_publication_workflow, processing_status_workflow, local_permission_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>PDF</type>
@@ -25,7 +21,7 @@
  </chain>
  <chain>
   <type>Presentation</type>
-  <workflow>document_publication_workflow, processing_status_workflow, local_permission_interaction_workflow, document_interaction_workflow</workflow>
+  <workflow>document_publication_workflow, local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Role Definition</type>
@@ -37,7 +33,7 @@
  </chain>
  <chain>
   <type>Text</type>
-  <workflow>local_permission_interaction_workflow, document_publication_workflow, processing_status_workflow, document_interaction_workflow</workflow>
+  <workflow>processing_status_workflow, local_permission_interaction_workflow, document_publication_workflow, document_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Web Page</type>

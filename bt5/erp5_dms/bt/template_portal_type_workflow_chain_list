@@ -2,10 +2,6 @@ Drawing | document_interaction_workflow
 Drawing | document_publication_workflow
 Drawing | local_permission_interaction_workflow
 Drawing | processing_status_workflow
-External Web Page | edit_workflow
-External Web Page | external_document_interaction_workflow
-External Web Page | external_document_publication_workflow
-External Web Page | processing_status_workflow
 File | -edit_workflow
 File | document_interaction_workflow
 File | document_publication_workflow

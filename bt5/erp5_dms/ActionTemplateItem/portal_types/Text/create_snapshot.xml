@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.hasOOFile() and not object.hasSnapshot()</string> </value>
+            <value> <string>python: object.hasBaseData() and not object.hasSnapshotData()</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -27,6 +27,12 @@
             <value> <string>webdav.png</string> </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_type</string> </key>
             <value> <string>image/png</string> </value>
         </item>

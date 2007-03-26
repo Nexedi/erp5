@@ -238,7 +238,16 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>http</string>
+                          <string>http</string>
+                        </tuple>
+                        <tuple>
+                          <string>file</string>
+                          <string>file</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

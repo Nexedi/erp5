@@ -96,9 +96,7 @@
                 <item>
                     <key> <string>not_assigned</string> </key>
                     <value>
-                      <list>
-                        <string>comment</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

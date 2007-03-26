@@ -81,7 +81,7 @@ metafields=(\'title\',\'subject\',\'description\',\'reference\',\'version\',\'la
 f=kw.get(\'my_file\',None)\n
 \n
 # edit metadata (only if we have OOo file)\n
-if ob.hasOOFile():\n
+if ob.hasBaseData():\n
   newmeta={}\n
   for mf in metafields:\n
     keymf=\'my_\'+mf\n
@@ -89,7 +89,7 @@ if ob.hasOOFile():\n
       newmeta[mf]=kw[keymf]\n
   if newmeta:\n
     # edit metadata via server\n
-    ob.activate().editMetadata(newmeta)\n
+    ob.activate().updateBaseMetadata(newmeta)\n
 </string> </value>
         </item>
         <item>

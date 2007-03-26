@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Document_decorateHtmlRepresentation</string> </value>
+            <value> <string>here/asStrippedHTML</string> </value>
         </item>
       </dictionary>
     </pickle>

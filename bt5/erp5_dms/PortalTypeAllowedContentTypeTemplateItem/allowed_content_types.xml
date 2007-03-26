@@ -3,6 +3,7 @@
   <item>Spreadsheet</item>
   <item>File</item>
   <item>Text</item>
+  <item>Web Page</item>
   <item>Drawing</item>
   <item>PDF</item>
   <item>Presentation</item>
@@ -18,6 +19,7 @@
  </portal_type>
  <portal_type id="Drawing">
   <item>Role Definition</item>
+  <item>Image</item>
  </portal_type>
  <portal_type id="External Source Module">
   <item>External Web Page</item>
@@ -36,11 +38,23 @@
  </portal_type>
  <portal_type id="Presentation">
   <item>Role Definition</item>
+  <item>Image</item>
  </portal_type>
  <portal_type id="Spreadsheet">
   <item>Role Definition</item>
  </portal_type>
  <portal_type id="Text">
+  <item>Image</item>
   <item>Role Definition</item>
+ </portal_type>
+ <portal_type id="URL Crawler">
+  <item>Presentation</item>
+  <item>Web Page</item>
+  <item>Spreadsheet</item>
+  <item>Image</item>
+  <item>Drawing</item>
+  <item>Text</item>
+  <item>File</item>
+  <item>PDF</item>
  </portal_type>
 </allowed_content_type_list>
