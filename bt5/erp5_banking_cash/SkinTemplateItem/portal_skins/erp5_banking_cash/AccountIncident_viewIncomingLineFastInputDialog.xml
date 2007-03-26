@@ -66,9 +66,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
+currency = context.getResourceId()\n
+if currency is None :\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                              , \'view\'\n
+                              , \'portal_status_message=Please+select+a+vault.\'\n
+                              )\n
+  return request.RESPONSE.redirect( redirect_url )\n
 \n
 cash_detail_dict = {\'line_portal_type\'           : \'Incoming Account Incident Line\'\n
-                    , \'operation_currency\'       : context.getResourceId()\n
+                    , \'operation_currency\'       : currency\n
                     , \'cash_status_list\'         : None\n
                     , \'emission_letter_list\'     : None\n
                     , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
@@ -132,7 +139,9 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>currency</string>
                             <string>None</string>
+                            <string>redirect_url</string>
                             <string>False</string>
                             <string>cash_detail_dict</string>
                           </tuple>

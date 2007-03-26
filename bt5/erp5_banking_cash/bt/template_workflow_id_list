@@ -1,6 +1,7 @@
 account_incident_workflow
 cash_balance_regulation_workflow
 cash_exchange_workflow
+cash_incident_currency_interaction_workflow
 cash_incident_workflow
 cash_movement_workflow
 cash_sorting_incident_workflow

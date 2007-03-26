@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Cash Incident</type>
-  <workflow>edit_workflow, cash_incident_workflow</workflow>
+  <workflow>cash_incident_currency_interaction_workflow, edit_workflow, cash_incident_workflow</workflow>
  </chain>
  <chain>
   <type>Cash Movement</type>

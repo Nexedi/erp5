@@ -4,6 +4,7 @@ Cash Balance Regulation | cash_balance_regulation_workflow
 Cash Balance Regulation | edit_workflow
 Cash Exchange | cash_exchange_workflow
 Cash Exchange | edit_workflow
+Cash Incident | cash_incident_currency_interaction_workflow
 Cash Incident | cash_incident_workflow
 Cash Incident | edit_workflow
 Cash Movement | cash_movement_workflow

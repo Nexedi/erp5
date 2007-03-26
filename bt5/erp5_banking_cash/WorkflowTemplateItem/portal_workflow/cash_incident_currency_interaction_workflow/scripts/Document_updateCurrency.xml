@@ -65,29 +65,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-currency = context.getResourceId()\n
-if currency is None :\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                              , \'view\'\n
-                              , \'portal_status_message=Please+select+a+vault.\'\n
-                              )\n
-  return request.RESPONSE.redirect( redirect_url )\n
+            <value> <string>obj = state_change[\'object\']\n
 \n
-cash_detail_dict = {\'line_portal_type\'           : \'Outgoing Account Incident Line\'\n
-                    , \'operation_currency\'       : currency\n
-                    , \'cash_status_list\'         : [\'valid\',\'new_emitted\']\n
-                    , \'emission_letter_list\'     : None\n
-                    , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
-                    , \'currency_cash_portal_type\': None\n
-                    , \'read_only\'                : False\n
-                    , \'column_base_category\'     : \'variation\'\n
-                    }\n
-\n
-return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
-                                                          , cash_detail_dict = cash_detail_dict\n
-                                                          , destination = context.getObject().absolute_url()\n
-                                                          )\n
+source = obj.getSource()\n
+if source is not None:\n
+  currency = obj.Baobab_getVaultCurrency(vault=source)\n
+  obj.setResource(currency)\n
 </string> </value>
         </item>
         <item>
@@ -103,14 +86,14 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
-            <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,20 +113,19 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>state_change</string>
+                            <string>_getitem_</string>
+                            <string>obj</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>currency</string>
+                            <string>source</string>
                             <string>None</string>
-                            <string>redirect_url</string>
-                            <string>False</string>
-                            <string>cash_detail_dict</string>
+                            <string>currency</string>
                           </tuple>
                         </value>
                     </item>
@@ -160,11 +142,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountIncident_viewOutgoingLineFastInputDialog</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Document_updateCurrency</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
