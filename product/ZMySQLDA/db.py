@@ -155,11 +155,7 @@ def int_or_long(s):
     try: return int(s)
     except: return long(s)
 
-"""Locking strategy:
-
-The minimum that must be done is a mutex around a query, store_result
-sequence. When using transactions, the mutex must go around the
-entire transaction."""
+FINISH_OR_ABORT_CALLED_ID = '_v_finish_or_abort_called'
 
 class DB(TM):
 
@@ -188,12 +184,9 @@ class DB(TM):
     _p_oid=_p_changed=_registered=None
 
     def __init__(self,connection):
-        from thread import allocate_lock
         self.connection=connection
         self.kwargs = kwargs = self._parse_connection_string(connection)
         self.db=apply(self.Database_Connection, (), kwargs)
-        LOG("ZMySQLDA", INFO, "Opened new connection %s: %s" \
-            % (self.db, connection)) 
         transactional = self.db.server_capabilities & CLIENT.TRANSACTIONS
         if self._try_transactions == '-':
             transactional = 0
@@ -202,17 +195,12 @@ class DB(TM):
         self._use_TM = self._transactions = transactional
         if self._mysql_lock:
             self._use_TM = 1
-        if self._use_TM:
-            self._tlock = allocate_lock()
-            self._tthread = None
-        self._lock = allocate_lock()
 
-    def __del__(self):
-        LOG("ZMySQLDA", INFO, "Closing connection %s: %s" \
-            % (self.db, self.connection))
-        self.db.close()
-        self.db = None
-        
+    def close(self):
+        if self.db is not None:
+            self.db.close()
+            self.db = None
+
     def _parse_connection_string(self, connection):
         kwargs = {'conv': self.conv}
         items = split(connection)
@@ -254,12 +242,9 @@ class DB(TM):
                _care=('TABLE', 'VIEW')):
         r=[]
         a=r.append
-        self._lock.acquire()
-        try:
+        if 1:
             self.db.query("SHOW TABLES")
             result = self.db.store_result()
-        finally:
-            self._lock.release()
         row = result.fetch_row(1)
 	while row:
             a({'TABLE_NAME': row[0][0], 'TABLE_TYPE': 'TABLE'})
@@ -269,13 +254,10 @@ class DB(TM):
     def columns(self, table_name):
         from string import join
         try:
-            try:
-                self._lock.acquire()
                 # Field, Type, Null, Key, Default, Extra
+            if 1:
                 self.db.query('SHOW COLUMNS FROM %s' % table_name)
                 c=self.db.store_result()
-            finally:
-                self._lock.release()
         except:
             return ()
         r=[]
@@ -321,8 +303,7 @@ class DB(TM):
         result=()
         db=self.db
         try:
-            try:
-                self._lock.acquire()
+            if 1:
                 for qs in filter(None, map(strip,split(query_string, '\0'))):
                     qtype = upper(split(qs, None, 1)[0])
                     if qtype == "SELECT" and max_rows:
@@ -340,13 +321,11 @@ class DB(TM):
                         result=c.fetch_row(max_rows)
                     else:
                         desc=None
-            finally:
-                self._lock.release()
                     
         except OperationalError, m:
             if m[0] not in hosed_connection: raise
             # Hm. maybe the db is hosed.  Let's restart it.
-	    db=self.db=apply(self.Database_Connection, (), self.kwargs)
+            db=self.db=apply(self.Database_Connection, (), self.kwargs)
             return self.query(query_string, max_rows)
 
         if desc is None: return (),()
@@ -366,9 +345,6 @@ class DB(TM):
     def string_literal(self, s): return self.db.string_literal(s)
 
     def _begin(self, *ignored):
-        from thread import get_ident
-        self._tlock.acquire()
-        self._tthread = get_ident()
         try:
             if self._transactions:
                 self.db.query("BEGIN")
@@ -379,13 +355,10 @@ class DB(TM):
         except:
             LOG('ZMySQLDA', ERROR, "exception during _begin",
                 error=sys.exc_info())
-            self._tlock.release()
             raise
         
     def _finish(self, *ignored):
-        from thread import get_ident
-        if not self._tlock.locked() or self._tthread != get_ident():
-            LOG('ZMySQLDA', INFO, "ignoring _finish")
+        if getattr(self, FINISH_OR_ABORT_CALLED_ID, False):
             return
         try:
             try:
@@ -400,12 +373,11 @@ class DB(TM):
                     error=sys.exc_info())
                 raise
         finally:
-            self._tlock.release()
+            self._v_database_connection = None
+            setattr(self, FINISH_OR_ABORT_CALLED_ID, True)
 
     def _abort(self, *ignored):
-        from thread import get_ident
-        if not self._tlock.locked() or self._tthread != get_ident():
-            LOG('ZMySQLDA', INFO, "ignoring _abort")
+        if getattr(self, FINISH_OR_ABORT_CALLED_ID, False):
             return
         try:
             if self._mysql_lock:
@@ -417,4 +389,5 @@ class DB(TM):
             else:
                 LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
         finally:
-            self._tlock.release()
+            setattr(self, FINISH_OR_ABORT_CALLED_ID, True)
+
