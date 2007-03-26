@@ -96,6 +96,7 @@ from Globals import HTMLFile
 from ImageFile import ImageFile
 from ExtensionClass import Base
 from DateTime import DateTime
+from thread import allocate_lock
 
 manage_addZMySQLConnectionForm=HTMLFile('connectionAdd',globals())
 
@@ -105,6 +106,10 @@ def manage_addZMySQLConnection(self, id, title,
     """Add a DB connection to a folder"""
     self._setObject(id, Connection(id, title, connection_string, check))
     if REQUEST is not None: return self.manage_main(self,REQUEST)
+
+# Connection Pool for connections to MySQL.
+database_connection_pool_lock = allocate_lock()
+database_connection_pool = {}
 
 class Connection(DABase.Connection):
     " "
@@ -117,15 +122,27 @@ class Connection(DABase.Connection):
 
     def factory(self): return DB
 
-    def connect(self,s):
-        try: self._v_database_connection.close()
-        except: pass
-        self._v_connected=''
-        DB=self.factory()
-	## No try. DO.
-	self._v_database_connection=DB(s)
-        self._v_connected=DateTime()
-        return self
+    def connect(self, s):
+      try:
+        database_connection_pool_lock.acquire()
+        self._v_connected = ''
+        pool_key = self.getPhysicalPath()
+        connection = database_connection_pool.get(pool_key)
+        if connection is not None and connection.connection == s:
+          self._v_database_connection = connection
+        else:
+          if connection is not None:
+            connection.close()
+          DB = self.factory()
+          database_connection_pool[pool_key] = DB(s, self)
+          self._v_database_connection = database_connection_pool[pool_key]
+        # XXX If date is used as such, it can be wrong because an existing
+        # connection may be reused. But this is suposedly only used as a
+        # marker to know if connection was successfull.
+        self._v_connected = DateTime()
+      finally:
+          database_connection_pool_lock.release()
+      return self
 
     def sql_quote__(self, v, escapes={}):
         return self._v_database_connection.string_literal(v)
