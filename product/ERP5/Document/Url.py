@@ -51,7 +51,8 @@ class UrlMixIn:
                             'asURL')
   def asURL(self):
     """
-    Returns a text representation of the Url
+    Returns a text representation of the Url if defined
+    or None else.
     """
     protocol = self.getUrlProtocol()
     if not protocol:
@@ -63,6 +64,7 @@ class UrlMixIn:
       else:
         protocol = 'http'
     url_string = self.getUrlString()
+    if not url_string: return None
     if protocol in no_host_protocol_list or url_string.startswith('//'):
       return '%s:%s' % (protocol, url_string)
     return '%s://%s' % (protocol, url_string)
