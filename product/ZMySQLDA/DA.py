@@ -134,7 +134,7 @@ class Connection(DABase.Connection):
           if connection is not None:
             connection.close()
           DB = self.factory()
-          database_connection_pool[pool_key] = DB(s, self)
+          database_connection_pool[pool_key] = DB(s)
           self._v_database_connection = database_connection_pool[pool_key]
         # XXX If date is used as such, it can be wrong because an existing
         # connection may be reused. But this is suposedly only used as a
