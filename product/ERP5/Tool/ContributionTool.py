@@ -640,7 +640,8 @@ class ContributionTool(BaseTool):
     except urllib2.URLError, error:
       if error.reason.args[0] == -3:
         # Temporary failure in name resolution - try again in 1 day
-        self.activate(at_date=DateTime() + 1).newContentFromURL(
+        self.activate(at_date=DateTime() + 1,
+                      activity="SQLQueue").newContentFromURL(
                         container_path=container_path, id=id,
                         repeat=repeat - 1, **kw)
       else:
