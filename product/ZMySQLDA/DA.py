@@ -132,7 +132,7 @@ class Connection(DABase.Connection):
           self._v_database_connection = connection
         else:
           if connection is not None:
-            connection.close()
+            connection.closeConnection()
           DB = self.factory()
           database_connection_pool[pool_key] = DB(s)
           self._v_database_connection = database_connection_pool[pool_key]
