@@ -380,6 +380,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
   href_parser = re.compile('<a[^>]*href=[\'"](.*?)[\'"]',re.IGNORECASE)
   body_parser = re.compile('<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
   title_parser = re.compile('<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
+  base_parser = re.compile('<base[^>]*href=[\'"](.*?)[\'"][^>]*>', re.IGNORECASE + re.DOTALL)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -1134,13 +1135,12 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       Returns the content base URL based on the actual content or
       on its URL.
     """
-    # XXX TODO - try to retrieve base URL from content
-    # If no base_url defined, define the base URL from our URL
     base_url = self.asURL()
     base_url_list = base_url.split('/')
     if len(base_url_list):
-      if base_url_list[-1]:
+      if base_url_list[-1] and base_url_list[-1].find('.') > 0:
         # Cut the trailing part in http://www.some.site/at/trailing.html
+        # but not in http://www.some.site/at
         base_url = '/'.join(base_url_list[:-1])
     return base_url
 
