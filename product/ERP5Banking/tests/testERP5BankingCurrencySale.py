@@ -206,15 +206,10 @@ class TestERP5BankingCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     FIXME: check if the transition fails when a category or property is invalid.
     """
 
-    try:
-      self.assertEqual(self.currency_sale.getDestinationPaymentValue(), self.bank_account_1)
-      self.workflow_tool.doActionFor(self.currency_sale, 'plan_action', wf_id='currency_sale_workflow')
-      #self.assertNotEqual(self.currency_sale.getAggregateValue(), None)
-      self.assertEqual(self.currency_sale.getSimulationState(), 'planned')
-    except:
-      import pdb
-      pdb.set_trace()
-      raise
+    self.assertEqual(self.currency_sale.getDestinationPaymentValue(), self.bank_account_1)
+    self.workflow_tool.doActionFor(self.currency_sale, 'plan_action', wf_id='currency_sale_workflow')
+    #self.assertNotEqual(self.currency_sale.getAggregateValue(), None)
+    self.assertEqual(self.currency_sale.getSimulationState(), 'planned')
 
 
   def stepSendToCounter(self, sequence=None, sequence_list=None, **kwd):
