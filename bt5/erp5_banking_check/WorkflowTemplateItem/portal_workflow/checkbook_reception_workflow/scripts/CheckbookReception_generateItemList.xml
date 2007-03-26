@@ -128,15 +128,22 @@ def assertReferenceMatchListEmpty(match_list):\n
       matched_reference_list.append(match.getReference())\n
     raise ValidationFailed, \'The following references are already allocated : %s\' % (matched_reference_list, )\n
 \n
+def checkReferenceListUniqueness(reference_list, model):\n
+  """\n
+    Check each given reference not to already exist.\n
+  """\n
+  match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list)\n
+  assertReferenceMatchListEmpty(match_list)\n
+  for reference in reference_list:\n
+    if portal_activities.countMessageWithTag(\'check_%s_%s\' % (model, reference)) != 0:\n
+      raise ValidationFailed, \'This reference is alredy scheduled for indexing, and so is already allocated : %s\' % (reference, )\n
+\n
 portal_activities = context.getPortalObject().portal_activities\n
 def checkReferenceUniqueness(reference, model):\n
   """\n
     Check the given reference not to already exist.\n
   """\n
-  match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference)\n
-  assertReferenceMatchListEmpty(match_list)\n
-  if portal_activities.countMessageWithTag(\'check_%s_%s\' % (model, reference)) != 0:\n
-    raise ValidationFailed, \'This reference is alredy scheduled for indexing, and so is already allocated : %s\' % (reference, )\n
+  checkReferenceListUniqueness([reference, ], model)\n
 \n
 # Check getBaobabSource and getBaobabDestination\n
 transaction.Base_checkBaobabSourceAndDestination()\n
@@ -199,15 +206,13 @@ for line in line_list:\n
       destination_section = item.getDestinationSection()\n
       item.setStartDate(start_date)\n
       reference_list = range(reference_to_int(reference_range_min), last_reference_value + 1)\n
-      checkReferenceUniqueness(reference_list, model)\n
+      checkReferenceListUniqueness(reference_list, model)\n
       for j in reference_list:\n
         reference = int_to_reference(j, reference_range_min)\n
         check = item.newContent(portal_type=\'Check\', title=str(reference), activate_kw={\'tag\': \'check_%s_%s\' % (model, reference)})\n
         check.setDestination(destination_section)\n
         check.setStartDate(start_date)\n
         check.setReference(reference)\n
-        check.confirm()\n
-\n
     else:\n
       checkReferenceUniqueness(reference_range_min, model)\n
       item.setReference(reference_range_min)\n
@@ -289,9 +294,10 @@ for line in line_list:\n
                             <string>getTravelerCheckReferencePrefix</string>
                             <string>generateTravelerCheckReference</string>
                             <string>assertReferenceMatchListEmpty</string>
-                            <string>context</string>
-                            <string>portal_activities</string>
                             <string>portal</string>
+                            <string>portal_activities</string>
+                            <string>checkReferenceListUniqueness</string>
+                            <string>context</string>
                             <string>checkReferenceUniqueness</string>
                             <string>delivery</string>
                             <string>line_list</string>
