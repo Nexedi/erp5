@@ -455,6 +455,13 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       """
         we try to get a list, else we get value and convert to list
       """
+      method = getattr(self, property, None)
+      if method is not None:
+        if callable(method):
+          val = method()
+          if isinstance(val, list) or isinstance(val, tuple):
+            return list(val)
+          return [str(val)]
       val = self.getPropertyList(property)
       if val is None:
         val = self.getProperty(property)
