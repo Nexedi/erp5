@@ -108,7 +108,7 @@ def hashVariationCategoryItemList(item_list=None, value_list=None,\n
 \n
 hashVariationCategoryItemList = CachingMethod(hashVariationCategoryItemList,\n
                                               id=\'Checkbook_hashVariationCategoryItemList\',\n
-                                              cache_duration=3600)\n
+                                              cache_factory=\'erp5_ui_medium\')\n
 return hashVariationCategoryItemList(item_list=item_list, value_list=value_list,\n
                                      default_sub_field_property_dict=default_sub_field_property_dict,\n
                                      is_right_display=is_right_display)\n
