@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002,2007 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -192,8 +192,8 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           kw['sort_on'] = sort_on
         elif kw.has_key('sort_on'):
           del kw['sort_on'] # We should not sort if no sort was defined
-        if not kw.has_key('selection_name'):
-          kw['selection_name'] = self.name
+        # We should always set selection_name with self.name
+        kw['selection_name'] = self.name
         if method is not None:
           if callable(method):
             if self.domain is not None and self.report is not None:
