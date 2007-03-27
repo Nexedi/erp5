@@ -366,6 +366,19 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       Default implementation uses DocumentReferenceConstraint to check if the 
       reference/language/version triplet is unique. Additional constraints
       can be added if necessary.
+
+    NOTE: Document.py supports a notion of revision which is very specific.
+    The underlying concept is that, as soon as a document has a reference,
+    the association of (reference, version, language) must be unique
+    accross the whole system. This means that a given document in a given
+    version in a given language is unique. The underlying idea is similar
+    to the one in a Wiki system in which each page is unique and acts
+    the the atom of collaboration. In the case of ERP5, if a team collaborates
+    on a Text document written with an offline word processor, all
+    updates should be placed inside the same object. A Contribution
+    will thus modify an existing document, if allowed from security
+    point of view, and increase the revision number. Same goes for
+    properties (title). Each change generates a new revision.
   """
 
   meta_type = 'ERP5 Document'
@@ -489,7 +502,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     return bool(self.getUrlString())
 
   ### Relation getters
-  security.declareProtected(Permissions.View, 'getSearchableReferenceList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSearchableReferenceList')
   def getSearchableReferenceList(self):
     """
       This method returns a list of dictionaries which can
@@ -509,7 +522,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     res = [(r.group(), r.groupdict()) for r in res]
     return res
     
-  security.declareProtected(Permissions.View, 'getImplicitSuccessorValueList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSuccessorValueList')
   def getImplicitSuccessorValueList(self):
     """
       Find objects which we are referencing (if our text_content contains
@@ -543,7 +556,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     res_dict = dict.fromkeys(res)
     return res_dict.keys()
 
-  security.declareProtected(Permissions.View, 'getImplicitPredecessorValueList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitPredecessorValueList')
   def getImplicitPredecessorValueList(self):
     """
       This function tries to find document which are referencing us - by reference only, or
@@ -574,7 +587,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     ref = self.getReference()
     return [o for o in di.keys() if o.getReference() != ref] # every object has its own reference in SearchableText
 
-  security.declareProtected(Permissions.View, 'getImplicitSimilarValueList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSimilarValueList')
   def getImplicitSimilarValueList(self):
     """
       Analyses content of documents to find out by the content which documents
@@ -584,7 +597,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     """
     return []
 
-  security.declareProtected(Permissions.View, 'getSimilarCloudValueList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimilarCloudValueList')
   def getSimilarCloudValueList(self, depth=0):
     """
       Returns all documents which are similar to us, directly or indirectly, and
@@ -619,17 +632,6 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       lista_latest.pop(self()) # remove this document
 
     return lista_latest.keys()
-
-  security.declareProtected(Permissions.View, 'hasFile')
-  def hasFile(self):
-    """
-    Checks whether we have an initial file
-    """
-    _marker = []
-    if getattr(self,'data', _marker) is not _marker: # XXX-JPS - use propertysheet accessors
-      d = getattr(self, 'data')
-      return d is not None and d != ''
-    return False
 
   ### Version and language getters - might be moved one day to a mixin class in base
   security.declareProtected(Permissions.View, 'getLatestVersionValue')
@@ -693,101 +695,58 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     if language: kw['language'] = language
     return catalog(**kw)
 
-  security.declareProtected(Permissions.View, 'isVersionUnique')
+  security.declareProtected(Permissions.AccessContentsInformation, 'isVersionUnique')
   def isVersionUnique(self):
     """
-      Returns true if no other document of the same
-      portal_type and reference has the same version and language
-
-      XXX should delegate to script with proxy roles
-      XXX-JPS revision ?
+      Returns true if no other document exists with the same
+      reference, version and language, or if the current
+      document has no reference.
     """
+    if not self.getReference():
+      return 1
     catalog = getToolByName(self, 'portal_catalog', None)
-    # XXX why this does not work???
-    #return catalog.countResults(portal_type=self.getPortalType(),
-                                #reference=self.getReference(),
-                                #version=self.getVersion(),
-                                #language=self.getLanguage(),
-                                #) <= 1
-    return len(catalog(portal_type=self.getPortalType(),
-                                reference=self.getReference(),
-                                version=self.getVersion(),
-                                language=self.getLanguage(),
-                                )) <= 1
+    # This method has been reported not to work. Extra test needed.
+    return catalog.unrestrictedCountResults(portal_type=self.getPortalDocumentTypeList(),
+                                            reference=self.getReference(),
+                                            version=self.getVersion(),
+                                            language=self.getLanguage(),
+                                            ) <= 1
 
-  security.declareProtected(Permissions.View, 'getLatestRevisionValue')
-  def getLatestRevisionValue(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRevision')
+  def getRevision(self):
     """
-      Returns the latest revision of ourselves
-    """
-    if not self._checkCompleteCoordinates():
-      return None
-    catalog = getToolByName(self, 'portal_catalog', None)
-    res = catalog(
-        reference=self.getReference(),
-        language=self.getLanguage(),
-        version=self.getVersion(),
-        sort_on=(('revision','descending'),)
-        )
-    if len(res) == 0:
-      return None
-    return res[0].getObject()
+      Returns the current revision by analysing the change log
+      of the current object.
 
-  security.declareProtected(Permissions.View, 'getRevisionValueList')
-  def getRevisionValueList(self):
+      NOTE: for now, workflow choice is hardcoded. This is
+      an optimisation hack. If a document does neither use
+      edit_workflow or processing_status_workflow, the
+      first workflow in the chain has prioriot. Better
+      implementation would require to be able to define
+      which workflow in a chain is the default one for
+      revision tracking (and for modification date).
     """
-      Returns a list revision strings for a given reference, version, language
-      XXX should it return revision strings, or docs (as the func name would suggest)?
+    portal_workflow = getToolByName(self, 'portal_workflow')
+    wf_list = list(portal_workflow.getWorkflowsFor(self))
+    wf = portal_workflow.getWorkflowById('edit_workflow')
+    if wf is not None: wf_list = [wf] + wf_list
+    wf = portal_workflow.getWorkflowById('processing_status_workflow')
+    if wf is not None: wf_list = [wf] + wf_list
+    for wf in wf_list:
+      history = wf.getInfoFor(self, 'history', None)
+      if history:
+        return len(filter(lambda x:x.get('action', None) in ('edit', 'upload'), history))
+    return None
 
-      XXX-JPS return values - getRevisionList returns revisions 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRevisionList')
+  def getRevisionList(self):
     """
-    # Use portal_catalog
-    if not self._checkCompleteCoordinates():
-      return []
-    res = self.portal_catalog(reference=self.getReference(),
-                  language=self.getLanguage(),
-                  version=self.getVersion()
-                  )
-    d = {}
-    for r in res:
-      d[r.getRevision()] = True
-      revs = d.keys()
-      revs.sort(reverse=True)
-    return revs
+      Returns the list of revision numbers of the current document
+      by by analysing the change log of the current object.
+    """
+    return range(0, self.getRevision())
 
-  security.declarePrivate('_checkCompleteCoordinates')
-  def _checkCompleteCoordinates(self):
-    """
-      test if the doc has all coordinates
-
-      XXX-JPS - revision ?
-    """
-    reference = self.getReference()
-    version = self.getVersion()
-    language = self.getLanguage()
-    return (reference and version and language)
-  
-  security.declareProtected(Permissions.ModifyPortalContent, 'setNewRevision')
-  def setNewRevision(self, immediate_reindex=False):
-    """
-      Set a new revision number automatically
-      Delegates to ZMI script because revision numbering policies can be different.
-      Should be called by interaction workflow upon appropriate action.
-
-      Sometimes we should reindex immediately, to avoid other doc setting
-      the same revision (if revisions are global and there is heavy traffic)
-    """
-    # Use portal_catalog without security (proxy roles on scripts)
-    method = self._getTypeBasedMethod('getNewRevision', 
-        fallback_script_id = 'Document_getNewRevision')
-    new_rev = method()
-    self.setRevision(new_rev)
-    if immediate_reindex:
-      self.immediateReindexObject()
-    else:
-      self.reindexObject()
-  
-  security.declareProtected(Permissions.View, 'getLanguageList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getLanguageList')
   def getLanguageList(self, version=None):
     """
       Returns a list of languages which this document is available in
@@ -802,7 +761,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       kw['version'] = version
     return map(lambda o:o.getLanguage(), catalog(**kw))
 
-  security.declareProtected(Permissions.View, 'getOriginalLanguage')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOriginalLanguage')
   def getOriginalLanguage(self):
     """
       Returns the original language of this document.
@@ -877,6 +836,23 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
                             # disappear within a given transaction
     return kw
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getStandardFileName')
+  def getStandardFileName(self):
+    """
+    Returns the document coordinates as a standard file name. This
+    method is the reverse of getPropertyDictFromFileName.
+
+    NOTE: this method must be overloadable by types base method with fallback
+    """
+    if self.getReference():
+      file_name = self.getReference()
+    else:
+      file_name = self.getTitleOrId()
+    if self.getVersion():
+      file_name = file_name + '-%s' % self.getVersion()
+    if self.getLanguage():
+      file_name = file_name + '-%s' % self.getLanguage()
+    return file_name
 
   ### Metadata disovery and ingestion methods
   security.declareProtected(Permissions.ModifyPortalContent, 'discoverMetadata')
@@ -1151,7 +1127,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
         base_url = '/'.join(base_url_list[:-1])
     return base_url
 
-  # Alarm date calculation
+  # Alarm date calculation - this method should be moved out ASAP
   security.declareProtected(Permissions.AccessContentsInformation, 'getNextAlarmDate')
   def getNextAlarmDate(self):
     """
@@ -1160,22 +1136,3 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     classes is needed.
     """
     return DateTime() + 10
-
-  # Standard File Naming
-  security.declareProtected(Permissions.AccessContentsInformation, 'getStandardFileName')
-  def getStandardFileName(self):
-    """
-    Returns the document coordinates as a standard file name.
-
-    NOTE: this method must be overloadable by types base method with fallback
-    """
-    if self.getReference():
-      file_name = self.getReference()
-    else:
-      file_name = self.getTitleOrId()
-    if self.getVersion():
-      file_name = file_name + '-%s' % self.getVersion()
-    if self.getLanguage():
-      file_name = file_name + '-%s' % self.getLanguage()
-    return file_name
-  
