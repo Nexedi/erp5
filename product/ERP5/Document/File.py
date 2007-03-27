@@ -142,6 +142,13 @@ class File(Document, CMFFile, ConversionCacheMixin):
     self._setFile(data, precondition=precondition)
     self.reindexObject()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasFile')
+  def hasFile(self):
+    """
+    Checks whether a file was uploaded into the document.
+    """
+    return self.hasData()
+
   security.declarePrivate('_unpackData')
   def _unpackData(self, data):
     """
