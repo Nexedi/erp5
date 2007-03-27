@@ -171,9 +171,14 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
                                     source_value=self.cash, 
                                     description='test',
                                     destination_value=self.counter, 
-                                    source_total_asset_price=52400.0)
+                                    source_total_asset_price=52400.0,)
     # execute tic
     self.stepTic()
+    # set source reference
+    self.setDocumentSourceReference(self.destruction_survey)
+    # check source reference
+    self.assertNotEqual(self.destruction_survey.getSourceReference(), '')
+    self.assertNotEqual(self.destruction_survey.getSourceReference(), None)
     # check we have only one cash transfer
     self.assertEqual(len(self.destruction_survey_module.objectValues()), 1)
     # get the cash transfer document
