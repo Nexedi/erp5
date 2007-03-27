@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TemplateTool_viewUpgradeRepositoryBusinessTemplateListDialog</string> </value>
+            <value> <string>string:${object_url}/TemplateTool_viewUpgradeRepositoryBusinessTemplateListDialog?reset=1</string> </value>
         </item>
       </dictionary>
     </pickle>
