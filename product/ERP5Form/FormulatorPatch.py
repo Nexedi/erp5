@@ -1001,7 +1001,7 @@ class FloatWidget(TextWidget):
           else:
             if 'e' in value:
               # %f will not use exponential format
-              return '%f' % float(original_value)
+              value = '%f' % float(original_value)
           value_list = value.split('.')
           integer = value_list[0]
           if input_style.find(' ')>=0:
