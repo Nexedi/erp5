@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002,2007 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -42,7 +42,7 @@ try:
 except ImportError:
   pass
 
-from zLOG import LOG, WARNING
+from zLOG import LOG, WARNING, ERROR
 
 MAX_PRIORITY = 5
 
@@ -125,7 +125,7 @@ class SQLQueue(RAMQueue):
         activity_tool.invoke(m) # Try to invoke the message
         if m.is_executed:                                          # Make sure message could be invoked
           get_transaction().commit()                                        # If successful, commit
-      except Exception, exc:
+      except:
         # If an exception occurs, abort the transaction to minimize the impact,
         try:
           get_transaction().abort()
@@ -134,48 +134,50 @@ class SQLQueue(RAMQueue):
           LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
           pass
 
-        if isinstance(exc, ConflictError):
-          # If a conflict occurs, delay the operation.
-          activity_tool.SQLQueue_setPriority(uid = line.uid, date = next_processing_date,
+        # An exception happens at somewhere else but invoke, so messages
+        # themselves should not be delayed.
+        try:
+          activity_tool.SQLQueue_setPriority(uid = line.uid, date = line.date,
                                              priority = line.priority)
-        else:
-          # For the other exceptions, put it into an error state.
-          activity_tool.SQLQueue_assignMessage(uid = line.uid, 
-                                               processing_node = INVOKE_ERROR_STATE)
-          LOG('SQLQueue', WARNING,
-              'Error in ActivityTool.invoke', error=sys.exc_info())
-
-        get_transaction().commit()
+          get_transaction().commit()
+        except:
+          LOG('SQLQueue', ERROR, 'SQLQueue.dequeueMessage raised, and cannot even set processing to zero due to an exception',
+              error=sys.exc_info())
+          raise
         return 0
 
-
-      if m.is_executed:
-        activity_tool.SQLQueue_delMessage(uid=[line.uid])  # Delete it
-      else:
-        try:
-          # If not, abort transaction and start a new one
-          get_transaction().abort()
-        except:
-          # Unfortunately, database adapters may raise an exception against abort.
-          LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
-          pass
-
-        if type(m.exc_type) is ClassType \
-                and issubclass(m.exc_type, ConflictError):
-          activity_tool.SQLQueue_setPriority(uid = line.uid, 
-                                             date = next_processing_date,
-                                             priority = line.priority)
-        elif line.priority > MAX_PRIORITY:
-          # This is an error
-          activity_tool.SQLQueue_assignMessage(uid = line.uid, 
-                                               processing_node = INVOKE_ERROR_STATE)
-                                                                            # Assign message back to 'error' state
-          m.notifyUser(activity_tool)                                       # Notify Error
+      try:
+        if m.is_executed:
+          activity_tool.SQLQueue_delMessage(uid=[line.uid])  # Delete it
         else:
-          # Lower priority
-          activity_tool.SQLQueue_setPriority(uid=line.uid, date = next_processing_date,
-                                              priority = line.priority + 1)
-      get_transaction().commit()
+          try:
+            # If not, abort transaction and start a new one
+            get_transaction().abort()
+          except:
+            # Unfortunately, database adapters may raise an exception against abort.
+            LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
+            pass
+  
+          if type(m.exc_type) is ClassType \
+                  and issubclass(m.exc_type, ConflictError):
+            activity_tool.SQLQueue_setPriority(uid = line.uid, 
+                                              date = next_processing_date,
+                                              priority = line.priority)
+          elif line.priority > MAX_PRIORITY:
+            # This is an error
+            activity_tool.SQLQueue_assignMessage(uid = line.uid, 
+                                                processing_node = INVOKE_ERROR_STATE)
+                                                                              # Assign message back to 'error' state
+            m.notifyUser(activity_tool)                                       # Notify Error
+          else:
+            # Lower priority
+            activity_tool.SQLQueue_setPriority(uid=line.uid, date = next_processing_date,
+                                                priority = line.priority + 1)
+        get_transaction().commit()
+      except:
+        LOG('SQLQueue', ERROR, 'SQLQueue.dequeueMessage raised an exception during checking for the results of processed messages',
+            error=sys.exc_info())
+        raise
       return 0
     get_transaction().commit() # Release locks before starting a potentially long calculation
     return 1

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002,2007 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -313,7 +313,7 @@ class SQLDict(RAMDict):
             break
         else:
           get_transaction().abort()
-      except Exception, exc:
+      except:
         # If an exception occurs, abort the transaction to minimize the impact,
         try:
           get_transaction().abort()
@@ -321,33 +321,20 @@ class SQLDict(RAMDict):
           # Unfortunately, database adapters may raise an exception against abort.
           LOG('SQLDict', WARNING, 'abort failed, thus some objects may be modified accidentally')
           pass
+
+        # An exception happens at somewhere else but invoke or invokeGroup, so messages
+        # themselves should not be delayed.
         try:
-          if isinstance(exc, ConflictError):
-            # For a conflict error, simply delay the operations.
-            for uid_list in uid_list_list:
-              if len(uid_list):
-                activity_tool.SQLDict_setPriority(uid = uid_list, 
-                                                  delay = VALIDATION_ERROR_DELAY,
-                                                  retry = 1)
-          else:
-            # For other exceptions, put the messages to an invalid state immediately.
-            for uid_list in uid_list_list:
-              if len(uid_list):
-                activity_tool.SQLDict_assignMessage(uid = uid_list, 
-                                                    processing_node = INVOKE_ERROR_STATE)
-                LOG('SQLDict', WARNING,
-                    'Error in ActivityTool.invoke', error=sys.exc_info())
-  
-          get_transaction().commit()
+          for uid_list in uid_list_list:
+            if len(uid_list):
+              # This only sets processing to zero.
+              activity_tool.SQLDict_setPriority(uid = uid_list)
+              get_transaction().commit()
         except:
           LOG('SQLDict', ERROR, 'SQLDict.dequeueMessage raised, and cannot even set processing to zero due to an exception',
               error=sys.exc_info())
           raise
         return 0
-      except:
-        LOG('SQLDict', ERROR, 'SQLDict.dequeueMessage raised an exception which is not a subclass of Exception',
-            error=sys.exc_info())
-        raise
 
       try:
         for i in xrange(len(message_list)):
