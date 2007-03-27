@@ -46,6 +46,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
       HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 
 try:
@@ -1297,7 +1298,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     org_e = self._makeOrganisation(title='foo',description='bir')
     org_f = self._makeOrganisation(title='foo',description='bar')
 
-    from Products.ZSQLCatalog.SQLCatalog import Query,ComplexQuery
     # title='abc'
     catalog_kw= {'title':Query(title='abc')}
     self.failIfDifferentSet([org_a.getPath()],
@@ -1487,6 +1487,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     path_list = [first_deleted_url,deleted_url,next_deleted_url]
     self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.new_connection_id)
     self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.original_connection_id)
+    # Make sure module are there
+    path_list = [module.getRelativeUrl()]
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
     
   def test_47_Unrestricted(self, quiet=quiet, run=run_all_test):
     """test unrestricted search/count results.
@@ -1654,6 +1658,43 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals([select_], [x.getObject() for x in
                                    ctool(portal_type='Person', title='SELECT')])
 
+  def test_52_QueryAndTableAlias(self,quiet=quiet, run=run_all_test):
+    """
+    Make sure we can use aliases for tables wich will
+    be used by related keys. This allow in some particular
+    cases to decrease a lot the number of aliases
+    """
+    if not run: return
+    if not quiet:
+      message = 'Query And Table Alias'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    org_a = self._makeOrganisation(title='abc',default_address_city='abc')
+    module = self.getOrganisationModule()
+    module.immediateReindexObject()
+    # First try without aliases
+    query1 = Query(parent_portal_type="Organisation")
+    query2 = Query(grand_parent_portal_type="Organisation Module")
+    complex_query = ComplexQuery(query1, query2, operator="AND")
+    self.failIfDifferentSet([org_a.getPath() + '/default_address'],
+        [x.path for x in self.getCatalogTool()(query=complex_query)])
+    # Then try without aliases
+    query1 = Query(parent_portal_type="Organisation", 
+                   table_alias_list=(("catalog" , "parent"),))
+    query2 = Query(grand_parent_portal_type="Organisation Module",
+                   table_alias_list=(("catalog" , "parent"), 
+                                    ("catalog", "grand_parent")))
+    complex_query = ComplexQuery(query1, query2, operator="AND")
+    self.failIfDifferentSet([org_a.getPath() + '/default_address'],
+        [x.path for x in self.getCatalogTool()(query=complex_query)])
+    sql_kw = self.getCatalogTool().buildSQLQuery(query=complex_query)
+    # Make sure we have the right list of aliases
+    table_alias_list = sql_kw["from_table_list"]
+    self.failIfDifferentSet((("catalog","catalog"),
+                             ("parent","catalog"),
+                             ("grand_parent","catalog")),
+                             table_alias_list)
 
 if __name__ == '__main__':
     framework()
