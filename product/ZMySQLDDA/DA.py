@@ -83,9 +83,17 @@
 # attributions are listed in the accompanying credits file.
 #
 ##############################################################################
+database_type='MySQL'
 
-from Products.ZMySQLDA.DA import *
+import os
 from db import DeferredDB
+import Shared.DC.ZRDB.Connection, sys, DABase
+from App.Dialogs import MessageDialog
+from Globals import HTMLFile
+from ImageFile import ImageFile
+from ExtensionClass import Base
+from DateTime import DateTime
+from thread import allocate_lock
 
 manage_addZMySQLDeferredConnectionForm=HTMLFile('deferredConnectionAdd',globals())
 
@@ -96,24 +104,49 @@ def manage_addZMySQLDeferredConnection(self, id, title,
     self._setObject(id, DeferredConnection(id, title, connection_string, check))
     if REQUEST is not None: return self.manage_main(self,REQUEST)
 
-class DeferredConnection(Connection):
+# Connection Pool for connections to MySQL.
+database_connection_pool_lock = allocate_lock()
+database_connection_pool = {}
+
+class DeferredConnection(DABase.Connection):
     """
         Experimental MySQL DA which implements
         deferred SQL code execution to reduce locking issues
     """
+    database_type=database_type
+    id='%s_database_connection' % database_type
     meta_type=title='Z %s Deferred Database Connection' % database_type
+    icon='misc_/Z%sDDA/conn' % database_type
+
+    manage_properties=HTMLFile('connectionEdit', globals())
 
     def factory(self): return DeferredDB
 
-    def connect(self,s):
-        try: self._v_database_connection.close()
-        except: pass
-        self._v_connected=''
-        DB=self.factory()
-        ## No try. DO.
-        self._v_database_connection=DeferredDB(s)
-        self._v_connected=DateTime()
-        return self
+    def connect(self, s):
+      try:
+        database_connection_pool_lock.acquire()
+        self._v_connected = ''
+        pool_key = self.getPhysicalPath()
+        connection = database_connection_pool.get(pool_key)
+        if connection is not None and connection.connection == s:
+          self._v_database_connection = connection
+        else:
+          if connection is not None:
+            connection.closeConnection()
+          DB = self.factory()
+          database_connection_pool[pool_key] = DeferredDB(s)
+          self._v_database_connection = database_connection_pool[pool_key]
+        # XXX If date is used as such, it can be wrong because an existing
+        # connection may be reused. But this is suposedly only used as a
+        # marker to know if connection was successfull.
+        self._v_connected = DateTime()
+      finally:
+        database_connection_pool_lock.release()
+      return self
+
+    def sql_quote__(self, v, escapes={}):
+        return self._v_database_connection.string_literal(v)
+
 
 classes=('DA.DeferredConnection')
 
@@ -132,8 +165,8 @@ folder_methods={
 
 __ac_permissions__=(
     ('Add Z MySQL Database Connections',
-     ('manage_addZMySQLConnectionForm',
-      'manage_addZMySQLConnection')),
+     ('manage_addZMySQLDeferredConnectionForm',
+      'manage_addZMySQLDeferredConnection')),
     )
 
 misc_={'conn': ImageFile(

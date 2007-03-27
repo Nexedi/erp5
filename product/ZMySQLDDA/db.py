@@ -84,28 +84,154 @@
 #
 ##############################################################################
 
-from Products.ZMySQLDA.db import *
+import _mysql
+import MySQLdb
+from _mysql_exceptions import OperationalError, NotSupportedError
+MySQLdb_version_required = (0,9,2)
 
-class DeferredDB(DB):
+_v = getattr(_mysql, 'version_info', (0,0,0))
+if _v < MySQLdb_version_required:
+    raise NotSupportedError, \
+       "ZMySQLDDA requires at least MySQLdb %s, %s found" % \
+       (MySQLdb_version_required, _v)
+
+from MySQLdb.converters import conversions
+from MySQLdb.constants import FIELD_TYPE, CR, CLIENT
+from Shared.DC.ZRDB.TM import TM
+from DateTime import DateTime
+from zLOG import LOG, ERROR, INFO
+
+import string, sys
+from string import strip, split, find, upper, rfind
+from time import time
+from thread import get_ident
+
+hosed_connection = (
+    CR.SERVER_GONE_ERROR,
+    CR.SERVER_LOST
+    )
+
+key_types = {
+    "PRI": "PRIMARY KEY",
+    "MUL": "INDEX",
+    "UNI": "UNIQUE",
+    }
+
+field_icons = "bin", "date", "datetime", "float", "int", "text", "time"
+
+icon_xlate = {
+    "varchar": "text", "char": "text",
+    "enum": "what", "set": "what",
+    "double": "float", "numeric": "float",
+    "blob": "bin", "mediumblob": "bin", "longblob": "bin",
+    "tinytext": "text", "mediumtext": "text",
+    "longtext": "text", "timestamp": "datetime",
+    "decimal": "float", "smallint": "int",
+    "mediumint": "int", "bigint": "int",
+    }
+
+type_xlate = {
+    "double": "float", "numeric": "float",
+    "decimal": "float", "smallint": "int",
+    "mediumint": "int", "bigint": "int",
+    "int": "int", "float": "float",
+    "timestamp": "datetime", "datetime": "datetime",
+    "time": "datetime",
+    }
+
+def _mysql_timestamp_converter(s):
+  if len(s) < 14:
+    s = s + "0"*(14-len(s))
+  parts = map(int, (s[:4],s[4:6],s[6:8],
+                    s[8:10],s[10:12],s[12:14]))
+  return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
+
+def DateTime_or_None(s):
+    try: return DateTime(s)
+    except: return None
+
+def int_or_long(s):
+    try: return int(s)
+    except: return long(s)
+
+class DeferredDB(TM):
     """
         An experimental MySQL DA which implements deferred execution
         of SQL code in order to reduce locks and provide better behaviour
         with MyISAM non transactional tables
     """
 
+    Database_Connection=_mysql.connect
+    Database_Error=_mysql.Error
+
+    def Database_Connection(self, *args, **kwargs):
+      return MySQLdb.connect(*args, **kwargs)
+
+    defs={
+        FIELD_TYPE.CHAR: "i", FIELD_TYPE.DATE: "d",
+        FIELD_TYPE.DATETIME: "d", FIELD_TYPE.DECIMAL: "n",
+        FIELD_TYPE.DOUBLE: "n", FIELD_TYPE.FLOAT: "n", FIELD_TYPE.INT24: "i",
+        FIELD_TYPE.LONG: "i", FIELD_TYPE.LONGLONG: "l",
+        FIELD_TYPE.SHORT: "i", FIELD_TYPE.TIMESTAMP: "d",
+        FIELD_TYPE.TINY: "i", FIELD_TYPE.YEAR: "i",
+        }
+
+    conv=conversions.copy()
+    conv[FIELD_TYPE.LONG] = int_or_long
+    conv[FIELD_TYPE.DATETIME] = DateTime_or_None
+    conv[FIELD_TYPE.DATE] = DateTime_or_None
+    conv[FIELD_TYPE.DECIMAL] = float
+    del conv[FIELD_TYPE.TIME]
+
+    _p_oid=_p_changed=_registered=None
+
     def __init__(self,connection):
-        DB.__init__(self, connection)
+        self.connection=connection
+        self.kwargs = self._parse_connection_string(connection)
+        self.db = {}
+        self._finished_or_aborted = {}
+        db = self._getConnection()
+        transactional = db.server_capabilities & CLIENT.TRANSACTIONS
+        if self._try_transactions == '-':
+            transactional = 0
+        elif not transactional and self._try_transactions == '+':
+            raise NotSupportedError, "transactions not supported by this server"
+        self._use_TM = self._transactions = transactional
+        if self._mysql_lock:
+            self._use_TM = 1
         self._sql_string_list_dict = {}
 
-    def query(self,query_string, max_rows=1000):
-        self._use_TM and self._register()
-        for qs in filter(None, map(strip,split(query_string, '\0'))):
-            qtype = upper(split(qs, None, 1)[0])
-            if qtype == "SELECT":
-                  raise NotSupportedError, "can not SELECT in deferred connections"
-            self._appendToSQLStringList(qs)
+    def __del__(self):
+      self._cleanupConnections()
 
-        return (),()
+    def _getFinishedOrAborted(self):
+      return self._finished_or_aborted[get_ident()]
+
+    def _setFinishedOrAborted(self, value):
+      self._finished_or_aborted[get_ident()] = value
+
+    def _cleanupConnections(self):
+      for db in self.db.itervalues():
+        db.close()
+
+    def _forceReconnection(self):
+      db = apply(self.Database_Connection, (), self.kwargs)
+      self.db[get_ident()] = db
+      return db
+
+    def _getConnection(self):
+      ident = get_ident()
+      db = self.db.get(ident)
+      if db is None:
+        db = self._forceReconnection()
+      return db
+
+    def _closeConnection(self):
+      ident = get_ident()
+      db = self.db.get(ident)
+      if db is not None:
+        db.close()
+        del self.db[ident]
 
     def _emptySQLStringList(self):
         self._sql_string_list_dict[get_ident()] = []
@@ -116,6 +242,134 @@ class DeferredDB(DB):
     def _getSQLStringList(self):
         return self._sql_string_list_dict[get_ident()]
 
+    def _parse_connection_string(self, connection):
+        kwargs = {'conv': self.conv}
+        items = split(connection)
+        self._use_TM = None
+        if not items: return kwargs
+        lockreq, items = items[0], items[1:]
+        if lockreq[0] == "*":
+            self._mysql_lock = lockreq[1:]
+            db_host, items = items[0], items[1:]
+            self._use_TM = 1
+        else:
+            self._mysql_lock = None
+            db_host = lockreq
+        if '@' in db_host:
+            db, host = split(db_host,'@',1)
+            kwargs['db'] = db
+            if ':' in host:
+                host, port = split(host,':',1)
+                kwargs['port'] = int(port)
+            kwargs['host'] = host
+        else:
+            kwargs['db'] = db_host
+        if kwargs['db'] and kwargs['db'][0] in ('+', '-'):
+            self._try_transactions = kwargs['db'][0]
+            kwargs['db'] = kwargs['db'][1:]
+        else:
+            self._try_transactions = None
+        if not kwargs['db']:
+            del kwargs['db']
+        if not items: return kwargs
+        kwargs['user'], items = items[0], items[1:]
+        if not items: return kwargs
+        kwargs['passwd'], items = items[0], items[1:]
+        if not items: return kwargs
+        kwargs['unix_socket'], items = items[0], items[1:]
+        return kwargs
+
+    def tables(self, rdb=0,
+               _care=('TABLE', 'VIEW')):
+        r=[]
+        a=r.append
+        result = self._query("SHOW TABLES")
+        row = result.fetch_row(1)
+        while row:
+            a({'TABLE_NAME': row[0][0], 'TABLE_TYPE': 'TABLE'})
+            row = result.fetch_row(1)
+        return r
+
+    def columns(self, table_name):
+        from string import join
+        try:
+            c = self._query('SHOW COLUMNS FROM %s' % table_name)
+        except:
+            return ()
+        r=[]
+        for Field, Type, Null, Key, Default, Extra in c.fetch_row(0):
+            info = {}
+            field_default = Default and "DEFAULT %s"%Default or ''
+            if Default: info['Default'] = Default
+            if '(' in Type:
+                end = rfind(Type,')')
+                short_type, size = split(Type[:end],'(',1)
+                if short_type not in ('set','enum'):
+                    if ',' in size:
+                        info['Scale'], info['Precision'] = \
+                                       map(int, split(size,',',1))
+                    else:
+                        info['Scale'] = int(size)
+            else:
+                short_type = Type
+            if short_type in field_icons:
+                info['Icon'] = short_type
+            else:
+                info['Icon'] = icon_xlate.get(short_type, "what")
+            info['Name'] = Field
+            info['Type'] = type_xlate.get(short_type,'string')
+            info['Extra'] = Extra,
+            info['Description'] = join([Type, field_default, Extra or '',
+                                        key_types.get(Key, Key or ''),
+                                        Null != 'YES' and 'NOT NULL' or '']),
+            info['Nullable'] = (Null == 'YES') and 1 or 0
+            if Key:
+                info['Index'] = 1
+            if Key == 'PRI':
+                info['PrimaryKey'] = 1
+                info['Unique'] = 1
+            elif Key == 'UNI':
+                info['Unique'] = 1
+            r.append(info)
+        return r
+
+    def _query(self, query, force_reconnect=False):
+      """
+        Send a to MySQL server.
+        It reconnects automaticaly if needed and the following conditions are
+        met:
+         - It has not just tried to reconnect (ie, this function will not
+           attemp to connect twice per call).
+         - This conection is not transactionnal and has set not MySQL locks,
+           because they are bound to the connection. This check can be
+           overridden by passing force_reconnect with True value.
+      """
+      db = self._getConnection()
+      try:
+        db.query(query)
+      except OperationalError, m:
+        if ((not force_reconnect) and \
+            (self._mysql_lock or self._transactions)) or \
+           m[0] not in hosed_connection:
+          raise
+        # Hm. maybe the db is hosed.  Let's restart it.
+        self._forceReconnection()
+        db.query(query)
+      return db.store_result()
+
+    def query(self,query_string, max_rows=1000):
+        self._use_TM and self._register()
+        for qs in filter(None, map(strip,split(query_string, '\0'))):
+            qtype = upper(split(qs, None, 1)[0])
+            if qtype == "SELECT":
+                raise NotSupportedError, "can not SELECT in deferred connections"
+            self._appendToSQLStringList(qs)
+
+        return (),()
+
+    def string_literal(self, s):
+      return self._getConnection().string_literal(s)
+
     def _begin(self, *ignored):
         # The Deferred DB instance is sometimes used for several
         # transactions, so it is required to clear the sql_string_list
@@ -125,7 +379,7 @@ class DeferredDB(DB):
 
     def _finish(self, *ignored):
         if self._getFinishedOrAborted():
-          return
+            return
         self._setFinishedOrAborted(True)
         # Ping the database to reconnect if connection was lost.
         self._query("SELECT 1", force_reconnect=True)
@@ -142,5 +396,4 @@ class DeferredDB(DB):
 
     def _abort(self, *ignored):
         self._setFinishedOrAborted(True)
-        pass
 
