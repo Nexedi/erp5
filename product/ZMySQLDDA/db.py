@@ -95,90 +95,52 @@ class DeferredDB(DB):
 
     def __init__(self,connection):
         DB.__init__(self, connection)
-        self.sql_string_list = []
+        self._sql_string_list_dict = {}
 
     def query(self,query_string, max_rows=1000):
         self._use_TM and self._register()
-        desc=None
-        result=()
-        db=self.db
-        try:
-            self._lock.acquire()
-            for qs in filter(None, map(strip,split(query_string, '\0'))):
-                qtype = upper(split(qs, None, 1)[0])
-                if qtype == "SELECT":
-                      raise NotSupportedError, "can not SELECT in deferred connections"
-                #LOG('ZMySQLDDA', 0, "insert string %s" % qs )
-                self.sql_string_list.append(qs)
-        finally:
-            self._lock.release()
+        for qs in filter(None, map(strip,split(query_string, '\0'))):
+            qtype = upper(split(qs, None, 1)[0])
+            if qtype == "SELECT":
+                  raise NotSupportedError, "can not SELECT in deferred connections"
+            self._appendToSQLStringList(qs)
 
         return (),()
 
+    def _emptySQLStringList(self):
+        self._sql_string_list_dict[get_ident()] = []
+
+    def _appendToSQLStringList(self, value):
+        self._sql_string_list_dict[get_ident()].append(value)
+
+    def _getSQLStringList(self):
+        return self._sql_string_list_dict[get_ident()]
+
     def _begin(self, *ignored):
-        from thread import get_ident
-        self._tlock.acquire()
-        self._tthread = get_ident()
         # The Deferred DB instance is sometimes used for several
         # transactions, so it is required to clear the sql_string_list
         # each time a transaction starts
-        self.sql_string_list = []
+        self._emptySQLStringList()
+        self._setFinishedOrAborted(False)
 
     def _finish(self, *ignored):
-        from thread import get_ident
-        if not self._tlock.locked() or self._tthread != get_ident():
-            LOG('ZMySQLDA', INFO, "ignoring _finish")
-            return
-        # BEGIN commit
-        #LOG('ZMySQLDDA', INFO, "BEGIN commit")
-        try:
-            if self._transactions:
-                self.db.query("BEGIN")
-                self.db.store_result()
-            if self._mysql_lock:
-                self.db.query("SELECT GET_LOCK('%s',0)" % self._mysql_lock)
-                self.db.store_result()
-        except:
-            LOG('ZMySQLDDA', ERROR, "exception during _begin",
-                error=sys.exc_info())
-            self._tlock.release()
-            raise
-        # Execute SQL
-        db = self.db
-        for qs in self.sql_string_list:
-            try:
-                db.query(qs)
-                c=db.store_result()
-            except OperationalError, m:
-                if m[0] not in hosed_connection: raise
-                # Hm. maybe the db is hosed.  Let's restart it.
-                db=self.db=apply(self.Database_Connection, (), self.kwargs)
-                try:
-                    db.query(qs)
-                    c=db.store_result()
-                except OperationalError, m:
-                    raise
-            #LOG('ZMySQLDDA', INFO, "Execute %s" % qs)
-        # Finish commit
-        #LOG('ZMySQLDDA', INFO, "FINISH commit")
-        try:
-            try:
-                if self._mysql_lock:
-                    self.db.query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
-                    self.db.store_result()
-                if self._transactions:
-                    self.db.query("COMMIT")
-                self.db.store_result()
-            except:
-                LOG('ZMySQLDDA', ERROR, "exception during _finish",
-                    error=sys.exc_info())
-                raise
-        finally:
-            self._tlock.release()
+        if self._getFinishedOrAborted():
+          return
+        self._setFinishedOrAborted(True)
+        # Ping the database to reconnect if connection was lost.
+        self._query("SELECT 1", force_reconnect=True)
+        if self._transactions:
+            self._query("BEGIN")
+        if self._mysql_lock:
+            self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock)
+        for qs in self._getSQLStringList():
+            self._query(qs)
+        if self._mysql_lock:
+            self._query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
+        if self._transactions:
+            self._query("COMMIT")
 
     def _abort(self, *ignored):
-        from thread import get_ident
-        if not self._tlock.locked() or self._tthread != get_ident():
-            LOG('ZMySQLDDA', INFO, "ignoring _abort")
-            return
-        self._tlock.release()
+        self._setFinishedOrAborted(True)
+        pass
+
