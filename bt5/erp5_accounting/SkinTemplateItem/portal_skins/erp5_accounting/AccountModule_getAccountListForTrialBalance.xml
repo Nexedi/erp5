@@ -86,6 +86,7 @@ accounting_movement_type_list = [ t for t in\n
 \n
 inventory_params = dict(section_uid=section_uid,\n
                         simulation_state=simulation_state,\n
+                        group_by_resource=0,\n
                         precision=precision)\n
 MARKER = Object()\n
 \n
@@ -509,6 +510,12 @@ return line_list\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, **kw</string> </value>
         </item>
@@ -570,8 +577,8 @@ return line_list\n
                             <string>account_used</string>
                             <string>account_type_to_group_by_node</string>
                             <string>profit_and_loss_account_type</string>
-                            <string>account_type_to_group_by_mirror_section</string>
                             <string>account_type_to_group_by_payment</string>
+                            <string>account_type_to_group_by_mirror_section</string>
                             <string>total_debit</string>
                             <string>total_credit</string>
                             <string>total_initial_debit_balance</string>
