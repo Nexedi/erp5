@@ -1,6 +1,7 @@
 agent
 agent_privilege
 currency_exchange_type
+destination_region
 economical_class
 function
 gender
@@ -19,5 +20,6 @@ salary_level
 site
 skill
 social_form
+source_region
 specialise
 subordination
