@@ -192,17 +192,19 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           kw['sort_on'] = sort_on
         elif kw.has_key('sort_on'):
           del kw['sort_on'] # We should not sort if no sort was defined
+        if not kw.has_key('selection_name'):
+          kw['selection_name'] = self.name
         if method is not None:
           if callable(method):
             if self.domain is not None and self.report is not None:
               result = method(selection_domain = self.domain,
-                              selection_report = self.report, selection=self, selection_name=self.name, **kw)
+                              selection_report = self.report, selection=self, **kw)
             elif self.domain is not None:
-              result = method(selection_domain = self.domain, selection=self, selection_name=self.name, **kw)
+              result = method(selection_domain = self.domain, selection=self, **kw)
             elif self.report is not None:
-              result = method(selection_report = self.report, selection=self, selection_name=self.name, **kw)
+              result = method(selection_report = self.report, selection=self, **kw)
             else:
-              result = method(selection=self, selection_name=self.name, **kw)
+              result = method(selection=self, **kw)
             return result
           else:
             return []
