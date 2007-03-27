@@ -70,7 +70,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Order</string> </value>
+            <value> <string>ERP5 XMLObject</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addOrder</string> </value>
+            <value> <string>addXMLObject</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
