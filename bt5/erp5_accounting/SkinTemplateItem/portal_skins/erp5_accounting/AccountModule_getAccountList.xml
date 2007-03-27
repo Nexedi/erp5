@@ -83,8 +83,7 @@ if not id:\n
 kwd[\'select_expression\'] = "\'%s\' AS accounting_transaction_line_currency" % id\n
 \n
 # precision for editable fields\n
-params = context.ERP5Accounting_getParams(selection_name=selection_name,\n
-                                          selection=selection)\n
+params = context.ERP5Accounting_getParams(selection_name)\n
 if params.get(\'precision\', None) is not None:\n
   context.REQUEST.set(\'precision\', params[\'precision\'])\n
 \n

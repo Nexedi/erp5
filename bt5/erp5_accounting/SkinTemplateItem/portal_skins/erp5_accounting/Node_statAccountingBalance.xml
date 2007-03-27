@@ -69,8 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-params = portal.ERP5Accounting_getParams(selection_name=selection_name,\n
-                                         selection=selection)\n
+params = portal.ERP5Accounting_getParams(selection_name)\n
 \n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n

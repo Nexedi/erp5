@@ -69,8 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-params = portal.ERP5Accounting_getParams(selection_name=selection_name,\n
-                                         selection=selection)\n
+params = portal.ERP5Accounting_getParams(selection_name)\n
 selection_params = context.portal_selections.getSelectionParamsFor(selection_name)\n
 \n
 params[\'omit_input\'] = omit_input\n
