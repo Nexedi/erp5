@@ -118,7 +118,6 @@ class OOoDocument(File, ConversionCacheMixin):
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
-                    , PropertySheet.Snapshot
                     )
 
   # regular expressions for stripping xml from ODF documents
@@ -188,7 +187,7 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     def cached_getTargetFormatItemList(content_type):
       server_proxy = self._mkProxy()
-      allowed = server_proxy.getAllowedTargets(content_type) # oood API needs naming convention update
+      allowed = server_proxy.getAllowedTargetItemList(content_type) # oood API needs naming convention update
       return [(y, x) for x, y in allowed] # tuple order is reversed to be compatible with ERP5 Form
 
     # Cache valid format list
