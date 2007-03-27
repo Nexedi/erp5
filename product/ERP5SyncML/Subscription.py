@@ -1060,7 +1060,7 @@ class Subscription(Folder, SyncCode):
     """
     if signature.getGid() in self.objectIds():
       self._delObject(signature.getGid())
-    self._setObject( signature.getGid(), signature )
+    self._setObject( signature.getGid(), aq_base(signature) )
 
   def delSignature(self, gid):
     """
