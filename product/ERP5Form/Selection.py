@@ -196,13 +196,13 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           if callable(method):
             if self.domain is not None and self.report is not None:
               result = method(selection_domain = self.domain,
-                              selection_report = self.report, selection=self, **kw)
+                              selection_report = self.report, selection=self, selection_name=self.name, **kw)
             elif self.domain is not None:
-              result = method(selection_domain = self.domain, selection=self, **kw)
+              result = method(selection_domain = self.domain, selection=self, selection_name=self.name, **kw)
             elif self.report is not None:
-              result = method(selection_report = self.report, selection=self, **kw)
+              result = method(selection_report = self.report, selection=self, selection_name=self.name, **kw)
             else:
-              result = method(selection=self, **kw)
+              result = method(selection=self, selection_name=self.name, **kw)
             return result
           else:
             return []
