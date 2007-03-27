@@ -78,11 +78,11 @@ for item in multimembership_base_list :\n
 \n
 category_list = []\n
 \n
-\n
 for item in mixed_list:\n
-  if item==\'destination_region\':\n
-    item = \'region\' # This must be made more generic\n
-    category_list += [\'destination_region/\' + x for x in context.portal_categories[item].getCategoryChildCompactLogicalPathItemList(base=1)]\n
+  if item in (\'destination_region\', \'source_region\'):\n
+    category = \'region\' # This must be made more generic\n
+    category_list += [(x[0], \'%s/%s\' % (item, x[1])) for x in \n
+                      context.portal_categories[category].getCategoryChildCompactLogicalPathItemList(base=1)]\n
   else:\n
     category_list += context.portal_categories[item].getCategoryChildCompactLogicalPathItemList(base=1)\n
 \n
@@ -137,6 +137,7 @@ return category_list\n
                             <string>_getiter_</string>
                             <string>item</string>
                             <string>category_list</string>
+                            <string>category</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getitem_</string>
