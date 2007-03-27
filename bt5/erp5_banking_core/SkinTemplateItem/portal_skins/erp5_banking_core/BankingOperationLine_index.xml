@@ -66,10 +66,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Reindex the given line with a tag so it can be found in the message table.\n
+activate_kw = {}\n
 if source:\n
-  line.reindexObject(tag=context.BankAccount_getMessageTag(line.getSourcePaymentValue()))\n
+  activate_kw[\'tag\'] = context.BankAccount_getMessageTag(line.getSourcePaymentValue())\n
+  line.reindexObject(activate_kw=activate_kw)\n
 else:\n
-  line.reindexObject(tag=context.BankAccount_getMessageTag(line.getDestinationPaymentValue()))\n
+  activate_kw[\'tag\'] = context.BankAccount_getMessageTag(line.getDestinationPaymentValue())\n
+  line.reindexObject(activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
@@ -120,8 +123,10 @@ else:\n
                           <tuple>
                             <string>line</string>
                             <string>source</string>
+                            <string>activate_kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
