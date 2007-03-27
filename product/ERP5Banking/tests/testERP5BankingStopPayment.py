@@ -130,6 +130,11 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
                      start_date=self.date,
                      reference_range_min=51,
                      source_total_asset_price=20000)
+    # set source reference
+    self.setDocumentSourceReference(self.stop_payment)
+    # check source reference
+    self.assertNotEqual(self.stop_payment.getSourceReference(), '')
+    self.assertNotEqual(self.stop_payment.getSourceReference(), None)
     # check its portal type
     self.assertEqual(self.stop_payment.getPortalType(), 'Stop Payment')
     # check source
