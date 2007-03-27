@@ -270,9 +270,7 @@ class DB(TM):
                _care=('TABLE', 'VIEW')):
         r=[]
         a=r.append
-        db = self._getConnection()
-        db.query("SHOW TABLES")
-        result = db.store_result()
+        result = self._query("SHOW TABLES")
         row = result.fetch_row(1)
         while row:
             a({'TABLE_NAME': row[0][0], 'TABLE_TYPE': 'TABLE'})
@@ -282,9 +280,7 @@ class DB(TM):
     def columns(self, table_name):
         from string import join
         try:
-            db = self._getConnection()
-            db.query('SHOW COLUMNS FROM %s' % table_name)
-            c = db.store_result()
+            c = self._query('SHOW COLUMNS FROM %s' % table_name)
         except:
             return ()
         r=[]
@@ -324,35 +320,50 @@ class DB(TM):
             r.append(info)
         return r
 
+    def _query(self, query, force_reconnect=False):
+      """
+        Send a to MySQL server.
+        It reconnects automaticaly if needed and the following conditions are
+        met:
+         - It has not just tried to reconnect (ie, this function will not
+           attemp to connect twice per call).
+         - This conection is not transactionnal and has set not MySQL locks,
+           because they are bound to the connection. This check can be
+           overridden by passing force_reconnect with True value.
+      """
+      db = self._getConnection()
+      try:
+        db.query(query)
+      except OperationalError, m:
+        if ((not force_reconnect) and \
+            (self._mysql_lock or self._transactions)) or \
+           m[0] not in hosed_connection:
+          raise
+        # Hm. maybe the db is hosed.  Let's restart it.
+        self._forceReconnection()
+        db.query(query)
+      return db.store_result()
+
     def query(self,query_string, max_rows=1000):
         self._use_TM and self._register()
         desc=None
         result=()
-        db = self._getConnection()
-        try:
-            if 1:
-                for qs in filter(None, map(strip,split(query_string, '\0'))):
-                    qtype = upper(split(qs, None, 1)[0])
-                    if qtype == "SELECT" and max_rows:
-                        qs = "%s LIMIT %d" % (qs,max_rows)
-                        r=0
-                    db.query(qs)
-                    c=db.store_result()
-                    if desc is not None:
-                        if c and (c.describe() != desc):
-                            raise 'Query Error', (
-                                'Multiple select schema are not allowed'
-                                )
-                    if c:
-                        desc=c.describe()
-                        result=c.fetch_row(max_rows)
-                    else:
-                        desc=None
-        except OperationalError, m:
-            if m[0] not in hosed_connection: raise
-            # Hm. maybe the db is hosed.  Let's restart it.
-            self._forceReconnection()
-            return self.query(query_string, max_rows)
+        for qs in filter(None, map(strip,split(query_string, '\0'))):
+            qtype = upper(split(qs, None, 1)[0])
+            if qtype == "SELECT" and max_rows:
+                qs = "%s LIMIT %d" % (qs,max_rows)
+                r=0
+            c = self._query(qs)
+            if desc is not None:
+                if c and (c.describe() != desc):
+                    raise 'Query Error', (
+                        'Multiple select schema are not allowed'
+                        )
+            if c:
+                desc=c.describe()
+                result=c.fetch_row(max_rows)
+            else:
+                desc=None
 
         if desc is None: return (),()
 
@@ -373,13 +384,12 @@ class DB(TM):
 
     def _begin(self, *ignored):
         try:
-            db = self._getConnection()
+            # Ping the database to reconnect if connection was closed.
+            self._query("SELECT 1", force_reconnect=True)
             if self._transactions:
-                db.query("BEGIN")
-                db.store_result()
+                self._query("BEGIN")
             if self._mysql_lock:
-                db.query("SELECT GET_LOCK('%s',0)" % self._mysql_lock)
-                db.store_result()
+                self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock)
         except:
             LOG('ZMySQLDA', ERROR, "exception during _begin",
                 error=sys.exc_info())
@@ -390,25 +400,19 @@ class DB(TM):
         if self._getFinishedOrAborted():
             return
         self._setFinishedOrAborted(True)
-        db = self._getConnection()
         if self._mysql_lock:
-            db.query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
-            db.store_result()
+            self._query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
         if self._transactions:
-            db.query("COMMIT")
-        db.store_result()
+            self._query("COMMIT")
 
     def _abort(self, *ignored):
         if self._getFinishedOrAborted():
             return
         self._setFinishedOrAborted(True)
-        db = self._getConnection()
         if self._mysql_lock:
-            db.query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
-            db.store_result()
+            self._query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
         if self._transactions:
-            db.query("ROLLBACK")
-            db.store_result()
+            self._query("ROLLBACK")
         else:
             LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
 
