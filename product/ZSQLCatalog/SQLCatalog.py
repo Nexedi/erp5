@@ -203,13 +203,14 @@ class Query(QueryMixin):
   format - %d/%m/%Y
   """
   def __init__(self, format=None, operator=None, range=None,
-                     search_mode=None, **kw):
+                     search_mode=None, table_alias_list=None, **kw):
     self.format = format
     if operator is None:
       operator = 'OR'
     self.operator = operator
     self.range = range
     self.search_mode = search_mode
+    self.table_alias_list = table_alias_list
     key_list = kw.keys()
     if len(key_list) != 1:
       raise KeyError, 'Query must have only one key'
@@ -224,6 +225,16 @@ class Query(QueryMixin):
 
   def getFormat(self):
     return self.format
+
+  def getTableAliasList(self):
+    return self.table_alias_list
+
+  def getRelatedTableMapDict(self):
+    result = {}
+    table_alias_list = self.getTableAliasList()
+    if table_alias_list is not None:
+      result[self.getKey()] = table_alias_list
+    return result
 
   def getSearchMode(self):
     return self.search_mode
@@ -383,6 +394,12 @@ class ComplexQuery(QueryMixin):
 
   def getQueryList(self):
     return self.query_list
+
+  def getRelatedTableMapDict(self):
+    result = {}
+    for query in self.getQueryList():
+      result.update(query.getRelatedTableMapDict())
+    return result
 
   def asSQLExpression(self, key_alias_dict=None,
                             ignore_empty_string=1,
@@ -1870,6 +1887,9 @@ class Catalog( Folder,
     key_list = [] # the list of column keys
     key_alias_dict = {}
     query_group_by_list = None # Useful to keep a default group_by passed by scriptable keys
+    query_related_table_map_dict = {}
+    if query is not None:
+      kw ['query'] = query
     for key in kw.keys():
       if key not in RESERVED_KEY_LIST:
         value = kw[key]
@@ -1895,10 +1915,7 @@ class Catalog( Folder,
         if current_query is not None:
           query_dict[key] = current_query
           key_list.extend(current_query.getSQLKeyList())
-
-    if query is not None:
-      query_dict['query'] = query
-      key_list.extend(query.getSQLKeyList())
+          query_related_table_map_dict.update(current_query.getRelatedTableMapDict())
 
     # if we have a sort index, we must take it into account to get related
     # keys.
@@ -1924,23 +1941,25 @@ class Catalog( Folder,
     for t in related_tuples:
       t_tuple = t.split('|')
       key = t_tuple[0].strip()
-      join_tuple = t_tuple[1].strip().split('/')
-      #LOG('related_tuples', 0, str(join_tuple))
-      related_keys.append(key)
-#       LOG('buildSqlQuery, join_tuple',0,join_tuple)
-      method_id = join_tuple[2]
-      table_list = tuple(join_tuple[0].split(','))
-      related_method[key] = method_id
-      related_table_list[key] = table_list
-      related_column[key] = join_tuple[1]
-      # Rename tables to prevent conflicts
-      if not related_table_map.has_key((table_list,method_id)):
-        map_list = []
-        for table_id in table_list:
-          map_list.append((table_id,
-             "related_%s_%s" % (table_id, table_rename_index))) # We add an index in order to alias tables in the join
-          table_rename_index += 1 # and prevent name conflicts
-        related_table_map[(table_list,method_id)] = map_list
+      if key in key_list:
+        join_tuple = t_tuple[1].strip().split('/')
+        related_keys.append(key)
+        method_id = join_tuple[2]
+        table_list = tuple(join_tuple[0].split(','))
+        related_method[key] = method_id
+        related_table_list[key] = table_list
+        related_column[key] = join_tuple[1]
+        # Check if some aliases where specified in queries
+        map_list = query_related_table_map_dict.get(key,None)
+        # Rename tables to prevent conflicts
+        if not related_table_map.has_key((table_list,method_id)):
+          if map_list is None:
+            map_list = []
+            for table_id in table_list:
+              map_list.append((table_id,
+                 "related_%s_%s" % (table_id, table_rename_index))) # We add an index in order to alias tables in the join
+              table_rename_index += 1 # and prevent name conflicts
+          related_table_map[(table_list,method_id)] = map_list
 
     # We take additional parameters from the REQUEST
     # and give priority to the REQUEST
