@@ -187,7 +187,7 @@ class DB(TM):
         self.kwargs = self._parse_connection_string(connection)
         self.db = {}
         self._finished_or_aborted = {}
-        db = self.getConnection()
+        db = self._getConnection()
         transactional = db.server_capabilities & CLIENT.TRANSACTIONS
         if self._try_transactions == '-':
             transactional = 0
@@ -198,31 +198,31 @@ class DB(TM):
             self._use_TM = 1
 
     def __del__(self):
-      self.cleanupConnections()
+      self._cleanupConnections()
 
-    def getFinishedOrAborted(self):
+    def _getFinishedOrAborted(self):
       return self._finished_or_aborted[get_ident()]
     
-    def setFinishedOrAborted(self, value):
+    def _setFinishedOrAborted(self, value):
       self._finished_or_aborted[get_ident()] = value
 
-    def cleanupConnections(self):
+    def _cleanupConnections(self):
       for db in self.db.itervalues():
         db.close()
 
-    def forceReconnection(self):
+    def _forceReconnection(self):
       db = apply(self.Database_Connection, (), self.kwargs)
       self.db[get_ident()] = db
       return db
 
-    def getConnection(self):
+    def _getConnection(self):
       ident = get_ident()
       db = self.db.get(ident)
       if db is None:
-        db = self.forceReconnection()
+        db = self._forceReconnection()
       return db
 
-    def closeConnection(self):
+    def _closeConnection(self):
       ident = get_ident()
       db = self.db.get(ident)
       if db is not None:
@@ -270,7 +270,7 @@ class DB(TM):
                _care=('TABLE', 'VIEW')):
         r=[]
         a=r.append
-        db = self.getConnection()
+        db = self._getConnection()
         db.query("SHOW TABLES")
         result = db.store_result()
         row = result.fetch_row(1)
@@ -282,7 +282,7 @@ class DB(TM):
     def columns(self, table_name):
         from string import join
         try:
-            db = self.getConnection()
+            db = self._getConnection()
             db.query('SHOW COLUMNS FROM %s' % table_name)
             c = db.store_result()
         except:
@@ -328,7 +328,7 @@ class DB(TM):
         self._use_TM and self._register()
         desc=None
         result=()
-        db = self.getConnection()
+        db = self._getConnection()
         try:
             if 1:
                 for qs in filter(None, map(strip,split(query_string, '\0'))):
@@ -351,7 +351,7 @@ class DB(TM):
         except OperationalError, m:
             if m[0] not in hosed_connection: raise
             # Hm. maybe the db is hosed.  Let's restart it.
-            self.forceReconnection()
+            self._forceReconnection()
             return self.query(query_string, max_rows)
 
         if desc is None: return (),()
@@ -369,11 +369,11 @@ class DB(TM):
         return items, result
 
     def string_literal(self, s):
-      return self.getConnection().string_literal(s)
+      return self._getConnection().string_literal(s)
 
     def _begin(self, *ignored):
         try:
-            db = self.getConnection()
+            db = self._getConnection()
             if self._transactions:
                 db.query("BEGIN")
                 db.store_result()
@@ -384,30 +384,25 @@ class DB(TM):
             LOG('ZMySQLDA', ERROR, "exception during _begin",
                 error=sys.exc_info())
             raise
-        self.setFinishedOrAborted(False)
+        self._setFinishedOrAborted(False)
         
     def _finish(self, *ignored):
-        if self.getFinishedOrAborted():
+        if self._getFinishedOrAborted():
             return
-        self.setFinishedOrAborted(True)
-        try:
-            db = self.getConnection()
-            if self._mysql_lock:
-                db.query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
-                db.store_result()
-            if self._transactions:
-                db.query("COMMIT")
+        self._setFinishedOrAborted(True)
+        db = self._getConnection()
+        if self._mysql_lock:
+            db.query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
             db.store_result()
-        except:
-            LOG('ZMySQLDA', ERROR, "exception during _finish",
-                error=sys.exc_info())
-            raise
+        if self._transactions:
+            db.query("COMMIT")
+        db.store_result()
 
     def _abort(self, *ignored):
-        if self.getFinishedOrAborted():
+        if self._getFinishedOrAborted():
             return
-        self.setFinishedOrAborted(True)
-        db = self.getConnection()
+        self._setFinishedOrAborted(True)
+        db = self._getConnection()
         if self._mysql_lock:
             db.query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
             db.store_result()
