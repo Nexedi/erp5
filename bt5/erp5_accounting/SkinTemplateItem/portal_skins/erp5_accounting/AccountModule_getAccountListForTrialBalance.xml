@@ -86,8 +86,8 @@ accounting_movement_type_list = [ t for t in\n
 \n
 inventory_params = dict(section_uid=section_uid,\n
                         simulation_state=simulation_state,\n
-                        group_by_resource=0,\n
-                        precision=precision)\n
+                        precision=precision,\n
+                        group_by_resource=0)\n
 MARKER = Object()\n
 \n
 # a dictionary (node_relative_url, mirror_section_uid, payment_uid)\n
@@ -287,7 +287,7 @@ for node in LazyFilter(context.account_module.contentValues(), skip=\'\'):\n
                               dict(debit=0, credit=0))\n
 \n
 \n
-initial_balance_date = (from_date - 1).earliestTime()\n
+initial_balance_date = (from_date - 1).latestTime()\n
 \n
 line_list = []\n
 for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
@@ -416,19 +416,19 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
     if \'account_type/%s\' % account.getAccountType() in (\n
                                   profit_and_loss_account_type):\n
       initial_debit_balance = getInventory(node_uid=node_uid,\n
-                                 omit_output=1,\n
-                                 from_date=min(period_start_date,\n
-                                               initial_balance_date),\n
-                                 at_date=initial_balance_date,\n
-                                 portal_type=accounting_movement_type_list,\n
-                                 **inventory_params)\n
+                               omit_output=1,\n
+                               from_date=min(period_start_date,\n
+                                             initial_balance_date),\n
+                               at_date=initial_balance_date,\n
+                               portal_type=accounting_movement_type_list,\n
+                               **inventory_params)\n
       initial_credit_balance = - getInventory(node_uid=node_uid,\n
-                                 omit_input=1,\n
-                                 from_date=min(period_start_date,\n
-                                               initial_balance_date),\n
-                                 at_date=initial_balance_date,\n
-                                 portal_type=accounting_movement_type_list,\n
-                                 **inventory_params) or 0\n
+                               omit_input=1,\n
+                               from_date=min(period_start_date,\n
+                                             initial_balance_date),\n
+                               at_date=initial_balance_date,\n
+                               portal_type=accounting_movement_type_list,\n
+                               **inventory_params) or 0\n
     else:\n
       initial_debit_balance = getInventory(node_uid=node_uid,\n
                                  omit_output=1,\n
@@ -454,8 +454,10 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
   total_initial_debit_balance += round(initial_debit_balance, precision)\n
   total_initial_credit_balance += round(initial_credit_balance, precision)\n
 \n
-  final_debit_balance = initial_debit_balance + data[\'debit\']\n
-  final_credit_balance = initial_credit_balance + data[\'credit\']\n
+  final_debit_balance = round(initial_debit_balance + data[\'debit\'],\n
+                              precision)\n
+  final_credit_balance = round(initial_credit_balance + data[\'credit\'],\n
+                               precision)\n
   \n
   closing_balance = final_debit_balance - final_credit_balance\n
   \n

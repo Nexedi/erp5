@@ -106,7 +106,6 @@ request.set(\'period_start_date\', period_start_date)\n
 \n
 if not from_date:\n
   from_date = period_start_date\n
-from_date = (from_date - 1).latestTime()\n
 \n
 # currency precision\n
 currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
@@ -146,6 +145,12 @@ return [ ReportSection(\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
