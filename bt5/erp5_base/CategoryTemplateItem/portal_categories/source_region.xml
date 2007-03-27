@@ -44,8 +44,8 @@
             <key> <string>acquisition_base_category</string> </key>
             <value>
               <tuple>
-                <string>target_source</string>
                 <string>source</string>
+                <string>source_section</string>
               </tuple>
             </value>
         </item>
@@ -95,7 +95,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
