@@ -96,9 +96,13 @@ if 1:\n
     file_name = contribute_file.filename\n
   else:\n
     file_name = None\n
-  new_content.discoverMetadata(file_name=file_name) # Consider putting an exception handler\n
-  msg = context.Base_translateString(\'Document successfully created\')\n
-  target = new_content\n
+  merged_content = new_content.discoverMetadata(file_name=file_name) # Consider putting an exception handler\n
+  if merged_content is not new_content:\n
+    msg = context.Base_translateString(\'Document successfully updated\')\n
+    target = merged_content\n
+  else:\n
+    msg = context.Base_translateString(\'Document successfully created\')\n
+    target = new_content\n
   editable_mode = 1\n
 else:\n
 #except Exception, e:\n
@@ -169,6 +173,7 @@ return target.Base_redirect(\'view\', keep_items=dict(portal_status_message=msg,
                             <string>new_content</string>
                             <string>hasattr</string>
                             <string>file_name</string>
+                            <string>merged_content</string>
                             <string>msg</string>
                             <string>target</string>
                             <string>editable_mode</string>
