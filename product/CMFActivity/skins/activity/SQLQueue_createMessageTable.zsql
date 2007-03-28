@@ -9,7 +9,7 @@ class_file:
 </dtml-comment>
 <params></params>
 CREATE TABLE `message_queue` (
-  `uid` int(11) NOT NULL auto_increment,
+  `uid` int(11) NOT NULL,
   `date` datetime,
   `path` VARCHAR(255),
   `method_id` VARCHAR(40),

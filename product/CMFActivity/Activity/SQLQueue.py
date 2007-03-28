@@ -61,7 +61,9 @@ class SQLQueue(RAMQueue):
   """
   def prepareQueueMessage(self, activity_tool, m):
     if m.is_registered:
-      activity_tool.SQLQueue_writeMessage(path = '/'.join(m.object_path) ,
+      #import pdb; pdb.set_trace()
+      activity_tool.SQLQueue_writeMessage(uid = activity_tool.getPortalObject().portal_ids.generateNewLengthId(id_group='portal_activity_queue'),
+                                          path = '/'.join(m.object_path) ,
                                           method_id = m.method_id,
                                           priority = m.activity_kw.get('priority', 1),
                                           broadcast = m.activity_kw.get('broadcast', 0),
@@ -316,8 +318,10 @@ class SQLQueue(RAMQueue):
           # Broadcast messages must be distributed into all nodes.
           activity_tool.SQLQueue_assignMessage(processing_node=1, uid=uid)
           if node_count > 1:
+            uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity_queue', id_count=node_count - 1)
             for node in range(2, node_count+1):
-              activity_tool.SQLQueue_writeMessage( path = line.path,
+              activity_tool.SQLQueue_writeMessage(uid = uid_list.pop(),
+                                                  path = line.path,
                                                   method_id = line.method_id,
                                                   priority = line.priority,
                                                   broadcast = 1,
