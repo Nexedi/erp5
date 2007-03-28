@@ -279,50 +279,48 @@ else:
 
 
 
-class ERP5ReportTool(ReportTool):
+def ReportTool_renderPDF(self, templatename, document_xml, *args, **kwargs):
+  """
+    Render document using template
+  """
 
-  def renderPDF(self, templatename, document_xml, *args, **kwargs):
-    """
-      Render document using template
-    """
+  context = kwargs.get('context',None)
+  if context is None:
+    context = self
 
-    context = kwargs.get('context',None)
-    if context is None:
-      context = self
+  encoding = kwargs.get('encoding') or 'UTF-8'
+  #LOG('ReportTool_renderPDF', 0, 'encoding = %r' % encoding)
+  rhandler = ERP5ResourceHandler(context, getattr(self, 'resourcePath', None))
 
-    encoding = kwargs.get('encoding') or 'UTF-8'
-    #LOG('ERP5ReportTool', 0, 'encoding = %r' % encoding)
-    rhandler = ERP5ResourceHandler(context, getattr(self, 'resourcePath', None))
+  # if zope gives us the xml in unicode
+  # we need to encode it before it can be parsed
+  template_xml = getattr(context, templatename)(*args, **kwargs)
+  if type(template_xml) is type(u''):
+    template_xml = self._encode(template_xml, encoding)
+  if type(document_xml) is type(u''):
+    document_xml = self._encode(document_xml, encoding)
+  #LOG('ReportTool_renderPDF', 0, 'template_xml = %r, document_xml = %r' % (template_xml, document_xml))
 
-    # if zope gives us the xml in unicode
-    # we need to encode it before it can be parsed
-    template_xml = getattr(context, templatename)(*args, **kwargs)
-    if type(template_xml) is type(u''):
-      template_xml = self._encode(template_xml, encoding)
-    if type(document_xml) is type(u''):
-      document_xml = self._encode(document_xml, encoding)
-    #LOG('ERP5ReportTool', 0, 'template_xml = %r, document_xml = %r' % (template_xml, document_xml))
+  # XXXXX Because reportlab does not support UTF-8, use Latin-1. What a mess.
+  template_xml = unicode(template_xml,encoding).encode('iso-8859-1')
+  document_xml = unicode(document_xml,encoding).encode('iso-8859-1','replace')
+  encoding = 'iso-8859-1'
 
-    # XXXXX Because reportlab does not support UTF-8, use Latin-1. What a mess.
-    template_xml = unicode(template_xml,encoding).encode('iso-8859-1')
-    document_xml = unicode(document_xml,encoding).encode('iso-8859-1','replace')
-    encoding = 'iso-8859-1'
+  # create the PDFTemplate from xml
+  template_dom = xml.dom.minidom.parseString(template_xml)
+  template_dom.encoding = encoding
+  template = TemplateParser(template_dom,encoding,resourceHandler=rhandler)()
 
-    # create the PDFTemplate from xml
-    template_dom = xml.dom.minidom.parseString(template_xml)
-    template_dom.encoding = encoding
-    template = TemplateParser(template_dom,encoding,resourceHandler=rhandler)()
+  # create the PDFDocment from xml
+  document_dom = xml.dom.minidom.parseString(document_xml)
+  document_dom.encoding = encoding
+  document = DocumentParser(document_dom,encoding,resourceHandler=rhandler)
 
-    # create the PDFDocment from xml
-    document_dom = xml.dom.minidom.parseString(document_xml)
-    document_dom.encoding = encoding
-    document = DocumentParser(document_dom,encoding,resourceHandler=rhandler)
-
-    # create the PDF itself using the document and the template
-    buf = StringIO()
-    document(template,buf)
-    buf.seek(0)
-    return buf.read()
+  # create the PDF itself using the document and the template
+  buf = StringIO()
+  document(template,buf)
+  buf.seek(0)
+  return buf.read()
 
 
-ReportTool.renderPDF = ERP5ReportTool.renderPDF
+ReportTool.renderPDF = ReportTool_renderPDF
