@@ -63,6 +63,8 @@ class TransactionalVariable(TM, IterableUserDict):
   """TransactionalVariable provides a dict-like look-n-feel.
   This class must not be used directly outside.
   """
+  _finalize = None
+
   def _begin(self, *ignored):
     """It is required to attach this instance to somewhere in
     ZODB so that _finish or _abort will be called at the end
