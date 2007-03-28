@@ -73,7 +73,8 @@
 from DateTime import DateTime\n
 from Products.ERP5Type.Document import newTempBase\n
 \n
-selection_params = selection.getParams()\n
+portal = context.getPortalObject()\n
+selection_params = portal.portal_selections.getSelectionParamsFor(selection_name)\n
 get_inventory_kw = {\n
     \'section_category\': selection_params.get(\'section_category\')\n
   , \'simulation_state\': selection_params.get(\'simulation_state\')\n
@@ -85,7 +86,6 @@ get_inventory_kw = {\n
 at_date   = selection_params.get(\'at_date\', None)\n
 from_date = selection_params.get(\'from_date\', None)\n
 \n
-portal = context.getPortalObject()\n
 getInventory = portal.portal_simulation.getInventoryAssetPrice\n
 \n
 # FIXME: Here we do not want to sum all movement < 0, but sum the balances\n
@@ -140,7 +140,7 @@ return [list_item]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, **kw</string> </value>
+            <value> <string>selection, selection_name, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -160,26 +160,27 @@ return [list_item]\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>kw</string>
                             <string>DateTime</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
                             <string>selection_params</string>
                             <string>True</string>
                             <string>get_inventory_kw</string>
                             <string>None</string>
                             <string>at_date</string>
                             <string>from_date</string>
-                            <string>context</string>
-                            <string>portal</string>
                             <string>getInventory</string>
                             <string>opening_debit_balance</string>
                             <string>opening_credit_balance</string>
