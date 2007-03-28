@@ -69,26 +69,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-Refreshes the content of external document; then publishes or retracts\n
-depending on whether refresh was successful.\n
-\n
-This is called from interaction workflow, upon every edit\n
-can be called regularly from portal_alarms, or something like that.\n
+This scripts calls the crawlContent API and returns a nice message\n
+to the user. If no URL is defined, warns the user.\n
 """\n
-context.resetTopObject()\n
-\n
-if context.getUrlProtocol() is None or context.getUrlString() is None:\n
-  context.log("Incomplete url in %s" % context.getRelativeUrl(),context.getQualifiedUrl())\n
-  res = False\n
+translateString = context.Base_translateString\n
+if not context.asURL():\n
+  portal_status_message = translateString("Please specify a URL before trying to start to crawl content.")\n
 else:\n
-  res = context.spiderSource()\n
-\n
-if res and context.getSimulationState() == \'draft\':\n
-  context.publish()\n
-if not res and context.getSimulationState() == \'public\':\n
-  context.retract()\n
-\n
-context.reindexObject()\n
+  portal_status_message = translateString("Started crawling External Source.")\n
+  context.crawlContent()\n
+return context.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
         </item>
         <item>
@@ -111,16 +101,7 @@ context.reindexObject()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args,**kwargs</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -146,13 +127,13 @@ context.reindexObject()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kwargs</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
-                            <string>False</string>
-                            <string>res</string>
+                            <string>translateString</string>
+                            <string>portal_status_message</string>
+                            <string>_apply_</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -169,7 +150,7 @@ context.reindexObject()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ExternalDocument_spiderAndSetState</string> </value>
+            <value> <string>ExternalSource_crawlContent</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

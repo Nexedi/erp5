@@ -20,7 +20,9 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
         </item>
         <item>
             <key> <string>category</string> </key>
@@ -61,6 +63,25 @@
         <item>
             <key> <string>visible</string> </key>
             <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/ExternalSource_viewContentList</string> </value>
         </item>
       </dictionary>
     </pickle>

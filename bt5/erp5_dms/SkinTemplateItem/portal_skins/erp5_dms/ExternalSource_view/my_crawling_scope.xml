@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>IntegerField</string>
+          <string>StringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_recursion_depth</string> </value>
+            <value> <string>my_crawling_scope</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -25,16 +25,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>integer_out_of_range</string> </key>
-                    <value> <string>The integer you entered was out of range.</string> </value>
-                </item>
-                <item>
-                    <key> <string>not_integer</string> </key>
-                    <value> <string>You did not enter an integer.</string> </value>
-                </item>
-                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>Too much input was given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -76,10 +72,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -92,15 +84,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -124,9 +124,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -146,12 +144,6 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>end</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -167,15 +159,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -199,7 +199,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>5</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -211,19 +211,15 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>40</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -238,16 +234,24 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Crawling Scope</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Recursion depth</string> </value>
+                    <key> <string>truncate</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -255,44 +259,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/getRecursionDepth</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getPortalType()==\'External Web Page\'</string> </value>
         </item>
       </dictionary>
     </pickle>

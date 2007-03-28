@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_dms_category_list</string> </value>
+            <value> <string>my_source_project_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -49,6 +49,10 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -68,6 +72,10 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -83,11 +91,15 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_dms_category_list</string> </value>
+                    <value> <string>my_source_project_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Document_library</string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
               </dictionary>
             </value>

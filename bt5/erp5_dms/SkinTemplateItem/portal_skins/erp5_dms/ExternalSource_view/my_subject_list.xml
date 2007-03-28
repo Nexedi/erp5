@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>ListField</string>
+          <string>LinesField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_url_protocol</string> </value>
+            <value> <string>my_subject_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -25,12 +25,20 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
+                    <key> <string>line_too_long</string> </key>
+                    <value> <string>A line was too long.</string> </value>
+                </item>
+                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
-                    <key> <string>unknown_selection</string> </key>
-                    <value> <string>You selected an item that was not in the list.</string> </value>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>You entered too many characters.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_many_lines</string> </key>
+                    <value> <string>You entered too many lines.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -72,11 +80,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -84,15 +88,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -104,7 +112,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -147,11 +163,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -159,17 +171,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -181,7 +195,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -201,7 +223,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -224,73 +248,55 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>height</string> </key>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>http</string>
-                          <string>http</string>
-                        </tuple>
-                        <tuple>
-                          <string>file</string>
-                          <string>file</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Protocol</string> </value>
+                    <value> <string>Keywords</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/getProtocolItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

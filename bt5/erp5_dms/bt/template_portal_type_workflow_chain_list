@@ -21,6 +21,9 @@ Presentation | document_interaction_workflow
 Presentation | document_publication_workflow
 Presentation | local_permission_interaction_workflow
 Presentation | processing_status_workflow
+RSS Feed | document_publication_workflow
+RSS Feed | edit_workflow
+RSS Feed | local_permission_interaction_workflow
 Role Definition | edit_workflow
 Role Definition | local_permission_interaction_workflow
 Spreadsheet | document_interaction_workflow
@@ -31,6 +34,9 @@ Text | document_interaction_workflow
 Text | document_publication_workflow
 Text | local_permission_interaction_workflow
 Text | processing_status_workflow
+URL Crawler | document_publication_workflow
+URL Crawler | edit_workflow
+URL Crawler | local_permission_interaction_workflow
 Web Page | -publication_workflow
 Web Page | document_publication_workflow
 Web Page | local_permission_interaction_workflow

@@ -19,6 +19,33 @@
             </value>
         </item>
         <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>_owner</string> </key>
             <value>
               <none/>
@@ -26,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -42,9 +69,7 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -55,31 +80,25 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>url</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -87,7 +106,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ExternalPage_view</string> </value>
+            <value> <string>ExternalSource_viewContentList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -95,7 +114,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ExternalPage_view</string> </value>
+            <value> <string>WebPage_viewContentList</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -107,11 +130,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>External Page</string> </value>
+            <value> <string>External Source Content</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

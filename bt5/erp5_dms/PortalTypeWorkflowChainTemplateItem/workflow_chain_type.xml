@@ -24,6 +24,10 @@
   <workflow>document_publication_workflow, local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>RSS Feed</type>
+  <workflow>document_publication_workflow, edit_workflow, local_permission_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Role Definition</type>
   <workflow>local_permission_interaction_workflow, edit_workflow</workflow>
  </chain>
@@ -36,7 +40,11 @@
   <workflow>processing_status_workflow, local_permission_interaction_workflow, document_publication_workflow, document_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>URL Crawler</type>
+  <workflow>edit_workflow, document_publication_workflow, local_permission_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Web Page</type>
-  <workflow>local_permission_interaction_workflow, -publication_workflow, document_publication_workflow</workflow>
+  <workflow>-publication_workflow, local_permission_interaction_workflow, document_publication_workflow</workflow>
  </chain>
 </workflow_chain>

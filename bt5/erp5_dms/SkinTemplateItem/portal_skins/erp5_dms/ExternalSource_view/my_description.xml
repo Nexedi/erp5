@@ -136,9 +136,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -241,7 +239,7 @@
                 </item>
                 <item>
                     <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -277,29 +275,10 @@
                 </item>
                 <item>
                     <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/getDescription</string> </value>
         </item>
       </dictionary>
     </pickle>

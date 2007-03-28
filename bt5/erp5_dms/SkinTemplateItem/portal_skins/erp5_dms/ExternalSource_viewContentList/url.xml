@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>external_processing_status_message</string> </value>
+            <value> <string>url</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -245,7 +245,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Status message</string> </value>
+                    <value> <string>URL</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_workflow.getInfoFor(ob=here, name=\'history\', wf_id=\'processing_status_workflow\')[-1][\'comment\']</string> </value>
+            <value> <string>here/asURL</string> </value>
         </item>
       </dictionary>
     </pickle>

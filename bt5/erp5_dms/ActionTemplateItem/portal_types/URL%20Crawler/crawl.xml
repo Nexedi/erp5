@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/URLCrawler_crawlContent</string> </value>
+            <value> <string>string:${object_url}/ExternalSource_crawlContent</string> </value>
         </item>
       </dictionary>
     </pickle>
