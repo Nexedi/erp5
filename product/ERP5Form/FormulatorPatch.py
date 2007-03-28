@@ -689,6 +689,7 @@ def ListWidget_render_view(self, field, value):
     
 ListWidget.render = ListWidget_render
 ListWidget.render_view = ListWidget_render_view
+ListWidget.render_pdf = ListWidget_render_view
 
 # JPS - Subfield handling with listbox requires extension
 from Products.Formulator.StandardFields import DateTimeField
