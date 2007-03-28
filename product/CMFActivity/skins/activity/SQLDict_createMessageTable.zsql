@@ -9,7 +9,7 @@ class_file:
 </dtml-comment>
 <params></params>
 CREATE TABLE `message` (
-  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uid` INT UNSIGNED NOT NULL,
   `date` DATETIME NOT NULL,
   `path` VARCHAR(255) NOT NULL,
   `method_id` VARCHAR(255) NOT NULL,

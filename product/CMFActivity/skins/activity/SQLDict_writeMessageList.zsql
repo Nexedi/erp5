@@ -7,7 +7,8 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>path_list
+<params>uid_list
+path_list
 method_id_list
 message_list
 priority_list
@@ -18,11 +19,12 @@ group_method_id_list
 tag_list
 order_validation_text_list</params>
 INSERT INTO message
-(path, date, method_id, processing_node, processing, priority, broadcast, group_method_id, tag, order_validation_text, message)
+(uid, path, date, method_id, processing_node, processing, priority, broadcast, group_method_id, tag, order_validation_text, message)
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(path_list))">
 <dtml-if sequence-start><dtml-else>,</dtml-if>
 (
+  <dtml-sqlvar expr="uid_list[loop_item]" type="int">,
   <dtml-sqlvar expr="path_list[loop_item]" type="string">,
   <dtml-if date_list><dtml-sqlvar expr="date_list[loop_item]" type="datetime"><dtml-else><dtml-sqlvar "_.DateTime()" type="datetime"></dtml-if>, 
   <dtml-sqlvar expr="method_id_list[loop_item]" type="string">,

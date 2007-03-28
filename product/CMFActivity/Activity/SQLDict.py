@@ -93,7 +93,9 @@ class SQLDict(RAMDict):
       group_method_id_list = [message.activity_kw.get('group_method_id', '') for message in registered_message_list]
       tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
       order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]
-      activity_tool.SQLDict_writeMessageList( path_list = path_list,
+      uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity', id_count=len(registered_message_list))
+      activity_tool.SQLDict_writeMessageList( uid_list = uid_list,
+                                              path_list = path_list,
                                               method_id_list = method_id_list,
                                               priority_list = priority_list,
                                               broadcast_list = broadcast_list,
@@ -517,8 +519,10 @@ class SQLDict(RAMDict):
           uid = line.uid
           activity_tool.SQLDict_assignMessage(processing_node=1, uid=[uid])
           if node_count > 1:
+            uid_list = activity_tool.getPortalObject().id_tool.generateNewLengthIdList(id_group='portal_activity', id_count=node_count - 1)
             for node in range(2, node_count+1):
-              activity_tool.SQLDict_writeMessage( path = path,
+              activity_tool.SQLDict_writeMessage( uid = uid_list.pop(),
+                                                  path = path,
                                                   method_id = line.method_id,
                                                   priority = line.priority,
                                                   broadcast = 1,

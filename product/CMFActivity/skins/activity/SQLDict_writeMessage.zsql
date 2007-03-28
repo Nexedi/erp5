@@ -7,7 +7,8 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>path
+<params>uid
+path
 method_id
 message
 priority
@@ -19,6 +20,7 @@ tag
 order_validation_text</params>
 INSERT INTO message
 SET
+  uid = <dtml-sqlvar uid type="int">,
   path = <dtml-sqlvar path type="string">,
   <dtml-if date>date = <dtml-sqlvar date type="string">, <dtml-else>date = <dtml-sqlvar "_.DateTime()" type="datetime">, </dtml-if> 
   method_id = <dtml-sqlvar method_id type="string">,
