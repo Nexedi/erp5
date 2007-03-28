@@ -611,6 +611,14 @@ class ERP5Site(FolderMixIn, CMFSite):
            self._getPortalConfiguration('portal_supply_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalProjectTypeList')
+  def getPortalProjectTypeList(self):
+    """
+      Return document types.
+    """
+    return self._getPortalGroupedTypeList('project')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalDocumentTypeList')
   def getPortalDocumentTypeList(self):
     """
