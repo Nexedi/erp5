@@ -202,8 +202,10 @@ class IdTool(UniqueObject, Folder):
       raise AttributeError, 'Error while generating Id: ' \
         'z_portal_ids_generate_id and/or z_portal_ids_commit could not ' \
         'be found.'
-    result = query(id_group=id_group, id_count=id_count, default=default)
-    commit()
+    try:
+      result = query(id_group=id_group, id_count=id_count, default=default)
+    finally:
+      commit()
     new_id = result[0]['LAST_INSERT_ID()']
     if self.dict_length_ids.get(id_group) is None:
       self.dict_length_ids[id_group] = Length(new_id)
