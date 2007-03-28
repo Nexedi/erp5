@@ -519,7 +519,7 @@ class SQLDict(RAMDict):
           uid = line.uid
           activity_tool.SQLDict_assignMessage(processing_node=1, uid=[uid])
           if node_count > 1:
-            uid_list = activity_tool.getPortalObject().id_tool.generateNewLengthIdList(id_group='portal_activity', id_count=node_count - 1)
+            uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity', id_count=node_count - 1)
             for node in range(2, node_count+1):
               activity_tool.SQLDict_writeMessage( uid = uid_list.pop(),
                                                   path = path,
