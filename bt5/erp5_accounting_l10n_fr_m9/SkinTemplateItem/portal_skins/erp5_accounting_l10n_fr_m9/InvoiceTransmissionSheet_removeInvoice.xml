@@ -68,10 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>selection = context.portal_selections.getSelectionFor(\n
-                \'purchase_invoice_transmission_sheet_list_selection\')\n
-\n
-for uid in selection.getCheckedUids():\n
+            <value> <string>for uid in context.portal_selections.getSelectionChekedUidsFor(\'purchase_invoice_transmission_sheet_list_selection\'):\n
   invoice = context.portal_catalog.getObject(uid)\n
   aggregate_list = invoice.getAggregateValueList()\n
   if context in aggregate_list :\n
@@ -129,7 +126,6 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>selection</string>
                             <string>_getiter_</string>
                             <string>uid</string>
                             <string>invoice</string>

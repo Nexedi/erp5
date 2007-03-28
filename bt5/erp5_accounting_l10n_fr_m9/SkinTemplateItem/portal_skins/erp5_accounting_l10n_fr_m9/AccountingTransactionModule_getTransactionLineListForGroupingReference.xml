@@ -75,11 +75,8 @@ stool = portal.portal_simulation\n
 \n
 # we use a different selection for dialog params, because we never want this\n
 # selection to be reseteted\n
-dialog_params_selection = portal.portal_selections.getSelectionFor(\n
-                               \'grouping_reference_fast_input_selection\')\n
-selection_params = {}\n
-if dialog_params_selection is not None:\n
-  selection_params = dialog_params_selection.getParams()\n
+selection_params = portal.portal_selections.getSelectionParamsFor(\n
+                        \'grouping_reference_fast_input_selection\')\n
 \n
 # support pseudo sorting; sorting is done by uid.\n
 orig_sort_on = portal.portal_selections.getSelectionSortOrder(\n
@@ -199,7 +196,6 @@ return stool.getMovementHistoryList(\n
                             <string>portal</string>
                             <string>ctool</string>
                             <string>stool</string>
-                            <string>dialog_params_selection</string>
                             <string>selection_params</string>
                             <string>None</string>
                             <string>orig_sort_on</string>
