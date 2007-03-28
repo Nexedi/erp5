@@ -543,7 +543,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.tic()
     self.assertEquals(o.getTitle(), 'b')
 
-    o._v_activate_kw = {'tag':'toto'}
+    o.setDefaultActivateParameters(tag = 'toto')
     def titi(self):
       self.setCorporateName(self.getTitle() + 'd')
     o.__class__.titi = titi

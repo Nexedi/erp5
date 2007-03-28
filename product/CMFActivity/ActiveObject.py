@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from ZODB.POSException import ConflictError
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 try:
   from Products.CMFCore import permissions
@@ -57,7 +58,7 @@ class ActiveObject(ExtensionClass.Base):
   method on the wrapper returned by the `activate` method like this:
 
   >>> obj.activate().aMethod()
-  
+
   This will defer the call to obj.aMethod() 
   """
 
@@ -66,23 +67,23 @@ class ActiveObject(ExtensionClass.Base):
   def activate(self, activity=DEFAULT_ACTIVITY, active_process=None,
                passive_commit=0, activate_kw=None, **kw):
     """Returns an active wrapper for this object.
-    
+
       Reserved Optional parameters:
-      
+
       at_date           --  request execution date for this activate call
-      
+
       after_method_id   --  never validate message if after_method_id
                             is in the list of methods which are
                             going to be executed
-    
+
       after_message_uid --  never validate message if after_message_uid
                             is in the list of messages which are
                             going to be executed
-    
+
       after_path        --  never validate message if after_path
                             is in the list of path which are
                             going to be executed
-      
+
       after_path_and_method_id
                         -- never validate message if a message for
                            method_id on path is in the queue.
@@ -96,15 +97,31 @@ class ActiveObject(ExtensionClass.Base):
     # Get activate values from activate_kw, then _v_activate_kw
     # only if they are not set directly as arguments to activate()
     if activate_kw is not None:
-      for key,value in activate_kw.items():
-        if not kw.has_key(key):
-          kw[key] = value
-    # This volatile variable '_v_activate_kw' can be used to pass parameters
+      for k, v in activate_kw.iteritems():
+        if k not in kw:
+          kw[k] = v
+
+    # Get default parameters from a transactional variable.
+    tv = getTransactionalVariable()
+    key = ('default_activate_parameter', self.getPhysicalPath())
+    try:
+      for k, v in tv[key].iteritems():
+        if k not in kw:
+          kw[k] = v
+    except KeyError:
+      pass
+
+    # Deprecated: This volatile variable '_v_activate_kw' can be used to pass parameters
     # automatically to activate.
     if getattr(self, '_v_activate_kw', None) is not None:
-      for key,value in self._v_activate_kw.items():
-        if not kw.has_key(key):
-          kw[key] = value
+      import warnings
+      warnings.warn('_v_activate_kw is deprecated;\n'
+                    ' use setDefaultActivateParameters instead.',
+                    DeprecationWarning)
+      for k, v in self._v_activate_kw.iteritems():
+        if k not in kw:
+          kw[k] = v
+
     activity_tool = getToolByName(self, 'portal_activities', None)
     if activity_tool is None: return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
@@ -172,3 +189,10 @@ class ActiveObject(ExtensionClass.Base):
     if activity_tool is None: return None # Do nothing if no portal_activities
     return activity_tool.getActiveProcess()
 
+  security.declareProtected( permissions.ModifyPortalContent, 'setDefaultActivateParameters' )
+  def setDefaultActivateParameters(self, **kw):
+    # This method sets the default keyword parameters to activate. This is useful
+    # when you need to specify special parameters implicitly (e.g. to reindexObject).
+    tv = getTransactionalVariable()
+    key = ('default_activate_parameter', self.getPhysicalPath())
+    tv[key] = kw
