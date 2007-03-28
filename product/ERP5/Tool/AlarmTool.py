@@ -106,19 +106,17 @@ class AlarmTool(BaseTool):
     """
       We retrieve thanks to the catalog the full list of alarms
     """
-    user = self.portal_catalog.getOwner()
-    newSecurityManager(self.REQUEST, user)
     if to_active:
       now = DateTime()
-      catalog_search = self.portal_catalog(
-        portal_type = self.getPortalAlarmTypeList(), 
+      catalog_search = self.portal_catalog.unrestrictedSearchResults(
+        portal_type = self.getPortalAlarmTypeList(),
         alarm_date={'query':now,'range':'ngt'}
       )
       # check again the alarm date in case the alarm was not yet reindexed
       alarm_list = [x.getObject() for x in catalog_search \
           if x.getObject().getAlarmDate()<=now]
     else:
-      catalog_search = self.portal_catalog(
+      catalog_search = self.portal_catalog.unrestrictedSearchResults(
         portal_type = self.getPortalAlarmTypeList()
       )
       alarm_list = [x.getObject() for x in catalog_search]
@@ -132,7 +130,7 @@ class AlarmTool(BaseTool):
     """
     current_date = DateTime()
     for alarm in self.getAlarmList(to_active=1):
-      if alarm:
+      if alarm is not None:
         user = alarm.getOwner()
         newSecurityManager(self.REQUEST, user)
         if alarm.isActive() or not alarm.isEnabled():
