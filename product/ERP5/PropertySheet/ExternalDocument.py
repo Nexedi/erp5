@@ -44,11 +44,10 @@ class ExternalDocument:
             'type'        : 'int',
             'default'     : 0,
             'mode'        : 'w'},
-        {   'id'          : 'crawling_local',
+        {   'id'          : 'crawling_scope',
             'description' : 'Defines whether the crawling process should be local to a single'
                             'domain or IP host. If so, crawling will not try to access'
                             'links outside the initial host.',
-            'type'        : 'boolean',
-            'default'     : 0,
+            'type'        : 'string',
             'mode'        : 'w'},
         )
