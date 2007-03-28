@@ -308,16 +308,16 @@ class TestERP5BankingMixin:
 
   def createCurrency(self, id='EUR', title='Euro'):
     # create the currency document for euro inside the currency module
-    currency = self.getCurrencyModule().newContent(id=id, title=title)
+    currency = self.getCurrencyModule().newContent(id=id, title=title, reference=id)
     if id=='USD':
       # Create an exchange line
       exchange_line = currency.newContent(portal_type='Currency Exchange Line',
-          start_date='01/01/1900',stop_date='01/01/2900',
-          price_currency='currency_module/EUR',
-          currency_exchange_type_list=['currency_exchange_type/sale',
-                                       'currency_exchange_type/purchase',
-                                       'currency_exchange_type/transfer'],
-          base_price=2)
+                                          start_date='01/01/1900',stop_date='01/01/2900',
+                                          price_currency='currency_module/EUR',
+                                          currency_exchange_type_list=['currency_exchange_type/sale',
+                                                                       'currency_exchange_type/purchase',
+                                                                       'currency_exchange_type/transfer'],
+                                          base_price=2)
       cell_list = exchange_line.objectValues()
       self.assertEquals(len(cell_list),3)
       for cell in cell_list:
@@ -590,6 +590,15 @@ class TestERP5BankingMixin:
             if s.getId() == 'auxiliaire':
               for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
                 s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+
+    # Create other site now but without vault
+    if len(site_list) != 0:
+      if 'paris' not in site_list:
+        self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
+      if 'madrid' not in site_list:
+        self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
+      if 'siege' not in site_list:
+        self.siege = self.testsite.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
 
 
   def openCounterDate(self, date=None, site=None,id='counter_date_1',open=1):
