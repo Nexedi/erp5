@@ -48,34 +48,6 @@ if __name__ == '__main__':
 class TestERP5BankingUsualCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
   """
     This class is a unit test to check the module of Cash Incident
-
-    Here are the following step that will be done in the test :
-  
-    - before the test, we need to create some movements that will put resources in the source
-
-    - create a cash transfer
-    - check it has been created correctly
-    - check source and destination (current == future)
-
-    - create a "Note Line" (billetage)
-    - check it has been created correctly
-    - check the total amount
-
-    - create a second Line
-    - check it has been created correctly
-    - check the total amount
-
-    - create an invalid Line (quantity > available at source)
-    - check that the system behaves correctly
-
-    - pass "confirm_action" transition
-    - check that the new state is confirmed
-    - check that the source has been debited correctly (current < future)
-    - check amount, lines, ...
-
-    - pass "deliver_action" transition
-    - check that the new state is delivered
-    - check that the destination has been credited correctly (current == future)
   """
 
   login = PortalTestCase.login
@@ -168,17 +140,25 @@ class TestERP5BankingUsualCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
                                      id='usual_cash_incident_1', 
                                      portal_type='Usual Cash Incident', 
                                      description='test',
-                                     source_total_asset_price=52400.0,)
+                                     source_total_asset_price=52400.0,
+                                     source_transport='testsite/madrid',
+                                     incident_type='reception')
     # execute tic
     self.stepTic()
     # check we have only one cash transfer
     self.assertEqual(len(self.usual_cash_incident_module.objectValues()), 1)
+    # set source reference
+    self.setDocumentSourceReference(self.usual_cash_incident)
+    # check source reference
+    self.assertNotEqual(self.usual_cash_incident.getSourceReference(), '')
+    self.assertNotEqual(self.usual_cash_incident.getSourceReference(), None)
     # get the cash transfer document
     self.usual_cash_incident = getattr(self.usual_cash_incident_module, 'usual_cash_incident_1')
     # check its portal type
     self.assertEqual(self.usual_cash_incident.getPortalType(), 'Usual Cash Incident')
     # check that its destination is counter
     self.assertEqual(self.usual_cash_incident.getSource(), 'site/testsite/paris')
+    self.assertEqual(self.usual_cash_incident.getSourceTransport(), 'testsite/madrid')
     self.assertEqual(self.usual_cash_incident.getDestination(), None)
 
 
