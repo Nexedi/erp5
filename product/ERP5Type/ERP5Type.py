@@ -181,6 +181,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
       'recent_document', 'my_document', 'template_document',
       # MRP
       'divergence_tester', 'calendar_period'
+      # Project
+      'project',
     )
     group_list = ()
 
