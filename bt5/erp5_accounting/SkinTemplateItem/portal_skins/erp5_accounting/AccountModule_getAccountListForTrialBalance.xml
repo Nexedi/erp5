@@ -464,6 +464,7 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
   line_list.append(Object(uid=\'new_\',\n
                           node_id=node_id,\n
                           node_title=node_title,\n
+                          node_relative_url=node_relative_url,\n
                           initial_debit_balance=initial_debit_balance,\n
                           initial_credit_balance=initial_credit_balance,\n
                           debit=data[\'debit\'],\n
