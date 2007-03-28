@@ -158,7 +158,7 @@ class TextDocument(Document, TextContent):
         Returns the content base URL based on the actual content
         (in HTML)
       """
-      html = self.asHTML()
+      html = self._asHTML()
       base_list = re.findall(self.base_parser, str(html))
       if base_list:
         return base_list[0]
