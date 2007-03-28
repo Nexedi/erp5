@@ -37,6 +37,25 @@
                                 <value>
                                   <dictionary>
                                     <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string>1</string> </value>
+                                    </item>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>int</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>id_count</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string>1</string> </value>
+                                    </item>
+                                    <item>
                                         <key> <string>type</string> </key>
                                         <value> <string>int</string> </value>
                                     </item>
@@ -56,8 +75,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>id_group</string>
-                            <string>default</string>
+<string>id_group</string>
+<string>id_count</string>
+<string>default</string>
                           </list>
                         </value>
                     </item>
@@ -69,7 +89,8 @@
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>id_group\r\n
-default:int</string> </value>
+id_count:int=1\r\n
+default:int=1</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -88,7 +109,12 @@ default:int</string> </value>
 \n
 BEGIN\n
 <dtml-var sql_delimiter>\n
-INSERT INTO portal_ids (`id_group`, `last_id`) VALUES (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar default type="int">)) ON DUPLICATE KEY UPDATE `last_id` = LAST_INSERT_ID(`last_id` + 1)\n
+INSERT INTO\n
+  portal_ids (`id_group`, `last_id`)\n
+VALUES\n
+  (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar default type="int">))\n
+ON DUPLICATE KEY UPDATE\n
+  `last_id` = LAST_INSERT_ID(`last_id` + <dtml-sqlvar id_count type="int">)\n
 <dtml-var sql_delimiter>\n
 SELECT LAST_INSERT_ID()
 
@@ -133,7 +159,12 @@ SELECT LAST_INSERT_ID()
 \n
 BEGIN\n
 <dtml-var sql_delimiter>\n
-INSERT INTO portal_ids (`id_group`, `last_id`) VALUES (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar default type="int">)) ON DUPLICATE KEY UPDATE `last_id` = LAST_INSERT_ID(`last_id` + 1)\n
+INSERT INTO\n
+  portal_ids (`id_group`, `last_id`)\n
+VALUES\n
+  (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar default type="int">))\n
+ON DUPLICATE KEY UPDATE\n
+  `last_id` = LAST_INSERT_ID(`last_id` + <dtml-sqlvar id_count type="int">)\n
 <dtml-var sql_delimiter>\n
 SELECT LAST_INSERT_ID()
 
