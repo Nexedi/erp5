@@ -28,9 +28,8 @@
 
 from struct import unpack
 import warnings
-import ExtensionClass
 
-from Globals import InitializeClass, DTMLFile, PersistentMapping
+from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
 from AccessControl.PermissionRole import rolesForPermissionOn
@@ -56,7 +55,7 @@ from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransa
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
 from Products.ERP5Type.Log import log as unrestrictedLog
-
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from ZopePatch import ERP5PropertyManager
 
 from CopySupport import CopyContainer, CopyError,\
@@ -69,21 +68,13 @@ from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from string import join
 import sys
 import psyco
-import traceback
 
 from cStringIO import StringIO
 from socket import gethostname, gethostbyaddr
 import random
 
-from DateTime import DateTime
-
 import inspect
 from pprint import pformat
-
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 
 from ZODB.POSException import ConflictError
 from zLOG import LOG, INFO, ERROR, WARNING
@@ -682,120 +673,112 @@ class Base( CopyContainer,
 
       Other case : we want to change the phone number of a related object without
       going to edit the related object
-
     """
     # Push context to prevent loop
-    # We use TRANSACTION but should use REQUEST
-    from Globals import get_request
-    TRANSACTION = get_transaction()
-    if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
+    tv = getTransactionalVariable()
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
                        accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type)
-    if TRANSACTION._erp5_acquisition_stack.has_key(acquisition_key): return null_value
-    TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1
+    if acquisition_key in tv:
+      return null_value
 
-    if storage_id is None: storage_id=key
-    #LOG("Get Acquired Property storage_id",0,str(storage_id))
-    # Test presence of attribute without acquisition
-    # if present, get it in its context, thus we keep acquisition if
-    # returned value is an object
-    d = getattr(aq_base(self), storage_id, _MARKER)
-    if d is not _MARKER:
-      value = getattr(self, storage_id, None)
-    else:
-      value = None
-    # If we hold an attribute and mask_value is set, return the attribute
-    if mask_value and value is not None:
-      # Pop context
-      del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-      if is_tales_type:
-        expression = Expression(value)
-        econtext = createExpressionContext(self)
-        return expression(econtext)
+    tv[acquisition_key] = 1
+
+    try:
+      if storage_id is None: storage_id=key
+      #LOG("Get Acquired Property storage_id",0,str(storage_id))
+      # Test presence of attribute without acquisition
+      # if present, get it in its context, thus we keep acquisition if
+      # returned value is an object
+      d = getattr(aq_base(self), storage_id, _MARKER)
+      if d is not _MARKER:
+        value = getattr(self, storage_id, None)
       else:
-        return value
-    # Retrieve the list of related objects
-    #LOG("Get Acquired Property self",0,str(self))
-    #LOG("Get Acquired Property portal_type",0,str(portal_type))
-    #LOG("Get Acquired Property base_category",0,str(base_category))
-    #super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
-    super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # Full acquisition
-    super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
-    #LOG("Get Acquired Property super_list",0,str(super_list))
-    #LOG("Get Acquired Property accessor_id",0,str(accessor_id))
-    if len(super_list) > 0:
-      super = super_list[0]
-      # Retrieve the value
-      if accessor_id is None:
-        value = super.getProperty(key)
-      else:
-        method = getattr(super, accessor_id)
-        value = method() # We should add depends here XXXXXX
-                         # There is also a strong risk here of infinite loop
-      if copy_value:
-        if getattr(self, storage_id, None) is None:
-          # Copy the value if it does not already exist as an attribute of self
-          # Like in the case of orders / invoices
-          setattr(self, storage_id, value)
-      if is_list_type:
-        # We must provide the first element of the acquired list
-        if value is None:
-          result = None
+        value = None
+      # If we hold an attribute and mask_value is set, return the attribute
+      if mask_value and value is not None:
+        # Pop context
+        if is_tales_type:
+          expression = Expression(value)
+          econtext = createExpressionContext(self)
+          return expression(econtext)
         else:
-          if isinstance(value, (list, tuple)):
-            if len(value) is 0:
-              result = None
-            else:
-              result = value[0]
+          return value
+      # Retrieve the list of related objects
+      #LOG("Get Acquired Property self",0,str(self))
+      #LOG("Get Acquired Property portal_type",0,str(portal_type))
+      #LOG("Get Acquired Property base_category",0,str(base_category))
+      #super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
+      super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # Full acquisition
+      super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
+      #LOG("Get Acquired Property super_list",0,str(super_list))
+      #LOG("Get Acquired Property accessor_id",0,str(accessor_id))
+      if len(super_list) > 0:
+        super = super_list[0]
+        # Retrieve the value
+        if accessor_id is None:
+          value = super.getProperty(key)
+        else:
+          method = getattr(super, accessor_id)
+          value = method() # We should add depends here XXXXXX
+                          # There is also a strong risk here of infinite loop
+        if copy_value:
+          if getattr(self, storage_id, None) is None:
+            # Copy the value if it does not already exist as an attribute of self
+            # Like in the case of orders / invoices
+            setattr(self, storage_id, value)
+        if is_list_type:
+          # We must provide the first element of the acquired list
+          if value is None:
+            result = None
           else:
-            result = value
-      else:
-        # Value is a simple type
-        result = value
-    else:
-      result = None
-    if result is not None:
-      # Pop context
-      del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-      return result
-    else:
-      #LOG("alt_accessor_id",0,str(alt_accessor_id))
-      if alt_accessor_id is not None:
-        for id in alt_accessor_id:
-          #LOG("method",0,str(id))
-          method = getattr(self, id, None)
-          if callable(method):
-            result = method()
-            if result is not None:
-              if is_list_type:
-                if isinstance(result, (list, tuple)):
-                  # We must provide the first element of the alternate result
-                  if len(result) > 0:
-                    # Pop context
-                    del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-                    return result[0]
-                else:
-                  # Pop context
-                  del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-                  return result
+            if isinstance(value, (list, tuple)):
+              if len(value) is 0:
+                result = None
               else:
-                # Pop context
-                del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-                # Result is a simple type
-                return result
-
-      if copy_value:
-        # Pop context
-        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-        return getattr(self,storage_id, default_value)
+                result = value[0]
+            else:
+              result = value
+        else:
+          # Value is a simple type
+          result = value
       else:
-        # Pop context
-        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-        # Return the default value defined at the class level XXXXXXXXXXXXXXX
-        return default_value
+        result = None
+      if result is not None:
+        return result
+      else:
+        #LOG("alt_accessor_id",0,str(alt_accessor_id))
+        if alt_accessor_id is not None:
+          for id in alt_accessor_id:
+            #LOG("method",0,str(id))
+            method = getattr(self, id, None)
+            if callable(method):
+              result = method()
+              if result is not None:
+                if is_list_type:
+                  if isinstance(result, (list, tuple)):
+                    # We must provide the first element of the alternate result
+                    if len(result) > 0:
+                      return result[0]
+                  else:
+                    return result
+                else:
+                  # Result is a simple type
+                  return result
+
+        if copy_value:
+          return getattr(self,storage_id, default_value)
+        else:
+          # Return the default value defined at the class level XXXXXXXXXXXXXXX
+          return default_value
+    finally:
+      # Pop the acquisition context.
+      try:
+        del tv[acquisition_key]
+      except KeyError:
+        pass
 
   def _getAcquiredPropertyList(self, key, default_value, null_value,
      base_category, portal_type=None, copy_value=0, mask_value=0, sync_value=0, append_value=0,
@@ -811,66 +794,67 @@ class Base( CopyContainer,
 
     """
     # Push context to prevent loop
-    from Globals import get_request
-    TRANSACTION = get_transaction()
-    if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
+    tv = getTransactionalVariable()
+    if isinstance(portal_type, list):
+      portal_type = tuple(portal_type)
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
                        accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type)
-    if TRANSACTION._erp5_acquisition_stack.has_key(acquisition_key): return null_value
-    TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1
+    if acquisition_key in tv:
+      return null_value
 
-    if storage_id is None: storage_id=key
-    value = getattr(self, storage_id, None)
-    if mask_value and value is not None:
-      # Pop context
-      del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-      if is_tales_type:
-        expression = Expression(value)
-        econtext = createExpressionContext(self)
-        return expression(econtext)
-      else:
-        return value
-    super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # Full acquisition
-    super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
-    if len(super_list) > 0:
-      value = []
-      for super in super_list:
-        if accessor_id is None:
-          if is_list_type:
-            result = super.getPropertyList(key)
-            if isinstance(result, (list, tuple)):
-              value += result
-            else:
-              value += [result]
-          else:
-            value += [super.getProperty(key)]
+    tv[acquisition_key] = 1
+
+    try:
+      if storage_id is None: storage_id=key
+      value = getattr(self, storage_id, None)
+      if mask_value and value is not None:
+        if is_tales_type:
+          expression = Expression(value)
+          econtext = createExpressionContext(self)
+          return expression(econtext)
         else:
-          method = getattr(super, accessor_id)
-          if is_list_type:
-            result = method() # We should add depends here
-            if isinstance(result, (list, tuple)):
-              value += result
+          return value
+      super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # Full acquisition
+      super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
+      if len(super_list) > 0:
+        value = []
+        for super in super_list:
+          if accessor_id is None:
+            if is_list_type:
+              result = super.getPropertyList(key)
+              if isinstance(result, (list, tuple)):
+                value += result
+              else:
+                value += [result]
             else:
-              value += [result]
+              value += [super.getProperty(key)]
           else:
-            value += [method()] # We should add depends here
-      if copy_value:
-        if not hasattr(self, storage_id):
-          setattr(self, storage_id, value)
-      # Pop context
-      del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-      return value
-    else:
-      # ?????
-      if copy_value:
-        # Pop context
-        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-        return getattr(self,storage_id, default_value)
+            method = getattr(super, accessor_id)
+            if is_list_type:
+              result = method() # We should add depends here
+              if isinstance(result, (list, tuple)):
+                value += result
+              else:
+                value += [result]
+            else:
+              value += [method()] # We should add depends here
+        if copy_value:
+          if not hasattr(self, storage_id):
+            setattr(self, storage_id, value)
+        return value
       else:
-        # Pop context
-        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-        return default_value
+        # ?????
+        if copy_value:
+          return getattr(self,storage_id, default_value)
+        else:
+          return default_value
+    finally:
+      # Pop the acquisition context.
+      try:
+        del tv[acquisition_key]
+      except KeyError:
+        pass
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
   def getProperty(self, key, d=_MARKER, **kw):
