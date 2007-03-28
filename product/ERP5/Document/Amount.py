@@ -373,7 +373,7 @@ class Amount(Base, Variated):
   
   
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
-  def getTotalPrice(self):
+  def getTotalPrice(self, **kw):
     """
       Return total price for the number of items
       
