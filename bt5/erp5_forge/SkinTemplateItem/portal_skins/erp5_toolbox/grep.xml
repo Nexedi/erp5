@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ExternalMethod.ExternalMethod</string>
+          <string>ExternalMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_function</string> </key>
+            <value> <string>grep</string> </value>
+        </item>
+        <item>
+            <key> <string>_module</string> </key>
+            <value> <string>Grep</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>grep</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
