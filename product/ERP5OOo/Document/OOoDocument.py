@@ -224,6 +224,8 @@ class OOoDocument(File, ConversionCacheMixin):
     """
       Communicates with server to convert a file 
     """
+    if not self.hasBaseData():
+      self.convertToBaseFormat()
     if format == 'text-content':
       # Extract text from the ODF file
       cs = cStringIO.StringIO()
