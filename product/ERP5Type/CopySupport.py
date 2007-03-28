@@ -121,18 +121,17 @@ class CopyContainer:
       if changed != 0:
           object.setCategoryList(category_list)
 
-  def _recursiveSetActivityAfterTag(self,object):
+  def _recursiveSetActivityAfterTag(self, obj):
       """
       Make sure to set an after tag on each object
       so that it is possible to unindex before doing
       indexing, this prevent uid changes
       """
-      uid = getattr(aq_base(object),'uid',None)
+      uid = getattr(aq_base(obj), 'uid', None)
       if uid is not None:
-        activate_kw = {'after_tag': '%s' % uid}
-        object._v_activate_kw = activate_kw
-      for sub_object in object.objectValues():
-          self._recursiveSetActivityAfterTag(sub_object)
+        obj.setDefaultActivateParameters(after_tag = str(uid))
+      for sub_obj in obj.objectValues():
+        self._recursiveSetActivityAfterTag(sub_obj)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'manage_renameObject' )
   def manage_renameObject(self, id=None, new_id=None, REQUEST=None):

@@ -333,7 +333,7 @@ class DocumentConstructor(Method):
                  activate_kw=None, is_indexable=None, **kw):
       o = self.klass(id)
       if activate_kw is not None:
-        o._v_activate_kw = activate_kw
+        o.setDefaultActivateParameters(**activate_kw)
       if is_indexable is not None:
         o.isIndexable = is_indexable
       folder._setObject(id, o)

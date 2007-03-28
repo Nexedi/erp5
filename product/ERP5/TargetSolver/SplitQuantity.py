@@ -67,7 +67,7 @@ class SplitQuantity(CopyToTarget):
       activate_kw = self.activate_kw,
       **self.additional_parameters
     )
-    simulation_movement._v_activate_kw = self.activate_kw
+    simulation_movement.setDefaultActivateParameters(**self.activate_kw)
     simulation_movement.edit (
       quantity = (simulation_movement.getQuantity() - self.quantity)
                  * simulation_movement.getDeliveryRatio()
