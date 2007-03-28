@@ -53,11 +53,11 @@ class Project(Order):
 
     # Default Properties
     property_sheets = (
-                       PropertySheet.Base,                
-                       PropertySheet.DublinCore,          
-                       PropertySheet.XMLObject,          
-                       PropertySheet.CategoryCore,        
-                       PropertySheet.Arrow,               
-                       PropertySheet.Task,                
+                       PropertySheet.Base,
+                       PropertySheet.DublinCore,
+                       PropertySheet.XMLObject,
+                       PropertySheet.CategoryCore,
+                       PropertySheet.Arrow,
+                       PropertySheet.Task,
                        )
 
