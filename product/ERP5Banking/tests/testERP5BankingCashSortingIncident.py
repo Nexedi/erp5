@@ -196,6 +196,11 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.stepTic()
     # check we have only one cash transfer
     self.assertEqual(len(self.cash_sorting_incident_module.objectValues()), 1)
+    # set source reference
+    self.setDocumentSourceReference(self.cash_sorting_incident)
+    # check source reference
+    self.assertNotEqual(self.cash_sorting_incident.getSourceReference(), '')
+    self.assertNotEqual(self.cash_sorting_incident.getSourceReference(), None)
     # get the cash transfer document
     self.cash_sorting_incident = getattr(self.cash_sorting_incident_module, 'cash_sorting_incident_1')
     # check its portal type
