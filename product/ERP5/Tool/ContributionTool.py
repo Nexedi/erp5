@@ -288,8 +288,9 @@ class ContributionTool(BaseTool):
     # Move the document to where it belongs
     if container_path is not None:
       container = self.getPortalObject().restrictedTraverse(container_path)
-    document = self._setObject(file_name, ob, user_login=user_login,
-                               container=container, id=id, discover_metadata=discover_metadata)
+    document = self._setObject(file_name, ob, user_login=user_login, id=id,
+                               container=container, discover_metadata=discover_metadata,
+                               )
     document = self._getOb(file_name) # Call _getOb to purge cache
 
     # Notify workflows
@@ -343,7 +344,8 @@ class ContributionTool(BaseTool):
     return property_dict
 
   # WebDAV virtual folder support
-  def _setObject(self, name, ob, user_login=None, container=None, id=None, discover_metadata=1):
+  def _setObject(self, name, ob, user_login=None, container=None,
+                       id=None, discover_metadata=1):
     """
       The strategy is to let NullResource.PUT do everything as
       usual and at the last minute put the object in a different
@@ -410,12 +412,18 @@ class ContributionTool(BaseTool):
           # ZODB scripts
           document.activate().discoverMetadata(file_name=name, user_login=user_login)
       else:
-        document = existing_document
         if document.isExternalDocument():
+          document = existing_document 
           # If this is an external document, update its content
           document.activate().updateContentFromURL()
+          # XXX - Make sure this does not increase ZODB
+          # XXX - what to do also with parameters (put again edit_kw) ?
+          # Providing some information to the use about the fact
+          # this was an existing document would also be great
         else:
-          # This is where we may have to implement revision support
+          # We may have to implement additional revision support
+          # to support in place contribution (ie. for a given ID)
+          # but is this really useful ? 
           raise NotImplementedError
 
       # Keep the document close to us - this is only useful for
@@ -440,7 +448,7 @@ class ContributionTool(BaseTool):
         del self._v_document_cache[id]
         return self.getPortalObject().unrestrictedTraverse(document_url)
 
-    # Try first to return an object listed bv listDAVObjects
+    # Try first to return an object listed by listDAVObjects
     uid = str(id).split('-')[-1]
     object = self.getPortalObject().portal_catalog.unrestrictedGetResultValue(uid=uid)
     if object is not None:
