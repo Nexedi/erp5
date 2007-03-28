@@ -31,6 +31,7 @@ from time import time
 from AccessControl.SecurityInfo import allow_class
 from CachePlugins.BaseCache import CachedMethodError
 from zLOG import LOG, WARNING
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
 DEFAULT_CACHE_FACTORY = 'erp5_ui_short'
@@ -224,20 +225,26 @@ allow_class(CachingMethod)
 def getReadOnlyTransactionCache(context):
   """Get the transaction cache.
   """
+  tv = getTransactionalVariable()
   try:
-    return context.REQUEST['_erp5_read_only_transaction_cache']
+    return tv['read_only_transaction_cache']
   except KeyError:
     return None
 
 def enableReadOnlyTransactionCache(context):
   """Enable the transaction cache.
   """
-  context.REQUEST.set('_erp5_read_only_transaction_cache', {})
+  tv = getTransactionalVariable()
+  tv['read_only_transaction_cache'] = {}
 
 def disableReadOnlyTransactionCache(context):
   """Disable the transaction cache.
   """
-  context.REQUEST.set('_erp5_read_only_transaction_cache', None)
+  tv = getTransactionalVariable()
+  try:
+    del tv['read_only_transaction_cache']
+  except KeyError:
+    pass
 
 ########################################################
 ## Old global cache functions                         ##
