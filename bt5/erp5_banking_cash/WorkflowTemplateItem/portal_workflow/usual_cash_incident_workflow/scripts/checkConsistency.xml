@@ -85,6 +85,10 @@ if not transaction.Baobab_checkCounterDateOpen(site=var_source, date=date):\n
   msg = Message(domain = "ui", message="Counter Date is not opened")\n
   raise ValidationFailed, (msg,)\n
 \n
+if var_type in (None, \'\'):\n
+   msg = Message(domain = "ui", message="Incident Type must be defined.")\n
+   raise ValidationFailed, (msg,)\n
+\n
 if (var_type == \'reception\' and var_source_transport is None):\n
    msg = Message(domain = "ui", message="Remote Site not null.")\n
    raise ValidationFailed, (msg,)\n
