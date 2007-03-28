@@ -112,7 +112,7 @@ BEGIN\n
 INSERT INTO\n
   portal_ids (`id_group`, `last_id`)\n
 VALUES\n
-  (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar default type="int">))\n
+  (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar expr="default + id_count" type="int">))\n
 ON DUPLICATE KEY UPDATE\n
   `last_id` = LAST_INSERT_ID(`last_id` + <dtml-sqlvar id_count type="int">)\n
 <dtml-var sql_delimiter>\n
@@ -162,7 +162,7 @@ BEGIN\n
 INSERT INTO\n
   portal_ids (`id_group`, `last_id`)\n
 VALUES\n
-  (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar default type="int">))\n
+  (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar expr="default + id_count" type="int">))\n
 ON DUPLICATE KEY UPDATE\n
   `last_id` = LAST_INSERT_ID(`last_id` + <dtml-sqlvar id_count type="int">)\n
 <dtml-var sql_delimiter>\n
