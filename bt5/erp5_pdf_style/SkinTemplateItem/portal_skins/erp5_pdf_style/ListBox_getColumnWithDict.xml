@@ -151,7 +151,7 @@ for listboxline in listboxline_list:\n
   col_count = 0\n
   for column_id, column_property in listboxline.getColumnItemList():\n
     if isinstance(column_property, number):\n
-      string_property = "%s+++" % (column_property)\n
+      string_property = "%s++++++" % (column_property)\n
     else:\n
       string_property = str(column_property or \'\')\n
     if listboxline.isStatLine():\n
