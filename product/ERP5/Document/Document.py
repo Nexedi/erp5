@@ -36,6 +36,7 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base
 from Globals import PersistentMapping
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.WebDAVSupport import TextContent
@@ -650,7 +651,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     if not self.getReference():
       return self
     catalog = getToolByName(self, 'portal_catalog', None)
-    kw = dict(reference=self.getReference(), sort_on=(('version','descending'),('revision','descending'),))
+    kw = dict(reference=self.getReference(), sort_on=(('version','descending'),))
     if language is not None: kw['language'] = language
     res = catalog(**kw)
 
@@ -688,8 +689,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     catalog = getToolByName(self, 'portal_catalog', None)
     kw = dict(portal_type=self.getPortalType(),
                    reference=self.getReference(),
-                   group_by=('revision',),
-                   order_by=(('revision', 'descending', 'SIGNED'),)
+                   order_by=(('version', 'descending', 'SIGNED'),)
                   )
     if version: kw['version'] = version
     if language: kw['language'] = language
@@ -705,13 +705,40 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     if not self.getReference():
       return 1
     catalog = getToolByName(self, 'portal_catalog', None)
-    # This method has been reported not to work. Extra test needed.
-    return catalog.unrestrictedCountResults(portal_type=self.getPortalDocumentTypeList(),
+    self_count = catalog.unrestrictedCountResults(portal_type=self.getPortalDocumentTypeList(),
                                             reference=self.getReference(),
                                             version=self.getVersion(),
                                             language=self.getLanguage(),
-                                            ) <= 1
+                                            uid=self.getUid(),
+                validation_state="!=deleted" # XXX Either use a system pref
+                                              # or implement a class method
+                                            )[0][0]
+    count = catalog.unrestrictedCountResults(portal_type=self.getPortalDocumentTypeList(),
+                                            reference=self.getReference(),
+                                            version=self.getVersion(),
+                                            language=self.getLanguage(),
+                validation_state="<> deleted" # XXX Either use a system pref
+                                              # or implement a class method
+                                            )[0][0]
+    # If self is not indexed yet, then if count == 1, version is not unique
+    return count <= self_count
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'setUniqueReference')
+  def setUniqueReference(self, suffix='auto'):
+    """
+      Create a unique reference for the current document
+      based on a suffix
+    """
+    # Change the document reference
+    reference = self.getReference() + '-%s-' % suffix + '%s'
+    ref_count = 0
+    kw = dict(portal_type=self.getPortalDocumentTypeList())
+    if self.getVersion(): kw['version'] = self.getVersion()
+    if self.getLanguage(): kw['language'] = self.getLanguage()
+    while catalog.unrestrictedCountResults(reference=reference % ref_count, **kw)[0][0]:
+      ref_count += 1
+    self._setReference(reference % ref_count)
+  
   security.declareProtected(Permissions.AccessContentsInformation, 'getRevision')
   def getRevision(self):
     """
@@ -745,6 +772,66 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       by by analysing the change log of the current object.
     """
     return range(0, self.getRevision())
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'mergeRevision')
+  def mergeRevision(self):
+    """
+      Merge the current document with any previous revision
+      or change its version to make sure it is still unique.
+
+      NOTE: revision support is implemented in the Document
+      class rather than within the ContributionTool
+      because the ingestion process requires to analyse the content
+      of the document first. Hence, it is not possible to
+      do any kind of update operation until the whole ingestion
+      process is completed, since update requires to know
+      reference, version, language, etc. In addition,
+      we have chosen to try to merge revisions after each
+      metadata discovery as a way to make sure that any
+      content added in the system through the ContributionTool
+      (ex. through webdav) will be merged if necessary.
+      It may be posssible though to split disoverMetadata and
+      finishIngestion.
+    """
+    document = self
+    catalog = getToolByName(self, 'portal_catalog', None)
+    if self.getReference():
+      # Find all document with same (reference, version, language)
+      kw = dict(portal_type=self.getPortalDocumentTypeList(),
+                reference=self.getReference(),
+                validation_state="!=deleted") # XXX Either use a system pref
+                                               # or implement a class method
+                                               # because !=delete is hardcoded
+      if self.getVersion(): kw['version'] = self.getVersion()
+      if self.getLanguage(): kw['language'] = self.getLanguage()
+      document_list = catalog.unrestrictedSearchResults(**kw)
+      existing_document = None
+      # Select the first one which is not self and which
+      # shares the same coordinates
+      LOG('existing_document', 0, str(len(document_list)))
+      for o in document_list:
+        if o.getRelativeUrl() != self.getRelativeUrl() and\
+           o.getVersion() == self.getVersion() and\
+           o.getLanguage() == self.getLanguage():
+          existing_document = o.getObject()
+          break
+      # We found an existing document to update
+      if existing_document is not None:
+        document = existing_document
+        if existing_document.getPortalType() != self.getPortalType():
+          raise ValueError, "Ingestion may not change the type of an existing document"
+        elif not _checkPermission(Permissions.ModifyPortalContent, existing_document):
+          self.setUniqueReference(suffix='unauthorized')
+          raise Unauthorized, "You are not allowed to update this document"
+        else:
+          update_kw = {}
+          for k in self.propertyIds():
+            if k not in ('id', 'uid', 'rid', 'sid') and self.hasProperty(k): # XXX Use a global list instead
+              update_kw[k] = self.getProperty(k)
+          existing_document.edit(**update_kw)
+          # Erase self
+          self.delete() # XXX Do we want to delete by workflow or for real ?
+    return document
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getLanguageList')
   def getLanguageList(self, version=None):
@@ -860,7 +947,9 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     """
       This is the main metadata discovery function - controls the process
       of discovering data from various sources. The discovery itself is
-      delegated to scripts or uses preference-configurable regexps.
+      delegated to scripts or uses preference-configurable regexps. The
+      method returns either self or the document which has been
+      merged in the discovery process.
 
       file_name - this parameter is a file name of the form "AA-BBB-CCC-223-en"
 
@@ -907,6 +996,9 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     self._edit(**kw) # Try not to invoke an automatic transition here
     self.finishIngestion() # Finish ingestion by calling method
     self.reindexObject()
+    return self.mergeRevision() # Revision merge is tightly coupled
+                                # to metadata discovery - refer to the documentation
+                                # of mergeRevision method
 
   security.declareProtected(Permissions.ModifyPortalContent, 'finishIngestion')
   def finishIngestion(self):
@@ -956,11 +1048,10 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       (with body tags, etc.). Adds if necessary a base
       tag so that the document can be displayed in an iframe
       or standalone.
+
+      Actual conversion is delegated to _asHTML
     """
-    if self.hasConversion(format='base-html'):
-      mime, data = self.getConversion(format='base-html')
-      return data
-    mime, html = self.convert(format='html')
+    html = self._asHTML()
     if self.getUrlString():
       # If a URL is defined, add the base tag
       # if base is defined yet.
@@ -971,6 +1062,18 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       # We do not implement cache yet since it increases ZODB
       # for probably no reason. More research needed
       # self.setConversion(html, mime='text/html', format='base-html')
+    return html
+
+  security.declarePrivate('_asHTML')
+  def _asHTML(self):
+    """
+      A private method which converts to HTML. This method
+      is the one to override in subclasses.
+    """
+    if self.hasConversion(format='base-html'):
+      mime, data = self.getConversion(format='base-html')
+      return data
+    mime, html = self.convert(format='html')
     return html
 
   security.declareProtected(Permissions.View, 'asStrippedHTML')
@@ -1061,6 +1164,18 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       links (in combindation with populate).
     """
     raise NotImplementedError
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
+  def updateBaseMetadata(self, **kw):
+    """
+    Update the base format data with the latest properties entered
+    by the user. For example, if title is changed in ERP5 interface,
+    the base format file should be updated accordingly.
+
+    Default implementation does nothing. Refer to OOoDocument class
+    for an example of implementation.
+    """
+    pass
 
   # Transformation API
   security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
