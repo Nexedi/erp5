@@ -378,6 +378,31 @@ class TestPredicates(ERP5TypeTestCase):
     self.assertEquals([True, False, True, False], calls)
   
 
+  def test_Predicate_getMembershipCriterionCategoryList(self):
+    # Predicate_getMembershipCriterionCategoryList is a script used to show the
+    # item list in Predicate_view/my_membership_criterion_category_list.
+    # When called on a predicate using a simple category (like region) as
+    # membership criterion base category, it will show for values the content
+    # of this category.
+    pred = self.createPredicate(
+        membership_criterion_base_category_list=['region'], )
+    self.failUnless(('europe/western_europe', 'region/europe/western_europe') in
+        [tuple(x) for x in pred.Predicate_getMembershipCriterionCategoryList()],
+        pred.Predicate_getMembershipCriterionCategoryList(),)
+    
+    # If this category is empty, it will show values from fallback category,
+    # with the path they have when they are acquired
+    pred = self.createPredicate(
+        membership_criterion_base_category_list=['source_region'], )
+    # note that the id of the actual base category is displayed in the first
+    # item too, for making it clear in the UI that it's the content of a
+    # category used for another base category.
+    self.failUnless(('source_region/europe/western_europe',
+                     'source_region/region/europe/western_europe') in
+        [tuple(x) for x in pred.Predicate_getMembershipCriterionCategoryList()],
+        pred.Predicate_getMembershipCriterionCategoryList(),)
+
+
   def test_PredicateFusion(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Test simple predicates fusion.
     New predicate act as a logical AND between predicates
