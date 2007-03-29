@@ -390,8 +390,10 @@ def readLocalPropertySheet(class_id):
   path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
-  text = f.read()
-  f.close()
+  try:
+    text = f.read()
+  finally:
+    f.close()
   return text
 
 def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
@@ -403,7 +405,10 @@ def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
-  f.write(text)
+  try:
+    f.write(text)
+  finally:
+    f.close()
 
 def importLocalPropertySheet(class_id, path = None):
   from Products.ERP5Type import PropertySheet
@@ -413,10 +418,13 @@ def importLocalPropertySheet(class_id, path = None):
     path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
-  module = imp.load_source(class_id, path, f)
-  setattr(PropertySheet, class_id, getattr(module, class_id))
-  # Register base categories
-  registerBaseCategories(getattr(module, class_id))
+  try:
+    module = imp.load_source(class_id, path, f)
+    setattr(PropertySheet, class_id, getattr(module, class_id))
+    # Register base categories
+    registerBaseCategories(getattr(module, class_id))
+  finally:
+    f.close()
 
 base_category_dict = {}
 def registerBaseCategories(property_sheet):
@@ -434,8 +442,11 @@ def importLocalInterface(class_id, path = None):
     path = os.path.join(instance_home, "Interface")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
-  module = imp.load_source(class_id, path, f)
-  setattr(Products.ERP5Type.Interface, class_id, getattr(module, class_id))
+  try:
+    module = imp.load_source(class_id, path, f)
+    setattr(Products.ERP5Type.Interface, class_id, getattr(module, class_id))
+  finally:
+    f.close()
 
 def importLocalConstraint(class_id, path = None):
   import Products.ERP5Type.Interface
@@ -444,8 +455,11 @@ def importLocalConstraint(class_id, path = None):
     path = os.path.join(instance_home, "Constraint")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
-  module = imp.load_source(class_id, path, f)
-  setattr(Products.ERP5Type.Constraint, class_id, getattr(module, class_id))
+  try:
+    module = imp.load_source(class_id, path, f)
+    setattr(Products.ERP5Type.Constraint, class_id, getattr(module, class_id))
+  finally:
+    f.close()
 
 def getLocalExtensionList():
   if not getConfiguration:
@@ -499,8 +513,10 @@ def readLocalExtension(class_id):
   path = os.path.join(instance_home, "Extensions")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
-  text = f.read()
-  f.close()
+  try:
+    text = f.read()
+  finally:
+    f.close()
   return text
 
 def removeLocalTest(class_id):
@@ -516,8 +532,10 @@ def readLocalTest(class_id):
   path = os.path.join(instance_home, "tests")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
-  text = f.read()
-  f.close()
+  try:
+    text = f.read()
+  finally:
+    f.close()
   return text
 
 def readLocalConstraint(class_id):
@@ -525,8 +543,10 @@ def readLocalConstraint(class_id):
   path = os.path.join(instance_home, "Constraint")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
-  text = f.read()
-  f.close()
+  try:
+    text = f.read()
+  finally:
+    f.close()
   return text
 
 def writeLocalExtension(class_id, text, create=1, instance_home=None):
@@ -538,7 +558,10 @@ def writeLocalExtension(class_id, text, create=1, instance_home=None):
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
-  f.write(text)
+  try:
+    f.write(text)
+  finally:
+    f.close()
 
 def writeLocalTest(class_id, text, create=1, instance_home=None):
   if instance_home is None:
@@ -549,7 +572,10 @@ def writeLocalTest(class_id, text, create=1, instance_home=None):
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
-  f.write(text)
+  try:
+    f.write(text)
+  finally:
+    f.close()
 
 def writeLocalConstraint(class_id, text, create=1, instance_home=None):
   if instance_home is None:
@@ -560,7 +586,10 @@ def writeLocalConstraint(class_id, text, create=1, instance_home=None):
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
-  f.write(text)
+  try:
+    f.write(text)
+  finally:
+    f.close()
 
 def removeLocalConstraint(class_id):
   instance_home = getConfiguration().instancehome
@@ -594,8 +623,10 @@ def readLocalDocument(class_id):
   path = os.path.join(instance_home, "Document")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
-  text = f.read()
-  f.close()
+  try:
+    text = f.read()
+  finally:
+    f.close()
   return text
 
 def writeLocalDocument(class_id, text, create=1, instance_home=None):
@@ -607,7 +638,10 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
-  f.write(text)
+  try:
+    f.write(text)
+  finally:
+    f.close()
 
 def setDefaultClassProperties(property_holder):
   """Initialize default properties for ERP5Type Documents.
@@ -679,21 +713,23 @@ def importLocalDocument(class_id, document_path = None):
   
   # Import Document Class and Initialize it
   f = open(path)
-  document_module = imp.load_source(
+  try:
+    document_module = imp.load_source(
           'Products.ERP5Type.Document.%s' % class_id, path, f)
-  document_class = getattr(document_module, class_id)
-  document_constructor = DocumentConstructor(document_class)
-  document_constructor_name = "add%s" % class_id
-  document_constructor.__name__ = document_constructor_name
-  setattr(Products.ERP5Type.Document, class_id, document_module)
-  setattr(Products.ERP5Type.Document, document_constructor_name,
+    document_class = getattr(document_module, class_id)
+    document_constructor = DocumentConstructor(document_class)
+    document_constructor_name = "add%s" % class_id
+    document_constructor.__name__ = document_constructor_name
+    setattr(Products.ERP5Type.Document, class_id, document_module)
+    setattr(Products.ERP5Type.Document, document_constructor_name,
                                       document_constructor)
-  setDefaultClassProperties(document_class)
-  from AccessControl import ModuleSecurityInfo
-  ModuleSecurityInfo('Products.ERP5Type.Document').declareProtected(
+    setDefaultClassProperties(document_class)
+    from AccessControl import ModuleSecurityInfo
+    ModuleSecurityInfo('Products.ERP5Type.Document').declareProtected(
         Permissions.AddPortalContent, document_constructor_name,)
-  InitializeClass(document_class)
-  f.close()
+    InitializeClass(document_class)
+  finally:
+    f.close()
 
   # Temp documents are created as standard classes with a different constructor
   # which patches some methods are the instance level to prevent reindexing
