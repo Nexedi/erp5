@@ -511,21 +511,21 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     # now create a temp OOoDocument to convert data to pdf
     from Products.ERP5Type.Document import newTempOOoDocument
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
-    tmp_ooo.edit(data = ooo,
+    tmp_ooo.edit(base_data = ooo,
                 fname =  self.title_or_id(),
                 source_reference = self.title_or_id(),
-                content_type = self.content_type,)
+                base_content_type = self.content_type,)
     tmp_ooo.oo_data = ooo
     if format == 'pdf':
       # slightly different implementation
       # now convert it to pdf
       tgts=[x[1] for x in tmp_ooo.getTargetFormatItemList() if x[1].endswith('pdf')]
       if len(tgts)>1:
-          return tmp_ooo.returnMessage('multiple pdf formats found - this shouldnt happen')
+          raise ValueError, 'multiple pdf formats found - this shouldnt happen'
       if len(tgts)==0:
-          return tmp_ooo.returnMessage('no pdf format found')
+          raise ValueError, 'no pdf format found'
       fmt=tgts[0]
-      mime, data = tmp_ooo._makeFile(fmt)
+      mime, data = tmp_ooo.convert(fmt)
       if REQUEST is not None:
           REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
           REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s.pdf"' % self.title_or_id())
