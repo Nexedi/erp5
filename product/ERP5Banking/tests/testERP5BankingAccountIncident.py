@@ -161,25 +161,6 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # open counter date
     self.openCounterDate(site=self.paris)
 
-  def genericAssertWorkflowTransitionFails(self, object, workflow_id, transition_id, error_message=None):
-    """
-      Check that passing given transition from given workflow on given object
-      raises ValidationFailed.
-      Do sanity checks (workflow history length increased by one, simulation
-      state unchanged).
-      If error_message is provided, it will be asserted equal to the last
-      workflow history error message.
-    """
-    reference_history_length = len(self.workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id))
-    reference_workflow_state = object.getSimulationState()
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, object, transition_id, wf_id=workflow_id)
-    workflow_history = self.workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id)
-    self.assertEqual(len(workflow_history), reference_history_length + 1)
-    if error_message is not None:
-      self.assertEqual(str(workflow_history[-1]['error_message']), error_message)
-    self.assertEqual(object.getSimulationState(), reference_workflow_state)
-    
-
   def stepCleanupObjects(self, sequence=None, sequence_list=None, **kwd):
     """
     Cleanup account_incident_module after a sequence execution so that
@@ -353,7 +334,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
     self.account_incident.setSourceTotalAssetPrice('172400.0')
-    self.genericAssertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="You can't have excess and deficit on the document.")
+    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="You can't have excess and deficit on the document.")
 
 
   def stepDelOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
@@ -368,7 +349,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     Try to confirm the cash transfer with a bad cash transfer line and
     check the try of confirm the cash transfer with the invalid line has failed
     """
-    self.genericAssertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="Price differs between document and resource.")
+    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="Price differs between document and resource.")
 
   def stepTryConfirmAccountIncidentWithNoResource(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -377,7 +358,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     original_resource_path = self.account_incident.getResource()
     self.account_incident.setResource('')
     self.assertEqual(self.account_incident.getResourceValue(), None)
-    self.genericAssertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="No resource defined.")
+    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="No resource defined.")
     self.account_incident.setResource(original_resource_path)
 
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
