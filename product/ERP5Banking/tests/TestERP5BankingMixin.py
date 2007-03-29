@@ -317,12 +317,27 @@ class TestERP5BankingMixin:
                                           currency_exchange_type_list=['currency_exchange_type/sale',
                                                                        'currency_exchange_type/purchase',
                                                                        'currency_exchange_type/transfer'],
-                                          base_price=2)
+                                          )
       cell_list = exchange_line.objectValues()
       self.assertEquals(len(cell_list),3)
       for cell in cell_list:
         cell.setBasePrice(650.0)
         cell.setDiscount(650.0)
+    elif id == "EUR":
+      # Create an exchange line
+      exchange_line = currency.newContent(portal_type='Currency Exchange Line',
+                                          start_date='01/01/1900',stop_date='01/01/2900',
+                                          price_currency='currency_module/USD',
+                                          currency_exchange_type_list=['currency_exchange_type/sale',
+                                                                       'currency_exchange_type/purchase',
+                                                                       'currency_exchange_type/transfer'],
+                                          )
+      cell_list = exchange_line.objectValues()
+      self.assertEquals(len(cell_list),3)
+      for cell in cell_list:
+        cell.setBasePrice(1./650.0)
+        cell.setDiscount(1./650.0)
+
     return currency
 
 
