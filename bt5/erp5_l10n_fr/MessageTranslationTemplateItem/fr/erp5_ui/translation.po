@@ -1089,8 +1089,8 @@ msgstr ""
 msgid "Corporate Name"
 msgstr "Société"
 
-msgid "Corporate registration code"
-msgstr "N° Registre du Commerce"
+msgid "Corporate Registration Code"
+msgstr "SIRET"
 
 msgid "Count"
 msgstr "Nombre"
@@ -1121,18 +1121,6 @@ msgstr "Créer la transaction de payment correspondante"
 
 msgid "Created by"
 msgstr "Créé par"
-
-msgid "Creating 1 Apparel Colour Range Variation."
-msgstr "1 Coloris du tissu principal ajouté."
-
-msgid "Creating 1 Apparel Model Colour Variation."
-msgstr "Coloris ajouté(s) pour cet article."
-
-msgid "Creating 2 Apparel Colour Range Variation."
-msgstr "Coloris du tissu principal ajoutés."
-
-msgid "Creating 2 Apparel Model Colour Variation."
-msgstr "Coloris ajoutés pour cet article."
 
 msgid "Creation Date"
 msgstr "Date de création"
