@@ -44,6 +44,7 @@ from Products.ERP5Type.Utils import getLocalDocumentList, \
 from Products.ERP5Type.Utils import getLocalConstraintList, \
                                     removeLocalConstraint, \
                                     importLocalConstraint
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from zLOG import LOG, DEBUG
 
 try:
