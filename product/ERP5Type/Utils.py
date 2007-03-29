@@ -337,7 +337,7 @@ class DocumentConstructor(Method):
       folder._setObject(id, o)
       o = folder._getOb(id)
       # if no activity tool, the object has already an uid
-      if getattr(aq_base(o),' uid', None) is None:
+      if getattr(aq_base(o), 'uid', None) is None:
         o.uid = folder.portal_catalog.newUid()
       if kw: o._edit(force_update=1, **kw)
       if REQUEST is not None:
