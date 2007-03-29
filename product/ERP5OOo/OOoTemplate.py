@@ -530,14 +530,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
           REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
           REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s.pdf"' % self.title_or_id())
       return data
-    # now for other formats
-    if not tmp_ooo.isTargetFormatAllowed(format):
-      errstr = '%s format is not supported' % format
-      return tmp_ooo.returnMessage(errstr)
-    try:
-      mime, data = tmp_ooo.convert(format)
-    except xmlrpclib.Fault,e:
-      return tmp_ooo.returnMessage('Problem: %s' % str(e))
+    mime, data = tmp_ooo.convert(format)
     if REQUEST is not None:
         REQUEST.RESPONSE.setHeader('Content-type', mime)
         REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s.%s"' % (self.title_or_id(),format))
