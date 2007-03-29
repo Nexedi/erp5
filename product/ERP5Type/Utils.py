@@ -332,20 +332,10 @@ class DocumentConstructor(Method):
     def __call__(self, folder, id, REQUEST=None,
                  activate_kw=None, is_indexable=None, **kw):
       o = self.klass(id)
-      # Disable implicit indexing, because activate_kw may not be
-      # set correctly, as setDefaultActivateParameters depends on
-      # the physical path, until it is connected to an object tree.
-      o.isIndexable = 0
-      folder._setObject(id, o)
-      if is_indexable is not None:
-        o.isIndexable = is_indexable
-      else:
-        del o.isIndexable
-      o = folder._getOb(id)
       if activate_kw is not None:
         o.setDefaultActivateParameters(**activate_kw)
-      # Now execute reindexObject explicitly.
-      o.reindexObject()
+      folder._setObject(id, o)
+      o = folder._getOb(id)
       # if no activity tool, the object has already an uid
       if getattr(aq_base(o),' uid', None) is None:
         o.uid = folder.portal_catalog.newUid()
