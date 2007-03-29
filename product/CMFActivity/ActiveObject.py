@@ -103,7 +103,7 @@ class ActiveObject(ExtensionClass.Base):
 
     # Get default parameters from a transactional variable.
     tv = getTransactionalVariable()
-    key = ('default_activate_parameter', self.getPhysicalPath())
+    key = ('default_activate_parameter', id(aq_base(self)))
     try:
       for k, v in tv[key].iteritems():
         if k not in kw:
@@ -194,5 +194,5 @@ class ActiveObject(ExtensionClass.Base):
     # This method sets the default keyword parameters to activate. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
     tv = getTransactionalVariable()
-    key = ('default_activate_parameter', self.getPhysicalPath())
+    key = ('default_activate_parameter', id(aq_base(self)))
     tv[key] = kw

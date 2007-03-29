@@ -39,18 +39,19 @@ from zLOG import LOG
 
 manage_addActiveProcessForm=DTMLFile('dtml/ActiveProcess_add', globals())
 
-def addActiveProcess( self, id, title='', REQUEST=None, activate_kw=None, **kw):
+def addActiveProcess(self, id, title='', REQUEST=None, activate_kw=None, **kw):
     """
         Add a new Category and generate UID by calling the
         ZSQLCatalog. This code is inspired from Document Constructor
         in Products.ERP5Type.Utils and should probably be merged.
     """
-    o = ActiveProcess( id )
+    o = ActiveProcess(id)
     if activate_kw is not None:
       o.setDefaultActivateParameters(**activate_kw)
     o.uid = self.portal_catalog.newUid()
-    self._setObject( id, o )
-    if kw: o.__of__(folder)._edit(force_update=1, **kw)
+    self._setObject(id, o)
+    o = self._getOb(id)
+    if kw: o._edit(force_update=1, **kw)
     if REQUEST is not None:
         REQUEST['RESPONSE'].redirect( 'manage_main' )
 
