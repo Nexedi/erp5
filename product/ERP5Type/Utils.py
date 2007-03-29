@@ -332,15 +332,24 @@ class DocumentConstructor(Method):
     def __call__(self, folder, id, REQUEST=None,
                  activate_kw=None, is_indexable=None, **kw):
       o = self.klass(id)
-      if activate_kw is not None:
-        o.setDefaultActivateParameters(**activate_kw)
+      # Disable implicit indexing, because activate_kw may not be
+      # set correctly, as setDefaultActivateParameters depends on
+      # the physical path, until it is connected to an object tree.
+      o.isIndexable = 0
+      folder._setObject(id, o)
       if is_indexable is not None:
         o.isIndexable = is_indexable
-      folder._setObject(id, o)
+      else:
+        del o.isIndexable
+      o = folder._getOb(id)
+      if activate_kw is not None:
+        o.setDefaultActivateParameters(**activate_kw)
+      # Now execute reindexObject explicitly.
+      o.reindexObject()
       # if no activity tool, the object has already an uid
       if getattr(aq_base(o),' uid', None) is None:
         o.uid = folder.portal_catalog.newUid()
-      if kw: o.__of__(folder)._edit(force_update=1, **kw)
+      if kw: o._edit(force_update=1, **kw)
       if REQUEST is not None:
         REQUEST['RESPONSE'].redirect( 'manage_main' )
 
