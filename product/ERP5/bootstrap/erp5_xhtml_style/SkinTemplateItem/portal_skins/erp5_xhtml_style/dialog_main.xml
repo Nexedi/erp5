@@ -100,13 +100,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                onclick="this.onclick=function(event) { return false; };" />\n
         <input tal:condition="python: form.update_action!=\'\'"\n
                tal:attributes="value python: here.Base_translateString(\'Update\')"\n
-               id="dialog_update_button" name="Base_showUpdateDialog:method" type="submit"\n
-               onclick="this.onclick=function(event) { return false; };" />\n
+               id="dialog_update_button" name="Base_showUpdateDialog:method" type="submit" />\n
         <input tal:attributes="value python: here.Base_translateString(here.Base_getFormViewDialogActionButtonTitle(form));\n
                                onclick python: dialog_category == \'object_report\' and \'return 1\' or default;\n
                                name python: \'%s:method\' % (form_action, )"\n
-               id="dialog_submit_button" type="submit"\n
-               onclick="this.onclick=function(event) { return false; };" />\n
+               id="dialog_submit_button" type="submit" />\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
