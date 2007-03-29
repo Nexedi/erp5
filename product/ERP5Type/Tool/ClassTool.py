@@ -37,7 +37,7 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from App.config import getConfiguration
-from Products.ERP5Type.TM import VTM as TM
+from Shared.DC.ZRDB.TM import TM
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.ERP5Type import Permissions
@@ -74,13 +74,49 @@ LOCAL_DIRECTORY_LIST = ('Document', 'Extensions', 'Constraint', 'tests', 'Proper
 
 if allowClassTool():
 
-  class ClassTool(TM, BaseTool):
+  class TemporaryInstanceHome(TM):
+    _finalize = None
+    path = None
+
+    def __init__(self):
+      pass
+
+    def getPath(self):
+      return self.path
+
+    def _begin(self):
+      self.path = tempfile.mkdtemp()
+      try:
+        for name in LOCAL_DIRECTORY_LIST:
+          os.mkdir(os.path.join(self.path, name))
+      except:
+        shutil.rmtree(self.path)
+        raise
+
+    def _finish(self):
+      instance_home = getConfiguration().instancehome
+      for name in LOCAL_DIRECTORY_LIST:
+        source_dir = os.path.join(self.path, name)
+        destination_dir = os.path.join(instance_home, name)
+        for fname in os.listdir(source_dir):
+          source_file = os.path.join(source_dir, fname)
+          destination_file = os.path.join(destination_dir, fname)
+          try:
+            os.remove(destination_file)
+          except OSError:
+            pass
+          shutil.move(source_file, destination_file)
+      shutil.rmtree(self.path, 1)
+
+    def _abort(self):
+      shutil.rmtree(self.path, 1)
+
+  class ClassTool(BaseTool):
       """
         This is the full-featured version of ClassTool.
       """
       id = 'portal_classes'
       meta_type = 'ERP5 Class Tool'
-      _use_TM = _transactions = 1
   
       # Declarative Security
       security = ClassSecurityInfo()
@@ -339,9 +375,9 @@ class %s(XMLObject):
 #
 ##############################################################################
 
-class PropertySheetTemplate:
+class %s:
     \"\"\"
-        PropertySheetTemplate properties for all ERP5 objects
+        %s properties for all ERP5 objects
     \"\"\"
 
     _properties = (
@@ -352,7 +388,7 @@ class PropertySheetTemplate:
     )
   
 
-""" % COPYRIGHT
+""" % (COPYRIGHT, class_id, class_id)
         self.writeLocalPropertySheet(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Created' % (self.absolute_url(), class_id))
@@ -588,7 +624,7 @@ class Test(ERP5TypeTestCase):
 
 from Products.ERP5Type.Constraint import Constraint
 
-class ConstraintTemplate(Constraint):
+class %s(Constraint):
     \"\"\"
       Explain here what this constraint checker does
     \"\"\"
@@ -605,7 +641,7 @@ class ConstraintTemplate(Constraint):
       # Do the job here
       
       return errors
-""" % COPYRIGHT
+""" % (COPYRIGHT, class_id)
         self.writeLocalConstraint(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Created' % (self.absolute_url(), class_id))
@@ -848,84 +884,40 @@ def initialize( context ):
         dochelper.setStaticPropertyList(property_list)
         return dochelper
 
-      # Transaction Management
-      def createTemporaryInstanceHome(self):
-        """
-        """
-        self._register()
-        # Make a new instance home
-        if not getattr(self, '_v_instance_home', None):
-          self._v_instance_home = tempfile.mkdtemp()
-          instance_home = self._v_instance_home
-          for name in LOCAL_DIRECTORY_LIST:
-            os.mkdir(os.sep.join((instance_home, name)))
-
-      def deleteTemporaryInstanceHome(self):
-        """
-        """
-        # Delete the whole instance home
-        if getattr(self, '_v_instance_home', None):
-          tmp_instance_home = self._v_instance_home
-          for name in LOCAL_DIRECTORY_LIST:
-            source_dir = os.sep.join((tmp_instance_home, name))
-            for fname in os.listdir(source_dir):
-              source_file = os.sep.join((source_dir,fname))
-              os.remove(source_file)
-            os.rmdir(source_dir)
-          os.rmdir(tmp_instance_home)
-        self._v_instance_home = None
-
-      def renameTemporaryInstanceHome(self):
-        """
-        """
-        # Delete temporary instance home
-        tmp_instance_home = self._v_instance_home
-        instance_home = getConfiguration().instancehome
-        for name in LOCAL_DIRECTORY_LIST:
-          source_dir = os.sep.join((tmp_instance_home, name))
-          destination_dir = os.sep.join((instance_home, name))
-          for fname in os.listdir(source_dir):
-            source_file = os.sep.join((source_dir,fname))
-            destination_file = os.sep.join((destination_dir,fname))
-            try:
-              os.remove(destination_file)
-            except OSError:
-              pass
-            shutil.move(source_file, destination_file)
-        self.deleteTemporaryInstanceHome()
+      def _createTemporaryInstanceHome(self):
+        if getattr(self, '_v_instance_home', None) is None:
+          self._v_instance_home = TemporaryInstanceHome()
+        self._v_instance_home._register()
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalPropertySheet' )
       def writeLocalPropertySheet(self, class_id, text, create=1):
-        self.createTemporaryInstanceHome()
-        writeLocalPropertySheet(class_id, text, create=create, instance_home=self._v_instance_home)
+        self._createTemporaryInstanceHome()
+        writeLocalPropertySheet(class_id, text, create=create, 
+                                instance_home=self._v_instance_home.getPath())
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalExtension' )
       def writeLocalExtension(self, class_id, text, create=1):
-        self.createTemporaryInstanceHome()
-        writeLocalExtension(class_id, text, create=create, instance_home=self._v_instance_home)
+        self._createTemporaryInstanceHome()
+        writeLocalExtension(class_id, text, create=create, 
+                            instance_home=self._v_instance_home.getPath())
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalTest' )
       def writeLocalTest(self, class_id, text, create=1):
-        self.createTemporaryInstanceHome()
-        writeLocalTest(class_id, text, create=create, instance_home=self._v_instance_home)
+        self._createTemporaryInstanceHome()
+        writeLocalTest(class_id, text, create=create, 
+                       instance_home=self._v_instance_home.getPath())
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalDocument' )
       def writeLocalDocument(self, class_id, text, create=1):
-        self.createTemporaryInstanceHome()
-        writeLocalDocument(class_id, text, create=create, instance_home=self._v_instance_home)
+        self._createTemporaryInstanceHome()
+        writeLocalDocument(class_id, text, create=create, 
+                           instance_home=self._v_instance_home.getPath())
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalConstraint' )
       def writeLocalConstraint(self, class_id, text, create=1):
-        self.createTemporaryInstanceHome()
-        writeLocalConstraint(class_id, text, create=create, instance_home=self._v_instance_home)
-
-      def _finish(self):
-        # Move all temp files we created
-        self.renameTemporaryInstanceHome()
-
-      def _abort(self):
-        # Delete all temp files we created
-        self.deleteTemporaryInstanceHome()
+        self._createTemporaryInstanceHome()
+        writeLocalConstraint(class_id, text, create=create, 
+                             instance_home=self._v_instance_home.getPath())
 
 else:
 
