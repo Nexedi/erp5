@@ -297,7 +297,7 @@ msgstr "Activité"
 msgid "Activity Pending"
 msgstr "Activité en suspens"
 
-msgid "Activity code"
+msgid "Activity Code"
 msgstr "Code A.P.E."
 
 msgid "Add ${portal_type}"
@@ -308,9 +308,6 @@ msgstr "Ajouter Coloris"
 
 msgid "Added files"
 msgstr ""
-
-msgid "Additional payment"
-msgstr "Modes de règlement"
 
 msgid "Address"
 msgstr "Adresse"
@@ -1212,12 +1209,6 @@ msgstr "Réf. client"
 msgid "Cut"
 msgstr "Couper"
 
-msgid "DAKAR"
-msgstr ""
-
-msgid "DIOURBEL"
-msgstr ""
-
 msgid "Data Updated."
 msgstr "Données Enregistrées."
 
@@ -1226,12 +1217,6 @@ msgstr "Données enregistrées."
 
 msgid "Date Order"
 msgstr ""
-
-msgid "Days of month"
-msgstr "Jours de Mois"
-
-msgid "Days of week"
-msgstr "Jours de Semaine"
 
 msgid "Debit"
 msgstr "Débit"
@@ -1254,19 +1239,10 @@ msgstr "Valider l'écriture des à nouveaux"
 msgid "Define Sort Order"
 msgstr "Définir l'ordre de tri."
 
-msgid "Define advantages"
-msgstr "Définir avantages"
-
-msgid "Defines the base URL where portal type action documentation will be searched for."
-msgstr ""
-
 msgid "Delete"
 msgstr "Effacer"
 
 msgid "Delete The Objects"
-msgstr "Supprimer les objets"
-
-msgid "Delete the objects"
 msgstr "Supprimer les objets"
 
 msgid "Deleted objects: ${object_ids}"
@@ -1298,9 +1274,6 @@ msgstr "Etat livraison"
 
 msgid "Delivery Tool"
 msgstr ""
-
-msgid "Delivery mode"
-msgstr "Mode de livraison"
 
 msgid "Dependencies"
 msgstr ""
