@@ -109,14 +109,13 @@ default:int=1</string> </value>
 \n
 BEGIN\n
 <dtml-var sql_delimiter>\n
-INSERT INTO\n
-  portal_ids (`id_group`, `last_id`)\n
-VALUES\n
-  (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar expr="default + id_count" type="int">))\n
-ON DUPLICATE KEY UPDATE\n
-  `last_id` = LAST_INSERT_ID(`last_id` + <dtml-sqlvar id_count type="int">)\n
+INSERT INTO portal_ids (`id_group`, `last_id`)\n
+ VALUES (<dtml-sqlvar id_group type="string">, <dtml-sqlvar expr="id_count + default" type="int">)\n
+ ON DUPLICATE KEY UPDATE `last_id` = `last_id` + <dtml-sqlvar id_count type="int">\n
 <dtml-var sql_delimiter>\n
-SELECT LAST_INSERT_ID()
+SELECT `last_id` AS `LAST_INSERT_ID()` FROM portal_ids\n
+ WHERE `id_group` = <dtml-sqlvar id_group type="string">\n
+
 
 ]]></string> </value>
         </item>
@@ -159,14 +158,13 @@ SELECT LAST_INSERT_ID()
 \n
 BEGIN\n
 <dtml-var sql_delimiter>\n
-INSERT INTO\n
-  portal_ids (`id_group`, `last_id`)\n
-VALUES\n
-  (<dtml-sqlvar id_group type="string">, LAST_INSERT_ID(<dtml-sqlvar expr="default + id_count" type="int">))\n
-ON DUPLICATE KEY UPDATE\n
-  `last_id` = LAST_INSERT_ID(`last_id` + <dtml-sqlvar id_count type="int">)\n
+INSERT INTO portal_ids (`id_group`, `last_id`)\n
+ VALUES (<dtml-sqlvar id_group type="string">, <dtml-sqlvar expr="id_count + default" type="int">)\n
+ ON DUPLICATE KEY UPDATE `last_id` = `last_id` + <dtml-sqlvar id_count type="int">\n
 <dtml-var sql_delimiter>\n
-SELECT LAST_INSERT_ID()
+SELECT `last_id` AS `LAST_INSERT_ID()` FROM portal_ids\n
+ WHERE `id_group` = <dtml-sqlvar id_group type="string">\n
+
 
 ]]></string> </value>
                     </item>
