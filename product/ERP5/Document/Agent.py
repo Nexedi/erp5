@@ -79,7 +79,7 @@ class Agent(Folder, Image):
         raise RuntimeError, 'No file or an empty file was specified'
 
     import_file.seek(0)
-    self.manage_editPhoto(file=import_file)
+    self.manage_upload(file=import_file)
     #    self._data = import_file.read()
 
     if REQUEST is not None:
