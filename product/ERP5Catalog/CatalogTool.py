@@ -481,6 +481,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if allowedRolesAndUsers:
           allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
           security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+          if len(security_uid_list) == 0:
+            security_uid_list = None
         if role_column_dict:
           query_list = []
           for key, value in role_column_dict.items():
