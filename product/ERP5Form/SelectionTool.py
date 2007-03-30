@@ -380,6 +380,15 @@ class SelectionTool( UniqueObject, SimpleItem ):
         return selection.getInvertModeUidList()
       return 0
 
+    security.declareProtected(ERP5Permissions.View, 'getSelectionIndexFor')
+    def getSelectionIndexFor(self, selection_name, REQUEST=None):
+      """Get the 'index' parameter of a selection.
+      """
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        return selection.getIndex()
+      return None
+
     security.declareProtected(ERP5Permissions.View, 'setSelectionToIds')
     def setSelectionToIds(self, selection_name, selection_uids, REQUEST=None):
       """

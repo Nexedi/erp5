@@ -209,6 +209,11 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEquals({},
                       self.portal_selections.getSelectionReportDictFor('test_selection'))
 
+  def testIndex(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    self.assertEquals(None,
+                      self.portal_selections.getSelectionIndexFor('test_selection'))
+
 if __name__ == '__main__':
   framework()
 else:
