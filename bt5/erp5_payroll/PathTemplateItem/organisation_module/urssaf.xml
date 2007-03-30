@@ -4,7 +4,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5.Document.Organisation</string>
+          <string>Products.ERP5Type.Document.Organisation</string>
           <string>Organisation</string>
         </tuple>
         <none/>
