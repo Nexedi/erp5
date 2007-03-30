@@ -196,3 +196,12 @@ class ActiveObject(ExtensionClass.Base):
     tv = getTransactionalVariable()
     key = ('default_activate_parameter', id(aq_base(self)))
     tv[key] = kw
+
+  security.declareProtected( permissions.View, 'getDefaultActivateParameterDict' )
+  def getDefaultActivateParameterDict(self):
+    # This method returns default activate parameters to self.
+    # The result can be either a dict object or None.
+    tv = getTransactionalVariable()
+    key = ('default_activate_parameter', id(aq_base(self)))
+    return tv.get(key)
+
