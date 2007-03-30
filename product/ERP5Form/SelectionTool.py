@@ -240,7 +240,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection_object = Selection(params=params)
       self.setSelectionFor(selection_name, selection_object, REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionDomainDictFor')
+    security.declareProtected(ERP5Permissions.View, 'getSelectionDomainDictFor')
     def getSelectionDomainDictFor(self, selection_name, REQUEST=None):
       """
         Returns the Domain dict for a given selection_name
@@ -252,7 +252,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         except AttributeError:
           return {}
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionDomainDictFor')
+    security.declareProtected(ERP5Permissions.View, 'getSelectionReportDictFor')
     def getSelectionReportDictFor(self, selection_name, REQUEST=None):
       """
         Returns the Report dict for a given selection_name
@@ -276,6 +276,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection_object = Selection(checked_uids=checked_uids)
       self.setSelectionFor(selection_name, selection_object, REQUEST)
 
+    security.declareProtected(ERP5Permissions.View, 'updateSelectionCheckedUidList')
     def updateSelectionCheckedUidList(self, selection_name, listbox_uid, uids, REQUEST=None):
       """
         Updates the unchecked uids(listbox_uids) and checked uids (uids)
@@ -370,7 +371,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if selection is not None:
         selection.edit(invert_mode=invert_mode)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionInvertModeFor')
+    security.declareProtected(ERP5Permissions.View, 'getSelectionInvertModeUidListFor')
     def getSelectionInvertModeUidListFor(self, selection_name, REQUEST=None):
       """Get the 'invert_mode' parameter of a selection.
       """
