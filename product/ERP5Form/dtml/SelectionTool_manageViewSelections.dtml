@@ -16,7 +16,7 @@ This page show the active selections for the current user.
     <th> Selection Parameters </th>
   </tr>
 
-  <dtml-in getSelectionNames>
+  <dtml-in getSelectionNameList>
    <tr>
     <td> <dtml-var sequence-item></td>
     <td> <dtml-var 

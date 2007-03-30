@@ -40,6 +40,7 @@ from zLOG import LOG
 from Testing import ZopeTestCase
 from Products.ERP5Type.Utils import get_request
 from Products.ERP5Form.Selection import Selection
+from Products.ERP5Type import allowMemcachedTool
 
 
 class TestSelectionTool(ERP5TypeTestCase):
@@ -50,9 +51,7 @@ class TestSelectionTool(ERP5TypeTestCase):
     return "SelectionTool"
 
   def getBusinessTemplateList(self):
-    # Use the same framework as the functional testing for convenience.
-    # This adds some specific portal types and skins.
-    return ('erp5_ui_test',)
+    return tuple()
 
   def afterSetUp(self):
     uf = self.getPortal().acl_users
@@ -63,10 +62,15 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.portal_selections.setSelectionFor('test_selection', Selection())
     self.portal_selections.setSelectionParamsFor('test_selection', {'key':'value'})
 
-  def testGetSelectionNames(self, quiet=quiet, run=run_all_test):
+  def testGetSelectionNameList(self, quiet=quiet, run=run_all_test):
     if not run: return
-    self.assertEquals(['test_selection'],
-                      self.portal_selections.getSelectionNames())
+    if allowMemcachedTool():
+      from Products.ERP5Form.SelectionTool import SelectionError
+      self.assertRaises(SelectionError,
+                        self.portal_selections.getSelectionNameList)
+    else:
+      self.assertEquals(['test_selection'],
+                        self.portal_selections.getSelectionNameList())
 
   def testGetSelectionFor(self, quiet=quiet, run=run_all_test):
     if not run: return

@@ -41,6 +41,8 @@ from Products.ERP5.Document.Domain import Domain
 
 from zLOG import LOG
 
+from Products.ERP5Type.Tool.MemcachedTool import MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID
+
 class Selection(Acquisition.Implicit, Traversable, Persistent):
     """
         Selection
@@ -156,6 +158,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
     security.declarePrivate('edit')
     def edit(self, params=None, **kw):
+        setattr(self, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID, True)
         if params is not None:
           self.params = {}
           for key in params.keys():

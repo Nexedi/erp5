@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002,2007 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -37,6 +37,7 @@ from Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
 from ZTUtils import make_query
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
+from Products.ERP5Type import allowMemcachedTool
 from Products.ERP5Form import _dtmldir
 from Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
@@ -118,21 +119,17 @@ class SelectionTool( UniqueObject, SimpleItem ):
       form_id = dialog_id or REQUEST.get('dialog_id', None) or form_id or REQUEST.get('form_id', 'view')
       return getattr(context, form_id)()
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
-    def getSelectionNames(self, context=None, REQUEST=None):
+    security.declareProtected(ERP5Permissions.View, 'getSelectionNameList')
+    def getSelectionNameList(self, context=None, REQUEST=None):
       """
         Returns the selection names of the current user.
-
-        NOTE - The naming getSelectionNames is wrong. It
-        should be getSelectionNameList to follow conventions
       """
-      if context is None: context = self
-      if not REQUEST:
-        REQUEST = get_request()
-      if hasattr(self, 'selection_data'):
-        user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-        if user_id is not None and self.selection_data.has_key(user_id):
-          return self.selection_data[user_id].keys()
+      if allowMemcachedTool():
+        raise SelectionError, 'getSelectionNameList is not supported if you use memcached tool.'
+      user_id = self.portal_membership.getAuthenticatedMember().getUserName()
+      if user_id is not None:
+        prefix = '%s-' % user_id
+        return [x.replace(prefix, '', 1) for x in self.getSelectionContainer().keys() if x.startswith(prefix)]
       return []
 
     security.declareProtected(ERP5Permissions.View, 'callSelectionFor')
@@ -143,23 +140,30 @@ class SelectionTool( UniqueObject, SimpleItem ):
         return None
       return selection(context=context)
 
+    def getSelectionContainer(self):
+      """
+        Return the selection container.
+      """
+      value = getattr(self, '_v_selection_data', None)
+      if value is None:
+        if allowMemcachedTool():
+          value = self.getPortalObject().portal_memcached.getMemcachedDict(key_prefix='selection_tool')
+        else:
+          value = PersistentMapping()
+          value.set = value.__setitem__
+        setattr(self, '_v_selection_data', value)
+      return value
+
     security.declareProtected(ERP5Permissions.View, 'getSelectionFor')
     def getSelectionFor(self, selection_name, REQUEST=None):
       """
         Returns the selection instance for a given selection_name
       """
-      if REQUEST is None:
-        REQUEST = get_request()
-
-      if not hasattr(self, 'selection_data'):
-        self.selection_data = PersistentMapping()
       user_id = self.portal_membership.getAuthenticatedMember().getUserName()
       if user_id is not None:
-        if not self.selection_data.has_key(user_id):
-          self.selection_data[user_id] = PersistentMapping()
         if isinstance(selection_name, (tuple, list)):
           selection_name = selection_name[0]
-        selection = self.selection_data[user_id].get(selection_name, None)
+        selection = self.getSelectionContainer().get('%s-%s' % (user_id, selection_name))
         if selection is not None:
           return selection.__of__(self)
 
@@ -172,42 +176,10 @@ class SelectionTool( UniqueObject, SimpleItem ):
         # Set the name so that this selection itself can get its own name.
         selection_object.edit(name = selection_name)
 
-      if not REQUEST:
-        REQUEST = get_request()
-      # New system: store directly - bypass session
-      if 0:
-        user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-        if user_id is not None:
-          self.selection_data.set((user_id, selection_name), selection_object)
-        return
-
-      # Another method: local dict
-      if 0:
-        if not hasattr(self, 'selection_data'):
-          self.selection_data = PersistentMapping()
-        user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-        if user_id is not None:
-          self.selection_data[(user_id, selection_name)] = selection_object
-        return
-
-      # Another method: local dict but 2 stage to prevent user conflict
-      if 1:
-        if not hasattr(self, 'selection_data'):
-          self.selection_data = PersistentMapping()
-        user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-        if user_id is not None:
-          if not self.selection_data.has_key(user_id):
-            self.selection_data[user_id] = PersistentMapping()
-          self.selection_data[user_id][selection_name] = aq_base(selection_object)
-        return
-
-      #try: CAUSES PROBLEMS WHY ??
-      if 1:
-        session = REQUEST.SESSION
-        selection_name = selection_name + '_selection_object'
-        session[selection_name] = selection_object
-      #except:
-      #  LOG('WARNING ERP5Form SelectionTool',0,'Could not set Selection')
+      user_id = self.portal_membership.getAuthenticatedMember().getUserName()
+      if user_id is not None:
+        self.getSelectionContainer().set('%s-%s' % (user_id, selection_name), aq_base(selection_object))
+      return
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionParamsFor')
     def getSelectionParamsFor(self, selection_name, params=None, REQUEST=None):
@@ -352,7 +324,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         return selection.getListUrl()
       else:
         return None
-    
+
     security.declareProtected(ERP5Permissions.View, 'getSelectionInvertModeFor')
     def getSelectionInvertModeFor(self, selection_name, REQUEST=None):
       """Get the 'invert_mode' parameter of a selection.
@@ -746,7 +718,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string)
-                                            
+
     security.declareProtected(ERP5Permissions.View, 'setDomainRootFromParam')
     def setDomainRootFromParam(self, REQUEST, selection_name, domain_root):
       if REQUEST is None:
@@ -1224,7 +1196,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     security.declarePublic('buildSQLExpressionFromDomainSelection')
     def buildSQLExpressionFromDomainSelection(self, selection_domain,
-                                              table_map=None, domain_id=None, 
+                                              table_map=None, domain_id=None,
                                               exclude_domain_id=None,
                                               strict_membership=0,
                                               join_table="catalog",
@@ -1324,8 +1296,8 @@ class TreeListLine:
     return self.exception_uid_list
 
 
-def makeTreeList(here, form, root_dict, report_path, base_category, 
-		  depth, unfolded_list, form_id, selection_name, 
+def makeTreeList(here, form, root_dict, report_path, base_category,
+		  depth, unfolded_list, form_id, selection_name,
 		  report_depth, is_report_opened=1, list_method=None,
 		  filtered_portal_types=[] ,sort_on = (('id', 'ASC'),)):
   """
@@ -1375,7 +1347,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
 
   tree_list = []
   if root is None: return tree_list
-  
+
   if base_category == 'parent':
     # Use searchFolder as default
     if list_method is None:
@@ -1400,14 +1372,14 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
             if sub_o is not None and hasattr(aq_base(root), 'objectValues'):
               exception_uid_list.append(sub_o.getUid())
           # Summary (open)
-          tree_list += [TreeListLine(o, 1, depth, 1, selection_domain, exception_uid_list)] 
+          tree_list += [TreeListLine(o, 1, depth, 1, selection_domain, exception_uid_list)]
           if is_report_opened :
             # List (contents, closed, must be strict selection)
-            tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, exception_uid_list)] 
-          
-          tree_list += makeTreeList(here, form, new_root_dict, report_path, 
+            tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, exception_uid_list)]
+
+          tree_list += makeTreeList(here, form, new_root_dict, report_path,
       		    base_category, depth + 1, unfolded_list, form_id, 
-      		    selection_name, report_depth, 
+      		    selection_name, report_depth,
       		    is_report_opened=is_report_opened, sort_on=sort_on)
         else:
           tree_list += [TreeListLine(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
