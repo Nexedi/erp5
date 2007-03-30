@@ -114,7 +114,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         del REQUEST.form['report_depth']
 
       if query_string is not None:
-        LOG('SelectionTool', 0, 'DEPRECATED: _redirectToOriginalForm got called with a query_string. The variables must be passed in REQUEST.form.')
+        warnings.warn('DEPRECATED: _redirectToOriginalForm got called with a query_string. The variables must be passed in REQUEST.form.',
+                      DeprecationWarning)
       context = REQUEST['PARENTS'][0]
       form_id = dialog_id or REQUEST.get('dialog_id', None) or form_id or REQUEST.get('form_id', 'view')
       return getattr(context, form_id)()
@@ -131,6 +132,14 @@ class SelectionTool( UniqueObject, SimpleItem ):
         prefix = '%s-' % user_id
         return [x.replace(prefix, '', 1) for x in self.getSelectionContainer().keys() if x.startswith(prefix)]
       return []
+
+    # backward compatibility
+    security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
+    def getSelectionNames(self, context=None, REQUEST=None):
+      warnings.warn("getSelectionNames() is deprecated.\n"
+                    "Please use getSelectionNameList() instead.",
+                    DeprecationWarning)
+      return self.getSelectionNameList(context, REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'callSelectionFor')
     def callSelectionFor(self, selection_name, context=None, REQUEST=None):

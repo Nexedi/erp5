@@ -68,7 +68,11 @@ class TestSelectionTool(ERP5TypeTestCase):
       from Products.ERP5Form.SelectionTool import SelectionError
       self.assertRaises(SelectionError,
                         self.portal_selections.getSelectionNameList)
+      self.assertRaises(SelectionError,
+                        self.portal_selections.getSelectionNames)
     else:
+      self.assertEquals(['test_selection'],
+                        self.portal_selections.getSelectionNames())
       self.assertEquals(['test_selection'],
                         self.portal_selections.getSelectionNameList())
 
