@@ -32,6 +32,8 @@ from Products.ERP5Type import Permissions, _dtmldir
 from AccessControl import ClassSecurityInfo
 from Globals import DTMLFile
 
+MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID = '_v_memcached_edited'
+
 if allowMemcachedTool():
   import memcache
   import traceback
@@ -89,6 +91,10 @@ if allowMemcachedTool():
         would not be ignored.
       """
       try:
+        for key, value in self.local_cache.iteritems():
+          if getattr(value, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID, None):
+            delattr(value, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID)
+            self.scheduled_action_dict[key] = UPDATE_ACTION
         for key, action in self.scheduled_action_dict.iteritems():
           if action is UPDATE_ACTION:
             self.memcached_connection.set(key, self.local_cache[key], 0)
