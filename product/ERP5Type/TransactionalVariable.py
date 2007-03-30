@@ -93,4 +93,4 @@ def getTransactionalVariable(context):
     return instance
   except AttributeError:
     transactional_variable_pool.instance = TransactionalVariable()
-    return getTransactionalVariable()
+    return getTransactionalVariable(context)
