@@ -28,7 +28,6 @@
 
 import socket
 import urllib
-import traceback
 import threading
 import sys
 from types import TupleType, StringType
@@ -49,6 +48,7 @@ from Acquisition import aq_base
 from Acquisition import aq_inner
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ActivityBuffer import ActivityBuffer
+from zExceptions import ExceptionFormatter
 
 from ZODB.POSException import ConflictError
 
@@ -189,7 +189,8 @@ class Message:
       self.is_executed = 0
       self.exc_type = sys.exc_info()[0]
       self.exc_value = str(sys.exc_info()[1])
-      self.traceback = ''.join(traceback.format_tb(sys.exc_info()[2]))
+      self.traceback = ''.join(ExceptionFormatter.format_exception(
+                               *sys.exc_info()))
       LOG('ActivityTool', WARNING,
           'Could not call method %s on object %s' % (
           self.method_id, self.object_path), error=sys.exc_info())
@@ -219,7 +220,7 @@ Subject: %s
 Document: %s
 Method: %s
 Exception: %s %s
-Traceback:
+
 %s
 """ % (activity_tool.email_from_address, user_email, message,
        message, '/'.join(self.object_path), self.method_id,
