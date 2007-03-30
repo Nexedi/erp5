@@ -133,6 +133,7 @@ return object.getPath() + \'/\' + method + \'?\' + make_query(kw)\n
                             <string>make_query</string>
                             <string>_getattr_</string>
                             <string>index</string>
+                            <string>context</string>
                             <string>object</string>
                             <string>method</string>
                             <string>str</string>
@@ -149,6 +150,7 @@ return object.getPath() + \'/\' + method + \'?\' + make_query(kw)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
               </tuple>

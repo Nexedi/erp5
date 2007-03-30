@@ -127,6 +127,7 @@ return url\n
                             <string>selection</string>
                             <string>_getattr_</string>
                             <string>index</string>
+                            <string>context</string>
                             <string>object</string>
                             <string>None</string>
                             <string>url</string>
@@ -142,6 +143,7 @@ return url\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
               </tuple>

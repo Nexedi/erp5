@@ -70,8 +70,6 @@
             <key> <string>_body</string> </key>
             <value> <string>from ZTUtils import make_query\n
 \n
-index = selection.getIndex()\n
-name = selection.getName()\n
 object = brain.getObject()\n
 if object is None:\n
   return None\n
@@ -131,8 +129,6 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
-                            <string>index</string>
-                            <string>name</string>
                             <string>object</string>
                             <string>None</string>
                             <string>url</string>

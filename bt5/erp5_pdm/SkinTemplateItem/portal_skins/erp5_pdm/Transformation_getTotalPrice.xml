@@ -68,9 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if selection!=None:\n
+            <value> <string>if selection_name is not None:\n
 \n
-  reference_variation_category_list = selection.getParams()[\'reference_variation_category_list\' ]\n
+  reference_variation_category_list = context.portal_selections.getSelectionParamsFor(selection_name)[\'reference_variation_category_list\']\n
   request = context.REQUEST\n
   request.other[\'categories\'] = reference_variation_category_list\n
   tmp_context = context.asContext(context=context, REQUEST=request)\n
@@ -105,7 +105,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None</string> </value>
+            <value> <string>selection=None, selection_name=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,18 +125,19 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>None</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
-                            <string>reference_variation_category_list</string>
                             <string>context</string>
+                            <string>reference_variation_category_list</string>
                             <string>request</string>
                             <string>_write_</string>
                             <string>tmp_context</string>
@@ -154,6 +155,7 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>
