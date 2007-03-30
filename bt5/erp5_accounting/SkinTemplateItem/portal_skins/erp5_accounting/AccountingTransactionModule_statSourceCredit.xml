@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>params = selection.getParams()\n
+            <value> <string>params = context.portal_selections.getSelectionParamsFor(selection_name)\n
 \n
 params[\'stat\'] = 1\n
 params[\'omit_input\'] = 1\n
@@ -98,7 +98,7 @@ return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, **kw</string> </value>
+            <value> <string>selection=None, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,13 +118,14 @@ return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>params</string>

@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># XXX bad name: AccountingTransaction_getMirrorSection sounds more consistent\n
-section_category=selection.getParams().get(\'section_category\')\n
+section_category=context.portal_selections.getSelectionParamsFor(selection_name).get(\'section_category\')\n
 if not section_category:\n
   return\n
 \n
@@ -100,7 +100,7 @@ if mirror_section is not None:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection=None, **kwd</string> </value>
+            <value> <string>brain, selection=None, selection_name=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -120,7 +120,7 @@ if mirror_section is not None:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -128,6 +128,7 @@ if mirror_section is not None:\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>kwd</string>
                             <string>_getattr_</string>
                             <string>section_category</string>
