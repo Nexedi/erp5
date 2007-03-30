@@ -147,7 +147,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       return map((lambda (id, val): val), res)
 
     # Return Cache
-    _listGlobalActions = CachingMethod(_listGlobalActions, id='listGlobalActions', cache_duration = 300)
+    _listGlobalActions = CachingMethod(_listGlobalActions, id='listGlobalActions', cache_factory = 'erp5_ui_short')
     user = str(_getAuthenticatedUser(self))
     return _listGlobalActions(user=user, id=self.id, portal_path=self._getPortalRoot().getPhysicalPath())
 
