@@ -70,8 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from ZTUtils import make_query\n
 \n
-index = selection.getIndex()\n
-name = selection.getName()\n
+index = context.portal_selections.getSelectionIndexFor(selection_name)\n
 object = brain.getObject()\n
 \n
 # this is for domain_tree mode\n
@@ -80,7 +79,7 @@ if object.getPortalType() == "Category" : \n
 \n
 method = \'Account_viewAccountingTransactionList\'\n
 kw = { \'selection_index\': str(index),\n
-       \'selection_name\' : name, \n
+       \'selection_name\' : selection_name, \n
        \'reset\' : \'1\', \n
      }\n
 \n
@@ -101,7 +100,7 @@ return object.getPath() + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **kwd</string> </value>
+            <value> <string>brain=None, selection=None, selection_name=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,7 +120,7 @@ return object.getPath() + \'/\' + method + \'?\' + make_query(kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -134,7 +133,6 @@ return object.getPath() + \'/\' + method + \'?\' + make_query(kw)\n
                             <string>make_query</string>
                             <string>_getattr_</string>
                             <string>index</string>
-                            <string>name</string>
                             <string>object</string>
                             <string>method</string>
                             <string>str</string>

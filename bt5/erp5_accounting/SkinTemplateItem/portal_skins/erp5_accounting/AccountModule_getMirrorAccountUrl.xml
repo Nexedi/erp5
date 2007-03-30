@@ -70,14 +70,13 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-index = selection.getIndex()\n
-name = selection.getName()\n
+index = context.portal_selections.getSelectionIndexFor(selection_name)\n
 object = brain.getObject()\n
 object = object.getDestinationValue()\n
 if object is None:\n
   url = None\n
 else:\n
-  url = object.absolute_url() + \'/view?selection_index=%s&selection_name=%s&reset=1\' % (index, name)\n
+  url = object.absolute_url() + \'/view?selection_index=%s&selection_name=%s&reset=1\' % (index, selection_name)\n
 \n
 return url\n
 
@@ -98,7 +97,7 @@ return url\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None</string> </value>
+            <value> <string>brain=None, selection=None, selection_name=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,7 +117,7 @@ return url\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -128,7 +127,6 @@ return url\n
                             <string>selection</string>
                             <string>_getattr_</string>
                             <string>index</string>
-                            <string>name</string>
                             <string>object</string>
                             <string>None</string>
                             <string>url</string>
