@@ -230,6 +230,17 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>selection_name</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string>None</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>selection_params</string> </key>
                                 <value>
                                   <dictionary>
@@ -292,31 +303,32 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>selection</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>selection_params</string>
-                            <string>select_expression</string>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>to_date</string>
-                            <string>node</string>
-                            <string>resource</string>
-                            <string>entity</string>
-                            <string>stat</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>amount</string>
-                            <string>amount_range_min</string>
-                            <string>amount_range_max</string>
-                            <string>creation_date_range_min</string>
-                            <string>creation_date_range_max</string>
-                            <string>section_category</string>
-                            <string>count</string>
-                            <string>transaction_uid</string>
-                            <string>specific_reference</string>
-                            <string>no_limit</string>
-                            <string>search_result_keys</string>
+<string>selection</string>
+<string>selection_name</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>selection_params</string>
+<string>select_expression</string>
+<string>from_date</string>
+<string>at_date</string>
+<string>to_date</string>
+<string>node</string>
+<string>resource</string>
+<string>entity</string>
+<string>stat</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>amount</string>
+<string>amount_range_min</string>
+<string>amount_range_max</string>
+<string>creation_date_range_min</string>
+<string>creation_date_range_max</string>
+<string>section_category</string>
+<string>count</string>
+<string>transaction_uid</string>
+<string>specific_reference</string>
+<string>no_limit</string>
+<string>search_result_keys</string>
                           </list>
                         </value>
                     </item>
@@ -334,6 +346,7 @@
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>selection\r\n
+selection_name=None\r\n
 selection_domain\r\n
 selection_report\r\n
 selection_params=""\r\n
@@ -524,9 +537,9 @@ WHERE\n
   <dtml-if omit_output> AND stock.total_price > 0\n
                         AND stock.uid = movement.uid\n
   </dtml-if>\n
-  <dtml-if expr="selection is not None and selection.isInvertMode() and len(selection.getInvertModeUidList()) > 0">\n
+  <dtml-if expr="selection_name is not None and portal_selections.getSelectionInvertModeFor(selection_name) and len(context.portal_selections.getSelectionInvertModeUidListFor(selection_name)) > 0">\n
     AND ( 0 = 1\n
-      <dtml-in expr="selection.getInvertModeUidList()">\n
+      <dtml-in expr="context.portal_selections.getSelectionInvertModeUidListFor(selection_name)">\n
         OR catalog.uid = <dtml-var sequence-item>\n
       </dtml-in>\n
     )\n
@@ -710,9 +723,9 @@ WHERE\n
   <dtml-if omit_output> AND stock.total_price > 0\n
                         AND stock.uid = movement.uid\n
   </dtml-if>\n
-  <dtml-if expr="selection is not None and selection.isInvertMode() and len(selection.getInvertModeUidList()) > 0">\n
+  <dtml-if expr="selection_name is not None and portal_selections.getSelectionInvertModeFor(selection_name) and len(context.portal_selections.getSelectionInvertModeUidListFor(selection_name)) > 0">\n
     AND ( 0 = 1\n
-      <dtml-in expr="selection.getInvertModeUidList()">\n
+      <dtml-in expr="context.portal_selections.getSelectionInvertModeUidListFor(selection_name)">\n
         OR catalog.uid = <dtml-var sequence-item>\n
       </dtml-in>\n
     )\n

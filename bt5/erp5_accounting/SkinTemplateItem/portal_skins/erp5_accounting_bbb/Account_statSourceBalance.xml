@@ -78,8 +78,8 @@ precision = context.Base_getPreferredPrecision()\n
 ###\n
 # Merge selection parameters in kw\n
 selection_params = None\n
-if selection is not None:\n
-  selection_params = selection.getParams()\n
+if selection_name is not None:\n
+  selection_params = context.portal_selections.getSelectionParamsFor(selection_name)\n
   kw.update(selection_params)\n
 \n
 ###\n
@@ -224,7 +224,7 @@ return context.Base_getRoundValue(row.total_price or 0.0, precision)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, **kw</string> </value>
+            <value> <string>selection, selection_name, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -252,13 +252,14 @@ return context.Base_getRoundValue(row.total_price or 0.0, precision)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>

@@ -69,11 +69,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># XXX bad name: AccountingTransaction_getMirrorSectionTitle sounds more consistent\n
-if selection is None:\n
+if selection_name is None:\n
   # TODO: this should definitivly be REQUEST chached\n
-  selection = context.portal_selections.getSelectionFor(\'accounting_selection\')\n
+  selection_name = \'accounting_selection\'\n
 \n
-section_category=selection.getParams().get(\'section_category\')\n
+section_category=context.portal_selections.getSelectionParamsFor(selection_name).get(\'section_category\')\n
 if not section_category:\n
   return\n
 \n
@@ -102,7 +102,7 @@ return transaction.getSourceSectionTitle()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **kw</string> </value>
+            <value> <string>brain=None, selection=None, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,7 +122,7 @@ return transaction.getSourceSectionTitle()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -130,6 +130,7 @@ return transaction.getSourceSectionTitle()\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>

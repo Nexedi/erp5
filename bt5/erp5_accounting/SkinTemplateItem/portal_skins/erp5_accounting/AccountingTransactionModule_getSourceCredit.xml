@@ -68,11 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if selection is None:\n
-  selection = context.getPortalObject()\\\n
-              .portal_selections.getSelectionFor(\'accounting_selection\')\n
-if selection is not None:\n
-  params.update(selection.getParams())\n
+            <value> <string>if selection_name is None:\n
+  selection_name = \'accounting_selection\'\n
+params.update(context.portal_selections.getSelectionParamsFor(selection_name))\n
 kw = {}\n
 kw[\'section_category\'] = params.get(\'section_category\')\n
 kw[\'stat\'] = 1\n
@@ -80,7 +78,7 @@ kw[\'omit_input\'] = 1\n
 kw[\'transaction_uid\'] = context.getUid()\n
 \n
 result = context.AccountingTransactionModule_zGetAccountingTransactionList(\n
-                selection=selection, selection_params=kw, **kw)\n
+                selection_name=selection_name, selection_params=kw, **kw)\n
 \n
 if result:\n
   row = result[0]\n
@@ -103,7 +101,7 @@ return 0.\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **params</string> </value>
+            <value> <string>brain=None, selection=None, selection_name=None, **params</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,7 +121,7 @@ return 0.\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -131,6 +129,7 @@ return 0.\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>params</string>
                             <string>None</string>
                             <string>_getattr_</string>
