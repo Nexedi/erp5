@@ -675,7 +675,7 @@ class Base( CopyContainer,
       going to edit the related object
     """
     # Push context to prevent loop
-    tv = getTransactionalVariable()
+    tv = getTransactionalVariable(self)
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key, base_category,
@@ -794,7 +794,7 @@ class Base( CopyContainer,
 
     """
     # Push context to prevent loop
-    tv = getTransactionalVariable()
+    tv = getTransactionalVariable(self)
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,

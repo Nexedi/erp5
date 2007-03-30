@@ -225,7 +225,7 @@ allow_class(CachingMethod)
 def getReadOnlyTransactionCache(context):
   """Get the transaction cache.
   """
-  tv = getTransactionalVariable()
+  tv = getTransactionalVariable(context)
   try:
     return tv['read_only_transaction_cache']
   except KeyError:
@@ -234,13 +234,13 @@ def getReadOnlyTransactionCache(context):
 def enableReadOnlyTransactionCache(context):
   """Enable the transaction cache.
   """
-  tv = getTransactionalVariable()
+  tv = getTransactionalVariable(context)
   tv['read_only_transaction_cache'] = {}
 
 def disableReadOnlyTransactionCache(context):
   """Disable the transaction cache.
   """
-  tv = getTransactionalVariable()
+  tv = getTransactionalVariable(context)
   try:
     del tv['read_only_transaction_cache']
   except KeyError:

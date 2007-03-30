@@ -73,7 +73,7 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
         ZopeTestCase._print('\n '+message)
         LOG('Testing... ', 0, message)
 
-      tv = getTransactionalVariable()
+      tv = getTransactionalVariable(self.getPortal())
       self.failIfEqual(tv, None)
 
       # Test frequently used dict methods. This does not cover everything,
@@ -106,7 +106,7 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
         ZopeTestCase._print('\n '+message)
         LOG('Testing... ', 0, message)
 
-      tv = getTransactionalVariable()
+      tv = getTransactionalVariable(self.getPortal())
       self.failIfEqual(tv, None)
 
       tv.clear()
@@ -134,7 +134,7 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
         ZopeTestCase._print('\n '+message)
         LOG('Testing... ', 0, message)
 
-      tv = getTransactionalVariable()
+      tv = getTransactionalVariable(self.getPortal())
       self.failIfEqual(tv, None)
 
       tv.clear()

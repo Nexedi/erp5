@@ -66,13 +66,7 @@ class TransactionalVariable(TM, IterableUserDict):
   _finalize = None
 
   def _begin(self, *ignored):
-    """It is required to attach this instance to somewhere in
-    ZODB so that _finish or _abort will be called at the end
-    of a transaction. A portal object is used at the moment."""
-    # Is there any other way to retrieve a portal object?
-    from Products.ERP5Type.Utils import get_request
-    portal = get_request()['PARENTS'].getPortalObject()
-    portal._v_erp5_transactional_variable = self
+    pass
 
   def _finish(self, *ignored):
     self.clear()
@@ -80,16 +74,23 @@ class TransactionalVariable(TM, IterableUserDict):
   def _abort(self, *ignored):
     self.clear()
 
+  def __hash__(self):
+    return hash(id(self))
+
   def __setitem__(self, key, value):
     IterableUserDict.__setitem__(self, key, value)
     self._register()
 
 transactional_variable_pool = local()
 
-def getTransactionalVariable():
+def getTransactionalVariable(context):
   """Return a transactional variable."""
+  portal = context.portal_url.getPortalObject()
   try:
-    return transactional_variable_pool.instance
+    instance = transactional_variable_pool.instance
+    if getattr(portal, '_v_erp5_transactional_variable', None) is not instance:
+      portal._v_erp5_transactional_variable = instance
+    return instance
   except AttributeError:
     transactional_variable_pool.instance = TransactionalVariable()
-    return transactional_variable_pool.instance
+    return getTransactionalVariable()
