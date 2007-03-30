@@ -334,6 +334,8 @@ class DocumentConstructor(Method):
       o = self.klass(id)
       if activate_kw is not None:
         o.setDefaultActivateParameters(**activate_kw)
+      if is_indexable is not None:   
+        o.isIndexable = is_indexable
       folder._setObject(id, o)
       o = folder._getOb(id)
       # if no activity tool, the object has already an uid
