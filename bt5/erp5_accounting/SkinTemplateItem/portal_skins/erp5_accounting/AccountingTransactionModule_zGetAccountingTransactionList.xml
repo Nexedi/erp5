@@ -537,9 +537,9 @@ WHERE\n
   <dtml-if omit_output> AND stock.total_price > 0\n
                         AND stock.uid = movement.uid\n
   </dtml-if>\n
-  <dtml-if expr="selection_name is not None and portal_selections.getSelectionInvertModeFor(selection_name) and len(context.portal_selections.getSelectionInvertModeUidListFor(selection_name)) > 0">\n
+  <dtml-if expr="selection_name is not None and portal_selections.getSelectionInvertModeFor(selection_name) and len(portal_selections.getSelectionInvertModeUidListFor(selection_name)) > 0">\n
     AND ( 0 = 1\n
-      <dtml-in expr="context.portal_selections.getSelectionInvertModeUidListFor(selection_name)">\n
+      <dtml-in expr="portal_selections.getSelectionInvertModeUidListFor(selection_name)">\n
         OR catalog.uid = <dtml-var sequence-item>\n
       </dtml-in>\n
     )\n
@@ -723,9 +723,9 @@ WHERE\n
   <dtml-if omit_output> AND stock.total_price > 0\n
                         AND stock.uid = movement.uid\n
   </dtml-if>\n
-  <dtml-if expr="selection_name is not None and portal_selections.getSelectionInvertModeFor(selection_name) and len(context.portal_selections.getSelectionInvertModeUidListFor(selection_name)) > 0">\n
+  <dtml-if expr="selection_name is not None and portal_selections.getSelectionInvertModeFor(selection_name) and len(portal_selections.getSelectionInvertModeUidListFor(selection_name)) > 0">\n
     AND ( 0 = 1\n
-      <dtml-in expr="context.portal_selections.getSelectionInvertModeUidListFor(selection_name)">\n
+      <dtml-in expr="portal_selections.getSelectionInvertModeUidListFor(selection_name)">\n
         OR catalog.uid = <dtml-var sequence-item>\n
       </dtml-in>\n
     )\n
