@@ -131,7 +131,7 @@ class AlarmTool(BaseTool):
     current_date = DateTime()
     for alarm in self.getAlarmList(to_active=1):
       if alarm is not None:
-        user = alarm.getOwner()
+        user = alarm.getWrappedOwner()
         newSecurityManager(self.REQUEST, user)
         if alarm.isActive() or not alarm.isEnabled():
           # do nothing if already active, or not enabled
