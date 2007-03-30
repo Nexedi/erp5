@@ -6,8 +6,9 @@
   <item>Pay Sheet Cell</item>
  </portal_type>
  <portal_type id="Pay Sheet Transaction">
-  <item>Pay Sheet Line</item>
   <item>Pay Sheet Transaction Line</item>
+  <item>Pay Sheet Line</item>
+  <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Payroll Service Module">
   <item>Payroll Service</item>
