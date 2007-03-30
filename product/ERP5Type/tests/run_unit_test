@@ -15,7 +15,7 @@ then
 fi
 
 # Excluded tests must be separated by whitespaces
-excluded_test_list="testPurchaseOrder testCatalogSecurity"
+excluded_test_list="testCatalogSecurity"
 
 test_list=`/bin/ls -1 $DIRECTORY/*/tests/test*.py`
 
