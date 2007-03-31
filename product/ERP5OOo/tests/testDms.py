@@ -70,9 +70,6 @@ import os
 from Products.ERP5Type import product_path
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
 
-# XXX set it to an appropriate value
-erp5_port=9090
-
 class TestDocument(ERP5TypeTestCase):
   """
   """
