@@ -26,6 +26,23 @@
 #
 ##############################################################################
 
+"""
+  A test suite for Document Management System functionality.
+  This will test:
+  - creating text documents
+  - setting properties of a document, assigning local roles
+  - setting relations between documents (explicit and implicity)
+  - searching in basic and advanced modes
+  - document publication workflow settings
+  - sourcing external content
+  - (...)
+  This will NOT test:
+  - contributing files of various types
+  - convertion between many formats
+  - metadata extraction and editing
+  - email ingestion
+  These are subject to another suite "testIngestion".
+"""
 
 
 #
@@ -38,9 +55,6 @@ import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
-
-class FileObject(file):
-  filename=''
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
@@ -68,6 +82,8 @@ class TestDocument(ERP5TypeTestCase):
 
   def getTitle(self):
     return "DMS"
+
+  ## setup
 
   def afterSetUp(self, quiet=1, run=1):
     self.createCategories()
@@ -99,13 +115,14 @@ class TestDocument(ERP5TypeTestCase):
         else:
           path = path[cat]
 
+  ## helper methods
+
   def getUserFolder(self):
     return self.getPortal().acl_users
 
   def createObjects(self):
     if not hasattr(self.getPortal().person_module,'1'):
       p1=self.getPortal().person_module.newContent(portal_type='Person',id='1',first_name='John',last_name='McCartney',reference='john',career_role='internal')
-      #self.getWorkflowTool().doActionFor(p1,'validate_action')
       get_transaction().commit()
       self.tic()
 
@@ -120,24 +137,9 @@ class TestDocument(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def test_01_HasEverything(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Has Everything ')
-      LOG('Testing... ',0,'testHasEverything')
-    self.failUnless(self.getCategoryTool()!=None)
-    self.failUnless(self.getSimulationTool()!=None)
-    self.failUnless(self.getTypeTool()!=None)
-    self.failUnless(self.getSQLConnection()!=None)
-    self.failUnless(self.getCatalogTool()!=None)
-    self.failUnless(self.getWorkflowTool()!=None)
-
   def _addRoleToDoc(self,doc):
     role=doc.newContent(portal_type='Role Definition')
     role._edit(agent='person_module/1',role_name='Assignor')
-
-  #def printAndCheck(self,doc):
-    #self.assert_(u'Auditor' in doc.__ac_local_roles__.get('HQ',[]))
 
   def createTestDocument(self):
     dm=self.getPortal().document_module
@@ -149,6 +151,20 @@ class TestDocument(ERP5TypeTestCase):
     f.close()
     doctext.convert()
     return doctext
+
+  ## tests
+
+  def test_01_HasEverything(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Has Everything ')
+      LOG('Testing... ',0,'testHasEverything')
+    self.failUnless(self.getCategoryTool()!=None)
+    self.failUnless(self.getSimulationTool()!=None)
+    self.failUnless(self.getTypeTool()!=None)
+    self.failUnless(self.getSQLConnection()!=None)
+    self.failUnless(self.getCatalogTool()!=None)
+    self.failUnless(self.getWorkflowTool()!=None)
 
   def test_02_ObjectCreation(self,quiet=0,run=run_all_test):
     if not quiet:
@@ -162,76 +178,6 @@ class TestDocument(ERP5TypeTestCase):
     self.tic()
     u=self.getTestUser()
     self.failUnless('Assignor' in u.getRolesInContext(doctext))
-
-  def test_03_BasicConversion(self,quiet=0,run=run_all_test):
-    if not quiet:
-      ZopeTestCase._print('\nTest Basic Conversion')
-      LOG('Testing... ',0,'test_03_BasicConversion')
-    dm=self.getPortal().document_module
-    doctext=dm.newContent(portal_type='Text')
-    doctext._getServerCoordinate=lambda:('127.0.0.1',8080)
-    f=FileObject(os.getenv('INSTANCE_HOME')+'/../Products/ERP5OOo/tests/test.doc')
-    f.filename='test.doc'
-    doctext._edit(file=f)
-    f.close()
-    self.assert_(not doctext.hasOOFile())
-    ZopeTestCase._print('\n originalloaded '+str(doctext.getSourceReference()))
-    ZopeTestCase._print('\n hasOOFile '+str(doctext.hasOOFile()))
-    doctext.convert()
-    self.assert_(doctext.hasOOFile())
-    ZopeTestCase._print('\n hasOOFile '+str(doctext.hasOOFile()))
-    tgts=doctext.getTargetFormatItemList()
-    tgtext=[t[1] for t in tgts]
-    self.assert_('pdf' in tgtext)
-    self.assertEquals('keywords',doctext.getSubjectList()[0])
-    self.assert_(doctext.getSearchableText().find('adadadfa'))
-    
-  def test_04_FileGeneration(self,quiet=0,run=run_all_test):
-    if not quiet:
-      ZopeTestCase._print('\nTest File Generation')
-      LOG('Testing... ',0,'test_04_FileGeneration')
-    doctext=self.createTestDocument()
-    doctext.getTargetFile('pdf')
-    self.assert_(doctext.hasConversion(format = 'pdf'))
-    doctext.getTargetFile('doc')
-    self.assert_(doctext.hasConversion(format = 'doc'))
-    doctext.getTargetFile('txt')
-    self.assert_(doctext.hasConversion(format = 'txt'))
-    doctext.getTargetFile('html-writer')
-    self.assert_(doctext.hasConversion(format = 'html-writer'))
-    doctext.getTargetFile('rtf')
-    self.assert_(doctext.hasConversion(format = 'rtf'))
-    self.failIf(doctext.hasSnapshot())
-    doctext.createSnapshot()
-    self.failUnless(doctext.hasSnapshot())
-    # XXX why this line fails???
-    # self.assertRaises(ConversionError,doctext.createSnapshot)
-
-  def test_05_OtherFunctions(self,quiet=0,run=run_all_test):
-    if not quiet:
-      ZopeTestCase._print('\nTest Other Functions')
-      LOG('Testing... ',0,'test_05_OtherFunctions')
-    doctext=self.createTestDocument()
-    #ZopeTestCase._print('\n'+doctext.getCacheInfo())
-    mtype=doctext.guessMimeType('file.doc')
-    self.assertEquals(mtype,'application/msword')
-
-  def test_06_ExternalDocument(self,quiet=0,run=run_all_test):
-    if not quiet:
-      ZopeTestCase._print('\nTest External Web Page')
-      LOG('Testing... ',0,'test_06_ExternalWeb Page')
-    dm=self.getPortal().external_source_module
-    doctext=dm.newContent(portal_type='External Web Page')
-    self.assert_('http' in doctext.getProtocolList())
-    doctext.setUrlProtocol('http')
-    doctext.setUrlString('localhost:%i/erp5' % erp5_port)
-    doctext.spiderSource()
-    if not quiet:
-      ZopeTestCase._print(doctext.getExternalProcessingStatusMessage())
-      LOG('Testing External Web Page... ',0,doctext.getExternalProcessingStatusMessage())
-    self.assert_(doctext.getTextContent().find('My language')>-1)
-    
-
 
 if __name__ == '__main__':
     framework()
