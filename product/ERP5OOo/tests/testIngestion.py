@@ -151,14 +151,6 @@ class TestIngestion(ERP5TypeTestCase):
     addTool('CMF Mail In Tool', None)
     mailin = self.portal.portal_mailin
     mailin.edit_configuration('Document_ingestEmail')
-    # XXX  content_type_registry is not services by business templating mechanism
-    # so it has to be exported and placed in ../../../unit_test/import/ director
-    # we import it here
-    try:
-      self.portal._delObject('content_type_registry')
-    except AttributeError:
-      pass
-    self.portal.manage_importObject(file='content_type_registry.zexp')
 
   def createPreferences(self):
     default_pref = self.portal.portal_preferences.default_site_preference
