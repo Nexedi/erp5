@@ -100,7 +100,7 @@ class PDFDocument(Image, ConversionCacheMixin):
       if not self.hasConversion(format='txt'):
         data = self._convertToText()
         self.setConversion(data, mime='text/plain', format='txt')
-      return self.getConversion(format=format)
+      return self.getConversion(format='txt')
     else:
       return Image.convert(self, format, **kw)
 
@@ -132,6 +132,9 @@ class PDFDocument(Image, ConversionCacheMixin):
   def _convertToHTML(self):
     """
     Convert the PDF text content to HTML with pdftohtml
+
+    NOTE: XXX check that command exists and was executed
+    successfully
     """
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(self._unpackData(self.data))
@@ -149,6 +152,9 @@ class PDFDocument(Image, ConversionCacheMixin):
     """
     Returns the information about the PDF document with
     pdfinfo.
+
+    NOTE: XXX check that command exists and was executed
+    successfully
     """
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(self._unpackData(self.data))
