@@ -640,6 +640,46 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(base_category is not None)
     sequence.edit(bc_id=base_category.getId(),)
 
+  # Content Type Registry
+  def stepAddEntryToContentTypeRegistry(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add entry to content type registry
+    """
+    ctr = getattr(self.getPortal(), 'content_type_registry')
+    ctr.addPredicate('test', 'extension')
+    ctr.assignTypeName('test', 'What Not')
+    ctr.getPredicate('test').extensions = ('abc', 'def')
+
+  def stepCheckContentTypeRegistryHasNewEntry(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check that we can find new type name in ctr
+    """
+    ctr = getattr(self.getPortal(), 'content_type_registry')
+    self.failUnless(ctr.findTypeName('bzzz.def', None, None) == 'What Not')
+
+  def stepAddContentTypeRegistryAsPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+      Add Content Type Registry to Business template
+    """
+    bc_id = sequence.get('bc_id')
+    bt = sequence.get('current_bt')
+    path = 'content_type_registry'
+    bt.edit(template_path_list=[path])
+
+  def stepRemoveContentTypeRegistryNewEntry(self, sequence=None, sequence_list=None, **kw):
+    """
+      Remove new entry from content_type_registry
+    """
+    ctr = getattr(self.getPortal(), 'content_type_registry')
+    ctr.removePredicate('test')
+
+  def stepCheckContentTypeRegistryHasNoNewEntry(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check that we can not find new type name in ctr anymore
+    """
+    ctr = getattr(self.getPortal(), 'content_type_registry')
+    self.failUnless(ctr.findTypeName('bzzz.def', None, None) is None)
+
   def stepAddBaseCategoryToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Add Base category to Business template
@@ -2776,6 +2816,59 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_111_BusinessTemplateWithContentTypeRegistry(self, quiet=quiet, run=run_all_test):
+    """
+      Test if content_type_registry is propertly exported and installed within
+      business template (as path).
+      This test shows that there is a slight issue - when the bt that brought
+      content_type_registry is uninstalled, the registry is removed altogether,
+      not restored, which maybe is an issue and maybe not.
+      The sequence string does not do CheckNoTrashBin after installing
+      template because there is the old registry (I think) and it is ok.
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With Content Type Registry As Path'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    # a simple path
+    sequence_string = '\
+                       AddEntryToContentTypeRegistry \
+                       CheckContentTypeRegistryHasNewEntry \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       AddContentTypeRegistryAsPathToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveContentTypeRegistryNewEntry \
+                       CheckContentTypeRegistryHasNoNewEntry \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckSkinsLayers \
+                       CheckContentTypeRegistryHasNewEntry \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
   def test_12_BusinessTemplateWithCatalogMethod(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -4002,3 +4095,7 @@ else:
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestBusinessTemplate))
     return suite
+
+
+
+# vim: filetype=python syntax=python shiftwidth=2 
