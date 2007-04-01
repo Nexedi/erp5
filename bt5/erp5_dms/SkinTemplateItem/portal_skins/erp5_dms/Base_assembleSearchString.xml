@@ -131,7 +131,7 @@ if lng and lng != \'0\':\n
   search_string += \' language:%s\' % lng\n
 \n
 # category search\n
-for category in (context.portal_preferences.getPreferredDocumentBaseCategoryList() or ()):\n
+for category in (\'group\', \'site\', \'function\', \'publication_section\', \'classification\'):\n
   category_value = req.get(\'subfield_field_your_category_list_\' + category)\n
   if category_value:\n
     search_string += \' %s:%s\' % (category, category_value)\n
@@ -153,8 +153,6 @@ if search_mode and search_mode_map.has_key(search_mode):\n
   search_string += \' mode:%s\' % search_mode_map[search_mode]\n
 \n
 return search_string\n
-\n
-# vim: filetype=python syntax=python shiftwidth=2\n
 </string> </value>
         </item>
         <item>

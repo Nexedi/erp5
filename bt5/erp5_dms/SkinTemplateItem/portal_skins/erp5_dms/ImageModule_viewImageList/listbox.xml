@@ -334,20 +334,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>getPortalType</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>short_title</string>
-                          <string>Short Title</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
@@ -362,12 +350,12 @@
                           <string>Version</string>
                         </tuple>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
                           <string>validation_state</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
                         </tuple>
                       </list>
                     </value>
@@ -430,7 +418,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
