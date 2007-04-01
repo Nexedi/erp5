@@ -743,8 +743,10 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
   def getRevision(self):
     """
       Returns the current revision by analysing the change log
-      of the current object.
-
+      of the current object. The return value is a string
+      in order to be consistent with the property sheet
+      definition.
+      
       NOTE: for now, workflow choice is hardcoded. This is
       an optimisation hack. If a document does neither use
       edit_workflow or processing_status_workflow, the
@@ -762,8 +764,8 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     for wf in wf_list:
       history = wf.getInfoFor(self, 'history', None)
       if history:
-        return len(filter(lambda x:x.get('action', None) in ('edit', 'upload'), history))
-    return None
+        return str(len(filter(lambda x:x.get('action', None) in ('edit', 'upload'), history)))
+    return ''
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRevisionList')
   def getRevisionList(self):
