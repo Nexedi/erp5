@@ -27,8 +27,9 @@
 ##############################################################################
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.XMLObject import XMLObject
 
-class Machine:
+class Machine(XMLObject):
 
     add_permission = Permissions.AddPortalContent
     meta_type = 'ERP5 Machine'
