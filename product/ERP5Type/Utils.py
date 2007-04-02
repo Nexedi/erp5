@@ -347,12 +347,26 @@ class DocumentConstructor(Method):
 
 class TempDocumentConstructor(DocumentConstructor):
 
+    def __init__(self, klass):
+      # Create a new class to set permissions specific to temporary objects.
+      class TempDocument(klass):
+        pass
+
+      # Replace some attributes.
+      for name in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
+                   'activate', 'setUid', 'setTitle', 'getTitle'):
+        setattr(TempDocument, name, getattr(klass, '_temp_%s' % name))
+
+      # Make some methods public.
+      for method_id in ('reindexObject', 'recursiveReindexObject',
+                        'activate', 'setUid', 'setTitle', 'getTitle',
+                        'edit', 'setProperty'):
+        setattr(TempDocument, '%s__roles__' % method_id, None)
+
+      self.klass = TempDocument
+
     def __call__(self, folder, id, REQUEST=None, **kw):
       o = self.klass(id)
-      # Monkey patch TempBase specific arguments
-      for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
-                'activate', 'setUid', 'setTitle', 'getTitle'):
-        setattr(o, k, getattr(o,"_temp_%s" % k))
       if kw:
         o.__of__(folder)._edit(force_update=1, **kw)
       if hasattr(folder, 'isTempObject') and folder.isTempObject(): 
