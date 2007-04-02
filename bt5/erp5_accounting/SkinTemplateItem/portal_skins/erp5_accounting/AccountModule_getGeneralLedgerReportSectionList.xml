@@ -114,7 +114,6 @@ account_columns = (\n
       (\'getTranslatedSimulationStateTitle\', \'State\'),\n
       (\'debit\', \'Debit\'),\n
       (\'credit\', \'Credit\'),\n
-      (\'total_price\', \'Balance\'),\n
       (\'running_total_price\', \'Net\'), )\n
 \n
 if gap:\n
