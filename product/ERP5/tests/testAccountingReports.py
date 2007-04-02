@@ -49,6 +49,9 @@ class TestAccountingReports(AccountingTestCase):
     ...
   """
 
+  def getTitle(self):
+    return "Accounting Reports"
+
   # utility methods for ERP5 Report
   def getReportSectionList(self, report_name):
     """Get the list of report sections in a report."""
