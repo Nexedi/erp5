@@ -20,7 +20,8 @@ from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent, aq_inner
 from Products.DCWorkflow import DCWorkflow
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
-from AccessControl import getSecurityManager, ClassSecurityInfo, ModuleSecurityInfo
+from AccessControl import getSecurityManager, ClassSecurityInfo, \
+        ModuleSecurityInfo, Unauthorized
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.utils import  _getAuthenticatedUser

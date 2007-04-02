@@ -17,6 +17,7 @@ import email
 from email.Header import decode_header
 from email.Utils import parseaddr
 from ZODB.POSException import ConflictError
+from zLOG import LOG
 
 import traceback
 import StringIO

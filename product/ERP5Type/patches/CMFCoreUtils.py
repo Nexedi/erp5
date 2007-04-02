@@ -12,7 +12,9 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import *
+from warnings import warn
+from Products.CMFCore.exceptions import AccessControl_Unauthorized, NotFound
+from Products.CMFCore.utils import getActionContext
 from Products.CMFCore.utils import _verifyActionPermissions
 from Products.CMFCore.Expression import getExprContext
 from Products.CMFCore import PortalContent

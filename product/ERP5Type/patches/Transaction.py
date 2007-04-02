@@ -18,8 +18,10 @@ import sys
 # Adding commit_prepare to the zodb transaction
 try:
     from ZODB import Transaction, POSException
+    from zLOG import LOG, ERROR
     
     hosed = Transaction.hosed
+    hosed_msg = Transaction.hosed_msg
     free_transaction = Transaction.free_transaction
     jar_cmp = Transaction.jar_cmp
     
