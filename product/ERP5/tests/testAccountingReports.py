@@ -1083,7 +1083,239 @@ class TestAccountingReports(AccountingTestCase):
         initial_debit_balance=0, initial_credit_balance=0, debit=500,
         credit=500, final_debit_balance=500, final_credit_balance=500,
         final_balance_if_debit=None, final_balance_if_credit=None)
-  
+
+
+  def testGeneralLedger(self):
+    # Simple test of general ledger
+    # we will use the same data set as account statement
+    self.createAccountStatementDataSet(use_two_bank_accounts=0)
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+
+    report_section_list = self.getReportSectionList(
+                                    'AccountModule_viewGeneralLedgerReport')
+    self.assertEquals(6, len(report_section_list))
+
+    self.assertEquals('40: Payable (Client 1)',
+                      report_section_list[0].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    
+    # report layout
+    self.assertEquals(['Movement_getSpecificReference',
+        'Movement_getExplanationTitle', 'date',
+        'Movement_getExplanationTranslatedPortalType',
+        'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
+        'getTranslatedSimulationStateTitle', 'debit', 'credit',
+        'running_total_price'],
+        data_line_list[0].column_id_list)
+    
+    self.assertEquals(2, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='1',
+          Movement_getExplanationTitle='Transaction 1',
+          date=DateTime(2006, 2, 1),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=0, credit=100, running_total_price=-100, )
+    
+    self.checkLineProperties(data_line_list[1],
+          Movement_getSpecificReference='2',
+          Movement_getExplanationTitle='Transaction 2',
+          date=DateTime(2006, 2, 1, 0, 1),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=200, credit=0, running_total_price=100, )
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+          Movement_getSpecificReference=None,
+          Movement_getExplanationTitle=None,
+          date=None,
+          Movement_getExplanationTranslatedPortalType=None,
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle=None,
+          getTranslatedSimulationStateTitle=None,
+          debit=200, credit=100, )
+    
+    self.assertEquals('41: Receivable (Client 1)',
+                      report_section_list[1].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(5, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='1',
+          Movement_getExplanationTitle='Transaction 1',
+          date=DateTime(2006, 2, 1),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=100, credit=0, running_total_price=100, )
+    
+    self.checkLineProperties(data_line_list[1],
+          Movement_getSpecificReference='2',
+          Movement_getExplanationTitle='Transaction 2',
+          date=DateTime(2006, 2, 1, 0, 1),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=0, credit=200, running_total_price=-100, )
+    
+    self.checkLineProperties(data_line_list[2],
+          Movement_getSpecificReference='3',
+          Movement_getExplanationTitle='Transaction 3',
+          date=DateTime(2006, 2, 2, 0, 2),
+          Movement_getExplanationTranslatedPortalType='Payment Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=300, credit=0, running_total_price=200, )
+    
+    self.checkLineProperties(data_line_list[3],
+          Movement_getSpecificReference='6',
+          Movement_getExplanationTitle='Transaction 6',
+          date=DateTime(2006, 2, 2, 0, 5),
+          Movement_getExplanationTranslatedPortalType
+                ='Purchase Invoice Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=600, credit=0, running_total_price=800, )
+    
+    self.checkLineProperties(data_line_list[4],
+          Movement_getSpecificReference='8',
+          Movement_getExplanationTitle='Transaction 8',
+          date=DateTime(2006, 2, 3),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=800, credit=0, running_total_price=1600, )
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+          Movement_getSpecificReference=None,
+          Movement_getExplanationTitle=None,
+          date=None,
+          Movement_getExplanationTranslatedPortalType=None,
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle=None,
+          getTranslatedSimulationStateTitle=None,
+          debit=1800, credit=200, )
+
+    self.assertEquals('41: Receivable (Client 2)',
+                      report_section_list[2].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[2])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='4',
+          Movement_getExplanationTitle='Transaction 4',
+          date=DateTime(2006, 2, 2, 0, 3),
+          Movement_getExplanationTranslatedPortalType='Payment Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 2',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=400, credit=0, running_total_price=400, )
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=400, credit=0, )
+
+    self.assertEquals('41: Receivable (John Smith)',
+                      report_section_list[3].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[3])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='5',
+          Movement_getExplanationTitle='Transaction 5',
+          date=DateTime(2006, 2, 2, 0, 4),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='John Smith',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=500, credit=0, running_total_price=500, )
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=500, credit=0, )
+
+    self.assertEquals('5: Bank (Bank1)',
+                      report_section_list[4].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[4])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(5, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='3',
+          Movement_getExplanationTitle='Transaction 3',
+          date=DateTime(2006, 2, 2, 0, 2),
+          Movement_getExplanationTranslatedPortalType='Payment Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=0, credit=300, running_total_price=-300, )
+    
+    self.checkLineProperties(data_line_list[1],
+          Movement_getSpecificReference='4',
+          Movement_getExplanationTitle='Transaction 4',
+          date=DateTime(2006, 2, 2, 0, 3),
+          Movement_getExplanationTranslatedPortalType='Payment Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 2',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=0, credit=400, running_total_price=-700, )
+
+    self.checkLineProperties(data_line_list[2],
+          Movement_getSpecificReference='5',
+          Movement_getExplanationTitle='Transaction 5',
+          date=DateTime(2006, 2, 2, 0, 4),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='John Smith',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=0, credit=500, running_total_price=-1200, )
+
+    self.checkLineProperties(data_line_list[3],
+          Movement_getSpecificReference='6',
+          Movement_getExplanationTitle='Transaction 6',
+          date=DateTime(2006, 2, 2, 0, 5),
+          Movement_getExplanationTranslatedPortalType
+                              ='Purchase Invoice Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=0, credit=600, running_total_price=-1800, )
+
+    self.checkLineProperties(data_line_list[4],
+          Movement_getSpecificReference='8',
+          Movement_getExplanationTitle='Transaction 8',
+          date=DateTime(2006, 2, 3),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle='Client 1',
+          getTranslatedSimulationStateTitle='Closed',
+          debit=0, credit=800, running_total_price=-2600, )
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=0, credit=2600, )
+
+    self.assertEquals('Total', report_section_list[5].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[5])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # report layout
+    self.assertEquals(['debit', 'credit'], data_line_list[0].column_id_list)
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0], debit=2900, credit=2900)
     
 def test_suite():
   suite = unittest.TestSuite()
