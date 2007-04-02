@@ -86,7 +86,7 @@
 database_type='MySQL'
 
 import os
-from db import DeferredDB
+from db import ThreadedDeferredDB
 import Shared.DC.ZRDB.Connection, sys, DABase
 from App.Dialogs import MessageDialog
 from Globals import HTMLFile
@@ -120,7 +120,7 @@ class DeferredConnection(DABase.Connection):
 
     manage_properties=HTMLFile('connectionEdit', globals())
 
-    def factory(self): return DeferredDB
+    def factory(self): return ThreadedDeferredDB
 
     def connect(self, s):
       try:
@@ -133,8 +133,8 @@ class DeferredConnection(DABase.Connection):
         else:
           if connection is not None:
             connection.closeConnection()
-          DB = self.factory()
-          database_connection_pool[pool_key] = DeferredDB(s)
+          ThreadedDeferredDB = self.factory()
+          database_connection_pool[pool_key] = ThreadedDeferredDB(s)
           self._v_database_connection = database_connection_pool[pool_key]
         # XXX If date is used as such, it can be wrong because an existing
         # connection may be reused. But this is suposedly only used as a
