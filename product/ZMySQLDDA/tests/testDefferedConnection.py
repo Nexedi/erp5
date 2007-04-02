@@ -30,6 +30,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from _mysql_exceptions import OperationalError
 from Products.ZMySQLDA.db import hosed_connection
+from thread import get_ident
 from zLOG import LOG
 
 UNCONNECTED_STATE = 0
@@ -87,7 +88,7 @@ class TestDefferedConnection(ERP5TypeTestCase):
       Apply monkey patch on db and reset connection state to "unconnected".
       Returns a tuple containing original functions.
     """
-    mysql_class = connection._getConnection().__class__
+    mysql_class = connection.db.__class__
     mysql_class.original_query = mysql_class.query
     mysql_class.query = fake_db_query
     connection.__class__.original_forceReconnection = connection.__class__._forceReconnection
@@ -100,7 +101,7 @@ class TestDefferedConnection(ERP5TypeTestCase):
     """
     connection.__class__._forceReconnection = connection.__class__.original_forceReconnection
     delattr(connection.__class__, 'original_forceReconnection')
-    mysql_class = connection._getConnection().__class__
+    mysql_class = connection.db.__class__
     mysql_class.query = mysql_class.original_query
     delattr(mysql_class, 'original_query')
 
@@ -110,10 +111,11 @@ class TestDefferedConnection(ERP5TypeTestCase):
     """
     deffered = self.getPortal().erp5_sql_deferred_connection
     deffered_connection = getattr(deffered, '_v_database_connection', None)
-    if getattr(deffered, '_v_database_connection', None) is None:
+    if deffered_connection is None:
       deffered.connect(deffered.connection_string)
       deffered_connection = getattr(deffered, '_v_database_connection')
-    return deffered_connection
+    deffered_connection.tables() # Dummy access to force actual connection.
+    return deffered_connection._pool_get(get_ident())
 
   def test_00_basicReplaceQuery(self):
     """
@@ -141,7 +143,7 @@ class TestDefferedConnection(ERP5TypeTestCase):
     # Replace dynamically the function used to send queries to mysql so it's
     # dumber than the implemented one.
     self.monkeypatchConnection(connection)
-    connection._query = connection._getConnection().query
+    connection._query = connection.db.query
     try:
       try:
         get_transaction().commit()
@@ -187,10 +189,10 @@ class TestDefferedConnection(ERP5TypeTestCase):
     connection = self.getDefferedConnection()
     # Queue a query
     connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
-    self.assertEqual(len(connection._getSQLStringList()), 1)
+    self.assertEqual(len(connection._sql_string_list), 1)
     get_transaction().commit()
     connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
-    self.assertEqual(len(connection._getSQLStringList()), 1)
+    self.assertEqual(len(connection._sql_string_list), 1)
 
 if __name__ == '__main__':
   unittest.main()
