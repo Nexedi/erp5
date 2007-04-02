@@ -80,8 +80,9 @@ default_date = DateTime(year, 01, 01)\n
 immediate_reindex = 0\n
 \n
 # if the previous test didn\'t change input data, no need to recreate content\n
-current_script_data_id = \'%s_month_count_%s_draft_%s\' % (\n
-       month_count, add_draft_transactions, script.getId())\n
+current_script_data_id = \'%s_month_count_%s_draft_%s_state_%s\' % (\n
+     month_count, add_draft_transactions, transaction_state, script.getId())\n
+\n
 if accounting_module.getProperty(\'current_content_script\',\n
                                 \'\') == current_script_data_id:\n
   return "Accounting Transactions Created."\n
