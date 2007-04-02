@@ -97,7 +97,7 @@ def addToDate(date, to_add=None, **kw):
                                                 return_value['hour'],
                                                 return_value['minute'],
                                                 return_value['second'],
-                                                date.localZone()))
+                                                date.timezone()))
   return_date += day_to_add
   return return_date
   
