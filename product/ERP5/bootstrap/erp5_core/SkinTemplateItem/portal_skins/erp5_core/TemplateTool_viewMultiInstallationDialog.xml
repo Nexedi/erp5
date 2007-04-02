@@ -67,7 +67,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
+                <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
               </list>
@@ -86,21 +86,21 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox_choice</string>
-                        <string>listbox_object_id</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list>
                         <string>your_form_title</string>
                         <string>your_update_catalog</string>
                         <string>your_update_translation</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_choice</string>
+                        <string>listbox_object_id</string>
                       </list>
                     </value>
                 </item>
