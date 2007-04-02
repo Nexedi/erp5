@@ -108,17 +108,9 @@ from string import strip, split, find, upper, rfind
 from time import time
 from thread import get_ident, allocate_lock
 
-# Connection is unusable, reconnect if possible (if so, don't re-raise the
-# exception), otherwise re-raise the exception.
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
     CR.SERVER_LOST
-    )
-
-# Connection is unusable and some earlier query caused the trouble.
-# Reconnect *and* re-raise the exception.
-dead_connection = (
-    CR.COMMANDS_OUT_OF_SYNC,
     )
 
 key_types = {
@@ -360,7 +352,7 @@ class DB(TM):
 
     def _query(self, query, force_reconnect=False):
         """
-          Send a to MySQL server.
+          Send a query to MySQL server.
           It reconnects automaticaly if needed and the following conditions are
           met:
            - It has not just tried to reconnect (ie, this function will not
@@ -374,12 +366,10 @@ class DB(TM):
         except OperationalError, m:
             if ((not force_reconnect) and \
                 (self._mysql_lock or self._transactions)) or \
-               m[0] not in (hosed_connection + dead_connection):
+               m[0] not in hosed_connection:
                 raise
             # Hm. maybe the db is hosed.  Let's restart it.
             self._forceReconnection()
-            if m[0] in dead_connection:
-                raise
             self.db.query(query)
         return self.db.store_result()
 
