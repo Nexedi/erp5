@@ -75,9 +75,12 @@ request  = context.REQUEST\n
 portal   = context.portal_url.getPortalObject()\n
 cat_tool = portal.portal_categories\n
 sim_tool = portal.portal_simulation\n
+N_ = context.Base_translateString\n
 \n
 at_date             = request[\'at_date\']\n
 section_category    = request[\'section_category\']\n
+section_uid = context.Base_getSectionUidListForSectionCategory(\n
+                                             request[\'section_category\'])\n
 simulation_state    = request[\'simulation_state\']\n
 from_date           = request.get(\'from_date\', None)\n
 gap                 = request.get(\'gap\', None)\n
@@ -89,7 +92,7 @@ omit_grouping_reference = request.get(\'omit_grouping_reference\', False)\n
 request.other[\'is_accounting_report\'] = True\n
 \n
 params = dict(at_date=at_date,\n
-              section_category=section_category,\n
+              section_uid=section_uid,\n
               simulation_state=simulation_state,\n
               omit_grouping_reference=omit_grouping_reference,\n
               from_date_summary=True,\n
@@ -182,7 +185,6 @@ for c in gap_value_list:\n
             result.append(ReportSection(\n
                       path=account.getPhysicalPath(),\n
                       title=title,\n
-                      level=9,\n
                       form_id=\'Account_viewAccountingTransactionList\',\n
                       selection_name=\'acount_preference_selection\',\n
                       selection_params=third_party_params.copy(),\n
@@ -214,7 +216,6 @@ for c in gap_value_list:\n
             result.append(ReportSection(\n
                       path=account.getPhysicalPath(),\n
                       title=title,\n
-                      level=9,\n
                       form_id=\'Account_viewAccountingTransactionList\',\n
                       selection_name=\'accounting_report_selection\',\n
                       selection_params=bank_params.copy(),\n
@@ -228,7 +229,6 @@ for c in gap_value_list:\n
           result.append(ReportSection(\n
                         path=account.getPhysicalPath(),\n
                         title="%s: %s" % (c.getId(), account.getTitle()),\n
-                        level=9,\n
                         form_id=\'Account_viewAccountingTransactionList\',\n
                         selection_name=\'accounting_report_selection\',\n
                         selection_params=params,\n
@@ -236,6 +236,15 @@ for c in gap_value_list:\n
                         listbox_display_mode=\'FlatListMode\',\n
                         selection_sort_order=[(\'stock.date\',\n
                                                \'ascending\')]))\n
+total_params = params.copy()\n
+if gap:\n
+  total_params[\'node_category\'] = gap\n
+result.append(ReportSection(\n
+              path=context.getPhysicalPath(),\n
+              title=N_("Total"),\n
+              form_id=\'AccountModule_viewGeneralLedgerSummary\',\n
+              selection_name=\'accounting_report_selection\',\n
+              selection_params=total_params))\n
 \n
 return result\n
 </string> </value>
@@ -288,9 +297,11 @@ return result\n
                             <string>portal</string>
                             <string>cat_tool</string>
                             <string>sim_tool</string>
+                            <string>N_</string>
                             <string>_getitem_</string>
                             <string>at_date</string>
                             <string>section_category</string>
+                            <string>section_uid</string>
                             <string>simulation_state</string>
                             <string>None</string>
                             <string>from_date</string>
@@ -324,6 +335,7 @@ return result\n
                             <string>bank_account_brain</string>
                             <string>bank_params</string>
                             <string>bank_account_uid</string>
+                            <string>total_params</string>
                           </tuple>
                         </value>
                     </item>
