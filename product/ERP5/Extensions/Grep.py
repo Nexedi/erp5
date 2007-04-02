@@ -2,6 +2,11 @@ import re
 import cgi
 from Acquisition import aq_base
 
+try:
+  from Products import ExternalEditor
+except:
+  ExternalEditor = None
+
 skip_meta_types = ('Image', 'File')
 
 def traverse(ob, r, result, command_line_arguments):
@@ -40,8 +45,20 @@ def grep(self, pattern, A=0, B=0, r=1, i=0):
   for path, line in result:
     path = cgi.escape(path)
     line = cgi.escape(line)
-    html_element_list.append('<a href="%s/manage_workspace">%s</a>: %s<br/>' % (
-path, path, line.replace('\n', '<br/>')))
+    if ExternalEditor is None:
+      html_element_list.append(
+          '<a href="%s/manage_workspace">%s</a>: %s<br/>' %
+          (path, path, line.replace('\n', '<br/>')))
+    else:
+      # if we have ExternalEditor installed, add the "external edit" link
+      path_element_list = path.split('/')
+      external_editor_link = '%s/externalEdit_/%s' % (
+         '/'.join(path_element_list[:-1]), path_element_list[-1])
+      html_element_list.append(
+        '<a href="%s/manage_workspace">%s</a>&nbsp;<a href="%s">'
+        '<img border="0" src="/misc_/ExternalEditor/edit_icon"/></a> %s<br/>'
+         % (path, path, external_editor_link, line.replace('\n', '<br/>')))
+
   html_element_list.extend(['</body>', '</html>'])
   self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
   return '\n'.join(html_element_list)
