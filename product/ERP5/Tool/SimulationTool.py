@@ -1788,17 +1788,19 @@ class SimulationTool(BaseTool):
       if portal_type == []:
         portal_type = self.getPortalCalendarPeriodTypeList()
 
-      result = self.Person_zGetAvailableTime(
+      sql_result = self.Person_zGetAvailableTime(
                           from_date=from_date,
                           to_date=to_date,
                           portal_type=portal_type,
                           node=node,
                           resource=resource,
-                          src__=src__, **kw)[0].total_quantity
-      if src__:
-        return result_list
-      elif (result is None) or (result < 0):
+                          src__=src__, **kw)
+      if not src__:
         result = 0
+        if len(sql_result) == 1:
+          result = sql_result[0].total_quantity
+      else:
+        result = sql_result
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 
@@ -1818,6 +1820,9 @@ class SimulationTool(BaseTool):
       portal_type    - only take rows in stock table which portal_type
                        is in portal_type parameter
 
+      resource       - only take rows in stock table which resource_uid is
+                       equivalent to resource
+
       from_date (>=) - return period which start >= from_date
 
       to_date   (<)  - return period which start < to_date
@@ -1830,18 +1835,29 @@ class SimulationTool(BaseTool):
       if portal_type == []:
         portal_type = self.getPortalCalendarPeriodTypeList()
 
-      result_list = self.Person_zGetAvailableTimeSequence(
-                             period_list=Sequence(from_date, to_date, **kw),
-                             portal_type=portal_type,
-                             node=node,
-                             resource=resource,
-                             src__=src__)
-      for x in result_list:
-        if x.total_quantity < 0:
-          x.total_quantity = 0
-      return result_list
+      sequence = Sequence(from_date, to_date, **kw)
+      for sequence_item in sequence:
+        setattr(sequence_item, 'total_quantity',
+                self.getAvailableTime(
+                          from_date=sequence_item.from_date,
+                          to_date=sequence_item.to_date,
+                          portal_type=portal_type,
+                          node=node,
+                          resource=resource,
+                          src__=src__))
+      return sequence
 
 from Products.ERP5Type.DateUtils import addToDate
+
+class SequenceItem:
+  """
+  SequenceItem define a time period.
+  period.
+  """
+  def __init__(self, from_date, to_date):
+    self.from_date = from_date
+    self.to_date = to_date
+
 class Sequence:
   """
   Sequence is a iterable object, which calculate a range of time
@@ -1878,8 +1894,8 @@ class Sequence:
                                   day=day,
                                   month=month,
                                   year=year)
-      self.item_list.append((current_from_date, 
-                             current_to_date))
+      self.item_list.append(SequenceItem(current_from_date, 
+                                         current_to_date))
       current_from_date = current_to_date
 
   def __len__(self):
@@ -1897,5 +1913,7 @@ class Sequence:
 
 InitializeClass(Sequence)
 allow_class(Sequence)
+InitializeClass(SequenceItem)
+allow_class(SequenceItem)
 
 InitializeClass(SimulationTool)
