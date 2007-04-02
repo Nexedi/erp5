@@ -128,7 +128,7 @@ class DeferredConnection(DABase.Connection):
         self._v_connected = ''
         pool_key = self.getPhysicalPath()
         connection = database_connection_pool.get(pool_key)
-        if connection is not None and connection.connection == s:
+        if connection is not None and connection._connection == s:
           self._v_database_connection = connection
         else:
           if connection is not None:
