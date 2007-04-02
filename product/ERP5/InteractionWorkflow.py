@@ -29,6 +29,8 @@ from Products.ERP5Type import Permissions
 
 from zLOG import LOG
 
+_MARKER = []
+
 class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     """
     The InteractionTool implements portal object
@@ -149,7 +151,9 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         Allows the user to request information provided by the
         workflow.  This method must perform its own security checks.
         '''
-        vdef = self.variables[name]
+        vdef = self.variables.get(name, _MARKER)
+        if vdef is _MARKER:
+          return default
         if vdef.info_guard is not None and not vdef.info_guard.check(
             getSecurityManager(), self, ob):
             return default
