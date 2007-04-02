@@ -81,10 +81,10 @@
                     <key> <string>panel1</string> </key>
                     <value>
                       <list>
-                        <string>transaction_section_category</string>
-                        <string>transaction_simulation_state</string>
-                        <string>at_date</string>
+                        <string>section_category</string>
+                        <string>simulation_state</string>
                         <string>from_date</string>
+                        <string>at_date</string>
                       </list>
                     </value>
                 </item>

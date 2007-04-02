@@ -77,8 +77,8 @@ cat_tool = portal.portal_categories\n
 sim_tool = portal.portal_simulation\n
 \n
 at_date             = request[\'at_date\']\n
-section_category    = request[\'transaction_section_category\']\n
-simulation_state    = request[\'transaction_simulation_state\']\n
+section_category    = request[\'section_category\']\n
+simulation_state    = request[\'simulation_state\']\n
 from_date           = request.get(\'from_date\', None)\n
 gap                 = request.get(\'gap\', None)\n
 omit_empty_accounts = request.get(\'omit_empty_accounts\', True)\n
