@@ -509,6 +509,7 @@ class ERP5TypeTestCase(PortalTestCase):
       if error_message is not None:
         self.assertEqual(str(workflow_history[-1]['error_message']), error_message)
       self.assertEqual(object.getSimulationState(), reference_workflow_state)
+      return error_message
 
 def setupERP5Site( business_template_list=(),
                    app=None,
