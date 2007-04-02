@@ -89,7 +89,7 @@ $Id: DA.py,v 1.4 2001/08/09 20:16:36 adustman Exp $''' % database_type
 __version__='$Revision: 1.4 $'[11:-2]
 
 import os
-from db import DB
+from db import ThreadedDB
 import Shared.DC.ZRDB.Connection, sys, DABase
 from App.Dialogs import MessageDialog
 from Globals import HTMLFile
@@ -120,7 +120,7 @@ class Connection(DABase.Connection):
 
     manage_properties=HTMLFile('connectionEdit', globals())
 
-    def factory(self): return DB
+    def factory(self): return ThreadedDB
 
     def connect(self, s):
       try:
@@ -128,13 +128,13 @@ class Connection(DABase.Connection):
         self._v_connected = ''
         pool_key = self.getPhysicalPath()
         connection = database_connection_pool.get(pool_key)
-        if connection is not None and connection.connection == s:
+        if connection is not None and connection._connection == s:
           self._v_database_connection = connection
         else:
           if connection is not None:
             connection.closeConnection()
-          DB = self.factory()
-          database_connection_pool[pool_key] = DB(s)
+          ThreadedDB = self.factory()
+          database_connection_pool[pool_key] = ThreadedDB(s)
           self._v_database_connection = database_connection_pool[pool_key]
         # XXX If date is used as such, it can be wrong because an existing
         # connection may be reused. But this is suposedly only used as a
