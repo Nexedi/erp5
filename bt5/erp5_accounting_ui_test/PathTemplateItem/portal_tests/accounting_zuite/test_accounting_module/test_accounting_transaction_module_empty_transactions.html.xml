@@ -110,7 +110,7 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/AccountingZuite_markChanged</td>\n
+  <td>${base_url}/AccountingZuite_markChanged</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -120,7 +120,7 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/Zuite_waitForActivities</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -130,7 +130,7 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/accounting_module/view</td>\n
+  <td>${base_url}/accounting_module/view</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -243,7 +243,7 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/Zuite_waitForActivities</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -296,7 +296,7 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/Zuite_waitForActivities</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -306,7 +306,7 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/accounting_module/view</td>\n
+  <td>${base_url}/accounting_module/view</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n

@@ -297,7 +297,7 @@ Test Transactions related to an Organisation, with start date\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/</td>\n
+  <td>${base_url}</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

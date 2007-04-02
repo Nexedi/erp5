@@ -90,13 +90,6 @@ Test Transactions related to an Organisation, with start date\n
   <td>Base_edit:method</td>\n
   <td></td>\n
 </tr>\n
-<!-- XXX manually clear the cache ? -->\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@title=\'Select Language\']</td>\n
-  <td></td>\n
-</tr>\n
-\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_module</td>\n
@@ -297,7 +290,7 @@ Test Transactions related to an Organisation, with start date\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>/erp5/</td>\n
+  <td>${base_url}</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -330,19 +323,12 @@ Test Transactions related to an Organisation, with start date\n
   <td>Base_edit:method</td>\n
   <td></td>\n
 </tr>\n
-<!-- XXX manually clear the cache ? -->\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@title=\'Select Language\']</td>\n
-  <td></td>\n
-</tr>\n
 <!-- }}} -->\n
 \n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></string> </value>
         </item>
