@@ -33,10 +33,11 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
-from Products.ERP5.Document.Periodicity import Periodicity
+from Products.ERP5.Document.Alarm import PeriodicityMixin
 from Products.ERP5.Document.Movement import Movement
+from Products.ERP5Type.DateUtils import addToDate
 
-class CalendarPeriod(Movement, Periodicity):
+class CalendarPeriod(Movement, PeriodicityMixin):
   """
   Calendar Period is used to add available time of the user in a 
   period of Time
@@ -89,7 +90,8 @@ class CalendarPeriod(Movement, Periodicity):
                             'getInventoriatedQuantity')
   def getInventoriatedQuantity(self, default=None, *args, **kw):
     """
-    Surcharged accessor to calculate the Quantity in second.
+    Surcharged accessor to calculate the Quantity in second
+    from stop date and start date values.
     """
     quantity = self.getQuantity(*args, **kw)
     if quantity in [None, 0]:
@@ -143,7 +145,7 @@ class CalendarPeriod(Movement, Periodicity):
                                           start_date)
       duration = stop_date - start_date
       # First date has to respect the periodicity config
-      next_start_date = self.getNextAlarmDate(start_date-1)
+      next_start_date = self.getNextPeriodicalDate(start_date-1)
       while (next_start_date is not None) and \
         (next_start_date <= periodicity_stop_date):
 
@@ -171,30 +173,36 @@ class CalendarPeriod(Movement, Periodicity):
           # SQL method don't like iterator
 #             yield (next_start_date, next_start_date+duration)
           result.append([next_start_date, next_start_date+duration])
-        next_start_date = self.getNextAlarmDate(next_start_date)
+        next_start_date = self.getNextPeriodicalDate(next_start_date)
 
     return result
 
-  def getNextAlarmDate(self, current_date, next_start_date=None):
+  def getNextPeriodicalDate(self, current_date, next_start_date=None):
     """
     Get the next date where this periodic event should start.
+
+    XXX It completely reimplements the PeriodictyMixin method because
+    the minimal duration between dates is day, and not minute
+    Better way would be to improve the API of getNextPeriodicalDate,
+    and optimize addToDate method.
     """
+    # XXX Copy/Paste from PeriodicityMixin
     if next_start_date is None:
       next_start_date = current_date
     if next_start_date > current_date:
       return
     else:
       # Make sure the old date is not too far away
-      nb_days = int(current_date-next_start_date)
-      next_start_date = next_start_date + nb_days
+      day_count = int(current_date-next_start_date)
+      next_start_date = next_start_date + day_count
 
     previous_date = next_start_date
-    next_start_date += 1
+    next_start_date = addToDate(next_start_date, day=1)
     while 1:
-      if (self.validateDay(next_start_date)) and \
-         (self.validateWeek(next_start_date)) and \
-         (self.validateMonth(next_start_date)):
+      if (self._validateDay(next_start_date)) and \
+         (self._validateWeek(next_start_date)) and \
+         (self._validateMonth(next_start_date)):
         break
       else:
-        next_start_date += 1
+        next_start_date = addToDate(next_start_date, day=1)
     return next_start_date
