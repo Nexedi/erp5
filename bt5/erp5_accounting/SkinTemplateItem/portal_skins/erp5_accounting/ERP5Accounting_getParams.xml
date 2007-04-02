@@ -132,13 +132,17 @@ precision = selection_params.get(\'precision\', None)\n
 if precision is not None:\n
   params[\'precision\'] = precision\n
 \n
-mirror_section_uid = selection_params.get(\'mirror_section_uid\', None)\n
-if mirror_section_uid:\n
-  params[\'mirror_section_uid\'] = mirror_section_uid\n
+# Some reports, such as general ledger, uses different forms with different report\n
+# parameters, we don\'t want to accidentally fill the cache with mirror_section_uid \n
+# or payment_uid.\n
+if not selection_params.get(\'no_mirror_section_uid_cache\', 0):\n
+  mirror_section_uid = selection_params.get(\'mirror_section_uid\', None)\n
+  if mirror_section_uid:\n
+    params[\'mirror_section_uid\'] = mirror_section_uid\n
 \n
-payment_uid = selection_params.get(\'payment_uid\', None)\n
-if payment_uid:\n
-  params[\'payment_uid\'] = payment_uid\n
+  payment_uid = selection_params.get(\'payment_uid\', None)\n
+  if payment_uid:\n
+    params[\'payment_uid\'] = payment_uid\n
 \n
 simulation_state = selection_params.get(\'simulation_state\',\n
              preference.getPreferredAccountingTransactionSimulationStateList())\n
