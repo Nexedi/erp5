@@ -125,7 +125,9 @@ return url\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>index</string>
                             <string>context</string>
                             <string>object</string>

@@ -131,6 +131,7 @@ if mirror_section is not None:\n
                             <string>selection_name</string>
                             <string>kwd</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>section_category</string>
                             <string>transaction</string>
                             <string>source_section</string>
@@ -148,6 +149,7 @@ if mirror_section is not None:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>

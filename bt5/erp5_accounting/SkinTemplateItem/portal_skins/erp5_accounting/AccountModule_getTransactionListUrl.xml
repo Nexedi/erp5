@@ -128,10 +128,12 @@ return object.getPath() + \'/\' + method + \'?\' + make_query(kw)\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>kwd</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>index</string>
                             <string>context</string>
                             <string>object</string>

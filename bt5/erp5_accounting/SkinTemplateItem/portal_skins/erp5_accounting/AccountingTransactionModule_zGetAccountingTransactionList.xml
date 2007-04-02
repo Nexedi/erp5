@@ -303,32 +303,32 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>selection</string>
-<string>selection_name</string>
-<string>selection_domain</string>
-<string>selection_report</string>
-<string>selection_params</string>
-<string>select_expression</string>
-<string>from_date</string>
-<string>at_date</string>
-<string>to_date</string>
-<string>node</string>
-<string>resource</string>
-<string>entity</string>
-<string>stat</string>
-<string>omit_input</string>
-<string>omit_output</string>
-<string>amount</string>
-<string>amount_range_min</string>
-<string>amount_range_max</string>
-<string>creation_date_range_min</string>
-<string>creation_date_range_max</string>
-<string>section_category</string>
-<string>count</string>
-<string>transaction_uid</string>
-<string>specific_reference</string>
-<string>no_limit</string>
-<string>search_result_keys</string>
+                            <string>selection</string>
+                            <string>selection_name</string>
+                            <string>selection_domain</string>
+                            <string>selection_report</string>
+                            <string>selection_params</string>
+                            <string>select_expression</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>to_date</string>
+                            <string>node</string>
+                            <string>resource</string>
+                            <string>entity</string>
+                            <string>stat</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                            <string>amount</string>
+                            <string>amount_range_min</string>
+                            <string>amount_range_max</string>
+                            <string>creation_date_range_min</string>
+                            <string>creation_date_range_max</string>
+                            <string>section_category</string>
+                            <string>count</string>
+                            <string>transaction_uid</string>
+                            <string>specific_reference</string>
+                            <string>no_limit</string>
+                            <string>search_result_keys</string>
                           </list>
                         </value>
                     </item>

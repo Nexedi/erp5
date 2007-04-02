@@ -157,6 +157,7 @@ return transaction.getStartDate()\n
               <tuple>
                 <none/>
                 <none/>
+                <none/>
               </tuple>
             </value>
         </item>

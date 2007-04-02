@@ -160,6 +160,7 @@ return transaction.getDestinationReference()\n
               <tuple>
                 <none/>
                 <none/>
+                <none/>
               </tuple>
             </value>
         </item>

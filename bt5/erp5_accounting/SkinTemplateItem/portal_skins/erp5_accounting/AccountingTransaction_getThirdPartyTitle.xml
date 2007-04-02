@@ -152,6 +152,7 @@ return transaction.getSourceSectionTitle()\n
               <tuple>
                 <none/>
                 <none/>
+                <none/>
               </tuple>
             </value>
         </item>

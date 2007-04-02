@@ -148,7 +148,7 @@ return getTotalPrice(transaction.getPath())\n
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>transaction</string>
-<string>context</string>
+                            <string>context</string>
                             <string>getTotalPrice</string>
                           </tuple>
                         </value>
