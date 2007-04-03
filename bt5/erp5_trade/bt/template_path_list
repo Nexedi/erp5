@@ -1,5 +1,4 @@
 portal_categories/order/supply
-portal_categories/origin/order
 portal_categories/resource/packing
 portal_categories/trade_date/**
 portal_deliveries/purchase_packing_list_builder
