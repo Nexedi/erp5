@@ -260,11 +260,39 @@ class TestTrashTool(ERP5TypeTestCase):
     self.failUnless(base_category is not None)
     subobjects_ids = base_category.objectIds()
     bc_path = base_category.getPath().split('/')[2:-1]
-    LOG('bc_path', 0, bc_path)
     # check backup
     backup_subobjects_ids = trash.backupObject(trashbin, bc_path, bc_id, save=1, keep_subobjects=1)
     # no subobjects return
     self.assertEqual(len(backup_subobjects_ids), 0)
+
+  def stepBackupSubCategories(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check we can add a trash folder into a backup object
+    """
+    trash_id = sequence.get('trash_id')
+    trash = self.getTrashTool()
+    trashbin = trash._getOb(trash_id, None)
+    # get base category to backup
+    subcat_path = sequence.get('subcat_path')
+    bc_id = subcat_path.split('/')[-1]
+    bc_path = subcat_path.split('/')[2:-1]
+    # check backup
+    trash.backupObject(trashbin, bc_path, bc_id, save=1)
+    
+  def stepAddSubCategories(self, sequence=None, sequence_list=None, **kw):
+    # Add subcategories
+    category_id_list = sequence.get('category_id_list')
+    self.assertEqual(len(category_id_list), 10)
+    cat_id = category_id_list[0]
+    bc_id = sequence.get('bc_id')
+    pc = self.getCategoryTool()
+    base_category = pc._getOb(bc_id, None)
+    self.failUnless(base_category is not None)
+    cat = base_category._getOb(cat_id, None)
+    self.failUnless(cat is not None)
+    subcat = cat.newContent(portal_type='Category')
+    self.failUnless(subcat is not None)
+    sequence.edit(subcat_path=subcat.getPath())
     
   # tests
   def test_01_checkTrashBinCreation(self, quiet=quiet, run=run_all_test):
@@ -343,6 +371,34 @@ class TestTrashTool(ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_05_checkBackupWithTrashSubObjects(self, quiet=quiet, run=run_all_test):
+    """
+    Test we can backup a tree like this :
+    base_category/trash_folder/category
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Check Backup With Trash Sub Object'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CheckTrashToolExists  \
+                       CreateTrashBin \
+                       CheckTrashBinIndexable \
+                       AddBaseCategory \
+                       AddCategories \
+                       AddSubCategories \
+                       Tic \
+                       BackupObjectsWithSave \
+                       Tic \
+                       CheckObjectBackupWithoutSubObjects \
+                       BackupSubCategories \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
 if __name__ == '__main__':
   framework()
