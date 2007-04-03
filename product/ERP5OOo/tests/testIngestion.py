@@ -85,7 +85,7 @@ class FileUploadTest(file):
     self.headers = {}
 
 def makeFilePath(name):
-  return os.getenv('INSTANCE_HOME') + '/../Products/ERP5OOo/tests/' + name
+  return os.getenv('INSTANCE_HOME') + '/../Products/ERP5OOo/tests/data/' + name
 
 def makeFileUpload(name):
   path = makeFilePath(name)
@@ -128,6 +128,26 @@ class TestIngestion(ERP5TypeTestCase):
     self.createCategories()
     self.createPreferences()
     self.createTools()
+    self.unpackData()
+  
+  def unpackData(self):
+    """
+      Unpack the content of testIngestion_docs.zip
+    """
+    join = os.path.join
+    base_path = join(os.getenv('INSTANCE_HOME'), '..', 'Products', 'ERP5OOo', 'tests')
+    zf = zipfile.ZipFile(join(base_path, 'testIngestion_docs.zip'))
+    data_dir = join(base_path, 'data')
+    if not os.path.isdir(data_dir):
+      os.mkdir(data_dir)
+    for name in zf.namelist():
+      fname = join(data_dir, name)
+      if not os.path.exists(fname):
+        try:
+          f = open(fname, 'w')
+          f.write(zf.read(name))
+        finally:
+          f.close()
 
   def createTools(self):
     """
