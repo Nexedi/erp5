@@ -111,6 +111,7 @@
                         <string>my_title</string>
                         <string>my_bar_category_title_list</string>
                         <string>my_foo_category_title</string>
+                        <string>my_start_date</string>
                       </list>
                     </value>
                 </item>
