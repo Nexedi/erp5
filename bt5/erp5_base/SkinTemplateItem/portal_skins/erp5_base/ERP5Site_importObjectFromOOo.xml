@@ -188,12 +188,9 @@ else:\n
 \n
       if len(new_object_property_dict.keys()) > 0:\n
         object_list[property_module_url][property_pt].append(new_object_property_dict)\n
-    if len(object_list) % 100 == 0 :\n
-      context.activate(tag="object_OOo_import", priority=1, activity="SQLQueue").ERP5Site_importObjectFromOOoActivity(object_list=object_list)\n
-      object_list = []\n
 \n
-    # rest of activities\n
-    context.activate(tag="object_OOo_import", priority=1, activity="SQLQueue").ERP5Site_importObjectFromOOoActivity(object_list=object_list)\n
+  context.activate(tag="object_OOo_import", priority=1, activity="SQLQueue").ERP5Site_importObjectFromOOoActivity(object_list=object_list)\n
+\n
   return request.RESPONSE.redirect(context.absolute_url() + \'/view?portal_status_message=OpenOffice+document+importing.\')\n
 \n
 return context.ERP5Site_importObjectFromOOoFastInput(REQUEST=request)\n
