@@ -29,7 +29,7 @@ def reindexObject(self, idxs=[], *args, **kw):
     """
     if idxs == []:
         # Update the modification date.
-        if hasattr(aq_base(self), 'notifyModified'):
+        if getattr(aq_base(self), 'notifyModified', None) is not None:
             self.notifyModified()
     catalog = getToolByName(self, 'portal_catalog', None)
     if catalog is not None:
