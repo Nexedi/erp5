@@ -146,7 +146,7 @@
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td>${base_url}/foo_module/view</td>\n
+  <td>${base_url}/foo_module/FooModule_viewFooList</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

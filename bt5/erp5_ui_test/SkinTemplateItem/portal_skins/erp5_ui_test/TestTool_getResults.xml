@@ -114,11 +114,12 @@ return \'\\n\'.join(results) + \'\\n\'\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>portal_tests</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
                             <string>e</string>
                             <string>results</string>
                           </tuple>
