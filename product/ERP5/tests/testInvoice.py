@@ -162,8 +162,10 @@ class TestInvoice(TestPackingListMixin,
     currency_module = self.getCurrencyModule()
     if len(currency_module.objectValues(id='EUR'))==0:
       currency = self.getCurrencyModule().newContent(
-            portal_type = 'Currency',
-            id = "EUR" )
+          portal_type='Currency',
+          id="EUR",
+          base_unit_quantity=0.01,
+          )
     currency = currency_module.objectValues(id='EUR')[0]
     sequence.edit(currency = currency)
 
@@ -588,7 +590,9 @@ class TestInvoice(TestPackingListMixin,
               break
           else:
             self.fail('No line found that matches %s' % line_id)
-          self.assertEquals(line.getQuantity(), expected_price * line_ratio)
+          resource_precision = line.getResourceValue().getQuantityPrecision()
+          self.assertEquals(round(line.getQuantity(), resource_precision),
+              round(expected_price * line_ratio, resource_precision))
 
   def stepCheckDeliveryRuleForDeferred(
                       self, sequence=None, sequence_list=None, **kw):
