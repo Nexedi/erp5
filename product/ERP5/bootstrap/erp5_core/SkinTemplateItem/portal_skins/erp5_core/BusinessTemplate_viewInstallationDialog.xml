@@ -80,7 +80,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
@@ -89,9 +89,12 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_update_catalog</string>
+                        <string>your_update_translation</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -103,16 +106,13 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_update_catalog</string>
-                        <string>your_update_translation</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list/>
                     </value>
