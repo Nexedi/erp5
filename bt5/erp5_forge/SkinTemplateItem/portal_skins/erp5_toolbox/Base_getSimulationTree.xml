@@ -103,10 +103,8 @@ else:\n
   start_paths = [start_path,]\n
 if start_paths == []:\n
   # we are in no simulation related object\n
-  print \'No related simulations found\'\n
-  return printed\n
+  return []\n
 \n
-print \'%s simulation related path found.\'%(len(start_paths),)\n
 related_simulations = {}\n
 for start_path in start_paths:\n
 \n
@@ -158,8 +156,6 @@ return related_simulations\n
                         <value>
                           <tuple>
                             <string>start_path</string>
-                            <string>_print_</string>
-                            <string>_print</string>
                             <string>getByRecurse</string>
                             <string>getFromCatalog</string>
                             <string>None</string>
@@ -170,7 +166,6 @@ return related_simulations\n
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>len</string>
                             <string>related_simulations</string>
                             <string>_write_</string>
                           </tuple>
