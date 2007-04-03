@@ -36,8 +36,8 @@ from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
 from ZTUtils import make_query
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions as ERP5Permissions
-from Products.ERP5Type import allowMemcachedTool
 from Products.ERP5Form import _dtmldir
 from Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
@@ -59,7 +59,7 @@ import warnings
 class SelectionError( Exception ):
     pass
 
-class SelectionTool( UniqueObject, SimpleItem ):
+class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
     """
       The SelectionTool object is the place holder for all
       methods and algorithms related to persistent selections
@@ -68,7 +68,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     id              = 'portal_selections'
     meta_type       = 'ERP5 Selections'
-
+    portal_type     = 'Selection Tool'
     security = ClassSecurityInfo()
 
     #
@@ -79,6 +79,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
                          },
                          { 'label'      : 'View Selections'
                          , 'action'     : 'manage_view_selections'
+                         },
+                         { 'label'      : 'Configure'
+                         , 'action'     : 'manage_configure'
                          } ))
 
     security.declareProtected( ERP5Permissions.ManagePortal
@@ -89,6 +92,36 @@ class SelectionTool( UniqueObject, SimpleItem ):
                              , 'manage_view_selections' )
     manage_view_selections = DTMLFile( 'SelectionTool_manageViewSelections', _dtmldir )
 
+    security.declareProtected( ERP5Permissions.ManagePortal
+                             , 'manage_configure' )
+    manage_configure = DTMLFile( 'SelectionTool_configure', _dtmldir )
+
+    # storages of SelectionTool
+    storage_list = ('Persistent Mapping', 'Memcached Tool')
+
+    security.declareProtected( ERP5Permissions.ManagePortal, 'setStorage')
+    def setStorage(self, value, RESPONSE=None):
+      """
+        Set the storage of Selection Tool.
+      """
+      if value in self.storage_list:
+        self.storage = value
+      else:
+        raise ValueError, 'Given storage type (%s) is now supported.' % (value,)
+      if RESPONSE is not None:
+        RESPONSE.redirect('%s/manage_configure' % (self.absolute_url()))
+
+    def getStorage(self, default=None):
+      if default is None:
+        default = self.storage_list[0]
+      storage = getattr(self, 'storage', default)
+      if storage is not default and storage not in self.storage_list:
+        storage = storage_list[0]
+      return storage
+
+    def isMemcachedUsed(self):
+      return self.getStorage() == 'Memcached Tool'
+      
     def _redirectToOriginalForm(self, REQUEST=None, form_id=None, dialog_id=None,
                                 query_string=None,
                                 no_reset=False, no_report_depth=False):
@@ -125,8 +158,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
         Returns the selection names of the current user.
       """
-      if allowMemcachedTool():
-        raise SelectionError, 'getSelectionNameList is not supported if you use memcached tool.'
+      if self.isMemcachedUsed():
+        return []
       user_id = self.portal_membership.getAuthenticatedMember().getUserName()
       if user_id is not None:
         prefix = '%s-' % user_id
@@ -155,7 +188,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       value = getattr(self, '_v_selection_data', None)
       if value is None:
-        if allowMemcachedTool():
+        if self.isMemcachedUsed():
           value = self.getPortalObject().portal_memcached.getMemcachedDict(key_prefix='selection_tool')
         else:
           value = PersistentMapping()

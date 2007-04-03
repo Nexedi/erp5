@@ -40,7 +40,6 @@ from zLOG import LOG
 from Testing import ZopeTestCase
 from Products.ERP5Type.Utils import get_request
 from Products.ERP5Form.Selection import Selection
-from Products.ERP5Type import allowMemcachedTool
 
 
 class TestSelectionTool(ERP5TypeTestCase):
@@ -64,17 +63,17 @@ class TestSelectionTool(ERP5TypeTestCase):
 
   def testGetSelectionNameList(self, quiet=quiet, run=run_all_test):
     if not run: return
-    if allowMemcachedTool():
-      from Products.ERP5Form.SelectionTool import SelectionError
-      self.assertRaises(SelectionError,
-                        self.portal_selections.getSelectionNameList)
-      self.assertRaises(SelectionError,
-                        self.portal_selections.getSelectionNames)
-    else:
-      self.assertEquals(['test_selection'],
-                        self.portal_selections.getSelectionNames())
-      self.assertEquals(['test_selection'],
-                        self.portal_selections.getSelectionNameList())
+    # use persistent mapping by default
+    self.assertEquals(['test_selection'],
+                      self.portal_selections.getSelectionNameList())
+    self.assertEquals(['test_selection'],
+                      self.portal_selections.getSelectionNames())
+    # use memcached tool
+    self.portal_selections.setStorage('Memcached Tool')
+    self.assertEquals([],
+                      self.portal_selections.getSelectionNameList())
+    self.assertEquals([],
+                      self.portal_selections.getSelectionNames())
 
   def testGetSelectionFor(self, quiet=quiet, run=run_all_test):
     if not run: return

@@ -5,6 +5,11 @@
            form_title='View Selections',
            help_product='ERP5Form',
 	   )">
+<dtml-if isMemcachedUsed>
+<p class="form-help">
+Listing active selections is not supported if you use memcached tool.
+</p>
+<dtml-else>
 <p class="form-help">
 This page show the active selections for the current user.
  It is only useful for debug purposes.
@@ -25,4 +30,5 @@ This page show the active selections for the current user.
   </dtml-in>
 
 </table>
+</dtml-if>
 <dtml-var manage_page_footer>
