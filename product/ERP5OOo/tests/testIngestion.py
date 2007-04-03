@@ -44,7 +44,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Cache import clearCache
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
-from ZPublisher.HTTPRequest import FileUpload
 
 
 if __name__ == '__main__':
@@ -862,41 +861,7 @@ class TestIngestion(ERP5TypeTestCase):
         break
     self.failUnless(john_is_owner)
 
-  def stepImportRawDataFile(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('TEST-en-003.ods')
-    #environ = {'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': 'plain/text'}
-    #file = FileUpload(FieldStorage(fp=f, environ=environ))
-    person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    get_transaction().commit(); self.tic()
-    listbox=(
-    { 'listbox_key': '001',
-      'portal_type_property_list':'Person.title'},
-    { 'listbox_key': '002',
-      'portal_type_property_list':'Person.first_name'},
-    { 'listbox_key': '003',
-      'portal_type_property_list':'Person.last_name'},
-    { 'listbox_key': '004',
-      'portal_type_property_list':'Person.default_email_text'}
-    )
-    person_module.ERP5Site_importObjectFromOOo(import_file=f, listbox=listbox)
   
-  def stepCheckActivitiesCount(self, sequence=None, sequence_list=None, **kw):
-    message_list = self.getPortal().portal_activities.getMessageList()
-    self.assertEqual(1,len(message_list))
-    method_id = message_list[0].method_id
-    self.assertEqual('ERP5Site_importObjectFromOOoActivity',method_id)
-  
-  def stepCheckImportedPersonList(self, sequence=None, sequence_list=None, **kw):
-    person_module = self.getPortal().person_module
-    for i in range(101):
-      object = person_module['%s' % (i+1)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('Doe %s' % (i), object.getLastName())
-      self.assertEqual('john.doe%s@foo.com' % (i), object.getDefaultEmailText())
-
   ##################################
   ##  Tests
   ##################################
@@ -1155,23 +1120,6 @@ class TestIngestion(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_12_ImportObjectFromOOoInActivities(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Simulate import of OOo file true ERP5Site_importObjectFromOOoFastInput
-      For Person Module.
-    """
-    if testrun and 12 not in testrun:return
-    if not run: return
-    if not quiet: shout('test_12_ImportObjectOOoInActivities')
-    sequence_list = SequenceList()
-    step_list = [ 'stepImportRawDataFile'
-                 ,'stepCheckActivitiesCount'
-                 ,'Tic'
-                 ,'stepCheckImportedPersonList'
-                ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
 
 if __name__ == '__main__':
   framework()
