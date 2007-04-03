@@ -61,19 +61,25 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.portal_selections.setSelectionFor('test_selection', Selection())
     self.portal_selections.setSelectionParamsFor('test_selection', {'key':'value'})
 
-  def testGetSelectionNameList(self, quiet=quiet, run=run_all_test):
+  def testGetSelectionContainer(self, quiet=quiet, run=run_all_test):
     if not run: return
     # use persistent mapping by default
     self.assertEquals(['test_selection'],
                       self.portal_selections.getSelectionNameList())
     self.assertEquals(['test_selection'],
                       self.portal_selections.getSelectionNames())
+    self.assert_(self.portal_selections.getSelectionContainer() is not None)
+    self.assert_(getattr(self.portal_selections, '_selection_data', None)
+                 is not None)
     # use memcached tool
     self.portal_selections.setStorage('Memcached Tool')
     self.assertEquals([],
                       self.portal_selections.getSelectionNameList())
     self.assertEquals([],
                       self.portal_selections.getSelectionNames())
+    self.assert_(self.portal_selections.getSelectionContainer() is not None)
+    self.assert_(getattr(self.portal_selections, '_v_selection_data', None)
+                 is not None)
 
   def testGetSelectionFor(self, quiet=quiet, run=run_all_test):
     if not run: return

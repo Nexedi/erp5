@@ -186,14 +186,16 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
         Return the selection container.
       """
-      value = getattr(self, '_v_selection_data', None)
-      if value is None:
-        if self.isMemcachedUsed():
+      if self.isMemcachedUsed():
+        value = getattr(self, '_v_selection_data', None)
+        if value is None:
           value = self.getPortalObject().portal_memcached.getMemcachedDict(key_prefix='selection_tool')
-        else:
+          setattr(self, '_v_selection_data', value)
+      else:
+        value = getattr(self, '_selection_data', None)
+        if value is None:
           value = PersistentMapping()
-          value.set = value.__setitem__
-        setattr(self, '_v_selection_data', value)
+          setattr(self, '_selection_data', value)
       return value
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionFor')
@@ -220,7 +222,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
 
       user_id = self.portal_membership.getAuthenticatedMember().getUserName()
       if user_id is not None:
-        self.getSelectionContainer().set('%s-%s' % (user_id, selection_name), aq_base(selection_object))
+        self.getSelectionContainer()['%s-%s' % (user_id, selection_name)] = aq_base(selection_object)
       return
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionParamsFor')
