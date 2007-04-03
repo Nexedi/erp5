@@ -81,6 +81,7 @@
     * ERP5Site_importObjectFromOOoFastInput          -- The UI\n
     * ERP5Site_getSpreadsheetColumnNameList          -- Utility script\n
     * ERP5Site_getModulePortalTypeSortedPropertyList -- Utility script\n
+    * ERP5Site_importObjectFromOOoActivity           -- Activating Import Script\n
 """\n
 \n
 request  = context.REQUEST\n
@@ -92,7 +93,7 @@ def getRequestValues(rq):\n
   return map(lambda x: x[1], rq.items())\n
 \n
 def getSpreadsheet():\n
-  from Products.ERP5OOo.OOoUtils import OOoParser\n
+  from Products.ERP5OOo.OOoUtils import OOoParser, CorruptedOOoFile\n
   OOoParser = OOoParser()\n
   # Extract tables from the speadsheet file\n
   import_file = kw[\'import_file\']\n
@@ -117,13 +118,13 @@ if len(listbox) == 0:\n
 \n
 # Second Step\n
 else:\n
-\n
   # Re-upload the OOo file\n
   spreadsheets = getSpreadsheet()\n
 \n
   # Build the data mapping\n
   mapping = {}\n
   request.set(\'ooo_import_spreadsheet_data\', spreadsheets)\n
+\n
   listbox_ordered_lines = context.ERP5Site_getSpreadsheetColumnNameList()\n
   for line in listbox_ordered_lines:\n
     listbox_id = line.getUid()[4:]\n
@@ -171,51 +172,29 @@ else:\n
       for line_property_index in range(len(line)):\n
         if line_property_index in column_mapping.keys():\n
           property_module = sheet_module\n
+          property_module_url = property_module.getRelativeUrl()\n
           property_pt     = column_mapping[line_property_index][\'portal_type\']\n
           property_id     = column_mapping[line_property_index][\'property\']\n
           property_value  = line[line_property_index]\n
 \n
           if not property_value in (\'\', None):\n
-            if not object_list.has_key(property_module):\n
-              object_list[property_module] = {}\n
-            if not object_list[property_module].has_key(property_pt):\n
-              object_list[property_module][property_pt] = []\n
+            if not object_list.has_key(property_module_url):\n
+              object_list[property_module_url] = {}\n
+            if not object_list[property_module_url].has_key(property_pt):\n
+              object_list[property_module_url][property_pt] = []\n
   \n
             # Create a new property value\n
             new_object_property_dict[property_id] = property_value\n
 \n
       if len(new_object_property_dict.keys()) > 0:\n
-        object_list[property_module][property_pt].append(new_object_property_dict)\n
-  # Create new ERP5 objects\n
-  new_path_list = []\n
-  for (module, per_portal_type_data) in object_list.items():\n
-    for (portal_type, new_object_list) in per_portal_type_data.items():\n
-      for new_object_property_dict in new_object_list:\n
-        #get portal type objects\n
-        ptype_object = None\n
-        for allowed_ptype in module.allowedContentTypes():\n
-          ptype_name = \'\'.join(allowed_ptype.id.split(\' \'))\n
-          if ptype_name == portal_type:\n
-            ptype_object = allowed_ptype\n
-            break\n
-        if ptype_object is None:\n
-          raise \'Portal type %s not found in allowed content types\' % portal_type\n
-        category_list = ptype_object.getInstanceBaseCategoryList()\n
-        new_object = module.newContent( portal_type       = portal_type\n
-                                      , immediate_reindex = 1\n
-                                      )\n
-        new_object_category_dict = {}\n
-        for prop_key in new_object_property_dict.keys():\n
-          if prop_key in category_list:\n
-            new_object_category_dict[prop_key] = new_object_property_dict[prop_key]\n
-            del new_object_property_dict[prop_key]\n
-        new_object.edit(**new_object_property_dict)\n
-        # Match the categories\n
-        new_object_category_dict = context.ERP5Site_getCategoriesFullPath(category_dict = new_object_category_dict)\n
-        new_object.edit(**new_object_category_dict)\n
-        new_path_list.append(new_object.getRelativeUrl())\n
-  \n
-  return request.RESPONSE.redirect(context.absolute_url() + \'/person_module/view?portal_status_message=OpenOffice+document+successfully+imported.+New+object+created:+\' + str(len(new_path_list)))\n
+        object_list[property_module_url][property_pt].append(new_object_property_dict)\n
+    if len(object_list) % 100 == 0 :\n
+      context.activate(tag="object_OOo_import", priority=1, activity="SQLQueue").ERP5Site_importObjectFromOOoActivity(object_list=object_list)\n
+      object_list = []\n
+\n
+    # rest of activities\n
+    context.activate(tag="object_OOo_import", priority=1, activity="SQLQueue").ERP5Site_importObjectFromOOoActivity(object_list=object_list)\n
+  return request.RESPONSE.redirect(context.absolute_url() + \'/view?portal_status_message=OpenOffice+document+importing.\')\n
 \n
 return context.ERP5Site_importObjectFromOOoFastInput(REQUEST=request)\n
 
@@ -308,23 +287,10 @@ return context.ERP5Site_importObjectFromOOoFastInput(REQUEST=request)\n
                             <string>new_object_property_dict</string>
                             <string>line_property_index</string>
                             <string>property_module</string>
+                            <string>property_module_url</string>
                             <string>property_pt</string>
                             <string>property_id</string>
                             <string>property_value</string>
-                            <string>new_path_list</string>
-                            <string>module</string>
-                            <string>per_portal_type_data</string>
-                            <string>portal_type</string>
-                            <string>new_object_list</string>
-                            <string>ptype_object</string>
-                            <string>allowed_ptype</string>
-                            <string>ptype_name</string>
-                            <string>category_list</string>
-                            <string>new_object</string>
-                            <string>new_object_category_dict</string>
-                            <string>prop_key</string>
-                            <string>_apply_</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>

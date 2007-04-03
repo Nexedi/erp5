@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Create new ERP5 objects In Activity from OOo document\n
+context.log(\'object_list\',object_list)\n
+context.log(\'kw\',kw)\n
+for (module_url, per_portal_type_data) in object_list.items():\n
+  for (portal_type, new_object_list) in per_portal_type_data.items():\n
+    for new_object_property_dict in new_object_list:\n
+      #get portal type objects\n
+      ptype_object = None\n
+      module = context.getPortalObject().restrictedTraverse(module_url)\n
+      for allowed_ptype in module.allowedContentTypes():\n
+        ptype_name = \'\'.join(allowed_ptype.id.split(\' \'))\n
+        if ptype_name == portal_type:\n
+          ptype_object = allowed_ptype\n
+          break\n
+      if ptype_object is None:\n
+        raise \'Portal type %s not found in allowed content types\' % portal_type\n
+      category_list = ptype_object.getInstanceBaseCategoryList()\n
+      new_object = module.newContent( portal_type       = portal_type\n
+                                    , immediate_reindex = 1\n
+                                    )\n
+      new_object_category_dict = {}\n
+      for prop_key in new_object_property_dict.keys():\n
+        if prop_key in category_list:\n
+          new_object_category_dict[prop_key] = new_object_property_dict[prop_key]\n
+          del new_object_property_dict[prop_key]\n
+      new_object.edit(**new_object_property_dict)\n
+      # Match the categories\n
+      new_object_category_dict = context.ERP5Site_getCategoriesFullPath(category_dict = new_object_category_dict)\n
+      new_object.edit(**new_object_category_dict)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>object_list, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>object_list</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>_getiter_</string>
+                            <string>module_url</string>
+                            <string>per_portal_type_data</string>
+                            <string>portal_type</string>
+                            <string>new_object_list</string>
+                            <string>new_object_property_dict</string>
+                            <string>None</string>
+                            <string>ptype_object</string>
+                            <string>module</string>
+                            <string>allowed_ptype</string>
+                            <string>ptype_name</string>
+                            <string>category_list</string>
+                            <string>new_object</string>
+                            <string>new_object_category_dict</string>
+                            <string>prop_key</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_importObjectFromOOoActivity</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
