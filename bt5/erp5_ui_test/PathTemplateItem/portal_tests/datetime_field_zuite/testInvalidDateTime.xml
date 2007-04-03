@@ -117,27 +117,27 @@
 </tr>\n
 \n
 <tr>\n
-  <td>verifyNotValue</td>\n
+  <td>verifyValue</td>\n
   <td>subfield_field_my_start_date_year</td>\n
   <td>9999</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyNotValue</td>\n
+  <td>verifyValue</td>\n
   <td>subfield_field_my_start_date_month</td>\n
   <td>88</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyNotValue</td>\n
+  <td>verifyValue</td>\n
   <td>subfield_field_my_start_date_day</td>\n
   <td>77</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyNotValue</td>\n
+  <td>verifyValue</td>\n
   <td>subfield_field_my_start_date_hour</td>\n
   <td>66</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyNotValue</td>\n
+  <td>verifyValue</td>\n
   <td>subfield_field_my_start_date_minute</td>\n
   <td>99</td>\n
 </tr>\n
