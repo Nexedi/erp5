@@ -884,8 +884,9 @@ class TestIngestion(ERP5TypeTestCase):
   
   def stepCheckActivitiesCount(self, sequence=None, sequence_list=None, **kw):
     message_list = self.getPortal().portal_activities.getMessageList()
-    #101 objects x 3 (default_email, recursiveImmediateReindexObject, immediateReindexObject) = 303 activities
-    self.assertEqual(303,len(message_list))
+    self.assertEqual(1,len(message_list))
+    method_id = message_list[0].method_id
+    self.assertEqual('ERP5Site_importObjectFromOOoActivity',method_id)
   
   def stepCheckImportedPersonList(self, sequence=None, sequence_list=None, **kw):
     person_module = self.getPortal().person_module
