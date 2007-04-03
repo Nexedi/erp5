@@ -981,6 +981,22 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       , priority = 2.0 )
     sequence.edit(first_action_id='become_geek')
 
+  def stepCreateEmptyAction(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create an empty action
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
+    object_pt.addAction(id = ''
+      , name = ' Nerd'
+      , action = ''
+      , condition = ''
+      , permission = ()
+      , category = ''
+      , visible = 1
+      , priority = 1.2)
+
   def stepCreateSecondAction(self, sequence=None, sequence_list=None, **kw):
     """
     Create a second action
@@ -2550,6 +2566,54 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+
+  def test_07_BusinessTemplateWithEmptyAction(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template Upgrade With Empty Action'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateFirstAction \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       CreateEmptyAction \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckSkinsLayers \
+                       CheckPortalTypeExists \
+                       CheckFirstActionExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckPortalTypeRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+
 
   def test_08_BusinessTemplateWithTwoActions(self, quiet=quiet, run=run_all_test):
     if not run: return

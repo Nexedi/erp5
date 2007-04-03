@@ -682,9 +682,12 @@ class ObjectTemplateItem(BaseTemplateItem):
             # set actions
             action_list = subobjects_dict['action_list']
             for action in action_list:
+              action_text = action.action
+              if isinstance(action_text, Expression):
+                action_text = action_text.text
               obj.addAction(id = action.id
                             , name = action.title
-                            , action = action.action.text
+                            , action = action_text
                             , condition = action.getCondition()
                             , permission = action.permissions
                             , category = action.category
