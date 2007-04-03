@@ -1233,9 +1233,14 @@ class ListBoxRenderer:
                                       base_category = base_category,
                                       is_open = False, selection_domain = selection_domain,
                                       exception_uid_list = exception_uid_list))
+        # manage multiple base category
+        if len(report_path) >= 1 and base_category != report_path[0]:
+          new_base_category = None
+        else:
+          new_base_category = base_category
         tree_list.extend(self.makeReportTreeList(root_dict = new_root_dict,
                                                  report_path = report_path,
-                                                 base_category = base_category,
+                                                 base_category = new_base_category,
                                                  depth = depth + 1,
                                                  unfolded_list = unfolded_list,
                                                  is_report_opened = is_report_opened,
