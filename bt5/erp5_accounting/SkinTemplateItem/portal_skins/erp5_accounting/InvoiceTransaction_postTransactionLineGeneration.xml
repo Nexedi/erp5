@@ -95,7 +95,7 @@ for line in sale_invoice.objectValues() :\n
     continue\n
   else : \n
     resources_keys[line.getResource()] = 1\n
-context.log(\'resources_keys\',resources_keys)\n
+\n
 if len(resources_keys.keys()) == 1 :\n
   # set the resource on the transaction\n
   sale_invoice.setResource(resources_keys.keys()[0])\n
@@ -110,8 +110,8 @@ else :\n
   raise ValueError, "%s doesn(t have only one resource %s" % (\n
               sale_invoice.getPath(), resources_keys.keys())\n
 \n
-\n
-# vim: syntax=python\n
+# round debit / credit on created transaction.\n
+context.AccountingTransaction_roundDebitCredit()\n
 </string> </value>
         </item>
         <item>

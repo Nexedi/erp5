@@ -70,42 +70,31 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+""" Rounds debit and credit lines on generated transactions, according to \n
+precision of this transaction\'s resource.\n
 """\n
-  This script no longer round debit & credit but only check consistency in a generated\n
-    accounting transaction, because now we want rouding problems fixed.\n
-"""\n
+precision = context.getQuantityPrecisionFromResource(context.getResource())\n
+resource = context.getResourceValue()\n
 \n
-precision = context.Base_getPreferredPrecision()\n
-r_ = lambda x: context.Base_getRoundValue(x, precision)\n
+line = None\n
+total_quantity = 0.0\n
 \n
-line           = None\n
-net_balance    = 0.0\n
-debit_balance  = 0.0\n
-credit_balance = 0.0\n
-\n
-line_list = context.getMovementList(portal_type=context.getPortalAccountingMovementTypeList())\n
+line_list = context.getMovementList(\n
+            portal_type=context.getPortalAccountingMovementTypeList())\n
 \n
 for line in line_list:\n
-  line_quantity = r_(line.getQuantity())\n
-  # Auto remove empty lines\n
-  if line_quantity == 0.0: \n
-    context.deleteContent(line.getId())\n
-    # Proceed to next line\n
-    continue\n
-  line.setQuantity(line_quantity)  \n
-  if line.getSourceDebit() > 0:\n
-    line.setSourceDebit(r_(line.getSourceDebit()))\n
-    debit_balance = r_(debit_balance + r_(line_quantity))\n
-  else:\n
-    line.setSourceCredit(r_(line.getSourceCredit()))\n
-    credit_balance = r_(credit_balance + r_(line_quantity))\n
-  net_balance = r_(net_balance + r_(line_quantity))\n
+  line_quantity = round(line.getQuantity(), precision)\n
+  line.setQuantity(line_quantity)\n
+  total_quantity += line_quantity\n
 \n
-# Check if the debit is equal to the credit\n
-if abs(net_balance) > 0 or \\\n
-   abs(credit_balance + debit_balance) > 0:\n
-#  raise ValueError, "Debit differ to Credit (%s != %s => diff: %s) for %s " % (debit_balance, credit_balance, net_balance, context.getPath())\n
-  context.log(\'ValueError\', "Debit differ to Credit (%s != %s => diff: %s) for %s " % (debit_balance, credit_balance, net_balance, context.getPath()))\n
+# total_quantity should be 0, or we created a transaction where debit != credit\n
+if abs(round(total_quantity, precision)) > 2 * resource.getBaseUnitQuantity():\n
+  raise ValueError, \'debit != credit for %s => %s\' % (\n
+        context.getPath(), total_quantity)\n
+\n
+# if the difference is <= the base quantity unit, we round the last line\n
+if line is not None:\n
+  line.setQuantity(round(line.getQuantity() - total_quantity, precision))\n
 
 
 ]]></string> </value>
@@ -159,16 +148,16 @@ if abs(net_balance) > 0 or \\\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>precision</string>
-                            <string>r_</string>
+                            <string>resource</string>
                             <string>None</string>
                             <string>line</string>
-                            <string>net_balance</string>
-                            <string>debit_balance</string>
-                            <string>credit_balance</string>
+                            <string>total_quantity</string>
                             <string>line_list</string>
                             <string>_getiter_</string>
+                            <string>round</string>
                             <string>line_quantity</string>
                             <string>abs</string>
+                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>
