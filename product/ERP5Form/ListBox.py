@@ -2804,8 +2804,9 @@ class ListBoxValidator(Validator.Validator):
         editable_column_ids = map(lambda x: x[0], editable_columns)
         selection_name = field.get_value('selection_name')
         #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
-        selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-        params = selection.getParams()
+        params = here.portal_selections.getSelectionParamsFor(
+                                                           selection_name, 
+                                                           REQUEST=REQUEST)
         portal_url = getToolByName(here, 'portal_url')
         portal = portal_url.getPortalObject()
 
