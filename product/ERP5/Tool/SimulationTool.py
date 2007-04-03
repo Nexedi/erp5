@@ -1059,7 +1059,6 @@ class SimulationTool(BaseTool):
 
       """
       new_kw = self._generateSQLKeywordDict(table='item',strict_simulation_state=strict_simulation_state,**kw)
-      new_kw['at_date'] = kw.get('at_date')
 
       # Extra parameters for the SQL Method
       new_kw['join_on_item'] = new_kw.get('at_date') or \
