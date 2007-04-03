@@ -488,6 +488,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         id = 'EUR',
         title = 'Euro',
         portal_type = self.currency_portal_type,
+        base_unit_quantity = .01,
       )
     sequence.edit(euro=currency_module.EUR, currency=currency_module.EUR)
     
@@ -1276,7 +1277,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       'collected_vat'     : (0, 19.60),
       'receivable'        : (119.60, 0),
     }
-  
+
     for invoice_transaction_line in invoice_transaction_line_list :
       self.assert_(
           invoice_transaction_line.getSourceId() in accounting_lines_layout.keys(),
