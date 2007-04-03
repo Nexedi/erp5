@@ -59,7 +59,7 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test Invalid DateTime</td></tr>\n
 </thead><tbody>\n
-<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
@@ -82,9 +82,20 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/Foo_viewProxyField</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewDateTimeField</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Data Updated.</td>\n
+  <td></td>\n
+</tr>\n
+\n
 <tr>\n
   <td>type</td>\n
   <td>subfield_field_my_start_date_year</td>\n
@@ -165,7 +176,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testInvalidDateTime</string> </value>
+            <value> <string>testSurchargeWithInvalidDateTime</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
