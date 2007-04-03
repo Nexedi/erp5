@@ -404,6 +404,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(bt is not None)
     bt.getPortalTypesProperties()
 
+  def stepFillWrongPortalTypesFields(self, sequence=None, sequence_list=None, **kw):
+    """
+    Fill portal types properties field in business template with wrong values
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.getPortalTypesProperties()
+    bt_allowed_content_type_list = list(getattr(self, 'template_portal_type_allowed_content_type', []) or [])
+    bt_allowed_content_type_list.append("Geek Module | BusinessTemplate")
+    bt.setProperty('template_portal_type_allowed_content_type', bt_allowed_content_type_list)
+    
   # module
   def stepCreateModuleAndObjects(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1964,6 +1975,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertRaises(AttributeError,
                       template.build)
 
+  def stepCheckBuildWithBadPortalTypeFailed(self, sequence=None, sequence_list=None, **kw):
+    """
+    Build Business Template
+    """
+    template = sequence.get('current_bt')
+    self.assertRaises(ValueError,
+                      template.build)
+
   def stepBuildBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Build Business Template
@@ -2251,6 +2270,31 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_021_BusinessTemplateWithPortalTypesAdnWrongValues(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With Portal Types and Bad Values'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
+                       FillWrongPortalTypesFields \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckBuildWithBadPortalTypeFailed \
+                       RemovePortalType \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
   # test of skins
   def test_03_BusinessTemplateWithSkins(self, quiet=quiet, run=run_all_test):

@@ -1509,8 +1509,17 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   class_property = 'allowed_content_types'
 
   def build(self, context, **kw):
-    for key in self._archive.keys():
+    types_tool = self.getPortalObject().portal_types
+    types_list = list(types_tool.objectIds())
+    for key in self._archive.keys():      
       portal_type, allowed_type = key.split(' | ')
+      # check properties corresponds to what is defined in site
+      if not portal_type in types_list:
+        raise ValueError, "Portal Type %s not found in site" %(portal_type,)
+      ob = types_tool._getOb(portal_type)
+      prop_value = getattr(ob, self.class_property, ())
+      if not allowed_type in prop_value:
+        raise ValueError, "Property %s not found in portal type %s" %(allowed_type, portal_type)
       if self._objects.has_key(portal_type):
         allowed_list = self._objects[portal_type]
         allowed_list.append(allowed_type)
