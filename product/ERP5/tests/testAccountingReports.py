@@ -1106,6 +1106,19 @@ class TestAccountingReports(AccountingTestCase):
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
+    # The box showing parameters summary in
+    # Account_viewAccountingTransactionList is not rendered here.
+    report_section = report_section_list[0]
+    report_section.pushReport(self.portal)
+    form = getattr(self.portal, report_section.form_id)
+    # we test that this form only shows a listbox
+    for group in form.get_groups():
+      if group != 'hidden':
+        for field in form.get_fields_in_group(group):
+          if field.getId() != 'listbox':
+            self.fail('Field %s should not be visible', field.getId())
+    report_section.popReport(self.portal)
+    
     # report layout
     self.assertEquals(['Movement_getSpecificReference',
         'Movement_getExplanationTitle', 'date',
