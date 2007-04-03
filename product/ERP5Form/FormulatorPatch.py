@@ -699,6 +699,8 @@ def DateTimeField_get_default(self, key, value, REQUEST):
         return value
     # if there is something in the request then return None
     # sub fields should pick up defaults themselves
+    # XXX hasattr(REQUEST, 'form') seems useless, because REQUEST always has
+    # a form property
     if REQUEST is not None and hasattr(REQUEST, 'form') and \
         REQUEST.form.has_key('subfield_%s_%s' % (key, 'year')):
         return None
@@ -750,7 +752,11 @@ class PatchedDateTimeWidget(DateTimeWidget):
         # Is it still usefull to test the None value,
         # as DateTimeField should be considerer as the other field
         # and get an empty string as default value?
-        if value in (None, '') and field.get_value('default_now'):
+        # XXX hasattr(REQUEST, 'form') seems useless, 
+        # because REQUEST always has a form property
+        if (value in (None, '')) and (field.get_value('default_now')) and \
+           ((REQUEST is None) or (not hasattr(REQUEST, 'form')) or \
+            (not REQUEST.form.has_key('subfield_%s_%s' % (key, 'year')))):
             value = DateTime()
         year   = None
         month  = None
