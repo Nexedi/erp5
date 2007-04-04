@@ -124,7 +124,7 @@ for line in line_list :\n
     source_counter = source\n
   # Make sure there is no reindex with the tag of this counter\n
   if not serialize_dict.has_key(source_counter):\n
-    serialize_dict[key] = 1\n
+    serialize_dict[source_counter] = 1\n
     source_object = context.portal_categories.getCategoryValue(source_counter)\n
     source_object.serialize()\n
   # Reindex this line with this particular source_counter tag\n
@@ -235,7 +235,6 @@ return 0\n
                             <string>line</string>
                             <string>line_resource</string>
                             <string>_write_</string>
-                            <string>key</string>
                             <string>source_object</string>
                             <string>activate_kw</string>
                             <string>cell</string>
