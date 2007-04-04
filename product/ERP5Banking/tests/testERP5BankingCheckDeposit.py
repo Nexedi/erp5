@@ -75,7 +75,6 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     """
       Method called before the launch of the test to initialize some data
     """
-    TestBaobabMixin.afterSetUp(self)
     # Set some variables :
     self.initDefaultVariable()
 
@@ -152,6 +151,18 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepLoginAsSuperUser(self, sequence=None, sequence_list=None, **kwd):
     self.login('super_user')
+
+  def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl()), 50000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl()), 50000)
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
