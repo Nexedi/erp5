@@ -59,81 +59,99 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
-
   def getTitle(self):
     """
       Return the title of the test
     """
     return "ERP5BankingCheckDeposit"
 
+  def getCheckDepositModule(self):
+    """
+    Return the check deposit module
+    """
+    return getattr(self.getPortal(), 'check_deposit_module', None)
+
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
     """
+    TestBaobabMixin.afterSetUp(self)
+    # Set some variables :
     self.initDefaultVariable()
-    # the check deposit module
+
     self.check_deposit_module = self.getCheckDepositModule()
-    # the checkbook module
-    self.checkbook_module = self.getCheckbookModule()
 
-    # Create a user and login as manager to populate the erp5 portal with objects for tests.
     self.createManagerAndLogin()
-    self.currency_1 = self.createCurrency()
-    self.createFunctionGroupSiteCategory()
-
-    # create a person and a bank account
-    self.person_1 = self.createPerson(id='person_1',
-                                      first_name='toto',
-                                      last_name='titi')
-    self.bank_account_1 = self.createBankAccount(person=self.person_1,
-                                                 account_id='bank_account_1',
-                                                 currency=self.currency_1,
-                                                 amount=0) 
-
-    
-
-    # create a second person who will be used as agent for the check
-    self.person_2 = self.createPerson(id='person_2',
-                                      first_name='foo',
-                                      last_name='bar')
-    self.bank_account_2 = self.createBankAccount(person=self.person_2,
-                                                 account_id='bank_account_2',
-                                                 currency=self.currency_1,
-                                                 amount=1000) 
-
-    # create a check for this person
-    self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
-                                            vault=self.paris,
-                                            bank_account=self.bank_account_2,
-                                            min=250,
-                                            max=300,                                            
-                                            )
-
-    self.check_1 = self.createCheck(id='check_1',
-                                    reference='250',
-                                    checkbook=self.checkbook_1)
-
-    self.check_2 = self.createCheck(id='check_2',
-                                    reference='251',
-                                    checkbook=self.checkbook_1)
-    
-
-
-    # now we need to create a user as Manager to do the test
-    # in order to have an assigment defined which is used to do transition
-    # Create an Organisation that will be used for users assignment
+    # create categories
+    self.createFunctionGroupSiteCategory(site_list=['paris',])
+    # create resources
+    self.createBanknotesAndCoins()
+    # define the user, a site is needed for accouting event
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
-                          function='banking', group='baobab',  site='testsite/paris')
-    # define the user
+                                                            function='banking', group='baobab',  site='testsite/paris',role='internal')
     user_dict = {
-        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris']
+      'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1']
       }
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+    # create a person with a bank account
+    self.person_1 = self.createPerson(id='person_1',
+                                      first_name='toto',
+                                      last_name='titi',
+                                      site='testsite/paris')
+    self.bank_account_1 = self.createBankAccount(person=self.person_1,
+                                                 account_id='bank_account_1',
+                                                 reference = 'bank_account_1',
+                                                 currency=self.currency_1,
+                                                 amount=100000,
+                                                 bic_code='',
+                                                 swift_registered=0,
+                                                 internal_bank_account_number="343434343434")
+    # create a second person with a bank account
+    self.person_2 = self.createPerson(id='person_2',
+                                      first_name='foo',
+                                      last_name='bar',
+                                      site='testsite/paris')
+    self.bank_account_2 = self.createBankAccount(person=self.person_2,
+                                                 account_id='bank_account_2',
+                                                 reference = 'bank_account_2',
+                                                 currency=self.currency_1,
+                                                 amount=50000,
+                                                 bic_code='',
+                                                 swift_registered=0,
+                                                 internal_bank_account_number="878787878787")
+    # create a bank account for the organisation
+    self.bank_account_3 = self.createBankAccount(person=self.organisation,
+                                                 account_id='bank_account_3',
+                                                 reference = 'bank_account_3',
+                                                 currency=self.currency_1,
+                                                 amount=50000,
+                                                 bic_code='BICAGENCPARIS',
+                                                 swift_registered=1)
 
+    # the checkbook module
+    self.checkbook_module = self.getCheckbookModule()
+    # create a check
+    self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
+                                            vault=None,
+                                            bank_account=self.bank_account_2,
+                                            min=50,
+                                            max=100,
+                                            )
+
+    self.check_1 = self.createCheck(id='check_1',
+                                    reference='CHKNB1',
+                                    checkbook=self.checkbook_1)
+
+
+  def stepLogout(self, sequence=None, sequence_list=None, **kwd):
+    self.logout()
+
+  def stepLoginAsSuperUser(self, sequence=None, sequence_list=None, **kwd):
+    self.login('super_user')
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -141,40 +159,27 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     that were added by the business template and that we rely
     on are really here.
     """
-    # check that Check Deposit Module was created
-    self.assertEqual(self.check_deposit_module.getPortalType(), 'Check Deposit Module')
-    # check check deposit module is empty
+    self.checkResourceCreated()
+    self.assertEqual(self.check_deposit_module.getPortalType(),
+                     'Check Deposit Module')
     self.assertEqual(len(self.check_deposit_module.objectValues()), 0)
 
-
-  def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateCheckDepositOperation(self, sequence=None, sequence_list=None, **kw):
     """
-    Check the initial inventory before any operations
+    Create a first check deposite that used a ban account which has no bic code
     """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 0)
 
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl()), 1000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl()), 1000)
-
-
-  def stepCreateCheckDeposit(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create a check deposit document and check it
-    """
-    self.check_deposit = self.check_deposit_module.newContent(
-                                id = 'check_deposit',
-                                portal_type = 'Check Deposit',
-                                destination_payment_value = self.bank_account_1,
-                                start_date = DateTime().Date(),
-                                source_total_asset_price = 500.0,
-                                description='test',
-                                resource_value=self.currency_1)
-    
+    self.check_deposit = self.check_deposit_module.newContent(id = 'check_deposit',
+                                                              portal_type = 'Check Deposit',
+                                                              destination_payment_value = self.bank_account_1,
+                                                              start_date = DateTime().Date(),
+                                                              source_total_asset_price = 2000.0,
+                                                              resource_value=self.currency_1,
+                                                              external_software_value=None,)
     self.assertNotEqual(self.check_deposit, None)
     self.assertEqual(self.check_deposit.getTotalPrice(), 0.0)
     self.assertEqual(self.check_deposit.getDestinationPayment(), self.bank_account_1.getRelativeUrl())
-    self.assertEqual(self.check_deposit.getSourceTotalAssetPrice(), 500.0)
+    self.assertEqual(self.check_deposit.getSourceTotalAssetPrice(), 2000.0)
     # the initial state must be draft
     self.assertEqual(self.check_deposit.getSimulationState(), 'draft')
     # set source reference
@@ -185,71 +190,68 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepAddCheckOperationLine(self, sequence=None, sequence_list=None, **kwd):
     """
-    Add Check to the check deposit
+    Add a check to the check deposit
     """
     self.check_operation_line_1 = self.check_deposit.newContent(id='check_operation_line_1',
                                                                 portal_type="Check Operation Line",
-                                                                aggregate_free_text="250",
+                                                                aggregate_free_text="CHKNB1",
                                                                 source_payment_value = self.bank_account_2,
-                                                                price=500,
+                                                                price=2000,
                                                                 quantity=1,
                                                                 quantity_unit_value=self.unit)
     self.assertNotEqual(self.check_operation_line_1, None)
     self.assertEqual(len(self.check_deposit.objectIds()), 1)
-    
 
-  def stepCheckConsistency(self, sequence=None, sequence_list=None, **kwd):
+  def stepPlanCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check the consistency of the check deposit
-
-    FIXME: check if the transition fails when a category or property is invalid.
+    Send the check deposit document to first validation level
     """
-    self.assertEqual(self.check_deposit.getTotalPrice(portal_type="Check Operation Line"), 500.0)
+    self.assertEqual(self.check_deposit.getTotalPrice(portal_type="Check Operation Line"), 2000.0)
     self.workflow_tool.doActionFor(self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
     self.assertEqual(self.check_deposit.getSimulationState(), 'planned')
 
-
-  def stepRequestBalance(self, sequence=None, sequence_list=None, **kwd):
+  def stepOrderCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
     """
-    Request balance verification for the check deposit
-
-    FIXME: check if the transition fails when a category or property is invalid.
+    Send the check deposit document to second validation level
     """
     self.workflow_tool.doActionFor(self.check_deposit, 'order_action', wf_id='check_deposit_workflow')
     self.assertEqual(self.check_deposit.getSimulationState(), 'ordered')
 
-
-  def stepCheckOrderedInventory(self, sequence=None, sequence_list=None, **kwd):
+  def stepDeliverCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check the inventory at state ordered
-    """
-    # bank account 1 is planned to be increased by 500
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 500)
-    # bank account 1 is planned to be decreased by 500
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl()), 1000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl()), 500)
-
-
-  def stepPay(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Pay the check deposit
-
-    FIXME: check if the transition fails when a category or property is invalid.
+    Deliver the check deposit
     """
     self.workflow_tool.doActionFor(self.check_deposit, 'deliver_action', wf_id='check_deposit_workflow')
     self.assertEqual(self.check_deposit.getSimulationState(), 'delivered')
 
-
-  def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
+  def stepRejectCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check the initial inventory before any operations
+    Cancel the check deposit
     """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 500)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 500)
+    self.workflow_tool.doActionFor(self.check_deposit, 'cancel_action', wf_id='check_deposit_workflow')
+    self.assertEqual(self.check_deposit.getSimulationState(), 'cancelled')
 
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl()), 500)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl()), 500)
+  def stepCheckBankAccountInventoryAfterCheckDepositDelivered(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check inventory of the bank account changed after validation of operation
+    """
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 102000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 102000)
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl()), 48000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl()), 48000)
+
+  def stepCheckBankAccountInventoryAfterCheckDepositRejected(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check inventory of the bank account doesn't changed after reject of operation
+    """
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl()), 50000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl()), 50000)
 
 
   def test_01_ERP5BankingCheckDeposit(self, quiet=QUIET, run=RUN_ALL_TEST):
@@ -259,15 +261,22 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # define the sequence
-    sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
-                      'CreateCheckDeposit Tic AddCheckOperationLine Tic ' \
-                      'CheckConsistency Tic ' \
-                      'RequestBalance Tic ' \
-                      'CheckOrderedInventory ' \
-                      'Pay Tic ' \
-                      'CheckFinalInventory'
-    
-    sequence_list.addSequenceString(sequence_string)
+    sequence_string1 = 'Tic CheckObjects Tic CheckInitialInventory ' \
+                       + 'CreateCheckDepositOperation Tic ' \
+                       + 'AddCheckOperationLine Tic ' \
+                       + 'PlanCheckDepositOperation Tic OrderCheckDepositOperation ' \
+                       + 'Tic DeliverCheckDepositOperation Tic ' \
+                       + 'CheckBankAccountInventoryAfterCheckDepositDelivered'
+
+    sequence_string2 = 'Tic CheckObjects Tic CheckInitialInventory ' \
+                       + 'CreateCheckDepositOperation Tic ' \
+                       + 'AddCheckOperationLine Tic ' \
+                       + 'PlanCheckDepositOperation Tic OrderCheckDepositOperation ' \
+                       + 'Tic RejectCheckDepositOperation Tic ' \
+                       + 'CheckBankAccountInventoryAfterCheckDepositRejected'
+
+    sequence_list.addSequenceString(sequence_string1)
+    sequence_list.addSequenceString(sequence_string2)
     # play the sequence
     sequence_list.play(self)
 
