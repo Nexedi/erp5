@@ -74,7 +74,7 @@ class FolderMixIn(ExtensionClass.Base):
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, immediate_reindex=0,
           container=None, created_by_builder=0, activate_kw=None,
-          is_indexable=None, temp_object=0, check_allowed=1, **kw):
+          is_indexable=None, temp_object=0, **kw):
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
@@ -103,9 +103,10 @@ class FolderMixIn(ExtensionClass.Base):
         return m(container, new_id)
 
     myType = pt.getTypeInfo(container)
-    if myType is not None and check_allowed == 1:
+    if myType is not None:
       if not myType.allowType( portal_type ):
-        raise ValueError('Disallowed subobject type: %s' % portal_type)
+        if not 'portal_trash' in container.getPath():
+          raise ValueError('Disallowed subobject type: %s' % portal_type)
 
     pt.constructContent( type_name=portal_type,
                          container=container,
