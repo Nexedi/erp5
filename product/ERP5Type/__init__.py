@@ -50,13 +50,9 @@ import Products.Localizer # So that we make sure Globals.get_request is availabl
 # read permissions for zope - this prevents security holes in 
 # production environment  
 class_tool_security_path = '%s%s%s' % (product_path, os.sep, 'ALLOW_CLASS_TOOL')
-memcached_tool_enable_path = '%s%s%s' % (product_path, os.sep, 'USE_MEMCACHED_TOOL')
 
 def allowClassTool():
   return os.access(class_tool_security_path, os.F_OK)
-
-def allowMemcachedTool():
-  return os.access(memcached_tool_enable_path, os.F_OK)
 
 def initialize( context ):
   # Import Product Components

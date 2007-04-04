@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Products.ERP5Type import allowMemcachedTool
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
 from AccessControl import ClassSecurityInfo
@@ -34,7 +33,13 @@ from Globals import DTMLFile
 
 MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID = '_v_memcached_edited'
 
-if allowMemcachedTool():
+try:
+  import memcache
+except ImportError:
+  memcache = None
+
+if memcache is not None:
+  # Real memcache tool
   import memcache
   import traceback
   from Shared.DC.ZRDB.TM import TM
@@ -305,8 +310,8 @@ if allowMemcachedTool():
       self.server_address_list = value
       self._v_memcached_dict = None
 
-else:
-  
+else:  
+  # Placeholder memcache tool
   class MemcachedTool(BaseTool):
     """
       Dummy MemcachedTool placeholder.
@@ -326,10 +331,8 @@ else:
         if this function is called and memcachedtool is disabled, fail loudly
         with a meaningfull message.
       """
-      from Products.ERP5Type import memcached_tool_enable_path
-      raise RuntimeError, 'MemcachedTool is disabled. You should ask'\
-        ' the server administrator to enable it by creating the file %s' % \
-        (memcached_tool_enable_path, )
+      raise RuntimeError, 'MemcachedTool is disabled. You should ask the'\
+        ' server administrator to enable it by installing python-memcached.'
 
     setServerAddress = failingMethod
     getServerAddress = failingMethod
@@ -337,4 +340,3 @@ else:
     setServerAddressList = failingMethod
     memcached_tool_configure = failingMethod
     getMemcachedDict = failingMethod
-

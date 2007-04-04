@@ -99,7 +99,6 @@ def _recreateClassTool(portal):
 def installRealMemcachedTool(portal):
   """Replaces portal_memcached by a real memcached tool object.
   """
-  Products.ERP5Type.allowMemcachedTool = lambda: 1
   _recreateMemcachedTool(portal)
 
 def _recreateMemcachedTool(portal):
