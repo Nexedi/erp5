@@ -322,7 +322,6 @@ class TestERP5BankingMixin:
       self.assertEquals(len(cell_list),3)
       for cell in cell_list:
         cell.setBasePrice(650.0)
-        cell.setDiscount(650.0)
     elif id == "EUR":
       # Create an exchange line
       exchange_line = currency.newContent(portal_type='Currency Exchange Line',
@@ -336,7 +335,6 @@ class TestERP5BankingMixin:
       self.assertEquals(len(cell_list),3)
       for cell in cell_list:
         cell.setBasePrice(1./650.0)
-        cell.setDiscount(1./650.0)
 
     return currency
 
