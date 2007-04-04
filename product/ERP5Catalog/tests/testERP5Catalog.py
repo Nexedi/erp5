@@ -1695,6 +1695,58 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                              ("parent","catalog"),
                              ("grand_parent","catalog")),
                              table_alias_list)
+    
+  def test_53_DateFormat(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Date Format'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    org_a = self._makeOrganisation(title='org_a')
+    org_b = self._makeOrganisation(title='org_b')
+    sql_connection = self.getSQLConnection()
+    # Add a method in order to directly put values we want into
+    # the catalog.
+    def updateDate(organisation,date):
+      uid = organisation.getUid()
+      sql = "UPDATE catalog SET modification_date='%s' '\
+          'WHERE uid=%s" %\
+          (date,uid)
+      result = sql_connection.manage_test(sql)
+    updateDate(org_a,'2007-01-12 01:02:03')
+    updateDate(org_b,'2006-02-24 15:09:06')
+
+    catalog_kw = {'modification_date':{'query':'24/02/2006',
+                               'format':'%d/%m/%Y',
+                               'type':'date'}}
+    self.failIfDifferentSet([org_b.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
+    catalog_kw = {'modification_date':{'query':'2007-01-12',
+                               'format':'%Y-%m-%d',
+                               'type':'date'}}
+    self.failIfDifferentSet([org_a.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
+    catalog_kw = {'modification_date':{'query':'>31/12/2006',
+                               'format':'%d/%m/%Y',
+                               'type':'date'}}
+    self.failIfDifferentSet([org_a.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
+    catalog_kw = {'modification_date':{'query':'2006',
+                               'format':'%Y',
+                               'type':'date'}}
+    self.failIfDifferentSet([org_b.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
+    catalog_kw = {'modification_date':{'query':'>2006',
+                               'format':'%Y',
+                               'type':'date'}}
+    self.failIfDifferentSet([org_a.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
+
 
 if __name__ == '__main__':
     framework()
