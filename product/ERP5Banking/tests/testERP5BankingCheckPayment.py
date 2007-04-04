@@ -118,7 +118,7 @@ class TestERP5BankingCheckPaymentMixin:
     self.bank_account_1 = self.createBankAccount(person=self.person_1,
                                                  account_id='bank_account_1',
                                                  currency=self.currency_1,
-                                                 amount=100000)
+                                                 amount=30000)
 
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
@@ -162,6 +162,9 @@ class TestERP5BankingCheckPaymentMixin:
     self.check_5 = self.createCheck(id='check_5',
                                     reference='54',
                                     checkbook=self.checkbook_1)
+    self.check_5 = self.createCheck(id='check_6',
+                                    reference='56',
+                                    checkbook=self.checkbook_1)
     self.non_existant_check_reference = '55'
     self.createCheckbookModel(id='checkbook_model')
 
@@ -193,8 +196,8 @@ class TestERP5BankingCheckPaymentMixin:
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     # check the inventory of the bank account
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
 
 
   def stepCreateCheckPayment(self, sequence=None, sequence_list=None, **kwd):
@@ -235,19 +238,29 @@ class TestERP5BankingCheckPaymentMixin:
     """ Make sure we can validate another check payment """
     self.createAnotherCheckPayment(sequence=sequence,will_fail=0,number="51")
 
+  def stepPayAnotherCheckPaymentFails(self, sequence=None, sequence_list=None, **kwd):
+    """ Make sure we can validate another check payment """
+    self.createAnotherCheckPayment(sequence=sequence, 
+                  check_pay_will_fail=1, number="56")
+
   def stepValidateAnotherCheckPaymentWorksAgain(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure we can validate another check payment """
-    self.createAnotherCheckPayment(sequence=sequence,will_fail=0,number="54")
+    self.createAnotherCheckPayment(sequence=sequence,
+                                   will_fail=0, number="54")
 
   def stepValidateAnotherCheckPaymentFails(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure that we can not validate another check payment """
-    self.createAnotherCheckPayment(sequence=sequence,will_fail=1,number="52")
+    self.createAnotherCheckPayment(sequence=sequence, will_fail=1,
+                                   pending_account=1, number="52")
 
   def stepValidateAnotherCheckPaymentFailsAgain(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure that we can not validate another check payment """
-    self.createAnotherCheckPayment(sequence=sequence,will_fail=1,number="53")
+    self.createAnotherCheckPayment(sequence=sequence, will_fail=1,
+               insuffisient_balance=1, number="53")
 
-  def createAnotherCheckPayment(self, will_fail=0, sequence=None, number=None,**kwd):
+  def createAnotherCheckPayment(self, will_fail=0, check_pay_will_fail=0, sequence=None, 
+                                number=None, pending_account=0,
+                                insuffisient_balance=0, **kwd):
     new_payment = self.check_payment_module.newContent(portal_type = 'Check Payment',
                                          destination_payment_value = self.bank_account_1,
                                          # aggregate_value = self.check_1,
@@ -255,16 +268,20 @@ class TestERP5BankingCheckPaymentMixin:
                                          aggregate_free_text = number,
                                          # source_value = self.bi_counter,
                                          start_date = DateTime().Date(),
-                                         source_total_asset_price = 90000.0)
+                                         source_total_asset_price = 20000.0)
     new_payment._setSource(self.bi_counter.getRelativeUrl())
     self.workflow_tool.doActionFor(new_payment, 'plan_action', 
                                    wf_id='check_payment_workflow')
     self.assertEqual(new_payment.getSimulationState(), 'planned')
     get_transaction().commit()
     if will_fail:
-      self.assertRaises(ValidationFailed,self.workflow_tool.doActionFor, 
-                        new_payment, 'confirm_action', 
-                        wf_id='check_payment_workflow')
+      message = self.assertWorkflowTransitionFails(new_payment,
+                         'check_payment_workflow','confirm_action')
+      LOG('self.assertWorkflowTransitionFails message',0,message)
+      if pending_account:
+        self.failUnless(message.find('There are operations pending for this account')>=0)
+      if insuffisient_balance:
+        self.failUnless(message.find('Bank account is not sufficient')>=0)
       self.assertEqual(new_payment.getSimulationState(), 'planned')
       get_transaction().commit()
       self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
@@ -275,6 +292,12 @@ class TestERP5BankingCheckPaymentMixin:
                         wf_id='check_payment_workflow')
       self.assertEqual(new_payment.getSimulationState(), 'confirmed')
       get_transaction().commit()
+      if check_pay_will_fail:
+        self.stepInputCashDetails(check_payment=new_payment)
+        message = self.assertWorkflowTransitionFails(new_payment,
+                           'check_payment_workflow','deliver_action')
+        LOG('self.assertWorkflowTransitionFails message',0,message)
+        self.failUnless(message.find('There are operations pending for this vault')>=0)
       self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
                                      wf_id='check_payment_workflow')
 
@@ -354,25 +377,28 @@ class TestERP5BankingCheckPaymentMixin:
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     # check the inventory of the bank account, must be planned to be decrease by 20000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 10000)
 
 
-  def stepInputCashDetails(self, sequence=None, sequence_list=None, **kwd):
+  def stepInputCashDetails(self, sequence=None, check_payment=None, 
+                           sequence_list=None, **kwd):
     """
     Input cash details
     """
-    self.addCashLineToDelivery(self.check_payment, 'line_1', 'Cash Delivery Line', self.billet_10000,
+    if check_payment is None:
+      check_payment = self.check_payment
+    self.addCashLineToDelivery(check_payment, 'line_1', 'Cash Delivery Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'),
             ('emission_letter/p', 'cash_status/valid') + self.variation_list[1:],
             {self.variation_list[1] : 1})
-    self.assertEqual(self.check_payment.line_1.getPrice(), 10000)
+    self.assertEqual(check_payment.line_1.getPrice(), 10000)
 
-    self.addCashLineToDelivery(self.check_payment, 'line_2', 'Cash Delivery Line', self.billet_5000,
+    self.addCashLineToDelivery(check_payment, 'line_2', 'Cash Delivery Line', self.billet_5000,
             ('emission_letter', 'cash_status', 'variation'),
             ('emission_letter/p', 'cash_status/valid') + self.variation_list[1:],
             {self.variation_list[1] : 2})
-    self.assertEqual(self.check_payment.line_2.getPrice(), 5000)
+    self.assertEqual(check_payment.line_2.getPrice(), 5000)
 
   def stepPay(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -401,8 +427,8 @@ class TestERP5BankingCheckPaymentMixin:
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 22.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.bi_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 22.0)
     # check the final inventory of the bank account
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 10000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 10000)
 
   def stepCleanup(self, sequence=None, sequence_list=None, **kwd):
     """

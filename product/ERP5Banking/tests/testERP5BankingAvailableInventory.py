@@ -62,7 +62,13 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
   to debit two times the same account if the amount on the account is
   too short.
 
+  We must make sure that future incoming movements will not be
+  taken into account
+
   We will by the way check the way counter dates are working.
+
+  Also, we must make sure it is not possible to deliver two check
+  payments by the same time (due to tag on counter)
   """
 
   login = PortalTestCase.login
@@ -157,33 +163,13 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     Make sure we can not close the counter date 
     when there is still some operations remaining
     """
-    # Before the test, we need to input the inventory
-    inventory_dict_line_1 = {'id' : 'inventory_line_1',
-                             'resource': self.billet_10000,
-                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
-                             'quantity': {'variation/2003': 0, 'variation/1992': 0}}
-
-    inventory_dict_line_2 = {'id' : 'inventory_line_2',
-                             'resource': self.billet_200,
-                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
-                             'quantity': {'variation/2003': 0, 'variation/1992': 0}}
-
-    inventory_dict_line_3 = {'id' : 'inventory_line_3',
-                             'resource':self.billet_5000 ,
-                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
-                             'quantity': {'variation/2003': 0, 'variation/1992': 0}}
-
-    line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
-    self.line_list = line_list
     bi_counter = self.paris.surface.banque_interne
     bi_counter_vault = bi_counter.guichet_1.encaisse_des_billets_et_monnaies.entrante
-    self.createCashInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
+    line_list = self.line_list
+    self.resetInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
                              line_list=line_list,extra_id='_reset_in')
     bi_counter_vault = bi_counter.guichet_1.encaisse_des_billets_et_monnaies.sortante
-    self.createCashInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
+    self.resetInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
                              line_list=line_list,extra_id='_reset_out')
 
   def stepCheckRightStockBeforeClosingDate(self, 
@@ -201,9 +187,9 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     """
     self.simulation_tool = self.getSimulationTool()
     # check the inventory of the bank account
-    self.assertEqual(self.currency_1.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.currency_1.getAvailableInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.currency_1.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.currency_1.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
+    self.assertEqual(self.currency_1.getAvailableInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
+    self.assertEqual(self.currency_1.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
 
   def stepCheckAccountConfirmedInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -211,9 +197,9 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     """
     self.simulation_tool = self.getSimulationTool()
     # check the final inventory of the bank account
-    self.assertEqual(self.currency_1.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.currency_1.getAvailableInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
-    self.assertEqual(self.currency_1.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.currency_1.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
+    self.assertEqual(self.currency_1.getAvailableInventory(payment=self.bank_account_1.getRelativeUrl()), 10000)
+    self.assertEqual(self.currency_1.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
 
   def stepCheckAccountFinalInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -221,9 +207,9 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     """
     self.simulation_tool = self.getSimulationTool()
     # check the final inventory of the bank account
-    self.assertEqual(self.currency_1.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.currency_1.getAvailableInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.currency_1.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.currency_1.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
+    self.assertEqual(self.currency_1.getAvailableInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
+    self.assertEqual(self.currency_1.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
 
 
   def test_01_ERP5BankingAvailabeInventory(self, quiet=QUIET, run=RUN_ALL_TEST):
@@ -250,7 +236,8 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'MoneyDepositInputCashDetails Tic ' \
                       'DeliverMoneyDeposit Tic ' \
                       'ValidateAnotherCheckPaymentWorksAgain Tic ' \
-                      'Pay Tic ' \
+                      'Pay PayAnotherCheckPaymentFails ' \
+                      'Tic ' \
                       'CheckAccountFinalInventory ' \
                       'CheckBadStockBeforeClosingDate ' \
                       'ResetInventory Tic ' \
