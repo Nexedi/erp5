@@ -91,12 +91,19 @@ def Field_render_helper(self, key, value, REQUEST):
     else:
         return self.widget.render(self, key, value, REQUEST)
 
+def Field_get_user_input_value(self, key, REQUEST):
+  """
+  Try to get a value of the field from the REQUEST
+  """
+  return REQUEST.form[key]
+
 Field.generate_field_key = Field_generate_field_key
 Field.render = Field_render
 Field.render_sub_field = Field_render_sub_field
 Field.generate_subfield_key = Field_generate_subfield_key
 Field.validate_sub_field = Field_validate_sub_field
 Field._render_helper = Field_render_helper
+Field._get_user_input_value = Field_get_user_input_value
 
 from Products.Formulator.Validator import SelectionValidator
 from Products.Formulator.Validator import StringBaseValidator
@@ -693,21 +700,23 @@ ListWidget.render_pdf = ListWidget_render_view
 
 # JPS - Subfield handling with listbox requires extension
 from Products.Formulator.StandardFields import DateTimeField
+from Products.Formulator.Field import ZMIField
 
 def DateTimeField_get_default(self, key, value, REQUEST):
-    if value is not None:
-        return value
-    # if there is something in the request then return None
-    # sub fields should pick up defaults themselves
-    # XXX hasattr(REQUEST, 'form') seems useless, because REQUEST always has
-    # a form property
-    if REQUEST is not None and hasattr(REQUEST, 'form') and \
-        REQUEST.form.has_key('subfield_%s_%s' % (key, 'year')):
-        return None
-    else:
-        return self.get_value('default')
+    """
+    Use the default method
+    """
+    return ZMIField._get_default(self, key, value, REQUEST)
+
+def DateTimeField_get_user_input_value(self, key, REQUEST):
+  """
+  Try to get a value of the field from the REQUEST
+  """
+  if REQUEST.form['subfield_%s_%s' % (key, 'year')]:
+    return None
 
 DateTimeField._get_default = DateTimeField_get_default
+DateTimeField._get_user_input_value = DateTimeField_get_user_input_value
 
 from Products.Formulator.Widget import DateTimeWidget
 old_date_time_widget_property_names = DateTimeWidget.property_names

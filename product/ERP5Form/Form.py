@@ -169,7 +169,7 @@ def _get_default(self, key, value, REQUEST):
     if value is not None:
         return value
     try:
-        value = REQUEST.form[key]
+        value = self._get_user_input_value(key, REQUEST)
     except (KeyError, AttributeError):
         # fall back on default
         return self.get_value('default', REQUEST=REQUEST) # It was missing on Formulator

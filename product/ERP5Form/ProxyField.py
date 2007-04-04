@@ -473,3 +473,15 @@ class ProxyField(ZMIField):
       if proxy_field is not None:
         result = proxy_field.has_value(id)
     return result
+
+  security.declareProtected('Access contents information', '_get_user_input_value')
+  def _get_user_input_value(self, key, REQUEST):
+    """
+    Try to get a value of the field from the REQUEST
+    """
+    proxy_field = self.getTemplateField()
+    if proxy_field is not None:
+      result = proxy_field._get_user_input_value(key, REQUEST)
+    else:
+      result = ZMIField._get_user_input_value(key, REQUEST)
+    return result
