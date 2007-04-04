@@ -122,7 +122,7 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
 # Now we will validate the accounting position\n
 transaction = state_change[\'object\']\n
 bank_account = transaction.getDestinationPaymentValue()\n
-price = transaction.getSourceTotalAssetPrice()\n
+price = transaction.ERP5Banking_getExchangeValue()\n
 line = transaction.get(\'movement\')\n
 \n
 in_list = transaction.objectValues(portal_type=\'Incoming Account Incident Line\')\n
@@ -130,11 +130,9 @@ out_list = transaction.objectValues(portal_type=\'Outgoing Account Incident Line
 \n
 debit=0\n
 if (len(in_list)!= 0):  \n
-  # This is a single currency operation, so it is not necessary to convert the price.\n
   line.setSourceCredit(price)\n
 \n
 elif (len(out_list) != 0) :\n
-  # This is a single currency operation, so it is not necessary to convert the price.\n
   debit=1\n
   line.setSourceDebit(price)\n
 \n
