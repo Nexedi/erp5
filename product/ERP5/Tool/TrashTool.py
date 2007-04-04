@@ -66,7 +66,7 @@ class TrashTool(BaseTool):
           path += '_items'
         if path not in backup_object_container.objectIds():
           backup_object_container = backup_object_container.newContent(portal_type='Trash Folder', id=path,
-                                                                       is_indexable=0, check_allowed=0)
+                                                                       is_indexable=0)
           backup_object_container.edit(isHidden=1)
         else:
           backup_object_container = backup_object_container._getOb(path)
