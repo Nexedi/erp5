@@ -72,6 +72,7 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
   organisation_portal_type = 'Organisation'
   account_portal_type = 'Account'
   currency_portal_type = 'Currency'
+  resource_portal_type = 'Product'
   linear_method = 'eu/linear'
   degressive_method = 'fr/degressive'
   uncontinuous_degressive_method = 'fr/uncontinuous_degressive'
@@ -437,7 +438,7 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     if len(item_module.contentValues()) == 0:
       for i in range(30):
         item_id = 'item%i' % i
-        item_module.newContent(id=item_id, reference=item_id)
+        item_module.newContent(id=item_id, reference='%i' % i)
 
   def stepPdb(self, sequence=None, sequence_list=None, **kw):
     import pdb;pdb.set_trace()
@@ -493,12 +494,17 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
   def stepAggregateItems(self, sequence=None, sequence_list=None, **kw):
     pl = sequence.get('packing_list_list', [])[-1]
     parameter_dict = sequence.get('parameter_dict', {})
+    resource_value = sequence.get('product',None)
+    if resource_value is None:
+      resource_value = self.getPortal().product_module.newContent()
+      sequence.edit(product=resource_value)
     if parameter_dict is None: parameter_dict = {}
     item_list_list = sequence.get('item_list_list') # This is a list of list in
                                                     # order to make multiple lines
     for item_list in item_list_list:
       pl_line = pl.newContent(portal_type = self.packing_list_line_portal_type)
-      pl_line.edit(aggregate_value_list = item_list, **parameter_dict)
+      pl_line.edit(aggregate_value_list = item_list, 
+                   resource_value=resource_value, **parameter_dict)
     get_transaction().commit()
     self.tic()
     pl.edit()
