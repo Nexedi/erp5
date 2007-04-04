@@ -185,16 +185,38 @@ class QueryMixin:
   def getOperator(self):
     return self.operator
 
+  def getLogicalOperator(self):
+    return self.logical_operator
+
   def _quoteSQLString(self, value):
     """Return a quoted string of the value.
     """
-    if hasattr(value, 'ISO'):
-      value = value.ISO()
-    elif hasattr(value, 'strftime'):
-      value = value.strftime('%Y-%m-%d %H:%M:%S')
+    format = self.getFormat()
+    type = self.getType()
+    if format is not None and type is not None:
+      if type == 'date':
+        if hasattr(value, 'strftime'):
+          value = value.strftime(format)
+        if isinstance(value, basestring):
+          value = "STR_TO_DATE('%s','%s')" % (value, format)
     else:
-      value = sql_quote(str(value))
+      if hasattr(value, 'ISO'):
+        value = "'%s'" % value.ISO()
+      elif hasattr(value, 'strftime'):
+        value = "'%s'" % value.strftime('%Y-%m-%d %H:%M:%S')
+      else:
+        value = "'%s'" % sql_quote(str(value))
     return value
+
+  def _quoteSQLKey(self, key):
+    """Return a quoted string of the value.
+    """
+    format = self.getFormat()
+    type = self.getType()
+    if format is not None and type is not None:
+      if type == 'date':
+        key = "STR_TO_DATE(DATE_FORMAT(%s,'%s'),'%s')" % (key, format, format)
+    return key
 
 class Query(QueryMixin):
   """
@@ -203,7 +225,7 @@ class Query(QueryMixin):
   format - %d/%m/%Y
   """
   def __init__(self, format=None, operator=None, range=None,
-                     search_mode=None, table_alias_list=None, **kw):
+                     search_mode=None, table_alias_list=None, type=None, **kw):
     self.format = format
     if operator is None:
       operator = 'OR'
@@ -216,6 +238,7 @@ class Query(QueryMixin):
       raise KeyError, 'Query must have only one key'
     self.key = key_list[0]
     self.value = kw[self.key]
+    self.type = type
 
   def __call__(self):
     self.asSQLExpression()
@@ -225,6 +248,9 @@ class Query(QueryMixin):
 
   def getFormat(self):
     return self.format
+
+  def getType(self):
+    return self.type
 
   def getTableAliasList(self):
     return self.table_alias_list
@@ -273,24 +299,31 @@ class Query(QueryMixin):
     select_expression = []
     # Default case: variable equality
     range_value = self.getRange()
+    format = self.getFormat()
     if ignore_key:
       pass
     elif range_value is not None:
       if isinstance(value, (list, tuple)):
-        query_min = self._quoteSQLString(min(value))
-        query_max = self._quoteSQLString(max(value))
+        if format is None:
+          query_min = min(value)
+          query_max = max(value)
+        else:
+          query_min = value[0]
+          query_max = value[1]
       else:
         query_min=query_max=value
+      query_min = self._quoteSQLString(query_min)
+      query_max = self._quoteSQLString(query_max)
       if range_value == 'min' :
-        where_expression.append("%s >= '%s'" % (key, query_min))
+        where_expression.append("%s >= %s" % (key, query_min))
       elif range_value == 'max' :
-        where_expression.append("%s < '%s'" % (key, query_max))
+        where_expression.append("%s < %s" % (key, query_max))
       elif range_value == 'minmax' :
-        where_expression.append("%s >= '%s' and %s < '%s'" % (key, query_min, key, query_max))
+        where_expression.append("%s >= %s and %s < %s" % (key, query_min, key, query_max))
       elif range_value == 'minngt' :
-        where_expression.append("%s >= '%s' and %s <= '%s'" % (key, query_min, key, query_max))
+        where_expression.append("%s >= %s and %s <= %s" % (key, query_min, key, query_max))
       elif range_value == 'ngt' :
-        where_expression.append("%s <= '%s'" % (key, query_max))
+        where_expression.append("%s <= %s" % (key, query_max))
     elif isSimpleType(value) or isinstance(value, DateTime) \
         or isinstance(value, (list, tuple)):
       # Convert into lists any value which contain a ;
@@ -303,26 +336,27 @@ class Query(QueryMixin):
       if isSimpleType(value) or isinstance(value, DateTime):
         value_list = [value]
       # For security.
+      LOG('SQLCatalog.Query value_list',0,value_list)
       for value in value_list:
-        value = self._quoteSQLString(value)
-        if value != '' or not ignore_empty_string:
+        comparison_operator = None
+        if (value != '' or not ignore_empty_string) \
+                        and isinstance(value, basestring):
+          LOG('SQLCatalog,Query value:',0,value)
+          LOG('SQLCatalog,Query value after quote:',0,value)
+          LOG('SQLCatalog,Query format:',0,self.getFormat())
+          LOG('SQLCatalog,Query type:',0,self.getType())
           if '%' in value:
-            where_expression.append("%s LIKE '%s'" % (key, value))
-          elif value.startswith('='):
-            where_expression.append("%s = '%s'" % (key, value[1:]))
-          elif value.startswith('>='):
-            where_expression.append("%s >= '%s'" % (key, value[2:]))
-          elif value.startswith('<='):
-            where_expression.append("%s <= '%s'" % (key, value[2:]))
-          elif value.startswith('>'):
-            where_expression.append("%s > '%s'" % (key, value[1:]))
-          elif value.startswith('<'):
-            where_expression.append("%s < '%s'" % (key, value[1:]))
-          elif value.startswith('!='):
-            where_expression.append("%s != '%s'" % (key, value[2:]))
+            comparison_operator = 'LIKE'
+          elif len(value) >= 1 and value[0:2] in ('<=','!=','>='):
+            comparison_operator = value[0:2]
+            value = value[2:]
+          elif len(value) >= 1 and value[0] in ('=','>','<'):
+            comparison_operator = value[0]
+            value = value[1:]
           elif key in keyword_search_keys:
             # We must add % in the request to simulate the catalog
-            where_expression.append("%s LIKE '%%%s%%'" % (key, value))
+            comparison_operator = 'LIKE'
+            value = '%%%s%%' % value
           elif key in full_text_search_keys:
             # We must add % in the request to simulate the catalog
             # we first check if there is a special search_mode for this key
@@ -334,20 +368,33 @@ class Query(QueryMixin):
               search_mode = 'natural'
             search_mode=search_mode.lower()
             mode = full_text_search_modes.get(search_mode,'')
-            where_expression.append("MATCH %s AGAINST ('%s' %s)" % (key, value, mode))
+            where_expression.append(
+                        "MATCH %s AGAINST ('%s' %s)" % (key, value, mode))
             if not stat__:
               # we return relevance as Table_Key_relevance
-              select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.replace('.','_')))
+              select_expression.append(
+                     "MATCH %s AGAINST ('%s' %s) AS %s_relevance" 
+                     % (key, value, mode,key.replace('.','_')))
               # and for simplicity as Key_relevance
               if '.' in key:
-                select_expression.append("MATCH %s AGAINST ('%s' %s) AS %s_relevance" % (key, value, mode,key.split('.')[1]))
+                select_expression.append(
+                     "MATCH %s AGAINST ('%s' %s) AS %s_relevance" % 
+                     (key, value, mode,key.split('.')[1]))
           else:
-            where_expression.append("%s = '%s'" % (key, value))
+            comparison_operator = '='
+        else:
+          comparison_operator = '='
+        if comparison_operator is not None:
+          key = self._quoteSQLKey(key)
+          value = self._quoteSQLString(value)
+          where_expression.append("%s %s %s" % 
+                                  (key, comparison_operator, value))
 
     elif value is None:
       where_expression.append("%s is NULL" % (key))
     else:
-      where_expression.append("%s = %s" % (key, self._quoteSQLString(value)))
+      where_expression.append("%s = %s" % 
+           (self._quoteSQLKey(key), self._quoteSQLString(value)))
 
     if len(where_expression)>0:
       if len(where_expression)==1:
