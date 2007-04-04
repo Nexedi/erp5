@@ -103,7 +103,7 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_value': ('emission_letter/p', 'cash_status/to_sort') + self.variation_list,
                              'quantity': self.quantity_200}
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
 
     self.cash = self.paris.caveau.auxiliaire.encaisse_des_billets_a_ventiler_et_a_detruire
     self.counter = self.paris.caveau.auxiliaire.encaisse_des_billets_ventiles_et_detruits
@@ -387,8 +387,6 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.destruction_survey, name='history', wf_id='destruction_survey_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 6)
 
 
   def stepCheckSourceFinal(self, sequence=None, sequence_list=None, **kwd):
@@ -414,6 +412,26 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not close the counter date 
+    when there is still some operations remaining
+    """
+    node = self.cash
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverDestructionSurveyFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Pay the check payment
+
+    FIXME: check if the transition fails when a category or property is invalid.
+    """
+    message = self.assertWorkflowTransitionFails(self.destruction_survey,
+              'destruction_survey_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests
@@ -435,6 +453,9 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'TryConfirmDestructionSurveyWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'ConfirmDestructionSurvey ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'DeliverDestructionSurveyFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverDestructionSurvey ' \
                     + 'CheckSourceFinal CheckDestinationFinal '
     sequence_list.addSequenceString(sequence_string)
