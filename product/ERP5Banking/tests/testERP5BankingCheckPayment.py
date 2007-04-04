@@ -414,6 +414,27 @@ class TestERP5BankingCheckPaymentMixin:
     for id in object_id_list:
       self.check_payment_module.deleteContent(id)
 
+  def stepResetInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not close the counter date 
+    when there is still some operations remaining
+    """
+    bi_counter_vault = self.bi_counter_vault
+    line_list = self.line_list
+    self.resetInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
+                             line_list=line_list,extra_id='_reset_out')
+
+  def stepPayCheckPaymentFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Pay the check payment
+
+    FIXME: check if the transition fails when a category or property is invalid.
+    """
+    message = self.assertWorkflowTransitionFails(self.check_payment,
+              'check_payment_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
 class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
                                   TestERP5BankingMixin, ERP5TypeTestCase):
 
@@ -437,6 +458,9 @@ class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
                       'CheckConfirmedInventory ' \
                       'stepValidateAnotherCheckPaymentFailsAgain Tic ' \
                       'InputCashDetails Tic ' \
+                      'ResetInventory Tic ' \
+                      'PayCheckPaymentFails Tic ' \
+                      'DeleteResetInventory Tic ' \
                       'Pay Tic ' \
                       'CheckFinalInventory Cleanup Tic'
     # sequence 2 : check if validating with non-exiting check fail if
