@@ -76,6 +76,12 @@ vault = transaction.getSource()\n
 vaultDestination = transaction.getDestination()\n
 \n
 \n
+# use of the constraint : Test source and destination\n
+vliste = transaction.checkConsistency()\n
+transaction.log(\'vliste\', vliste)\n
+if len(vliste) != 0:\n
+  raise ValidationFailed, (vliste[0].getMessage(),)\n
+\n
 portal_type_with_no_space = transaction.getPortalType().replace(\' \',\'\')\n
 check_path_script = getattr(transaction,\'%s_checkPath\' % portal_type_with_no_space,None)\n
 \n
@@ -160,6 +166,9 @@ elif resource <> 0 :\n
                             <string>transaction</string>
                             <string>vault</string>
                             <string>vaultDestination</string>
+                            <string>vliste</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
                             <string>portal_type_with_no_space</string>
                             <string>getattr</string>
                             <string>None</string>

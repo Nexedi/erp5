@@ -36,10 +36,6 @@
   <workflow>cash_to_currency_sale_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Check Deposit</type>
-  <workflow>check_deposit_workflow, edit_workflow</workflow>
- </chain>
- <chain>
   <type>Classification Survey</type>
   <workflow>classification_survey_workflow, edit_workflow</workflow>
  </chain>
@@ -77,7 +73,7 @@
  </chain>
  <chain>
   <type>Monetary Destruction</type>
-  <workflow>edit_workflow, monetary_destruction_workflow</workflow>
+  <workflow>monetary_destruction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Monetary Issue</type>

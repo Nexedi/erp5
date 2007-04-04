@@ -1,3 +1,4 @@
+
 Account Incident | account_incident_workflow
 Account Incident | edit_workflow
 Cash Balance Regulation | cash_balance_regulation_workflow
@@ -17,8 +18,6 @@ Cash To Currency Purchase | cash_to_currency_purchase_workflow
 Cash To Currency Purchase | edit_workflow
 Cash To Currency Sale | cash_to_currency_sale_workflow
 Cash To Currency Sale | edit_workflow
-Check Deposit | check_deposit_workflow
-Check Deposit | edit_workflow
 Classification Survey | classification_survey_workflow
 Classification Survey | edit_workflow
 Container Cell | edit_workflow

@@ -1,3 +1,4 @@
+
 account_incident_workflow
 cash_balance_regulation_workflow
 cash_exchange_workflow
@@ -8,7 +9,6 @@ cash_sorting_incident_workflow
 cash_sorting_workflow
 cash_to_currency_purchase_workflow
 cash_to_currency_sale_workflow
-check_deposit_workflow
 classification_survey_workflow
 counter_rendering_workflow
 currency_purchase_workflow

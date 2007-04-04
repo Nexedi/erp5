@@ -1,3 +1,4 @@
+
 Account Incident | source_decision
 Bank Account | site
 Cash Container Item | aggregate
@@ -7,7 +8,6 @@ Cash Sorting Incident | responsible
 Cash Sorting Incident | source_decision
 Cash To Currency Purchase | currency_exchange_type
 Cash To Currency Sale | currency_exchange_type
-Check Deposit | site
 Container Cell | cash_status
 Container Cell | emission_letter
 Container Cell | variation

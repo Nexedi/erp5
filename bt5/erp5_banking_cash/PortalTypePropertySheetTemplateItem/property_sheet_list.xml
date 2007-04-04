@@ -44,10 +44,6 @@
   <item>Price</item>
   <item>Resource</item>
  </portal_type>
- <portal_type id="Check Deposit">
-  <item>Amount</item>
-  <item>Price</item>
- </portal_type>
  <portal_type id="Container Cell">
   <item>CashContainer</item>
  </portal_type>
