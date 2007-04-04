@@ -86,7 +86,10 @@ context.log(\'source\',source)\n
 line_list = []\n
 for l in tmp_list :\n
   # The source can be different for every line (due to getBaobabSource approach)\n
-  source_counter = source or l.getBaobabSource()\n
+  if source is None:\n
+    source_counter = l.getBaobabSource()\n
+  else:\n
+    source_counter = source\n
   # test if resource is a currency_cash\n
   try:\n
     if (l.getResourceValue().getPortalType() in currency_cash_portal_type_list) \\\n
@@ -103,10 +106,30 @@ if len(line_list) == 0 :\n
 if no_balance_check:\n
   return 0\n
 \n
+serialize_dict = {}\n
+\n
+activity_tool = context.portal_activities\n
+def checkActivities(line,source_counter):\n
+  if activity_tool.countMessageWithTag(source_counter):\n
+    msg = Message(domain=\'ui\', message="There are operations pending for this vault that prevent form calculating its position. Please try again later.")\n
+    raise ValidationFailed, (msg,)\n
+\n
+\n
 for line in line_list :\n
   line_resource = line.getResource()\n
   # The source can be different for every line (due to getBaobabSource approach)\n
-  source_counter = source or line.getBaobabSource()\n
+  if source is None:\n
+    source_counter = line.getBaobabSource()\n
+  else:\n
+    source_counter = source\n
+  # Make sure there is no reindex with the tag of this counter\n
+  if not serialize_dict.has_key(source_counter):\n
+    serialize_dict[key] = 1\n
+    source_object = context.portal_categories.getCategoryValue(source_counter)\n
+    source_object.serialize()\n
+  # Reindex this line with this particular source_counter tag\n
+  activate_kw = {\'tag\':source_counter}\n
+  line.reindexObject(activate_kw=activate_kw)\n
   if line.hasCellContent() :\n
     for cell in line.objectValues() :\n
       variation_text = cell.getVariationText()\n
@@ -201,12 +224,20 @@ return 0\n
                             <string>line_list</string>
                             <string>_getiter_</string>
                             <string>l</string>
+                            <string>None</string>
                             <string>source_counter</string>
                             <string>AttributeError</string>
                             <string>KeyError</string>
                             <string>len</string>
+                            <string>serialize_dict</string>
+                            <string>activity_tool</string>
+                            <string>checkActivities</string>
                             <string>line</string>
                             <string>line_resource</string>
+                            <string>_write_</string>
+                            <string>key</string>
+                            <string>source_object</string>
+                            <string>activate_kw</string>
                             <string>cell</string>
                             <string>variation_text</string>
                             <string>inventory_value</string>

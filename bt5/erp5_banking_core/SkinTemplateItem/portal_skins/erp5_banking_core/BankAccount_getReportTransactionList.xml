@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+\n
+if reference is None:\n
+  account_list = [context]\n
+else:\n
+  account_list = context.BankAccount_getReportInformationList(reference=reference)\n
+\n
+\n
+\n
+# Build the common inventory dict\n
+params = {}\n
+if from_date is not None:\n
+  params[\'from_date\'] = from_date\n
+if at_date is not None:\n
+  params[\'at_date\'] = at_date\n
+\n
+\n
+account_dict = {}\n
+for account in account_list:\n
+  account_dict[account.getUid()] = account\n
+\n
+inventory_list = context.portal_simulation.getCurrentInventoryList(\n
+                                                          payment_uid = account_dict.keys()\n
+                                                          , **params\n
+                                                          )\n
+\n
+final_inventory_list = []\n
+portal = account.getPortalObject()\n
+i = 0\n
+for inventory in inventory_list:\n
+  tmp_dict = {}\n
+  movement = portal.restrictedTraverse(inventory.path)\n
+  delivery = movement.getExplanationValue()\n
+  source_reference = delivery.getSourceReference()\n
+  tmp_dict[\'source_reference\'] = source_reference\n
+  tmp_dict[\'total_price\'] = inventory.total_price\n
+  tmp_dict[\'description\'] = delivery.getDescription()\n
+  tmp_dict[\'start_date\'] = delivery.getStartDate()\n
+  account = account_dict[inventory.payment_uid]\n
+  tmp_dict[\'reference\'] = account.getReference()\n
+  final_inventory_list.append(newTempBase(account, "new_%03i" % i, **tmp_dict))\n
+  i += 1\n
+\n
+\n
+def sort_date(a,b):\n
+  result = cmp(a.reference,b.reference)\n
+  if result == 0:\n
+    result = cmp(a.start_date,b.start_date)\n
+  return result\n
+\n
+final_inventory_list.sort(sort_date)\n
+\n
+return final_inventory_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>from_date=None, to_date=None, at_date=None, reference=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>at_date</string>
+                            <string>reference</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>None</string>
+                            <string>context</string>
+                            <string>account_list</string>
+                            <string>_getattr_</string>
+                            <string>params</string>
+                            <string>_write_</string>
+                            <string>account_dict</string>
+                            <string>_getiter_</string>
+                            <string>account</string>
+                            <string>_apply_</string>
+                            <string>inventory_list</string>
+                            <string>final_inventory_list</string>
+                            <string>portal</string>
+                            <string>i</string>
+                            <string>inventory</string>
+                            <string>tmp_dict</string>
+                            <string>movement</string>
+                            <string>delivery</string>
+                            <string>source_reference</string>
+                            <string>_getitem_</string>
+                            <string>_inplacevar_</string>
+                            <string>sort_date</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BankAccount_getReportTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -235,7 +235,7 @@ for resource in resource_dict.keys():\n
       tmp_dict.update({\'date\':resource_in_vault[\'date\']})\n
     general_total_price += resource_in_vault[\'total_price\']\n
   tmp_dict[\'general_total_price\'] = general_total_price\n
-  total_inventory_list.append(newTempBase(context, "new_%3i" % i, **tmp_dict))\n
+  total_inventory_list.append(newTempBase(context, "new_%03i" % i, **tmp_dict))\n
   i += 1\n
 \n
 def sort_base_price(a,b):\n
@@ -343,6 +343,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>KeyError</string>
                             <string>general_total_price</string>
                             <string>resource_in_vault</string>
+                            <string>_inplacevar_</string>
                             <string>sort_base_price</string>
                             <string>repr</string>
                             <string>append</string>
