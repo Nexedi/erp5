@@ -264,6 +264,21 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl()), 50000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl()), 50000)
 
+  def stepClearCheck(self, sequence=None, sequence_list=None, **kw):
+    """
+    Remove previous check and create a new one with same reference
+    """
+    self.checkbook_1.manage_delObjects([self.check_1.getId(),])
+    self.check_1 = self.createCheck(id='check_1',
+                                    reference='CHKNB1',
+                                    checkbook=self.checkbook_1)
+
+  def stepClearCheckDepositModule(self, sequence=None, sequence_list=None, **kw):
+    """
+    Clear the check deposit module
+    """
+    if hasattr(self, 'check_deposit'):
+      self.check_deposit_module.manage_delObjects([self.check_deposit.getId(),])
 
   def test_01_ERP5BankingCheckDeposit(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -279,7 +294,8 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                        + 'Tic DeliverCheckDepositOperation Tic ' \
                        + 'CheckBankAccountInventoryAfterCheckDepositDelivered'
 
-    sequence_string2 = 'Tic CheckObjects Tic CheckInitialInventory ' \
+    sequence_string2 = 'Tic ClearCheck ClearCheckDepositModule Tic '\
+                       + 'CheckObjects Tic CheckInitialInventory ' \
                        + 'CreateCheckDepositOperation Tic ' \
                        + 'AddCheckOperationLine Tic ' \
                        + 'PlanCheckDepositOperation Tic OrderCheckDepositOperation ' \
