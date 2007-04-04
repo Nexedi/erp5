@@ -109,7 +109,7 @@ if no_balance_check:\n
 serialize_dict = {}\n
 \n
 activity_tool = context.portal_activities\n
-def checkActivities(line,source_counter):\n
+def checkActivities(source_counter):\n
   if activity_tool.countMessageWithTag(source_counter):\n
     msg = Message(domain=\'ui\', message="There are operations pending for this vault that prevent form calculating its position. Please try again later.")\n
     raise ValidationFailed, (msg,)\n
@@ -127,6 +127,7 @@ for line in line_list :\n
     serialize_dict[source_counter] = 1\n
     source_object = context.portal_categories.getCategoryValue(source_counter)\n
     source_object.serialize()\n
+    checkActivities(source_counter)\n
   # Reindex this line with this particular source_counter tag\n
   activate_kw = {\'tag\':source_counter}\n
   line.reindexObject(activate_kw=activate_kw)\n
