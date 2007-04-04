@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Check Deposit">
+  <item>site</item>
+ </portal_type>
  <portal_type id="Checkbook Delivery">
   <item>currency_exchange_type</item>
  </portal_type>

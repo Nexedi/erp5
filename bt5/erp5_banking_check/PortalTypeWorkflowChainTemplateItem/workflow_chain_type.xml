@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Check Deposit</type>
+  <workflow>check_deposit_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Check Payment</type>
   <workflow>check_payment_workflow, edit_workflow</workflow>
  </chain>
@@ -9,7 +13,7 @@
  </chain>
  <chain>
   <type>Checkbook Movement</type>
-  <workflow>checkbook_movement_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, checkbook_movement_workflow</workflow>
  </chain>
  <chain>
   <type>Checkbook Reception</type>

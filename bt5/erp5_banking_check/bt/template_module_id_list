@@ -1,3 +1,4 @@
+check_deposit_module
 check_payment_module
 checkbook_delivery_module
 checkbook_movement_module

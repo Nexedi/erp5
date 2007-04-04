@@ -1,3 +1,11 @@
+Check Deposit Module | list_ui
+Check Deposit Module | sort_on
+Check Deposit Module | view
+Check Deposit | accounting_view
+Check Deposit | agents
+Check Deposit | history
+Check Deposit | metadata
+Check Deposit | view
 Check Payment Module | list_ui
 Check Payment Module | print
 Check Payment Module | sort_on

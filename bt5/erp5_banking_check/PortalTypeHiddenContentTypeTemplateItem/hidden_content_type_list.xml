@@ -1,4 +1,7 @@
 <hidden_content_type_list>
+ <portal_type id="Check Deposit">
+  <item>Banking Operation Line</item>
+ </portal_type>
  <portal_type id="Check Payment">
   <item>Banking Operation Line</item>
   <item>Cash Delivery Line</item>
