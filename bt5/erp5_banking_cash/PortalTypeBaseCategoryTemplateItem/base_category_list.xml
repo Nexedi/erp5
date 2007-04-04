@@ -22,14 +22,17 @@
  <portal_type id="Cash To Currency Sale">
   <item>currency_exchange_type</item>
  </portal_type>
+ <portal_type id="Check Deposit">
+  <item>site</item>
+ </portal_type>
  <portal_type id="Container Cell">
   <item>variation</item>
   <item>cash_status</item>
   <item>emission_letter</item>
  </portal_type>
  <portal_type id="Container Line">
-  <item>emission_letter</item>
   <item>variation</item>
+  <item>emission_letter</item>
   <item>cash_status</item>
  </portal_type>
  <portal_type id="Currency Purchase">

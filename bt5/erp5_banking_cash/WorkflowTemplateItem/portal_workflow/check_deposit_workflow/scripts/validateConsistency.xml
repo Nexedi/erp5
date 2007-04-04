@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+transaction = state_change[\'object\']\n
+\n
+# Check the amount.\n
+price = transaction.getSourceTotalAssetPrice()\n
+if price is None or price <= 0:\n
+  msg = Message(domain=\'ui\', message=\'Amount is not valid.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Check the bank account.\n
+destination_bank_account = transaction.getDestinationPaymentValue()\n
+if destination_bank_account is None:\n
+  msg = Message(domain=\'ui\', message="Destination bank account not defined.")\n
+  raise ValidationFailed, (msg,)\n
+if destination_bank_account.getValidationState() != \'valid\':\n
+  msg = Message(domain=\'ui\', message=\'Destination bank account is not valid.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Check if the total price is equal to the total asset price.\n
+if transaction.getTotalPrice(portal_type = \'Check Operation Line\') != transaction.getSourceTotalAssetPrice():\n
+  msg = Message(domain=\'ui\', message="Total price doesn\'t match.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Check each check operation line.\n
+for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
+  check_number = check_operation_line.getAggregateFreeText()\n
+  if not check_number:\n
+    msg = Message(domain=\'ui\', message=\'Check is not defined.\')\n
+    raise ValidationFailed, (msg,)\n
+  \n
+  source_bank_account = check_operation_line.getSourcePaymentValue()\n
+  if source_bank_account is None:\n
+    msg = Message(domain=\'ui\', message=\'Source bank account not defined.\')\n
+    raise ValidationFailed, (msg,)\n
+\n
+  # Test if the account balance is sufficient.\n
+  error = context.BankAccount_checkBalance(source_bank_account.getRelativeUrl(), check_operation_line.getTotalQuantity())\n
+  if error[\'error_code\'] == 1:\n
+    msg = Message(domain=\'ui\', message="Source bank account is not sufficient.")\n
+    raise ValidationFailed, (msg,)\n
+  elif error[\'error_code\'] == 2:\n
+    msg = Message(domain=\'ui\', message="source bank account is not valid.")\n
+    raise ValidationFailed, (msg,)\n
+  elif error[\'error_code\'] != 0:\n
+    msg = Message(domain=\'ui\', message="Unknown error code.")\n
+    raise ValidationFailed, (msg,)\n
+\n
+  result = context.portal_catalog(portal_type = \'Check\', reference = check_number)\n
+  if len(result) == 0:\n
+    # Until a certain date, ERP5 allows the user to generate a check automatically.\n
+    from DateTime import DateTime\n
+    now = DateTime()\n
+    stop_date = context.Baobab_getAutomaticCheckCreationStopDate()\n
+    if now > stop_date:\n
+      msg = Message(domain=\'ui\', message=\'No such check.\')\n
+      raise ValidationFailed, (msg,)\n
+  elif len(result) == 1:\n
+    # Check if this check has the same bank account as the payment.\n
+    check = result[0].getObject()\n
+    if check_operation_line.getSourcePaymentReference() != check.getDestinationPaymentReference():\n
+      msg = Message(domain=\'ui\', message=\'Bank account do not match between payment and check.\')\n
+      raise ValidationFailed, (msg,)\n
+    # Check the state of this check.\n
+    state = check.getSimulationState()\n
+    if state != \'confirmed\':\n
+      if state == \'draft\':\n
+        msg = Message(domain=\'ui\', message=\'The check is not issued yet.\')\n
+      elif state == \'cancelled\':\n
+        msg = Message(domain=\'ui\', message=\'The check has been canceled.\')\n
+      elif state == \'delivered\':\n
+        msg = Message(domain=\'ui\', message=\'The check has already been cashed.\')\n
+      elif state == \'stopped\':\n
+        msg = Message(domain=\'ui\', message=\'The check has been stopped.\')\n
+      raise ValidationFailed, (msg,)\n
+  else:\n
+    msg = Message(domain=\'ui\', message="Duplicated checks for the same check number.")\n
+    raise ValidationFailed, (msg,)\n
+\n
+context.updateBankingOperation(state_change)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getitem_</string>
+                            <string>transaction</string>
+                            <string>_getattr_</string>
+                            <string>price</string>
+                            <string>None</string>
+                            <string>msg</string>
+                            <string>destination_bank_account</string>
+                            <string>_getiter_</string>
+                            <string>check_operation_line</string>
+                            <string>check_number</string>
+                            <string>source_bank_account</string>
+                            <string>context</string>
+                            <string>error</string>
+                            <string>result</string>
+                            <string>len</string>
+                            <string>DateTime</string>
+                            <string>now</string>
+                            <string>stop_date</string>
+                            <string>check</string>
+                            <string>state</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateConsistency</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

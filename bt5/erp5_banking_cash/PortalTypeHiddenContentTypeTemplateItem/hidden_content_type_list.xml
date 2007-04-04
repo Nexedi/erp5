@@ -40,6 +40,9 @@
   <item>Outgoing Cash To Currency Sale Line</item>
   <item>Incoming Cash To Currency Sale Line</item>
  </portal_type>
+ <portal_type id="Check Deposit">
+  <item>Banking Operation Line</item>
+ </portal_type>
  <portal_type id="Classification Survey">
   <item>Outgoing Classification Survey Line</item>
   <item>Incoming Classification Survey Line</item>

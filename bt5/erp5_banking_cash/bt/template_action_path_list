@@ -100,6 +100,14 @@ Cash To Currency Sale | outgoing_cash_view
 Cash To Currency Sale | outgoing_fastinput
 Cash To Currency Sale | print
 Cash To Currency Sale | view
+Check Deposit Module | list_ui
+Check Deposit Module | sort_on
+Check Deposit Module | view
+Check Deposit | accounting_view
+Check Deposit | agents
+Check Deposit | history
+Check Deposit | metadata
+Check Deposit | view
 Classification Survey Module | list
 Classification Survey Module | list_ui
 Classification Survey Module | sort_on

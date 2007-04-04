@@ -27,6 +27,9 @@ Cash To Currency Purchase | Outgoing Cash To Currency Purchase Line
 Cash To Currency Sale Module | Cash To Currency Sale
 Cash To Currency Sale | Incoming Cash To Currency Sale Line
 Cash To Currency Sale | Outgoing Cash To Currency Sale Line
+Check Deposit Module | Check Deposit
+Check Deposit | Banking Operation Line
+Check Deposit | Check Operation Line
 Classification Survey Module | Classification Survey
 Classification Survey | Incoming Classification Survey Line
 Classification Survey | Outgoing Classification Survey Line

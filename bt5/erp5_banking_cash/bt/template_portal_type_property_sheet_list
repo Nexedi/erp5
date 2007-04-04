@@ -25,6 +25,8 @@ Cash To Currency Sale | Discount
 Cash To Currency Sale | Price
 Cash To Currency Sale | Reference
 Cash To Currency Sale | Resource
+Check Deposit | Amount
+Check Deposit | Price
 Container Cell | CashContainer
 Container Line | CashContainer
 Counter Rendering | Amount
