@@ -103,6 +103,14 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
             <value> <string>state_change</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
