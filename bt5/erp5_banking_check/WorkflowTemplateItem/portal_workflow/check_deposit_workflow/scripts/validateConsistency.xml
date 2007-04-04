@@ -146,6 +146,9 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
   else:\n
     msg = Message(domain=\'ui\', message="Duplicated checks for the same check number.")\n
     raise ValidationFailed, (msg,)\n
+\n
+if transaction.getSimulationState() == "draft":\n
+  context.updateBankingOperation(state_change)\n
 
 
 ]]></string> </value>
