@@ -110,7 +110,7 @@ class SQLDict(RAMDict):
     path = '/'.join(m.object_path)
     order_validation_text = self.getOrderValidationText(m)
     uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = m.method_id,
-                                                 order_validation_text = order_validation_text, 
+                                                 order_validation_text = order_validation_text,
                                                  processing_node = None)
     uid_list = [x.uid for x in uid_list]
     if len(uid_list)>0:
@@ -167,11 +167,13 @@ class SQLDict(RAMDict):
         if priority > MAX_PRIORITY:
           # This is an error
           if len(uid_list) > 0:
+            #LOG('SQLDict', 0, 'error uid_list = %r' % (uid_list,))
             activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = VALIDATE_ERROR_STATE)
                                                                             # Assign message back to 'error' state
           #m.notifyUser(activity_tool)                                      # Notify Error
           get_transaction().commit()                                        # and commit
         else:
+          #LOG('SQLDict', 0, 'lower priority uid_list = %r' % (uid_list,))
           # Lower priority
           if len(uid_list) > 0: # Add some delay before new processing
             activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
@@ -179,12 +181,10 @@ class SQLDict(RAMDict):
           get_transaction().commit() # Release locks before starting a potentially long calculation
       else:
         # We do not lower priority for INVALID_ORDER errors but we do postpone execution
-        order_validation_text = self.getOrderValidationText(message)
-        activity_tool.SQLDict_setPriority(order_validation_text = order_validation_text, 
-                                          processing_node = processing_node,
+        #order_validation_text = self.getOrderValidationText(message)
+        activity_tool.SQLDict_setPriority(uid = uid_list,
                                           delay = VALIDATION_ERROR_DELAY,
-                                          retry = 1,
-                                          uid = None)
+                                          retry = 1)
         get_transaction().commit() # Release locks before starting a potentially long calculation
       return 0
     return 1
