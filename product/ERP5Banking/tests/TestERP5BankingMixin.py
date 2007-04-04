@@ -1016,3 +1016,31 @@ class TestERP5BankingMixin:
     self.assertEqual(self.billet_200.getPriceCurrency(), 'currency_module/EUR')
     # check years  of billet_200
     self.assertEqual(self.billet_200.getVariationList(), ['1992', '2003'])
+
+  def resetInventory(self, 
+               sequence=None, line_list=None, sequence_list=None, extra_id=None, 
+               destination=None, currency=None, **kwd):
+    """
+    Make sure we can not close the counter date 
+    when there is still some operations remaining
+    """
+    if extra_id is not None:
+      extra_id = '_reset_%s' % extra_id
+    else:
+      extra_id = '_reset'
+    # Before the test, we need to input the inventory
+    for line in line_list:
+      for variation in line['quantity'].keys():
+        line['quantity'][variation] = 0
+    self.createCashInventory(source=None, destination=destination, currency=currency,
+                             line_list=line_list,extra_id=extra_id)
+
+  def stepDeleteResetInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not close the counter date 
+    when there is still some operations remaining
+    """
+    inventory_module = self.getPortal().cash_inventory_module
+    to_delete_id_list = [x for x in inventory_module.objectIds() 
+                         if x.find('reset')>=0]
+    inventory_module.manage_delObjects(ids=to_delete_id_list)
