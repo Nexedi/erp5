@@ -1289,7 +1289,22 @@ class BasicStructure:
 
         # recovering exeption_uid_list
         exception_uid_list = object_tree_line.getExceptionUidList()
-        if exception_uid_list is not None:
+        # XXX filter the object to the right domain.
+        # Can be improved in future.
+        domain_obj = object_tree_line.getObject()
+        new_object_list = [] 
+        if domain_obj.getPortalType() == 'Domain':
+          category_obj = domain_obj.getMembershipCriterionCategory()
+          membership_base_category = domain_obj.getMembershipCriterionBaseCategory()
+          if (category_obj is not None) and (membership_base_category is not None):
+            category_value = (membership_base_category + '/' +category_obj.getRelativeUrl())
+            for selected_object in object_list:
+              if category_value in selected_object.getCategoriesList():
+                 new_object_list.append(selected_object)
+            object_list = new_object_list
+
+
+        if exception_uid_list not in ([],None) :
           # Filter folders if parent tree :
           # build new object_list for current line
           # (list of relative elements)
@@ -1546,9 +1561,10 @@ class BasicStructure:
       message = 'can not find secondary axis bounds for planning view :\
       No object has good start & stop properties, please check your objects \
       and their corresponding properties'
+      #axis_dict['bound_begin'] = 0
+      #axis_dict['bound_end'] = 1
       return 1 #[(Message(domain=None, message=message,mapping=None))]
-
-
+    
     axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
     # now start and stop have the extreme values of the second axis bound.
     # this represents in fact the size of the Planning's secondary axis
@@ -1943,67 +1959,70 @@ class BasicGroup:
       else:
         block_end = None
 
-      # testing if activity is visible according to the current zoom selection
-      # over the secondary_axis
-      if block_begin == None:
-        block_begin = secondary_axis_info['bound_start']
-        current_color='#E4CCE1'
-      if block_end == None:
-        block_end = secondary_axis_info['bound_stop']
-        current_color='#E4CCE1'
-      if  (block_begin > secondary_axis_info['bound_stop'] or \
-        block_end < secondary_axis_info['bound_start']):
-        # activity will not be displayed, stopping process
-        pass
-      else:
-        # activity is somehow displayed. checking if need to cut its bounds
-        if block_begin < secondary_axis_info['bound_start']:
-          # need to cut begin bound
-          block_start = secondary_axis_info['bound_start']
-        else: block_start = block_begin
-
-        if block_end > secondary_axis_info['bound_stop']:
-          block_stop = secondary_axis_info['bound_stop']
+      if secondary_axis_info.has_key('bound_start') and \
+               secondary_axis_info.has_key('bound_stop'):
+        # testing if activity is visible according to the current zoom selection
+        # over the secondary_axis
+        if (block_begin == None):
+          block_begin = secondary_axis_info['bound_start']
+          current_color='#E4CCE1'
+        if block_end == None:
+          block_end = secondary_axis_info['bound_stop']
+          current_color='#E4CCE1'
+        
+        if  (block_begin > secondary_axis_info['bound_stop'] or \
+          block_end < secondary_axis_info['bound_start']):
+          # activity will not be displayed, stopping process
+          pass
         else:
-          block_stop = block_end
+          # activity is somehow displayed. checking if need to cut its bounds
+          if block_begin < secondary_axis_info['bound_start']:
+            # need to cut begin bound
+            block_start = secondary_axis_info['bound_start']
+          else: block_start = block_begin
 
-        # testing if some activities have errors
-        error = 'false'
-        if list_error not in (None,[]):
-          for activity_error in list_error:
-            if activity_error[0][0] == name:
-              error = 'true'
-              break
+          if block_end > secondary_axis_info['bound_stop']:
+            block_stop = secondary_axis_info['bound_stop']
+          else:
+            block_stop = block_end
 
-        # XXX testing constraint result here.
-        # if current object url in list of error constranint urls, then
-        # colorizing the block.
+          # testing if some activities have errors
+          error = 'false'
+          if list_error not in (None,[]):
+            for activity_error in list_error:
+              if activity_error[0][0] == name:
+                error = 'true'
+                break
 
-        # defining name
-        name = "Activity_%s" % (self.object.getObject().getTitle())
+          # XXX testing constraint result here.
+          # if current object url in list of error constranint urls, then
+          # colorizing the block.
 
-        # height should be implemented here
-        height = None
+          # defining name
+          name = "Activity_%s" % (self.object.getObject().getTitle())
 
-        # get object url, not group url
-        url = self.object.getObject().getUrl()
+          # height should be implemented here
+          height = None
 
-        # creating new activity instance
-        activity=BasicActivity(title=info['info_center'], name=name,
-                               object=self.object.object, url=url,
-                               absolute_begin=block_begin,
-                               absolute_end=block_end,
-                               absolute_start=block_start,
-                               absolute_stop=block_stop, height=height,
-                               color=current_color, info_dict=info,
-                               error=error, property_dict=self.property_dict)
+          # get object url, not group url
+          url = self.object.getObject().getUrl()
 
-        # adding new activity to personal group activity list
-        try:
-          self.basic_activity_list.append(activity)
-        except (AttributeError):
-          self.basic_activity_list = []
-          self.basic_activity_list.append(activity)
+          # creating new activity instance
+          activity=BasicActivity(title=info['info_center'], name=name,
+                                 object=self.object.object, url=url,
+                                 absolute_begin=block_begin,
+                                 absolute_end=block_end,
+                                 absolute_start=block_start,
+                                 absolute_stop=block_stop, height=height,
+                                 color=current_color, info_dict=info,
+                                 error=error, property_dict=self.property_dict)
+
+          # adding new activity to personal group activity list
+          try:
+            self.basic_activity_list.append(activity)
+          except (AttributeError):
+            self.basic_activity_list = []
+            self.basic_activity_list.append(activity)
 
 class BasicActivity:
   """ Represents an activity, a task, in the group it belongs to. Beware
