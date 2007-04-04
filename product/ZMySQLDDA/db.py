@@ -240,6 +240,20 @@ class ThreadedDeferredDB:
       finally:
         self._db_lock.release()
 
+    def _pool_del(self, key):
+      self._db_lock.acquire()
+      try:
+        del self._db_pool[key]
+      finally:
+        self._db_lock.release()
+
+    def closeConnection(self):
+      ident = get_ident()
+      try:
+        self._pool_del(ident)
+      except KeyError:
+        pass
+
     def _access_db(self, method_id, args, kw):
         """
           Generic method to call pooled objects' methods.
