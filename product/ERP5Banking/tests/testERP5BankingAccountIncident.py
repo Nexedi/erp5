@@ -31,7 +31,6 @@
 import os
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 
@@ -127,11 +126,30 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_200}
+
+    # Overload the default usd quantity to have a measurable amount in the end (exchange rate is extremely low).
+
+    inventory_dict_line_3 = {'id': 'inventory_line_3',
+                             'resource': self.usd_billet_100,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/not_defined', 'cash_status/not_defined') + self.usd_variation_list,
+                             'variation_list': self.usd_variation_list,
+                             'quantity': self.quantity_usd_100}
+    
+    inventory_dict_line_4 = {'id': 'inventory_line_4',
+                             'resource': self.usd_billet_50,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/not_defined', 'cash_status/not_defined') + self.usd_variation_list,
+                             'variation_list': self.usd_variation_list,
+                             'quantity': self.quantity_usd_50}
     
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=None, destination=self.vault, currency=self.currency_1,
                              line_list=line_list)
+    self.foreign_vault = self.paris.surface.caisse_courante.encaisse_des_devises.usd
+    self.createCashInventory(source=None, destination=self.foreign_vault, currency=self.currency_2,
+                             line_list=[inventory_dict_line_3, inventory_dict_line_4])
 
     # create a person and a bank account
     self.person_1 = self.createPerson(id='person_1',
@@ -197,7 +215,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
 
 
-  def stepCreateAccountIncident(self, sequence=None, sequence_list=None, **kwd):
+  def createAccountIncident(self, resource_value, source_total_asset_price):
     """
     Create a cash transfer document and check it
     """
@@ -205,10 +223,10 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.account_incident = self.account_incident_module.newContent(
                                           id='account_incident_1', 
                                           portal_type='Account Incident', 
-                                          source_total_asset_price=52400.0,
+                                          source_total_asset_price=source_total_asset_price,
                                           description='test',
                                           destination_payment_value=self.bank_account_1,
-                                          resource_value=self.currency_1)
+                                          resource_value=resource_value)
     # execute tic
     self.stepTic()
     # set source reference
@@ -226,7 +244,18 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # check source reference
     self.assertNotEqual(self.account_incident.getSourceReference(), '')
     self.assertNotEqual(self.account_incident.getSourceReference(), None)
-    
+  
+  def stepCreateAccountIncident(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Create an account incident document with site default currency.
+    """
+    self.createAccountIncident(resource_value=self.currency_1, source_total_asset_price=52400.0)
+
+  def stepCreateForeignCurrencyAccountIncident(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Create an account incident with a forreign currency.
+    """
+    self.createAccountIncident(resource_value=self.currency_2, source_total_asset_price=sum(self.quantity_usd_100.values()) * 100)
 
   def stepCreateIncomingLine(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -274,6 +303,49 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
+  def stepCreateForeignIncomingLine(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create the cash transfer line 1 with banknotes of 100 and check it has been well created
+    """
+    # create the cash transfer line
+    self.addCashLineToDelivery(self.account_incident,
+                               'valid_line_1',
+                               'Incoming Account Incident Line',
+                               self.usd_billet_100,
+                               ('emission_letter', 'cash_status', 'variation'),
+                               ('emission_letter/not_defined', 'cash_status/not_defined') + self.usd_variation_list,
+                               self.quantity_usd_100,
+                               variation_list = self.usd_variation_list)
+    # execute tic
+    self.stepTic()
+    # check there is only one line created
+    self.assertEqual(len(self.account_incident.objectValues(
+                         portal_type='Incoming Account Incident Line')), 1)
+    # get the cash transfer line
+    self.valid_line_1 = getattr(self.account_incident, 'valid_line_1')
+    # check its portal type
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Incoming Account Incident Line')
+    # check the resource is banknotes of 10000
+    self.assertEqual(self.valid_line_1.getResourceValue(), self.usd_billet_100)
+    # chek the value of the banknote
+    #banknote_quantity = sum(self.quantity_usd_100.values())
+    self.assertEqual(self.valid_line_1.getPrice(), 100)
+    # check the unit of banknote
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
+    # check we have one delivery cell:
+    self.assertEqual(len(self.valid_line_1.objectValues()), 1)
+    # get the delivery cell
+    banknote_quantity = sum(self.quantity_usd_100.values())
+    cell = self.valid_line_1.movement_0_0_0
+    # chek portal types
+    self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+    # check the source vault is usual_cash
+    self.assertEqual(cell.getBaobabSourceValue(), None)
+    # check the destination vault is counter
+    self.assertEqual(cell.getBaobabDestination(), self.foreign_vault.getRelativeUrl())
+    # check the banknote of the cell is banknote of 100
+    self.assertEqual(cell.getResourceValue(), self.usd_billet_100)
+    self.assertEqual(cell.getQuantity(), banknote_quantity)
 
   def stepCheckSubTotal(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -284,6 +356,15 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check the total price
     self.assertEqual(self.account_incident.getTotalPrice(), 10000 * 5.0)
 
+  def stepCheckForeignSubTotal(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the amount after the creation of cash transfer line 1
+    """
+    banknote_quantity = sum(self.quantity_usd_100.values())
+    # Check quantity of banknotes
+    self.assertEqual(self.account_incident.getTotalQuantity(), banknote_quantity)
+    # Check the total price
+    self.assertEqual(self.account_incident.getTotalPrice(), 100 * banknote_quantity)
 
   def stepCreateOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -385,6 +466,15 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # check state is confirmed
     self.assertEqual(self.account_incident.getSimulationState(), 'confirmed')
 
+  def stepConfirmForeignAccountIncident(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Confirm the cash transfer and check it
+    """
+    # do the Workflow action
+    self.workflow_tool.doActionFor(self.account_incident, 'confirm_action', wf_id='account_incident_workflow')
+    # check state is confirmed
+    self.assertEqual(self.account_incident.getSimulationState(), 'confirmed')
+
   def stepDeliverAccountIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Deliver the cash transfer with a good user
@@ -411,6 +501,37 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 150000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 150000)
 
+  def stepCheckInitialForeignCurrencyInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    quantity_of_100 = sum(self.quantity_usd_100.values())
+    quantity_of_50 = sum(self.quantity_usd_50.values())
+    # check we have USD banknotes of 100 in forreign vault
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.foreign_vault.getRelativeUrl(), resource=self.usd_billet_100.getRelativeUrl()), quantity_of_100)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.foreign_vault.getRelativeUrl(), resource=self.usd_billet_100.getRelativeUrl()), quantity_of_100)
+    # check we have USD banknotes of 50 in forreign vault
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.foreign_vault.getRelativeUrl(), resource=self.usd_billet_50.getRelativeUrl()), quantity_of_50)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.foreign_vault.getRelativeUrl(), resource=self.usd_billet_50.getRelativeUrl()), quantity_of_50)
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+
+  def stepCheckFinalForeignCurrencyInventory(self, sequence=None, sequence_list=None, **kwd):
+    self.simulation_tool = self.getSimulationTool()
+    quantity_of_100 = sum(self.quantity_usd_100.values())
+    added_quantity_of_100 = quantity_of_100 # We received the same amount as what was originaly in stock
+    quantity_of_50 = sum(self.quantity_usd_50.values())
+    # check the number of banknotes of 100
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.foreign_vault.getRelativeUrl(), resource = self.usd_billet_100.getRelativeUrl()), quantity_of_100 + added_quantity_of_100)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.foreign_vault.getRelativeUrl(), resource = self.usd_billet_100.getRelativeUrl()), quantity_of_100 + added_quantity_of_100)
+    # check the number of banknotes of 50
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.foreign_vault.getRelativeUrl(), resource = self.usd_billet_50.getRelativeUrl()), quantity_of_50)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.foreign_vault.getRelativeUrl(), resource = self.usd_billet_50.getRelativeUrl()), quantity_of_50)
+    # check the inventory of the bank account in the default currency, not in the foreign one !
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(), resource=self.currency_1.getRelativeUrl()), 100000.0 + (added_quantity_of_100 * 100.0 * 650.0)) # XXX: hardcoded exchange rate, extracted from createCurrency.
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl(), resource=self.currency_1.getRelativeUrl()), 100000.0 + (added_quantity_of_100 * 100.0 * 650.0)) # XXX: hardcoded exchange rate, extracted from createCurrency.
 
   ##################################
   ##  Tests
@@ -433,8 +554,17 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'Tic CheckTotal ' \
                     + 'ConfirmAccountIncident Tic ' \
                     + 'DeliverAccountIncident Tic ' \
-                    + 'CheckFinalInventory '
+                    + 'CheckFinalInventory ' \
+                      'CleanupObjects'
+    sequence_string_2 = 'Tic CheckObjects Tic CheckInitialForeignCurrencyInventory ' \
+                        'CreateForeignCurrencyAccountIncident ' \
+                        'CreateForeignIncomingLine CheckForeignSubTotal ' \
+                        'ConfirmForeignAccountIncident Tic ' \
+                        'DeliverAccountIncident Tic ' \
+                        'CheckFinalForeignCurrencyInventory ' \
+                        'CleanupObjects'
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string_2)
     # play the sequence
     sequence_list.play(self)
 
