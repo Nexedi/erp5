@@ -1,3 +1,6 @@
+2007-04-05 Aurel
+* fix index for category table
+
 2007-02-01 Romain
 * Add mirror_date column to the stock table.
 
