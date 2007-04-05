@@ -84,7 +84,7 @@ if len(line_list)==0:\n
 \n
 baobab_source = transaction.getBaobabSource()\n
 at_date = transaction.getStartDate()\n
-context.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = baobab_source)\n
+transaction.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = baobab_source)\n
 \n
 if msg is not None:\n
   raise ValidationFailed, (msg,)\n
@@ -145,7 +145,6 @@ if msg is not None:\n
                             <string>len</string>
                             <string>baobab_source</string>
                             <string>at_date</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
