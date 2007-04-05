@@ -122,7 +122,13 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
 # Now we will validate the accounting position\n
 transaction = state_change[\'object\']\n
 bank_account = transaction.getDestinationPaymentValue()\n
-price = transaction.ERP5Banking_getExchangeValue()\n
+exchange_rate_list = transaction.CurrencyExchange_getExchangeRateList(from_currency=transaction.getResource(),\n
+  to_currency=\'currency_module/%s\' % (context.Baobab_getPortalReferenceCurrencyID(), ),\n
+  currency_exchange_type=\'transfer\',\n
+  start_date=transaction.getStartDate())\n
+if len(exchange_rate_list) == 0:\n
+  raise ValidationError, \'Convertion between currencies %s and %s is unknown.\'\n
+price = context.getSourceTotalAssetPrice() * exchange_rate_list[0]\n
 line = transaction.get(\'movement\')\n
 \n
 in_list = transaction.objectValues(portal_type=\'Incoming Account Incident Line\')\n
@@ -232,6 +238,8 @@ if debit:\n
                             <string>len</string>
                             <string>resource</string>
                             <string>bank_account</string>
+                            <string>exchange_rate_list</string>
+                            <string>ValidationError</string>
                             <string>line</string>
                             <string>debit</string>
                             <string>error</string>
