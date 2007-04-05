@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>current_tracking_list = [x.getObject() for x in context.portal_simulation.getCurrentTrackingList(\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+current_tracking_list = [x.getObject() for x in context.portal_simulation.getCurrentTrackingList(\n
                          at_date=at_date, node=node_url,\n
                          where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
 aggregate_uid_list = [x.uid for x in current_tracking_list]\n
@@ -126,6 +129,10 @@ for line in context.getMovementList():\n
                           <tuple>
                             <string>node_url</string>
                             <string>at_date</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -138,9 +145,7 @@ for line in context.getMovementList():\n
                             <string>aggregate_uid</string>
                             <string>_getitem_</string>
                             <string>aggregate_value</string>
-                            <string>Message</string>
                             <string>msg</string>
-                            <string>ValidationFailed</string>
                           </tuple>
                         </value>
                     </item>
