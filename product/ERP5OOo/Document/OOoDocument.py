@@ -38,14 +38,15 @@ from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
+
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionCacheMixin, ConversionError
-from Products.CMFCore.utils import getToolByName
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5.Document.File import _unpackData
 
 from zLOG import LOG
 
@@ -53,7 +54,6 @@ enc=base64.encodestring
 dec=base64.decodestring
 
 _MARKER = []
-
 
 class OOoDocument(File, ConversionCacheMixin):
   """
@@ -229,7 +229,7 @@ class OOoDocument(File, ConversionCacheMixin):
     if format == 'text-content':
       # Extract text from the ODF file
       cs = cStringIO.StringIO()
-      cs.write(self._unpackData(self.getBaseData()))
+      cs.write(_unpackData(self.getBaseData()))
       z = zipfile.ZipFile(cs)
       s = z.read('content.xml')
       s = self.rx_strip.sub(" ", s) # strip xml
@@ -239,7 +239,7 @@ class OOoDocument(File, ConversionCacheMixin):
       return 'text/plain', s
     server_proxy = self._mkProxy()
     kw = server_proxy.run_generate(self.getId(),
-                                   enc(self._unpackData(self.getBaseData())),
+                                   enc(_unpackData(self.getBaseData())),
                                    None, format)
     return kw['mime'], Pdata(dec(kw['data']))
 
@@ -287,7 +287,7 @@ class OOoDocument(File, ConversionCacheMixin):
         # Extra processing required since
         # we receive a zip file
         cs = cStringIO.StringIO()
-        cs.write(self._unpackData(data))
+        cs.write(_unpackData(data))
         z = zipfile.ZipFile(cs)
         for f in z.infolist():
           fn = f.filename
@@ -321,7 +321,7 @@ class OOoDocument(File, ConversionCacheMixin):
       format = format_list[0]
       mime, data = self._convert(format)
       archive_file = cStringIO.StringIO()
-      archive_file.write(self._unpackData(data))
+      archive_file.write(_unpackData(data))
       zip_file = zipfile.ZipFile(archive_file)
       must_close = 1
     else:
@@ -350,7 +350,7 @@ class OOoDocument(File, ConversionCacheMixin):
     # LOG('in _convertToBaseFormat', 0, self.getRelativeUrl())
     server_proxy = self._mkProxy()
     kw = server_proxy.run_convert(self.getSourceReference() or self.getId(),
-                                  enc(self._unpackData(self.getData())))
+                                  enc(_unpackData(self.getData())))
     self._setBaseData(dec(kw['data']))
     metadata = kw['meta']
     self._base_metadata = metadata
@@ -375,6 +375,6 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     server_proxy = self._mkProxy()
     kw = server_proxy.run_setmetadata(self.getId(),
-                                      enc(self._unpackData(self.getBaseData())),
+                                      enc(_unpackData(self.getBaseData())),
                                       kw)
     self._setBaseData(dec(kw['data']))
