@@ -128,7 +128,7 @@ exchange_rate_list = transaction.CurrencyExchange_getExchangeRateList(from_curre
   start_date=transaction.getStartDate())\n
 if len(exchange_rate_list) == 0:\n
   raise ValidationError, \'Convertion between currencies %s and %s is unknown.\'\n
-price = context.getSourceTotalAssetPrice() * exchange_rate_list[0]\n
+price = price * exchange_rate_list[0]\n
 line = transaction.get(\'movement\')\n
 \n
 in_list = transaction.objectValues(portal_type=\'Incoming Account Incident Line\')\n
