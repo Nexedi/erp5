@@ -68,58 +68,39 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" Trial balance.\n
-"""\n
-from Products.ERP5Form.Report import ReportSection\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Cache import CachingMethod\n
 \n
-request = context.REQUEST\n
-portal  = context.portal_url.getPortalObject()\n
-N_ = portal.Base_translateString\n
+def getAccountingPeriodStartDateForSectionCategory(section_category, date):\n
+  portal = context.getPortalObject()\n
+  section_uid = portal.Base_getSectionUidListForSectionCategory(\n
+                                      section_category)\n
+  # XXX for now we guess period start date from the first organisation having\n
+  # accounting periods\n
+  period_start_date = None\n
+  valid_accounting_period = dict(portal_type=\'Accounting Period\',\n
+                                 simulation_state=(\'planned\', \'confirmed\',\n
+                                        \'stopped\', \'closing\', \'delivered\'))\n
+  for uid in section_uid:\n
+    section = portal.portal_catalog.getObject(uid)\n
+    for ap in section.contentValues(filter=valid_accounting_period):\n
+      if ap.getStartDate() <= date <= ap.getStopDate():\n
+        period_start_date = ap.getStartDate().earliestTime()\n
+    if period_start_date:\n
+      break\n
+  else:\n
+    period_start_date = DateTime(date.year(), 1, 1)\n
+  return period_start_date\n
 \n
-at_date  = request[\'at_date\']\n
-from_date = request.get(\'from_date\', None)\n
-simulation_state = request[\'simulation_state\']\n
-expand_accounts = request.get(\'expand_accounts\', False)\n
-show_empty_accounts = request[\'show_empty_accounts\']\n
+getAccountingPeriodStartDateForSectionCategory = CachingMethod(\n
+              getAccountingPeriodStartDateForSectionCategory,\n
+              id=script.getId(), cache_factory=\'erp5_content_long\')\n
 \n
-section_uid = portal.Base_getSectionUidListForSectionCategory(\n
-                                   request[\'section_category\'])\n
-\n
-period_start_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(\n
-         section_category=request[\'section_category\'], date=from_date or at_date)\n
-# for the report summary\n
-request.set(\'period_start_date\', period_start_date)\n
-\n
-if not from_date:\n
-  from_date = period_start_date\n
-\n
-# currency precision\n
-currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
-precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
-request.set(\'precision\', precision)\n
-\n
-request.set(\'is_accounting_report\', True)\n
-\n
-# flat_mode is a boolean that indicate wether we should use a report tree or a\n
-# flat list of all accounts.\n
-if request.get(\'tree_mode\', False): # TODO\n
-  raise \'Tree mode no longer supported\'\n
-\n
-return [ ReportSection(\n
-            path=portal.account_module.getPhysicalPath(),\n
-            level=1,\n
-            form_id=\'AccountModule_viewAccountListForTrialBalance\',\n
-            selection_name=\'trial_balance_selection\',\n
-            selection_params=dict(show_empty_accounts=show_empty_accounts,\n
-                                  expand_accounts=expand_accounts,\n
-                                  at_date=at_date.latestTime(),\n
-                                  from_date=from_date.earliestTime(),\n
-                                  period_start_date=\n
-                                          period_start_date.earliestTime(),\n
-                                  section_uid=section_uid,\n
-                                  simulation_state=simulation_state,\n
-                                  precision=precision ),) ]\n
-</string> </value>
+return getAccountingPeriodStartDateForSectionCategory(section_category, date)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -134,14 +115,8 @@ return [ ReportSection(\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>section_category, date</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -161,33 +136,19 @@ return [ ReportSection(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Form.Report</string>
-                            <string>ReportSection</string>
+                            <string>section_category</string>
+                            <string>date</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>getAccountingPeriodStartDateForSectionCategory</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>portal</string>
-                            <string>N_</string>
-                            <string>_getitem_</string>
-                            <string>at_date</string>
-                            <string>None</string>
-                            <string>from_date</string>
-                            <string>simulation_state</string>
-                            <string>False</string>
-                            <string>expand_accounts</string>
-                            <string>show_empty_accounts</string>
-                            <string>section_uid</string>
-                            <string>period_start_date</string>
-                            <string>currency</string>
-                            <string>precision</string>
-                            <string>True</string>
-                            <string>dict</string>
+                            <string>script</string>
                           </tuple>
                         </value>
                     </item>
@@ -204,7 +165,7 @@ return [ ReportSection(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountModule_getTrialBalanceReportSectionList</string> </value>
+            <value> <string>Base_getAccountingPeriodStartDateForSectionCategory</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
