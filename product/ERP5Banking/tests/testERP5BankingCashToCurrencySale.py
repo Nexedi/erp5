@@ -115,7 +115,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_list': self.usd_variation_list,
                              'quantity': self.quantity_usd_20}
 
-    line_list_sortante = [inventory_dict_line_1]
+    self.line_list = line_list_sortante = [inventory_dict_line_1]
 
     self.guichet_entrante = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
     self.guichet_sortante= self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.sortante
@@ -364,13 +364,6 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_to_currency_sale, name='history', wf_id='cash_to_currency_sale_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 3)
-
-
-
-
-
 
   def stepCheckFinalInventoryGuichet_Entrante(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -384,8 +377,6 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_entrante.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 200.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_entrante.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 200.0)
 
-
-
   def stepCheckFinalInventoryGuichet_Sortante(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the initial inventory before any operations
@@ -395,14 +386,29 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_sortante.getRelativeUrl(), resource = self.usd_billet_20.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_sortante.getRelativeUrl(), resource = self.usd_billet_20.getRelativeUrl()), 0.0)
 
-
-
   def stepDelCashToCurrencySale(self, sequence=None, sequence_list=None, **kwd):
     """
     Delete the invalid vault_transfer line previously create
     """
     self.cash_to_currency_sale_module.deleteContent('cash_to_currency_sale_1')
 
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.guichet_sortante
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverCashToCurrencySaleFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.cash_to_currency_sale,
+              'cash_to_currency_sale_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
 
 
   ##################################
@@ -422,6 +428,9 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidIncomingLine CheckSubTotal ' \
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'DeliverCashToCurrencySaleFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverCashToCurrencySale Tic ' \
                     + 'CheckFinalInventoryGuichet_Entrante ' \
                     + 'CheckFinalInventoryGuichet_Sortante' 
