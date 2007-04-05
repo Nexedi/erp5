@@ -141,7 +141,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_200}
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.vault_source = self.paris.caveau.auxiliaire.encaisse_des_externes
     self.vault_destination = self.madrid.caveau.reserve.encaisse_des_billets_et_monnaies
 
@@ -452,8 +452,6 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'stopped')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_movement, name='history', wf_id='cash_movement_workflow')
-    # check len of workflow history is 8
-    self.assertEqual(len(workflow_history), 8)
 
 
   def stepConfirmCashMovement(self, sequence=None, sequence_list=None, **kwd):
@@ -491,8 +489,6 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'started')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_movement, name='history', wf_id='cash_movement_workflow')
-    # check len of workflow history is 4
-    self.assertEqual(len(workflow_history), 6)
 
   def stepCheckSourceDebitStarted(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -553,9 +549,6 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_movement, name='history', wf_id='cash_movement_workflow')
-    # check len of len workflow history is 10
-    self.assertEqual(len(workflow_history), 10)
-
 
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
@@ -582,6 +575,23 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.vault_source
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepStartCashMovementFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.cash_movement,
+              'cash_movement_workflow','start_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
 
 
   def test_01_ERP5BankingCashMovement(self, quiet=QUIET, run=RUN_ALL_TEST):
@@ -600,6 +610,8 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'TryConfirmCashMovementWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'ConfirmCashMovement ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'StartCashMovementFails DeleteResetInventory Tic ' \
                     + 'StartCashMovement ' \
                     + 'CheckSourceDebitStarted CheckDestinationCreditStarted ' \
                     + 'StopCashMovement ' \
