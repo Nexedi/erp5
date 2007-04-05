@@ -74,6 +74,12 @@
 # context. If to_currency is provided, then instead of using\n
 # the context, it will generate a temp object.\n
 \n
+# Handle the case where from_currency is to_currency\n
+# Assumes that 2 currencies with the same ID, they are the same currency\n
+if from_currency is not None and to_currency is not None and \\\n
+   [x for x in from_currency.split(\'/\') if x.strip()][-1] == [x for x in to_currency.split(\'/\') if x.strip()][-1]:\n
+    return 1\n
+\n
 def sort_by_date(a, b):\n
   if a.getStartDateRangeMin() > b.getStartDateRangeMin() :\n
     return -1\n
@@ -178,16 +184,21 @@ return result\n
                             <string>currency_exchange_type</string>
                             <string>start_date</string>
                             <string>kw</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>x</string>
                             <string>sort_by_date</string>
                             <string>context</string>
                             <string>object</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
-                            <string>None</string>
                             <string>calculateExchangeFromParameters</string>
                             <string>result</string>
                             <string>getattr</string>
-                            <string>_getattr_</string>
                             <string>mapped_value</string>
                           </tuple>
                         </value>
