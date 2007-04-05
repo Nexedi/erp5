@@ -25,16 +25,19 @@
 #
 ##############################################################################
 
+import tempfile, os, cStringIO
+
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowMethod
+from Products.CMFCore.utils import getToolByName
+
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionCacheMixin
-from Products.CMFCore.utils import getToolByName
-from zLOG import LOG
+from Products.ERP5.Document.File import _unpackData
 
-import tempfile, os, cStringIO
+from zLOG import LOG
 
 class PDFDocument(Image, ConversionCacheMixin):
   """
@@ -75,7 +78,7 @@ class PDFDocument(Image, ConversionCacheMixin):
     """
     if format is None:
       RESPONSE.setHeader('Content-Type', 'application/pdf')
-      return self._unpackData(self.data)
+      return _unpackData(self.data)
     if format in ('html', 'txt', 'text'):
       mime, data = self.convert(format)
       RESPONSE.setHeader('Content-Length', len(data))
@@ -119,7 +122,7 @@ class PDFDocument(Image, ConversionCacheMixin):
       Convert the PDF text content to text with pdftotext
     """
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(self._unpackData(self.data))
+    tmp.write(_unpackData(self.data))
     tmp.seek(0)
     cmd = 'pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
     r = os.popen(cmd)
@@ -137,7 +140,7 @@ class PDFDocument(Image, ConversionCacheMixin):
     successfully
     """
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(self._unpackData(self.data))
+    tmp.write(_unpackData(self.data))
     tmp.seek(0)
     cmd = 'pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
     r = os.popen(cmd)
@@ -157,7 +160,7 @@ class PDFDocument(Image, ConversionCacheMixin):
     successfully
     """
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(self._unpackData(self.data))
+    tmp.write(_unpackData(self.data))
     tmp.seek(0)
     cmd = 'pdfinfo -meta -box %s' % tmp.name
     r = os.popen(cmd)
