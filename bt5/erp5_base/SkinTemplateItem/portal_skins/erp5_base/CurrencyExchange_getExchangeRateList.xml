@@ -78,7 +78,7 @@
 # Assumes that 2 currencies with the same ID, they are the same currency\n
 if from_currency is not None and to_currency is not None and \\\n
    [x for x in from_currency.split(\'/\') if x.strip()][-1] == [x for x in to_currency.split(\'/\') if x.strip()][-1]:\n
-    return 1\n
+    return [1]\n
 \n
 def sort_by_date(a, b):\n
   if a.getStartDateRangeMin() > b.getStartDateRangeMin() :\n
