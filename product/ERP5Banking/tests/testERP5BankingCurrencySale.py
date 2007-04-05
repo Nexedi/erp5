@@ -101,7 +101,7 @@ class TestERP5BankingCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
 
 
 
-    line_list = [inventory_dict_line_1]
+    self.line_list = line_list = [inventory_dict_line_1]
     self.bi_counter = self.paris.surface.banque_interne
     self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.sortante
     self.createCashInventory(source=None, destination=self.bi_counter_vault, currency=self.currency_2,
@@ -272,6 +272,23 @@ class TestERP5BankingCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
 
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl(), resource=self.currency_1.getRelativeUrl()), 32000)
 
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.bi_counter_vault
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepPayFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.currency_sale,
+              'currency_sale_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
 
   def test_01_ERP5BankingCurrencySale(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -286,6 +303,8 @@ class TestERP5BankingCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
                       'SendToCounter Tic ' \
                       'CheckConfirmedInventory ' \
                       'InputCashDetails Tic ' \
+                      'ResetSourceInventory Tic ' \
+                      'PayFails DeleteResetInventory Tic ' \
                       'Pay Tic ' \
                       'CheckFinalInventory '
     sequence_list.addSequenceString(sequence_string)
