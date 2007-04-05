@@ -104,8 +104,8 @@ class WorkflowMethod(Method):
       except ObjectDeleted, ex:
         res = ex.getResult()
       else:
-        if hasattr(aq_base(instance), 'reindexObject'):
-            instance.reindexObject()
+        if getattr((aq_base(instance), 'reindexObject', None) is not None:
+          instance.reindexObject()
     else:
       res = wf.wrapWorkflowMethod(instance, self._id, self.__dict__['_m'],
                                   (instance,) + args, kw)
