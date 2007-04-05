@@ -911,13 +911,19 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     """
       Get properties which were supplied explicitly to the ingestion method
       (discovered or supplied before the document was created).
+
+      The implementation consists in saving document properties
+      into _backup_input by supposing that original input parameters were
+      set on the document by ContributionTool.newContent as soon
+      as the document was created.
     """
     if hasattr(self, '_backup_input'):
       return getattr(self, '_backup_input')
     kw = {}
     for id in self.propertyIds():
       # We should not consider file data
-      if id not in ('data', 'categories_list', 'uid', 'id', 'text_content', ) \
+      if id not in ('data', 'categories_list', 'uid', 'id',
+                    'text_content', 'base_data',) \
             and self.hasProperty(id):
         kw[id] = self.getProperty(id)
     self._backup_input = kw # We could use volatile and pass kw in activate
