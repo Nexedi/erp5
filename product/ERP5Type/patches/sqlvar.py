@@ -71,9 +71,10 @@ def SQLVar_render(self, md):
         try:
             if hasattr(v, 'ISO'):
                 v=v.ISO()
-            if hasattr(v, 'strftime'):
+            elif hasattr(v, 'strftime'):
                 v=v.strftime('%Y-%m-%d %H:%M:%S')
-            else: v=str(v)
+            else: 
+                v=str(v)
         except:
             if not v and args.has_key('optional') and args['optional']:
                 return 'null'
