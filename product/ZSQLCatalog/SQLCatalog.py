@@ -336,15 +336,10 @@ class Query(QueryMixin):
       if isSimpleType(value) or isinstance(value, DateTime):
         value_list = [value]
       # For security.
-      LOG('SQLCatalog.Query value_list',0,value_list)
       for value in value_list:
         comparison_operator = None
         if (value != '' or not ignore_empty_string) \
                         and isinstance(value, basestring):
-          LOG('SQLCatalog,Query value:',0,value)
-          LOG('SQLCatalog,Query value after quote:',0,value)
-          LOG('SQLCatalog,Query format:',0,self.getFormat())
-          LOG('SQLCatalog,Query type:',0,self.getType())
           if '%' in value:
             comparison_operator = 'LIKE'
           elif len(value) >= 1 and value[0:2] in ('<=','!=','>='):
