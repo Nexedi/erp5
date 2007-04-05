@@ -116,7 +116,11 @@ class TestAccountingReports(AccountingTestCase):
               title='Second One',
               simulation_state='delivered',
               destination_section_value=self.organisation_module.client_2,
-              start_date=DateTime(2006, 2, 2),
+              start_date=DateTime(2006, 2, 2, 1, 1), # XXX we have to force
+              # different values of hour minutes, because /for now/ sorting is
+              # done on date, uid. Sorting on [source|destination]_reference
+              # would be too heavy, and we just want a sort on date, with a
+              # stable order (hence the cheap sort on uid)
               lines=(dict(source_value=account_module.receivable,
                           source_debit=239.20),
                      dict(source_value=account_module.collected_vat,
@@ -221,7 +225,7 @@ class TestAccountingReports(AccountingTestCase):
     # Second Transaction
     self.checkLineProperties(data_line_list[3],
                             specific_reference=second.getSourceReference(),
-                            date=DateTime(2006, 2, 2),
+                            date=DateTime(2006, 2, 2, 1, 1),
                             title='Second One',
                             node_title='41',
                             mirror_section_title='Client 2',
