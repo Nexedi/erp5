@@ -99,17 +99,8 @@ if candidate_type_list and current_type not in candidate_type_list:\n
                                 mapping = dict(portal_type = current_type, appropriate_type = str(candidate_type_list)))\n
   return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message =portal_status_message, cancel_url = kw[\'cancel_url\']), **kw)\n
 \n
-context.manage_upload(file)\n
+context.edit(file=file)\n
 context.discoverMetadata(file_name=file_name)\n
-\n
-# increase revision\n
-try:\n
-  current_revision = int(context.getRevision())\n
-except ValueError:\n
-  current_revision = 0\n
-\n
-rev = \'%03d\' % (current_revision + 1)\n
-context.setRevision(rev)\n
 \n
 msg = translateString(\'File uploaded.\')\n
 \n
@@ -174,10 +165,6 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
                             <string>str</string>
                             <string>portal_status_message</string>
                             <string>_apply_</string>
-                            <string>int</string>
-                            <string>current_revision</string>
-                            <string>ValueError</string>
-                            <string>rev</string>
                             <string>msg</string>
                           </tuple>
                         </value>
