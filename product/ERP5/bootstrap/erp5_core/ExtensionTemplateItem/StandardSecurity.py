@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
+from Products.ERP5Security.ERP5GroupManager import ConsistencyError
+
 def getSecurityCategoryFromAssignment(self, base_category_list, user_name, object, portal_type, child=0):
   """
   This script returns a list of dictionaries which represent
@@ -49,13 +51,8 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
   
   category_list = []
   
-  # Get the Person module
-  person_module = context.portal_url.getPortalObject().getDefaultModule('Person')
-  
-  # It is better to keep getObject(), in this script this
-  # prevent a very strange bug, sometimes without getObject the
-  # assignment is not found
-  person_object_list = [x.getObject() for x in person_module.searchFolder(portal_type='Person', reference=user_name)]
+  person_object_list = self.portal_catalog.unrestrictedSearchResults(
+                                portal_type='Person', reference=user_name)
   
   if len(person_object_list) != 1:
     if len(person_object_list) > 1:
@@ -65,7 +62,7 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
       # this happens for example when a manager with no associated person object
       # creates a person_object for a new user
       return []
-  person_object = person_object_list[0]
+  person_object = person_object_list[0].getObject()
   
   # We look for every valid assignments of this user
   for assignment in person_object.contentValues(filter={'portal_type': 'Assignment'}):
