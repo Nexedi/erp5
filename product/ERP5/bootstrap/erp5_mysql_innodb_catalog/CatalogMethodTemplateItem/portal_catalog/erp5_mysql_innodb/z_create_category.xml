@@ -101,10 +101,8 @@ CREATE TABLE `category` (\n
   `base_category_uid` BIGINT UNSIGNED default \'0\',\n
   `category_strict_membership` tinyint(1) default \'0\',\n
   KEY `uid` (`uid`),\n
-  KEY `Membership` (`category_uid`,`base_category_uid`),\n
-) TYPE = InnoDB; \n
-\n
-</string> </value>
+  KEY `Membership` (`category_uid`,`base_category_uid`)\n
+) TYPE = InnoDB;</string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -148,10 +146,8 @@ CREATE TABLE `category` (\n
   `base_category_uid` BIGINT UNSIGNED default \'0\',\n
   `category_strict_membership` tinyint(1) default \'0\',\n
   KEY `uid` (`uid`),\n
-  KEY `Membership` (`category_uid`,`base_category_uid`),\n
-) TYPE = InnoDB; \n
-\n
-</string> </value>
+  KEY `Membership` (`category_uid`,`base_category_uid`)\n
+) TYPE = InnoDB;</string> </value>
                     </item>
                   </dictionary>
                 </state>
