@@ -42,6 +42,19 @@ from DateTime import DateTime
 
 mimetypes.init()
 
+def _unpackData(data):
+  """
+  Unpack Pdata into string
+  """
+  if isinstance(data, str):
+    return data
+  else:
+    data_list = []
+    while data is not None:
+      data_list.append(data.data)
+      data = data.next
+    return ''.join(data_list)
+
 class File(Document, CMFFile, ConversionCacheMixin):
   """
       A File can contain raw data which can be uploaded and downloaded.
@@ -148,20 +161,6 @@ class File(Document, CMFFile, ConversionCacheMixin):
     Checks whether a file was uploaded into the document.
     """
     return self.hasData()
-
-  security.declarePrivate('_unpackData')
-  def _unpackData(self, data):
-    """
-    Unpack Pdata into string
-    """
-    if isinstance(data, str):
-      return data
-    else:
-      data_list = []
-      while data is not None:
-        data_list.append(data.data)
-        data = data.next
-      return ''.join(data_list)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'guessMimeType')
   def guessMimeType(self, fname=''):
