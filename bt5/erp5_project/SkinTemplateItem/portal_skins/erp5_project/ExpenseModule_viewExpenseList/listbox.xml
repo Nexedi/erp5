@@ -334,10 +334,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>start_date</string>
                           <string>Start Date</string>
                         </tuple>
