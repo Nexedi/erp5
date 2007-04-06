@@ -26,8 +26,14 @@ Product | price_view
 Product | print
 Product | view
 Product | view_stock
+Service Module | csv_export
+Service Module | csv_import
+Service Module | list_ui
 Service Module | print
+Service Module | search
+Service Module | sort_on
 Service Module | view
+Service Module | workflow_report
 Service | history
 Service | metadata
 Service | print
