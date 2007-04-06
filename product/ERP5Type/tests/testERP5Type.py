@@ -209,19 +209,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.failUnless(business_template.getTitle()==test_string)
     
     # Test Dynamic Code Generation
-    def test_01_AqDynamic(self):
-      portal = self.getPortal()
-      #module = portal.person
-      from Products.ERP5Type.Base import initializeClassDynamicProperties
-      from Products.ERP5Type.Base import initializePortalTypeDynamicProperties
-      from Products.ERP5Type.Base import Base
-      from Products.ERP5Type import Document
-      initializeClassDynamicProperties(portal, Base)
-      # Base class should now have a state method
-      # self.failUnless(hasattr(Base, 'getFirstName'))
-      # This test is now useless since methods are portal type based
-    
-    def test_02_AqDynamic(self):
+    def test_02_AqDynamic(self, quiet=quiet, run=run_all_test):
+      if not run: return
       portal = self.getPortal()
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
@@ -1272,6 +1261,72 @@ class TestPropertySheet:
              alpha.getRegionRelatedTitleList(portal_type='Person', 
                                              checked_permission="View"), 
              [doo.getTitle(), bar.getTitle(), ])
+
+    def test_25_AqDynamicWithTempObject(self, quiet=quiet, run=run_all_test):
+      """Check if _aq_dynamic works correctly, regardless of whether
+      it is first called for a temporary object or a persistent object.
+
+      This test is based on the fact that a portal type is shared between
+      a temporary document and a persistent document, and if a class for
+      the temporary document is used for generating new methods, calling
+      such methods from a persistent object may fail, because such a
+      persistent object is not an instance of the temporary document class.
+      """
+      if not run: return
+      portal = self.getPortal()
+
+      # Clear out all generated methods.
+      _aq_reset()
+
+      # Create a new temporary person object.
+      from Products.ERP5Type.Document import newTempPerson
+      o = newTempPerson(portal, 'temp_person_1')
+      self.failUnless(o.isTempObject())
+
+      # This should generate a workflow method.
+      self.assertEquals(o.getValidationState(), 'draft')
+      o.validate()
+      self.assertEquals(o.getValidationState(), 'validated')
+
+      # Create a new persistent person object.
+      person_module = portal.person_module
+      person_id = 'person_1'
+      if person_id in person_module.objectIds():
+        person_module.manage_delObjects([person_id])
+      o = person_module.newContent(id=person_id, portal_type='Person')
+      self.failIf(o.isTempObject())
+
+      # This should call methods generated above for the temporary object.
+      self.assertEquals(o.getValidationState(), 'draft')
+      o.validate()
+      self.assertEquals(o.getValidationState(), 'validated')
+
+      # Paranoia: test the reverse snenario as well, although this
+      # should succeed anyway.
+
+      # Create a new persistent person object.
+      person_id = 'person_2'
+      if person_id in person_module.objectIds():
+        person_module.manage_delObjects([person_id])
+      o = person_module.newContent(id=person_id, portal_type='Person')
+      self.failIf(o.isTempObject())
+
+      # Clear out all generated methods.
+      _aq_reset()
+
+      # This should generate workflow methods.
+      self.assertEquals(o.getValidationState(), 'draft')
+      o.validate()
+      self.assertEquals(o.getValidationState(), 'validated')
+
+      # Create a new temporary person object.
+      o = newTempPerson(portal, 'temp_person_2')
+      self.failUnless(o.isTempObject())
+
+      # This should call methods generated for the persistent object.
+      self.assertEquals(o.getValidationState(), 'draft')
+      o.validate()
+      self.assertEquals(o.getValidationState(), 'validated')
 
 if __name__ == '__main__':
   framework()

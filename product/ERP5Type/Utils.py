@@ -350,6 +350,7 @@ class TempDocumentConstructor(DocumentConstructor):
     def __init__(self, klass):
       # Create a new class to set permissions specific to temporary objects.
       class TempDocument(klass):
+        isTempDocument = 1
         pass
 
       # Replace some attributes.
@@ -369,7 +370,8 @@ class TempDocumentConstructor(DocumentConstructor):
       o = self.klass(id)
       if kw:
         o.__of__(folder)._edit(force_update=1, **kw)
-      if hasattr(folder, 'isTempObject') and folder.isTempObject(): 
+      isTempObject = getattr(folder, 'isTempObject', None)
+      if isTempObject is not None and isTempObject():
         folder._setObject(id, o)# Temp Object in Temp Object should use containment
         return id               # return id to be compatible with CMF constructInstance
       else:                     # Temp Object in Persistent Object should use acquisition

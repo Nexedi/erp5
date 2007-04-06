@@ -407,6 +407,7 @@ class Base( CopyContainer,
   isPredicate = 0     #
   isTemplate = 0      #
   isDocument = 0      #
+  isTempDocument = 0  # If set to 0, instances are temporary.
 
   # Dynamic method acquisition system (code generation)
   aq_method_generated = {}
@@ -490,6 +491,13 @@ class Base( CopyContainer,
 
     # Proceed with property generation
     klass = self.__class__
+    if self.isTempObject():
+      # If self is a temporary object, generate methods for the base
+      # document class rather than for the temporary document class.
+      # Otherwise, instances of the base document class would fail
+      # in calling such methods, because they are not instances of
+      # the temporary document class.
+      klass = klass.__bases__[0]
     generated = 0 # Prevent infinite loops
 
     # Generate class methods
@@ -2114,13 +2122,9 @@ class Base( CopyContainer,
 
   security.declarePublic('isTempObject')
   def isTempObject(self):
+    """Return true if self is an instance of a temporary document class.
     """
-      Tells if an object is temporary or not
-
-      Implementation is based on the fact that reindexObject method is overloaded
-      for all TempObjects with the same dummy method
-    """
-    return self.reindexObject.im_func is self._temp_reindexObject.im_func
+    return getattr(self.__class__, 'isTempDocument', 0)
 
   # Workflow Related Method
   security.declarePublic('getWorkflowStateItemList')
@@ -2916,6 +2920,7 @@ class TempBase(Base):
     we shoud used TempBase
   """
   isIndexable = 0
+  isTempDocument = 1
 
   # Declarative security
   security = ClassSecurityInfo()
