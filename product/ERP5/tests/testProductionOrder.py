@@ -1014,8 +1014,29 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
 
   def test_05_testCutPasteInAnotherContainer(self, quiet=0, run=run_all_test):
     """
-    Check that relation are changed when doing a copy/paste,
-    on supply chain
+    Check that relations are changed when doing a copy/paste,
+    on a supply chain.
+
+    The point in this test is that internal relations should be updated
+    when copying an object. Suppose that a document D1 contains sub-objects
+    S1_1 and S1_2, and S1_1 is related to S1_2. When copying D1 to D2,
+    S2_1 and S2_2 are also copied from S1_1 and S1_2. Now S2_1 should be
+    related to S2_2, instead of S1_2.
+
+    Good:
+
+    D1 -+- S1_1          D1 -+- S1_1   D2 -+- S2_1
+        |    |      =>       |    |        |    |
+        |    v               |    v        |    v
+        +- S1_2              +- S1_2       +- S2_2
+
+    Bad:
+
+    D1 -+- S1_1          D1 -+- S1_1   D2 -+- S2_1
+        |    |      =>       |    |      __|_/    
+        |    v               |    v     /  |     
+        +- S1_2              +- S1_2<--/   +- S2_2
+
     """
     if not run: return
     sequence_list = SequenceList()
