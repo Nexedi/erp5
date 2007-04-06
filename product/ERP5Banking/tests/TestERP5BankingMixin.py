@@ -379,6 +379,10 @@ class TestERP5BankingMixin:
     self.quantity_usd_200 = {}
     # 2 banknotes of 200
     self.quantity_usd_200['variation/not_defined'] = 2
+    # quantity of usd banknote of 100
+    self.quantity_usd_100 = {}
+    # 2 banknotes of 100
+    self.quantity_usd_100['variation/not_defined'] = 2
     # quantity of usd banknote of 50
     self.quantity_usd_50 = {}
     # 3 banknotes of 50
@@ -544,6 +548,7 @@ class TestERP5BankingMixin:
         caisse_courante = surface.newContent(id='caisse_courante', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
         caisse_courante.newContent(id='encaisse_des_billets_et_monnaies', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
         caisse_courante.newContent(id='billets_mutiles', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+        caisse_courante.newContent(id='encaisse_des_devises', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
         # create counter for surface
         for s in ['banque_interne', 'gros_versement', 'gros_paiement']:
           vault_codification = c.getCodification()
@@ -603,6 +608,9 @@ class TestERP5BankingMixin:
             if s.getId() == 'auxiliaire':
               for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
                 s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+        # Create forreing currency entries in encaisse_des_devises.
+        for currency in ['usd', ]:
+          caisse_courante.encaisse_des_devises.newContent(id=currency, portal_type='Category', codification='', vault_type='surface/caisse_courante/%s' % (currency, ))
 
     # Create other site now but without vault
     if len(site_list) != 0:
