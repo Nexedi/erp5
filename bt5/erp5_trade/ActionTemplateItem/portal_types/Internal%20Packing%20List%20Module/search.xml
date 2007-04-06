@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_print</string> </value>
+            <value> <string>object_search</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>print</string> </value>
+            <value> <string>search</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -54,11 +54,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>20.0</float> </value>
+            <value> <float>40.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Print</string> </value>
+            <value> <string>Search</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_printPdf</string> </value>
+            <value> <string>string:${object_url}/Folder_viewSearchDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

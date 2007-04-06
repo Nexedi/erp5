@@ -32,8 +32,14 @@ Internal Packing List Line | print
 Internal Packing List Line | quantity_view
 Internal Packing List Line | view
 Internal Packing List Line | view_price
+Internal Packing List Module | csv_export
+Internal Packing List Module | csv_import
+Internal Packing List Module | list_ui
 Internal Packing List Module | print
+Internal Packing List Module | search
+Internal Packing List Module | sort_on
 Internal Packing List Module | view
+Internal Packing List Module | workflow_report
 Internal Packing List | history
 Internal Packing List | metadata
 Internal Packing List | print
