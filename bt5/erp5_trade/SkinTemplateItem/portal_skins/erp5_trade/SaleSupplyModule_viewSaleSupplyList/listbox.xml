@@ -314,10 +314,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -342,10 +338,6 @@
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
@@ -467,10 +459,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -504,10 +492,6 @@
                     <key> <string>sort_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>

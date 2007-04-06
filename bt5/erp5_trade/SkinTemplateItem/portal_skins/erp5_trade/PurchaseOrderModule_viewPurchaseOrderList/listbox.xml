@@ -318,10 +318,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Purchase Order</string>
                         </tuple>
@@ -362,10 +358,6 @@
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Purchase Order</string>
@@ -529,10 +521,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Purchase Order</string>
                         </tuple>
@@ -582,10 +570,6 @@
                     <key> <string>sort_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Purchase Order</string>

@@ -393,10 +393,6 @@
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
