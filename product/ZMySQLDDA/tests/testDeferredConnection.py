@@ -60,16 +60,16 @@ def fake_db_query(self, *args, **kw):
     raise OperationalError, (hosed_connection[0], 'dummy exception')
   return self.original_query(*args, **kw)
 
-class TestDefferedConnection(ERP5TypeTestCase):
+class TestDeferredConnection(ERP5TypeTestCase):
   """
-    Test MySQL Deffered Connection
+    Test MySQL Deferred Connection
   """
 
   def getBusinessTemplateList(self):
     return tuple()
 
   def getTitle(self):
-    return "Deffered Connection"
+    return "Deferred Connection"
 
   def setUp(self):
     ERP5TypeTestCase.setUp(self)
@@ -105,23 +105,23 @@ class TestDefferedConnection(ERP5TypeTestCase):
     mysql_class.query = mysql_class.original_query
     delattr(mysql_class, 'original_query')
 
-  def getDefferedConnection(self):
+  def getDeferredConnection(self):
     """
-      Return site's deffered connection object.
+      Return site's deferred connection object.
     """
-    deffered = self.getPortal().erp5_sql_deferred_connection
-    deffered_connection = getattr(deffered, '_v_database_connection', None)
-    if deffered_connection is None:
-      deffered.connect(deffered.connection_string)
-      deffered_connection = getattr(deffered, '_v_database_connection')
-    deffered_connection.tables() # Dummy access to force actual connection.
-    return deffered_connection._pool_get(get_ident())
+    deferred = self.getPortal().erp5_sql_deferred_connection
+    deferred_connection = getattr(deferred, '_v_database_connection', None)
+    if deferred_connection is None:
+      deferred.connect(deferred.connection_string)
+      deferred_connection = getattr(deferred, '_v_database_connection')
+    deferred_connection.tables() # Dummy access to force actual connection.
+    return deferred_connection._pool_get(get_ident())
 
   def test_00_basicReplaceQuery(self):
     """
       Check that a basic query succeeds.
     """
-    connection = self.getDefferedConnection()
+    connection = self.getDeferredConnection()
     connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     try:
       get_transaction().commit()
@@ -137,7 +137,7 @@ class TestDefferedConnection(ERP5TypeTestCase):
       connection.db.query to fail.
       This makes sure that disconnection-trick monkey patch does work.
     """
-    connection = self.getDefferedConnection()
+    connection = self.getDeferredConnection()
     # Queue a query
     connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     # Replace dynamically the function used to send queries to mysql so it's
@@ -164,7 +164,7 @@ class TestDefferedConnection(ERP5TypeTestCase):
       Check that if the connection gets closed before being used the
       commit can happen without trouble.
     """
-    connection = self.getDefferedConnection()
+    connection = self.getDeferredConnection()
     # Queue a query
     connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     # Artificially cause a connection close.
@@ -173,7 +173,7 @@ class TestDefferedConnection(ERP5TypeTestCase):
       try:
         get_transaction().commit()
       except OperationalError, m:
-        LOG('TestDefferedConnection', 0, 'OperationalError exception raised: %s' % (m, ))
+        LOG('TestDeferredConnection', 0, 'OperationalError exception raised: %s' % (m, ))
         self.fail()
       except:
         raise # Make sure the test is known to have failed, even if it's not
@@ -186,7 +186,7 @@ class TestDefferedConnection(ERP5TypeTestCase):
       Check that multiple transactions (one after another) are correctly
       isolated one from the other.
     """
-    connection = self.getDefferedConnection()
+    connection = self.getDeferredConnection()
     # Queue a query
     connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     self.assertEqual(len(connection._sql_string_list), 1)
