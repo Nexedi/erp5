@@ -16,9 +16,6 @@
   <item>source_decision</item>
   <item>destination_decision</item>
  </portal_type>
- <portal_type id="Sale Invoice Transaction">
-  <item>source_project</item>
- </portal_type>
  <portal_type id="Sale Order Line">
   <item>predecessor</item>
  </portal_type>

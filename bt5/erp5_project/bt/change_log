@@ -1,3 +1,6 @@
+2007-04-06 Romain
+* Remove source_project from Sale Invoice Transaction base categories, as erp5_project is not dependant from erp5_accounting.
+
 2007-02-07 rafael
 * Removed Roles from Task Report
 

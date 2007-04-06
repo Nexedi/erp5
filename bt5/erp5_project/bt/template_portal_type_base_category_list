@@ -5,7 +5,6 @@ Requirement Document | destination_decision
 Requirement Document | source_decision
 Requirement | destination_decision
 Requirement | source_decision
-Sale Invoice Transaction | source_project
 Sale Order Line | predecessor
 Sale Order Milestone | predecessor
 Sale Packing List Line | predecessor
