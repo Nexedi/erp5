@@ -80,6 +80,9 @@ line_list = transaction.objectValues()\n
 if len(line_list)==0:\n
   msg = Message(domain="ui", message="Sorry, you must select at least one check or checkbook")\n
 \n
+at_date = transaction.getStartDate()\n
+transaction.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = baobab_source)\n
+\n
 if msg is not None:\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
@@ -137,6 +140,8 @@ if msg is not None:\n
                             <string>msg</string>
                             <string>line_list</string>
                             <string>len</string>
+                            <string>at_date</string>
+                            <string>baobab_source</string>
                           </tuple>
                         </value>
                     </item>

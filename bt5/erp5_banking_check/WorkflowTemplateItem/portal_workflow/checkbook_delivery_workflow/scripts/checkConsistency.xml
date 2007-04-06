@@ -65,9 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# XXX: This script is only kept in case it must be added back as a "Before" script on "_action" transition.\n
+            <value> <string># XXX: This script is only kept in case it must be added back as a "Before" script on "_action" transition.\n
 #      But it is not used any longer at the moment.\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
@@ -75,68 +73,15 @@ from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
 \n
-# First we have to look if we have some checks with some prices,\n
-# if so, this means that we are saling such kinds of check, thus\n
-# we must change the position of the customer account\n
-movement_list = transaction.getMovementList()\n
-total_debit = 0\n
-for movement in movement_list:\n
-  aggregate_value_list = movement.getAggregateValueList()\n
-  for item in aggregate_value_list:\n
-    if item.getPortalType()==\'Check\':\n
-      if item.getPrice() is not None:\n
-        # then we must calculate the exchange value\n
-        base_price = movement.CurrencyExchange_getExchangeRateList()[0]\n
-        if base_price is None:\n
-          msg = Message(domain = "ui", message="Sorry, no valid price was found for this currency")\n
-          raise ValidationFailed, (msg,)\n
-        total_debit += base_price*item.getPrice()\n
-if total_debit>0:\n
-  total_debit = round(total_debit+0.5)\n
-  # Source and destination will be updated automaticaly based on the category of bank account\n
-  # The default account chosen should act as some kind of *temp* account or *parent* account\n
-  movement = transaction.get(\'movement\',None)\n
-  if movement is None:\n
-    movement = transaction.newContent(portal_type=\'Banking Operation Line\',\n
-                           id=\'movement\',\n
-                           source=\'account_module/bank_account\', # Set default source\n
-                           destination=\'account_module/bank_account\', # Set default destination\n
-                           )\n
-  movement.setSourceDebit(total_debit)\n
-  transaction.setSourceTotalAssetPrice(total_debit)\n
-\n
-  line = transaction.movement\n
-  bank_account = transaction.getDestinationPaymentValue()\n
-  price = total_debit\n
-\n
-  # this prevents multiple transactions from being committed at the same time for this bank account.\n
-  bank_account.serialize()\n
-\n
-  # Make sure there are no other operations pending for this account\n
-  if context.BankAccount_isMessagePending(bank_account):\n
-    msg = Message(domain=\'ui\', message="There are operations pending for this account that prevent form calculating its position. Please try again later.")\n
-    raise ValidationFailed, (msg,)\n
-\n
-  # Index the banking operation line so it impacts account position\n
-  context.BankingOperationLine_index(line)\n
-\n
-  # Test if the account balance is sufficient.\n
-  error = context.BankAccount_checkBalance(bank_account.getRelativeUrl(), price)\n
-  if error[\'error_code\'] == 1:\n
-    msg = Message(domain=\'ui\', message="Bank account is not sufficient.")\n
-    raise ValidationFailed, (msg,)\n
-  elif error[\'error_code\'] == 2:\n
-    msg = Message(domain=\'ui\', message="Bank account is not valid.")\n
-    raise ValidationFailed, (msg,)\n
-  elif error[\'error_code\'] != 0:\n
-    msg = Message(domain=\'ui\', message="Unknown error code.")\n
-    raise ValidationFailed, (msg,)\n
 \n
 date = transaction.getStartDate()\n
 source = transaction.getSource(None)\n
 if source is None:\n
   msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
   raise ValidationFailed, (msg,)\n
+\n
+at_date = transaction.getStartDate()\n
+transaction.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = source)\n
 \n
 # check we are in an opened accounting day\n
 if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
@@ -149,9 +94,7 @@ if \'guichet\' in site.getVaultType():\n
   if not context.Baobab_checkCounterOpened(site):\n
     msg = Message(domain = "ui", message="Counter is not opened")\n
     raise ValidationFailed, (msg,)\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -202,24 +145,13 @@ if \'guichet\' in site.getVaultType():\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>movement_list</string>
-                            <string>total_debit</string>
-                            <string>_getiter_</string>
-                            <string>movement</string>
-                            <string>aggregate_value_list</string>
-                            <string>item</string>
-                            <string>None</string>
-                            <string>base_price</string>
-                            <string>msg</string>
-                            <string>round</string>
-                            <string>line</string>
-                            <string>bank_account</string>
-                            <string>price</string>
-                            <string>context</string>
-                            <string>error</string>
                             <string>date</string>
+                            <string>None</string>
                             <string>source</string>
+                            <string>msg</string>
+                            <string>at_date</string>
                             <string>site</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -236,7 +168,7 @@ if \'guichet\' in site.getVaultType():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validatePositionAccounting</string> </value>
+            <value> <string>checkConsistency</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
