@@ -107,6 +107,7 @@ Person | report
 Person | terminate_career
 Person | view
 Query Module | list_ui
+Query Module | search
 Query Module | sort_on
 Query Module | view
 Query | history

@@ -24,6 +24,7 @@ Project Milestone | metadata
 Project Milestone | print
 Project Milestone | view
 Project Module | print_pdf
+Project Module | search
 Project Module | view
 Project | add_task_related
 Project | content
@@ -54,6 +55,7 @@ Requirement Document | view
 Requirement Module | fast_input
 Requirement Module | list_ui
 Requirement Module | print_pdf
+Requirement Module | search
 Requirement Module | sort_on
 Requirement Module | view
 Requirement | fast_input
@@ -79,6 +81,7 @@ Task Line | print
 Task Line | quantity_view
 Task Line | view
 Task Module | list_ui
+Task Module | search
 Task Module | sort_on
 Task Module | view
 Task Report Line | history
@@ -90,6 +93,7 @@ Task Report Line | view
 Task Report Module | icalendar_export
 Task Report Module | list_ui
 Task Report Module | planning_report
+Task Report Module | search
 Task Report Module | sort_on
 Task Report Module | view
 Task Report | expense_view

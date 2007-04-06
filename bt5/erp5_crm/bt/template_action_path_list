@@ -1,4 +1,5 @@
 Event Module | print_pdf
+Event Module | search
 Event Module | view
 Incoming Fax | document_view
 Incoming Fax | history
@@ -26,12 +27,14 @@ Phone Call | metadata
 Phone Call | print
 Phone Call | view
 Sale Opportunity Module | print
+Sale Opportunity Module | search
 Sale Opportunity Module | view
 Sale Opportunity | history
 Sale Opportunity | metadata
 Sale Opportunity | print
 Sale Opportunity | view
 Support Request Module | print
+Support Request Module | search
 Support Request Module | view
 Support Request | history
 Support Request | metadata

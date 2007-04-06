@@ -153,6 +153,7 @@ Purchase Supply Line | view
 Purchase Supply Module | csv_export
 Purchase Supply Module | list_ui
 Purchase Supply Module | print
+Purchase Supply Module | search
 Purchase Supply Module | sort_on
 Purchase Supply Module | view
 Purchase Supply | history
@@ -269,6 +270,7 @@ Sale Supply Line | view
 Sale Supply Module | csv_export
 Sale Supply Module | list_ui
 Sale Supply Module | print
+Sale Supply Module | search
 Sale Supply Module | sort_on
 Sale Supply Module | view
 Sale Supply | history

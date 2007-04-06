@@ -1,4 +1,5 @@
 Bug Module | list_ui
+Bug Module | search
 Bug Module | sort_on
 Bug Module | view
 Bug | history
@@ -19,4 +20,5 @@ External Folder | view
 Preference | subversion
 Template Tool | bt_svn_history
 Upload Module | list
+Upload Module | search
 Upload Module | view
