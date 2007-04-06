@@ -292,6 +292,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     This method should respond quickly.  Basically the response depends on some
     previous calculation made by activeSense.
     """
+    value = False
     method_id = self.getSenseMethodId()
     process = self.getLastActiveProcess()
     if process is None:
