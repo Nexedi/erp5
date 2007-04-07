@@ -544,3 +544,4 @@ class OOoParser:
 
 InitializeClass(OOoParser)
 allow_class(OOoParser)
+allow_class(CorruptedOOoFile)
