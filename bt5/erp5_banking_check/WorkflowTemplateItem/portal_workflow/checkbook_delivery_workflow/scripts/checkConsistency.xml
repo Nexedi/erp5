@@ -75,7 +75,7 @@ transaction = state_change[\'object\']\n
 \n
 \n
 date = transaction.getStartDate()\n
-source = transaction.getSource(None)\n
+source = transaction.getBaobabSource(None)\n
 if source is None:\n
   msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
   raise ValidationFailed, (msg,)\n
@@ -88,12 +88,12 @@ if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
   msg = Message(domain = "ui", message="Counter Date is not opened")\n
   raise ValidationFailed, (msg,)\n
 \n
-site = transaction.getSourceValue()\n
+#site = transaction.getBaobabSourceValue()\n
 \n
-if \'guichet\' in site.getVaultType():\n
-  if not context.Baobab_checkCounterOpened(site):\n
-    msg = Message(domain = "ui", message="Counter is not opened")\n
-    raise ValidationFailed, (msg,)\n
+#if \'guichet\' in site.getVaultType():\n
+#  if not context.Baobab_checkCounterOpened(site):\n
+#    msg = Message(domain = "ui", message="Counter is not opened")\n
+#    raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -150,8 +150,6 @@ if \'guichet\' in site.getVaultType():\n
                             <string>source</string>
                             <string>msg</string>
                             <string>at_date</string>
-                            <string>site</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
