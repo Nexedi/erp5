@@ -70,8 +70,8 @@ from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change.object\n
 \n
-source = transaction.getSource()\n
-destination = transaction.getDestination()\n
+source = transaction.getBaobabSource()\n
+destination = transaction.getBaobabDestination()\n
 msg = None\n
 if source == destination:\n
   msg = Message(domain="ui", message="Sorry, the source and the destination must be different")\n
