@@ -71,8 +71,8 @@ from Products.ERP5Type.Message import Message\n
 transaction = state_change.object\n
 \n
 \n
-source = transaction.getSource()\n
-destination = transaction.getDestination()\n
+source = transaction.getBaobabSource()\n
+destination = transaction.getBaobabDestination()\n
 \n
 msg = None\n
 if source == destination:\n
