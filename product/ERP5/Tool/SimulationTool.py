@@ -1059,6 +1059,14 @@ class SimulationTool(BaseTool):
 
       """
       new_kw = self._generateSQLKeywordDict(table='item',strict_simulation_state=strict_simulation_state,**kw)
+      at_date = kw.get('at_date',None)
+      if at_date is not None:
+        from Products.ZSQLCatalog.SQLCatalog import QueryMixin
+        query_mixin = QueryMixin()
+        at_date = query_mixin._quoteSQLString(at_date)
+      # Do not remove at_date in new_kw, it is required in 
+      # order to do a "select item left join item on date"
+      new_kw['at_date'] = at_date
 
       # Extra parameters for the SQL Method
       new_kw['join_on_item'] = new_kw.get('at_date') or \
