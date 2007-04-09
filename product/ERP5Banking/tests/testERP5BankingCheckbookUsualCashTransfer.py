@@ -111,7 +111,6 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_to_deliver_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
 
-
 class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCashTransferMixin,
                                                 TestERP5BankingMixin, ERP5TypeTestCase):
   """
@@ -328,10 +327,6 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     state = self.checkbook_usual_cash_transfer.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_usual_cash_transfer, 
-                            name='history', wf_id='checkbook_usual_cash_transfer_workflow')
-
 
   def stepCheckFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
     """
@@ -363,6 +358,24 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
                 node=self.destination_vault.getRelativeUrl(),
                 at_date=self.date)), 2)
 
+  def stepChangePreviousDeliveryDate(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    self.previous_delivery = self.checkbook_vault_transfer
+    self.previous_date = self.previous_delivery.getStartDate()
+    self.previous_delivery.edit(start_date=self.date+5)
+
+  def stepDeliverCheckbookUsualCashTransferFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.checkbook_usual_cash_transfer,
+              'checkbook_usual_cash_transfer_workflow','confirm_to_deliver_action')
+    self.failUnless(message.find('Sorry, the item with reference')>=0)
+    self.failUnless(message.find('is not available any more')>=0)
+
   ##################################
   ##  Tests
   ##################################
@@ -381,6 +394,9 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
                     + 'ChangeCheckbookUsualCashTransferStartDate Tic ' \
                     + 'ConfirmCheckbookUsualCashTransfer Tic ' \
                     + 'CheckConfirmedCheckbookInventory Tic ' \
+                    + 'ChangePreviousDeliveryDate Tic ' \
+                    + 'DeliverCheckbookUsualCashTransferFails Tic ' \
+                    + 'PutBackPreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookUsualCashTransfer Tic ' \
                     + 'CheckFinalCheckbookInventory'
     sequence_list.addSequenceString(sequence_string)

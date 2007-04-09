@@ -277,10 +277,6 @@ class TestERP5BankingCheckbookMovement(TestERP5BankingCheckbookVaultTransferMixi
     state = self.checkbook_movement.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_movement, 
-                            name='history', wf_id='checkbook_movement_workflow')
-    self.assertEqual(len(workflow_history), 9)
 
 
   def stepCheckFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
@@ -301,6 +297,24 @@ class TestERP5BankingCheckbookMovement(TestERP5BankingCheckbookVaultTransferMixi
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(
                 node=self.destination_vault.getRelativeUrl())), 2)
 
+  def stepChangePreviousDeliveryDate(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    self.previous_delivery = self.checkbook_reception
+    self.previous_date = self.previous_delivery.getStartDate()
+    self.previous_delivery.edit(start_date=self.date+5)
+
+  def stepDeliverCheckbookMovementFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.checkbook_movement,
+              'checkbook_movement_workflow','confirm_to_deliver_action')
+    self.failUnless(message.find('Sorry, the item with reference')>=0)
+    self.failUnless(message.find('is not available any more')>=0)
+
   ##################################
   ##  Tests
   ##################################
@@ -319,6 +333,9 @@ class TestERP5BankingCheckbookMovement(TestERP5BankingCheckbookVaultTransferMixi
                     + 'OrderCheckbookMovement Tic ' \
                     + 'ConfirmCheckbookMovement Tic ' \
                     + 'CheckConfirmedCheckbookInventory Tic ' \
+                    + 'ChangePreviousDeliveryDate Tic ' \
+                    + 'DeliverCheckbookMovementFails Tic ' \
+                    + 'PutBackPreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookMovement Tic ' \
                     + 'CheckFinalCheckbookInventory'
     sequence_list.addSequenceString(sequence_string)

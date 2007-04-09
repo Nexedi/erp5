@@ -136,6 +136,13 @@ class TestERP5BankingCheckbookVaultTransferMixin:
     else:
       self.assertNotEquals(traveler_check,None)
 
+  def stepPutBackPreviousDeliveryDate(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Put back right inventory
+    """
+    self.previous_delivery.edit(start_date=self.previous_date)
+
 class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransferMixin,
                                               TestERP5BankingMixin, ERP5TypeTestCase):
   """

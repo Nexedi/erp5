@@ -128,7 +128,7 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_200}
     
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.diff_vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=None, destination=self.diff_vault, currency=self.currency_1,
                              line_list=line_list)
@@ -447,8 +447,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting_incident, name='history', wf_id='cash_sorting_incident_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 8)
     
 
   def stepCheckFinalIncomingInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -474,6 +472,24 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     # check we have 12 coin of 200 in usual_cash
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.diff_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.diff_vault
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverCashSortingIncidentFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.cash_sorting_incident,
+              'cash_sorting_incident_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
 
 
   ##################################
@@ -512,6 +528,9 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'SetOutgoingTotalAssetPrice ' \
                     + 'PlanCashSortingIncident ' \
                     + 'ConfirmCashSortingIncident ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'DeliverCashSortingIncidentFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverCashSortingIncident ' \
                     + 'Tic ' \
                     + 'CheckFinalOutgoingInventory '

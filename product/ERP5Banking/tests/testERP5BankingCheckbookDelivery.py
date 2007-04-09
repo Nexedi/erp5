@@ -128,6 +128,8 @@ class TestERP5BankingCheckbookDeliveryMixin:
     # in the source
     self.createCheckbookReception()
     self.checkItemsCreated()
+    get_transaction().commit()
+    self.tic()
     self.createCheckbookVaultTransfer()
 
 
@@ -241,10 +243,6 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     # check that checks are issued
     check = self.checkbook_1.objectValues()[0]
     self.assertEqual(check.getSimulationState(),'confirmed')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_delivery, 
-                            name='history', wf_id='checkbook_delivery_workflow')
-    self.assertEqual(len(workflow_history), 3)
 
 
   def stepCheckFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
@@ -265,6 +263,24 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     checkbook_object_list = [x.getObject() for x in checkbook_list]
     self.failIfDifferentSet(checkbook_object_list,[self.check_1])
 
+  def stepChangePreviousDeliveryDate(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    self.previous_delivery = self.checkbook_vault_transfer
+    self.previous_date = self.previous_delivery.getStartDate()
+    self.previous_delivery.edit(start_date=self.date+5)
+
+  def stepDeliverCheckbookDeliveryFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.checkbook_delivery,
+              'checkbook_delivery_workflow','deliver_action')
+    self.failUnless(message.find('Sorry, the item with reference')>=0)
+    self.failUnless(message.find('is not available any more')>=0)
+
   ##################################
   ##  Tests
   ##################################
@@ -279,6 +295,9 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     sequence_string = 'Tic CheckObjects Tic CheckInitialCheckbookInventory ' \
                     + 'CreateCheckbookDelivery Tic ' \
                     + 'CreateCheckAndCheckbookLineList Tic ' \
+                    + 'ChangePreviousDeliveryDate Tic ' \
+                    + 'DeliverCheckbookDeliveryFails Tic ' \
+                    + 'PutBackPreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookDelivery Tic ' \
                     + 'CheckFinalCheckbookInventory'
     sequence_list.addSequenceString(sequence_string)
