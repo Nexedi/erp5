@@ -693,7 +693,8 @@ class TestERP5BankingMixin:
     Compute and set the source reference for a document
     """
     # document must have a date defined
-    doc.edit(start_date=DateTime())
+    if doc.getStartDate() is None:
+      doc.edit(start_date=DateTime())
     # call script to set source reference
     doc.Baobab_getUniqueReference()
 
