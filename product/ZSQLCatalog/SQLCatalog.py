@@ -181,9 +181,19 @@ class UidBuffer(TM):
     self.temporary_buffer.setdefault(tid, []).extend(iterable)
 
 class QueryMixin:
+  
+  operator = None
+  format = None
+  type = None
 
   def getOperator(self):
     return self.operator
+
+  def getFormat(self):
+    return self.format
+
+  def getType(self):
+    return self.type
 
   def getLogicalOperator(self):
     return self.logical_operator
@@ -245,12 +255,6 @@ class Query(QueryMixin):
 
   def getRange(self):
     return self.range
-
-  def getFormat(self):
-    return self.format
-
-  def getType(self):
-    return self.type
 
   def getTableAliasList(self):
     return self.table_alias_list
