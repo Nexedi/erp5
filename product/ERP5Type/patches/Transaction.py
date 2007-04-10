@@ -78,19 +78,15 @@ try:
         #   do not deadlock.
         try:
             ncommitted = 0
-            # Do prepare until number of jars is stable - this could
-            # create infinite loop
-            jars_len = -1
             jars = self._get_jars(objects, subtransaction)
-            objects_len = len(self._objects)
-            while len(jars) != jars_len:
-                jars_len = len(jars)
-                self._commit_prepare(jars, subjars, subtransaction)
-                if len(self._objects) != objects_len:
-                  objects.extend(self._objects[objects_len:])
-                  objects_len = len(self._objects)
-                jars = self._get_jars(objects, subtransaction)
             try:
+                # Do prepare until number of jars is stable - this could
+                # create infinite loop
+                jars_len = -1
+                while len(jars) != jars_len:
+                    jars_len = len(jars)
+                    self._commit_prepare(jars, subjars, subtransaction)
+                    jars = self._get_jars(objects, subtransaction)
                 # If not subtransaction, then jars will be modified.
                 self._commit_begin(jars, subjars, subtransaction)
                 ncommitted += self._commit_objects(objects)
@@ -136,17 +132,15 @@ try:
         if subtransaction:
             assert not subjars
             for jar in jars:
-                try:
-                    jar.tpc_prepare(self, subtransaction)
-                except TypeError:
-                    # Assume that TypeError means that tpc_begin() only
-                    # takes one argument, and that the jar doesn't
-                    # support subtransactions.
-                    jar.tpc_prepare(self)
-                except AttributeError:
-                    # Assume that KeyError means that tpc_prepare
-                    # not available
-                    pass
+                tpc_prepare = getattr(jar, 'tpc_prepare', None)
+                if tpc_prepare is not None:
+                    try:
+                        tpc_prepare(self, subtransaction)
+                    except TypeError:
+                        # Assume that TypeError means that tpc_begin() only
+                        # takes one argument, and that the jar doesn't
+                        # support subtransactions.
+                        tpc_prepare(self)
         else:
             # Merge in all the jars used by one of the subtransactions.
             
@@ -166,15 +160,9 @@ try:
             # assume that subjars is small, so that it's cheaper to test
             # whether jar in subjars than to make a dict and do has_key.
             for jar in jars:
-                #if jar in subjars:
-                #  pass
-                #else:
-                try:
-                    jar.tpc_prepare(self)
-                except AttributeError:
-                    # Assume that KeyError means that tpc_prepare
-                    # not available
-                    pass
+                tpc_prepare = getattr(jar, 'tpc_prepare', None)
+                if tpc_prepare is not None:
+                    tpc_prepare(self)
 
     Transaction.Transaction.commit = commit
     Transaction.Transaction._commit_prepare = _commit_prepare
