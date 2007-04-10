@@ -151,13 +151,13 @@ class TestCMFActivity(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),0)
 
-  def DeferedSetTitleActivity(self, activity):
+  def DeferredSetTitleActivity(self, activity):
     """
     We check that the title is changed only after that
     the activity was called
     """
     portal = self.getPortal()
-    organisation =  portal.organisation._getOb(self.company_id)
+    organisation = portal.organisation._getOb(self.company_id)
     organisation._setTitle(self.title1)
     self.assertEquals(self.title1,organisation.getTitle())
     organisation.activate(activity=activity)._setTitle(self.title2)
@@ -370,7 +370,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),0)
 
-  def DeferedSetTitleWithRenamedObject(self, activity):
+  def DeferredSetTitleWithRenamedObject(self, activity):
     """
     make sure that it is impossible to rename an object
     if some activities are still waiting for this object
@@ -837,41 +837,41 @@ class TestCMFActivity(ERP5TypeTestCase):
     activity_tool.manageClearActivities(keep=0)
     get_transaction().commit()
 
-  def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
+  def test_01_DeferredSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
     if not quiet:
-      message = '\nTest Defered Set Title SQLDict '
+      message = '\nTest Deferred Set Title SQLDict '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.DeferedSetTitleActivity('SQLDict')
+    self.DeferredSetTitleActivity('SQLDict')
 
-  def test_02_DeferedSetTitleSQLQueue(self, quiet=0, run=run_all_test):
+  def test_02_DeferredSetTitleSQLQueue(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
     if not quiet:
-      message = '\nTest Defered Set Title SQLQueue '
+      message = '\nTest Deferred Set Title SQLQueue '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.DeferedSetTitleActivity('SQLQueue')
+    self.DeferredSetTitleActivity('SQLQueue')
 
-  def test_03_DeferedSetTitleRAMDict(self, quiet=0, run=run_all_test):
+  def test_03_DeferredSetTitleRAMDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
     if not quiet:
-      message = '\nTest Defered Set Title RAMDict '
+      message = '\nTest Deferred Set Title RAMDict '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.DeferedSetTitleActivity('RAMDict')
+    self.DeferredSetTitleActivity('RAMDict')
 
-  def test_04_DeferedSetTitleRAMQueue(self, quiet=0, run=run_all_test):
+  def test_04_DeferredSetTitleRAMQueue(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
     if not quiet:
-      message = '\nTest Defered Set Title RAMQueue '
+      message = '\nTest Deferred Set Title RAMQueue '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.DeferedSetTitleActivity('RAMQueue')
+    self.DeferredSetTitleActivity('RAMQueue')
 
   def test_05_InvokeAndCancelSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
@@ -1214,7 +1214,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       message = '\nTry Rename Object With SQL Dict '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.DeferedSetTitleWithRenamedObject('SQLDict')
+    self.DeferredSetTitleWithRenamedObject('SQLDict')
 
   def test_43_TryRenameObjectWithSQLQueue(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
@@ -1223,7 +1223,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       message = '\nTry Rename Object With SQL Queue '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.DeferedSetTitleWithRenamedObject('SQLQueue')
+    self.DeferredSetTitleWithRenamedObject('SQLQueue')
 
   def test_44_TryRenameObjectWithRAMDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
@@ -1232,7 +1232,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       message = '\nTry Rename Object With RAM Dict '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.DeferedSetTitleWithRenamedObject('RAMDict')
+    self.DeferredSetTitleWithRenamedObject('RAMDict')
 
   def test_45_TryRenameObjectWithRAMQueue(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
@@ -1241,7 +1241,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       message = '\nTry Rename Object With RAM Queue '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.DeferedSetTitleWithRenamedObject('RAMQueue')
+    self.DeferredSetTitleWithRenamedObject('RAMQueue')
 
   def test_46_TryActiveProcessWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
