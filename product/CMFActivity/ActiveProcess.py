@@ -33,6 +33,7 @@ from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from BTrees.IOBTree import IOBTree
+from BTrees.Length import Length
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 from zLOG import LOG
@@ -40,10 +41,7 @@ from zLOG import LOG
 manage_addActiveProcessForm=DTMLFile('dtml/ActiveProcess_add', globals())
 
 def addActiveProcess(self, id, title='', REQUEST=None, activate_kw=None, **kw):
-    """
-        Add a new Category and generate UID by calling the
-        ZSQLCatalog. This code is inspired from Document Constructor
-        in Products.ERP5Type.Utils and should probably be merged.
+    """Add a new Active Process.
     """
     o = ActiveProcess(id)
     if activate_kw is not None:
@@ -78,41 +76,28 @@ class ActiveProcess(Base):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
-                      , PropertySheet.Folder 
+                      , PropertySheet.Folder
                       , PropertySheet.ActiveProcess )
 
     # Declarative constructors
     constructors =   (manage_addActiveProcessForm, addActiveProcess)
 
-    # Base methods
-    def _generateNewId(self):
-      """
-        Generate a new result id for internal storage
-      """
-      try:
-        my_id = int(self.getLastId())
-      except TypeError:
-        my_id = 1
-      while self.result_list.has_key(my_id):
-        my_id = my_id + 1
-      self._setLastId(str(my_id)) # Make sure no reindexing happens
-
-      return my_id
-
     security.declareProtected(CMFCorePermissions.ManagePortal, 'postResult')
     def postResult(self, result):
-      if not hasattr(self, 'result_list'):
+      if getattr(self, 'result_list', None) is None:
         self.result_list = IOBTree()
-      result.id = self._generateNewId()
-      self.result_list[result.id] = result
+        self.result_len = Length()
+      self.result_list[self.result_len.value] = result
+      self.result_len.change(1)
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultList')
     def getResultList(self, **kw):
       """
         Returns the list of results
       """
-      if not hasattr(self, 'result_list'):
+      if getattr(self, 'result_list', None) is None:
         self.result_list = IOBTree()
+        self.result_len = Length()
       # Improve this to include sort order XXX
       return self.result_list.values()
 
