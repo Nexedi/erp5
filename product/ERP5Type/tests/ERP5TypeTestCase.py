@@ -548,7 +548,8 @@ def setupERP5Site( business_template_list=(),
           if not quiet:
             ZopeTestCase._print('\nAdding ERP5TypeTestCase user ... \n')
           uf = app.acl_users
-          uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
+          uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
+                        'Assignor', 'Author', 'Auditor', 'Associate'], [])
           user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
           newSecurityManager(None, user)
           # Add ERP5 Site
