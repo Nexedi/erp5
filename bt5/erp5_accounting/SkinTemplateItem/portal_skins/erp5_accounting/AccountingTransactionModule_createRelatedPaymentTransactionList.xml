@@ -99,7 +99,7 @@ if len(object_list) >= 1000:\n
         context.absolute_url(), N_(\n
          \'Refusing to process more than 1000 objects, check your selection\')))\n
 \n
-tag = \'payment_creation_%s\' % portal.portal_ids.generateNewLongId()\n
+tag = \'payment_creation_%s\' % random.randint(0, 1000)\n
 activated = 0\n
 for obj in object_list:\n
   if obj.portal_type in invoice_type_list:\n
@@ -200,6 +200,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>object_list</string>
                             <string>dict</string>
                             <string>len</string>
+                            <string>random</string>
                             <string>tag</string>
                             <string>activated</string>
                             <string>obj</string>

@@ -108,7 +108,7 @@ if len_selection_list == context.countFolder():\n
   value_error = N_("Refusing to process the entire module")\n
 else:\n
   # generate a random tag\n
-  tag = \'folder_workflow_action_%s\' % portal.portal_ids.generateNewLongId()\n
+  tag = \'folder_workflow_action_%s\' % random.randint(0, 1000)\n
 \n
   processed_object_count = 0    \n
   for o in selection_list:\n
@@ -219,6 +219,7 @@ return request.RESPONSE.redirect( redirect_url )\n
                             <string>len</string>
                             <string>len_selection_list</string>
                             <string>value_error</string>
+                            <string>random</string>
                             <string>tag</string>
                             <string>processed_object_count</string>
                             <string>o</string>
