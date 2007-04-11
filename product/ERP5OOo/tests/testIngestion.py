@@ -604,7 +604,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.newPythonScript('one', 'Text_getPropertyDictFromUserLogin',
                          'user_name=None', "return {'contributor':'person_module/john'}")
     self.newPythonScript('one', 'Text_getPropertyDictFromContent', '',
-                         "return {'short_title':'short'}")
+                         "return {'short_title':'short', 'title':'title', 'contributor':'person_module/john',}")
 
   def stepTestMetadataSetting(self, sequence=None, sequence_list=None, **kw):
     """
