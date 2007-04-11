@@ -477,6 +477,7 @@ class SQLDict(RAMDict):
       path_dict = {}
       assignMessage = activity_tool.SQLDict_assignMessage
       processing_node = 1
+      id_tool = activity_tool.getPortalObject().portal_ids
       for message in message_dict.itervalues():
         path = '/'.join(message.object_path)
         broadcast = message.activity_kw.get('broadcast', 0)
@@ -485,7 +486,6 @@ class SQLDict(RAMDict):
           uid = message.uid
           assignMessage(processing_node=1, uid=[uid])
           if node_count > 1:
-            id_tool = activity_tool.getPortalObject().portal_ids
             uid_list = id_tool.generateNewLengthIdList(id_group='portal_activity',
                                                        id_count=node_count - 1)
             path_list = [path] * (node_count - 1)

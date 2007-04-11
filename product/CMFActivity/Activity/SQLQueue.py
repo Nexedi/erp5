@@ -321,6 +321,7 @@ class SQLQueue(RAMQueue):
       path_dict = {}
       assignMessage = activity_tool.SQLQueue_assignMessage
       processing_node = 1
+      id_tool = activity_tool.getPortalObject().portal_ids
       for message in message_dict.itervalues():
         path = '/'.join(message.object_path)
         broadcast = message.activity_kw.get('broadcast', 0)
@@ -328,7 +329,6 @@ class SQLQueue(RAMQueue):
           # Broadcast messages must be distributed into all nodes.
           assignMessage(processing_node=1, uid=message.uid)
           if node_count > 1:
-            id_tool = activity_tool.getPortalObject().portal_ids
             uid_list = id_tool.generateNewLengthIdList(id_group='portal_activity_queue',
                                                        id_count=node_count - 1)
             priority = message.activity_kw.get('priority', 1)
