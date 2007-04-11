@@ -18,19 +18,18 @@ import ExtensionClass
 import Globals
 import OFS.History
 from Globals import DTMLFile, PersistentMapping
-from string import lower, split, join
+from string import split, join
 from thread import allocate_lock, get_ident
 from OFS.Folder import Folder
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
 from BTrees.OIBTree import OIBTree
 from App.config import getConfiguration
 from BTrees.Length import Length
 from Shared.DC.ZRDB.TM import TM
 
 from DateTime import DateTime
-from Products.PluginIndexes.common.randid import randid
-from Acquisition import aq_parent, aq_inner, aq_base, aq_self
-from zLOG import LOG, WARNING, INFO, TRACE, DEBUG, ERROR
+from Acquisition import aq_parent, aq_inner, aq_base
+from zLOG import LOG, WARNING, INFO, TRACE
 from ZODB.POSException import ConflictError
 from DocumentTemplate.DT_Var import sql_quote
 from Products.PythonScripts.Utility import allow_class
@@ -41,15 +40,12 @@ import urllib
 import string
 import pprint
 from cStringIO import StringIO
-from xml.dom.minidom import parse, parseString, getDOMImplementation
+from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
 import md5
-import threading
-import types
 
 try:
-  from Products.PageTemplates.Expressions import SecureModuleImporter
   from Products.CMFCore.Expression import Expression
   from Products.PageTemplates.Expressions import getEngine
   from Products.CMFCore.utils import getToolByName
@@ -401,7 +397,7 @@ class Query(QueryMixin):
       else:
         where_expression = '(%s)' % (' %s ' % self.getOperator()).join(where_expression)
     else:
-      where_expression = 'True' # It is better to have a valid default
+      where_expression = '1' # It is better to have a valid default
     return {'where_expression':where_expression,
             'select_expression_list':select_expression}
 
@@ -1292,7 +1288,7 @@ class Catalog( Folder,
   def manage_catalogObject(self, REQUEST, RESPONSE, URL1, urls=None):
     """ index Zope object(s) that 'urls' point to """
     if urls:
-      if isinstance(urls, types.StringType):
+      if isinstance(urls, str):
         urls=(urls,)
 
       for url in urls:
@@ -1308,7 +1304,7 @@ class Catalog( Folder,
     """ removes Zope object(s) 'urls' from catalog """
 
     if urls:
-      if isinstance(urls, types.StringType):
+      if isinstance(urls, str):
         urls=(urls,)
 
       for url in urls:
@@ -1386,49 +1382,61 @@ class Catalog( Folder,
               urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (`elapse`, `c_elapse`)))
 
   def catalogObject(self, object, path, is_object_moved=0):
-    """
-    Adds an object to the Catalog by calling
-    all SQL methods and providing needed arguments.
+    """Add an object to the Catalog by calling all SQL methods and
+    providing needed arguments.
 
-    'object' is the object to be cataloged
+    'object' is the object to be catalogged."""
+    self._catalogObjectList([object])
 
-    'uid' is the unique Catalog identifier for this object
+  def catalogObjectList(self, object_list, method_id_list=None, 
+                        disable_cache=0, check_uid=1, idxs=None):
+    """Add objects to the Catalog by calling all SQL methods and
+    providing needed arguments.
 
-    """
-    self.catalogObjectList([object])
-
-  def catalogObjectList(self, object_list, method_id_list=None, disable_cache=0,
-                              check_uid=1, idxs=None):
-    """
-      Add objects to the Catalog by calling
-      all SQL methods and providing needed arguments.
-
-      method_id_list : specify which method should be used. If not
-                       set it will take the default value of portal_catalog
+      method_id_list : specify which methods should be used. If not
+                       set, it will take the default value of portal_catalog.
 
       disable_cache : do not use cache, so values will be computed each time,
-                      only usefull in some particular cases, most of the time
-                      you don't need to use it
+                      only useful in some particular cases, most of the time
+                      you don't need to use it.
 
-      Each element of 'object_list' is an object to be cataloged
+    Each element of 'object_list' is an object to be catalogged.
 
-      'uid' is the unique Catalog identifier for this object
+    'uid' is the unique Catalog identifier for this object.
+    
+    Note that this method calls _catalogObjectList with fragments of
+    the object list, because calling _catalogObjectList with too many
+    objects at a time bloats the process's memory consumption, due to
+    caching."""
+    # XXX 300 is arbitrary.
+    for i in xrange(0, len(object_list), 300):
+      self._catalogObjectList(object_list[i:i+300], 
+                              method_id_list=method_id_list,
+                              disable_cache=disable_cache,
+                              check_uid=check_uid,
+                              idxs=idxs)
+    
+  def _catalogObjectList(self, object_list, method_id_list=None, 
+                         disable_cache=0, check_uid=1, idxs=None):
+    """This is the real method to catalog objects.
 
-      WARNING: This method assumes that currently all objects are being reindexed from scratch.
-
-      XXX: For now newUid is used to allocated UIDs. Is this good? Is it better to INSERT then SELECT?
-    """
+    XXX: For now newUid is used to allocated UIDs. Is this good?
+    Is it better to INSERT then SELECT?"""
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_list))
     #LOG('catalogObjectList', 0, 'called with %r' % (object_list,))
 
     if idxs not in (None, []):
-      LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', 0, 'Warning: idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
+      LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', WARNING, 
+          'idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
 
     if not self.isIndexable():
       return None
 
     site_root = self.getSiteRoot()
 
+    # Reminder about optimization: This below calls one or two small SQL
+    # queries for every object. This is extremely inefficient. It is
+    # far more efficient to send one or two queries for all objects.
     for object in object_list:
       path = object.getPath()
       if not getattr(aq_base(object), 'uid', None):
@@ -1493,7 +1501,6 @@ class Catalog( Folder,
       method_id_list = self.sql_catalog_object_list
     econtext_cache = {}
     argument_cache = {}
-    expression_cache = {}
 
     try:
       if not disable_cache:
@@ -1514,15 +1521,12 @@ class Catalog( Folder,
             if type_list and portal_type not in type_list:
               continue
             elif expression is not None:
-              expression_key = (object.uid, self.filter_dict[method_name]['expression'])
               try:
-                result = expression_cache[expression_key]
+                econtext = econtext_cache[object.uid]
               except KeyError:
-                try:
-                  econtext = econtext_cache[object.uid]
-                except KeyError:
-                  econtext = econtext_cache[object.uid] = self.getExpressionContext(object)
-                result = expression_cache[expression_key] = expression(econtext)
+                econtext = self.getExpressionContext(object)
+                econtext_cache[object.uid] = econtext
+              result = expression(econtext)
               if not result:
                 continue
             catalogged_object_list.append(object)
@@ -1536,7 +1540,7 @@ class Catalog( Folder,
 
         #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
         method = getattr(self, method_name)
-        if method.meta_type in ["Z SQL Method", "LDIF Method"]:
+        if method.meta_type in ("Z SQL Method", "LDIF Method"):
           # Build the dictionnary of values
           arguments = method.arguments_src
           for arg in split(arguments):
