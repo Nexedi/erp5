@@ -11,10 +11,10 @@ class_file:
 priority
 date</params>
 UPDATE
-	message_queue
+    message_queue
 SET
-	priority = <dtml-sqlvar priority type="int">,
-	processing = 0,
-  date = <dtml-sqlvar date type="datetime">  
+    priority = <dtml-sqlvar priority type="int">,
+    processing = 0,
+    date = <dtml-sqlvar date type="datetime">  
 WHERE
-	uid = <dtml-sqlvar uid type="int">
+    uid = <dtml-sqlvar uid type="int">

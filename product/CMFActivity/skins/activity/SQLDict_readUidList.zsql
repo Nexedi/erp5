@@ -1,8 +1,8 @@
 <dtml-comment>
 title:
 connection_id:cmf_activity_sql_connection
-max_rows:10000
-max_cache:100
+max_rows:1000
+max_cache:0
 cache_time:0
 class_name:
 class_file:

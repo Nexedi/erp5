@@ -86,14 +86,14 @@ def registerActivity(activity):
 
 class Message:
   """Activity Message Class.
-  
+
   Message instances are stored in an activity queue, inside the Activity Tool.
   """
-  def __init__(self, object, active_process, activity_kw, method_id, args, kw):
-    if type(object) is StringType:
-      self.object_path = object.split('/')
+  def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
+    if isinstance(obj, str):
+      self.object_path = obj.split('/')
     else:
-      self.object_path = object.getPhysicalPath()
+      self.object_path = obj.getPhysicalPath()
     if type(active_process) is StringType:
       self.active_process = active_process.split('/')
     elif active_process is None:
@@ -114,7 +114,7 @@ class Message:
   def getObject(self, activity_tool):
     """return the object referenced in this message."""
     return activity_tool.unrestrictedTraverse(self.object_path)
-    
+
   def getObjectList(self, activity_tool):
     """return the list of object that can be expanded from this message."""
     try:
@@ -124,9 +124,9 @@ class Message:
       object_list = getattr(obj, expand_method_id)()
     except KeyError:
       object_list = [self.getObject(activity_tool)]
-      
+
     return object_list
-      
+
   def hasExpandMethod(self):
     """return true if the message has an expand method.
     An expand method is used to expand the list of objects and to turn a
@@ -134,7 +134,7 @@ class Message:
     transactions affecting only one object at a time (this can prevent
     duplicated method calls)."""
     return self.activity_kw.has_key('expand_method_id')
-    
+
   def changeUser(self, user_name, activity_tool):
     """restore the security context for the calling user."""
     uf = activity_tool.getPortalObject().acl_users
@@ -169,7 +169,7 @@ class Message:
                     ActiveResult(object_path=object,
                           method_id=self.method_id,
                           result=result)) # XXX Allow other method_id in future
-  
+
   def __call__(self, activity_tool):
     try:
       obj = self.getObject(activity_tool)
@@ -198,8 +198,13 @@ class Message:
       if hasattr(activity_tool, 'error_log'):
         activity_tool.error_log.raising(sys.exc_info())
 
-  def validate(self, activity, activity_tool):
-    return activity.validate(activity_tool, self, **self.activity_kw)
+  def validate(self, activity, activity_tool, check_order_validation=1):
+    return activity.validate(activity_tool, self,
+                             check_order_validation=check_order_validation,
+                             **self.activity_kw)
+
+  def getDependentMessageList(self, activity, activity_tool):
+    return activity.getDependentMessageList(activity_tool, self, **self.activity_kw)
 
   def notifyUser(self, activity_tool, message="Failed Processing Activity"):
     """Notify the user that the activity failed."""
@@ -477,9 +482,9 @@ class ActivityTool (Folder, UniqueObject):
                 REQUEST.URL1 +
                 '/manageLoadBalancing?manage_tabs_message=' +
                 urllib.quote("Node(s) successfully deleted."))
-        
+
     def process_timer(self, tick, interval, prev="", next=""):
-        """ 
+        """
         Call distribute() if we are the Distributing Node and call tic()
         with our node number.
         This method is called by TimerService in the interval given
@@ -489,23 +494,23 @@ class ActivityTool (Folder, UniqueObject):
         acquired = timerservice_lock.acquire(0)
         if not acquired:
           return
-        
+
         old_sm = getSecurityManager()
         try:
           # get owner of portal_catalog, so normally we should be able to
           # have the permission to invoke all activities
           user = self.portal_catalog.getWrappedOwner()
           newSecurityManager(self.REQUEST, user)
-          
+
           currentNode = self.getCurrentNode()
-          
+
           # only distribute when we are the distributingNode or if it's empty
           if (self.distributingNode == self.getCurrentNode()):
             self.distribute(len(self._nodes))
 
           elif not self.distributingNode:
             self.distribute(1)
-          
+
           # SkinsTool uses a REQUEST cache to store skin objects, as
           # with TimerService we have the same REQUEST over multiple
           # portals, we clear this cache to make sure the cache doesn't
@@ -513,13 +518,13 @@ class ActivityTool (Folder, UniqueObject):
           stool = getToolByName(self, 'portal_skins', None)
           if stool is not None:
             stool.changeSkin(None)
-          
+
           # call tic for the current processing_node
           # the processing_node numbers are the indices of the elements in the node tuple +1
           # because processing_node starts form 1
           if currentNode in self._nodes:
             self.tic(list(self._nodes).index(currentNode)+1)
-              
+
           elif len(self._nodes) == 0:
             self.tic(1)
 
@@ -566,9 +571,9 @@ class ActivityTool (Folder, UniqueObject):
 
       # Initialize if needed
       if not is_initialized: self.initialize()
-      
+
       inner_self = aq_inner(self)
-      
+
       # If this is the first tic after zope is started, reset the processing
       # flag for activities of this node
       if first_run:
@@ -587,7 +592,7 @@ class ActivityTool (Folder, UniqueObject):
             raise
           except:
             LOG('CMFActivity:', 100, 'Core call to wakeup failed for activity %s' % activity)
-  
+
         # Process messages on each queue in round robin
         has_awake_activity = 1
         while has_awake_activity:
@@ -673,7 +678,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def invoke(self, message):
       message(self)
- 
+
     def invokeGroup(self, method_id, message_list):
       # Invoke a group method.
       object_list = []
@@ -770,7 +775,7 @@ class ActivityTool (Folder, UniqueObject):
               LOG('ActivityTool', WARNING,
                   'Could not call method %s on object %s' % (
                   m.method_id, m.object_path), error=sys.exc_info())
- 
+
     def newMessage(self, activity, path, active_process,
                    activity_kw, method_id, *args, **kw):
       # Some Security Cheking should be made here XXX
@@ -826,8 +831,8 @@ class ActivityTool (Folder, UniqueObject):
               LOG('ActivityTool', WARNING,
                   'could not dump messages from %s' %
                   (activity,), error=sys.exc_info())
-            
-      if hasattr(folder, 'SQLDict_createMessageTable'):
+
+      if getattr(folder, 'SQLDict_createMessageTable', None) is not None:
         try:
           folder.SQLDict_dropMessageTable()
         except ConflictError:
@@ -838,7 +843,7 @@ class ActivityTool (Folder, UniqueObject):
               error=sys.exc_info())
         folder.SQLDict_createMessageTable()
 
-      if hasattr(folder, 'SQLQueue_createMessageTable'):
+      if getattr(folder, 'SQLQueue_createMessageTable', None) is not None:
         try:
           folder.SQLQueue_dropMessageTable()
         except ConflictError:
@@ -920,16 +925,24 @@ class ActivityTool (Folder, UniqueObject):
       self.immediateReindexObject()
 
     # Active synchronisation methods
+    security.declarePrivate('validateOrder')
     def validateOrder(self, message, validator_id, validation_value):
+      message_list = self.getDependentMessageList(message, validator_id, validation_value)
+      return len(message_list) > 0
+
+    security.declarePrivate('getDependentMessageList')
+    def getDependentMessageList(self, message, validator_id, validation_value):
       global is_initialized
       if not is_initialized: self.initialize()
+      message_list = []
       for activity in activity_list:
         method_id = "_validate_%s" % validator_id
-        if hasattr(activity, method_id):
-          if getattr(activity,method_id)(aq_inner(self),
-                     message, validation_value):
-            return 1
-      return 0
+        method = getattr(activity, method_id, None)
+        if method is not None:
+          result = method(aq_inner(self), message, validation_value)
+          if result:
+            message_list.extend([(activity, m) for m in result])
+      return message_list
 
     # Required for tests (time shift)
     def timeShift(self, delay):

@@ -10,7 +10,8 @@ class_file:
 <params>path
 method_id
 processing_node
-priority</params>
+priority
+to_date</params>
 SELECT * FROM
     message_queue
 WHERE
@@ -19,3 +20,6 @@ WHERE
 <dtml-if priority>AND priority = <dtml-sqlvar priority type="int"> </dtml-if>
 <dtml-if path>AND path = <dtml-sqlvar path type="string"></dtml-if>
 <dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
+<dtml-if to_date> AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>
+ORDER BY
+    priority, date, uid

@@ -11,32 +11,31 @@ class_file:
 message_uid
 path
 tag
+count
 </params>
 SELECT
-    COUNT(DISTINCT uid) as uid_count
+<dtml-if count>
+    COUNT(*) AS uid_count
+<dtml-else>
+    *
+</dtml-if>
 FROM
     message
 WHERE
     processing_node >= -2
 <dtml-if method_id>
-    AND (
-<dtml-in method_id>
-        method_id = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
+    AND method_id IN (
+<dtml-in method_id><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
     )
 </dtml-if>
 <dtml-if message_uid>AND uid = <dtml-sqlvar message_uid type="int"> </dtml-if>
 <dtml-if path>
-    AND (
-<dtml-in path>
-        path = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
+    AND path IN (
+<dtml-in path><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
     )
 </dtml-if>
 <dtml-if tag>
-    AND (
-<dtml-in tag>
-        tag = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
+    AND tag IN (
+<dtml-in tag><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
     )
 </dtml-if>

@@ -19,4 +19,4 @@ WHERE
 <dtml-if to_date> AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>
 
 ORDER BY
-    priority, date
+    priority, date, uid

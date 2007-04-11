@@ -11,7 +11,7 @@ class_file:
 processing_node
 method_id
 broadcast
-uid:int=0</params>
+uid</params>
 UPDATE message_queue
 SET
   processing_node=<dtml-sqlvar processing_node type="int">,

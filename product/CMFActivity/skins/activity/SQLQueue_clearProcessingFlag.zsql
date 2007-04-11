@@ -7,7 +7,7 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>processing_node:int=-1</params>
+<params>processing_node</params>
 UPDATE
   message_queue
 SET

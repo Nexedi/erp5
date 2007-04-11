@@ -26,15 +26,14 @@
 #
 ##############################################################################
 
-import random
 from Products.CMFActivity.ActivityTool import registerActivity
 from RAMQueue import RAMQueue
 from DateTime import DateTime
-from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_TIME, VALIDATION_ERROR_DELAY
-from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
+from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY
+from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
 from ZODB.POSException import ConflictError
-from types import StringType, ClassType
+from types import ClassType
 import sys
 
 try:
@@ -61,8 +60,9 @@ class SQLQueue(RAMQueue):
   """
   def prepareQueueMessage(self, activity_tool, m):
     if m.is_registered:
-      #import pdb; pdb.set_trace()
-      activity_tool.SQLQueue_writeMessage(uid = activity_tool.getPortalObject().portal_ids.generateNewLengthId(id_group='portal_activity_queue'),
+      id_tool = activity_tool.getPortalObject().portal_ids
+      uid = id_tool.generateNewLengthId(id_group='portal_activity_queue')
+      activity_tool.SQLQueue_writeMessage(uid = uid,
                                           path = '/'.join(m.object_path) ,
                                           method_id = m.method_id,
                                           priority = m.activity_kw.get('priority', 1),
@@ -84,13 +84,7 @@ class SQLQueue(RAMQueue):
     now_date = DateTime()
     # Next processing date in case of error
     next_processing_date = now_date + float(VALIDATION_ERROR_DELAY)/86400
-    priority = random.choice(priority_weight)
-    # Try to find a message at given priority level
-    result = readMessage(processing_node=processing_node, priority=priority,
-                         to_date=now_date)
-    if len(result) == 0:
-      # If empty, take any message
-      result = readMessage(processing_node=processing_node, priority=None,to_date=now_date)
+    result = readMessage(processing_node=processing_node, to_date=now_date)
     if len(result) > 0:
       line = result[0]
       path = line.path
@@ -103,23 +97,17 @@ class SQLQueue(RAMQueue):
       try:
         m = self.loadMessage(line.message)
         # Make sure object exists
-        validation_state = m.validate(self, activity_tool)
+        validation_state = m.validate(self, activity_tool, check_order_validation=0)
         if validation_state is not VALID:
-          if validation_state in (EXCEPTION, INVALID_PATH):
-            if line.priority > MAX_PRIORITY:
-              # This is an error.
-              # Assign message back to 'error' state.
-              activity_tool.SQLQueue_assignMessage(uid=line.uid,
-                                                   processing_node = VALIDATE_ERROR_STATE)
-              get_transaction().commit()                                        # and commit
-            else:
-              # Lower priority
-              activity_tool.SQLQueue_setPriority(uid=line.uid, priority = line.priority + 1)
-              get_transaction().commit() # Release locks before starting a potentially long calculation
+          if line.priority > MAX_PRIORITY:
+            # This is an error.
+            # Assign message back to 'error' state.
+            activity_tool.SQLQueue_assignMessage(uid=line.uid,
+                                                 processing_node=VALIDATE_ERROR_STATE)
+            get_transaction().commit()                                        # and commit
           else:
-            # We do not lower priority for INVALID_ORDER errors but we do postpone execution
-            activity_tool.SQLQueue_setPriority(uid = line.uid, date = next_processing_date,
-                                                priority = line.priority)
+            # Lower priority
+            activity_tool.SQLQueue_setPriority(uid=line.uid, priority=line.priority + 1)
             get_transaction().commit() # Release locks before starting a potentially long calculation
           return 0
 
@@ -139,8 +127,8 @@ class SQLQueue(RAMQueue):
         # An exception happens at somewhere else but invoke, so messages
         # themselves should not be delayed.
         try:
-          activity_tool.SQLQueue_setPriority(uid = line.uid, date = line.date,
-                                             priority = line.priority)
+          activity_tool.SQLQueue_setPriority(uid=line.uid, date=line.date,
+                                             priority=line.priority)
           get_transaction().commit()
         except:
           LOG('SQLQueue', ERROR, 'SQLQueue.dequeueMessage raised, and cannot even set processing to zero due to an exception',
@@ -159,25 +147,26 @@ class SQLQueue(RAMQueue):
             # Unfortunately, database adapters may raise an exception against abort.
             LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
             pass
-  
+
           if type(m.exc_type) is ClassType \
                   and issubclass(m.exc_type, ConflictError):
-            activity_tool.SQLQueue_setPriority(uid = line.uid, 
-                                              date = next_processing_date,
-                                              priority = line.priority)
+            activity_tool.SQLQueue_setPriority(uid=line.uid,
+                                               date=next_processing_date,
+                                               priority=line.priority)
           elif line.priority > MAX_PRIORITY:
             # This is an error
-            activity_tool.SQLQueue_assignMessage(uid = line.uid, 
-                                                processing_node = INVOKE_ERROR_STATE)
+            activity_tool.SQLQueue_assignMessage(uid=line.uid,
+                                                 processing_node=INVOKE_ERROR_STATE)
                                                                               # Assign message back to 'error' state
             m.notifyUser(activity_tool)                                       # Notify Error
           else:
             # Lower priority
-            activity_tool.SQLQueue_setPriority(uid=line.uid, date = next_processing_date,
-                                                priority = line.priority + 1)
+            activity_tool.SQLQueue_setPriority(uid=line.uid, date=next_processing_date,
+                                               priority=line.priority + 1)
         get_transaction().commit()
       except:
-        LOG('SQLQueue', ERROR, 'SQLQueue.dequeueMessage raised an exception during checking for the results of processed messages',
+        LOG('SQLQueue', ERROR,
+            'SQLQueue.dequeueMessage raised an exception during checking for the results of processed messages',
             error=sys.exc_info())
         raise
       return 0
@@ -215,32 +204,45 @@ class SQLQueue(RAMQueue):
       # Parse each message in registered
       for m in activity_tool.getRegisteredMessageList(self):
         if object_path == m.object_path and (method_id is None or method_id == m.method_id):
-          if invoke: activity_tool.invoke(m)
-          activity_tool.unregisterMessage(self, m)
-      # Parse each message in SQL queue
-      #LOG('Flush', 0, str((path, invoke, method_id)))
-      result = readMessageList(path=path, method_id=method_id,processing_node=None)
-      #LOG('Flush', 0, str(len(result)))
-      method_dict = {}
-      for line in result:
-        path = line.path
-        method_id = line.method_id
-        if not method_dict.has_key(method_id):
-          # Only invoke once (it would be different for a queue)
-          method_dict[method_id] = 1
-          m = self.loadMessage(line.message, uid = line.uid)
           if invoke:
             # First Validate
-            if m.validate(self, activity_tool) is VALID:
+            validate_value = m.validate(self, activity_tool)
+            if validate_value is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
               if not m.is_executed:                                                 # Make sure message could be invoked
                 # The message no longer exists
                 raise ActivityFlushError, (
-                    'Could not evaluate %s on %s' % (method_id , path))
-            else:
+                    'Could not evaluate %s on %s' % (m.method_id , path))
+            elif validate_value is INVALID_PATH:
               # The message no longer exists
               raise ActivityFlushError, (
                   'The document %s does not exist' % path)
+            else:
+              raise ActivityFlushError, (
+                  'Could not validate %s on %s' % (m.method_id , path))
+          activity_tool.unregisterMessage(self, m)
+      # Parse each message in SQL queue
+      result = readMessageList(path=path, method_id=method_id, processing_node=None)
+      for line in result:
+        path = line.path
+        method_id = line.method_id
+        m = self.loadMessage(line.message, uid = line.uid)
+        if invoke:
+          # First Validate
+          validate_value = m.validate(self, activity_tool)
+          if validate_value is VALID:
+            activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
+            if not m.is_executed:                                                 # Make sure message could be invoked
+              # The message no longer exists
+              raise ActivityFlushError, (
+                  'Could not evaluate %s on %s' % (method_id , path))
+          elif validate_value is INVALID_PATH:
+            # The message no longer exists
+            raise ActivityFlushError, (
+                'The document %s does not exist' % path)
+          else:
+            raise ActivityFlushError, (
+                'Could not validate %s on %s' % (m.method_id , path))
 
       if len(result):
         activity_tool.SQLQueue_delMessage(uid = [line.uid for line in result])
@@ -265,31 +267,27 @@ class SQLQueue(RAMQueue):
         message_list.append(m)
     return message_list
 
-  def countMessage(self, activity_tool, tag=None,path=None,
-                   method_id=None,message_uid=None,**kw):
+  def countMessage(self, activity_tool, tag=None, path=None,
+                   method_id=None, message_uid=None, **kw):
+    """Return the number of messages which match the given parameters.
     """
-      Return the number of message which match the given parameter.
-    """
-    if isinstance(tag, StringType):
+    if isinstance(tag, str):
       tag = [tag]
-    if isinstance(path, StringType):
+    if isinstance(path, str):
       path = [path]
-    if isinstance(message_uid, (int,long)):
-      message_uid = [message_uid]
-    if isinstance(method_id, StringType):
+    if isinstance(method_id, str):
       method_id = [method_id]
     result = activity_tool.SQLQueue_validateMessageList(method_id=method_id, 
-                                                       path=path,
-                                                       message_uid=message_uid, 
-                                                       tag=tag)
+                                                        path=path,
+                                                        message_uid=message_uid, 
+                                                        tag=tag,
+                                                        count=1)
     return result[0].uid_count
 
   def countMessageWithTag(self, activity_tool, value):
+    """Return the number of messages which match the given tag.
     """
-      Return the number of message which match the given tag.
-    """
-    return self.countMessage(activity_tool,tag=value)
-
+    return self.countMessage(activity_tool, tag=value)
 
   def dumpMessageList(self, activity_tool):
     # Dump all messages in the table.
@@ -306,105 +304,115 @@ class SQLQueue(RAMQueue):
     processing_node = 1
     readMessageList = getattr(activity_tool, 'SQLQueue_readMessageList', None)
     if readMessageList is not None:
-      result = readMessageList(path=None, method_id=None, processing_node = -1) # Only assign non assigned messages
-      #LOG('distribute count',0,str(len(result)) )
-      #LOG('distribute count',0,str(map(lambda x:x.uid, result)))
-      #get_transaction().commit() # Release locks before starting a potentially long calculation
-      result = list(result)[0:100]
+      now_date = DateTime()
+      result = readMessageList(path=None, method_id=None,
+                               processing_node=-1, to_date=now_date)
+      get_transaction().commit()
+
+      validation_text_dict = {'none': 1}
+      message_dict = {}
       for line in result:
-        broadcast = line.broadcast
-        uid = line.uid
+        message = self.loadMessage(line.message, uid=line.uid)
+        message.order_validation_text = self.getOrderValidationText(message)
+        self.getExecutableMessageList(activity_tool, message, message_dict,
+                                      validation_text_dict)
+
+      # XXX probably this below can be optimized by assigning multiple messages at a time.
+      path_dict = {}
+      assignMessage = activity_tool.SQLQueue_assignMessage
+      processing_node = 1
+      for message in message_dict.itervalues():
+        path = '/'.join(message.object_path)
+        broadcast = message.activity_kw.get('broadcast', 0)
         if broadcast:
           # Broadcast messages must be distributed into all nodes.
-          activity_tool.SQLQueue_assignMessage(processing_node=1, uid=uid)
+          assignMessage(processing_node=1, uid=message.uid)
           if node_count > 1:
-            uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity_queue', id_count=node_count - 1)
-            for node in range(2, node_count+1):
-              activity_tool.SQLQueue_writeMessage(uid = uid_list.pop(),
-                                                  path = line.path,
-                                                  method_id = line.method_id,
-                                                  priority = line.priority,
-                                                  broadcast = 1,
-                                                  processing_node = node,
-                                                  message = line.message,
-                                                  date = line.date)
+            id_tool = activity_tool.getPortalObject().portal_ids
+            uid_list = id_tool.generateNewLengthIdList(id_group='portal_activity_queue',
+                                                       id_count=node_count - 1)
+            priority = message.activity_kw.get('priority', 1)
+            dumped_message = self.dumpMessage(message)
+            date = message.activity_kw.get('at_date', now_date)
+            tag = message.activity_kw.get('tag', '')
+            for node in xrange(2, node_count+1):
+              activity_tool.SQLQueue_writeMessage(uid=uid_list.pop(),
+                                                  path=path,
+                                                  method_id=message.method_id,
+                                                  priority=priority,
+                                                  broadcast=1,
+                                                  processing_node=node,
+                                                  message=dumped_message,
+                                                  date=date,
+                                                  tag=tag)
+          get_transaction().commit()
         else:
-          #LOG("distribute", 0, "assign %s" % uid)
-          activity_tool.SQLQueue_assignMessage(uid=uid, processing_node=processing_node)
-          #get_transaction().commit() # Release locks immediately to allow processing of messages
-          processing_node = processing_node + 1
-          if processing_node > node_count:
-            processing_node = 1 # Round robin
+          # Select a processing node. If the same path appears again, dispatch the message to
+          # the same node, so that object caching is more efficient. Otherwise, apply a round
+          # robin scheduling.
+          node = path_dict.get(path)
+          if node is None:
+            node = processing_node
+            path_dict[path] = node
+            processing_node += 1
+            if processing_node > node_count:
+              processing_node = 1
+
+          assignMessage(processing_node=node, uid=message.uid, broadcast=0)
+          get_transaction().commit() # Release locks immediately to allow processing of messages
 
   # Validation private methods
+  def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None):
+    if isinstance(method_id, str):
+      method_id = [method_id]
+    if isinstance(path, str):
+      path = [path]
+    if isinstance(tag, str):
+      tag = [tag]
+
+    if method_id or message_uid or path or tag:
+      validateMessageList = activity_tool.SQLQueue_validateMessageList
+      result = validateMessageList(method_id=method_id,
+                                   message_uid=message_uid,
+                                   path=path,
+                                   tag=tag)
+      message_list = []
+      for line in result:
+        m = self.loadMessage(line.message,
+                             uid=line.uid,
+                             date=line.date,
+                             processing_node=line.processing_node)
+        m.order_validation_text = self.getOrderValidationText(m)
+        message_list.append(m)
+      return message_list
+    else:
+      return []
+
   def _validate_after_method_id(self, activity_tool, message, value):
-    # Count number of occurances of method_id
-    #get_transaction().commit()
-    if type(value) == type(''):
-      value = [value]
-    result = activity_tool.SQLQueue_validateMessageList(method_id=value, message_uid=None, path=None)
-    #LOG('SQLQueue._validate_after_method_id, method_id',0,value)
-    #LOG('SQLQueue._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
-    return VALID
+    return self._validate(activity_tool, method_id=value)
 
   def _validate_after_path(self, activity_tool, message, value):
-    # Count number of occurances of path
-    if type(value) == type(''):
-      value = [value]
-    result = activity_tool.SQLQueue_validateMessageList(method_id=None, message_uid=None, path=value)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
-    return VALID
+    return self._validate(activity_tool, path=value)
 
   def _validate_after_message_uid(self, activity_tool, message, value):
-    # Count number of occurances of message_uid
-    result = activity_tool.SQLQueue_validateMessageList(method_id=None, message_uid=value, path=None)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
-    return VALID
+    return self._validate(activity_tool, message_uid=value)
 
   def _validate_after_path_and_method_id(self, activity_tool, message, value):
-    # Count number of occurances of method_id and path
-    if (type(value) != type( (0,) ) and type(value) != type ([])) or len(value)<2:
-      LOG('CMFActivity WARNING :', 0, 'unable to recognize value for after_path_and_method : %s' % repr(value))
-      return VALID
-    path = value[0]
-    method = value[1]
-    if type(path) == type(''):
-      path = [path]
-    if type(method) == type(''):
-      method = [method]
-    result = activity_tool.SQLQueue_validateMessageList(method_id=method, message_uid=None, path=path)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
-    return VALID
+    if not isinstance(value, (tuple, list)) or len(value) < 2:
+      LOG('CMFActivity', WARNING,
+          'unable to recognize value for after_path_and_method: %r' % (value,))
+      return []
+    return self._validate(activity_tool, path=value[0], method_id=value[1])
 
   def _validate_after_tag(self, activity_tool, message, value):
-    # Count number of occurances of tag
-    if type(value) == type(''):
-      value = [value]
-    result = activity_tool.SQLQueue_validateMessageList(method_id=None, message_uid=None, tag=value)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
-    return VALID
+    return self._validate(activity_tool, tag=value)
 
   def _validate_after_tag_and_method_id(self, activity_tool, message, value):
-    # Count number of occurances of tag and method_id
-    if (type(value) != type ( (0,) ) and type(value) != type([])) or len(value)<2:
-      LOG('CMFActivity WARNING :', 0, 'unable to recognize value for after_tag_and_method_id : %s' % repr(value))
-      return VALID
-    tag = value[0]
-    method = value[1]
-    if type(tag) == type(''):
-      tag = [tag]
-    if type(method) == type(''):
-      method = [method]
-    result = activity_tool.SQLQueue_validateMessageList(method_id=method, message_uid=None, tag=tag)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
-    return VALID
+    if not isinstance(value, (tuple, list)) or len(value) < 2:
+      LOG('CMFActivity', WARNING,
+          'unable to recognize value for after_tag_and_method_id: %r' % (value,))
+      return []
+    return self._validate(activity_tool, tag=value[0], method_id=value[1])
 
   # Required for tests (time shift)
   def timeShift(self, activity_tool, delay, processing_node = None):
@@ -412,6 +420,6 @@ class SQLQueue(RAMQueue):
       To simulate timeShift, we simply substract delay from
       all dates in SQLDict message table
     """
-    activity_tool.SQLQueue_timeShift(delay = delay, processing_node = processing_node)
+    activity_tool.SQLQueue_timeShift(delay=delay, processing_node=processing_node)
 
 registerActivity(SQLQueue)

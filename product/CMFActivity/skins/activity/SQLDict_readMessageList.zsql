@@ -11,19 +11,9 @@ class_file:
 method_id
 processing_node
 priority
-to_processing_date
-include_processing</params>
-<dtml-if to_processing_date>UPDATE message
-SET
-  processing = 0
-WHERE
-  processing = 1
-AND
-  processing_date < <dtml-sqlvar to_processing_date type="datetime">
-  
-<dtml-var "'\0'">
-
-</dtml-if>SELECT * FROM
+include_processing
+to_date</params>
+SELECT * FROM
     message
 WHERE
 1 = 1
@@ -34,5 +24,6 @@ WHERE
 <dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if>
 <dtml-if path>AND path = <dtml-sqlvar path type="string"> </dtml-if>
 <dtml-if method_id> AND method_id = <dtml-sqlvar method_id type="string"> </dtml-if>
+<dtml-if to_date> AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>
 ORDER BY
      priority, date, uid

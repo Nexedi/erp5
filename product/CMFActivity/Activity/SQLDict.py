@@ -26,17 +26,15 @@
 #
 ##############################################################################
 
-import random
 from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import registerActivity
-from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_TIME, VALIDATION_ERROR_DELAY
+from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY
 from RAMDict import RAMDict
-from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
+from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
 from ZODB.POSException import ConflictError
 import sys
-import sha
-from types import ClassType, StringType, ListType, TupleType
+from types import ClassType
 
 try:
   from transaction import get as get_transaction
@@ -141,50 +139,22 @@ class SQLDict(RAMDict):
     message_list = activity_buffer.getMessageList(self)
     return [m for m in message_list if m.is_registered]
 
-  def getOrderValidationText(self, message):
-    # Return an identifier of validators related to ordering.
-    order_validation_item_list = []
-    key_list = message.activity_kw.keys()
-    key_list.sort()
-    for key in key_list:
-      method_id = "_validate_%s" % key
-      if hasattr(self, method_id):
-        order_validation_item_list.append((key, message.activity_kw[key]))
-    if len(order_validation_item_list) == 0:
-      # When no order validation argument is specified, skip the computation
-      # of the checksum for speed. Here, 'none' is used, because this never be
-      # identical to SHA1 hexdigest (which is always 40 characters), and 'none'
-      # is true in Python. This is important, because dtml-if assumes that an empty
-      # string is false, so we must use a non-empty string for this.
-      return 'none'
-    return sha.new(repr(order_validation_item_list)).hexdigest()
-
   def validateMessage(self, activity_tool, message, uid_list, priority, processing_node):
-    validation_state = message.validate(self, activity_tool)
+    validation_state = message.validate(self, activity_tool, check_order_validation=0)
     if validation_state is not VALID:
-      if validation_state in (EXCEPTION, INVALID_PATH):
-        # There is a serious validation error - we must lower priority
-        if priority > MAX_PRIORITY:
-          # This is an error
-          if len(uid_list) > 0:
-            #LOG('SQLDict', 0, 'error uid_list = %r' % (uid_list,))
-            activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = VALIDATE_ERROR_STATE)
-                                                                            # Assign message back to 'error' state
-          #m.notifyUser(activity_tool)                                      # Notify Error
-          get_transaction().commit()                                        # and commit
-        else:
-          #LOG('SQLDict', 0, 'lower priority uid_list = %r' % (uid_list,))
-          # Lower priority
-          if len(uid_list) > 0: # Add some delay before new processing
-            activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
-                                              priority = priority + 1, retry = 1)
-          get_transaction().commit() # Release locks before starting a potentially long calculation
+      # There is a serious validation error - we must lower priority
+      if priority > MAX_PRIORITY:
+        # This is an error
+        if len(uid_list) > 0:
+          activity_tool.SQLDict_assignMessage(uid=uid_list, processing_node=VALIDATE_ERROR_STATE)
+                                                                          # Assign message back to 'error' state
+        #m.notifyUser(activity_tool)                                      # Notify Error
+        get_transaction().commit()                                        # and commit
       else:
-        # We do not lower priority for INVALID_ORDER errors but we do postpone execution
-        #order_validation_text = self.getOrderValidationText(message)
-        activity_tool.SQLDict_setPriority(uid = uid_list,
-                                          delay = VALIDATION_ERROR_DELAY,
-                                          retry = 1)
+        # Lower priority
+        if len(uid_list) > 0: # Add some delay before new processing
+          activity_tool.SQLDict_setPriority(uid=uid_list, delay=VALIDATION_ERROR_DELAY,
+                                            priority=priority + 1, retry=1)
         get_transaction().commit() # Release locks before starting a potentially long calculation
       return 0
     return 1
@@ -196,41 +166,29 @@ class SQLDict(RAMDict):
       return 1
 
     now_date = DateTime()
-    priority = random.choice(priority_weight)
-    # Try to find a message at given priority level which is scheduled for now
-    result = readMessage(processing_node=processing_node, priority=priority,
-                         to_date=now_date)
-    if len(result) == 0:
-      # If empty, take any message which is scheduled for now
-      priority = None
-      result = readMessage(processing_node=processing_node, priority=priority, to_date=now_date)
-    if len(result) == 0:
-      # If the result is still empty, shift the dates so that SQLDict can dispatch pending active
-      # objects quickly.
-      self.timeShift(activity_tool, VALIDATION_ERROR_DELAY, processing_node,retry=1)
-    else:
-      #LOG('SQLDict dequeueMessage', 100, 'result = %r' % (list(result)))
+    result = readMessage(processing_node=processing_node, to_date=now_date)
+    if len(result) > 0:
       line = result[0]
       path = line.path
       method_id = line.method_id
       order_validation_text = line.order_validation_text
-      uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
-                                                   processing_node = None, to_date = now_date,
-                                                   order_validation_text = order_validation_text)
+      uid_list = activity_tool.SQLDict_readUidList(path=path, method_id=method_id,
+                                                   processing_node=None, to_date=now_date,
+                                                   order_validation_text=order_validation_text)
       uid_list = [x.uid for x in uid_list]
       uid_list_list = [uid_list]
       priority_list = [line.priority]
       # Make sure message can not be processed anylonger
       if len(uid_list) > 0:
         # Set selected messages to processing
-        activity_tool.SQLDict_processMessage(uid = uid_list)
+        activity_tool.SQLDict_processMessage(uid=uid_list)
       get_transaction().commit() # Release locks before starting a potentially long calculation
       # This may lead (1 for 1,000,000 in case of reindexing) to messages left in processing state
 
       # At this point, messages are marked as processed. So catch any kind of exception to make sure
       # that they are unmarked on error.
       try:
-        m = self.loadMessage(line.message, uid = line.uid)
+        m = self.loadMessage(line.message, uid=line.uid)
         message_list = [m]
         # Validate message (make sure object exists, priority OK, etc.)
         if not self.validateMessage(activity_tool, m, uid_list, line.priority, processing_node):
@@ -244,13 +202,13 @@ class SQLDict(RAMDict):
           else:
             count = 1
 
-          group_method = activity_tool.restrictedTraverse(group_method_id)
+          group_method = activity_tool.getPortalObject().restrictedTraverse(group_method_id)
 
           if count < MAX_GROUPED_OBJECTS:
             # Retrieve objects which have the same group method.
-            result = readMessage(processing_node = processing_node, priority = priority,
-                                to_date = now_date, group_method_id = group_method_id,
-                                order_validation_text = order_validation_text)
+            result = readMessage(processing_node=processing_node,
+                                 to_date=now_date, group_method_id=group_method_id,
+                                 order_validation_text=order_validation_text)
             #LOG('SQLDict dequeueMessage', 0, 'result = %d' % (len(result)))
             path_and_method_id_dict = {}
             for line in result:
@@ -263,19 +221,20 @@ class SQLDict(RAMDict):
                 continue
               path_and_method_id_dict[key] = 1
 
-              uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
-                                                            processing_node = None, to_date = now_date,
-                                                            order_validation_text = order_validation_text)
+              uid_list = activity_tool.SQLDict_readUidList(path=path, method_id=method_id,
+                                                           processing_node=None,
+                                                           to_date=now_date,
+                                                           order_validation_text=order_validation_text)
               uid_list = [x.uid for x in uid_list]
               if len(uid_list) > 0:
                 # Set selected messages to processing
-                activity_tool.SQLDict_processMessage(uid = uid_list)
+                activity_tool.SQLDict_processMessage(uid=uid_list)
               get_transaction().commit() # Release locks before starting a potentially long calculation
 
               # Save this newly marked uids as soon as possible.
               uid_list_list.append(uid_list)
 
-              m = self.loadMessage(line.message, uid = line.uid)
+              m = self.loadMessage(line.message, uid=line.uid)
               if self.validateMessage(activity_tool, m, uid_list, line.priority, processing_node):
                 if m.hasExpandMethod():
                   count += len(m.getObjectList(activity_tool))
@@ -321,7 +280,8 @@ class SQLDict(RAMDict):
           get_transaction().abort()
         except:
           # Unfortunately, database adapters may raise an exception against abort.
-          LOG('SQLDict', WARNING, 'abort failed, thus some objects may be modified accidentally')
+          LOG('SQLDict', WARNING,
+              'abort failed, thus some objects may be modified accidentally')
           pass
 
         # An exception happens at somewhere else but invoke or invokeGroup, so messages
@@ -330,10 +290,11 @@ class SQLDict(RAMDict):
           for uid_list in uid_list_list:
             if len(uid_list):
               # This only sets processing to zero.
-              activity_tool.SQLDict_setPriority(uid = uid_list)
+              activity_tool.SQLDict_setPriority(uid=uid_list)
               get_transaction().commit()
         except:
-          LOG('SQLDict', ERROR, 'SQLDict.dequeueMessage raised, and cannot even set processing to zero due to an exception',
+          LOG('SQLDict', ERROR,
+              'SQLDict.dequeueMessage raised, and cannot even set processing to zero due to an exception',
               error=sys.exc_info())
           raise
         return 0
@@ -345,8 +306,8 @@ class SQLDict(RAMDict):
           priority = priority_list[i]
           if m.is_executed:
             if len(uid_list) > 0:
-              activity_tool.SQLDict_delMessage(uid = uid_list)                # Delete it
-            get_transaction().commit()                                        # If successful, commit
+              activity_tool.SQLDict_delMessage(uid=uid_list)       # Delete it
+            get_transaction().commit()                             # If successful, commit
             if m.active_process:
               active_process = activity_tool.unrestrictedTraverse(m.active_process)
               if not active_process.hasActivity():
@@ -355,24 +316,25 @@ class SQLDict(RAMDict):
           else:
             if type(m.exc_type) is ClassType and issubclass(m.exc_type, ConflictError):
               # If this is a conflict error, do not lower the priority but only delay.
-              activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
-                                                retry = 1)
+              activity_tool.SQLDict_setPriority(uid=uid_list, delay=VALIDATION_ERROR_DELAY)
               get_transaction().commit() # Release locks before starting a potentially long calculation
             elif priority > MAX_PRIORITY:
               # This is an error
               if len(uid_list) > 0:
-                activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)
+                activity_tool.SQLDict_assignMessage(uid=uid_list,
+                                                    processing_node=INVOKE_ERROR_STATE)
                                                                                 # Assign message back to 'error' state
               m.notifyUser(activity_tool)                                       # Notify Error
               get_transaction().commit()                                        # and commit
             else:
               # Lower priority
               if len(uid_list) > 0:
-                activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
-                                                  priority = priority + 1, retry = 1)
-                get_transaction().commit() # Release locks before starting a potentially long calculation
+                activity_tool.SQLDict_setPriority(uid=uid_list, delay=VALIDATION_ERROR_DELAY,
+                                                  priority=priority + 1)
+              get_transaction().commit() # Release locks before starting a potentially long calculation
       except:
-        LOG('SQLDict', ERROR, 'SQLDict.dequeueMessage raised an exception during checking for the results of processed messages',
+        LOG('SQLDict', ERROR,
+            'SQLDict.dequeueMessage raised an exception during checking for the results of processed messages',
             error=sys.exc_info())
         raise
 
@@ -411,7 +373,7 @@ class SQLDict(RAMDict):
     if readMessageList is not None:
       # Parse each message in registered
       for m in activity_tool.getRegisteredMessageList(self):
-        if list(m.object_path) == list(object_path) and (method_id is None or method_id == m.method_id):
+        if m.object_path == object_path and (method_id is None or method_id == m.method_id):
           #if not method_dict.has_key(method_id or m.method_id):
           if not method_dict.has_key(m.method_id):
             method_dict[m.method_id] = 1 # Prevents calling invoke twice
@@ -469,13 +431,13 @@ class SQLDict(RAMDict):
         if len(uid_list)>0:
           activity_tool.SQLDict_delMessage(uid = [x.uid for x in uid_list])
 
-  def getMessageList(self, activity_tool, processing_node=None,include_processing=0,**kw):
+  def getMessageList(self, activity_tool, processing_node=None, include_processing=0, **kw):
     # YO: reading all lines might cause a deadlock
     message_list = []
     readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
     if readMessageList is not None:
       result = readMessageList(path=None, method_id=None, processing_node=None,
-                               to_processing_date=None,include_processing=include_processing)
+                               to_processing_date=None, include_processing=include_processing)
       for line in result:
         m = self.loadMessage(line.message, uid = line.uid)
         m.processing_node = line.processing_node
@@ -496,145 +458,155 @@ class SQLDict(RAMDict):
     return message_list
 
   def distribute(self, activity_tool, node_count):
-    processing_node = 1
     readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
     if readMessageList is not None:
       now_date = DateTime()
-      if (now_date - self.max_processing_date) > MAX_PROCESSING_TIME:
-        # Sticky processing messages should be set back to non processing
-        max_processing_date = now_date - MAX_PROCESSING_TIME
-        self.max_processing_date = now_date
-      else:
-        max_processing_date = None
-      result = readMessageList(path=None, method_id=None, processing_node = -1,
-                               to_processing_date = max_processing_date,
-                               include_processing=0) # Only assign non assigned messages
-      get_transaction().commit() # Release locks before starting a potentially long calculation
-      path_dict = {}
+      result = readMessageList(path=None, method_id=None, processing_node=-1,
+                               to_date=now_date, include_processing=0)
+      get_transaction().commit()
+
+      validation_text_dict = {'none': 1}
+      message_dict = {}
       for line in result:
-        path = line.path
-        broadcast = line.broadcast
+        message = self.loadMessage(line.message, uid = line.uid,
+                                   order_validation_text = line.order_validation_text)
+        self.getExecutableMessageList(activity_tool, message, message_dict,
+                                      validation_text_dict)
+
+      # XXX probably this below can be optimized by assigning multiple messages at a time.
+      path_dict = {}
+      assignMessage = activity_tool.SQLDict_assignMessage
+      processing_node = 1
+      for message in message_dict.itervalues():
+        path = '/'.join(message.object_path)
+        broadcast = message.activity_kw.get('broadcast', 0)
         if broadcast:
           # Broadcast messages must be distributed into all nodes.
-          uid = line.uid
-          activity_tool.SQLDict_assignMessage(processing_node=1, uid=[uid])
+          uid = message.uid
+          assignMessage(processing_node=1, uid=[uid])
           if node_count > 1:
-            uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity', id_count=node_count - 1)
-            for node in range(2, node_count+1):
-              activity_tool.SQLDict_writeMessage( uid = uid_list.pop(),
-                                                  path = path,
-                                                  method_id = line.method_id,
-                                                  priority = line.priority,
-                                                  broadcast = 1,
-                                                  processing_node = node,
-                                                  message = line.message,
-                                                  date = line.date)
-        elif not path_dict.has_key(path):
-          # Only assign once (it would be different for a queue)
-          path_dict[path] = 1
-          activity_tool.SQLDict_assignMessage(path=path, processing_node=processing_node, uid=None, broadcast=0)
+            id_tool = activity_tool.getPortalObject().portal_ids
+            uid_list = id_tool.generateNewLengthIdList(id_group='portal_activity',
+                                                       id_count=node_count - 1)
+            path_list = [path] * (node_count - 1)
+            method_id_list = [message.method_id] * (node_count - 1)
+            priority_list = [message.activity_kw.get('priority', 1)] * (node_count - 1)
+            processing_node_list = range(2, node_count + 1)
+            broadcast_list = [1] * (node_count - 1)
+            message_list = [self.dumpMessage(message)] * (node_count - 1)
+            date_list = [message.activity_kw.get('at_date', now_date)] * (node_count - 1)
+            group_method_id_list = [message.activity_kw.get('group_method_id', '')] * (node_count - 1)
+            tag_list = [message.activity_kw.get('tag', '')] * (node_count - 1)
+            order_validation_text_list = [message.order_validation_text] * (node_count - 1)
+            activity_tool.SQLDict_writeMessageList(uid_list=uid_list,
+                                                   path_list=path_list,
+                                                   method_id_list=method_id_list,
+                                                   priority_list=priority_list,
+                                                   broadcast_list=broadcast_list,
+                                                   processing_node_list=processing_node_list,
+                                                   message_list=message_list,
+                                                   date_list=date_list,
+                                                   group_method_id_list=group_method_id_list,
+                                                   tag_list=tag_list,
+                                                   order_validation_text_list=order_validation_text_list)
+          get_transaction().commit()
+        else:
+          # Select a processing node. If the same path appears again, dispatch the message to
+          # the same node, so that object caching is more efficient. Otherwise, apply a round
+          # robin scheduling.
+          node = path_dict.get(path)
+          if node is None:
+            node = processing_node
+            path_dict[path] = node
+            processing_node += 1
+            if processing_node > node_count:
+              processing_node = 1
+
+          assignMessage(processing_node=node, uid=[message.uid], broadcast=0)
           get_transaction().commit() # Release locks immediately to allow processing of messages
-          processing_node = processing_node + 1
-          if processing_node > node_count:
-            processing_node = 1 # Round robin
 
   # Validation private methods
+  def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None):
+    if isinstance(method_id, str):
+      method_id = [method_id]
+    if isinstance(path, str):
+      path = [path]
+    if isinstance(tag, str):
+      tag = [tag]
+
+    if method_id or message_uid or path or tag:
+      validateMessageList = activity_tool.SQLDict_validateMessageList
+      result = validateMessageList(method_id=method_id,
+                                   message_uid=message_uid,
+                                   path=path,
+                                   tag=tag)
+      message_list = []
+      for line in result:
+        m = self.loadMessage(line.message,
+                             uid=line.uid,
+                             order_validation_text=line.order_validation_text,
+                             date=line.date,
+                             processing_node=line.processing_node)
+        message_list.append(m)
+      return message_list
+    else:
+      return []
+
   def _validate_after_method_id(self, activity_tool, message, value):
-    # Count number of occurances of method_id
-    if type(value) is StringType:
-      value = [value]
-    if len(value)>0: # if empty list provided, the message is valid
-      result = activity_tool.SQLDict_validateMessageList(method_id=value, message_uid=None, path=None)
-      if result[0].uid_count > 0:
-        return INVALID_ORDER
-    return VALID
+    return self._validate(activity_tool, method_id=value)
 
   def _validate_after_path(self, activity_tool, message, value):
-    # Count number of occurances of path
-    if type(value) is StringType:
-      value = [value]
-    if len(value)>0: # if empty list provided, the message is valid
-      result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, path=value)
-      if result[0].uid_count > 0:
-        return INVALID_ORDER
-    return VALID
+    return self._validate(activity_tool, path=value)
 
   def _validate_after_message_uid(self, activity_tool, message, value):
-    # Count number of occurances of message_uid
-    result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=value, path=None)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
-    return VALID
+    return self._validate(activity_tool, message_uid=value)
 
   def _validate_after_path_and_method_id(self, activity_tool, message, value):
-    # Count number of occurances of path and method_id
-    if (type(value) != TupleType and type(value) != ListType) or len(value)<2:
-      LOG('CMFActivity WARNING :', 0, 'unable to recognize value for after_path_and_method_id : %s' % repr(value))
-      return VALID
-    path = value[0]
-    method = value[1]
-    if type(path) is StringType:
-      path = [path]
-    if type(method) is StringType:
-      method = [method]
-    result = activity_tool.SQLDict_validateMessageList(method_id=method, message_uid=None, path=path)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
-    return VALID
+    if not isinstance(value, (tuple, list)) or len(value) < 2:
+      LOG('CMFActivity', WARNING,
+          'unable to recognize value for after_path_and_method_id: %r' % (value,))
+      return []
+    return self._validate(activity_tool, path=value[0], method_id=value[1])
 
   def _validate_after_tag(self, activity_tool, message, value):
-    # Count number of occurances of tag
-    if self.countMessageWithTag(activity_tool, value) > 0:
-      return INVALID_ORDER
-    return VALID
+    return self._validate(activity_tool, tag=value)
 
-  def countMessage(self, activity_tool, tag=None,path=None,
-                   method_id=None,message_uid=None,**kw):
+  def _validate_after_tag_and_method_id(self, activity_tool, message, value):
+    # Count number of occurances of tag and method_id
+    if not isinstance(value, (tuple, list)) or len(value) < 2:
+      LOG('CMFActivity', WARNING,
+          'unable to recognize value for after_tag_and_method_id: %r' % (value,))
+      return []
+    return self._validate(activity_tool, tag=value[0], method_id=value[1])
+
+  def countMessage(self, activity_tool, tag=None, path=None,
+                   method_id=None, message_uid=None, **kw):
+    """Return the number of messages which match the given parameters.
     """
-      Return the number of message which match the given parameter.
-    """
-    if isinstance(tag, StringType):
+    if isinstance(tag, str):
       tag = [tag]
-    if isinstance(path, StringType):
+    if isinstance(path, str):
       path = [path]
-    if isinstance(message_uid, (int,long)):
-      message_uid = [message_uid]
-    if isinstance(method_id, StringType):
+    elif isinstance(method_id, str):
       method_id = [method_id]
     result = activity_tool.SQLDict_validateMessageList(method_id=method_id, 
                                                        path=path,
                                                        message_uid=message_uid, 
-                                                       tag=tag)
+                                                       tag=tag,
+                                                       count=1)
     return result[0].uid_count
 
   def countMessageWithTag(self, activity_tool, value):
+    """Return the number of messages which match the given tag.
     """
-      Return the number of message which match the given tag.
-    """
-    return self.countMessage(activity_tool,tag=value)
-
-  def _validate_after_tag_and_method_id(self, activity_tool, message, value):
-    # Count number of occurances of tag and method_id
-    if (type(value) != TupleType and type(value) != ListType) or len(value)<2:
-      LOG('CMFActivity WARNING :', 0, 'unable to recognize value for after_tag_and_method_id : %s' % repr(value))
-      return VALID
-    tag = value[0]
-    method = value[1]
-    if type(tag) is StringType:
-      tag = [tag]
-    if type(method) is StringType:
-      method = [method]
-    result = activity_tool.SQLDict_validateMessageList(method_id=method, message_uid=None, tag=tag)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
-    return VALID
+    return self.countMessage(activity_tool, tag=value)
 
   # Required for tests (time shift)
-  def timeShift(self, activity_tool, delay, processing_node=None,retry=None):
+  def timeShift(self, activity_tool, delay, processing_node=None, retry=None):
     """
       To simulate timeShift, we simply substract delay from
       all dates in SQLDict message table
     """
-    activity_tool.SQLDict_timeShift(delay = delay, processing_node = processing_node,retry=retry)
+    activity_tool.SQLDict_timeShift(delay=delay, processing_node=processing_node,retry=retry)
 
 registerActivity(SQLDict)

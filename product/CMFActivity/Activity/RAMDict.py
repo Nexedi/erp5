@@ -27,8 +27,8 @@
 ##############################################################################
 
 from Products.CMFActivity.ActivityTool import registerActivity
+from Products.CMFActivity.Errors import ActivityFlushError
 from Queue import Queue, VALID
-from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 from zLOG import LOG
 
