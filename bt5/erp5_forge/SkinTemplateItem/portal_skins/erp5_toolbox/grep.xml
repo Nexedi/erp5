@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>_module</string> </key>
-            <value> <string>Grep</string> </value>
+            <value> <string>ERP5.Grep</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
