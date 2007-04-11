@@ -82,7 +82,6 @@ traverse = context.getPortalObject().restrictedTraverse\n
 # for preference info fields on Account_viewAccountingTransactionList\n
 request.set(\'is_accounting_report\', True)\n
 \n
-\n
 at_date = request[\'at_date\']\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
                                              request[\'section_category\'])\n
@@ -95,6 +94,10 @@ simulation_state = request[\'simulation_state\']\n
 from_date = request.get(\'from_date\', None)\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
 parent_portal_type = request.get(\'portal_type\')\n
+period_start_date = context\\\n
+    .Base_getAccountingPeriodStartDateForSectionCategory(\n
+                   section_category=request[\'section_category\'],\n
+                   date=from_date or at_date)\n
 \n
 # Also get the currency, to know the precision\n
 currency = context.Base_getCurrencyForSection(request[\'section_category\'])\n
@@ -103,9 +106,9 @@ precision = context.account_module.getQuantityPrecisionFromResource(currency)\n
 request.set(\'precision\', precision)\n
 \n
 params = dict(at_date=at_date,\n
+              period_start_date=period_start_date,\n
               section_uid=section_uid,\n
               node_uid=traverse(node).getUid(),\n
-              from_date_summary=1,\n
               simulation_state=simulation_state, )\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
@@ -199,6 +202,7 @@ return [ ReportSection(\n
                             <string>from_date</string>
                             <string>omit_grouping_reference</string>
                             <string>parent_portal_type</string>
+                            <string>period_start_date</string>
                             <string>currency</string>
                             <string>precision</string>
                             <string>dict</string>

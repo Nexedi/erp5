@@ -73,6 +73,7 @@ params = portal.ERP5Accounting_getParams(selection_name)\n
 \n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
+\n
 if kw.get(\'mirror_section_uid\'):\n
   params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
 \n
@@ -91,10 +92,16 @@ if kw.get(\'node_category\'):\n
 if kw.get(\'where_expression\'):\n
   params[\'where_expression\'] = kw[\'where_expression\']\n
 \n
-# Don\'t use the from_date parameter if from_date_summary is present\n
-# XXX actually I never use from date here -jerome\n
-if kw.get(\'from_date_summary\', 0) and params.has_key(\'from_date\'):\n
-  del params[\'from_date\']\n
+# For expense or income accounts, we only take into account transactions from the\n
+# beginning of the period.\n
+if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
+  # find the node for this node_uid\n
+  if context.getUid() == params[\'node_uid\']: # I bet it\'s context\n
+    node = context\n
+  else:\n
+    node = portal.portal_catalog.getObject(params[\'node_uid\'])\n
+  if node.getAccountTypeId() in (\'expense\', \'income\'):\n
+    params[\'from_date\'] = params[\'period_start_date\']\n
 \n
 return portal.portal_simulation.getInventoryAssetPrice(\n
               omit_input=omit_input,\n
@@ -162,6 +169,7 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
                             <string>params</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
+                            <string>node</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>

@@ -83,11 +83,6 @@ if not from_date:\n
   from_date = portal.portal_preferences\\\n
                 .getPreferredAccountingTransactionFromDate()\n
 \n
-# XXX needed ?\n
-if kw.get(\'no_from_date\') and from_date:\n
-  from_date = None\n
-\n
-\n
 # this script can be used for Node, Section or Payment\n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
@@ -104,21 +99,44 @@ if node_category:\n
 new_result  = []\n
 net_balance = 0.0\n
 \n
-if from_date:\n
+node_account_type = None\n
+if params.get(\'node_uid\'):\n
+  if context.getUid() == params[\'node_uid\']:\n
+    node_account_type = context.getAccountTypeId()\n
+  else:\n
+    node = portal.portal_catalog.getObject(params[\'node_uid\'])\n
+    node_account_type = node.getAccountTypeId()\n
+\n
+if from_date or node_account_type in (\'expense\', \'income\'):\n
+  period_start_date = None\n
   # Create a new parameter list to get the previous balance\n
-  get_inventory_kw = params.copy() # do not include omit_grouping here\n
+  get_inventory_kw = params.copy()\n
   get_inventory_kw[\'to_date\'] = from_date\n
-  # TODO: using a list of section_uid \n
-  # \'where_expression\': " section.portal_type = \'Organisation\' " \n
+\n
+  # ignore any at_date that could lay in params\n
   get_inventory_kw.pop(\'at_date\', None)\n
 \n
+  # if we have on an expense / income account, only take into account movements\n
+  # from the current period.\n
+  if params.has_key(\'period_start_date\') and \\\n
+            node_account_type in (\'expense\', \'income\'):\n
+    period_start_date = params[\'period_start_date\']\n
+    get_inventory_kw[\'from_date\'] = period_start_date\n
+    if from_date:\n
+      from_date = max(period_start_date, from_date)\n
+    else:\n
+      from_date = period_start_date\n
+\n
   # Get previous debit and credit\n
-  getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
-  # XXX missing Inventory API Feature: this could be retrived in 1 SQL Query\n
-  previous_total_debit  = getInventoryAssetPrice(omit_output=True,\n
+  if from_date == period_start_date:\n
+    previous_total_debit = previous_total_credit = 0\n
+  else:\n
+    getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
+    # XXX missing Inventory API Feature ? this could be retrived in 1 SQL Query\n
+    previous_total_debit  = getInventoryAssetPrice(omit_output=True,\n
                                                   **get_inventory_kw)\n
-  previous_total_credit = getInventoryAssetPrice(omit_input =True,\n
-                                                  **get_inventory_kw)\n
+    previous_total_credit = getInventoryAssetPrice(omit_input =True,\n
+                                                   **get_inventory_kw)\n
   if previous_total_credit != 0:\n
     previous_total_credit = - previous_total_credit\n
 \n
@@ -144,6 +162,7 @@ if from_date:\n
         Movement_getExplanationReference=\'\',\n
         Movement_getMirrorSectionTitle=\'\',\n
         Movement_getNodeGapId=\'\',\n
+        Movement_getExplanationUrl=lambda **kw: \'\',\n
         Node_statAccountingBalance=\'\',\n
         getTranslatedSimulationStateTitle=\'\',\n
       )\n
@@ -239,12 +258,16 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>_write_</string>
                             <string>new_result</string>
                             <string>net_balance</string>
+                            <string>node_account_type</string>
+                            <string>node</string>
+                            <string>period_start_date</string>
                             <string>get_inventory_kw</string>
+                            <string>max</string>
+                            <string>previous_total_debit</string>
+                            <string>previous_total_credit</string>
                             <string>getInventoryAssetPrice</string>
                             <string>_apply_</string>
                             <string>True</string>
-                            <string>previous_total_debit</string>
-                            <string>previous_total_credit</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempAccountingTransaction</string>
                             <string>previous_balance</string>

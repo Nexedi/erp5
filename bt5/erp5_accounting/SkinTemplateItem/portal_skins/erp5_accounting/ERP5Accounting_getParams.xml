@@ -100,6 +100,7 @@ elif selection is not None:\n
   selection_params = selection.getParams()\n
 preference = context.getPortalObject().portal_preferences\n
 \n
+from_date = None\n
 if wants_from_date:\n
   from_date = selection_params.get(\'from_date\',\n
                 preference.getPreferredAccountingTransactionFromDate())\n
@@ -120,6 +121,14 @@ if section_category:\n
   # an instance of Base, so we call it on account_module.\n
   params[\'precision\'] = context.account_module\\\n
                             .getQuantityPrecisionFromResource(currency)\n
+\n
+  # calculate the period_start_date for this section\n
+  # note that reports that precalculate a section_uid but no section_category\n
+  # will have to calculate period_start_date themselves.\n
+  if from_date or at_date:\n
+    params[\'period_start_date\'] = \\\n
+          context.Base_getAccountingPeriodStartDateForSectionCategory(\n
+              section_category=section_category, date=from_date or at_date)\n
 \n
 # if we have a section uid, it haves priority\n
 section_uid = selection_params.get(\'section_uid\', None)\n
