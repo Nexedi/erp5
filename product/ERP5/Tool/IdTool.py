@@ -192,11 +192,6 @@ class IdTool(UniqueObject, Folder):
       id_group = repr(id_group)
     if not isinstance(default, int):
       default = 1
-    if self.dict_length_ids.get(id_group) is None:
-      self.dict_length_ids[id_group] = Length()
-    # If the table has been flushed, the latest stored id must be used if
-    # it's greater than the default value.
-    default = max(default, self.dict_length_ids[id_group]())
     # FIXME: A skin folder should be used to contain ZSQLMethods instead of
     # default catalog, like activity tool (anyway, it uses activity tool
     # ZSQLConnection, so hot reindexing is not helping here).
@@ -212,6 +207,8 @@ class IdTool(UniqueObject, Folder):
     finally:
       commit()
     new_id = result[0]['LAST_INSERT_ID()']
+    if self.dict_length_ids.get(id_group) is None:
+      self.dict_length_ids[id_group] = Length(new_id)
     self.dict_length_ids[id_group].set(new_id)
     return range(new_id - id_count, new_id)
 
