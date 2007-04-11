@@ -584,7 +584,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(skin_subfolder is not None)
     method_id = "z_fake_method"
     addSQLMethod = skin_subfolder.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
-    addSQLMethod(id = method_id,title = '', connection_id = 'test test', arguments = '', template = '')
+    addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
+                 arguments='', template='')
     zsql_method = skin_subfolder._getOb(method_id, None)
     self.failUnless(zsql_method is not None)
     sequence.edit(zsql_method_id = method_id)
@@ -1099,7 +1100,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(catalog is not None)
     method_id = "z_fake_method"
     addSQLMethod =catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
-    addSQLMethod(id=method_id,title='', connection_id='test test', arguments='', template='')
+    addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
+                 arguments='', template='')
     zsql_method = catalog._getOb(method_id, None)
     self.failUnless(zsql_method is not None)
     sequence.edit(zsql_method_id = method_id)
@@ -1125,7 +1127,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog = pc.getSQLCatalog()
     method_id = "z_another_fake_method"
     addSQLMethod =catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
-    addSQLMethod(id=method_id,title='', connection_id='test test', arguments='', template='')
+    addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
+                 arguments='', template='')
     zsql_method = catalog._getOb(method_id, None)
     self.failUnless(zsql_method is not None)
     sequence.edit(another_zsql_method_id = method_id)
