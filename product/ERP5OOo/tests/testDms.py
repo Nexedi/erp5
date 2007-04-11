@@ -121,7 +121,7 @@ class TestDocument(ERP5TypeTestCase):
 
   def afterSetUp(self, quiet=QUIET, run=1):
     self.createCategoryList()
-    self.createObjectList()
+    #self.createObjectList()
     self.setSystemPreference()
     self.login()
     portal = self.getPortal()
