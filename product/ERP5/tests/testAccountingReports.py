@@ -495,7 +495,51 @@ class TestAccountingReports(AccountingTestCase):
     
     return bank1, (t1, t2, t3, t4, t5, t6, t7, t8)
 
+  def createAccountStatementDataSetOnTwoPeriods(self):
+    """Create accounting transactions on two periods, one transaction in 2005,
+    two transactions in 2006.
+    """
+    account_module = self.account_module
+    
+    # before
+    t1 = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Transaction 1',
+              source_reference='1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2005, 12, 31),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=100.0),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=100.0)))
+    
+    t2 = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Transaction 2',
+              source_reference='2',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 1, 1),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=200.0),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=200.0)))
+    
+    t3 = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Transaction 3',
+              source_reference='3',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=300.0),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=300.0)))
 
+    return t1, t2, t3
+                     
   def testAccountStatement(self):
     # Simple Account Statement for "Receivable" account
     self.createAccountStatementDataSet()
@@ -686,6 +730,94 @@ class TestAccountingReports(AccountingTestCase):
           data_line_list[0].getColumnProperty('Movement_getSpecificReference'))
 
     
+  def testAccountStatementPeriodDateForExpenseAccounts(self):
+    # Account statement for expense or income account will not show
+    # transactions from previous periods.
+    self.createAccountStatementDataSetOnTwoPeriods()
+    
+    # set request variables and render   
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.goods_sales.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # we have 3 transactions, but only 2 are in the period
+    self.assertEquals(2, len(data_line_list))
+    
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='2',
+                             date=DateTime(2006, 1, 1),
+                             Movement_getExplanationTitle='Transaction 2',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=0,
+                             credit=200,
+                             running_total_price=-200)
+    
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='3',
+                             date=DateTime(2006, 2, 2),
+                             Movement_getExplanationTitle='Transaction 3',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=0,
+                             credit=300,
+                             running_total_price=-500)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=0, credit=500)
+
+
+  def testAccountStatementPeriodDateAndInitialBalanceForExpenseAccounts(self):
+    # Account statement for expense or income account will not show
+    # transactions from previous periods (also for the Initial Balance line)
+    self.createAccountStatementDataSetOnTwoPeriods()
+    
+    # set request variables and render   
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.goods_sales.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 2, 2)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='Previous Balance',
+                             date=DateTime(2006, 2, 2),
+                             Movement_getExplanationTitle='',
+                             Movement_getMirrorSectionTitle='',
+                             debit=0,
+                             credit=200,
+                             running_total_price=-200)
+    
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='3',
+                             date=DateTime(2006, 2, 2),
+                             Movement_getExplanationTitle='Transaction 3',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=0,
+                             credit=300,
+                             running_total_price=-500)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=0, credit=500)
+
+
   def testAccountStatementMirrorSection(self):
     # 'Mirror Section' parameter is taken into account.
     self.createAccountStatementDataSet()
@@ -1333,7 +1465,8 @@ class TestAccountingReports(AccountingTestCase):
     self.assertEquals(['debit', 'credit'], data_line_list[0].column_id_list)
     self.assertEquals(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit=2900, credit=2900)
-    
+ 
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccountingReports))
