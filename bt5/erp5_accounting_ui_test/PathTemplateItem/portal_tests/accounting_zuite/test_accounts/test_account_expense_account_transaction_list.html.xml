@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test for Account transaction lisbox</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test Transactions related to an account\n
+</td></tr>\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
+\n
+<!-- Setup {{{ -->\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounts</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- {{{ Select Goods Sales account and check transaction list -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Goods Sales</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Transactions</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>2 record(s)</td>\n
+</tr>\n
+\n
+<!-- dumped listbox {{{2 -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
+  <td>Client 1 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]</td>\n
+  <td>2005/01/02</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]</td>\n
+  <td>Sale Invoice Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[6]</td>\n
+  <td>Client 1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[7]</td>\n
+  <td>Validated</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[8]</td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[9]</td>\n
+  <td>2000.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[10]</td>\n
+  <td>-2000.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[11]</td>\n
+  <td>-2000.0</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[2]</td>\n
+  <td>Client 2 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]</td>\n
+  <td>2005/01/03</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[4]</td>\n
+  <td>Sale Invoice Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[6]</td>\n
+  <td>Client 2</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[7]</td>\n
+  <td>Validated</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[8]</td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[9]</td>\n
+  <td>3000.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[10]</td>\n
+  <td>-3000.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[11]</td>\n
+  <td>-5000.0</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- {{{ stat line -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_stat_line\']/td[8]</td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
+  <td>5000.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@id=\'listbox_stat_line\']/td[10]</td>\n
+  <td>-5000.0</td>\n
+</tr>\n
+<!-- 2}}} -->\n
+\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_account_expense_account_transaction_list.html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
