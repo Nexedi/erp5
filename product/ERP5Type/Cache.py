@@ -36,15 +36,21 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
 DEFAULT_CACHE_FACTORY = 'erp5_ui_short'
 is_cache_initialized = 0
+is_cache_ready = 0
 
 def initializePortalCachingProperties(self):
   """ Init CachingMethod properties."""
   ## check if global CachingMethod is initialized in RAM for this ERP5 site. If not init it
   global is_cache_initialized
+  global is_cache_ready
   if not is_cache_initialized:
+    # we set is_cache_initialized right now to prevent infinite loops
     is_cache_initialized = 1
     ## update cache structure from portal_caches
     self.getPortalObject().portal_caches.updateCache()
+    # we mark the cache as ready after initialization, because initialization
+    # itself will cause cache misses that we want to ignore
+    is_cache_ready = 1
 
 class CacheFactory:
   """ CacheFactory is a RAM based object which contains different cache plugin
@@ -187,8 +193,12 @@ class CachingMethod:
               self.callable_object, cache_id, scope, self.cache_duration,
               *args, **kwd)
     except KeyError:
-      ## no caching enabled for this site or no such cache factory
-      LOG("Cache.__call__", WARNING, "Factory %s not found, method %s execute without cache" %(self.cache_factory, self.callable_object))
+      global is_cache_ready
+      if is_cache_ready:
+        ## no caching enabled for this site or no such cache factory
+        LOG("Cache.__call__", WARNING,
+            "Factory %s not found, method %s executed without cache" % (
+             self.cache_factory, self.callable_object))
       value = self.callable_object(*args, **kwd)
     return value
 
