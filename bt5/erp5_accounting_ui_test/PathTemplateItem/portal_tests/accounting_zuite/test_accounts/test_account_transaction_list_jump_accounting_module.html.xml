@@ -60,7 +60,7 @@
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
 <tr><td rowspan="1" colspan="4">\n
-Test Transactions related to an account\n
+Test Account Transaction List then jump to account module.\n
 </td></tr>\n
 </thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
 \n
