@@ -280,10 +280,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add Versions</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Virtual Host Monsters</name>
    <role>Manager</role>
   </permission>
@@ -299,19 +295,11 @@
    <name>Add Z MySQL Database Connections</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+  <permission type='list'>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='tuple'>
    <name>Add ZCatalogs</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add ZMailIn Clients</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add ZMailMessages</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -411,14 +399,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change ZMailIn</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change ZMailMessages</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Change bindings</name>
    <role>Manager</role>
   </permission>
@@ -455,9 +435,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change user folder</name>
-  </permission>
-  <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Manager</role>
   </permission>
@@ -486,9 +463,15 @@
    <name>Edit Factories</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Edit ParsedXML</name>
+  </permission>
   <permission type='tuple'>
    <name>Edit ReStructuredText</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Edit target</name>
   </permission>
   <permission type='tuple'>
    <name>FTP access</name>
@@ -538,6 +521,9 @@
   <permission type='tuple'>
    <name>Manage Groups</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Manage Selenium test cases</name>
   </permission>
   <permission type='tuple'>
    <name>Manage Transient Object Container</name>
@@ -601,10 +587,6 @@
   </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connections</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Post mail to ZMailIn</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -684,6 +666,9 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>View DOM hierarchy</name>
+  </permission>
   <permission type='tuple'>
    <name>View History</name>
    <role>Assignee</role>
@@ -691,10 +676,6 @@
    <role>Associate</role>
    <role>Auditor</role>
    <role>Author</role>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>View ZMailMessage</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -42,10 +39,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -54,11 +47,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>css_class</string> </key>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -115,6 +108,10 @@
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -181,10 +178,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -193,11 +186,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>css_class</string> </key>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -254,6 +247,10 @@
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -337,15 +334,27 @@
                       <list>
                         <tuple>
                           <string>resource_translated_title</string>
-                          <string>Resource</string>
+                          <string>Denomination</string>
                         </tuple>
                         <tuple>
-                          <string>total_quantity</string>
-                          <string>Inventory</string>
+                          <string>cash_status_translated_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>emission_letter_title</string>
+                          <string>Letter</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_title</string>
+                          <string>Issuing Year</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Number</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
-                          <string>Total Price</string>
+                          <string>Amount</string>
                         </tuple>
                       </list>
                     </value>
@@ -391,12 +400,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>total_quantity</string>
-                          <string>Inventory</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
+                          <string>quantity</string>
+                          <string>quantity</string>
                         </tuple>
                       </list>
                     </value>
@@ -421,11 +426,11 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>15</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
+                    <value> <string>Folder_viewCashCurrencyList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -440,12 +445,20 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>Cash Inventory Line</string>
                           <string>Cash Inventory Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>Cash Inventory Cell</string>
+                          <string>Cash Inventory Cell</string>
                         </tuple>
                       </list>
                     </value>
@@ -476,7 +489,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>cash_inventory_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -487,24 +500,7 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_quantity</string>
-                          <string>Inventory</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -519,7 +515,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Cash Inventory Lines</string> </value>
+                    <value> <string>Cash Details</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -547,7 +543,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <unicode>Delivery_getMovementList</unicode> </value>
         </item>
       </dictionary>
     </pickle>

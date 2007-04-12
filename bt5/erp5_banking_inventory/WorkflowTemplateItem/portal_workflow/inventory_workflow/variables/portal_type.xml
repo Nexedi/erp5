@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Variables</string>
-          <string>VariableDefinition</string>
-        </tuple>
-        <none/>
+        <global name="VariableDefinition" module="Products.DCWorkflow.Variables"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -38,7 +35,7 @@
         </item>
         <item>
             <key> <string>for_status</string> </key>
-            <value> <int>0</int> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -52,7 +49,7 @@
         </item>
         <item>
             <key> <string>update_always</string> </key>
-            <value> <int>0</int> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
