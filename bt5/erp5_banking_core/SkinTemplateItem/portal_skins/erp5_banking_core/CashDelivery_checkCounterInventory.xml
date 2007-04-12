@@ -82,7 +82,7 @@ requested_dict = {}\n
 # test all movement\n
 tmp_list = context.contentValues(filter={\'portal_type\': portal_type})\n
 #context.log(\'tmp_list\', str((tmp_list, portal_type, context)))\n
-context.log(\'source\',source)\n
+#context.log(\'source\',source)\n
 line_list = []\n
 for l in tmp_list :\n
   # The source can be different for every line (due to getBaobabSource approach)\n
@@ -125,6 +125,10 @@ for line in line_list :\n
   # Make sure there is no reindex with the tag of this counter\n
   if not serialize_dict.has_key(source_counter):\n
     serialize_dict[source_counter] = 1\n
+    if source_counter is None:\n
+      msg = Message(domain="ui", message="No source counter define to check inventory.")\n
+      raise ValidationFailed, (msg,)\n
+    #context.log("CashDelivery_checkCounterInventory", "source_counter = %s" %source_counter)\n
     source_object = context.portal_categories.getCategoryValue(source_counter)\n
     source_object.serialize()\n
     checkActivities(source_counter)\n
@@ -236,12 +240,12 @@ return 0\n
                             <string>line</string>
                             <string>line_resource</string>
                             <string>_write_</string>
+                            <string>msg</string>
                             <string>source_object</string>
                             <string>activate_kw</string>
                             <string>cell</string>
                             <string>variation_text</string>
                             <string>inventory_value</string>
-                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

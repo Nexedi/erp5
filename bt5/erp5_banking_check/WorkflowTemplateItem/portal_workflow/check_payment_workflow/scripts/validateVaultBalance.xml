@@ -82,6 +82,11 @@ for site in site_list:\n
   if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
     baobab_source = site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
     break\n
+\n
+if baobab_source is None:\n
+  msg = Message(domain="ui", message="Unable to determine counter from user assignement.")\n
+  raise ValidationFailed, (msg,)\n
+\n
 source = baobab_source\n
 source_object = context.portal_categories.getCategoryValue(source)\n
 \n
@@ -174,8 +179,8 @@ elif resource == 1:\n
                             <string>_getiter_</string>
                             <string>site</string>
                             <string>site_value</string>
-                            <string>source_object</string>
                             <string>msg</string>
+                            <string>source_object</string>
                             <string>resource</string>
                             <string>price</string>
                             <string>cash_detail</string>

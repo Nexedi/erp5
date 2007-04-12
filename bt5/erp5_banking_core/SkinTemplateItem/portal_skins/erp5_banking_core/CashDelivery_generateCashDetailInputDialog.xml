@@ -350,6 +350,7 @@ else :\n
 \n
   total_price = 0\n
   new_line_list = []\n
+  next_listbox_key = max([int(x.get(\'listbox_key\', 0)) for x in listbox]) + 1\n
   # browse line to determine new lines to add\n
   for line in listbox:\n
     # must get the resource\n
@@ -364,13 +365,15 @@ else :\n
       lines_to_add = 0\n
     line[\'number_line_to_add\'] = 0\n
     # remove the key\n
-    del line[\'listbox_key\']\n
+    #del line[\'listbox_key\']\n
     # create new line\n
     for num in xrange(lines_to_add):\n
       # make sure we don\'t have too many lines\n
       if line_counter_dict[resource_id] <= max_lines:\n
         line_counter_dict[resource_id] = line_counter_dict[resource_id] + 1\n
         new_line = line.copy()\n
+        new_line[\'listbox_key\'] = next_listbox_key\n
+        next_listbox_key += 1\n
         # set default quantity to 0\n
         for column_nb in xrange(1, len(column_base_list) + 1):\n
           new_line[\'column%s\' %(str(column_nb))] = 0\n
@@ -507,6 +510,7 @@ else :\n
                             <string>counter</string>
                             <string>column</string>
                             <string>quantity</string>
+                            <string>_inplacevar_</string>
                             <string>price</string>
                             <string>col_key</string>
                             <string>other_parameter_list</string>
@@ -519,9 +523,11 @@ else :\n
                             <string>line</string>
                             <string>resource_key</string>
                             <string>new_line_list</string>
+                            <string>max</string>
+                            <string>int</string>
+                            <string>next_listbox_key</string>
                             <string>resource_id</string>
                             <string>resource_list</string>
-                            <string>int</string>
                             <string>lines_to_add</string>
                             <string>xrange</string>
                             <string>num</string>

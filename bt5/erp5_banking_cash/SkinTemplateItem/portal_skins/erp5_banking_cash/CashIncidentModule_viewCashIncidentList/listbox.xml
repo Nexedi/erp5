@@ -394,7 +394,12 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>source_site_domain</string>
+                          <string>Vault</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -461,6 +466,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string>EmptyByDefaultListBox_asHTML</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -555,11 +564,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -574,11 +580,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

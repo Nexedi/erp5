@@ -65,14 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Document import newTempBase\n
 \n
 if reference is None:\n
   account_list = [context]\n
 else:\n
   account_list = context.BankAccount_getReportInformationList(reference=reference)\n
-\n
-\n
 \n
 # Build the common inventory dict\n
 params = {}\n
@@ -81,44 +81,113 @@ if from_date is not None:\n
 if at_date is not None:\n
   params[\'at_date\'] = at_date\n
 \n
-\n
 account_dict = {}\n
 for account in account_list:\n
   account_dict[account.getUid()] = account\n
 \n
-inventory_list = context.portal_simulation.getCurrentInventoryList(\n
-                                                          payment_uid = account_dict.keys()\n
-                                                          , **params\n
-                                                          )\n
+account_uids = account_dict.keys()\n
+resource_uid = context.currency_module[context.Baobab_getPortalReferenceCurrencyID()].getUid()\n
+\n
+inv_account_dict = {}\n
+# Set empty dictionnary for each account\n
+for account_uid in account_uids:\n
+  acc_dict = inv_account_dict[account_uid] = {}\n
+  account = account_dict[account_uid]\n
+  acc_dict[\'account_reference\'] = account.getReference()\n
+  acc_dict[\'account_owner\'] = account.getParentValue().getTitle()\n
+  acc_dict[\'currency_title\'] = account.getPriceCurrencyTitle()\n
+  acc_dict[\'transaction_list\'] = []\n
+\n
+# Current inventory\n
+if current_inventory:\n
+  current_available_inventory_list = context.portal_simulation.getCurrentInventoryList(\n
+    payment_uid = account_uids,\n
+    resource_uid = resource_uid,\n
+    group_by_payment = 1,\n
+    **params\n
+    )\n
+  for inv in current_available_inventory_list:\n
+    inv_account_dict[inv.payment_uid]["current"] = inv.total_quantity\n
+\n
+# Available inventory\n
+if available_inventory:\n
+  available_inventory_list = context.portal_simulation.getAvailableInventoryList(\n
+    payment_uid = account_uids,\n
+    resource_uid = resource_uid,\n
+    group_by_payment = 1,\n
+    **params\n
+    )\n
+  for inv in available_inventory_list:\n
+    inv_account_dict[inv.payment_uid]["available"] = inv.total_quantity\n
+\n
+# Future inventory\n
+if future_inventory:\n
+  future_inventory_list = context.portal_simulation.getFutureInventoryList(\n
+    payment_uid = account_uids,\n
+    resource_uid = resource_uid,\n
+    group_by_payment = 1,\n
+    **params\n
+    )\n
+  for inv in future_inventory_list:\n
+    inv_account_dict[inv.payment_uid]["future"] = inv.total_quantity\n
+\n
 \n
 final_inventory_list = []\n
 portal = account.getPortalObject()\n
 i = 0\n
-for inventory in inventory_list:\n
-  tmp_dict = {}\n
-  movement = portal.restrictedTraverse(inventory.path)\n
-  delivery = movement.getExplanationValue()\n
-  source_reference = delivery.getSourceReference()\n
-  tmp_dict[\'source_reference\'] = source_reference\n
-  tmp_dict[\'total_price\'] = inventory.total_price\n
-  tmp_dict[\'description\'] = delivery.getDescription()\n
-  tmp_dict[\'start_date\'] = delivery.getStartDate()\n
-  account = account_dict[inventory.payment_uid]\n
-  tmp_dict[\'reference\'] = account.getReference()\n
-  final_inventory_list.append(newTempBase(account, "new_%03i" % i, **tmp_dict))\n
-  i += 1\n
 \n
+if transaction_list:\n
+  inventory_list = context.portal_simulation.getCurrentInventoryList(\n
+    payment_uid = account_uids,\n
+    resource_uid = resource_uid,\n
+    **params\n
+    )\n
+\n
+  for inventory in inventory_list:\n
+    tmp_dict = {}\n
+\n
+    # Specific to each movement\n
+    movement = portal.restrictedTraverse(inventory.path)\n
+    delivery = movement.getExplanationValue()\n
+    document_reference = delivery.getSourceReference()\n
+    if document_reference is None:\n
+      document_reference = \'\'\n
+    tmp_dict[\'document_reference\'] = document_reference\n
+    total_price = inventory.total_quantity\n
+    tmp_dict[\'total_price\'] = total_price\n
+    tmp_dict[\'debit\'] = None\n
+    tmp_dict[\'credit\'] = None\n
+    if total_price is not None and total_price >= 0:\n
+      tmp_dict[\'debit\'] = total_price\n
+    elif total_price is not None and total_price < 0:\n
+      tmp_dict[\'credit\'] = - total_price\n
+\n
+    description = delivery.getDescription()\n
+    if description is None:\n
+      description = \'\'\n
+    tmp_dict[\'description\'] = description\n
+    tmp_dict[\'start_date\'] = delivery.getStartDate()\n
+    tmp_dict[\'module_title\'] = delivery.getParentValue().getTranslatedTitle()\n
+\n
+    # Common to bank account\n
+    acc_dict = inv_account_dict[inventory.payment_uid]\n
+    acc_dict[\'transaction_list\'].append(newTempBase(account, "new_%03i" % i, **tmp_dict))\n
+    i += 1\n
 \n
 def sort_date(a,b):\n
-  result = cmp(a.reference,b.reference)\n
-  if result == 0:\n
-    result = cmp(a.start_date,b.start_date)\n
-  return result\n
+#   result = cmp(a.account_reference,b.account_reference)\n
+#   if result == 0:\n
+  return cmp(a.start_date,b.start_date)\n
+#   return result\n
 \n
-final_inventory_list.sort(sort_date)\n
+for act_info in inv_account_dict.values():\n
+  act_info[\'transaction_list\'].sort(sort_date)\n
+  \n
 \n
-return final_inventory_list\n
-</string> </value>
+return inv_account_dict.values()\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -140,7 +209,7 @@ return final_inventory_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>from_date=None, to_date=None, at_date=None, reference=None</string> </value>
+            <value> <string>from_date=None, at_date=None, reference=None, current_inventory=0, available_inventory=0, future_inventory=0, transaction_list=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -160,16 +229,19 @@ return final_inventory_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>7</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>from_date</string>
-                            <string>to_date</string>
                             <string>at_date</string>
                             <string>reference</string>
+                            <string>current_inventory</string>
+                            <string>available_inventory</string>
+                            <string>future_inventory</string>
+                            <string>transaction_list</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>None</string>
@@ -181,19 +253,31 @@ return final_inventory_list\n
                             <string>account_dict</string>
                             <string>_getiter_</string>
                             <string>account</string>
+                            <string>account_uids</string>
+                            <string>_getitem_</string>
+                            <string>resource_uid</string>
+                            <string>inv_account_dict</string>
+                            <string>account_uid</string>
+                            <string>acc_dict</string>
                             <string>_apply_</string>
-                            <string>inventory_list</string>
+                            <string>current_available_inventory_list</string>
+                            <string>inv</string>
+                            <string>available_inventory_list</string>
+                            <string>future_inventory_list</string>
                             <string>final_inventory_list</string>
                             <string>portal</string>
                             <string>i</string>
+                            <string>inventory_list</string>
                             <string>inventory</string>
                             <string>tmp_dict</string>
                             <string>movement</string>
                             <string>delivery</string>
-                            <string>source_reference</string>
-                            <string>_getitem_</string>
+                            <string>document_reference</string>
+                            <string>total_price</string>
+                            <string>description</string>
                             <string>_inplacevar_</string>
                             <string>sort_date</string>
+                            <string>act_info</string>
                           </tuple>
                         </value>
                     </item>
@@ -209,7 +293,10 @@ return final_inventory_list\n
                 <none/>
                 <none/>
                 <none/>
-                <none/>
+                <int>0</int>
+                <int>0</int>
+                <int>0</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>

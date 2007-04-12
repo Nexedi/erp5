@@ -461,7 +461,7 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>EmptyByDefaultListBox_asHTML</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -561,11 +561,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -580,11 +577,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

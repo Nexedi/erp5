@@ -75,7 +75,7 @@ if reference is None:\n
   message = Message(domain="ui", message="Please give a reference")\n
   raise ValueError, message\n
 \n
-account_list = catalog(reference=reference, portal_type=portal_type)\n
+account_list = catalog(reference=reference, portal_type=portal_type, validation_state=\'valid\')\n
 if len(account_list) == 0:\n
   account_list = catalog(reference="%%%s%%" % reference, portal_type=portal_type)\n
 if len(account_list) == 0:\n

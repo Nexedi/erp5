@@ -290,8 +290,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>parameter_list</string> </key>
+                    <key> <string>max_linelength</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -493,6 +503,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(\'site_uid\',here.Baobab_getUserSiteUid()), (\'validation_state\', \'valid\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

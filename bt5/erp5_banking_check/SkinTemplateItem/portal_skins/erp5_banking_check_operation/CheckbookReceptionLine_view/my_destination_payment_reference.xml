@@ -255,7 +255,9 @@
                 </item>
                 <item>
                     <key> <string>parameter_list</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -327,7 +329,24 @@
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>getReference</string>
+                          <string>Account Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>getInternalReference</string>
+                          <string>Internal Account Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>getBicCode</string>
+                          <string>BIC Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>getParentTitle</string>
+                          <string>Owner</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -356,7 +375,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>24</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -476,11 +495,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -495,11 +511,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -507,6 +520,22 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>REQUEST/relation_item_list</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(\'site_uid\',here.Baobab_getUserSiteUid()), (\'validation_state\', \'valid\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
