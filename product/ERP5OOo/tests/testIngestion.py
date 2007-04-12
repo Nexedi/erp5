@@ -731,16 +731,17 @@ class TestIngestion(ERP5TypeTestCase):
 
   def stepExportPDF(self, sequence=None, sequence_list=None, **kw):
     """
-      see if it is possible to make a jpg
-      test conversion to html
+      Try to export PDF to text and HTML
     """
     document = self.getDocument('five')
     f = makeFileUpload('TEST-en-002.pdf')
     document.edit(file=f)
-    res = document.convert('jpg')
-    self.failUnless(res)
-    res_html = document.asHTML()
-    self.failUnless('magic' in res_html)
+    mime, text = document.convert('text')
+    self.failUnless('magic' in text)
+    self.failUnless(mime == 'text/plain')
+    mime, html = document.convert('html')
+    self.failUnless('magic' in html)
+    self.failUnless(mime == 'text/html')
 
   def stepExportImage(self, sequence=None, sequence_list=None, **kw):
     """
@@ -748,7 +749,7 @@ class TestIngestion(ERP5TypeTestCase):
       of REQUEST and RESPONSE, and the rest of the implementation is way down
       in Zope core
     """
-    printAndLog('not implemented')
+    printAndLog('stepExportImage not implemented')
 
   def stepCheckHasSnapshot(self, sequence=None, sequence_list=None, **kw):
     context = self.getDocument('one')
@@ -890,7 +891,7 @@ class TestIngestion(ERP5TypeTestCase):
   ##  Tests
   ##################################
 
-  def test_01_PreferenceSetup(self, quiet=QUIET, run=1): # RUN_ALL_TEST)
+  def test_01_PreferenceSetup(self, quiet=QUIET, run=1):
     """
       Make sure that preferences are set up properly and accessible
     """
@@ -902,7 +903,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(preference_tool.getPreferredDocumentFileNameRegularExpression(),
                       "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})")
 
-  def test_02_FileExtensionRegistry(self, quiet=QUIET, run=1): # RUN_ALL_TEST
+  def test_02_FileExtensionRegistry(self, quiet=QUIET, run=1):
     """
       check if we successfully imported registry
       and that it has all the entries we need
@@ -983,7 +984,7 @@ class TestIngestion(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_04_MetadataEditing(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_04_MetadataEditing(self, quiet=QUIET, run=1):
     """
       Check metadata in the object and in the ODF document
       Edit metadata on the object
@@ -1032,7 +1033,7 @@ class TestIngestion(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_06_FormatGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_06_FormatGeneration(self, quiet=QUIET, run=1):
     """
       Test generation of files in all possible formats
       which means check if they have correct lists of available formats for export
