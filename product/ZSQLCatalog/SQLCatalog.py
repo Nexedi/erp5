@@ -377,7 +377,7 @@ class Query(QueryMixin):
                      (key, value, mode,key.split('.')[1]))
           else:
             comparison_operator = '='
-        else:
+        elif not isinstance(value, basestring):
           comparison_operator = '='
         if comparison_operator is not None:
           key = self._quoteSQLKey(key)

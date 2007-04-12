@@ -1746,7 +1746,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failIfDifferentSet([org_a.getPath()],
         [x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',**catalog_kw)])
-
+    # If the date is an empty string, check that all objects are displayed.
+    catalog_kw = {'modification_date':{'query':'',
+                               'format':'%d/%m/%Y',
+                               'type':'date'}}
+    self.failIfDifferentSet([org_a.getPath(), org_b.getPath()],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
 
 if __name__ == '__main__':
     framework()
