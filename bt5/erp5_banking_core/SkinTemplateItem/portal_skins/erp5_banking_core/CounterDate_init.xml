@@ -80,7 +80,7 @@ context.setStartDate(DateTime(DateTime().Date()))\n
 # Set a reference\n
 counter_date_list = [x.getObject() for x  in context.portal_catalog(\n
                                            portal_type=\'Counter Date\',site_id=site.getSiteId(),\n
-                                           so_order=[(\'start_date\',\'descending\')],limit=1,\n
+                                           sort_on=[(\'start_date\',\'descending\')],limit=1,\n
                                            simulation_state=(\'open\',\'closed\'))]\n
 previous_reference = None\n
 if len(counter_date_list)>0:\n
