@@ -66,6 +66,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>price = context.ERP5Banking_getExchangeValue()\n
+if price is None:\n
+  return price\n
 \n
 commission_ratio = context.getDiscountRatio()\n
 commission_price = context.getDiscount()\n
@@ -142,9 +144,9 @@ return quantity\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>price</string>
+                            <string>None</string>
                             <string>commission_ratio</string>
                             <string>commission_price</string>
-                            <string>None</string>
                             <string>round</string>
                             <string>commission_value</string>
                             <string>quantity</string>

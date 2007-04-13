@@ -109,7 +109,11 @@ class Number:\n
 #return pvalue\n
 v_value = Number()\n
 \n
-return v_value.numbertoletter(pvalue)\n
+prefix = \'\'\n
+if pvalue < 0:\n
+  prefix = \'-\'\n
+  pvalue = -pvalue\n
+return prefix + v_value.numbertoletter(pvalue)\n
 
 
 ]]></string> </value>
@@ -163,6 +167,7 @@ return v_value.numbertoletter(pvalue)\n
                             <string>pvalue</string>
                             <string>Number</string>
                             <string>v_value</string>
+                            <string>prefix</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>
