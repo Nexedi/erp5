@@ -113,6 +113,7 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
     
     self.bi_counter = self.paris.surface.banque_interne
     self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
+    self.bi_counter = self.paris.surface.banque_interne.guichet_1
     
     self.createCashInventory(source=None, destination=self.bi_counter_vault, currency=self.currency_1,
                              line_list=line_list)
@@ -177,7 +178,7 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
     self.internal_money_deposit = self.internal_money_deposit_module.newContent(
                                     id='internal_money_deposit', 
                                     portal_type='Internal Money Deposit', 
-                                    destination_value=self.bi_counter_vault,
+                                    destination_value=self.bi_counter,
                                     resource_value = self.currency_1,
                                     source_total_asset_price=20000.0,
                                     grouping_reference="lettering",
@@ -196,10 +197,10 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
     self.internal_money_deposit = getattr(self.internal_money_deposit_module, 'internal_money_deposit')
     # check its portal type
     self.assertEqual(self.internal_money_deposit.getPortalType(), 'Internal Money Deposit')
-    self.assertEqual(self.internal_money_deposit.getDestination(), self.bi_counter_vault.getRelativeUrl())
+    self.assertEqual(self.internal_money_deposit.getBaobabDestination(), self.bi_counter_vault.getRelativeUrl())
     # check that its destination is guichet_1
     self.assertEqual(self.internal_money_deposit.getSourceTotalAssetPrice(), 20000.0)
-    self.assertEqual(self.internal_money_deposit.getSource(), None)
+    self.assertEqual(self.internal_money_deposit.getBaobabSource(), None)
 
     # the initial state must be draft
     self.assertEqual(self.internal_money_deposit.getSimulationState(), 'draft')
