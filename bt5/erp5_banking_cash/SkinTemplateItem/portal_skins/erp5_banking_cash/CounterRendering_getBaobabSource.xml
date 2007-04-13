@@ -65,15 +65,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>destination = context.getDestination()\n
-if destination is not None:\n
-  return destination+\'/encaisse_des_billets_et_monnaies/entrante\'\n
-# calculate the destination\n
+            <value> <string>source = context.getSource()\n
+if source is not None:\n
+  return source\n
+# calculate the source\n
 # must use owner to know site letter\n
 site_list = context.Baobab_getUserAssignedSiteList(user_id=context.Base_getOwnerId())\n
 for site in site_list:\n
   if context.portal_categories.getCategoryValue(site).getVaultType().endswith(\'/guichet\'):\n
-    return site+"/entrante"\n
+    return site\n
 from Products.ERP5Type.Message import Message\n
 message = Message(domain="ui", message="Object owner is not assigned to a counter.")\n
 raise ValueError,message\n
@@ -99,7 +99,7 @@ raise ValueError,message\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,9 +125,11 @@ raise ValueError,message\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>args</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>destination</string>
+                            <string>source</string>
                             <string>None</string>
                             <string>site_list</string>
                             <string>_getiter_</string>
@@ -152,7 +154,7 @@ raise ValueError,message\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>InternalMoneyDeposit_getBaobabDestination</string> </value>
+            <value> <string>CounterRendering_getBaobabSource</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
