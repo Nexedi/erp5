@@ -90,7 +90,7 @@ class TestIngestion(ERP5TypeTestCase):
   """
 
   # pseudo constants
-  RUN_ALL_TEST = 0
+  RUN_ALL_TEST = 1
   QUIET = 0
 
   ##################################
@@ -322,8 +322,9 @@ class TestIngestion(ERP5TypeTestCase):
       get_transaction().commit()
       self.tic()
       self.failUnless(context.hasFile())
-      if context.getPortalType() in ('Image', 'File',):
+      if context.getPortalType() in ('Image', 'File', 'PDF'):
         # File and images do not support conversion to text in DMS
+        # PDF has not implemented _convertToBaseFormat() so can not be converted
         self.assertEquals(context.getExternalProcessingState(), 'uploaded')
       else:
         self.assertEquals(context.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
@@ -357,29 +358,33 @@ class TestIngestion(ERP5TypeTestCase):
       to true, portal_type is specified when calling newContent
       on portal_contributions. 
     """
-    extension_to_type = (
-         ('ppt', 'Presentation')
-        ,('doc', 'Text')
-        ,('sdc', 'Spreadsheet')
-        ,('sxc', 'Drawing')
-        ,('pdf', 'PDF')
-        ,('jpg', 'Image')
-        ,('py', 'File')
-      )
+    created_documents = []
+    extension_to_type = (('ppt', 'Presentation')
+                        ,('doc', 'Text')
+                        ,('sdc', 'Spreadsheet')
+                        ,('sxc', 'File')
+                        ,('pdf', 'PDF')
+                        ,('jpg', 'Image')
+                        ,('py', 'File')
+                        )
     for extension, portal_type in extension_to_type:
-      printAndLog(extension)
       filename = 'TEST-en-002.' + extension
       file = makeFileUpload(filename)
-      printAndLog(file.filename)
       if with_portal_type:
         ob = self.portal.portal_contributions.newContent(portal_type=portal_type, file=file)
       else:
         ob = self.portal.portal_contributions.newContent(file=file)
-      get_transaction().commit()
-      self.tic()
+      ob.immediateReindexObject()
+      created_documents.append(ob)
+    get_transaction().commit()
+    self.tic()
+    # inspect created objects
+    count = 0
+    for extension, portal_type in extension_to_type:
+      ob = created_documents[count]
+      count+=1
       self.assertEquals(ob.getPortalType(), portal_type)
       self.assertEquals(ob.getReference(), 'TEST')
-      ob.reindexObject(); get_transaction().commit(); self.tic()
       if ob.getPortalType() in ('Image', 'File', 'PDF'):
         # Image, File and PDF are not converted to a base format
         self.assertEquals(ob.getExternalProcessingState(), 'uploaded')
@@ -388,6 +393,10 @@ class TestIngestion(ERP5TypeTestCase):
         # at the external_processing workflow
         self.assertEquals(ob.getExternalProcessingState(), 'converted')
         self.assert_('magic' in ob.SearchableText())
+    # clean up created objects for next test !
+    for ob in created_documents:
+      parent = ob.getParentValue() 
+      parent.manage_delObjects([ob.getId(),])
 
   def newPythonScript(self, object_id, script_id, argument_list, code):
     """
@@ -400,28 +409,28 @@ class TestIngestion(ERP5TypeTestCase):
     script = getattr(context, script_id)
     script.ZPythonScript_edit(argument_list, code)
 
-  def setDiscoveryOrder(self, order, id):
+  def setDiscoveryOrder(self, order, id='one'):
     """
       Creates a script to define the metadata discovery order
       for Text documents.
     """
     script_code = "return %s" % str(order)
     self.newPythonScript(id, 'Text_getPreferredDocumentMetadataDiscoveryOrderList', '', script_code)
-
+    
   def discoverMetadata(self, document_id='one'):
     """
       Sets input parameters and on the document ID document_id
       and discover metadata. For reindexing
     """
     context = self.getDocument(document_id)
-    printAndLog(context.Text_getPreferredDocumentMetadataDiscoveryOrderList())
-    context._backup_input = dict(reference='INPUT', language='in',
-                                 version='004', short_title='from_input',
+    # simulate user input
+    context._backup_input = dict(reference='INPUT', 
+                                 language='in',
+                                 version='004', 
+                                 short_title='from_input',
                                  contributor='person_module/james')
-    printAndLog(context.getSourceReference())
-    context.discoverMetadata(context.getSourceReference()) 
-    # we don't need user_login here because
-    # for testing we overwrite Text_getPropertyDictFromUserLogin
+    # pass to discovery file_name and user_login
+    context.discoverMetadata(context.getSourceReference(), 'john_doe') 
     context.reindexObject()
     get_transaction().commit()
     self.tic()
@@ -530,14 +539,17 @@ class TestIngestion(ERP5TypeTestCase):
       Upload a file directly from the form
       check if it has the data and source_reference
     """
+    filename = 'TEST-en-002.doc'
     document = self.getDocument('one')
     # Revision is 0 before upload (revisions are strings)
     self.assertEquals(document.getRevision(), '0')
-    f = makeFileUpload('TEST-en-002.doc')
+    f = makeFileUpload(filename)
     document.edit(file=f)
+    # set source
+    document.setSourceReference(filename)
     self.assert_(document.hasFile())
-    # XXX - source_reference set to file name ? is this a default feature or generic ?
-    #self.assertEquals(document.getSourceReference(), 'TEST-en-002.doc') 
+    # source_reference set to file name ?
+    self.assertEquals(document.getSourceReference(), filename) 
     # Revision is 1 after upload (revisions are strings)
     self.assertEquals(document.getRevision(), '1')
     document.reindexObject()
@@ -699,7 +711,7 @@ class TestIngestion(ERP5TypeTestCase):
       ingest all supported presentation formats
       make sure they are converted
     """
-    format_list = ['sxd', 'sda']
+    format_list = ['sxd','sda']
     self.ingestFormatList('four', format_list)
 
   def stepIngestPDFFormats(self, sequence=None, sequence_list=None, **kw):
@@ -803,7 +815,7 @@ class TestIngestion(ERP5TypeTestCase):
   def stepCheckMetadataSettingOrderFICU(self, sequence=None, sequence_list=None, **kw):
     """
      This is the default
-    """
+    """  
     expected_metadata = dict(reference='TEST', language='en', version='002', short_title='from_input', contributor='person_module/james')
     self.setDiscoveryOrder(['file_name', 'input', 'content', 'user_login'])
     self.discoverMetadata()
@@ -891,7 +903,7 @@ class TestIngestion(ERP5TypeTestCase):
   ##  Tests
   ##################################
 
-  def test_01_PreferenceSetup(self, quiet=QUIET, run=1):
+  def test_01_PreferenceSetup(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       Make sure that preferences are set up properly and accessible
     """
@@ -903,7 +915,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(preference_tool.getPreferredDocumentFileNameRegularExpression(),
                       "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})")
 
-  def test_02_FileExtensionRegistry(self, quiet=QUIET, run=1):
+  def test_02_FileExtensionRegistry(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       check if we successfully imported registry
       and that it has all the entries we need
@@ -934,7 +946,7 @@ class TestIngestion(ERP5TypeTestCase):
       file_name = 'aaa.' + type
       self.assertEquals(reg.findTypeName(file_name, None, None), portal_type)
 
-  def test_03_TextDoc(self, quiet=QUIET, run=1):
+  def test_03_TextDoc(self, quiet=QUIET, run=RUN_ALL_TEST):
     """h
       Test basic behaviour of a document:
       - create empty document
@@ -960,7 +972,7 @@ class TestIngestion(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_04_MetadataExtraction(self, quiet=QUIET, run=1):
+  def test_04_MetadataExtraction(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       Test metadata extraction from various sources:
       - from file name (doublecheck)
@@ -984,7 +996,7 @@ class TestIngestion(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_04_MetadataEditing(self, quiet=QUIET, run=1):
+  def test_04_MetadataEditing(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       Check metadata in the object and in the ODF document
       Edit metadata on the object
@@ -1033,7 +1045,7 @@ class TestIngestion(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def test_06_FormatGeneration(self, quiet=QUIET, run=1):
+  def test_06_FormatGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       Test generation of files in all possible formats
       which means check if they have correct lists of available formats for export
@@ -1088,7 +1100,7 @@ class TestIngestion(ERP5TypeTestCase):
       I don't know how to verify how cache works
     """
 
-  def test_09_Contribute(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_09_Contribute(self, quiet=QUIET, run=0):
     """
       Create content through portal_contributions
       - use newContent to ingest various types 
@@ -1152,7 +1164,7 @@ class TestIngestion(ERP5TypeTestCase):
       (owner, and anything discovered from user and mail body)
     """
     if not run: return
-    if not quiet: printAndLog('test_09_Contribute')
+    if not quiet: printAndLog('test_11_EmailIngestion')
     sequence_list = SequenceList()
     step_list = [ 'stepReceiveEmailFromUnknown'
                  ,'stepCreatePerson'
