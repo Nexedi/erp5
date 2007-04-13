@@ -119,18 +119,20 @@ class TestDocument(ERP5TypeTestCase):
 
   ## setup
 
-  def afterSetUp(self, quiet=QUIET, run=1):
-    self.createCategoryList()
+  def afterSetUp(self, quiet=QUIET, run=0):
+    pass
+    #self.createCategoryList()
     #self.createObjectList()
-    self.setSystemPreference()
-    self.login()
-    portal = self.getPortal()
+    #self.setSystemPreference()
+    #self.login()
+    #portal = self.getPortal()
 
   def getDocumentModule(self):
     return getattr(self.getPortal(),'document_module')
 
   def getBusinessTemplateList(self):
-    return ('erp5_base','erp5_trade','erp5_project','erp5_dms')
+    return ()
+    #return ('erp5_base','erp5_trade','erp5_project','erp5_dms')
 
   def getNeededCategoryList(self):
     return ('function/publication/reviewer','function/project/director','function/hq')
@@ -157,7 +159,7 @@ class TestDocument(ERP5TypeTestCase):
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(
            "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})")
-    default_pref.setPreferredReferenceLookupRegularExpression(
+    default_pref.setPreferredDocumentReferenceRegularExpression(
            "(?P<reference>[A-Z]{3,6})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?")
     default_pref.enable()
 
