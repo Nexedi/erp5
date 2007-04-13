@@ -608,7 +608,7 @@ class SimulationTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventory')
     def getCurrentInventory(self, omit_transit=1,
-                            transit_simulation_state=None,**kw):
+                            transit_simulation_state=None, **kw):
       """
       Returns current inventory
       """
@@ -630,7 +630,7 @@ class SimulationTool(BaseTool):
       """
       current_inventory = self.getCurrentInventory(**kw)
       kw['simulation_state'] = self.getPortalReservedInventoryStateList()
-      reserved_inventory = self.getInventory(omit_input=1,**kw)
+      reserved_inventory = self.getInventory(omit_input=1, **kw)
       return current_inventory+reserved_inventory
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -672,12 +672,20 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryList')
-    def getCurrentInventoryList(self, **kw):
+    def getCurrentInventoryList(self, omit_transit=1, 
+                                transit_simulation_state=None, **kw):
       """
         Returns list of current inventory grouped by section or site
       """
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
-      return self.getInventoryList(**kw)
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList() + \
+                               self.getPortalTransitInventoryStateList()
+      if transit_simulation_state is None:
+        transit_simulation_state = self.getPortalTransitInventoryStateList()
+
+      return self.getInventoryList(
+                            omit_transit=omit_transit,
+                            transit_simulation_state=transit_simulation_state,
+                            **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventoryList')
@@ -685,6 +693,7 @@ class SimulationTool(BaseTool):
       """
         Returns list of current inventory grouped by section or site
       """
+      # XXX Current calculation is not consistent with getAvailableInventory
       kw['simulation_state'] = tuple(
                     list(self.getPortalReservedInventoryStateList()) + \
                     list(self.getPortalCurrentInventoryStateList()))
@@ -698,6 +707,7 @@ class SimulationTool(BaseTool):
       """
       kw['simulation_state'] = tuple(
                  list(self.getPortalFutureInventoryStateList()) + \
+                 list(self.getPortalTransitInventoryStateList()) + \
                  list(self.getPortalReservedInventoryStateList()) + \
                  list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryList(**kw)
@@ -727,12 +737,18 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryStat')
-    def getCurrentInventoryStat(self, **kw):
+    def getCurrentInventoryStat(self, omit_transit=1, 
+                                transit_simulation_state=None, **kw):
       """
       Returns statistics of current inventory grouped by section or site
       """
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
-      return self.getInventoryStat(**kw)
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList() + \
+                               self.getPortalTransitInventoryStateList()
+      if transit_simulation_state is None:
+        transit_simulation_state = self.getPortalTransitInventoryStateList()
+      return self.getInventoryStat(omit_transit=omit_transit,
+                               transit_simulation_state=transit_simulation_state,
+                               **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventoryStat')
@@ -740,6 +756,7 @@ class SimulationTool(BaseTool):
       """
       Returns statistics of current inventory grouped by section or site
       """
+      # XXX Current calculation is not consistent with getAvailableInventory
       kw['simulation_state'] = tuple(
                     list(self.getPortalReservedInventoryStateList()) + \
                     list(self.getPortalCurrentInventoryStateList()))
@@ -753,6 +770,7 @@ class SimulationTool(BaseTool):
       """
       kw['simulation_state'] = tuple(
                  list(self.getPortalFutureInventoryStateList()) + \
+                 list(self.getPortalTransitInventoryStateList()) + \
                  list(self.getPortalReservedInventoryStateList()) + \
                  list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryStat(**kw)
