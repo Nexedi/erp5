@@ -65,7 +65,9 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
   We must make sure that future incoming movements will not be
   taken into account
 
-  We will by the way check the way counter dates are working.
+  We will by the way check the way counter dates are working :
+  - it must not be possible to open two counter dates by the same time
+  - make sure the reference defined on counter dates is increased every day
 
   Also, we must make sure it is not possible to deliver two check
   payments by the same time (due to tag on counter)
@@ -211,6 +213,33 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     self.assertEqual(self.currency_1.getAvailableInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
     self.assertEqual(self.currency_1.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
 
+  def stepCheckReferenceIsIncreasedEveryDay(self, sequence=None, sequence_list=None, **kwd):
+    """
+    make sure the reference is increasing
+    """
+    counter_date = self.counter_date_1
+    counter_date.setStartDate(self.date-10)
+    self.assertEquals(counter_date.getReference(),'1')
+    get_transaction().commit()
+    self.tic()
+    self.openCounterDate(site=self.paris, id='counter_date_3')
+    counter_date = self.counter_date_3
+    self.assertEquals(counter_date.getReference(),'2')
+    counter_date.close()
+    counter_date.setStartDate(self.date-9)
+    get_transaction().commit()
+    self.tic()
+    self.openCounterDate(site=self.paris, id='counter_date_4')
+    counter_date = self.counter_date_4
+    self.assertEquals(counter_date.getReference(),'3')
+    counter_date.close()
+    counter_date.setStartDate(self.date-8)
+    get_transaction().commit()
+    self.tic()
+    self.openCounterDate(site=self.paris, id='counter_date_5')
+    counter_date = self.counter_date_5
+    self.assertEquals(counter_date.getReference(),'4')
+
 
   def test_01_ERP5BankingAvailabeInventory(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -241,7 +270,8 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'CheckAccountFinalInventory ' \
                       'CheckBadStockBeforeClosingDate ' \
                       'ResetInventory Tic ' \
-                      'CheckRightStockBeforeClosingDate '
+                      'CheckRightStockBeforeClosingDate ' \
+                      'CheckReferenceIsIncreasedEveryDay '
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
