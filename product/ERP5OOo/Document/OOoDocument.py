@@ -32,6 +32,7 @@ import re
 import zipfile
 import cStringIO
 import socket
+from warnings import warn
 from DateTime import DateTime
 
 from AccessControl import ClassSecurityInfo
@@ -176,7 +177,8 @@ class OOoDocument(File, ConversionCacheMixin):
                                          allow_none=True)
     return server_proxy
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getTargetFormatList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTargetFormatItemList')
   def getTargetFormatItemList(self):
     """
       Returns a list of acceptable formats for conversion
@@ -187,13 +189,22 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     def cached_getTargetFormatItemList(content_type):
       server_proxy = self._mkProxy()
-      allowed = server_proxy.getAllowedTargetItemList(content_type) # oood API needs naming convention update
-      return [(y, x) for x, y in allowed] # tuple order is reversed to be compatible with ERP5 Form
+      try:
+        allowed = server_proxy.getAllowedTargetItemList(content_type)
+      except Fault, f:
+        allowed = server_proxy.getAllowedTargets(content_type)
+        warn('Your oood version is too old, using old method '
+            'getAllowedTargets instead of getAllowedTargetList',
+            DeprecationWarning)
+
+      # tuple order is reversed to be compatible with ERP5 Form
+      return [(y, x) for x, y in allowed]
 
     # Cache valid format list
-    cached_getTargetFormatItemList = CachingMethod(cached_getTargetFormatItemList,
-                                        id = "OOoDocument_getTargetFormatItemList",
-                                                   cache_factory='erp5_ui_medium')
+    cached_getTargetFormatItemList = CachingMethod(
+                                cached_getTargetFormatItemList,
+                                id="OOoDocument_getTargetFormatItemList",
+                                cache_factory='erp5_ui_medium')
 
     return cached_getTargetFormatItemList(self.getBaseContentType())
 
