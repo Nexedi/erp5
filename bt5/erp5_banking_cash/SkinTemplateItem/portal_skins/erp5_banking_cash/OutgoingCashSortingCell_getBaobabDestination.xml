@@ -76,7 +76,7 @@ if emission_letter!=\'not_defined\' and not (emission_letter in site_letter):\n
   return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
 elif emission_letter==\'not_defined\':\n
   # remaining banknote which are not sorted yet, or cancelled one\n
-  if not \'ventilation\' in context.getSource():\n
+  if not \'ventilation\' in context.getSource() and (context.getCashStatus() not in (\'mixed\',)):\n
     return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
   else:\n
     if context.getCashStatus() in ("mixed", "to_sort"):\n

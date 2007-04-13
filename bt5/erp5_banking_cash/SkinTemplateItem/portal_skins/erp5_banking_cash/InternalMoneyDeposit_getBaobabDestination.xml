@@ -73,7 +73,8 @@ if user_id is None:\n
   return None\n
 site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
 for site in site_list:\n
-  if context.portal_categories.getCategoryValue(site).getVaultType().endswith(\'guichet\') and (destination in site or site in destination):\n
+#   if context.portal_categories.getCategoryValue(site).getVaultType().endswith(\'guichet\') and (destination in site or site in destination):\n
+  if context.portal_categories.getCategoryValue(site).getVaultType().endswith(\'guichet\') and destination in site:\n
     return site + \'/encaisse_des_billets_et_monnaies/entrante\'\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n

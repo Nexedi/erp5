@@ -67,8 +67,9 @@
             <key> <string>_body</string> </key>
             <value> <string>site_list = context.Baobab_getUserAssignedSiteList()\n
 if len(site_list) == 0:\n
-  context.log("MonetarySurvey_init", "unabled to determine site")\n
-  return\n
+  from Products.ERP5Type.Message import Message\n
+  message = Message(domain="ui", message="The owner is not assigned to the right vault.")\n
+  raise ValueError,message\n
 \n
 site = site_list[0]\n
 site = context.Baobab_getVaultSite(site)\n
@@ -128,6 +129,10 @@ context.setDestination("%s/caveau/auxiliaire/encaisse_des_billets_a_ventiler_et_
                             <string>context</string>
                             <string>site_list</string>
                             <string>len</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>message</string>
+                            <string>ValueError</string>
                             <string>_getitem_</string>
                             <string>site</string>
                           </tuple>
