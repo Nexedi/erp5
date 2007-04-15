@@ -440,7 +440,8 @@ class ComplexQuery(QueryMixin):
   def getRelatedTableMapDict(self):
     result = {}
     for query in self.getQueryList():
-      result.update(query.getRelatedTableMapDict())
+      if not(isinstance(query, basestring)):
+        result.update(query.getRelatedTableMapDict())
     return result
 
   def asSQLExpression(self, key_alias_dict=None,
@@ -454,16 +455,19 @@ class ComplexQuery(QueryMixin):
     sql_expression_list = []
     select_expression_list = []
     for query in self.getQueryList():
-      query_result = query.asSQLExpression( key_alias_dict=key_alias_dict,
-                             ignore_empty_string=ignore_empty_string,
-                             keyword_search_keys=keyword_search_keys,
-                             full_text_search_keys=full_text_search_keys,
-                             stat__=stat__)
-      sql_expression_list.append(query_result['where_expression'])
-      select_expression_list.extend(query_result['select_expression_list'])
+      if isinstance(query, basestring):
+        sql_expression_list.append(query)
+      else:
+        query_result = query.asSQLExpression( key_alias_dict=key_alias_dict,
+                               ignore_empty_string=ignore_empty_string,
+                               keyword_search_keys=keyword_search_keys,
+                               full_text_search_keys=full_text_search_keys,
+                               stat__=stat__)
+        sql_expression_list.append(query_result['where_expression'])
+        select_expression_list.extend(query_result['select_expression_list'])
     operator = self.getOperator()
     result = {'where_expression':('(%s)' %  \
-                         (' %s ' % operator).join(sql_expression_list)),
+                         (' %s ' % operator).join(['(%s)' % x for x in sql_expression_list])),
               'select_expression_list':select_expression_list}
     return result
 
@@ -474,7 +478,8 @@ class ComplexQuery(QueryMixin):
     """
     key_list=[]
     for query in self.getQueryList():
-      key_list.extend(query.getSQLKeyList())
+      if not(isinstance(query, basestring)):
+        key_list.extend(query.getSQLKeyList())
     return key_list
 
 allow_class(ComplexQuery)
