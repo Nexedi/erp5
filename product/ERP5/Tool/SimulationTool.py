@@ -46,6 +46,8 @@ from Products.ERP5 import DeliverySolver
 from Products.ERP5 import TargetSolver
 from Products.PythonScripts.Utility import allow_class
 
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+
 class SimulationTool(BaseTool):
     """
     The SimulationTool implements the ERP5
@@ -196,6 +198,141 @@ class SimulationTool(BaseTool):
           property_uid_list['query'] = tmp_uid_list
       return property_uid_list
 
+    def _getSimulationStateQuery(self, simulation_state=None, omit_transit=0,
+                                input_simulation_state=None,
+                                output_simulation_state=None,
+                                transit_simulation_state=None,
+                                strict_simulation_state=None):
+      """
+      This method is used in order to give what should be
+      the input_simulation_state or output_simulation_state
+      depending on many parameters
+      """
+      string_or_list = (str, list, tuple)
+      # Simulation States
+      # If strict_simulation_state is set, we directly put it into the dictionary
+      from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+      if strict_simulation_state:
+        if isinstance(simulation_state, string_or_list)\
+                and simulation_state:
+           simulation_query = Query(**{'stock.simulation_state':simulation_state})
+      else:
+        # first, we evaluate simulation_state
+        sql_kw = {}
+        if simulation_state and isinstance(simulation_state, string_or_list):
+          if isinstance(simulation_state, str):
+            sql_kw['input_simulation_state'] = [simulation_state]
+            sql_kw['output_simulation_state'] = [simulation_state]
+          else:
+            sql_kw['input_simulation_state'] = simulation_state
+            sql_kw['output_simulation_state'] = simulation_state
+        # then, if omit_transit == 1, we evaluate (simulation_state -
+        # transit_simulation_state) for input_simulation_state
+        if omit_transit:
+          if isinstance(simulation_state, string_or_list)\
+                and simulation_state:
+            if isinstance(transit_simulation_state, string_or_list)\
+                  and transit_simulation_state:
+              # when we know both are usable, we try to calculate
+              # (simulation_state - transit_simulation_state)
+              if isinstance(simulation_state, str):
+                simulation_state = [simulation_state]
+              if isinstance(transit_simulation_state, str) :
+                transit_simulation_state = [transit_simulation_state]
+              delivered_simulation_state_list = []
+              for state in simulation_state :
+                if state not in transit_simulation_state :
+                  delivered_simulation_state_list.append(state)
+              sql_kw['input_simulation_state'] = delivered_simulation_state_list
+
+        # alternatively, the user can directly define input_simulation_state
+        # and output_simulation_state
+        if input_simulation_state and isinstance(input_simulation_state,
+                                                  string_or_list):
+          if isinstance(input_simulation_state, str):
+            input_simulation_state = [input_simulation_state]
+          sql_kw['input_simulation_state'] = input_simulation_state
+        if output_simulation_state and isinstance(output_simulation_state,
+                                                  string_or_list):
+          if isinstance(output_simulation_state, str):
+            output_simulation_state = [output_simulation_state]
+          sql_kw['output_simulation_state'] = output_simulation_state
+        # XXX In this case, we must not set sql_kw[input_simumlation_state] before
+        input_simulation_state = None
+        simulation_query = None
+        output_simulation_state = None
+        if sql_kw.has_key('input_simulation_state'):
+          input_simulation_state = sql_kw.get('input_simulation_state')
+        if sql_kw.has_key('output_simulation_state'):
+          output_simulation_state = sql_kw.get('output_simulation_state')
+        if input_simulation_state is not None \
+           or output_simulation_state is not None:
+          sql_kw.pop('input_simulation_state',None)
+          sql_kw.pop('output_simulation_state',None)
+        if input_simulation_state is not None:
+          if output_simulation_state is not None:
+            if input_simulation_state == output_simulation_state:
+              simulation_query = Query(**{'simulation_state': input_simulation_state,
+                                    'operator':'OR'})
+            else:
+              input_quantity_query = Query(**{'quantity': '>0'})
+              input_simulation_query = Query(**{'simulation_state': input_simulation_state,
+                                             'operator':'OR'})
+              input_query = ComplexQuery(input_quantity_query, input_simulation_query,
+                                         operator='AND')
+              output_quantity_query = Query(**{'quantity': '<0'})
+              output_simulation_query = Query(**{'simulation_state': output_simulation_state,
+                                     'operator':'OR'})
+              output_query = ComplexQuery(output_quantity_query, output_simulation_query,
+                                         operator='AND')
+              simulation_query = ComplexQuery(input_query, output_query, operator='OR')
+          else:
+            input_quantity_query = Query(**{'quantity': '>0'})
+            input_simulation_query_kw = {'simulation_state': input_simulation_state,
+                                   'operator':'OR'}
+            input_simulation_query = Query(**input_simulation_query_kw)
+            simulation_query = ComplexQuery(input_quantity_query, input_simulation_query,
+                                            operator = 'AND')
+        elif output_simulation_state is not None:
+          output_quantity_query = Query(**{'quantity': '<0'})
+          output_simulation_query_kw = {'simulation_state': output_simulation_state,
+                                 'operator':'OR'}
+          output_simulation_query = Query(**output_simulation_query_kw)
+          simulation_query = ComplexQuery(output_quantity_query, output_simulation_query,
+                                          operator = 'AND')
+      return simulation_query
+
+    def _getOmitQuery(self, query_table=None, omit_input=0, omit_output=0, **kw):
+      """
+      Build a specific query in order to take:
+      - negatives quantity values if omit_input
+      - postives quantity values if omit_output
+      """
+      omit_query = None
+      if omit_input or omit_output:
+        # Make sure to check some conditions
+        condition_expression = "%s.node_uid <> %s.mirror_node_uid \
+                                OR %s.section_uid <> %s.mirror_section_uid \
+                                OR %s.mirror_node_uid IS NULL \
+                                OR %s.mirror_section_uid IS NULL \
+                                OR %s.payment_uid IS NOT NULL \
+                                " % ((query_table,) * 7)
+        if omit_input:
+          quantity_query = Query(**{'quantity': '<0'})
+          omit_query = ComplexQuery(quantity_query, condition_expression,
+                                    operator='AND')
+        if omit_output:
+          quantity_query = Query(**{'quantity': '>0'})
+          if omit_query is None:
+            omit_query = ComplexQuery(quantity_query, condition_expression,
+                                      operator='AND')
+          else:
+            output_query = ComplexQuery(quantity_query, condition_expression,
+                                        operator='AND')
+            omit_query = ComplexQuery(omit_query, output_query, operator='AND')
+
+      return omit_query
+
     def _generateSQLKeywordDict(self, table='stock',
         # dates
         from_date=None, to_date=None, at_date=None,
@@ -217,11 +354,25 @@ class SimulationTool(BaseTool):
         strict_simulation_state=0,
         simulation_state=None, transit_simulation_state = None, omit_transit=0,
         input_simulation_state=None, output_simulation_state=None,
+        reserved_kw=None,
         # variations
         variation_text=None, sub_variation_text=None,
         variation_category=None,
         # uids
         resource_uid=None, node_uid=None, section_uid=None,
+        # omit input and output
+        omit_input=0,
+        omit_output=0,
+        # group by
+        group_by_node=0,
+        group_by_mirror_node=0,
+        group_by_section=0,
+        group_by_mirror_section=0,
+        group_by_payment=0,
+        group_by_sub_variation=0,
+        group_by_variation=0,
+        group_by_movement=0,
+        group_by_resource=1,
         # keywords for related keys
         **kw):
       """
@@ -360,53 +511,39 @@ class SimulationTool(BaseTool):
       #if len(variation_category_uid_list) :
       #  new_kw['variationCategory'] = variation_category_uid_list
       
-      string_or_list = (str, list, tuple)
-      # Simulation States
-      # If strict_simulation_state is set, we directly put it into the dictionary
-      if strict_simulation_state:
-        if isinstance(simulation_state, string_or_list)\
-                and simulation_state:
-          new_kw['simulation_state'] = simulation_state
-      else:
-        # first, we evaluate simulation_state
-        if simulation_state and isinstance(simulation_state, string_or_list):
-          if isinstance(simulation_state, str):
-            sql_kw['input_simulation_state'] = [simulation_state]
-            sql_kw['output_simulation_state'] = [simulation_state]
-          else:
-            sql_kw['input_simulation_state'] = simulation_state
-            sql_kw['output_simulation_state'] = simulation_state
-        # then, if omit_transit == 1, we evaluate (simulation_state -
-        # transit_simulation_state) for input_simulation_state
-        if omit_transit:
-          if isinstance(simulation_state, string_or_list)\
-                and simulation_state:
-            if isinstance(transit_simulation_state, string_or_list)\
-                  and transit_simulation_state:
-              # when we know both are usable, we try to calculate
-              # (simulation_state - transit_simulation_state)
-              if isinstance(simulation_state, str):
-                simulation_state = [simulation_state]
-              if isinstance(transit_simulation_state, str) :
-                transit_simulation_state = [transit_simulation_state]
-              delivered_simulation_state_list = []
-              for state in simulation_state :
-                if state not in transit_simulation_state :
-                  delivered_simulation_state_list.append(state)
-              sql_kw['input_simulation_state'] = delivered_simulation_state_list
+      simulation_query =  self._getSimulationStateQuery(simulation_state=simulation_state, 
+                                omit_transit=omit_transit,
+                                input_simulation_state=input_simulation_state,
+                                output_simulation_state=output_simulation_state,
+                                transit_simulation_state=transit_simulation_state,
+                                strict_simulation_state=strict_simulation_state)
+      if omit_input or omit_output:
+        omit_query = self._getOmitQuery(omit_input=omit_input,
+                                        omit_output=omit_output,
+                                        query_table=table)
+        if simulation_query is not None:
+          simulation_query = ComplexQuery(simulation_query, omit_query, operator='AND')
+        else:
+          simulation_query = omit_query
+      if reserved_kw is not None:
+        reserved_omit_input = reserved_kw.pop('omit_input',0)
+        reserved_omit_output = reserved_kw.pop('omit_output',0)
+        reserved_omit_query = self._getOmitQuery(query_table=table,
+                                                 omit_input=reserved_omit_input,
+                                                 omit_output=reserved_omit_output)
+        reserved_query = self._getSimulationStateQuery(**reserved_kw)
+        if reserved_omit_query is not None:
+          reserved_query = ComplexQuery(reserved_omit_query,reserved_query,
+                                        operator='AND')
+        if simulation_query is not None:
+          simulation_query = ComplexQuery(simulation_query, reserved_query,
+                                          operator='OR')
+        else:
+          simulation_query = reserved_query
+      if simulation_query is not None:
+        new_kw['query'] = simulation_query
 
-        # alternatively, the user can directly define input_simulation_state
-        # and output_simulation_state
-        if input_simulation_state and isinstance(input_simulation_state,
-                                                  string_or_list):
-          if isinstance(input_simulation_state, str):
-            input_simulation_state = [input_simulation_state]
-          sql_kw['input_simulation_state'] = input_simulation_state
-        if output_simulation_state and isinstance(output_simulation_state,
-                                                  string_or_list):
-          if isinstance(output_simulation_state, str):
-            output_simulation_state = [output_simulation_state]
-          sql_kw['output_simulation_state'] = output_simulation_state
+
 
       # It is necessary to use here another SQL query (or at least a subquery)
       # to get _DISTINCT_ uid from predicate_category table.
@@ -433,37 +570,37 @@ class SimulationTool(BaseTool):
 
       # build the group by expression
       group_by_expression_list = []
-      if kw.get('group_by_node', 0):
+      if group_by_node:
         group_by_expression_list.append('%s.node_uid' % table)
-      if kw.get('group_by_mirror_node', 0):
+      if group_by_mirror_node:
         group_by_expression_list.append('%s.mirror_node_uid' % table)
-      if kw.get('group_by_section', 0):
+      if group_by_section:
         group_by_expression_list.append('%s.section_uid' % table)
-      if kw.get('group_by_mirror_section', 0):
+      if group_by_mirror_section:
         group_by_expression_list.append('%s.mirror_section_uid' % table)
-      if kw.get('group_by_payment', 0):
+      if group_by_payment:
         group_by_expression_list.append('%s.payment_uid' % table)
-      if kw.get('group_by_sub_variation', 0):
+      if group_by_sub_variation:
         group_by_expression_list.append('%s.sub_variation_text' % table)
-      if kw.get('group_by_variation', 0):
+      if group_by_variation:
         group_by_expression_list.append('%s.variation_text' % table)
+      if group_by_movement:
+        group_by_expression_list.append('%s.uid' % table)
       if group_by_expression_list:
         # by default, we group by resource
-        if kw.get('group_by_resource', 1):
+        if group_by_resource:
           group_by_expression_list.append('%s.resource_uid' % table)
         new_kw['group_by_expression'] = ', '.join(group_by_expression_list)
       
-      sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
+      sql_kw.update(self.portal_catalog.buildSQLQuery(query_table=table,
+                                                      **new_kw))
       return sql_kw
 
     #######################################################
     # Inventory management
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventory')
-    def getInventory(self, src__=0, ignore_variation=0, standardise=0,
-                     omit_simulation=0, omit_input=0, omit_output=0,
-                     selection_domain=None, selection_report=None,
-                     precision=None, **kw):
+    def getInventory(self, src__=0, simulation_period='', **kw):
       """
       Returns an inventory of a single or multiple resources on a single or
       multiple nodes as a single float value
@@ -568,6 +705,9 @@ class SimulationTool(BaseTool):
       group_by_sub_variation - (useless on getInventory, but useful on
                         getInventoryList)
 
+      group_by_movement - (useless on getInventory, but useful on
+                        getInventoryList)
+
       precision - the precision used to round quantities and prices.
 
       **kw           -  if we want extended selection with more keywords (but
@@ -577,8 +717,6 @@ class SimulationTool(BaseTool):
       NOTE: we may want to define a parameter so that we can select the kind of
       inventory statistics we want to display (ex. sum, average, cost, etc.)
       """
-      sql_kw = self._generateSQLKeywordDict(**kw)
-
       # JPS: this is a hint for implementation of xxx_filter arguments
       # node_uid_count = portal_catalog.countResults(**node_filter)
       # if node_uid_count not too big:
@@ -587,39 +725,28 @@ class SimulationTool(BaseTool):
       # else:
       #   build a table in MySQL
       #   and join that table with the stock table
-
-      result = self.Resource_zGetInventory(
-          src__=src__, ignore_variation=ignore_variation,
-          standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report,
-          precision=precision, **sql_kw)
+      method = getattr(self,'get%sInventoryList' % simulation_period)
+      result = method(inventory_list=0, ignore_group_by=1, src__=src__, **kw)
       if src__:
         return result
 
       total_result = 0.0
       if len(result) > 0:
-        for result_line in result:
-          if result_line.inventory is not None:
-            total_result += result_line.inventory
+        if len(result) != 1:
+          raise ValueError, 'Sorry we must have only one'
+        inventory = result[0].inventory
+        if inventory is not None:
+          total_result = inventory
 
       return total_result
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventory')
-    def getCurrentInventory(self, omit_transit=1,
-                            transit_simulation_state=None, **kw):
+    def getCurrentInventory(self, **kw):
       """
       Returns current inventory
       """
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList() + \
-                               self.getPortalTransitInventoryStateList()
-      if transit_simulation_state is None:
-        transit_simulation_state = self.getPortalTransitInventoryStateList()
-      current_inventory = self.getInventory(omit_transit=omit_transit,
-                                  transit_simulation_state=transit_simulation_state,
-                                  **kw)
-      return current_inventory
+      return self.getInventory(simulation_period='Current', **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventory')
@@ -628,10 +755,7 @@ class SimulationTool(BaseTool):
       Returns available inventory
       (current inventory - reserved_inventory)
       """
-      current_inventory = self.getCurrentInventory(**kw)
-      kw['simulation_state'] = self.getPortalReservedInventoryStateList()
-      reserved_inventory = self.getInventory(omit_input=1, **kw)
-      return current_inventory+reserved_inventory
+      return self.getInventory(simulation_period='Available', **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventory')
@@ -639,18 +763,14 @@ class SimulationTool(BaseTool):
       """
       Returns future inventory
       """
-      kw['simulation_state'] = tuple(
-                   list(self.getPortalFutureInventoryStateList()) + \
-                   list(self.getPortalTransitInventoryStateList()) + \
-                   list(self.getPortalReservedInventoryStateList()) + \
-                   list(self.getPortalCurrentInventoryStateList()))
-      return self.getInventory(**kw)
+      return self.getInventory(simulation_period='Future', **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryList')
     def getInventoryList(self, src__=0, ignore_variation=0, standardise=0,
-                         omit_simulation=0, omit_input=0, omit_output=0,
+                         omit_simulation=0, 
                          selection_domain=None, selection_report=None,
+                         statistic=0, inventory_list=1, ignore_group_by=0,
                          precision=None, **kw):
       """
         Returns a list of inventories for a single or multiple
@@ -661,14 +781,24 @@ class SimulationTool(BaseTool):
         the kind of inventory statistics we want to display (ex. sum,
         average, cost, etc.)
       """
+      # If no group at all, give a default sort group by
+      if not (ignore_group_by \
+         or kw.get('group_by_node', 0) or kw.get('group_by_mirror_node', 0) \
+         or kw.get('group_by_section', 0) or kw.get('group_by_mirror_section', 0) \
+         or kw.get('group_by_payment', 0) or kw.get('group_by_sub_variation', 0) \
+         or kw.get('group_by_variation', 0) or kw.get('group_by_movement', 0) \
+         or kw.get('group_by_resource', 0)):
+        kw['group_by_movement'] = 1
+        kw['group_by_node'] = 1
+        kw['group_by_resource'] = 1
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetInventoryList(
                     src__=src__, ignore_variation=ignore_variation,
                     standardise=standardise, omit_simulation=omit_simulation,
-                    omit_input=omit_input, omit_output=omit_output,
                     selection_domain=selection_domain,
                     selection_report=selection_report, precision=precision,
-                    **sql_kw)
+                    inventory_list=inventory_list, 
+                    statistic=statistic, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryList')
@@ -689,15 +819,19 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventoryList')
-    def getAvailableInventoryList(self, **kw):
+    def getAvailableInventoryList(self, omit_transit=1, transit_simulation_state=None, **kw):
       """
         Returns list of current inventory grouped by section or site
       """
-      # XXX Current calculation is not consistent with getAvailableInventory
-      kw['simulation_state'] = tuple(
-                    list(self.getPortalReservedInventoryStateList()) + \
-                    list(self.getPortalCurrentInventoryStateList()))
-      return self.getInventoryList(**kw)
+      if transit_simulation_state is None:
+        transit_simulation_state = self.getPortalTransitInventoryStateList()
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList() + \
+                               self.getPortalTransitInventoryStateList()
+      reserved_kw = {'simulation_state': self.getPortalReservedInventoryStateList(),
+                     'transit_simulation_state': transit_simulation_state,
+                     'omit_input': 1}
+      return self.getInventoryList(reserved_kw=reserved_kw, omit_transit=omit_transit,
+                     transit_simulation_state=transit_simulation_state, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventoryList')
@@ -714,10 +848,7 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryStat')
-    def getInventoryStat(self, src__=0, ignore_variation=0, standardise=0,
-                         omit_simulation=0, omit_input=0, omit_output=0,
-                         selection_domain=None, selection_report=None,
-                         precision=None, **kw):
+    def getInventoryStat(self, simulation_period='', **kw):
       """
       getInventoryStat is the pending to getInventoryList in order to
       provide statistics on getInventoryList lines in ListBox such as:
@@ -725,30 +856,17 @@ class SimulationTool(BaseTool):
       nodes, etc.
       """
       kw['group_by_variation'] = 0
-      sql_kw = self._generateSQLKeywordDict(**kw)
-      result = self.Resource_zGetInventory(
-          src__=src__, ignore_variation=ignore_variation,
-          standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain,
-          selection_report=selection_report,
-          precision=precision, **sql_kw)
-      return result
+      method = getattr(self,'get%sInventoryList' % simulation_period)
+      return self.getInventoryList(statistic=1, inventory_list=0, 
+                                   ignore_group_by=1, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryStat')
-    def getCurrentInventoryStat(self, omit_transit=1, 
-                                transit_simulation_state=None, **kw):
+    def getCurrentInventoryStat(self, **kw):
       """
       Returns statistics of current inventory grouped by section or site
       """
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList() + \
-                               self.getPortalTransitInventoryStateList()
-      if transit_simulation_state is None:
-        transit_simulation_state = self.getPortalTransitInventoryStateList()
-      return self.getInventoryStat(omit_transit=omit_transit,
-                               transit_simulation_state=transit_simulation_state,
-                               **kw)
+      return self.getInventoryStat(simulation_period='Current', **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventoryStat')
@@ -756,11 +874,7 @@ class SimulationTool(BaseTool):
       """
       Returns statistics of current inventory grouped by section or site
       """
-      # XXX Current calculation is not consistent with getAvailableInventory
-      kw['simulation_state'] = tuple(
-                    list(self.getPortalReservedInventoryStateList()) + \
-                    list(self.getPortalCurrentInventoryStateList()))
-      return self.getInventoryStat(**kw)
+      return self.getInventoryStat(simulation_period='Available', **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventoryStat')
@@ -768,12 +882,7 @@ class SimulationTool(BaseTool):
       """
       Returns statistics of future inventory grouped by section or site
       """
-      kw['simulation_state'] = tuple(
-                 list(self.getPortalFutureInventoryStateList()) + \
-                 list(self.getPortalTransitInventoryStateList()) + \
-                 list(self.getPortalReservedInventoryStateList()) + \
-                 list(self.getPortalCurrentInventoryStateList()))
-      return self.getInventoryStat(**kw)
+      return self.getInventoryStat(simulation_period='Future', **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryChart')
@@ -815,21 +924,14 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryAssetPrice')
-    def getInventoryAssetPrice(self, src__=0, ignore_variation=0,
-                               standardise=0, omit_simulation=0, omit_input=0,
-                               omit_output=0, selection_domain=None,
-                               selection_report=None, precision=None, **kw):
+    def getInventoryAssetPrice(self, src__=0, 
+                               simulation_period='', **kw):
       """
       Same thing as getInventory but returns an asset
       price rather than an inventory.
       """
-      sql_kw = self._generateSQLKeywordDict(**kw)
-      result = self.Resource_zGetInventory(
-          src__=src__, ignore_variation=ignore_variation,
-          standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report,
-          precision=precision, **sql_kw)
+      method = getattr(self,'get%sInventoryList' % simulation_period)
+      result = method( src__=src__, inventory_list=0, ignore_group_by=1, **kw)
       if src__ :
         return result
 
@@ -848,7 +950,7 @@ class SimulationTool(BaseTool):
       Returns list of current inventory grouped by section or site
       """
       kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
-      return self.getInventoryAssetPrice(**kw)
+      return self.getInventoryAssetPrice(simulation_period='Current',**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventoryAssetPrice')
@@ -969,21 +1071,16 @@ class SimulationTool(BaseTool):
           selection_report=selection_report, precision=precision, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
-    def getNextNegativeInventoryDate(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, precision=None, **kw):
+    def getNextNegativeInventoryDate(self, src__=0, **kw):
       """
       Returns statistics of inventory grouped by section or site
       """
-      sql_kw = self._generateSQLKeywordDict(order_by_expression='stock.date', **kw)
-      sql_kw['group_by_expression'] = 'stock.uid'
-      sql_kw['order_by_expression'] = 'stock.date'
+      #sql_kw = self._generateSQLKeywordDict(order_by_expression='stock.date', **kw)
+      #sql_kw['group_by_expression'] = 'stock.uid'
+      #sql_kw['order_by_expression'] = 'stock.date'
 
-      result = self.Resource_zGetInventory(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report,
-          precision=precision, **sql_kw)
+      result = self.getInventoryList(src__=src__,
+          sort_on = (('date','ascending'),), group_by_movement=1, **kw)
       if src__ :
         return result
 
