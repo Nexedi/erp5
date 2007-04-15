@@ -75,6 +75,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>inventory_list</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>omit_input</string> </key>
                                 <value>
                                   <dictionary/>
@@ -110,6 +116,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>precision</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>section_filtered</string> </key>
                                 <value>
                                   <dictionary/>
@@ -129,6 +141,12 @@
                             </item>
                             <item>
                                 <key> <string>standardize</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>statistic</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -160,6 +178,9 @@
 <string>omit_output</string>
 <string>input_simulation_state</string>
 <string>output_simulation_state</string>
+<string>precision</string>
+<string>inventory_list</string>
+<string>statistic</string>
                           </list>
                         </value>
                     </item>
@@ -189,7 +210,10 @@ section_filtered\r\n
 omit_input\r\n
 omit_output\r\n
 input_simulation_state:list\r\n
-output_simulation_state:list</string> </value>
+output_simulation_state:list\r\n
+precision\r\n
+inventory_list\r\n
+statistic</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -230,10 +254,17 @@ output_simulation_state:list</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 SELECT\n
+<dtml-if expr="precision is not None">\n
+  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS inventory,\n
+  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
+  SUM(ROUND(stock.total_price, <dtml-var precision>)) AS total_price\n
+<dtml-else>\n
   SUM(stock.quantity) AS inventory,\n
   SUM(stock.quantity) AS total_quantity,\n
-  SUM(stock.total_price) AS total_price,\n
-  node.title AS node_title,\n
+  SUM(stock.total_price) AS total_price\n
+</dtml-if>\n
+<dtml-if inventory_list>\n
+  ,node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
   section.title AS section_title,\n
   section.relative_url AS section_relative_url,\n
@@ -249,6 +280,21 @@ SELECT\n
   stock.payment_uid as payment_uid,\n
   stock.mirror_node_uid as mirror_node_uid,\n
   catalog.path as path\n
+</dtml-if>\n
+<dtml-if statistic>\n
+  ,\n
+  COUNT(DISTINCT node.title) AS node_title,\n
+  COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
+  COUNT(DISTINCT section.title) AS section_title,\n
+  COUNT(DISTINCT section.relative_url) AS section_relative_url,\n
+  COUNT(DISTINCT resource.title) AS resource_title,\n
+  COUNT(DISTINCT resource.relative_url) AS resource_relative_url,\n
+  COUNT(DISTINCT stock.variation_text) AS variation_text,\n
+  MAX(stock.resource_uid) AS resource_uid,\n
+  COUNT(DISTINCT stock.uid) AS stock_uid,\n
+  MAX(stock.date) AS date\n
+</dtml-if>\n
+\n
 \n
 FROM\n
   stock\n
@@ -276,59 +322,16 @@ WHERE\n
   AND catalog.portal_type != \'Simulation Movement\'\n
 </dtml-if>\n
 \n
-<dtml-if omit_input>\n
-  AND stock.quantity < 0\n
-  AND ( stock.node_uid <> stock.mirror_node_uid\n
-        OR stock.section_uid <> stock.mirror_section_uid\n
-        OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL\n
-        OR stock.payment_uid IS NOT NULL )\n
-</dtml-if>\n
-<dtml-if omit_output>\n
-  AND stock.quantity > 0\n
-  AND ( stock.node_uid <> stock.mirror_node_uid\n
-        OR stock.section_uid <> stock.mirror_section_uid\n
-        OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL\n
-        OR stock.payment_uid IS NOT NULL )\n
-</dtml-if>\n
-\n
-<dtml-if input_simulation_state>\n
-  <dtml-if output_simulation_state>\n
-    <dtml-if "input_simulation_state == output_simulation_state">\n
-      AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-        <dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
-    <dtml-else>\n
-      AND ((stock.quantity>0\n
-        AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-          <dtml-unless sequence-end> OR </dtml-unless></dtml-in>))\n
-      OR (stock.quantity<0\n
-        AND (<dtml-in output_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-          <dtml-unless sequence-end> OR </dtml-unless></dtml-in>)))\n
-    </dtml-if>\n
-  <dtml-else>\n
-    AND stock.quantity>0\n
-    AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-      <dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
-  </dtml-if>\n
-<dtml-elif output_simulation_state>\n
-  AND stock.quantity<0\n
-  AND (<dtml-in output_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-    <dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
-</dtml-if>\n
-\n
 <dtml-if selection_domain>\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'stock\', join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
+<dtml-if group_by_expression>\n
 GROUP BY\n
-  <dtml-if group_by_expression>\n
     <dtml-var group_by_expression>\n
-  <dtml-else>\n
-    stock.uid, stock.node_uid, stock.resource_uid\n
-  </dtml-if>\n
+</dtml-if>\n
 <dtml-if order_by_expression>\n
 ORDER BY\n
   <dtml-var order_by_expression>\n
@@ -372,10 +375,17 @@ ORDER BY\n
                         <value> <string encoding="cdata"><![CDATA[
 
 SELECT\n
+<dtml-if expr="precision is not None">\n
+  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS inventory,\n
+  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
+  SUM(ROUND(stock.total_price, <dtml-var precision>)) AS total_price\n
+<dtml-else>\n
   SUM(stock.quantity) AS inventory,\n
   SUM(stock.quantity) AS total_quantity,\n
-  SUM(stock.total_price) AS total_price,\n
-  node.title AS node_title,\n
+  SUM(stock.total_price) AS total_price\n
+</dtml-if>\n
+<dtml-if inventory_list>\n
+  ,node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
   section.title AS section_title,\n
   section.relative_url AS section_relative_url,\n
@@ -391,6 +401,21 @@ SELECT\n
   stock.payment_uid as payment_uid,\n
   stock.mirror_node_uid as mirror_node_uid,\n
   catalog.path as path\n
+</dtml-if>\n
+<dtml-if statistic>\n
+  ,\n
+  COUNT(DISTINCT node.title) AS node_title,\n
+  COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
+  COUNT(DISTINCT section.title) AS section_title,\n
+  COUNT(DISTINCT section.relative_url) AS section_relative_url,\n
+  COUNT(DISTINCT resource.title) AS resource_title,\n
+  COUNT(DISTINCT resource.relative_url) AS resource_relative_url,\n
+  COUNT(DISTINCT stock.variation_text) AS variation_text,\n
+  MAX(stock.resource_uid) AS resource_uid,\n
+  COUNT(DISTINCT stock.uid) AS stock_uid,\n
+  MAX(stock.date) AS date\n
+</dtml-if>\n
+\n
 \n
 FROM\n
   stock\n
@@ -418,59 +443,16 @@ WHERE\n
   AND catalog.portal_type != \'Simulation Movement\'\n
 </dtml-if>\n
 \n
-<dtml-if omit_input>\n
-  AND stock.quantity < 0\n
-  AND ( stock.node_uid <> stock.mirror_node_uid\n
-        OR stock.section_uid <> stock.mirror_section_uid\n
-        OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL\n
-        OR stock.payment_uid IS NOT NULL )\n
-</dtml-if>\n
-<dtml-if omit_output>\n
-  AND stock.quantity > 0\n
-  AND ( stock.node_uid <> stock.mirror_node_uid\n
-        OR stock.section_uid <> stock.mirror_section_uid\n
-        OR stock.mirror_node_uid IS NULL\n
-        OR stock.mirror_section_uid IS NULL\n
-        OR stock.payment_uid IS NOT NULL )\n
-</dtml-if>\n
-\n
-<dtml-if input_simulation_state>\n
-  <dtml-if output_simulation_state>\n
-    <dtml-if "input_simulation_state == output_simulation_state">\n
-      AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-        <dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
-    <dtml-else>\n
-      AND ((stock.quantity>0\n
-        AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-          <dtml-unless sequence-end> OR </dtml-unless></dtml-in>))\n
-      OR (stock.quantity<0\n
-        AND (<dtml-in output_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-          <dtml-unless sequence-end> OR </dtml-unless></dtml-in>)))\n
-    </dtml-if>\n
-  <dtml-else>\n
-    AND stock.quantity>0\n
-    AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-      <dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
-  </dtml-if>\n
-<dtml-elif output_simulation_state>\n
-  AND stock.quantity<0\n
-  AND (<dtml-in output_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'\n
-    <dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
-</dtml-if>\n
-\n
 <dtml-if selection_domain>\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'stock\', join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
+<dtml-if group_by_expression>\n
 GROUP BY\n
-  <dtml-if group_by_expression>\n
     <dtml-var group_by_expression>\n
-  <dtml-else>\n
-    stock.uid, stock.node_uid, stock.resource_uid\n
-  </dtml-if>\n
+</dtml-if>\n
 <dtml-if order_by_expression>\n
 ORDER BY\n
   <dtml-var order_by_expression>\n
