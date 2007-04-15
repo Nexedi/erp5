@@ -212,6 +212,7 @@ class SimulationTool(BaseTool):
       # Simulation States
       # If strict_simulation_state is set, we directly put it into the dictionary
       from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+      simulation_query = None
       if strict_simulation_state:
         if isinstance(simulation_state, string_or_list)\
                 and simulation_state:
