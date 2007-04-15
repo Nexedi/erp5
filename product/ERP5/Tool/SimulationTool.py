@@ -765,13 +765,28 @@ class SimulationTool(BaseTool):
       Returns future inventory
       """
       return self.getInventory(simulation_period='Future', **kw)
+    
+    def _getDefaultGroupByParameters(self, ignore_group_by=0, **kw):
+      """
+      Set defaults group_by parameters
+      """
+      if not (ignore_group_by \
+         or kw.get('group_by_node', 0) or kw.get('group_by_mirror_node', 0) \
+         or kw.get('group_by_section', 0) or kw.get('group_by_mirror_section', 0) \
+         or kw.get('group_by_payment', 0) or kw.get('group_by_sub_variation', 0) \
+         or kw.get('group_by_variation', 0) or kw.get('group_by_movement', 0) \
+         or kw.get('group_by_resource', 0)):
+        kw['group_by_movement'] = 1
+        kw['group_by_node'] = 1
+        kw['group_by_resource'] = 1
+      return kw
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryList')
     def getInventoryList(self, src__=0, ignore_variation=0, standardise=0,
                          omit_simulation=0, 
                          selection_domain=None, selection_report=None,
-                         statistic=0, inventory_list=1, ignore_group_by=0,
+                         statistic=0, inventory_list=1, 
                          precision=None, **kw):
       """
         Returns a list of inventories for a single or multiple
@@ -782,16 +797,8 @@ class SimulationTool(BaseTool):
         the kind of inventory statistics we want to display (ex. sum,
         average, cost, etc.)
       """
+      kw = self._getDefaultGroupByParameters(**kw)
       # If no group at all, give a default sort group by
-      if not (ignore_group_by \
-         or kw.get('group_by_node', 0) or kw.get('group_by_mirror_node', 0) \
-         or kw.get('group_by_section', 0) or kw.get('group_by_mirror_section', 0) \
-         or kw.get('group_by_payment', 0) or kw.get('group_by_sub_variation', 0) \
-         or kw.get('group_by_variation', 0) or kw.get('group_by_movement', 0) \
-         or kw.get('group_by_resource', 0)):
-        kw['group_by_movement'] = 1
-        kw['group_by_node'] = 1
-        kw['group_by_resource'] = 1
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetInventoryList(
                     src__=src__, ignore_variation=ignore_variation,
@@ -1174,12 +1181,14 @@ class SimulationTool(BaseTool):
                delivered for the last time before at_date or to_date". Cannot be used with input
 
       """
+      kw = self._getDefaultGroupByParameters(**kw)
       new_kw = self._generateSQLKeywordDict(table='item',strict_simulation_state=strict_simulation_state,**kw)
       at_date = kw.get('at_date',None)
       if at_date is not None:
         from Products.ZSQLCatalog.SQLCatalog import QueryMixin
         query_mixin = QueryMixin()
         at_date = query_mixin._quoteSQLString(at_date)
+        at_date = at_date.strip("'")
       # Do not remove at_date in new_kw, it is required in 
       # order to do a "select item left join item on date"
       new_kw['at_date'] = at_date
