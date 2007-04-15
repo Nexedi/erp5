@@ -178,8 +178,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
            ) + self.GROUP_CATEGORIES
   
   def getBusinessTemplateList(self):
-    """ """
-    return ('erp5_base', 'erp5_dummy_movement')
+    """ erp5_trade is required for transit_simulation_state"""
+    return ('erp5_base', 'erp5_dummy_movement', 'erp5_trade')
 
   # TODO: move this to a base class {{{
   @reindex
@@ -666,7 +666,7 @@ class TestInventoryList(InventoryAPITestCase):
     self._makeMovement(resource_value=self.other_resource, quantity=100)
     # group_by_resource is implicit ...
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
-                                      group_by_node=1)
+                                      group_by_node=1, group_by_resource=1)
     self.assertEquals(2, len(inventory_list))
     self.assertEquals([r for r in inventory_list if r.resource_relative_url ==
                   self.resource.getRelativeUrl()][0].inventory, 100)
@@ -740,6 +740,46 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEquals(-2, inventory_list[0].total_price)
     self.assertEquals(-2, inventory_list[0].total_quantity)
 
+  def test_CurentAvailableFutureInventoryList(self):
+    def makeMovement(simulation_state=None, quantity=None):
+      self._makeMovement(quantity=quantity, price=1,
+                         source_value=self.node,
+                         destination_value=self.other_node,
+                         #source_section_value=self.section,
+                         #destination_section_value=self.other_section,
+                         #source_payment_value=self.payment_node,
+                         #destination_payment_value=self.other_payment_node,
+                         simulation_state=simulation_state)
+    def checkInventory(line=0, type='Current', destination=0, source=0, quantity=None):
+      method = getattr(self.getSimulationTool(),'get%sInventoryList' % type)
+      if source:
+        node_uid = self.node.getUid()
+      if destination:
+        node_uid = self.other_node.getUid()
+      inventory_list = method(node_uid=node_uid)
+      self.assertEquals(len(inventory_list), line)
+      if quantity is not None:
+        self.assertEquals(sum([x.total_quantity for x in inventory_list]), 
+                          quantity)
+    makeMovement(quantity=1, simulation_state='ordered')
+    checkInventory(line=0, type='Current', destination=1)
+    checkInventory(line=0, type='Available', destination=1)
+    checkInventory(line=1, type='Future', source=1, quantity=-1)
+    checkInventory(line=1, type='Future', destination=1, quantity=1)
+    makeMovement(quantity=3, simulation_state='confirmed')
+    checkInventory(line=0, type='Current', source=1)
+    checkInventory(line=0, type='Current', destination=1)
+    checkInventory(line=1, type='Available', source=1, quantity=-3)
+    checkInventory(line=0, type='Available', destination=1)
+    checkInventory(line=2, type='Future', source=1, quantity=-4)
+    checkInventory(line=2, type='Future', destination=1, quantity=4)
+    makeMovement(quantity=5, simulation_state='started')
+    checkInventory(line=1, type='Current', source=1, quantity=-5)
+    checkInventory(line=0, type='Current', destination=1)
+    checkInventory(line=2, type='Available', source=1, quantity=-8)
+    checkInventory(line=0, type='Available', destination=1)
+    checkInventory(line=3, type='Future', source=1, quantity=-9)
+    checkInventory(line=3, type='Future', destination=1, quantity=9)
 
 class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
@@ -1294,11 +1334,52 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals(-2, movement_history_list[0].total_price)
     self.assertEquals(-2, movement_history_list[0].total_quantity)
 
+class TestNextNegativeInventoryDate(InventoryAPITestCase):
+  """Tests getInventory methods.
+  """
+  def testNode(self):
+    getNextNegativeInventoryDate = self.getSimulationTool().getNextNegativeInventoryDate
+    def makeMovement(start_date=None, quantity=None, change_way=0):
+      if not change_way:
+        source_value = self.node
+        destination_value = self.other_node,
+      else:
+        source_value = self.other_node
+        destination_value = self.node,
+      self._makeMovement(quantity=quantity, price=1,
+                         source_value=source_value,
+                         destination_value=destination_value,
+                         start_date=start_date,
+                         simulation_state='planned')
+    node_uid = self.node.getUid()
+    date = DateTime(DateTime().strftime('%Y/%m/%d'))
+    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    makeMovement(quantity=1, change_way=1, start_date=date)
+    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    makeMovement(quantity=3, change_way=0, start_date=date+2)
+    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), date+2)
+    makeMovement(quantity=5, change_way=1, start_date=date+1)
+    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    makeMovement(quantity=7, change_way=0, start_date=date+3)
+    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), date+3)
 
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
   """
-  # TODO
+  def testStockUidQuantity(self):
+    getInventoryStat = self.getSimulationTool().getInventoryStat
+    def makeMovement(quantity=None):
+      self._makeMovement(quantity=quantity, price=1,
+                         source_value=self.other_node,
+                         destination_value=self.node)
+    node_uid = self.node.getUid()
+    makeMovement(quantity=1)
+    self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 1)
+    makeMovement(quantity=3)
+    self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 2)
+    makeMovement(quantity=5)
+    self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 3)
+
 
 if __name__ == '__main__':
   framework()
@@ -1309,6 +1390,8 @@ else:
     suite.addTest(unittest.makeSuite(TestInventory))
     suite.addTest(unittest.makeSuite(TestInventoryList))
     suite.addTest(unittest.makeSuite(TestMovementHistoryList))
+    suite.addTest(unittest.makeSuite(TestInventoryStat))
+    suite.addTest(unittest.makeSuite(TestNextNegativeInventoryDate))
     suite.addTest(unittest.makeSuite(TestInventoryStat))
     return suite
 
