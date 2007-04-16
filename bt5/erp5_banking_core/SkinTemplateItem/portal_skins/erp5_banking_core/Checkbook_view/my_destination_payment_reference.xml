@@ -324,7 +324,7 @@
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
-                    <value> <string>reference</string> </value>
+                    <value> <string>string_index</string> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
@@ -332,11 +332,11 @@
                       <list>
                         <tuple>
                           <string>getReference</string>
-                          <string>Account Number</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>getInternalReference</string>
-                          <string>Internal Account Number</string>
+                          <string>getInternalBankAccountNumber</string>
+                          <string>Internal Reference</string>
                         </tuple>
                         <tuple>
                           <string>getBicCode</string>
@@ -345,6 +345,14 @@
                         <tuple>
                           <string>getParentTitle</string>
                           <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>getSiteTitle</string>
+                          <string>Site</string>
+                        </tuple>
+                        <tuple>
+                          <string>getValidationStateTitle</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -375,7 +383,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>24</int> </value>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -503,7 +511,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getDestinationPaymentValue().getReference()</string> </value>
+            <value> <string>python: here.getDestinationPaymentValue().getInternalBankAccountNumber()</string> </value>
         </item>
       </dictionary>
     </pickle>

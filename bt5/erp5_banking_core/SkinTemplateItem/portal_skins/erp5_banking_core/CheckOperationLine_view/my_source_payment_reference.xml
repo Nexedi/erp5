@@ -223,7 +223,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>
@@ -296,7 +298,7 @@
                 <item>
                     <key> <string>parameter_list</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -364,7 +366,7 @@
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
-                    <value> <string>reference</string> </value>
+                    <value> <string>string_index</string> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
@@ -372,11 +374,11 @@
                       <list>
                         <tuple>
                           <string>getReference</string>
-                          <string>Account Number</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>getInternalReference</string>
-                          <string>Internal Account Number</string>
+                          <string>getInternalBankAccountNumber</string>
+                          <string>Internal Reference</string>
                         </tuple>
                         <tuple>
                           <string>getBicCode</string>
@@ -385,6 +387,14 @@
                         <tuple>
                           <string>getParentTitle</string>
                           <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>getSiteTitle</string>
+                          <string>Site</string>
+                        </tuple>
+                        <tuple>
+                          <string>getValidationStateTitle</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -415,7 +425,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>24</int> </value>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -533,6 +543,22 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getSourcePaymentValue().getInternalBankAccountNumber()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="TALESMethod" module="Products.Formulator.TALESField"/>
