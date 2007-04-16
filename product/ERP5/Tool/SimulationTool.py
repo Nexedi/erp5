@@ -46,7 +46,7 @@ from Products.ERP5 import DeliverySolver
 from Products.ERP5 import TargetSolver
 from Products.PythonScripts.Utility import allow_class
 
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, QueryMixin
 
 class SimulationTool(BaseTool):
     """
@@ -211,12 +211,12 @@ class SimulationTool(BaseTool):
       string_or_list = (str, list, tuple)
       # Simulation States
       # If strict_simulation_state is set, we directly put it into the dictionary
-      from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
       simulation_query = None
       if strict_simulation_state:
         if isinstance(simulation_state, string_or_list)\
                 and simulation_state:
-           simulation_query = Query(**{'stock.simulation_state':simulation_state})
+           simulation_query = Query(
+                   **{'stock.simulation_state': simulation_state})
       else:
         # first, we evaluate simulation_state
         sql_kw = {}
@@ -273,33 +273,42 @@ class SimulationTool(BaseTool):
         if input_simulation_state is not None:
           if output_simulation_state is not None:
             if input_simulation_state == output_simulation_state:
-              simulation_query = Query(**{'simulation_state': input_simulation_state,
-                                    'operator':'OR'})
+              simulation_query = Query(
+                         **{'stock.simulation_state': input_simulation_state,
+                         'operator':'OR'})
             else:
-              input_quantity_query = Query(**{'quantity': '>0'})
-              input_simulation_query = Query(**{'simulation_state': input_simulation_state,
-                                             'operator':'OR'})
-              input_query = ComplexQuery(input_quantity_query, input_simulation_query,
+              input_quantity_query = Query(**{'stock.quantity': '>0'})
+              input_simulation_query = Query(
+                         **{'stock.simulation_state': input_simulation_state,
+                         'operator':'OR'})
+              input_query = ComplexQuery(input_quantity_query, 
+                                         input_simulation_query,
                                          operator='AND')
-              output_quantity_query = Query(**{'quantity': '<0'})
-              output_simulation_query = Query(**{'simulation_state': output_simulation_state,
-                                     'operator':'OR'})
-              output_query = ComplexQuery(output_quantity_query, output_simulation_query,
+              output_quantity_query = Query(**{'stock.quantity': '<0'})
+              output_simulation_query = Query(
+                        **{'stock.simulation_state': output_simulation_state,
+                        'operator':'OR'})
+              output_query = ComplexQuery(output_quantity_query, 
+                                          output_simulation_query,
                                          operator='AND')
               simulation_query = ComplexQuery(input_query, output_query, operator='OR')
           else:
-            input_quantity_query = Query(**{'quantity': '>0'})
-            input_simulation_query_kw = {'simulation_state': input_simulation_state,
-                                   'operator':'OR'}
+            input_quantity_query = Query(**{'stock.quantity': '>0'})
+            input_simulation_query_kw = {
+                       'stock.simulation_state': input_simulation_state,
+                       'operator':'OR'}
             input_simulation_query = Query(**input_simulation_query_kw)
-            simulation_query = ComplexQuery(input_quantity_query, input_simulation_query,
+            simulation_query = ComplexQuery(input_quantity_query, 
+                                            input_simulation_query,
                                             operator = 'AND')
         elif output_simulation_state is not None:
-          output_quantity_query = Query(**{'quantity': '<0'})
-          output_simulation_query_kw = {'simulation_state': output_simulation_state,
-                                 'operator':'OR'}
+          output_quantity_query = Query(**{'stock.quantity': '<0'})
+          output_simulation_query_kw = {
+                  'stock.simulation_state': output_simulation_state,
+                  'operator':'OR'}
           output_simulation_query = Query(**output_simulation_query_kw)
-          simulation_query = ComplexQuery(output_quantity_query, output_simulation_query,
+          simulation_query = ComplexQuery(output_quantity_query, 
+                                          output_simulation_query,
                                           operator = 'AND')
       return simulation_query
 
@@ -312,18 +321,19 @@ class SimulationTool(BaseTool):
       omit_query = None
       if omit_input or omit_output:
         # Make sure to check some conditions
-        condition_expression = "%s.node_uid <> %s.mirror_node_uid \
-                                OR %s.section_uid <> %s.mirror_section_uid \
-                                OR %s.mirror_node_uid IS NULL \
-                                OR %s.mirror_section_uid IS NULL \
-                                OR %s.payment_uid IS NOT NULL \
-                                " % ((query_table,) * 7)
+        condition_expression = \
+          "%(query_table)s.node_uid <> %(query_table)s.mirror_node_uid \
+         OR %(query_table)s.section_uid <> %(query_table)s.mirror_section_uid \
+         OR %(query_table)s.mirror_node_uid IS NULL \
+         OR %(query_table)s.mirror_section_uid IS NULL \
+         OR %(query_table)s.payment_uid IS NOT NULL \
+           " % {'query_table': query_table}
         if omit_input:
-          quantity_query = Query(**{'quantity': '<0'})
+          quantity_query = Query(**{'%s.quantity' % query_table: '<0'})
           omit_query = ComplexQuery(quantity_query, condition_expression,
                                     operator='AND')
         if omit_output:
-          quantity_query = Query(**{'quantity': '>0'})
+          quantity_query = Query(**{'%s.quantity' % query_table: '>0'})
           if omit_query is None:
             omit_query = ComplexQuery(quantity_query, condition_expression,
                                       operator='AND')
@@ -593,8 +603,7 @@ class SimulationTool(BaseTool):
           group_by_expression_list.append('%s.resource_uid' % table)
         new_kw['group_by_expression'] = ', '.join(group_by_expression_list)
       
-      sql_kw.update(self.portal_catalog.buildSQLQuery(query_table=table,
-                                                      **new_kw))
+      sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
       return sql_kw
 
     #######################################################
@@ -1078,7 +1087,8 @@ class SimulationTool(BaseTool):
           omit_output=omit_output, selection_domain=selection_domain,
           selection_report=selection_report, precision=precision, **sql_kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getNextNegativeInventoryDate')
     def getNextNegativeInventoryDate(self, src__=0, **kw):
       """
       Returns statistics of inventory grouped by section or site
@@ -1088,7 +1098,7 @@ class SimulationTool(BaseTool):
       #sql_kw['order_by_expression'] = 'stock.date'
 
       result = self.getInventoryList(src__=src__,
-          sort_on = (('date','ascending'),), group_by_movement=1, **kw)
+          sort_on = (('stock.date', 'ascending'),), group_by_movement=1, **kw)
       if src__ :
         return result
 
@@ -1185,7 +1195,6 @@ class SimulationTool(BaseTool):
       new_kw = self._generateSQLKeywordDict(table='item',strict_simulation_state=strict_simulation_state,**kw)
       at_date = kw.get('at_date',None)
       if at_date is not None:
-        from Products.ZSQLCatalog.SQLCatalog import QueryMixin
         query_mixin = QueryMixin()
         at_date = query_mixin._quoteSQLString(at_date)
         at_date = at_date.strip("'")
