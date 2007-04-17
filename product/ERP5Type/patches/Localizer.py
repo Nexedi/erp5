@@ -100,3 +100,22 @@ try:
   GlobalTranslationService.translate = GlobalTranslationService_translate
 except ImportError:
   pass
+
+
+# Fix MessageCatalog's manage_export that fails with unicode strings
+from Products.Localizer.MessageCatalog import MessageCatalog
+original_manage_export = MessageCatalog.manage_export
+def cleanup_and_export(self, x, REQUEST=None, RESPONSE=None):
+  """Path manage_export to cleanup messages whose keys are unicode objects
+  before exporting.
+  """
+  message_keys = self._messages.keys()
+  for k in message_keys:
+    if isinstance(k, unicode):
+      message = self._messages.get(k.encode('utf8'),
+                 self._messages.get(k))
+      del self._messages[k]
+      self._messages[k.encode('utf8')] = message
+  return original_manage_export(self, x, REQUEST=REQUEST, RESPONSE=RESPONSE)
+MessageCatalog.manage_export = cleanup_and_export
+
