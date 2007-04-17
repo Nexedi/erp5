@@ -900,7 +900,8 @@ class TestERP5BankingMixin:
                   price = movement_line.getResourceValue().getBasePrice())
 
 
-  def createCashInventory(self, source, destination, currency, line_list=[],extra_id=''):
+  def createCashInventory(self, source, destination, currency, line_list=[],extra_id='',
+                          reset_quantity=0):
     """
     Create a cash inventory group
     """
@@ -942,7 +943,8 @@ class TestERP5BankingMixin:
                                  line['variation_id'],
                                  line['variation_value'],
                                  line['quantity'],
-                                 variation_list=variation_list)
+                                 variation_list=variation_list,
+                                 reset_quantity=reset_quantity)
     # deliver the inventory
     if inventory.getSimulationState()!='delivered':
       inventory.deliver()
@@ -951,7 +953,7 @@ class TestERP5BankingMixin:
 
   def addCashLineToDelivery(self, delivery_object, line_id, line_portal_type, resource_object,
           variation_base_category_list, variation_category_list, resource_quantity_dict,
-          variation_list=None):
+          variation_list=None, reset_quantity=0):
     """
     Add a cash line to a delivery
      """
@@ -986,7 +988,10 @@ class TestERP5BankingMixin:
       v1, v2 = variation_category_list[:2]
       cell = line.getCell(v1, variation, v2)
       if cell is not None:
-        cell.setQuantity(resource_quantity_dict[variation])
+        quantity = resource_quantity_dict[variation]
+        if reset_quantity:
+          quantity = 0
+        cell.setQuantity(quantity)
 
 
   def checkResourceCreated(self):
@@ -1036,11 +1041,8 @@ class TestERP5BankingMixin:
     else:
       extra_id = '_reset'
     # Before the test, we need to input the inventory
-    for line in line_list:
-      for variation in line['quantity'].keys():
-        line['quantity'][variation] = 0
     self.createCashInventory(source=None, destination=destination, currency=currency,
-                             line_list=line_list,extra_id=extra_id)
+                             line_list=line_list,extra_id=extra_id, reset_quantity=1)
 
   def stepDeleteResetInventory(self, sequence=None, sequence_list=None, **kwd):
     """
