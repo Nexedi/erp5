@@ -45,7 +45,7 @@ from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
 
-from zLOG import LOG
+from zLOG import LOG, INFO
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -801,7 +801,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalDocumentTypeList(),
                 reference=self.getReference(),
-                validation_state="!=deleted") # XXX Either use a system pref
+                validation_state="!=cancelled") # XXX Either use a system pref
                                                # or implement a class method
                                                # because !=delete is hardcoded
       if self.getVersion(): kw['version'] = self.getVersion()
@@ -810,7 +810,9 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       existing_document = None
       # Select the first one which is not self and which
       # shares the same coordinates
-      LOG('existing_document', 0, str(len(document_list)))
+      document_list = list(document_list)
+      document_list.sort(lambda x,y: cmp(x.getId(), y.getId() ))
+      LOG('[DMS] Existing documents for %s' %self.getSourceReference(), INFO, len(document_list))
       for o in document_list:
         if o.getRelativeUrl() != self.getRelativeUrl() and\
            o.getVersion() == self.getVersion() and\
@@ -821,10 +823,10 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       if existing_document is not None:
         document = existing_document
         if existing_document.getPortalType() != self.getPortalType():
-          raise ValueError, "Ingestion may not change the type of an existing document"
+          raise ValueError, "[DMS] Ingestion may not change the type of an existing document"
         elif not _checkPermission(Permissions.ModifyPortalContent, existing_document):
           self.setUniqueReference(suffix='unauthorized')
-          raise Unauthorized, "You are not allowed to update this document"
+          raise Unauthorized, "[DMS] You are not allowed to update this document"
         else:
           update_kw = {}
           for k in self.propertyIds():
@@ -963,8 +965,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
 
       user_login - this is a login string of a person; can be None if the user is
                    currently logged in, then we'll get him from session
-    """
-
+    """   
     # Get the order
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
     self._setSourceReference(file_name) # XXX Who added this ???
@@ -1000,7 +1001,6 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       del(kw['portal_type'])
     except KeyError:
       pass
-
     self._edit(**kw) # Try not to invoke an automatic transition here
     self.finishIngestion() # Finish ingestion by calling method
     self.reindexObject()
