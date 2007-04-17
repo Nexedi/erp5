@@ -36,6 +36,7 @@ from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 
 from zLOG import LOG
+from zLOG import PROBLEM
 
 class Delivery(XMLObject, ImmobilisationDelivery):
     """
@@ -195,12 +196,13 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       if portal_type is None:
         portal_type = self.getPortalMovementTypeList()
       movement_list = []
+      add_movement = movement_list.append
       for m in self.contentValues(filter={'portal_type': portal_type}):
         if m.hasCellContent():
           for c in m.contentValues(filter={'portal_type': portal_type}):
-            movement_list.append(c)
+            add_movement(c)
         else:
-          movement_list.append(m)
+          add_movement(m)
       return movement_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -320,7 +322,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       deliver is convergent, and if so it will put the delivery
       in a solved state, if not convergent in a diverged state
       """
-      if hasattr(self,'diverge') and hasattr(self,'converge'):
+      if getattr(self, 'diverge', None) is not None \
+            and getattr(self, 'converge', None) is not None:
         if self.isDivergent(**kw):
           self.diverge()
         else:
@@ -645,7 +648,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           # if there are not edited (acquisition)
           my_applied_rule.recursiveReindexObject(activate_kw=activate_kw)
         else:
-          LOG("ERP5 Error:", 100,
+          LOG("ERP5", PROBLEM,
               "Could not expand applied rule %s for delivery %s" %\
                   (applied_rule_id, self.getId()))
       self.expandRuleRelatedToMovement(
