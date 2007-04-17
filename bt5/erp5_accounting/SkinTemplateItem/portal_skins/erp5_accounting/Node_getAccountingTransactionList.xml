@@ -142,11 +142,10 @@ if from_date or node_account_type in (\'expense\', \'income\'):\n
 \n
   # Show the previous balance if not empty\n
   if previous_total_credit != 0 or previous_total_debit != 0:\n
-    from Products.ERP5Type.Document import newTempAccountingTransaction\n
+    from Products.ERP5Type.Document import newTempBase\n
 \n
     net_balance = previous_total_debit - previous_total_credit\n
-    previous_balance = newTempAccountingTransaction(\n
-                            portal, \'_temp_accounting_transaction\')\n
+    previous_balance = newTempBase(portal, \'_temp_accounting_transaction\')\n
     previous_balance.edit(\n
         uid=\'new_000\',\n
         date=from_date,\n
@@ -269,7 +268,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>_apply_</string>
                             <string>True</string>
                             <string>Products.ERP5Type.Document</string>
-                            <string>newTempAccountingTransaction</string>
+                            <string>newTempBase</string>
                             <string>previous_balance</string>
                           </tuple>
                         </value>
