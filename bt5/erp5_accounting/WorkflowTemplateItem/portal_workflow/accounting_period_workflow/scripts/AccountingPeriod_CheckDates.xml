@@ -83,9 +83,6 @@ stop_date = closing_period.getStopDate()\n
 if start_date > stop_date :\n
   raise ValidationFailed, N_("Start Date is After Stop Date")\n
 \n
-if start_date.year() != stop_date.year() :\n
-  raise ValidationFailed, N_("Start Date is not the same year as Stop Date")\n
-\n
 period_list = closing_period.getParentValue().searchFolder(\n
                   simulation_state = valid_states,\n
                   sort_on = [(\'delivery.start_date\', \'asc\')],\n
