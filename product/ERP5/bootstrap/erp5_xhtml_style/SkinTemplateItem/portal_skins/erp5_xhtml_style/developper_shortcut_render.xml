@@ -90,7 +90,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
 <tal:block metal:define-macro="translate_link">\n
   <a tal:define="image image | python: \'translate.png\'"\n
-     tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message, selected_language);\n
+     tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message.replace(\'(\', \'\\(\').replace(\')\', \'\\)\'), selected_language);\n
                      title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
                                                        alt info;"/></a>\n
 </tal:block>\n
