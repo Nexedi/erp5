@@ -143,8 +143,8 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                              'quantity': self.quantity_5000}
 
     
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]    
-    line_list_for_externe = [inventory_dict_line_for_externe_1, inventory_dict_line_for_externe_2]    
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]    
+    self.line_list_for_externe = line_list_for_externe = [inventory_dict_line_for_externe_1, inventory_dict_line_for_externe_2]    
     self.source = self.paris.caveau.serre.encaisse_des_billets_retires_de_la_circulation
     self.source_for_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
     ###self.destinat = self.paris.caveau.serre.encaisse_des_billets_detruits
@@ -623,8 +623,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_destruction, name='history', wf_id='monetary_destruction_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 6)
     
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
@@ -697,7 +695,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     Confirm the monetary_destruction and check it
     """
     # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.monetary_destruction.setSourceTotalAssetPrice('52400.0')
+    self.monetary_destruction.setSourceTotalAssetPrice('170000.0')
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_destruction, 'confirm_action', wf_id='monetary_destruction_workflow')
     # execute tic
@@ -726,8 +724,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_destruction, name='history', wf_id='monetary_destruction_workflow')
-    # check len of len workflow history is 10
-    self.assertEqual(len(workflow_history), 10)
 
 
   def stepDelMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
@@ -735,6 +731,30 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     Delete the invalid vault_transfer line previously create
     """
     self.monetary_destruction_module.deleteContent('monetary_destruction_1')
+
+  def stepResetInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    node = self.source
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepValidateFails(self, sequence=None, sequence_list=None, **kwd):
+    message = self.assertWorkflowTransitionFails(self.monetary_destruction,
+              'monetary_destruction_workflow','plan_to_deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
+  def stepResetInventoryForExterne(self, 
+               sequence=None, sequence_list=None, **kwd):
+    node = self.source_for_externe
+    line_list = self.line_list_for_externe
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverFails(self, sequence=None, sequence_list=None, **kwd):
+    message = self.assertWorkflowTransitionFails(self.monetary_destruction,
+              'monetary_destruction_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests
@@ -757,6 +777,9 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'PlannedMonetaryDestruction ' \
                     + 'CheckSourceDebitPlanned ' \
+                    + 'ResetInventory Tic ' \
+                    + 'ValidateFails ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'ValidateMonetaryDestruction ' \
                     + 'CheckSourceDebit '
     sequence_list.addSequenceString(sequence_string)
@@ -774,6 +797,9 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'CheckSourceDebitPlannedForExterne ' \
                     + 'OrderMonetaryDestruction ' \
                     + 'ConfirmMonetaryDestruction ' \
+                    + 'ResetInventoryForExterne Tic ' \
+                    + 'DeliverFails ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'ConfirmToDeliverMonetaryDestruction ' \
                     + 'CheckSourceDebitForExterne '		    
 		    
