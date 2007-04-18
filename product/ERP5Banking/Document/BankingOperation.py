@@ -68,8 +68,28 @@ class BankingOperation(BaobabMixin, AccountingTransaction):
     """
     Delivery.manage_beforeDelete(self, item, container) 
     
+  security.declareProtected(Permissions.View, 'getDestinationPaymentInternalBankAccountNumber')
+  def getDestinationPaymentInternalBankAccountNumber(self, default=None):
+    """
+    Getter for internal account number
+    """
+    dest = self.getDestinationPaymentValue(default)
+    if dest is default:
+      return default
+    else:
+      return dest.getInternalBankAccountNumber(default)
 
-
+  security.declareProtected(Permissions.View, 'getSourcePaymentInternalBankAccountNumber')
+  def getSourcePaymentInternalBankAccountNumber(self, default=None):
+    """
+    Getter for internal account number
+    """
+    src = self.getSourcePaymentValue(default)
+    if src is default:
+      return default
+    else:
+      return src.getInternalBankAccountNumber(default)
+    
 ### Dynamic patch
 Delivery.getBaobabSourceUid = lambda x: x.getSourceUid()
 Delivery.getBaobabSourceUid__roles__ = PermissionRole(Permissions.View)
