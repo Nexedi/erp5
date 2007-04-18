@@ -76,6 +76,9 @@ class PDFDocument(Image, ConversionCacheMixin):
       it is always a zip because multi-page pdfs are converted into a zip
       file of many images
     """
+    if self.getSourceReference() is not None:
+        RESPONSE.setHeader('Content-Disposition', 
+                           'attachment; filename=%s' %self.getSourceReference())
     if format is None:
       RESPONSE.setHeader('Content-Type', 'application/pdf')
       return _unpackData(self.data)

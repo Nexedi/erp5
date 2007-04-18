@@ -142,6 +142,9 @@ class OOoDocument(File, ConversionCacheMixin):
     _setCacheHeaders(self, {'format' : format})
     # Return the original file by default
     if format is None:
+      if self.getSourceReference() is not None:
+        RESPONSE.setHeader('Content-Disposition', 
+                           'attachment; filename=%s' %self.getSourceReference())
       return File.index_html(self, REQUEST, RESPONSE)
     # Make sure file is converted to base format
     if not self.hasBaseData():
@@ -378,7 +381,7 @@ class OOoDocument(File, ConversionCacheMixin):
     return self._base_metadata
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
-  def updateBaseMetadata(self, **kw):
+  def updateBaseMetadata(self, *arg, **kw):
     """
       Updates metadata information in the converted OOo document
       based on the values provided by the user. This is implemented
