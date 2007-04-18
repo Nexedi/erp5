@@ -65,16 +65,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
-\n
-def getUserSiteUid(user_id):\n
-  return context.Baobab_getUserAssignedRootSiteList(user_id=user_id, object=1)[0].getSiteUid()\n
-\n
-\n
-getUserSiteUid = CachingMethod(getUserSiteUid, id=\'Baobab_getUserUserSiteUid\', cache_factory=\'erp5_ui_medium\')\n
-return getUserSiteUid(user_id=user_id)\n
+            <value> <string># Get the id of the user which last passed given transition on given workflow.\n
+workflow_item_list = context.Base_getWorkflowHistoryItemList(workflow_id, display=0)\n
+workflow_item_list.reverse()\n
+previous_state = None\n
+found_given_state = 0\n
+for workflow_item in workflow_item_list:\n
+  current_state = workflow_item.getProperty(\'state\')\n
+  context.log(\'current_state\',current_state)\n
+  if current_state == state:\n
+    found_given_state = 1\n
+    continue\n
+  if found_given_state and (current_state != state):\n
+    previous_state = current_state\n
+    break\n
+return previous_state\n
 </string> </value>
         </item>
         <item>
@@ -97,15 +102,7 @@ return getUserSiteUid(user_id=user_id)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>workflow_id, state</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,18 +122,23 @@ return getUserSiteUid(user_id=user_id)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
+                            <string>workflow_id</string>
+                            <string>state</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>user_id</string>
-                            <string>getUserSiteUid</string>
+<string>context</string>
+                            <string>workflow_item_list</string>
+                            <string>None</string>
+                            <string>previous_state</string>
+                            <string>found_given_state</string>
+                            <string>_getiter_</string>
+                            <string>workflow_item</string>
+                            <string>current_state</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,7 +155,7 @@ return getUserSiteUid(user_id=user_id)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_getUserSiteUid</string> </value>
+            <value> <string>Base_getPreviousState</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
