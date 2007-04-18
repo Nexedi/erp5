@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
-<h3>Queued Activities</h3>
+<h3>Queued Activities <dtml-var expr="len(getMessageList(include_processing=1))"></h3>
 <table cellspacing="0" cellpadding="2" border="1">
   <tr>
     <th align="left" valign="top"></th>
