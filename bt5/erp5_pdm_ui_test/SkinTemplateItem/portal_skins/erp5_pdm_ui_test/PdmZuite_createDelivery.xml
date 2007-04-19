@@ -105,6 +105,7 @@ if state in [\'planned\', \'ordered\']:\n
   order.portal_workflow.doActionFor(order, \'plan_action\')\n
   if state == \'ordered\':\n
     order.portal_workflow.doActionFor(order, \'order_action\')\n
+  delivery = order\n
 \n
 else:\n
   module = portal.getDefaultModule(delivery_portal_type)\n
