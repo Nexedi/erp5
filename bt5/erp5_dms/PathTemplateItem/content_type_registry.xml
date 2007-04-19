@@ -28,6 +28,7 @@
                 <string>spread</string>
                 <string>slides</string>
                 <string>any</string>
+                <string>Drawing</string>
               </tuple>
             </value>
         </item>
@@ -57,10 +58,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>any</string> </key>
+                    <key> <string>Drawing</string> </key>
                     <value>
                       <tuple>
                         <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                        <string>Drawing</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>any</string> </key>
+                    <value>
+                      <tuple>
+                        <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                         <string>File</string>
                       </tuple>
                     </value>
@@ -69,7 +79,7 @@
                     <key> <string>img</string> </key>
                     <value>
                       <tuple>
-                        <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                        <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                         <string>Image</string>
                       </tuple>
                     </value>
@@ -78,7 +88,7 @@
                     <key> <string>pdf_file</string> </key>
                     <value>
                       <tuple>
-                        <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                        <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                         <string>PDF</string>
                       </tuple>
                     </value>
@@ -87,7 +97,7 @@
                     <key> <string>slides</string> </key>
                     <value>
                       <tuple>
-                        <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                        <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                         <string>Presentation</string>
                       </tuple>
                     </value>
@@ -96,7 +106,7 @@
                     <key> <string>spread</string> </key>
                     <value>
                       <tuple>
-                        <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                        <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                         <string>Spreadsheet</string>
                       </tuple>
                     </value>
@@ -105,7 +115,7 @@
                     <key> <string>txt rtf doc odt</string> </key>
                     <value>
                       <tuple>
-                        <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                        <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                         <string>Text</string>
                       </tuple>
                     </value>
@@ -117,6 +127,33 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.ContentTypeRegistry</string>
+          <string>ExtensionPredicate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>extensions</string> </key>
+            <value>
+              <list>
+                <string>sxd</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Drawing</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <tuple>
@@ -147,7 +184,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <tuple>
         <tuple>
@@ -181,7 +218,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <tuple>
@@ -208,7 +245,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
         <tuple>
@@ -237,7 +274,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <tuple>
         <tuple>
@@ -266,7 +303,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <tuple>
         <tuple>
