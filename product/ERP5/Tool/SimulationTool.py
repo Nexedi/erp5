@@ -537,6 +537,10 @@ class SimulationTool(BaseTool):
         else:
           simulation_query = omit_query
       if reserved_kw is not None:
+        if type(reserved_kw) != dict:
+          # Not a dict when taken from URL, so, cast is needed 
+          # to make pop method available
+          reserved_kw = dict(reserved_kw)
         reserved_omit_input = reserved_kw.pop('omit_input',0)
         reserved_omit_output = reserved_kw.pop('omit_output',0)
         reserved_omit_query = self._getOmitQuery(query_table=table,
