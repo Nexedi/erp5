@@ -55,6 +55,7 @@ class TestZelenium(ERP5TypeTestCase):
                 'erp5_trade', 'erp5_pdm', 'erp5_pdf_style',
                 'erp5_accounting', 'erp5_accounting_ui_test',
                 'erp5_web', 'erp5_web_ui_test',
+                'erp5_pdm_ui_test',
                 # 'erp5_accounting_l10n_fr', 'erp5_payroll',
                 # 'erp5_payroll_ui_test',
                 )
