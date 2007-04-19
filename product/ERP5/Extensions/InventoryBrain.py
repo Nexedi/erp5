@@ -190,20 +190,34 @@ class InventoryListBrain(ZSQLBrain):
       }
       # Add parameters to query_kw
       query_kw_update = {}
+
       if cname_id in ('getCurrentInventory', ):
         query_kw_update = {
-          'simulation_state': list(self.getPortalCurrentInventoryStateList())
+          'simulation_state': 
+            list(self.getPortalCurrentInventoryStateList() + \
+            self.getPortalTransitInventoryStateList()),
+          'omit_transit': 1,
+          'transit_simulation_state': list(
+                 self.getPortalTransitInventoryStateList())
         }
+
       elif cname_id in ('getAvailableInventory', ):
         query_kw_update = {
-          'simulation_state': \
-            list(self.getPortalReservedInventoryStateList()) + \
-            list(self.getPortalCurrentInventoryStateList())
+          'simulation_state': list(self.getPortalCurrentInventoryStateList() + \
+                            self.getPortalTransitInventoryStateList()),
+          'omit_transit': 1,
+          'transit_simulation_state': list(self.getPortalTransitInventoryStateList()),
+          'reserved_kw': {
+            'simulation_state': list(self.getPortalReservedInventoryStateList()),
+            'transit_simulation_state': list(self.getPortalTransitInventoryStateList()),
+            'omit_input': 1
+          }
         }
       elif cname_id in ('getFutureInventory', 'inventory', ):
         query_kw_update = {
           'simulation_state': \
             list(self.getPortalFutureInventoryStateList()) + \
+            list(self.getPortalTransitInventoryStateList()) + \
             list(self.getPortalReservedInventoryStateList()) + \
             list(self.getPortalCurrentInventoryStateList())
         }
