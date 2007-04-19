@@ -57,6 +57,8 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 # Define the conversion server host
 conversion_server_host = ('127.0.0.1', 8008)
 
+# test files' home
+TEST_FILES_HOME = os.path.join(os.getenv('INSTANCE_HOME'), 'Products', 'ERP5OOo', 'tests', 'test_document')
 
 def printAndLog(msg):
   """
@@ -78,7 +80,7 @@ class FileUploadTest(file):
     self.headers = {}
 
 def makeFilePath(name):
-  return os.getenv('INSTANCE_HOME') + '/../Products/ERP5OOo/tests/test_document/' + name
+  return os.path.join(TEST_FILES_HOME, name)
 
 def makeFileUpload(name):
   path = makeFilePath(name)
@@ -374,6 +376,7 @@ class TestIngestion(ERP5TypeTestCase):
         ob = self.portal.portal_contributions.newContent(portal_type=portal_type, file=file)
       else:
         ob = self.portal.portal_contributions.newContent(file=file)
+      # reindex
       ob.immediateReindexObject()
       created_documents.append(ob)
     get_transaction().commit()
@@ -784,6 +787,14 @@ class TestIngestion(ERP5TypeTestCase):
     context = self.getDocument('one')
     context.deleteSnapshot()
 
+  def stepCleanUp(self, sequence=None, sequence_list=None, **kw):
+    """
+        Clean up DMS system from old content.
+    """
+    portal = self.getPortal()
+    for module in (portal.document_module, portal.image_module,):
+      module.manage_delObjects(map(None, module.objectIds()))
+    
   def stepContributeFileListWithType(self, sequence=None, sequence_list=None, **kw):
     """
       Contribute all kinds of files giving portal type explicitly
@@ -959,7 +970,8 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_03_TextDoc')
     sequence_list = SequenceList()
-    step_list = [ 'stepCreateTextDocument'
+    step_list = ['stepCleanUp'
+                 ,'stepCreateTextDocument'
                  ,'stepCheckEmptyState'
                  ,'stepStraightUpload'
                  ,'stepCheckConvertedState'
@@ -988,7 +1000,8 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_04_MetadataExtraction')
     sequence_list = SequenceList()
-    step_list = [ 'stepCreateTextDocument'
+    step_list = [ 'stepCleanUp'
+                 ,'stepCreateTextDocument'
                  ,'stepSetSimulatedDiscoveryScript'
                  ,'stepTestMetadataSetting'
                 ]
@@ -1005,7 +1018,8 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_04_MetadataEditing')
     sequence_list = SequenceList()
-    step_list = [ 'stepCreateTextDocument'
+    step_list = [ 'stepCleanUp'
+                 ,'stepCreateTextDocument'
                  ,'stepDialogUpload'
                  ,'stepEditMetadata'
                  ,'stepCheckChangedMetadata'
@@ -1028,7 +1042,8 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_05_FormatIngestion')
     sequence_list = SequenceList()
-    step_list = ['stepCreateTextDocument'
+    step_list = ['stepCleanUp'
+                 ,'stepCreateTextDocument'
                  ,'stepIngestTextFormats'
                  ,'stepCreateSpreadsheetDocument'
                  ,'stepIngestSpreadsheetFormats'
@@ -1055,7 +1070,8 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_06_FormatGeneration')
     sequence_list = SequenceList()
-    step_list = [ 'stepCreateTextDocument'
+    step_list = [ 'stepCleanUp'
+                 ,'stepCreateTextDocument'
                  ,'stepCheckTextDocumentExportList'
                  ,'stepCreateSpreadsheetDocument'
                  ,'stepCheckSpreadsheetDocumentExportList'
@@ -1081,7 +1097,8 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_07_SnapshotGeneration')
     sequence_list = SequenceList()
-    step_list = [ 'stepCreateTextDocument'
+    step_list = [ 'stepCleanUp'
+                 ,'stepCreateTextDocument'
                  ,'stepDialogUpload'
                  ,'stepCheckHasNoSnapshot'
                  ,'stepCreateSnapshot'
@@ -1100,7 +1117,7 @@ class TestIngestion(ERP5TypeTestCase):
       I don't know how to verify how cache works
     """
 
-  def test_09_Contribute(self, quiet=QUIET, run=0):
+  def test_09_Contribute(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       Create content through portal_contributions
       - use newContent to ingest various types 
@@ -1113,7 +1130,8 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_09_Contribute')
     sequence_list = SequenceList()
-    step_list = ['stepContributeFileListWithNoType'
+    step_list = [ 'stepCleanUp'
+                 ,'stepContributeFileListWithNoType'
                  ,'stepContributeFileListWithType'
                 ]
     sequence_string = ' '.join(step_list)
@@ -1132,7 +1150,8 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_10_MetadataSettingPreferenceOrder')
     sequence_list = SequenceList()
-    step_list = [ 'stepCreateTextDocument'
+    step_list = [ 'stepCleanUp' 
+                 ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderFICU'
@@ -1166,7 +1185,8 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_11_EmailIngestion')
     sequence_list = SequenceList()
-    step_list = [ 'stepReceiveEmailFromUnknown'
+    step_list = [ 'stepCleanUp'
+                 ,'stepReceiveEmailFromUnknown'
                  ,'stepCreatePerson'
                  ,'stepReceiveEmailFromJohn'
                  ,'stepVerifyEmailedDocuments'
