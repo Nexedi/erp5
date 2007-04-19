@@ -49,12 +49,12 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <html>\n
-<head><title>Test stock browser for confirmed state</title></head>\n
+<head><title>Test stock browser for started state</title></head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
 <tr><td rowspan="1" colspan="4">\n
-Test stock browser for confirmed state\n
+Test stock browser for started state\n
 </td></tr>\n
 </thead>\n
 <tbody tal:define="init_method string:PdmZuite_createDelivery?state=started">\n
