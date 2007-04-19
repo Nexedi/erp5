@@ -71,20 +71,19 @@
             <value> <string encoding="cdata"><![CDATA[
 
 def convertToUpperCase(key):\n
-    """\n
-      This function turns an attribute name into\n
-      a method name according to the ERP5 naming conventions\n
-    """\n
-    import string\n
-    result = \'\'\n
-    if key != \'\':\n
-      parts = string.split(str(key),\'_\')\n
-      for part in parts:\n
-        letter_list = list(part)\n
-        letter_list[0] = string.upper(letter_list[0])\n
-        result = result + string.join(letter_list,\'\')\n
-    return result\n
-\n
+  """\n
+    This function turns an attribute name into\n
+    a method name according to the ERP5 naming conventions\n
+  """\n
+  import string\n
+  result = \'\'\n
+  if key != \'\':\n
+    parts = string.split(str(key),\'_\')\n
+    for part in parts:\n
+      letter_list = list(part)\n
+      letter_list[0] = string.upper(letter_list[0])\n
+      result = result + string.join(letter_list,\'\')\n
+  return result\n
 \n
 \n
 def splitCsvLine(str_line):\n
@@ -139,7 +138,6 @@ csv_title_list = splitCsvLine(csv_line_list[1])\n
 for csv_line in csv_line_list[2:]:\n
   object = {}\n
   csv_data_list = splitCsvLine(csv_line)\n
-\n
   data_n = 0\n
 \n
   for property in csv_property_list:\n
@@ -149,29 +147,24 @@ for csv_line in csv_line_list[2:]:\n
   object_list.append(object)\n
 \n
 \n
-\n
-root_path = \'gap/france/m14\'\n
-\n
-for object in object_list: \n
-  description = object.get(\'Description\', None) or None\n
-  gap = object.get(\'Gap\', None) or None\n
-  title = object.get(\'Title\', None) or None\n
+for object in object_list:\n
+  description = object.get(\'Description\', None) or \'\'\n
+  gap = object.get(\'Gap\', None) or \'\'\n
+  title = object.get(\'Title\', None) or \'\'\n
+  gap = str(gap)\n
   if gap:\n
     gap = gap.replace(\'CLASSE \', \'\')\n
     print \'%s - %s - %s\' % (gap or \'\', title or \'\', description or \'\')\n
     root = context.getPortalObject()\n
-    root = root.portal_categories.restrictedTraverse(root_path)\n
+    root = root.portal_categories.restrictedTraverse(gap_root_path)\n
     b = \'\'\n
     for a in gap:\n
       b = b + a\n
       if root.has_key(b):\n
         root = root[b]\n
-      else:    \n
+      else:\n
         root = root.newContent(id=b)\n
-    root.edit(title = title or \'\', description = description or \'\')\n
-\n
-\n
-  #context.activate(priority=4).Base_importCsvLine(object)\n
+    root.edit(title=title, description=description)\n
 \n
 return printed\n
 \n
@@ -201,7 +194,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file, encoding=\'iso-8859-15\', **kw</string> </value>
+            <value> <string>import_file, gap_root_path, encoding=\'iso-8859-15\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -221,13 +214,14 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>import_file</string>
+                            <string>gap_root_path</string>
                             <string>encoding</string>
                             <string>kw</string>
                             <string>_print_</string>
@@ -251,11 +245,11 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>data_n</string>
                             <string>property</string>
                             <string>_write_</string>
-                            <string>root_path</string>
                             <string>None</string>
                             <string>description</string>
                             <string>gap</string>
                             <string>title</string>
+                            <string>str</string>
                             <string>root</string>
                             <string>b</string>
                             <string>a</string>
