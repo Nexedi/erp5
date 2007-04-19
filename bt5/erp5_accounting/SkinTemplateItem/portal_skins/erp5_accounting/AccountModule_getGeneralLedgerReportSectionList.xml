@@ -239,7 +239,7 @@ for c in gap_value_list:\n
                                                \'ascending\')]))\n
 total_params = params.copy()\n
 if gap:\n
-  total_params[\'node_category\'] = gap\n
+  total_params[\'node_category\'] = \'gap/%s\' % gap\n
 result.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
               title=N_("Total"),\n
