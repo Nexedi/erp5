@@ -861,7 +861,7 @@ class Subscription(Folder, SyncCode):
       LOG('getGidFromObject gid_generator',0,'is callable')
       o_gid=gid_gen(object)
       LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
-    elif hasattr(o_base, gid_gen):
+    elif getattr(o_base, gid_gen, None) is not None:
       LOG('getGidFromObject',0,'there is the gid generator on o_base')
       generator = getattr(object, gid_gen)
       o_gid = generator()
@@ -945,7 +945,7 @@ class Subscription(Folder, SyncCode):
       new_id = None
       if callable(id_generator):
         new_id = id_generator(object,gid=gid)
-      elif hasattr(o_base, id_generator):
+      elif getattr(o_base, id_generator, None) is not None:
         generator = getattr(object, id_generator)
         new_id = generator()
       else: 
