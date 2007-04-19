@@ -925,6 +925,21 @@ class ListBoxRenderer:
         if k.startswith(search_prefix):
           params[k[len(search_prefix):]] = v
 
+      search_value_list = [x for x in self.getSearchValueList(param_dict=params) if isinstance(x[1], basestring)]
+      listbox_form = self.getForm()
+      listbox_id = self.getId()
+      for search_id, search_value, search_field in search_value_list:
+        if search_field is None:
+          # If the search field could not be found, try to get an "editable" field on current form.
+          editable_field_id = '%s_%s' % (listbox_id, search_id)
+          if listbox_form.has_field(editable_field_id):
+            search_field = listbox_form.get_field(editable_field_id)
+          else:
+            continue
+        render_dict = getattr(search_field.widget, 'render_dict', None)
+        if render_dict is not None:
+          params[search_id] = render_dict(search_field, search_value)
+
       # Set parameters, depending on the list method.
       list_method_name = self.getListMethodName()
       meta_type_list = self.getMetaTypeList()
@@ -1312,18 +1327,21 @@ class ListBoxRenderer:
 
     return value_list
 
-  def getSearchValueList(self):
+  def getSearchValueList(self, param_dict=None):
     """Return a list of values, where each value is a tuple consisting of an alias, a current value and a search field.
     If a column is not searchable, the alias is set to None, otherwise to a string. If a search field is not present,
     it is set to None.
     """
     search_column_id_set = self.getSearchColumnIdSet()
-    param_dict = self.getParamDict()
+    if param_dict is None:
+      param_dict = self.getParamDict()
     value_list = []
     for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
       if sql in search_column_id_set:
         # Get the current value and encode it in unicode.
         param = param_dict.get(alias, param_dict.get(sql, u''))
+        if isinstance(param, dict):
+          param = param.get('query', u'')
         if isinstance(param, str):
           param = unicode(param, self.getEncoding())
 

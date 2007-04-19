@@ -726,6 +726,18 @@ class PatchedDateTimeWidget(DateTimeWidget):
     """
       Added support for key in every call to render_sub_field
     """
+
+    sql_format_year  = '%Y'
+    sql_format_month = '%m'
+    sql_format_day   = '%d'
+    format_to_sql_format_dict = {'dmy': (sql_format_day  , sql_format_month, sql_format_year),
+                                 'ymd': (sql_format_year , sql_format_month, sql_format_day ),
+                                 'mdy': (sql_format_month, sql_format_day  , sql_format_year),
+                                 'my' : (sql_format_month, sql_format_year ),
+                                 'ym' : (sql_format_year , sql_format_month)
+                                }
+    sql_format_default = format_to_sql_format_dict['ymd']
+
     hide_day = fields.CheckBoxField('hide_day',
                                   title="Hide Day",
                                   description=(
@@ -751,6 +763,26 @@ class PatchedDateTimeWidget(DateTimeWidget):
         elif input_order in ('dmy', 'mdy'):
           input_order = 'my'
       return input_order
+
+    def render_dict(self, field, value):
+      """
+        This is yet another field rendering. It is designed to allow code to
+        understand field's value data by providing its type and format when
+        applicable.
+
+        It returns a dict with 3 keys:
+          type  : Text representation of value's type.
+          format: Type-dependant-formated formating information.
+                  This only describes the field format settings, not the actual
+                  format of provided value.
+          query : Passthrough of given value.
+      """
+      format_dict = self.format_to_sql_format_dict
+      input_order = format_dict.get(self.getInputOrder(field),
+                                    self.sql_format_default)
+      return {'query': value,
+              'format': field.get_value('date_separator').join(input_order),
+              'type': 'date'}
 
     def render(self, field, key, value, REQUEST):
         use_ampm = field.get_value('ampm_time_style')
