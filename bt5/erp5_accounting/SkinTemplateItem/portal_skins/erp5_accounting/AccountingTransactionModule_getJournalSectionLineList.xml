@@ -102,8 +102,8 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
                                          (\'parent_uid\', \'descending\'),\n
                                          (\'stock.total_price\', \'descending\')),\n
                                 **extra_kw):\n
-  debit = max(brain.total_price, 0)\n
-  credit = max(-brain.total_price, 0)\n
+  debit = max(brain.total_price, 0) or 0\n
+  credit = max(-(brain.total_price or 0), 0) or 0\n
   mvt = brain.getObject()\n
   if payment_mode and not \\\n
         mvt.getPaymentMode(\'\').startswith(payment_mode):\n
