@@ -761,7 +761,8 @@ class Movement(XMLObject, Amount):
     """
     quantity = 0
     if kw.has_key('source_debit') and kw.has_key('source_credit'):
-      quantity += (kw.pop('source_credit') or 0 - kw.pop('source_debit') or 0)
+      quantity += ((kw.pop('source_credit') or 0) -
+                      (kw.pop('source_debit') or 0))
       kw['quantity'] = quantity
     if kw.has_key('destination_debit') and kw.has_key('destination_credit'):
       quantity += (kw.pop('destination_debit') or 0 -
