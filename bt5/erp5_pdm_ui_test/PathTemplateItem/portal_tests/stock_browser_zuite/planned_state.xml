@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test stock browser for confirmed state</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test stock browser for confirmed state\n
+</td></tr>\n
+</thead>\n
+<tbody tal:define="init_method string:PdmZuite_createDelivery?state=planned">\n
+\n
+<!-- Setup {{{ -->\n
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />\n
+<!-- }}} -->\n
+\n
+<!-- Check source -->\n
+<tal:block tal:define="link_title python: \'erp5_pdm_ui_test_source_site_title\';\n
+                       movement_count python: 1;\n
+                       current_inventory python: 0.0;\n
+                       available_inventory python: 0.0;\n
+                       future_inventory python: -1.0;\n
+                       ">\n
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />\n
+</tal:block>\n
+\n
+<!-- Check destination -->\n
+<tal:block tal:define="link_title python: \'erp5_pdm_ui_test_destination_site_title\';\n
+                       movement_count python: 1;\n
+                       current_inventory python: 0.0;\n
+                       available_inventory python: 0.0;\n
+                       future_inventory python: 1.0;\n
+                       ">\n
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />\n
+</tal:block>\n
+\n
+</tbody></table>\n
+</body>\n
+</html> \n
+<!-- vim: syntax=html foldmethod=marker -->
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>planned_state</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
