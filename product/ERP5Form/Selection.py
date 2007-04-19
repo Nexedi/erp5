@@ -426,8 +426,8 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   security.declarePublic('asSQLExpression')
   def asSQLExpression(self, table_map=None, domain_id=None, 
                       exclude_domain_id=None, strict_membership=0,
-                      join_table="catalog", join_column="uid", base_category=None,
-                      category_table_alias='category'):
+                      join_table="catalog", join_column="uid", 
+                      base_category=None, category_table_alias='category'):
     select_expression = []
     portal = self.getPortalObject()
     for k, d in self.domain_dict.iteritems():
@@ -435,17 +435,21 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
 
       if k == 'parent':
         # Special treatment for parent
-        select_expression.append(d.getParentSQLExpression(table='catalog',
-                               strict_membership=strict_membership))
+        select_expression.append(
+            d.getParentSQLExpression(table='catalog',
+                                     strict_membership=strict_membership))
       elif k is not None:
         if getattr(aq_base(d), 'isPredicate', 0):
-          select_expression.append(d.asSQLExpression(table='%s_%s' % (k, category_table_alias),
-                                                     strict_membership=strict_membership))
+          select_expression.append(
+              d.asSQLExpression(table='%s_%s' % (k, category_table_alias),
+                                strict_membership=strict_membership))
         else:
           # This is a category, we must join
           select_expression.append('%s.%s = %s_%s.uid' % \
-                                (join_table, join_column, k, category_table_alias))
-          select_expression.append(d.asSQLExpression(table='%s_%s' % (k, category_table_alias),
+                                (join_table, join_column, 
+                                 k, category_table_alias))
+          select_expression.append(
+              d.asSQLExpression(table='%s_%s' % (k, category_table_alias),
                                 base_category=k,
                                 strict_membership=strict_membership))
                                 # XXX We should take into account k explicitely
@@ -462,7 +466,8 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   asSqlExpression = asSQLExpression
   
   security.declarePublic('asSQLJoinExpression')
-  def asSQLJoinExpression(self, domain_id=None, exclude_domain_id=None, category_table_alias='category'):
+  def asSQLJoinExpression(self, domain_id=None, exclude_domain_id=None, 
+                          category_table_alias='category'):
     join_expression = []
     #LOG('DomainSelection', 0, 'domain_id = %r, exclude_domain_id = %r, self.domain_dict = %r' % (domain_id, exclude_domain_id, self.domain_dict))
     portal = self.getPortalObject()

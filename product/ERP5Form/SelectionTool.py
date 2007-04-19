@@ -1236,7 +1236,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
                       DeprecationWarning)
       else:
         selection_domain = DomainSelection(selection_domain).__of__(self)
-      return selection_domain.asSQLJoinExpression(category_table_alias = category_table_alias)
+      return selection_domain.asSQLJoinExpression(
+          category_table_alias=category_table_alias)
 
     security.declarePublic('buildSQLExpressionFromDomainSelection')
     def buildSQLExpressionFromDomainSelection(self, selection_domain,
@@ -1253,8 +1254,12 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
                       DeprecationWarning)
       else:
         selection_domain = DomainSelection(selection_domain).__of__(self)
-      return selection_domain.asSQLExpression(strict_membership = strict_membership,
-                                              category_table_alias = category_table_alias)
+      return selection_domain.asSQLExpression(
+          strict_membership = strict_membership,
+          join_table=join_table,
+          join_column=join_column,
+          base_category=base_category,
+          category_table_alias = category_table_alias)
 
     def _aq_dynamic(self, name):
       """
