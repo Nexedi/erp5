@@ -666,7 +666,7 @@ class TestInventoryList(InventoryAPITestCase):
     self._makeMovement(resource_value=self.other_resource, quantity=100)
     # group_by_resource is implicit ...
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
-                                      group_by_node=1, group_by_resource=1)
+                                      group_by_node=1)
     self.assertEquals(2, len(inventory_list))
     self.assertEquals([r for r in inventory_list if r.resource_relative_url ==
                   self.resource.getRelativeUrl()][0].inventory, 100)
