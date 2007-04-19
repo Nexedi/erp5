@@ -151,7 +151,7 @@ class ContributionTool(BaseTool):
       # if we have only one, then this is it
       # LOG('findTypeName single portal_type_list', 0, portal_type_list[0])
       return portal_type_list[0]
-
+      
     # If it is still None, we need to read the document
     # to check which of the candidates is suitable
     # Let us give a chance to getPropertyDictFromContent to
@@ -328,19 +328,15 @@ class ContributionTool(BaseTool):
     method = self._getTypeBasedMethod('getPropertyDictFromFileName', 
         fallback_script_id = 'ContributionTool_getPropertyDictFromFileName')
     property_dict = method(file_name, property_dict)
-    if property_dict.has_key('portal_type') and property_dict['portal_type']:
+    if property_dict.get('portal_type', None) is not None:
       # we have to return portal_type as a tuple
       # because we should allow for having multiple candidate types
       property_dict['portal_type'] = (property_dict['portal_type'],)
     else:
       # we have to find candidates by file extenstion
-      try:
-        index = file_name.rfind('.')
-        if index != -1:
-          ext = file_name[index+1:]
-          property_dict['portal_type'] = self.ContributionTool_getCandidateTypeListByExtension(ext)
-      except ValueError: # no dot in file name
-        pass
+      if file_name.rfind('.')!= -1:
+        ext = file_name.split('.')[-1]
+        property_dict['portal_type'] = self.ContributionTool_getCandidateTypeListByExtension(ext)
     return property_dict
 
   # WebDAV virtual folder support
