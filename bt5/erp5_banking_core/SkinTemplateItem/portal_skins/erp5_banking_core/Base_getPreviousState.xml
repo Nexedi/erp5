@@ -72,7 +72,6 @@ previous_state = None\n
 found_given_state = 0\n
 for workflow_item in workflow_item_list:\n
   current_state = workflow_item.getProperty(\'state\')\n
-  context.log(\'current_state\',current_state)\n
   if current_state == state:\n
     found_given_state = 1\n
     continue\n

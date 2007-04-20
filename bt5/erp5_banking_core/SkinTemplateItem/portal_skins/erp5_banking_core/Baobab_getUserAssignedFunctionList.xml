@@ -87,7 +87,7 @@ def getFunctionList(user_id=user_id):\n
 \n
 getFunctionList = CachingMethod(getFunctionList, id=\'Baobab_getUserAssignedFunctionList\', \n
                                 cache_factory="erp5_ui_short")\n
-return getFunctionList()\n
+return getFunctionList(user_id=user_id)\n
 
 
 ]]></string> </value>

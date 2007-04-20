@@ -93,6 +93,12 @@ return context.getPortalObject().getProperty(\'reference_currency_id\')\n
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>

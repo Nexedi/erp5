@@ -208,6 +208,7 @@ for resource in resource_dict.keys():\n
   if current_resource_portal_type not in resource_portal_type:\n
     continue\n
   if len(resource)==3: # case of history\n
+    context.log(\'movement uid before error\',resource[2])\n
     movement = context.portal_catalog.getObject(resource[2])\n
     #context.log(\'movement\',movement)\n
     explanation_value = movement\n
@@ -231,11 +232,13 @@ for resource in resource_dict.keys():\n
     except KeyError:\n
       resource_in_vault = {\'quantity\' : 0,\'total_price\' : 0}\n
     total_quantity = resource_in_vault[\'quantity\']\n
+    total_price = resource_in_vault[\'total_price\']\n
     if banknote_quantity_divisor is not None:\n
       if current_resource_portal_type == \'Banknote\':\n
         total_quantity = round(total_quantity / banknote_quantity_divisor,0)\n
+        total_price = round(total_price / banknote_quantity_divisor,0)\n
     tmp_dict.update({\'total_quantity\' : total_quantity,\n
-        \'total_price\' : resource_in_vault[\'total_price\'],})\n
+        \'total_price\' : total_price,})\n
     if vault_report_type==\'history\':\n
       tmp_dict.update({\'date\':resource_in_vault[\'date\']})\n
     general_total_price += resource_in_vault[\'total_price\']\n
