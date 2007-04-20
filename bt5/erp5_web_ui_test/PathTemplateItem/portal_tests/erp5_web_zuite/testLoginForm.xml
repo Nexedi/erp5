@@ -52,13 +52,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Simple Relation Field, using metadata tab to set categories</title>\n
+<title>Test Login Form</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Simple Relation Field, using metadata tab\n
-to set categories</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Login Form</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />\n
 <tr>\n
@@ -110,9 +109,9 @@ to set categories</td></tr>\n
   <td>Click login</td>\n
 </tr>\n
 <tr>\n
-  <td>assertTextPresent</td>\n
+  <td>verifyText</td>\n
+  <td>//span[@class=\'headline\']</td>\n
   <td>Test Web Site</td>\n
-  <td/>\n
   <td>Make sure login within ERP5 Web</td>\n
 </tr>\n
 </tbody></table>\n
