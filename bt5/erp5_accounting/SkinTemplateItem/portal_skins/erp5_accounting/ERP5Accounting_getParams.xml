@@ -158,9 +158,9 @@ simulation_state = selection_params.get(\'simulation_state\',\n
 if simulation_state:\n
   params[\'simulation_state\'] = simulation_state\n
 \n
-portal_type = selection_params.get(\'portal_type\', None)\n
+portal_type = selection_params.get(\'movement_portal_type\', None)\n
 if portal_type:\n
-  params[\'portal_type\'] = portal_type\n
+  params[\'portal_type\'] = movement_portal_type\n
 else:\n
   parent_portal_type = selection_params.get(\'parent_portal_type\', None)\n
   if parent_portal_type:\n
@@ -236,6 +236,7 @@ return dict(params)\n
                             <string>payment_uid</string>
                             <string>simulation_state</string>
                             <string>portal_type</string>
+                            <string>movement_portal_type</string>
                             <string>parent_portal_type</string>
                           </tuple>
                         </value>

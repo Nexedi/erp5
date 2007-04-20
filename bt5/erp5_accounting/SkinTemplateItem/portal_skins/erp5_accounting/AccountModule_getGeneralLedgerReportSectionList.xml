@@ -100,7 +100,7 @@ params = dict(at_date=at_date,\n
               simulation_state=simulation_state,\n
               omit_grouping_reference=omit_grouping_reference,\n
               period_start_date=period_start_date,\n
-              portal_type=portal.getPortalAccountingMovementTypeList(),\n
+              movement_portal_type=portal.getPortalAccountingMovementTypeList(),\n
               no_mirror_section_uid_cache=1)\n
 \n
 if from_date:\n
