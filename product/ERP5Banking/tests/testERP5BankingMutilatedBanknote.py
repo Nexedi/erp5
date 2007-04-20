@@ -173,6 +173,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.mutilated_banknote.getSource(), 'site/testsite/paris')
     self.assertEqual(self.mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
     self.assertEqual(self.mutilated_banknote.getDestination(), self.mutilated_banknote_vault.getRelativeUrl())
+    # set source reference
+    self.setDocumentSourceReference(self.mutilated_banknote)
+    # check source reference
+    self.assertNotEqual(self.mutilated_banknote.getSourceReference(), '')
+    self.assertNotEqual(self.mutilated_banknote.getSourceReference(), None)
+
 
   def stepTryStopWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
@@ -462,6 +468,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.hq_mutilated_banknote.getSource(), 'site/testsite/siege')
     self.assertEqual(self.hq_mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
     self.assertEqual(self.hq_mutilated_banknote.getDestination(), self.hq_mutilated_banknote_vault.getRelativeUrl())
+    # set source reference
+    self.setDocumentSourceReference(self.hq_mutilated_banknote)
+    # check source reference
+    self.assertNotEqual(self.hq_mutilated_banknote.getSourceReference(), '')
+    self.assertNotEqual(self.hq_mutilated_banknote.getSourceReference(), None)
+
 
   def stepTryStopHQWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
