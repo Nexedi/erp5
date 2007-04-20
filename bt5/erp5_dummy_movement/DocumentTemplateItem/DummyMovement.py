@@ -56,6 +56,7 @@ class DummyMovement(Movement):
                     , PropertySheet.Arrow
                     , PropertySheet.Movement
                     , PropertySheet.Price
+                    , PropertySheet.ItemAggregation
                     )
 
   def getSimulationState(self):
