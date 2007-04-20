@@ -92,6 +92,9 @@ if kw.get(\'node_category\'):\n
 if kw.get(\'where_expression\'):\n
   params[\'where_expression\'] = kw[\'where_expression\']\n
 \n
+if not \'parent_portal_type\' in params:\n
+  params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
+\n
 # For expense or income accounts, we only take into account transactions from the\n
 # beginning of the period.\n
 if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n

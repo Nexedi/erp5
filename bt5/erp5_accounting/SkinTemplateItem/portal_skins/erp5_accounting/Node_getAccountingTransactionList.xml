@@ -95,6 +95,9 @@ if node_category_strict_membership:\n
 if node_category:\n
   params[\'node_category\'] = node_category\n
 \n
+if not \'parent_portal_type\' in params:\n
+  params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
+\n
 # Create the related accouting line list\n
 new_result  = []\n
 net_balance = 0.0\n
