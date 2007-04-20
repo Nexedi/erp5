@@ -118,7 +118,8 @@ class TestERP5BankingCheckPaymentMixin:
     self.bank_account_1 = self.createBankAccount(person=self.person_1,
                                                  account_id='bank_account_1',
                                                  currency=self.currency_1,
-                                                 amount=30000)
+                                                 amount=30000,
+                                                 internal_bank_account_number="343434343434")
 
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
