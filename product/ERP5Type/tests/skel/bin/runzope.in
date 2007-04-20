@@ -10,6 +10,10 @@ export PYTHONPATH INSTANCE_HOME SOFTWARE_HOME
 
 export erp5_load_data_fs="1"
 
-ZOPE_RUN="$SOFTWARE_HOME/Zope/Startup/run.py"
+if [ -f "$SOFTWARE_HOME/Zope2/Startup/run.py" ]; then
+  ZOPE_RUN="$SOFTWARE_HOME/Zope2/Startup/run.py"
+else
+  ZOPE_RUN="$SOFTWARE_HOME/Zope/Startup/run.py"
+fi
 
 exec "$PYTHON" "$ZOPE_RUN" -C "$CONFIG_FILE" "$@"

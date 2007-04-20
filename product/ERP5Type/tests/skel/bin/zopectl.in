@@ -10,6 +10,10 @@ export PYTHONPATH INSTANCE_HOME SOFTWARE_HOME
 
 export erp5_load_data_fs="1"
 
-ZDCTL="$SOFTWARE_HOME/Zope/Startup/zopectl.py"
+if [ -f "$SOFTWARE_HOME/Zope2/Startup/zopectl.py" ]; then
+  ZDCTL="$SOFTWARE_HOME/Zope2/Startup/zopectl.py"
+else
+  ZDCTL="$SOFTWARE_HOME/Zope/Startup/zopectl.py"
+fi
 
 exec "$PYTHON" "$ZDCTL" -C "$CONFIG_FILE" "$@"
