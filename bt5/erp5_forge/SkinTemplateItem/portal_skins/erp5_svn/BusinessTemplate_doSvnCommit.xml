@@ -102,12 +102,12 @@ else:\n
   commit_recurs = removed\n
 \n
 if changelog is None :\n
-  request.set(\'portal_status_message\', \'Please set a changelog message...\')\n
+  request.set(\'portal_status_message\', N_(\'Please Set a ChangeLog Message\'))\n
   request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
 if changelog.strip() == \'\' :\n
-  request.set(\'portal_status_message\', "Error: Changelog Message can\'t be empty.")\n
+  request.set(\'portal_status_message\', N_("Error: ChangeLog Message can\'t be Empty"))\n
   request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
