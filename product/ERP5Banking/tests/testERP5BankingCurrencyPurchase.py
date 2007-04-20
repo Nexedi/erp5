@@ -102,7 +102,8 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
     self.bank_account_1 = self.createBankAccount(person=self.person_1,
                                                  account_id='bank_account_1',
                                                  currency=self.currency_1,
-                                                 amount=100000)
+                                                 amount=100000,
+                                                 internal_bank_account_number="343434343434")
 
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',

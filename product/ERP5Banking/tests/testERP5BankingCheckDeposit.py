@@ -129,7 +129,8 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                                                  currency=self.currency_1,
                                                  amount=50000,
                                                  bic_code='BICAGENCPARIS',
-                                                 swift_registered=1)
+                                                 swift_registered=1,
+                                                 internal_bank_account_number="121212121212")
 
     # the checkbook module
     self.checkbook_module = self.getCheckbookModule()
