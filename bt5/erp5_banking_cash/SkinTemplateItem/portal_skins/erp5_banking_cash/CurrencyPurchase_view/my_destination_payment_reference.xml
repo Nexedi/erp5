@@ -555,7 +555,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getDestinationPaymentValue().getInternalBankAccountNumber()</string> </value>
+            <value> <string>python: here.getDestinationPaymentInternalBankAccountNumber()</string> </value>
         </item>
       </dictionary>
     </pickle>
