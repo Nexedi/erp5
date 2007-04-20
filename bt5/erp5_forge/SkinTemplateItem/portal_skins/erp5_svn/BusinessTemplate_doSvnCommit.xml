@@ -70,7 +70,13 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
+from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError\n
+from Products.ERP5Subversion.SubversionClient import SubversionLoginError\n
+from Products.ERP5Type.Message import Message\n
+from ZTUtils import make_query\n
+request = container.REQUEST\n
+\n
+N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 \n
 # XXX: To be compatible with commit from diff view\n
 if same_type(added, []):\n
@@ -96,13 +102,13 @@ else:\n
   commit_recurs = removed\n
 \n
 if changelog is None :\n
-  context.REQUEST.set(\'portal_status_message\', \'Please set a changelog message...\')\n
-  context.REQUEST.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
+  request.set(\'portal_status_message\', \'Please set a changelog message...\')\n
+  request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
 if changelog.strip() == \'\' :\n
-  context.REQUEST.set(\'portal_status_message\', "Error: Changelog Message can\'t be empty.")\n
-  context.REQUEST.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
+  request.set(\'portal_status_message\', "Error: Changelog Message can\'t be empty.")\n
+  request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
 try:\n
@@ -111,17 +117,17 @@ try:\n
   if commit_recurs != \'none\' and commit_recurs != \'\':\n
     context.getPortalObject()["portal_subversion"].checkin(path=commit_recurs, business_template=context, recurse=True, log_message=changelog)\n
 except SubversionSSLTrustError, error:\n
-  context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  context.REQUEST.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
+  request.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
+  request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed, changelog=changelog, trust_dict = error.getTrustDict(), caller=\'commit\').BusinessTemplate_viewSvnSSLTrust()\n
 except SubversionLoginError, error1 :\n
-  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  context.REQUEST.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
+  request.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
+  request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed, changelog=changelog, caller=\'commit\', realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Files commited successfully.\')\n
-context.REQUEST.set(\'do_extract\', \'False\')\n
-return context.BusinessTemplate_viewSvnStatus()\n
+return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
+       context.absolute_url(),\n
+       make_query(portal_status_message=N_(\'Files commited successfully\'))))\n
 
 
 ]]></string> </value>
@@ -174,8 +180,15 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>Products.ERP5Subversion.SubversionClient</string>
                             <string>SubversionSSLTrustError</string>
                             <string>SubversionLoginError</string>
-                            <string>same_type</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
                             <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>N_</string>
+                            <string>same_type</string>
                             <string>commit_non_recurs</string>
                             <string>_getitem_</string>
                             <string>context</string>
