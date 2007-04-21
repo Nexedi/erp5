@@ -181,7 +181,8 @@ class SQLDict(RAMDict):
       # Make sure message can not be processed anylonger
       if len(uid_list) > 0:
         # Set selected messages to processing
-        activity_tool.SQLDict_processMessage(uid=uid_list)
+        activity_tool.SQLDict_processMessage(uid=uid_list,
+                                             processing_node=processing_node)
       get_transaction().commit() # Release locks before starting a potentially long calculation
       # This may lead (1 for 1,000,000 in case of reindexing) to messages left in processing state
 
@@ -228,7 +229,8 @@ class SQLDict(RAMDict):
               uid_list = [x.uid for x in uid_list]
               if len(uid_list) > 0:
                 # Set selected messages to processing
-                activity_tool.SQLDict_processMessage(uid=uid_list)
+                activity_tool.SQLDict_processMessage(uid=uid_list,
+                                                     processing_node=processing_node)
               get_transaction().commit() # Release locks before starting a potentially long calculation
 
               # Save this newly marked uids as soon as possible.
