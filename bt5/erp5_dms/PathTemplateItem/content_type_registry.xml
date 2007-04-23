@@ -27,8 +27,8 @@
                 <string>pdf_file</string>
                 <string>spread</string>
                 <string>slides</string>
-                <string>any</string>
                 <string>Drawing</string>
+                <string>any</string>
               </tuple>
             </value>
         </item>
