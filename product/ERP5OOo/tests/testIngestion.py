@@ -3,6 +3,7 @@
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
 #                    Bartek Gorny <bg@erp5.pl>
 #                    Jean-Paul Smets <jp@nexedi.com>
+#                    Ivan Tyagov <ivan@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,25 +28,17 @@
 #
 ##############################################################################
 
-import os, sys, cStringIO
-import zipfile
+import os, sys, cStringIO, zipfile
 from xml.dom.minidom import parseString
-
-from cgi import FieldStorage
-from zExceptions import BadRequest
 from Testing import ZopeTestCase
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.CMFCore.utils import getToolByName
-
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.Cache import clearCache
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
 from Products.ERP5.Document.File import _unpackData
-
-from zLOG import LOG
+from zLOG import LOG, INFO, ERROR
 
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -59,6 +52,9 @@ conversion_server_host = ('127.0.0.1', 8008)
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.getenv('INSTANCE_HOME'), 'Products', 'ERP5OOo', 'tests', 'test_document')
+
+FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
+REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
 def printAndLog(msg):
   """
@@ -156,8 +152,8 @@ class TestIngestion(ERP5TypeTestCase):
     default_pref = self.portal.portal_preferences.default_site_preference
     default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
-    default_pref.setPreferredDocumentFileNameRegularExpression(
-           "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})")
+    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
+    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     default_pref.enable()
 
 
@@ -347,8 +343,8 @@ class TestIngestion(ERP5TypeTestCase):
     context.reindexObject()
     get_transaction().commit()
     self.tic()
-    clearCache() # We call clear cache to be sure that
-                 # the target list is updated
+    # We call clear cache to be sure that the target list is updated
+    self.getPortal().portal_caches.clearCache()
     target_list = context.getTargetFormatList()
     for target in asserted_target_list:
       self.assert_(target in target_list)
@@ -905,6 +901,11 @@ class TestIngestion(ERP5TypeTestCase):
         break
     self.failUnless(john_is_owner)
 
+  def playSequence(self, step_list, quiet):
+    sequence_list = SequenceList()
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
   
   ##################################
   ##  Tests
@@ -919,9 +920,9 @@ class TestIngestion(ERP5TypeTestCase):
     preference_tool = self.portal.portal_preferences
     self.assertEquals(preference_tool.getPreferredOoodocServerAddress(), conversion_server_host[0])
     self.assertEquals(preference_tool.getPreferredOoodocServerPortNumber(), conversion_server_host[1])
-    self.assertEquals(preference_tool.getPreferredDocumentFileNameRegularExpression(),
-                      "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})")
-
+    self.assertEquals(preference_tool.getPreferredDocumentFileNameRegularExpression(), FILE_NAME_REGULAR_EXPRESSION)
+    self.assertEquals(preference_tool.getPreferredDocumentReferenceRegularExpression(), REFERENCE_REGULAR_EXPRESSION)
+    
   def test_02_FileExtensionRegistry(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       check if we successfully imported registry
@@ -954,7 +955,7 @@ class TestIngestion(ERP5TypeTestCase):
       self.assertEquals(reg.findTypeName(file_name, None, None), portal_type)
 
   def test_03_TextDoc(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """h
+    """
       Test basic behaviour of a document:
       - create empty document
       - upload a file directly
@@ -965,7 +966,6 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_03_TextDoc')
-    sequence_list = SequenceList()
     step_list = ['stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepCheckEmptyState'
@@ -976,9 +976,7 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepDiscoverFromFilename'
                  ,'stepCheckConvertedContent'
                 ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    self.playSequence(step_list, quiet)
 
   def test_04_MetadataExtraction(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -995,15 +993,12 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_04_MetadataExtraction')
-    sequence_list = SequenceList()
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepSetSimulatedDiscoveryScript'
                  ,'stepTestMetadataSetting'
                 ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    self.playSequence(step_list, quiet)
 
   def test_04_MetadataEditing(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -1013,16 +1008,13 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_04_MetadataEditing')
-    sequence_list = SequenceList()
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepDialogUpload'
                  ,'stepEditMetadata'
                  ,'stepCheckChangedMetadata'
                 ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    self.playSequence(step_list, quiet)
 
   def test_05_FormatIngestion(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -1037,7 +1029,6 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_05_FormatIngestion')
-    sequence_list = SequenceList()
     step_list = ['stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepIngestTextFormats'
@@ -1052,9 +1043,7 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepCreateImageDocument'
                  ,'stepIngestImageFormats'
                 ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    self.playSequence(step_list, quiet)
 
   def test_06_FormatGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -1065,7 +1054,6 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_06_FormatGeneration')
-    sequence_list = SequenceList()
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepCheckTextDocumentExportList'
@@ -1080,9 +1068,7 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepCreateImageDocument'
                  ,'stepExportImage'
                 ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    self.playSequence(step_list, quiet)
 
   def test_07_SnapshotGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -1092,7 +1078,6 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_07_SnapshotGeneration')
-    sequence_list = SequenceList()
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepDialogUpload'
@@ -1104,9 +1089,7 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepCheckHasNoSnapshot'
                  ,'stepCreateSnapshot'
                 ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    self.playSequence(step_list, quiet)
 
   def test_08_Cache(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -1125,15 +1108,12 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_09_Contribute')
-    sequence_list = SequenceList()
     step_list = [ 'stepCleanUp'
                  ,'stepContributeFileListWithNoType'
                  ,'stepCleanUp'
                  ,'stepContributeFileListWithType'
                 ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    self.playSequence(step_list, quiet)
 
   def test_10_MetadataSettingPreferenceOrder(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -1146,7 +1126,6 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_10_MetadataSettingPreferenceOrder')
-    sequence_list = SequenceList()
     step_list = [ 'stepCleanUp' 
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
@@ -1169,9 +1148,7 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderUFCI'
                 ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    self.playSequence(step_list, quiet)
 
   def test_11_EmailIngestion(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -1181,17 +1158,13 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_11_EmailIngestion')
-    sequence_list = SequenceList()
     step_list = [ 'stepCleanUp'
                  ,'stepReceiveEmailFromUnknown'
                  ,'stepCreatePerson'
                  ,'stepReceiveEmailFromJohn'
                  ,'stepVerifyEmailedDocuments'
                 ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
+    self.playSequence(step_list, quiet)
 
 if __name__ == '__main__':
   framework()
