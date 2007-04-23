@@ -74,24 +74,24 @@
       <td colspan=3><img src="logo.png"></td>\n
     </tr>\n
     <tr>\n
-      <td align=left tal:content="python: from_organisation.getCorporateName()" colspan="2" />\n
+      <td align=left tal:content="python: from_organisation.getCorporateName(\'\')" colspan="2" />\n
       <td align=right tal:content="python: \'Invoice / Date Facture: %s\' % here.getStartDate().Date()"/>\n
     </tr>\n
     <tr>\n
-      <td align=left tal:content="python: \'Tel: %s\' % from_organisation.getDefaultTelephone().asText()" colspan="2"/>\n
+      <td align=left tal:content="python: \'Tel: %s\' % from_organisation.getDefaultTelephoneText(\'\')" colspan="2"/>\n
       <td align=right tal:content="python: \'Pay Before / Payer avant: %s\' % here.SaleInvoiceTransaction_getDueDate().Date()"/>\n
     </tr>\n
     <tr>\n
-      <td tal:content="python: from_organisation.getDefaultAddress().getStreetAddress()" colspan="2"/>\n
+      <td tal:content="python: from_organisation.getDefaultAddressStreetAddress()" colspan="2"/>\n
       <td align=right> Invoice / Facture No: ERP5 <span tal:replace="python: here.getReference() or here.getId()"/> </td>\n
     </tr>\n
     <tr>\n
       <td tal:content="python: \'%s %s\' %\n
-                              (from_organisation.getDefaultAddress().getZipCode(),\n
-                              from_organisation.getDefaultAddress().getCity())" colspan="3"/>\n
+                              (from_organisation.getDefaultAddressZipCode(\'\'),\n
+                              from_organisation.getDefaultAddressCity(\'\'))" colspan="3"/>\n
     </tr>\n
     <tr>\n
-      <td tal:content="python: from_organisation.getDefaultAddress().getRegionTitle()" colspan="3"/>\n
+      <td tal:content="python: from_organisation.getDefaultAddressRegionTitle(\'\')" colspan="3"/>\n
     </tr>\n
 \n
     <tr>\n
@@ -116,22 +116,22 @@
         <td align=left tal:content="client_delivery/getCorporateName | client_delivery/getTitle"/>\n
       </tr>\n
       <tr>\n
-        <td align=left tal:content="python: client_invoice.getDefaultAddress().getStreetAddress()" tal:on-error="nothing"/>\n
-        <td align=left tal:content="python: client_delivery.getDefaultAddress().getStreetAddress()" tal:on-error="nothing"/>\n
+        <td align=left tal:content="python: client_invoice.getDefaultAddressStreetAddress(\'\')"/>\n
+        <td align=left tal:content="python: client_delivery.getDefaultAddressStreetAddress(\'\')"/>\n
       </tr>\n
       <tr>\n
         <td align=left>\n
-          <tal:block tal:replace="python: client_invoice.getDefaultAddress().getZipCode()" tal:on-error="nothing"/>\n
-          <tal:block tal:replace="python: client_invoice.getDefaultAddress().getCity()" tal:on-error="nothing"/>\n
+          <tal:block tal:replace="python: client_invoice.getDefaultAddressZipCode(\'\')"/>\n
+          <tal:block tal:replace="python: client_invoice.getDefaultAddressCity(\'\')"/>\n
         </td>\n
         <td align=left>\n
-          <tal:block tal:replace="python: client_delivery.getDefaultAddress().getZipCode()" tal:on-error="nothing"/>\n
-          <tal:block tal:replace="python: client_delivery.getDefaultAddress().getCity()" tal:on-error="nothing"/>\n
+          <tal:block tal:replace="python: client_delivery.getDefaultAddressZipCode(\'\')"/>\n
+          <tal:block tal:replace="python: client_delivery.getDefaultAddressCity(\'\')"/>\n
         </td>\n
       </tr>\n
       <tr>\n
-        <td align=left tal:content="python: client_invoice.getDefaultAddress().getRegionTitle()" tal:on-error="nothing"/>\n
-        <td align=left tal:content="python: client_delivery.getDefaultAddress().getRegionTitle()" tal:on-error="nothing"/>\n
+        <td align=left tal:content="python: client_invoice.getDefaultAddressRegionTitle(\'\')"/>\n
+        <td align=left tal:content="python: client_delivery.getDefaultAddressRegionTitle(\'\')"/>\n
       </tr>\n
       </table>\n
 \n
