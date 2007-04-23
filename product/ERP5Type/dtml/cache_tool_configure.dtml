@@ -2,7 +2,7 @@
 <dtml-var manage_tabs>
 
 <h3>Cache invalidation</h3>
-  <form action="clearCache" method="POST">
+  <form action="clearAllCache" method="POST">
     <input type="submit" value="Clear all cache factories"/>
   </form>
   <dtml-in expr="objectIds('ERP5 Cache Factory')">
