@@ -1175,7 +1175,7 @@ class BasicStructure:
     except (IndexError):
       message = 'report path is empty or not valid, please check selection\
                  report path in Planning properties'
-      return [(Message(domain=None, message=message,mapping=None))]
+      return [(Message(domain='erp5_ui', message=message,mapping=None))]
     if (default_selection_report_path in portal_categories.objectIds()) or \
       (portal_domains is not None and default_selection_report_path in \
        portal_domains.objectIds()):
@@ -1187,7 +1187,7 @@ class BasicStructure:
 
     if self.selection_report_path in (None,()):
       message = 'report path is empty or not valid'
-      return [(Message(domain=None, message=message,mapping=None))]
+      return [(Message(domain='erp5_ui', message=message,mapping=None))]
 
     # testing report_depth value
     if report_depth is not None:
@@ -1285,7 +1285,7 @@ class BasicStructure:
           #object_list = self.here.portal_selections.getSelectionValueList(
           #  self.selection_name, context=self.here, REQUEST=self.REQUEST)
           message = 'No list method found, please check planningBox properties'
-          return [(Message(domain=None, message=message,mapping=None))]
+          return [(Message(domain='erp5_ui', message=message,mapping=None))]
 
         # recovering exeption_uid_list
         exception_uid_list = object_tree_line.getExceptionUidList()
@@ -1390,7 +1390,7 @@ class BasicStructure:
       # no group is available so the Y and X axis will be empty...
       message= 'selection method returned empty list of objects : please check\
                 your list_method and report_root'
-      return [(Message(domain=None, message=message,mapping=None))]
+      return [(Message(domain='erp5_ui', message=message,mapping=None))]
 
 
     ##################################################
@@ -1538,7 +1538,6 @@ class BasicStructure:
     it is now possible to recover begin and end value of the planning and then
     apply selection informations to get start and stop.
     """
-
     # recovering zoom properties
     axis_dict['zoom_start'] = int(self.params.get('zoom_start',0))
     axis_dict['zoom_level'] = float(self.params.get('zoom_level',1))
@@ -1563,7 +1562,7 @@ class BasicStructure:
       and their corresponding properties'
       #axis_dict['bound_begin'] = 0
       #axis_dict['bound_end'] = 1
-      return 1 #[(Message(domain=None, message=message,mapping=None))]
+      return [(Message(domain='erp5_ui', message=message,mapping=None))]
     
     axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
     # now start and stop have the extreme values of the second axis bound.
@@ -2146,7 +2145,7 @@ class PlanningStructure:
       # ERROR
       message = 'unable to find secondary axis generation script : "%s" does \
              not exist' % basic_structure.field.get_value('sec_axis_script')
-      return [(Message(domain=None, message=message, mapping=None))]
+      return [(Message(domain='erp5_ui', message=message, mapping=None))]
 
     # calling script to get list of delimiters to implement
     # just need to pass start, stop, and the minimum number of delimiter
@@ -2157,7 +2156,7 @@ class PlanningStructure:
     except (ArithmeticError, LookupError, AttributeError, TypeError):
       message =  'error raised in secondary axis generation script : please \
              check "%s"'% basic_structure.field.get_value('sec_axis_script')
-      return [(Message(domain=None, message=message,mapping=None))]
+      return [(Message(domain='erp5_ui', message=message,mapping=None))]
 
     axis_stop = int(axis_stop)
     axis_start = int(axis_start)
