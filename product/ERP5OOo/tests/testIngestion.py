@@ -396,10 +396,6 @@ class TestIngestion(ERP5TypeTestCase):
         # at the external_processing workflow
         self.assertEquals(ob.getExternalProcessingState(), 'converted')
         self.assert_('magic' in ob.SearchableText())
-    # clean up created objects for next test !
-    for ob in created_documents:
-      parent = ob.getParentValue() 
-      parent.manage_delObjects([ob.getId(),])
 
   def newPythonScript(self, object_id, script_id, argument_list, code):
     """
@@ -1132,6 +1128,7 @@ class TestIngestion(ERP5TypeTestCase):
     sequence_list = SequenceList()
     step_list = [ 'stepCleanUp'
                  ,'stepContributeFileListWithNoType'
+                 ,'stepCleanUp'
                  ,'stepContributeFileListWithType'
                 ]
     sequence_string = ' '.join(step_list)
