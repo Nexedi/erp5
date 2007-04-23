@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># if REQUEST.other contains ${form_id}/${listbox_id}/ListBox_getColumnWithDict\n
+            <value> <string>from DateTime import DateTime\n
+\n
+# if REQUEST.other contains ${form_id}/${listbox_id}/ListBox_getColumnWithDict\n
 # magic key, this will be used as column width, instead of calculating.\n
 if listbox is not None:\n
   cache = context.REQUEST.other.get(\n
@@ -151,7 +153,9 @@ for listboxline in listboxline_list:\n
   col_count = 0\n
   for column_id, column_property in listboxline.getColumnItemList():\n
     if isinstance(column_property, number):\n
-      string_property = "%s++++++" % (column_property)\n
+      string_property = "%s+++" % (column_property)\n
+    elif isinstance(column_property, DateTime):\n
+      string_property = column_property.strftime(\'%Y/%m/%d++\')\n
     else:\n
       string_property = str(column_property or \'\')\n
     if listboxline.isStatLine():\n
@@ -224,6 +228,7 @@ return result\n
                             <string>frame_width</string>
                             <string>section_width</string>
                             <string>listbox</string>
+                            <string>DateTime</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
