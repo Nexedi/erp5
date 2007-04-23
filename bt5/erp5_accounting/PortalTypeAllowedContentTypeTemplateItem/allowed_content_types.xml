@@ -19,9 +19,6 @@
  <portal_type id="Balance Transaction">
   <item>Balance Transaction Line</item>
  </portal_type>
- <portal_type id="Cash Register">
-  <item>Agent</item>
- </portal_type>
  <portal_type id="Closing Transaction">
   <item>Closing Transaction Line</item>
  </portal_type>
@@ -66,8 +63,8 @@
  </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>Purchase Invoice Transaction Line</item>
+  <item>Discount</item>
   <item>Invoice Line</item>
-  <item>Trade Condition</item>
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Rule Tool">
@@ -78,8 +75,8 @@
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
   <item>Payment Condition</item>
+  <item>Discount</item>
   <item>Sale Invoice Transaction Line</item>
-  <item>Trade Condition</item>
   <item>Invoice Line</item>
  </portal_type>
 </allowed_content_type_list>

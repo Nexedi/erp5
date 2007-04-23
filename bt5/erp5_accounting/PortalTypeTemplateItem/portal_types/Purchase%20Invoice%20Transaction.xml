@@ -82,8 +82,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>accounting_transaction</string>
                 <string>delivery</string>
+                <string>accounting_transaction</string>
                 <string>invoice</string>
               </tuple>
             </value>
@@ -101,6 +101,10 @@
         <item>
             <key> <string>init_script</string> </key>
             <value> <string>PurchaseInvoiceTransaction_init</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>property_sheet_list</string> </key>

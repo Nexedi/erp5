@@ -8,7 +8,6 @@ Accounting Transaction Module | Purchase Invoice Transaction
 Accounting Transaction Module | Sale Invoice Transaction
 Accounting Transaction | Accounting Transaction Line
 Balance Transaction | Balance Transaction Line
-Cash Register | Agent
 Closing Transaction | Closing Transaction Line
 Invoice Line | Discount
 Invoice Line | Invoice Cell
@@ -33,15 +32,15 @@ Preference | Accounting Transaction
 Preference | Payment Transaction
 Preference | Purchase Invoice Transaction
 Preference | Sale Invoice Transaction
+Purchase Invoice Transaction | Discount
 Purchase Invoice Transaction | Invoice Line
 Purchase Invoice Transaction | Payment Condition
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
-Purchase Invoice Transaction | Trade Condition
 Rule Tool | Invoice Rule
 Rule Tool | Invoice Transaction Rule
 Rule Tool | Invoicing Rule
 Rule Tool | Payment Rule
+Sale Invoice Transaction | Discount
 Sale Invoice Transaction | Invoice Line
 Sale Invoice Transaction | Payment Condition
 Sale Invoice Transaction | Sale Invoice Transaction Line
-Sale Invoice Transaction | Trade Condition
