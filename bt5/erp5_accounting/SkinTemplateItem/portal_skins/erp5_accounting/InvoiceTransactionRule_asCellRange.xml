@@ -82,8 +82,10 @@ dimension_result_list = []\n
 \n
 for dimension in dimension_list:\n
   if dimension is not None:\n
-    predicate_list = context.searchFolder(string_index=dimension,\n
-                                          sort_on=\'int_index\')\n
+    predicate_list = [x for x in context.contentValues(portal_type=\'Predicate\')\n
+                       if x.getProperty(\'string_index\') == dimension ]\n
+    predicate_list.sort(lambda a,b: cmp(a.getProperty(\'int_index\', 0),\n
+                                        b.getProperty(\'int_index\', 1)))\n
     if len(predicate_list):\n
       dimension_result_list.append(predicate_list)\n
 \n
@@ -156,11 +158,11 @@ return dimension_ids_list\n
                             <string>dimension_result_list</string>
                             <string>dimension</string>
                             <string>None</string>
+                            <string>x</string>
                             <string>predicate_list</string>
                             <string>len</string>
                             <string>dimension_ids_list</string>
                             <string>dimension_result</string>
-                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
