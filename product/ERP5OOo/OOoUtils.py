@@ -248,7 +248,7 @@ class OOoParser:
       raise CorruptedOOoFile()
 
     # Get the filename
-    self.filename = file_descriptor.filename
+    self.filename = getattr(file_descriptor, 'filename', 'default_filename')
 
     # List and load the content of the zip file
     for name in oo_unzipped.namelist():
