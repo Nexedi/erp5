@@ -37,14 +37,14 @@ from Products.ERP5.Document.Alarm import PeriodicityMixin
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5Type.DateUtils import addToDate
 
-class CalendarPeriod(Movement, PeriodicityMixin):
+class PresencePeriod(Movement, PeriodicityMixin):
   """
-  Calendar Period is used to add available time of the user in a 
+  Presence Period is used to add available time of the user in a 
   period of Time
   """
 
-  meta_type = 'ERP5 Calendar Period'
-  portal_type = 'Calendar Period'
+  meta_type = 'ERP5 Presence Period'
+  portal_type = 'Presence Period'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -143,9 +143,9 @@ class CalendarPeriod(Movement, PeriodicityMixin):
       stop_date = self.getStopDate(start_date)
       periodicity_stop_date = self.getPeriodicityStopDate(
                                           start_date)
-      second_duration = int(stop_date) - int(start_date)
+      duration = stop_date - start_date
       # First date has to respect the periodicity config
-      next_start_date = self.getNextPeriodicalDate(addToDate(start_date, day=-1))
+      next_start_date = self.getNextPeriodicalDate(start_date-1)
       while (next_start_date is not None) and \
         (next_start_date <= periodicity_stop_date):
 
@@ -163,8 +163,7 @@ class CalendarPeriod(Movement, PeriodicityMixin):
            (current_exception_date < next_start_date.Date()):
           # SQL method don't like iterator
 #             yield (next_start_date, next_start_date+duration)
-          result.append([next_start_date, addToDate(next_start_date, 
-                                                    second=second_duration)])
+          result.append([next_start_date, next_start_date+duration])
           # Update the next exception date
           if len(exception_date_list) != 0:
             current_exception_date = exception_date_list.pop(0).Date()
@@ -173,8 +172,7 @@ class CalendarPeriod(Movement, PeriodicityMixin):
         else:
           # SQL method don't like iterator
 #             yield (next_start_date, next_start_date+duration)
-          result.append([next_start_date, addToDate(next_start_date,
-                                                    second=second_duration)])
+          result.append([next_start_date, next_start_date+duration])
         next_start_date = self.getNextPeriodicalDate(next_start_date)
 
     return result
