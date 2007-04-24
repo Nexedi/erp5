@@ -427,7 +427,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>manage_main</string> </value>
+                    <value> <string>list</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -440,6 +440,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -524,19 +528,19 @@
                       <list>
                         <tuple>
                           <string>revision</string>
-                          <string>#</string>
+<string></string>
                         </tuple>
                         <tuple>
                           <string>author</string>
-                          <string>#</string>
+<string></string>
                         </tuple>
                         <tuple>
                           <string>date</string>
-                          <string>#</string>
+<string></string>
                         </tuple>
                         <tuple>
                           <string>message</string>
-                          <string>#</string>
+<string></string>
                         </tuple>
                       </list>
                     </value>
