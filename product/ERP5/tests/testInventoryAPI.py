@@ -77,6 +77,10 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     # for all those tests.
     return 'inventory_api_test'
 
+  def getItemModule(self):
+    """ the apparel fabric module """
+    return getattr(self.getPortal(),'apparel_fabric_item_module')
+
   def afterSetUp(self):
     """set up """
     self.createCategories()
@@ -105,6 +109,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     self.other_resource = self.getCurrencyModule().newContent(
                                   title='Other Resource',
                                   portal_type='Currency')
+    self.item = self.getItemModule().newContent(title='Item')
+    self.other_item = self.getItemModule().newContent(title='Other Item')
     # create a dummy Rule, to be able to create simulation movements
     rule_tool = self.portal.portal_rules
     if not hasattr(rule_tool, 'default_order_rule'):
@@ -178,8 +184,10 @@ class InventoryAPITestCase(ERP5TypeTestCase):
            ) + self.GROUP_CATEGORIES
   
   def getBusinessTemplateList(self):
-    """ erp5_trade is required for transit_simulation_state"""
-    return ('erp5_base', 'erp5_dummy_movement', 'erp5_trade')
+    """ erp5_trade is required for transit_simulation_state
+        erp5_apparel is required for item
+    """
+    return ('erp5_base', 'erp5_dummy_movement', 'erp5_trade', 'erp5_apparel')
 
   # TODO: move this to a base class {{{
   @reindex
@@ -1374,11 +1382,60 @@ class TestInventoryStat(InventoryAPITestCase):
                          destination_value=self.node)
     node_uid = self.node.getUid()
     makeMovement(quantity=1)
+    # Test the number of movement for this particular node
     self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 1)
     makeMovement(quantity=3)
     self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 2)
     makeMovement(quantity=5)
     self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 3)
+
+class TestTrackingList(InventoryAPITestCase):
+  """Tests Inventory Stat methods.
+  """
+  def testNodeUid(self):
+    getTrackingList = self.getSimulationTool().getTrackingList
+    start_date = DateTime()
+    def makeMovement(aggregate=None):
+      self._makeMovement(quantity=1, price=1,
+                         aggregate_value=aggregate,
+                         resource_value=self.resource,
+                         start_date = start_date,
+                         source_value=self.other_node,
+                         destination_value=self.node)
+    item_uid = self.item.getUid()
+    other_item_uid = self.other_item.getUid()
+    node_uid = self.node.getUid()
+    self.assertEquals(len(getTrackingList(node_uid=node_uid, 
+                             at_date=start_date)),0)
+    makeMovement(aggregate=self.item)
+    result = getTrackingList(node_uid=node_uid,at_date=start_date)
+    self.assertEquals(len(result),1)
+    self.failIfDifferentSet([x.uid for x in result], [item_uid])
+    makeMovement(aggregate=self.other_item)
+    result = getTrackingList(node_uid=node_uid,at_date=start_date)
+    self.assertEquals(len(result),2)
+    self.failIfDifferentSet([x.uid for x in result], [item_uid, other_item_uid])
+
+  def testSeveralAggregateOnMovement(self):
+    getTrackingList = self.getSimulationTool().getTrackingList
+    start_date = DateTime()
+    def makeMovement(aggregate_list=None):
+      self._makeMovement(quantity=1, price=1,
+                         aggregate_list=aggregate_list,
+                         resource_value=self.resource,
+                         start_date = start_date,
+                         source_value=self.other_node,
+                         destination_value=self.node)
+    item_uid = self.item.getUid()
+    other_item_uid = self.other_item.getUid()
+    node_uid = self.node.getUid()
+    self.assertEquals(len(getTrackingList(node_uid=node_uid, 
+                             at_date=start_date)),0)
+    makeMovement(aggregate_list=[self.item.getRelativeUrl(),
+                                 self.other_item.getRelativeUrl()])
+    result = getTrackingList(node_uid=node_uid,at_date=start_date)
+    self.assertEquals(len(result),2)
+    self.failIfDifferentSet([x.uid for x in result], [item_uid, other_item_uid])
 
 
 if __name__ == '__main__':
@@ -1393,6 +1450,7 @@ else:
     suite.addTest(unittest.makeSuite(TestInventoryStat))
     suite.addTest(unittest.makeSuite(TestNextNegativeInventoryDate))
     suite.addTest(unittest.makeSuite(TestInventoryStat))
+    suite.addTest(unittest.makeSuite(TestTrackingList))
     return suite
 
 # vim: foldmethod=marker
