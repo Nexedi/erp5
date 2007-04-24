@@ -787,12 +787,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
               )
     
     notebook_line = multi_line_invoice.newContent(
+      portal_type = self.sale_invoice_line_portal_type,
       id = 'notebook_line',
       resource = product_notebook.getRelativeUrl(),
       quantity = 10,
       price = 10)
 
     barebone_line = multi_line_invoice.newContent(
+      portal_type = self.sale_invoice_line_portal_type,
       id = 'barebone_line',
       resource = product_barebone.getRelativeUrl(),
       quantity = 10,
