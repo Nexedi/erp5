@@ -16,9 +16,6 @@ Domain | Domain Generator
 Order Builder | Predicate
 Order Tool | Order Builder
 Preference Tool | Preference
-Rule Tool | Delivery Rule
-Rule Tool | Invoice Rule
-Rule Tool | Invoice Transaction Rule
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
 Template Tool | Business Template

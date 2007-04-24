@@ -47,11 +47,6 @@
  <portal_type id="Preference Tool">
   <item>Preference</item>
  </portal_type>
- <portal_type id="Rule Tool">
-  <item>Invoice Rule</item>
-  <item>Invoice Transaction Rule</item>
-  <item>Delivery Rule</item>
- </portal_type>
  <portal_type id="Simulation Movement">
   <item>Applied Rule</item>
  </portal_type>
