@@ -143,6 +143,7 @@
             <value>
               <list>
                 <string>sxd</string>
+                <string>odg</string>
               </list>
             </value>
         </item>
@@ -202,10 +203,12 @@
               <list>
                 <string>gif</string>
                 <string>jpg</string>
+                <string>jpeg</string>
                 <string>png</string>
                 <string>bmp</string>
                 <string>GIF</string>
                 <string>JPG</string>
+                <string>JPEG</string>
                 <string>PNG</string>
                 <string>BMP</string>
               </list>
@@ -293,6 +296,7 @@
                 <string>xls</string>
                 <string>ods</string>
                 <string>sdc</string>
+                <string>sxc</string>
               </list>
             </value>
         </item>

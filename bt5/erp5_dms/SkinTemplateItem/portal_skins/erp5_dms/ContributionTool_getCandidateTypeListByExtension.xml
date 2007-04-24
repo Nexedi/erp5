@@ -68,25 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>typetoext = {\n
-  \'Text\':(\'doc\', \'sxw\', \'odt\', \'txt\', \'rtf\'),\n
-  \'Spreadsheet\':(\'xls\', \'sxc\', \'ods\'),\n
-  \'Presentation\':(\'ppt\', \'odp\'),\n
-  \'Drawing\':(\'odg\',),\n
-  \'Image\':(\'jpg\', \'jpeg\', \'gif\', \'bmp\', \'png\'),\n
-  \'PDF\':(\'pdf\',),\n
-}\n
-\n
-multitypes = {\n
-#     \'Text\':(\'Text\', \'Memo\')\n
-}\n
-context.log(ext)\n
-\n
-for ptype, ext_list in typetoext.items():\n
-  if ext in ext_list:\n
-    return multitypes.get(ptype, (ptype,))\n
-\n
-return ()\n
+            <value> <string>pt = context.content_type_registry.findTypeName(\'a.%s\' %ext, None, None)\n
+return pt\n
 </string> </value>
         </item>
         <item>
@@ -130,13 +113,10 @@ return ()\n
                         <value>
                           <tuple>
                             <string>ext</string>
-                            <string>typetoext</string>
-                            <string>multitypes</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_getiter_</string>
-                            <string>ptype</string>
-                            <string>ext_list</string>
+                            <string>None</string>
+                            <string>pt</string>
                           </tuple>
                         </value>
                     </item>
