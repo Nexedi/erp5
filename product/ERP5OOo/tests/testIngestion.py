@@ -948,6 +948,7 @@ class TestIngestion(ERP5TypeTestCase):
             'ppt' : 'Presentation',
             'odp' : 'Presentation',
             'sxi' : 'Presentation',
+            'sxd' : 'Drawing',
             'xxx' : 'File',
           }
     for type, portal_type in correct_type_mapping.items():
