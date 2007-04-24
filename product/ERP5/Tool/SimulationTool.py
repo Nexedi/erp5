@@ -1931,12 +1931,17 @@ class SimulationTool(BaseTool):
       if portal_type == []:
         portal_type = self.getPortalCalendarPeriodTypeList()
 
+      simulation_state = self.getPortalCurrentInventoryStateList() + \
+                         self.getPortalTransitInventoryStateList() + \
+                         self.getPortalReservedInventoryStateList()
+
       sql_result = self.Person_zGetAvailableTime(
                           from_date=from_date,
                           to_date=to_date,
                           portal_type=portal_type,
                           node=node,
                           resource=resource,
+                          simulation_state=simulation_state,
                           src__=src__, **kw)
       if not src__:
         result = 0
