@@ -966,15 +966,14 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       user_login - this is a login string of a person; can be None if the user is
                    currently logged in, then we'll get him from session
     """   
-    # Get the order
+    if file_name is not None:
+      # filename is often undefined....
+      self._setSourceReference(file_name)
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
-    self._setSourceReference(file_name) # XXX Who added this ???
-                                       # filename is often undefined....
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
     order_list = list(method())
     order_list.reverse()
-
     # Start with everything until content - build a dictionary according to the order
     kw = {}
     for order_id in order_list:
@@ -993,20 +992,18 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       else:
         result = method()
       if result is not None:
-        # LOG('discoverMetadata %s' % order_id, 0, repr(result))
         kw.update(result)
 
     # Prepare the content edit parameters - portal_type should not be changed
-    try:
-      del(kw['portal_type'])
-    except KeyError:
-      pass
-    self._edit(**kw) # Try not to invoke an automatic transition here
-    self.finishIngestion() # Finish ingestion by calling method
+    kw.pop('portal_type', None)
+    # Try not to invoke an automatic transition here
+    self._edit(**kw)
+    # Finish ingestion by calling method
+    self.finishIngestion() 
     self.reindexObject()
-    return self.mergeRevision() # Revision merge is tightly coupled
-                                # to metadata discovery - refer to the documentation
-                                # of mergeRevision method
+    # Revision merge is tightly coupled
+    # to metadata discovery - refer to the documentation of mergeRevision method
+    return self.mergeRevision() 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'finishIngestion')
   def finishIngestion(self):
