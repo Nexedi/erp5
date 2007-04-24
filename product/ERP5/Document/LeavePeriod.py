@@ -31,9 +31,9 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Document.CalendarPeriod import CalendarPeriod
+from Products.ERP5.Document.PresencePeriod import PresencePeriod
 
-class LeavePeriod(CalendarPeriod):
+class LeavePeriod(PresencePeriod):
   """
   Leave Period is used to remove available time of the user in a 
   period of Time
@@ -66,7 +66,7 @@ class LeavePeriod(CalendarPeriod):
     """
     Surcharged accessor to calculate the Quantity in second.
     """
-    quantity = CalendarPeriod.getInventoriatedQuantity(
+    quantity = PresencePeriod.getInventoriatedQuantity(
                                             self, default=default,
                                             *args, **kw)
     return -quantity
