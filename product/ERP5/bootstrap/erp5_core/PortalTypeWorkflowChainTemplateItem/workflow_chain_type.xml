@@ -4,6 +4,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Category Divergence Tester</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Document</type>
   <workflow>edit_workflow</workflow>
  </chain>
@@ -26,6 +30,14 @@
  <chain>
   <type>Preference</type>
   <workflow>preference_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Property Divergence Tester</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Quantity Divergence Tester</type>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Simulation Movement</type>

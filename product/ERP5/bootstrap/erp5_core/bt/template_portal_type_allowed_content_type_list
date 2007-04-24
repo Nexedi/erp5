@@ -6,7 +6,6 @@ Cache Factory | Distributed Ram Cache
 Cache Factory | Ram Cache
 Cache Factory | SQL Cache
 Cache Tool | Cache Factory
-Category Divergence Tester | edit_workflow
 Category Tool | Base Category
 Category | Category
 Delivery Builder | Predicate
@@ -16,10 +15,7 @@ Domain | Domain
 Domain | Domain Generator
 Order Builder | Predicate
 Order Tool | Order Builder
-Predicate | Value Predicate
 Preference Tool | Preference
-Property Divergence Tester | edit_workflow
-Quantity Divergence Tester | edit_workflow
 Rule Tool | Delivery Rule
 Rule Tool | Invoice Rule
 Rule Tool | Invoice Transaction Rule

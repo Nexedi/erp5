@@ -22,9 +22,6 @@
  <portal_type id="Category">
   <item>Category</item>
  </portal_type>
- <portal_type id="Category Divergence Tester">
-  <item>edit_workflow</item>
- </portal_type>
  <portal_type id="Category Tool">
   <item>Base Category</item>
  </portal_type>
@@ -47,17 +44,8 @@
  <portal_type id="Order Tool">
   <item>Order Builder</item>
  </portal_type>
- <portal_type id="Predicate">
-  <item>Value Predicate</item>
- </portal_type>
  <portal_type id="Preference Tool">
   <item>Preference</item>
- </portal_type>
- <portal_type id="Property Divergence Tester">
-  <item>edit_workflow</item>
- </portal_type>
- <portal_type id="Quantity Divergence Tester">
-  <item>edit_workflow</item>
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Invoice Rule</item>
