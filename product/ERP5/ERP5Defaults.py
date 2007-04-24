@@ -191,6 +191,7 @@ portal_draft_order_state_list =  ('cancelled', 'draft', 'auto_planned' )
 portal_planned_order_state_list =  ('planned', 'ordered', )
 
 portal_future_inventory_state_list = ('planned', 'ordered',)
+portal_transit_inventory_state_list = ()
 portal_reserved_inventory_state_list = ('confirmed', 'getting_ready', 'ready')
 portal_current_inventory_state_list = ('delivered', 'started', 'stopped', 'invoiced')
 # invoiced is Coramy specific and should be removed
