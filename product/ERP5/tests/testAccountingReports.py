@@ -966,8 +966,8 @@ class TestAccountingReports(AccountingTestCase):
     self.checkLineProperties(data_line_list[8], node_id='6',
         node_title='Goods Purchase', initial_debit_balance=0,
         initial_credit_balance=0, debit=0, credit=0, final_debit_balance=0,
-        final_credit_balance=0, final_balance_if_credit=0,
-        final_balance_if_debit=0)
+        final_credit_balance=0, final_balance_if_debit=0,
+        final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[9], node_id='7',
         node_title='Goods Sales', initial_debit_balance=0,
@@ -979,7 +979,7 @@ class TestAccountingReports(AccountingTestCase):
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=3600,
         credit=3600, final_debit_balance=3600, final_credit_balance=3600,
-        final_balance_if_debit=None, final_balance_if_credit=None)
+        final_balance_if_debit=3300, final_balance_if_credit=3300)
 
     
   def testTrialBalanceExpandAccounts(self):
@@ -1044,7 +1044,7 @@ class TestAccountingReports(AccountingTestCase):
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=2100,
         credit=2100, final_debit_balance=2100, final_credit_balance=2100,
-        final_balance_if_debit=None, final_balance_if_credit=None)
+        final_balance_if_debit=1800, final_balance_if_credit=1800)
 
 
   def testTrialBalancePreviousPeriod(self):
@@ -1149,7 +1149,7 @@ class TestAccountingReports(AccountingTestCase):
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=600, initial_credit_balance=600, debit=2150,
         credit=2150, final_debit_balance=2750, final_credit_balance=2750,
-        final_balance_if_debit=None, final_balance_if_credit=None)
+        final_balance_if_debit=2350, final_balance_if_credit=2350)
 
   def testTrialBalanceDifferentCurrencies(self):
     # Test of trial balance and different currencies
@@ -1218,7 +1218,7 @@ class TestAccountingReports(AccountingTestCase):
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=500,
         credit=500, final_debit_balance=500, final_credit_balance=500,
-        final_balance_if_debit=None, final_balance_if_credit=None)
+        final_balance_if_debit=500, final_balance_if_credit=500)
 
 
   def testGeneralLedger(self):
