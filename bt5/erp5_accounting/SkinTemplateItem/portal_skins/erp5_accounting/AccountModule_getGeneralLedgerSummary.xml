@@ -76,14 +76,48 @@ inventory_kw = dict(section_uid=section_uid,\n
                     at_date=at_date,\n
                     portal_type=context.getPortalAccountingMovementTypeList(),\n
                     )\n
-if node_category:\n
-  inventory_kw[\'node_category\'] = node_category\n
 \n
-return [Object(\n
-   debit=getInventoryAssetPrice(omit_output=1,\n
-                                **inventory_kw),\n
-  credit= - getInventoryAssetPrice(omit_input=1,\n
-                                **inventory_kw) or 0,)]\n
+if node_category:\n
+  # XXX if node category is passed, income or balance accounts are not\n
+  # calculated differently. As a result, the summary doesn\'t take from_date\n
+  # into account for income accounts.\n
+  return [Object(\n
+            debit=getInventoryAssetPrice(omit_output=1,\n
+                               node_category=node_category,\n
+                               precision=precision,\n
+                               **inventory_kw),\n
+            credit=-getInventoryAssetPrice(omit_input=1,\n
+                               node_category=node_category,\n
+                               precision=precision,\n
+                                **inventory_kw) or 0 ) ]\n
+\n
+income_node_category = [\'account_type/income\', \'account_type/expense\']\n
+balance_node_category = [\'account_type/equity\', \'account_type/asset\',\n
+                         \'account_type/liability\']\n
+\n
+debit = getInventoryAssetPrice(omit_output=1,\n
+                               from_date=period_start_date,\n
+                               node_category=income_node_category,\n
+                               precision=precision,\n
+                               **inventory_kw)\n
+\n
+credit = - getInventoryAssetPrice(omit_input=1,\n
+                               from_date=period_start_date,\n
+                               node_category=income_node_category,\n
+                               precision=precision,\n
+                                **inventory_kw) or 0\n
+\n
+debit += getInventoryAssetPrice(omit_output=1,\n
+                               node_category=balance_node_category,\n
+                               precision=precision,\n
+                               **inventory_kw)\n
+\n
+credit -= getInventoryAssetPrice(omit_input=1,\n
+                               node_category=balance_node_category,\n
+                               precision=precision,\n
+                                **inventory_kw) or 0\n
+\n
+return [Object(debit=debit, credit=credit)]\n
 </string> </value>
         </item>
         <item>
@@ -106,7 +140,7 @@ return [Object(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section_uid, simulation_state, at_date, node_category=None, from_date=\'ignored\', **kw</string> </value>
+            <value> <string>section_uid, simulation_state, at_date, period_start_date, precision, node_category=None, from_date=\'ignored\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -126,7 +160,7 @@ return [Object(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>7</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -135,18 +169,23 @@ return [Object(\n
                             <string>section_uid</string>
                             <string>simulation_state</string>
                             <string>at_date</string>
+                            <string>period_start_date</string>
+                            <string>precision</string>
                             <string>node_category</string>
                             <string>from_date</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>getInventoryAssetPrice</string>
                             <string>dict</string>
                             <string>inventory_kw</string>
-                            <string>_write_</string>
                             <string>_apply_</string>
+                            <string>income_node_category</string>
+                            <string>balance_node_category</string>
+                            <string>debit</string>
+                            <string>credit</string>
                           </tuple>
                         </value>
                     </item>

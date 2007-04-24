@@ -90,12 +90,18 @@ period_start_date = context\\\n
     .Base_getAccountingPeriodStartDateForSectionCategory(\n
           section_category=section_category, date=from_date or at_date)\n
 \n
+# currency precision\n
+currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
+precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
+request.set(\'precision\', precision)\n
+\n
 # TODO\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', False)\n
 \n
 request.other[\'is_accounting_report\'] = True\n
 \n
 params = dict(at_date=at_date,\n
+              precision=precision,\n
               section_uid=section_uid,\n
               simulation_state=simulation_state,\n
               omit_grouping_reference=omit_grouping_reference,\n
@@ -313,6 +319,8 @@ return result\n
                             <string>False</string>
                             <string>display_categories</string>
                             <string>period_start_date</string>
+                            <string>currency</string>
+                            <string>precision</string>
                             <string>omit_grouping_reference</string>
                             <string>_write_</string>
                             <string>dict</string>
