@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Get the report sections for general ledger\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Get the report sections for general ledger\n
 """\n
 from Products.ERP5Form.Report import ReportSection\n
 request  = context.REQUEST\n
@@ -114,7 +116,8 @@ if from_date:\n
 \n
 result = []\n
 \n
-account_columns = (\n
+if len(simulation_state) > 1:\n
+  account_columns = (\n
       (\'Movement_getSpecificReference\', \'Reference\'),\n
       (\'Movement_getExplanationTitle\', \'Title\'),\n
       (\'date\', \'Date\'),\n
@@ -122,6 +125,17 @@ account_columns = (\n
       (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
       (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
       (\'getTranslatedSimulationStateTitle\', \'State\'),\n
+      (\'debit\', \'Debit\'),\n
+      (\'credit\', \'Credit\'),\n
+      (\'running_total_price\', \'Net\'), )\n
+else:\n
+  account_columns = (\n
+      (\'Movement_getSpecificReference\', \'Reference\'),\n
+      (\'Movement_getExplanationTitle\', \'Title\'),\n
+      (\'date\', \'Date\'),\n
+      (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
+      (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
+      (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
       (\'debit\', \'Debit\'),\n
       (\'credit\', \'Credit\'),\n
       (\'running_total_price\', \'Net\'), )\n
@@ -255,7 +269,9 @@ result.append(ReportSection(\n
               selection_params=total_params))\n
 \n
 return result\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -326,6 +342,7 @@ return result\n
                             <string>dict</string>
                             <string>params</string>
                             <string>result</string>
+                            <string>len</string>
                             <string>account_columns</string>
                             <string>gap_value_list</string>
                             <string>cat</string>
@@ -337,7 +354,6 @@ return result\n
                             <string>strict_account_list</string>
                             <string>skip_branch</string>
                             <string>account</string>
-                            <string>len</string>
                             <string>_apply_</string>
                             <string>third_party_brain</string>
                             <string>third_party_params</string>
