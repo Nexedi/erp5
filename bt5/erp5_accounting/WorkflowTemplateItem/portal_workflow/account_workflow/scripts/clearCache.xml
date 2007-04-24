@@ -73,7 +73,7 @@ list of accounts.\n
 """\n
 from Products.CMFCore.utils import getToolByName\n
 portal_caches = getToolByName(sci.getPortal(), \'portal_caches\')\n
-portal_caches.clearCache()\n
+portal_caches.activate(priority=3).clearCache()\n
 </string> </value>
         </item>
         <item>
