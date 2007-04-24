@@ -75,13 +75,17 @@ initial_debit_balance = request[\'TrialBalance.total_initial_debit_balance\']\n
 initial_credit_balance = request[\'TrialBalance.total_initial_credit_balance\']\n
 debit = request[\'TrialBalance.debit\']\n
 credit = request[\'TrialBalance.credit\']\n
+final_balance_if_debit = request[\'TrialBalance.final_balance_if_debit\']\n
+final_balance_if_credit = request[\'TrialBalance.final_balance_if_credit\']\n
 \n
 return [ Object( initial_debit_balance=initial_debit_balance,\n
                  initial_credit_balance=initial_credit_balance,\n
                  debit=debit,\n
                  credit=credit,\n
                  final_debit_balance=initial_debit_balance + debit,\n
-                 final_credit_balance=initial_credit_balance + credit ) ]\n
+                 final_credit_balance=initial_credit_balance + credit,\n
+                 final_balance_if_debit=final_balance_if_debit,\n
+                 final_balance_if_credit=final_balance_if_credit ) ]\n
 </string> </value>
         </item>
         <item>
@@ -141,6 +145,8 @@ return [ Object( initial_debit_balance=initial_debit_balance,\n
                             <string>initial_credit_balance</string>
                             <string>debit</string>
                             <string>credit</string>
+                            <string>final_balance_if_debit</string>
+                            <string>final_balance_if_credit</string>
                           </tuple>
                         </value>
                     </item>
