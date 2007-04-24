@@ -260,7 +260,6 @@ class SimulationTool(BaseTool):
           sql_kw['output_simulation_state'] = output_simulation_state
         # XXX In this case, we must not set sql_kw[input_simumlation_state] before
         input_simulation_state = None
-        simulation_query = None
         output_simulation_state = None
         if sql_kw.has_key('input_simulation_state'):
           input_simulation_state = sql_kw.get('input_simulation_state')
@@ -1195,7 +1194,6 @@ class SimulationTool(BaseTool):
                delivered for the last time before at_date or to_date". Cannot be used with input
 
       """
-      kw = self._getDefaultGroupByParameters(**kw)
       new_kw = self._generateSQLKeywordDict(table='item',strict_simulation_state=strict_simulation_state,**kw)
       at_date = kw.get('at_date',None)
       if at_date is not None:
