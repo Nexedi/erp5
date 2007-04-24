@@ -86,7 +86,7 @@ section_uid = portal.Base_getSectionUidListForSectionCategory(\n
                                    request[\'section_category\'])\n
 \n
 period_start_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(\n
-         section_category=request[\'section_category\'], date=from_date or at_date)\n
+       section_category=request[\'section_category\'], date=from_date or at_date)\n
 # for the report summary\n
 request.set(\'period_start_date\', period_start_date)\n
 \n
@@ -97,6 +97,15 @@ if not from_date:\n
 currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
 precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
 request.set(\'precision\', precision)\n
+\n
+\n
+# optional GAP filter\n
+node_uid = []\n
+gap = request.get(\'gap\', None)\n
+if gap:\n
+  gap_value = portal.portal_categories.gap.restrictedTraverse(gap)\n
+  node_uid = [x.uid for x in gap_value.getCategoryMemberValueList(\n
+                portal_type=\'Account\')]\n
 \n
 request.set(\'is_accounting_report\', True)\n
 \n
@@ -118,7 +127,8 @@ return [ ReportSection(\n
                                           period_start_date.earliestTime(),\n
                                   section_uid=section_uid,\n
                                   simulation_state=simulation_state,\n
-                                  precision=precision ),) ]\n
+                                  precision=precision,\n
+                                  node_uid=node_uid), )]\n
 </string> </value>
         </item>
         <item>
@@ -186,6 +196,13 @@ return [ ReportSection(\n
                             <string>period_start_date</string>
                             <string>currency</string>
                             <string>precision</string>
+                            <string>node_uid</string>
+                            <string>gap</string>
+                            <string>gap_value</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                             <string>True</string>
                             <string>dict</string>
                           </tuple>

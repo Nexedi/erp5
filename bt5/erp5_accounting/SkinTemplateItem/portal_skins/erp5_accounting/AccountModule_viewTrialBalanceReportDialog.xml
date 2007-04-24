@@ -80,7 +80,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_gap</string>
+                      </list>
                     </value>
                 </item>
                 <item>

@@ -88,6 +88,9 @@ inventory_params = dict(section_uid=section_uid,\n
                         simulation_state=simulation_state,\n
                         precision=precision,\n
                         group_by_resource=0)\n
+if node_uid:\n
+  inventory_params[\'node_uid\'] = node_uid\n
+\n
 MARKER = Object()\n
 \n
 # a dictionary (node_relative_url, mirror_section_uid, payment_uid)\n
@@ -602,7 +605,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, **kw</string> </value>
+            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -622,7 +625,7 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -636,6 +639,7 @@ return line_list\n
                             <string>section_uid</string>
                             <string>simulation_state</string>
                             <string>precision</string>
+                            <string>node_uid</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -657,6 +661,7 @@ return line_list\n
                             <string>accounting_movement_type_list</string>
                             <string>dict</string>
                             <string>inventory_params</string>
+                            <string>_write_</string>
                             <string>MARKER</string>
                             <string>line_per_account</string>
                             <string>account_used</string>
@@ -672,7 +677,6 @@ return line_list\n
                             <string>total_final_balance_if_credit</string>
                             <string>_apply_</string>
                             <string>node</string>
-                            <string>_write_</string>
                             <string>_getitem_</string>
                             <string>account_props</string>
                             <string>round</string>
@@ -688,7 +692,6 @@ return line_list\n
                             <string>mirror_section_uid</string>
                             <string>payment_uid</string>
                             <string>data</string>
-                            <string>node_uid</string>
                             <string>node_title</string>
                             <string>node_id</string>
                             <string>None</string>
