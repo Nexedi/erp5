@@ -1220,6 +1220,58 @@ class TestAccountingReports(AccountingTestCase):
         credit=500, final_debit_balance=500, final_credit_balance=500,
         final_balance_if_debit=500, final_balance_if_credit=500)
 
+  def testTrialBalanceGAPFilter(self):
+    # Test of GAP filter on trial balance
+    self.createAccountStatementDataSet()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 1
+    request_form['gap'] = 'my_country/my_accounting_standards/4'
+
+    report_section_list = self.getReportSectionList(
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+ 
+    self.assertEquals(4, len(data_line_list))
+
+    # account are sorted by GAP Id
+    self.checkLineProperties(data_line_list[0], node_id='40',
+        node_title='Payable (Client 1)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=200, credit=100,
+        final_debit_balance=200, final_credit_balance=100,
+        final_balance_if_debit=100, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[1], node_id='41',
+        node_title='Receivable (Client 1)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=1000, credit=200,
+        final_debit_balance=1000, final_credit_balance=200,
+        final_balance_if_debit=800, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[2], node_id='41',
+        node_title='Receivable (Client 2)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=400, credit=0, final_debit_balance=400,
+        final_credit_balance=0, final_balance_if_debit=400,
+        final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[3], node_id='41',
+        node_title='Receivable (John Smith)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=500, credit=0,
+        final_debit_balance=500, final_credit_balance=0,
+        final_balance_if_debit=500, final_balance_if_credit=0,)
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=0, initial_credit_balance=0, debit=2100,
+        credit=300, final_debit_balance=2100, final_credit_balance=300,
+        final_balance_if_debit=1800, final_balance_if_credit=0)
 
   def testGeneralLedger(self):
     # Simple test of general ledger
