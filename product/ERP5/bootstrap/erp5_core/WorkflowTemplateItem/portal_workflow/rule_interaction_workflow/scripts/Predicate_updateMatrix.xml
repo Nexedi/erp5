@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>rule = state_change.object.getParentValueb()\n
+            <value> <string>rule = state_change.object.getParentValue()\n
 \n
 if rule.getPortalType() in (\'Invoice Transaction Rule\', \'Payment Rule\') :\n
   rule.updateMatrix()\n
