@@ -606,7 +606,6 @@ class BaobabConduit(ERP5Conduit):
                , 200
                , 'no bank account found'
                )
-            import pdb;pdb.set_trace()
             raise KeyError, 'No bank account Found'
 
 
@@ -674,6 +673,9 @@ class BaobabConduit(ERP5Conduit):
                )
 
 
+    if object.getPortalType() == 'Bank Account':
+      object.portal_workflow.doActionFor(object, 'validate_action', 
+                                         wf_id='bank_account_workflow')
 
 
   """
