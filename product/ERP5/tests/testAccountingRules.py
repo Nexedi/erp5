@@ -205,7 +205,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_transaction_rule.deleteContent(
                 [x for x in invoice_transaction_rule.objectIds()])
     self.assertEquals(len(invoice_transaction_rule.objectValues()), 0)
-    
+    get_transaction().commit()
+
     # and add new content, predicate product_line
     predicate_product_notebook = invoice_transaction_rule.newContent(
       id = 'product_notebook',

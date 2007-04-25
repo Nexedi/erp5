@@ -177,6 +177,8 @@ class TestInvoice(TestPackingListMixin,
     
     invoice_rule.deleteContent([x.getId()
                           for x in invoice_rule.objectValues()])
+    get_transaction().commit()
+    self.tic()
     region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
     product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
     region_predicate.edit(
