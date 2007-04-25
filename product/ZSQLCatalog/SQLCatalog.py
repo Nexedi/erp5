@@ -1284,7 +1284,7 @@ class Catalog( Folder,
           self._max_uid = Length()
         if uid > self._max_uid():
           self._max_uid.set(uid)
-        return uid
+        return long(uid)
       else:
         raise CatalogError("Could not retrieve new uid")
     finally:
@@ -1456,13 +1456,15 @@ class Catalog( Folder,
         path = object.getPath()
         index = self.getUidForPath(path)
         try:
-          index = int(index)
+          index = long(index)
         except TypeError:
-          pass
+          index = None
         if index is not None and index < 0:
           raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
         if index:
-          if uid != index:
+          # Use "is not" instead of "!=", because we want to make sure that
+          # uid becomes long, if it is int.
+          if uid is not index:
             LOG('SQLCatalog', WARNING, 'uid of %r changed from %r (property) to %r (catalog, by path) !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
             uid = index
             object.uid = uid
