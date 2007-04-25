@@ -149,9 +149,9 @@ min_column_width = 1\n
 max_line_len = {}\n
 number = (int, float, long)\n
 for listboxline in listboxline_list:\n
-  line_width = 0\n
   col_count = 0\n
   for column_id, column_property in listboxline.getColumnItemList():\n
+    col_count += 1\n
     if isinstance(column_property, number):\n
       string_property = "%s+++" % (column_property)\n
     elif isinstance(column_property, DateTime):\n
@@ -161,9 +161,9 @@ for listboxline in listboxline_list:\n
     if listboxline.isStatLine():\n
       string_property = "%s+++++" % string_property\n
     elif listboxline.isTitleLine():\n
-      string_property = str(N_(string_property))\n
-    line_width += len(string_property)\n
-    new_column_max_len = max(len(string_property), max_line_len.get(column_id, 0))\n
+      string_property = "%s++++++++" % str(N_(string_property))\n
+    new_column_max_len = max(len(string_property),\n
+                             max_line_len.get(column_id, 0))\n
     update_dict = {}\n
     update_dict[column_id] = new_column_max_len\n
     max_line_len.update(update_dict)\n
@@ -171,7 +171,10 @@ for listboxline in listboxline_list:\n
 total_max_len = float(sum(max_line_len.values()))\n
 result = {}\n
 for column_id, max_len in max_line_len.items() :\n
-  result[column_id] = max( (max(max_len, 1) / total_max_len) * frame_width, min_column_width)\n
+  result[column_id] = min(\n
+                       max((max(max_len, 1) / total_max_len) * frame_width,\n
+                          min_column_width),\n
+                       frame_width / col_count + 5)\n
 \n
 return result\n
 </string> </value>
