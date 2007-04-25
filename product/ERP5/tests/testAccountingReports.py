@@ -1312,8 +1312,7 @@ class TestAccountingReports(AccountingTestCase):
         'Movement_getExplanationTitle', 'date',
         'Movement_getExplanationTranslatedPortalType',
         'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
-        'getTranslatedSimulationStateTitle', 'debit', 'credit',
-        'running_total_price'],
+        'debit', 'credit', 'running_total_price'],
         data_line_list[0].column_id_list)
     
     self.assertEquals(2, len(data_line_list))
