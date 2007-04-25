@@ -68,8 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>pt = context.content_type_registry.findTypeName(\'a.%s\' %ext, None, None)\n
-return (pt,)\n
+            <value> <string>"""\n
+  This scripts counts the documents belonging to a given Person.\n
+  If it is called on a Person object, it counts the documents\n
+  which belong to that person. If it is called on another type\n
+  of object, it counts the document which belong to the current\n
+  user.\n
+"""\n
+if context.getPortalType() == \'Person\':\n
+  # If context is a person, get the user\n
+  user = context.getReference()\n
+  return context.ContributionTool_countMyContentList(user=user, **kw)\n
+else:\n
+  return context.ContributionTool_countMyContentList(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -85,8 +96,14 @@ return (pt,)\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>ext</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -106,17 +123,17 @@ return (pt,)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>ext</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
-                            <string>pt</string>
+                            <string>user</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -133,7 +150,7 @@ return (pt,)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ContributionTool_getCandidateTypeListByExtension</string> </value>
+            <value> <string>Person_countMyContentList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

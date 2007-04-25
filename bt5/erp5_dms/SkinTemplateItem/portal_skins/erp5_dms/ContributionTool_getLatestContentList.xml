@@ -69,15 +69,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Get latest documents (sort by creation_date descending,\n
-  with no other option)\n
+  Get latest documents sort.\n
 """\n
 \n
 kw[\'portal_type\'] = context.getPortalDocumentTypeList()\n
 kw[\'sort_on\'] = ((\'creation_date\',\'descending\'),)\n
 res = context.portal_catalog(**kw)\n
-\n
-\n
 return res\n
 </string> </value>
         </item>

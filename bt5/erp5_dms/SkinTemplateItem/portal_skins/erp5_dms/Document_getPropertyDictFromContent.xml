@@ -79,6 +79,7 @@ and return a dictionary of properties.\n
 """\n
 \n
 information = context.getContentInformation()\n
+\n
 result = {}\n
 property_id_list = context.propertyIds()\n
 for k, v in information.items():  \n
