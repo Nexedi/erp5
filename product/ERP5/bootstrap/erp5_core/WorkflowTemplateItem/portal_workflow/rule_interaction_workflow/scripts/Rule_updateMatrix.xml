@@ -69,7 +69,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>matrix = state_change.object\n
-matrix.activate(after_path_and_method_id=([matrix.getPath(),], [\'immediateReindexObject\',\'recursiveImmediateReindexObject\'])).updateMatrix()\n
+matrix.activate(\n
+    after_path_and_method_id=([matrix.getPath(),],\n
+        [\'immediateReindexObject\', \'recursiveImmediateReindexObject\'])\n
+    ).updateMatrix()\n
 </string> </value>
         </item>
         <item>
