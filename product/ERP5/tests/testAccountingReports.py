@@ -1323,7 +1323,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=0, credit=100, running_total_price=-100, )
     
     self.checkLineProperties(data_line_list[1],
@@ -1333,7 +1332,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=200, credit=0, running_total_price=100, )
     
     self.failUnless(line_list[-1].isStatLine())
@@ -1344,7 +1342,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType=None,
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle=None,
-          getTranslatedSimulationStateTitle=None,
           debit=200, credit=100, )
     
     self.assertEquals('41: Receivable (Client 1)',
@@ -1359,7 +1356,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=100, credit=0, running_total_price=100, )
     
     self.checkLineProperties(data_line_list[1],
@@ -1369,7 +1365,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=0, credit=200, running_total_price=-100, )
     
     self.checkLineProperties(data_line_list[2],
@@ -1379,7 +1374,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=300, credit=0, running_total_price=200, )
     
     self.checkLineProperties(data_line_list[3],
@@ -1390,7 +1384,6 @@ class TestAccountingReports(AccountingTestCase):
                 ='Purchase Invoice Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=600, credit=0, running_total_price=800, )
     
     self.checkLineProperties(data_line_list[4],
@@ -1400,7 +1393,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=800, credit=0, running_total_price=1600, )
     
     self.failUnless(line_list[-1].isStatLine())
@@ -1411,7 +1403,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType=None,
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle=None,
-          getTranslatedSimulationStateTitle=None,
           debit=1800, credit=200, )
 
     self.assertEquals('41: Receivable (Client 2)',
@@ -1426,7 +1417,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 2',
-          getTranslatedSimulationStateTitle='Closed',
           debit=400, credit=0, running_total_price=400, )
     
     self.failUnless(line_list[-1].isStatLine())
@@ -1444,7 +1434,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='John Smith',
-          getTranslatedSimulationStateTitle='Closed',
           debit=500, credit=0, running_total_price=500, )
     
     self.failUnless(line_list[-1].isStatLine())
@@ -1462,7 +1451,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=0, credit=300, running_total_price=-300, )
     
     self.checkLineProperties(data_line_list[1],
@@ -1472,7 +1460,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 2',
-          getTranslatedSimulationStateTitle='Closed',
           debit=0, credit=400, running_total_price=-700, )
 
     self.checkLineProperties(data_line_list[2],
@@ -1482,7 +1469,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='John Smith',
-          getTranslatedSimulationStateTitle='Closed',
           debit=0, credit=500, running_total_price=-1200, )
 
     self.checkLineProperties(data_line_list[3],
@@ -1493,7 +1479,6 @@ class TestAccountingReports(AccountingTestCase):
                               ='Purchase Invoice Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=0, credit=600, running_total_price=-1800, )
 
     self.checkLineProperties(data_line_list[4],
@@ -1503,7 +1488,6 @@ class TestAccountingReports(AccountingTestCase):
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
           Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
-          getTranslatedSimulationStateTitle='Closed',
           debit=0, credit=800, running_total_price=-2600, )
     
     self.failUnless(line_list[-1].isStatLine())
