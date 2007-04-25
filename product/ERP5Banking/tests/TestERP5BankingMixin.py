@@ -608,10 +608,12 @@ class TestERP5BankingMixin:
               if 'devises' in ss.getId():
                 for currency in ['eur','usd']:
                     ss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(ss.getId(),))
+              if 'encaisse_des_externes' in ss.getId():
+                ss.newContent(id='transit', portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
               #if ss.getId()=='encaisse_des_devises':
               #  for
             if s.getId() == 'auxiliaire':
-              for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
+              for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits', 'billets_detenus_par_des_tiers', 'encaisse_des_billets_recus_pour_ventilation_venant_de']:
                 s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
         # Create forreing currency entries in encaisse_des_devises.
         for currency in ['usd', ]:
