@@ -241,7 +241,7 @@ class XMLMatrix(Folder):
                                             # then we do not need to
                                             # work on it
               object_id_list += [object_id]
-            except ValueError, KeyError:
+            except (ValueError, KeyError):
               pass
 
       for object_id in object_id_list:
