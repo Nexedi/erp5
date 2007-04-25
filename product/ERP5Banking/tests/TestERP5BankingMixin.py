@@ -731,6 +731,8 @@ class TestERP5BankingMixin:
       kw['bank_account_number'] = '123456789012'
     if not kw.has_key('bank_account_key'):
       kw['bank_account_key'] = '12'
+    if not kw.has_key('internal_bank_account_number'):
+      kw['internal_bank_account_number'] = 'k12341234512'
     bank_account = person.newContent(id = account_id,
                                      portal_type = 'Bank Account',
                                      price_currency_value = currency,
