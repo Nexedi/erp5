@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:condition="here/portal_skins/updateSkinCookie | nothing"\n
+           tal:define="dummy here/setupCurrentSkin;" />\n
+<tal:block tal:define="response request/RESPONSE;\n
+                       mtool here/portal_membership;\n
+                       isAnon mtool/isAnonymousUser|nothing;">\n
+  <tal:block tal:condition="isAnon">\n
+    <tal:block tal:define="dummy python: response.expireCookie(\'__ac\', path=\'/\');\n
+                           url python: \'%s?came_from=%s&portal_status_message=%s\' % (request[\'came_from\'], request[\'came_from\'], here.getPortalObject().Localizer.translate(\'ui\', \'Sorry,+the+email+adress and/or+the+password+that+you+provided+are+incorrect.\'));\n
+                           dummy python: response.redirect(url);"/>\n
+  </tal:block>\n
+  <tal:block tal:condition="not: isAnon">\n
+    <tal:block tal:define="came_from python: \'%s/group_section\' % request.get(\'came_from\') or here.portal_url() + \'/view\';\n
+                           dummy python: response.redirect(came_from);" />\n
+  </tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_login</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Login Page Template used by login and resitration main page</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
