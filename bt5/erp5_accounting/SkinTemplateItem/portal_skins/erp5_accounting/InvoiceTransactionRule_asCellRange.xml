@@ -71,9 +71,9 @@
             <value> <string>dimension_list = [\'tax_category\', \'product\', \'region\', \'product_line\',\n
                   \'destination_region\', \'has_vat_number\', \'movement\']\n
 \n
-dimension_list.extend([ pred.getStringIndex()\n
-            for pred in context.objectValues(portal_type=\'Predicate\')\n
-            if pred.getStringIndex() not in dimension_list ])\n
+for pred in context.objectValues(portal_type=\'Predicate\'):\n
+  if pred.getStringIndex() not in dimension_list:\n
+    dimension_list.append(pred.getStringIndex())\n
 \n
 if list_dimensions:\n
   return dimension_list\n
@@ -83,8 +83,8 @@ dimension_result_list = []\n
 for dimension in dimension_list:\n
   if dimension is not None:\n
     predicate_list = [x for x in context.contentValues(portal_type=\'Predicate\')\n
-                       if x.getProperty(\'string_index\') == dimension ]\n
-    predicate_list.sort(lambda a,b: cmp(a.getProperty(\'int_index\', 0),\n
+                       if x.getStringIndex() == dimension ]\n
+    predicate_list.sort(lambda a,b: cmp(a.getProperty(\'int_index\', 1),\n
                                         b.getProperty(\'int_index\', 1)))\n
     if len(predicate_list):\n
       dimension_result_list.append(predicate_list)\n
@@ -92,7 +92,7 @@ for dimension in dimension_list:\n
 dimension_ids_list = []\n
 \n
 if matrixbox:\n
-  for dimension_result in dimension_result_list :\n
+  for dimension_result in dimension_result_list:\n
     dimension_ids_list.append(\n
               [(x.getObject().getRelativeUrl(),\n
                 x.getObject().getTitle()) for x in dimension_result])\n
@@ -149,15 +149,15 @@ return dimension_ids_list\n
                             <string>list_dimensions</string>
                             <string>kw</string>
                             <string>dimension_list</string>
-                            <string>_getattr_</string>
-                            <string>append</string>
-                            <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
                             <string>context</string>
                             <string>pred</string>
                             <string>dimension_result_list</string>
                             <string>dimension</string>
                             <string>None</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>x</string>
                             <string>predicate_list</string>
                             <string>len</string>
