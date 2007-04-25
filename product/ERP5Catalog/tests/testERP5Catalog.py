@@ -518,6 +518,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uid_dict = {}
     for i in xrange(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
+      self.failUnless(isinstance(uid, long))
       self.failIf(uid in uid_dict)
       uid_dict[uid] = None
   
@@ -1753,6 +1754,37 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failIfDifferentSet([org_a.getPath(), org_b.getPath()],
         [x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',**catalog_kw)])
+
+  def test_54_FixIntUid(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test if portal_catalog ensures that uid is long'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    portal_catalog = self.getCatalogTool()
+    portal = self.getPortal()
+
+    module = portal.getDefaultModule('Organisation')
+    organisation = module.newContent(portal_type='Organisation',)
+    # Ensure that the new uid is long.
+    uid = organisation.uid
+    self.failUnless(isinstance(uid, long))
+    get_transaction().commit()
+    self.tic()
+
+    # Ensure that the uid did not change after the indexing.
+    self.assertEquals(organisation.uid, uid)
+
+    # Force to convert the uid to int.
+    self.uid = int(uid)
+    get_transaction().commit()
+    self.tic()
+
+    # After the indexing, the uid must be converted to long automatically,
+    # and the value must be equivalent.
+    self.failUnless(isinstance(uid, long))
+    self.assertEquals(organisation.uid, uid)
+
 
 if __name__ == '__main__':
     framework()
