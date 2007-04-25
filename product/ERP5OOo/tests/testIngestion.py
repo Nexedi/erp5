@@ -52,7 +52,6 @@ conversion_server_host = ('127.0.0.1', 8008)
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.getenv('INSTANCE_HOME'), 'Products', 'ERP5OOo', 'tests', 'test_document')
-
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
@@ -354,13 +353,14 @@ class TestIngestion(ERP5TypeTestCase):
       Tries to a create new content through portal_contributions
       for every possible file type. If with_portal_type is set
       to true, portal_type is specified when calling newContent
-      on portal_contributions. 
+      on portal_contributions.
+      http://framework.openoffice.org/documentation/mimetypes/mimetypes.html
     """
     created_documents = []
     extension_to_type = (('ppt', 'Presentation')
                         ,('doc', 'Text')
                         ,('sdc', 'Spreadsheet')
-                        ,('sxc', 'File')
+                        ,('sxc', 'Spreadsheet')
                         ,('pdf', 'PDF')
                         ,('jpg', 'Image')
                         ,('py', 'File')
