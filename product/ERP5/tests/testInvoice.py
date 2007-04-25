@@ -67,6 +67,7 @@ class TestInvoice(TestPackingListMixin,
   """Test invoice are created from orders then packing lists. """
 
   RUN_ALL_TESTS = 1
+  quiet = 1
 
   default_region = "europe/west/france"
   vat_gap = 'fr/pcg/4/44/445/4457/44571'
@@ -676,7 +677,7 @@ class TestInvoice(TestPackingListMixin,
     sequence.edit(new_invoice=new_invoice)
 
   def stepConfirmTwoInvoices(self,sequence=None, sequence_list=None, **kw):
-    """ confirme both invoices. """
+    """ confirm both invoices. """
     portal = self.getPortal()
     invoice = sequence.get('invoice')
     new_invoice = sequence.get('new_invoice')
@@ -1050,12 +1051,13 @@ class TestInvoice(TestPackingListMixin,
       stepCheckNewPackingListIsPacked
     """
 
-  def test_01_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_01_SimpleInvoice(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Checks that a Simple Invoice is created from a Packing List
     """
     if not run: return
-    self.logMessage('Simple Invoice')
+    if not quiet:
+      self.logMessage('Simple Invoice')
     sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       sequence_list.addSequenceString(
@@ -1070,9 +1072,9 @@ class TestInvoice(TestPackingListMixin,
         stepRebuildAndCheckNothingIsCreated
         stepCheckInvoicesConsistency
       """)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_02_TwoInvoicesFromTwoPackingList(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_02_TwoInvoicesFromTwoPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     This test was created for the following bug:
         - an order is created and confirmed
@@ -1084,7 +1086,8 @@ class TestInvoice(TestPackingListMixin,
           and an invoice with no accounting rules. both invoices are wrong
     """
     if not run: return
-    self.logMessage('Two Invoices from Two Packing List')
+    if not quiet:
+      self.logMessage('Two Invoices from Two Packing List')
     sequence_list = SequenceList()
     for base_sequence in (self.TWO_PACKING_LIST_DEFAULT_SEQUENCE, ) :
       sequence_list.addSequenceString(
@@ -1103,9 +1106,9 @@ class TestInvoice(TestPackingListMixin,
         stepCheckTwoInvoicesTransactionLines
         stepCheckInvoicesConsistency
       """)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_03_InvoiceEditAndInvoiceRule(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_03_InvoiceEditAndInvoiceRule(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Invoice Rule should not be applied on invoice lines created from\
     Packing List.
@@ -1118,7 +1121,8 @@ class TestInvoice(TestPackingListMixin,
         movements for this invoice are present twice in the simulation.
     """
     if not run: return
-    self.logMessage('Invoice Edit')
+    if not quiet:
+      self.logMessage('Invoice Edit')
     sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       sequence_list.addSequenceString(
@@ -1134,15 +1138,17 @@ class TestInvoice(TestPackingListMixin,
         stepCheckInvoiceRuleNotAppliedOnInvoiceEdit
         stepCheckInvoicesConsistency
       """)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_04_PackingListEditAndInvoiceRule(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_04_PackingListEditAndInvoiceRule(self, quiet=quiet,
+      run=RUN_ALL_TESTS):
     """
     Delivery Rule should not be applied on packing list lines created\
     from Order.
     """
     if not run: return
-    self.logMessage('Packing List Edit')
+    if not quiet:
+      self.logMessage('Packing List Edit')
     sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       sequence_list.addSequenceString(
@@ -1152,15 +1158,16 @@ class TestInvoice(TestPackingListMixin,
         stepCheckDeliveryRuleNotAppliedOnPackingListEdit
         stepCheckInvoicesConsistency
       """)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_05_InvoiceEditPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_05_InvoiceEditPackingListLine(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Checks that editing a Packing List Line still creates a correct
     Invoice
     """
     if not run: return
-    self.logMessage('Packing List Line Edit')
+    if not quiet:
+      self.logMessage('Packing List Line Edit')
     sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       sequence_list.addSequenceString(
@@ -1176,16 +1183,17 @@ class TestInvoice(TestPackingListMixin,
       stepRebuildAndCheckNothingIsCreated
       stepCheckInvoicesConsistency
     """)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_06_InvoiceDeletePackingListLine(self, quiet=0,
+  def test_06_InvoiceDeletePackingListLine(self, quiet=quiet,
       run=RUN_ALL_TESTS):
     """
     Checks that deleting a Packing List Line still creates a correct
     Invoice
     """
     if not run: return
-    self.logMessage('Packing List Line Delete')
+    if not quiet:
+      self.logMessage('Packing List Line Delete')
     sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE, ) :
       sequence_list.addSequenceString(
@@ -1201,15 +1209,16 @@ class TestInvoice(TestPackingListMixin,
       stepRebuildAndCheckNothingIsCreated
       stepCheckInvoicesConsistency
     """)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_07_InvoiceAddPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_07_InvoiceAddPackingListLine(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Checks that adding a Packing List Line still creates a correct
     Invoice
     """
     if not run: return
-    self.logMessage('Packing List Line Add')
+    if not quiet:
+      self.logMessage('Packing List Line Add')
     sequence_list = SequenceList()
     for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE,
         self.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE) :
@@ -1228,16 +1237,17 @@ class TestInvoice(TestPackingListMixin,
       stepRebuildAndCheckNothingIsCreated
       stepCheckInvoicesConsistency
     """)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_08_InvoiceDecreaseQuantity(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_08_InvoiceDecreaseQuantity(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Change the quantity of a Invoice Line,
     check that the invoice is divergent,
     then split and defer, and check everything is solved
     """
     if not run: return
-    self.logMessage('Invoice Decrease Qantity')
+    if not quiet:
+      self.logMessage('Invoice Decrease Qantity')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
     """
     stepSetReadyPackingList
@@ -1265,16 +1275,17 @@ class TestInvoice(TestPackingListMixin,
     stepRebuildAndCheckNothingIsCreated
     stepCheckInvoicesConsistency
     """
-    self.playSequence(sequence)
+    self.playSequence(sequence, quiet=quiet)
 
-  def test_09_InvoiceChangeStartDate(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_09_InvoiceChangeStartDate(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Change the start_date of a Invoice Line,
     check that the invoice is divergent,
     then accept decision, and check everything is solved
     """
     if not run: return
-    self.logMessage('Invoice Change Sart Date')
+    if not quiet:
+      self.logMessage('Invoice Change Sart Date')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
     """
     stepSetReadyPackingList
@@ -1302,9 +1313,9 @@ class TestInvoice(TestPackingListMixin,
     stepRebuildAndCheckNothingIsCreated
     stepCheckInvoicesConsistency
     """
-    self.playSequence(sequence)
+    self.playSequence(sequence, quiet=quiet)
 
-  def test_10_AcceptDecisionOnPackingList(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_10_AcceptDecisionOnPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     - Increase or Decrease the quantity of a Packing List line
     - Accept Decision on Packing List
@@ -1312,7 +1323,8 @@ class TestInvoice(TestPackingListMixin,
     - Invoice must not be divergent and use new quantity
     """
     if not run: return
-    self.logMessage('InvoiceAcceptDecisionOnPackingList')
+    if not quiet:
+      self.logMessage('InvoiceAcceptDecisionOnPackingList')
     end_sequence = \
     """
     stepSetContainerFullQuantity
@@ -1365,9 +1377,9 @@ class TestInvoice(TestPackingListMixin,
       sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
           seq + end_sequence
       sequence_list.addSequenceString(sequence)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_11_AcceptDecisionOnPackingListAndInvoice(self, quiet=0,
+  def test_11_AcceptDecisionOnPackingListAndInvoice(self, quiet=quiet,
       run=RUN_ALL_TESTS):
     """
     - Increase or Decrease the quantity of a Packing List line
@@ -1379,7 +1391,8 @@ class TestInvoice(TestPackingListMixin,
     - Invoice must not be divergent and use old quantity
     """
     if not run: return
-    self.logMessage('InvoiceAcceptDecisionOnPackingListAndInvoice')
+    if not quiet:
+      self.logMessage('InvoiceAcceptDecisionOnPackingListAndInvoice')
     mid_sequence = \
     """
     stepSetContainerFullQuantity
@@ -1446,9 +1459,9 @@ class TestInvoice(TestPackingListMixin,
       sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
           seq1 + mid_sequence + seq2 + end_sequence
       sequence_list.addSequenceString(sequence)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_12_SplitPackingListAndAcceptInvoice(self, quiet=0,
+  def test_12_SplitPackingListAndAcceptInvoice(self, quiet=quiet,
       run=RUN_ALL_TESTS):
     """
     - Decrease the quantity of a Packing List line
@@ -1470,7 +1483,8 @@ class TestInvoice(TestPackingListMixin,
     - Invoice2 must not be divergent and use 0 as quantity
     """
     if not run: return
-    self.logMessage('InvoiceSplitPackingListAndAcceptInvoice')
+    if not quiet:
+      self.logMessage('InvoiceSplitPackingListAndAcceptInvoice')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
     """
     stepCheckInvoicingRule
@@ -1553,9 +1567,10 @@ class TestInvoice(TestPackingListMixin,
     stepRebuildAndCheckNothingIsCreated
     stepCheckInvoicesConsistency
     """
-    self.playSequence(sequence)
+    self.playSequence(sequence, quiet=quiet)
 
-  def test_13_SplitAndDeferInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_13_SplitAndDeferInvoice(self, quiet=quiet,
+        run=RUN_ALL_TESTS):
     """
     - Accept Order, Accept Packing List
     - Decrease quantity on Invoice
@@ -1567,7 +1582,8 @@ class TestInvoice(TestPackingListMixin,
     - splitted Invoice must not be divergent and use old - new quantity
     """
     if not run: return
-    self.logMessage('InvoiceSplitAndDeferInvoice')
+    if not quiet:
+      self.logMessage('InvoiceSplitAndDeferInvoice')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
     """
     stepSetReadyPackingList
@@ -1620,9 +1636,9 @@ class TestInvoice(TestPackingListMixin,
     stepRebuildAndCheckNothingIsCreated
     stepCheckInvoicesConsistency
     """
-    self.playSequence(sequence)
+    self.playSequence(sequence, quiet=quiet)
 
-  def test_14_AcceptDecisionOnInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_14_AcceptDecisionOnInvoice(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     - Accept Order, Accept Packing List
     - Increase or Decrease quantity on Invoice
@@ -1632,7 +1648,8 @@ class TestInvoice(TestPackingListMixin,
     - Invoice must not be divergent and use new quantity
     """
     if not run: return
-    self.logMessage('InvoiceAcceptDecisionOnInvoice')
+    if not quiet:
+      self.logMessage('InvoiceAcceptDecisionOnInvoice')
     mid_sequence = \
     """
     stepSetReadyPackingList
@@ -1685,7 +1702,7 @@ class TestInvoice(TestPackingListMixin,
       sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
           mid_sequence + seq + end_sequence
       sequence_list.addSequenceString(sequence)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def testCopyAndPaste(self, run=RUN_ALL_TESTS):
     """Test copy on paste on Invoice.
