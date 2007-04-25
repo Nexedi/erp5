@@ -35,29 +35,11 @@ TODO:
 
 """
 
-from random import randint
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             noSecurityManager
-from DateTime import DateTime
-from Acquisition import aq_base, aq_inner, aq_parent
+from AccessControl.SecurityManagement import newSecurityManager
+from Acquisition import aq_parent
 from zLOG import LOG
-from Products.ERP5Type.DateUtils import addToDate
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-import time
-import os
-from Products.ERP5Type import product_path
-from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.tests.Sequence import SequenceList
 from testPackingList import TestPackingListMixin
 from testAccountingRules import TestAccountingRulesMixin
 
@@ -183,9 +165,7 @@ class TestInvoice(TestPackingListMixin,
 
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
     """Create the rule for accounting. """
-
-    portal = self.getPortal()
-    account_module = self.getAccountModule()
+    portal = self.getPortal() account_module = self.getAccountModule()
     for account_id, account_gap in self.account_definition_list:
       if not account_id in account_module.objectIds():
         account = account_module.newContent(id=account_id)
@@ -194,6 +174,7 @@ class TestInvoice(TestPackingListMixin,
             'validate_action', wf_id='account_workflow')
     invoice_rule = self.getPortal().portal_rules\
                           .default_invoice_transaction_rule
+    
     invoice_rule.deleteContent([x.getId()
                           for x in invoice_rule.objectValues()])
     region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
@@ -453,38 +434,6 @@ class TestInvoice(TestPackingListMixin,
       self.assertEquals(packing_list.getTotalPrice(),
                         invoice.getTotalPrice())
 
-
-  def stepCreateSimpleSaleOrder(self, sequence, **kw):
-    """ create the Order for our test.
-      It contains one line :
-        resource : product_module/notebook
-        quantity : 10
-        price : 100
-    """
-    source_section = sequence.get('source_section')
-    source = sequence.get('source')
-    destination_section = sequence.get('destination_section')
-    destination = sequence.get('destination')
-    product = sequence.get('product')
-
-    order_module = self.getSaleOrderModule()
-    order = order_module.newContent(portal_type=self.order_portal_type)
-    order.setStartDate(DateTime('2004-11-20'))
-    order.setStopDate(DateTime('2004-11-24'))
-    order.setDestinationValue(destination)
-    order.setDestinationSectionValue(destination_section)
-    order.setSourceValue(source)
-    order.setSourceSectionValue(source_section)
-    order_line = order.newContent(portal_type=order_line_portal_type, id='1')
-    order_line.setResourceValue(product)
-    order_line.setQuantity(10)
-    order_line.setPrice(100)
-    self.assertEquals(len(order.checkConsistency()), 0)
-    sequence.edit(
-      order = order,
-      order_line = order_line,
-      order_line_list = [order_line])
-    self.assertEquals(order_line.getTotalPrice(), 10*100)
 
   def stepCheckOrderRule(self, sequence=None, sequence_list=None, **kw):
     """Check we have a related Order Rule"""
@@ -1740,12 +1689,9 @@ class TestInvoice(TestPackingListMixin,
 #  def getTitle(self):
 #    return "Purchase Invoices"
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestInvoice))
-    return suite
+import unittest
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestInvoice))
+  return suite
 
