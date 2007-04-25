@@ -589,7 +589,7 @@ class SQLDict(RAMDict):
       tag = [tag]
     if isinstance(path, str):
       path = [path]
-    elif isinstance(method_id, str):
+    if isinstance(method_id, str):
       method_id = [method_id]
     result = activity_tool.SQLDict_validateMessageList(method_id=method_id, 
                                                        path=path,
