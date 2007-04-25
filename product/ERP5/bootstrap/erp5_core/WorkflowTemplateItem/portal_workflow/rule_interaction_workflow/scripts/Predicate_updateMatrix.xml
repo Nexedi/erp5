@@ -71,7 +71,10 @@
             <value> <string>rule = state_change.object.getParentValue()\n
 \n
 if rule.getPortalType() in (\'Invoice Transaction Rule\', \'Payment Rule\') :\n
-  rule.updateMatrix()\n
+  rule.activate(\n
+    after_path_and_method_id=([rule.getPath(),],\n
+        [\'immediateReindexObject\', \'recursiveImmediateReindexObject\'])\n
+    ).updateMatrix()\n
 </string> </value>
         </item>
         <item>
