@@ -76,7 +76,13 @@ kwd = {\'base_id\': base_id}\n
 \n
 context.updateCellRange(script_id=\'CurrencyExchangeLine_asCellRange\', base_id=base_id)\n
 cell_range_key_list = context.getCellRangeKeyList(base_id = base_id)\n
-\n
+resource_list = [\'resource/%s\' % context.getParent().getRelativeUrl()]\n
+price_currency_list = [\'price_currency/%s\' % context.getPriceCurrency()]\n
+membership_list = resource_list+price_currency_list\n
+context.setMembershipCriterionBaseCategoryList([x.split(\'/\')[0] for x in membership_list])\n
+context.setMembershipCriterionCategoryList(membership_list)\n
+context.setResource(context.getParentValue().getRelativeUrl())\n
+context.setMappedValuePropertyList((\'base_price\',\'discount\'))\n
 if cell_range_key_list != [[None, None]] :\n
   i = 0\n
   for k in cell_range_key_list:\n
@@ -138,18 +144,21 @@ if cell_range_key_list != [[None, None]] :\n
                             <string>base_id</string>
                             <string>kwd</string>
                             <string>cell_range_key_list</string>
+                            <string>resource_list</string>
+                            <string>price_currency_list</string>
+                            <string>membership_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
                             <string>None</string>
                             <string>i</string>
-                            <string>_getiter_</string>
                             <string>k</string>
                             <string>filter</string>
                             <string>category_list</string>
                             <string>_apply_</string>
                             <string>c</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
