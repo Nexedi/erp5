@@ -84,7 +84,8 @@ resource_uid_list = [x.uid for x in context.currency_cash_module.searchFolder()]
 counter_vault_list = context.Delivery_getVaultItemList(\n
     user_site=0,base_site=site.getRelativeUrl(),all=1,\n
     vault_type=(\'site/surface/banque_interne\',\'site/surface/gros_paiement\',\n
-               \'site/surface/gros_versement\',\'site/surface/operations_diverses\'))\n
+               \'site/surface/gros_versement\',\'site/surface/operations_diverses\',\n
+               \'site/surface/salle_tri\'))\n
 for counter_vault in counter_vault_list:\n
   counter_vault_url = counter_vault[1]\n
   if counter_vault_url==\'\':\n

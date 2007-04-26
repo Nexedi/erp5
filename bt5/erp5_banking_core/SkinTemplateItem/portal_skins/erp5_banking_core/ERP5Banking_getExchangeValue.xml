@@ -67,7 +67,9 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-rate_list = context.CurrencyExchange_getExchangeRateList(from_currency=from_currency,to_currency=to_currency)\n
+rate_list = context.CurrencyExchange_getExchangeRateList(from_currency=from_currency,\n
+                 to_currency=to_currency, \n
+                 currency_exchange_type=currency_exchange_type)\n
 rate = None\n
 if len(rate_list) > 0:\n
   rate = rate_list[0]\n
@@ -104,7 +106,7 @@ return round(rate * price)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>from_currency=None,to_currency=None</string> </value>
+            <value> <string>from_currency=None,to_currency=None, currency_exchange_type=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -132,7 +134,7 @@ return round(rate * price)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -140,6 +142,7 @@ return round(rate * price)\n
                           <tuple>
                             <string>from_currency</string>
                             <string>to_currency</string>
+                            <string>currency_exchange_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>rate_list</string>
@@ -162,6 +165,7 @@ return round(rate * price)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
               </tuple>
