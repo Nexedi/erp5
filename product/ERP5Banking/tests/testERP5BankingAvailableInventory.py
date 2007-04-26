@@ -240,6 +240,25 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     counter_date = self.counter_date_5
     self.assertEquals(counter_date.getReference(),'4')
 
+  def stepSetInventoryInSortVault(self, sequence=None, sequence_list=None, **kwd):
+    """
+    put some banknotes into the vault used for sorting
+    """
+    destination = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
+    self.createCashInventory(source=None, 
+                             destination=destination, 
+                             currency=self.currency_1,
+                             line_list=self.line_list,
+                             extra_id='_sort_vault')
+
+  def stepResetInventoryInSortVault(self, sequence=None, sequence_list=None, **kwd):
+    """
+    put some banknotes into the vault used for sorting
+    """
+    inventory_module = self.getPortal().cash_inventory_module
+    to_delete_id_list = [x for x in inventory_module.objectIds() 
+                         if x.find('_sort_vault')>=0]
+    inventory_module.manage_delObjects(ids=to_delete_id_list)
 
   def test_01_ERP5BankingAvailabeInventory(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -270,6 +289,9 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'CheckAccountFinalInventory ' \
                       'CheckBadStockBeforeClosingDate ' \
                       'ResetInventory Tic ' \
+                      'SetInventoryInSortVault Tic ' \
+                      'CheckBadStockBeforeClosingDate ' \
+                      'ResetInventoryInSortVault Tic ' \
                       'CheckRightStockBeforeClosingDate ' \
                       'CheckReferenceIsIncreasedEveryDay '
     sequence_list.addSequenceString(sequence_string)
