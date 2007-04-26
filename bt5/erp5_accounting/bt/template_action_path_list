@@ -6,6 +6,7 @@ Account Module | journal_report
 Account Module | jump_active_accounting_pref
 Account Module | list_ui
 Account Module | print
+Account Module | search
 Account Module | sort_on
 Account Module | third_parties_report
 Account Module | trial_balance_report

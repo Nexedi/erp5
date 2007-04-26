@@ -88,31 +88,22 @@
                 <item>
                     <key> <string>disabled</string> </key>
                     <value>
-                      <list>
-                        <string>my_from_date</string>
-                        <string>my_to_date</string>
-                        <string>my_transaction_section_category</string>
-                        <string>my_transaction_simulation_state</string>
-                        <string>my_accounting_transaction_line_currency</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
-                        <string>my_title</string>
+                        <string>your_preferred_gap_id</string>
+                        <string>your_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_gap_id</string>
-                        <string>my_default_gap_root</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
