@@ -191,7 +191,24 @@ class BaobabConduit(ERP5Conduit):
       }],
     }
 
+  try:
+    from Products.Baobab.Conduit import inventory_code_to_path
+    from Products.Baobab.Conduit import vault_code_to_path
+    from Products.Baobab.Conduit import variation_translate_dict
+  except ImportError:
+    inventory_code_to_path = {}
+    vault_code_to_path = {}
+    variation_translate_dict = {}
 
+  status_code_to_cash_status = {'TVA' : 'valid',
+                                'NEE' : 'new_emitted',
+                                'NEU' : 'new_not_emitted',
+                                'RTC' : 'retired',
+                                'ATR' : 'to_sort',
+                                'MUT' : 'mutilated',
+                                'EAV' : 'to_ventilate',
+                                'ANN' : 'cancelled',
+                                'MIX' : 'mixed'}
 
   """
     Methods below are tools to use the property_map.
@@ -275,8 +292,8 @@ class BaobabConduit(ERP5Conduit):
         try:
           # Get the object with the path
           parent_object = object.restrictedTraverse(parent_object_path)
-	  if parent_object is not None:
-	    break
+          if parent_object is not None:
+            break
         except ConflictError:
           raise
         except:
@@ -532,16 +549,9 @@ class BaobabConduit(ERP5Conduit):
       for base_key in base_cat_map.keys():
         if base_key in kw.keys() and kw[base_key] not in ('', None):
           if base_key == 'status_code':
-            status_table = { 'TVA' : 'valid'
-                           , 'NEE' : 'new_emitted'
-                           , 'NEU' : 'new_not_emitted'
-                           , 'RTC' : 'retired'
-                           , 'ATR' : 'to_sort'
-                           , 'MUT' : 'mutilated'
-                           , 'EAV' : 'to_ventilate'
-                           , 'ANN' : 'cancelled'
-                           }
-            category = status_table[kw[base_key]]
+            category = self.status_code_to_cash_status[kw[base_key]]
+          elif base_key == 'variation':
+            category = self.variation_translate_dict.get(kw[base_key], kw[base_key])
           else:
             category = kw[base_key]
         else:
@@ -883,90 +893,42 @@ class BaobabConduit(ERP5Conduit):
 
   def getVaultPathFromCodification( self, object, agency_code=None, inventory_code=None, vault_code=None, currency_id=None):
     """
-    This method get many parameters and try to find a category
-    corresponding with parameters.
-
-    For example if agency_code=A00, this function will returns
-    site/aaa/bbb/ccc
+      Recompose category path from agency_code, inventory_code and vault_code.
+      agency_code    : site's codification
+      inventory_code : relative path common to all vaults for a given
+                       inventory
+      vault_code     : relative path specific to a given vault in a given
+                       inventory
     """
-    if agency_code in (None, ''):
+    if agency_code is None:
       return None
-    category_tool = object.portal_categories
-    # Get the site path to agency
-    agency_path = None
-    site_base_object = category_tool.resolveCategory('site')
-    # XXX Warning, we should use the catalog in order to retrieve this
-    # first level. It will go faster. But we need the codification in
-    # the catalog table
-
-    # Parse the category tree in order to find the category corresponding
-    # to the agency
-    for site_item in site_base_object.Delivery_getVaultItemList(
-                 vault_type=('site',),
-                 strict_membership=1,leaf_node=0,
-                 user_site=0,with_base=1)[1:]:
-      site_path = site_item[1]
-      site_object = category_tool.resolveCategory(site_path)
-      if site_object.getPortalType() == 'Category':
-        site_code = site_object.getCodification()
-        if site_code not in (None, '') and site_code.upper() == agency_code.upper():
-          agency_path = site_path
-          break
-    #import pdb;pdb.set_trace()
-    if inventory_code in (None, ''):
-      return agency_path
-    # Get the site path corresponding to the inventory type
-    inventory_path = None
-    agency_site_object = site_object
-    # Parse the category tree (from the level of the agency) in order to
-    # find the category corresponding to the inventory
-    for agency_sub_item in agency_site_object.getCategoryChildItemList(base=1)[1:]:
-      agency_sub_item_path   = agency_sub_item[1]
-      agency_sub_item_object = category_tool.resolveCategory(agency_sub_item_path)
-      agency_sub_item_vault  = agency_sub_item_object.getVaultType()
-      if agency_sub_item_vault not in (None, ''):
-        vault_type_path        = 'vault_type/' + agency_sub_item_vault
-        vault_type_object      = category_tool.resolveCategory(vault_type_path)
-        vault_type_code        = vault_type_object.getCodification()
-        if vault_type_code not in (None, '') and vault_type_code.upper() == inventory_code.upper():
-          inventory_path = agency_sub_item_path
-          break
-    if vault_code in (None, ''):
-      return inventory_path
-    # Get the site path corresponding to the vault code
-    vault_path = None
-    vault_site_object = agency_sub_item_object
-    # Parse the category tree (from the level of the inventory) in order to
-    # find the category corresponding to the vault
-    for vault_sub_item in vault_site_object.getCategoryChildItemList(base=1)[1:]:
-      vault_sub_item_path   = vault_sub_item[1]
-      vault_sub_item_object = category_tool.resolveCategory(vault_sub_item_path)
-      vault_sub_item_code   = vault_sub_item_object.getCodification()
-      if vault_sub_item_code not in (None, '') and vault_sub_item_code.upper() == vault_code.upper():
-        vault_path = vault_sub_item_path
-        break
-    if currency_id in (None, ''):
-      return vault_path
-    # Get the site path corresponding to the currency-related-subvault
-    currency_object = category_tool.currency_module[currency_id]
-    currency_title  = currency_object.getTitle()
-    currency_vault_path = None
-    vault_object = vault_sub_item_object
-    # Parse the category tree (from the level of the vault) in order to
-    # find the category corresponding to the currency
-    for currency_vault_item in vault_object.getCategoryChildItemList(base=1)[1:]:
-      currency_vault_item_path   = currency_vault_item[1]
-      currency_vault_item_object = category_tool.resolveCategory(currency_vault_item_path)
-      currency_vault_item_title  = currency_vault_item_object.getTitle()
-      if currency_vault_item_title not in (None, '') and currency_vault_item_title.upper() == currency_title.upper():
-        currency_vault_path = currency_vault_item_path
-        break
-    if currency_vault_path == None:
-      return vault_path
-    return currency_vault_path
-
-
-
+    portal = object.getPortalObject()
+    resolveCategory = portal.portal_categories.resolveCategory
+    site_list = portal.Delivery_getVaultItemList(vault_type=('site',),
+                                                 strict_membership=1,
+                                                 leaf_node=0,
+                                                 user_site=0,
+                                                 with_base=1)[1:]
+    agency_dict = dict([(resolveCategory(path).getCodification(), path) \
+                        for (title, path) in site_list])
+    agency_path = agency_dict.get(agency_code)
+    result_list = []
+    if agency_path is not None:
+      result_list.append(agency_path)
+      inventory_path = self.inventory_code_to_path.get(inventory_code)
+      if inventory_path is not None:
+        result_list.append(inventory_path)
+        vault_path = self.vault_code_to_path.get(vault_code)
+        if vault_path is not None:
+          result_list.append(vault_path)
+        elif vault_code is not None:
+          raise ValueError, '%s is not a known vault import codification' % (vault_code, )
+      elif inventory_code is not None:
+        raise ValueError, '%s is not a known inventory import codification' % (inventory_code, )
+    if len(result_list) == 0:
+      return None
+    return '/'.join(result_list)
+     
   ### CashInventoryDetail-related-properties functions
 
   def updateCashInventoryMatrix(self, line, cell_category_list, quantity, cell_uid):
