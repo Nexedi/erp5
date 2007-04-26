@@ -714,7 +714,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
                                             reference=self.getReference(),
                                             version=self.getVersion(),
                                             language=self.getLanguage(),
-                                            validation_state="<> cancelled"
+                                            validation_state="!=cancelled"
                                             )[0][0]
     # If self is not indexed yet, then if count == 1, version is not unique
     return count <= self_count
