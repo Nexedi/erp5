@@ -74,8 +74,8 @@
    </action>\n
    \n
    <para tal:content="python: here.Localizer.erp5_ui.gettext(form.getProperty(\'title\', \'\')).encode(\'utf-8\')" style=\'Title\'> report title </para>\n
-   <spacer height="100"/>\n
 \n
+   <spacer height="100" tal:condition="form/get_fields"/>\n
 \n
     <tal:block tal:repeat="group python: group_list[:3]">\n
       <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
@@ -168,7 +168,8 @@
 </tal:block>\n
 \n
   </content>\n
-</document>
+</document>\n
+
 
 ]]></string> </value>
         </item>
