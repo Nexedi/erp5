@@ -420,28 +420,32 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     Remove unneeded properties for export
     """
-    if hasattr(aq_base(obj), '_dav_writelocks'):
+    _marker = []
+    base_obj = aq_base(obj)
+    
+    if getattr(base_obj, '_dav_writelocks', _marker) is not _marker:
       del aq_base(obj)._dav_writelocks
-    if hasattr(obj, '__ac_local_roles__'):
+    if getattr(base_obj, '__ac_local_roles__', _marker) is not _marker:
       # remove local roles
       obj.__ac_local_roles__ = None
-    if hasattr(obj, '_owner'):
+    if getattr(base_obj, '_owner', _marker) is not _marker:
       obj._owner = None
-    if hasattr(aq_base(obj), 'uid'):
+    if getattr(base_obj, 'uid', _marker) is not _marker:
       obj.uid = None
-    if hasattr(aq_base(obj), '_filepath'):
+    if getattr(base_obj, '_filepath', _marker) is not _marker:
       obj._filepath = None
-    if hasattr(aq_base(obj), 'workflow_history'):
-      if hasattr(obj.__class__, 'workflow_history'):
+    if getattr(base_obj, 'workflow_history', _marker) is not _marker:
+      if getattr(base_obj.__class__, 'workflow_history', _marker) \
+          is not _marker:
         obj.workflow_history = None
       else:
         del obj.workflow_history
-    if getattr(obj, 'meta_type', None) == 'Script (Python)':
-      if hasattr(aq_base(obj), '_code'):
+    if getattr(base_obj, 'meta_type', None) == 'Script (Python)':
+      if getattr(base_obj, '_code', _marker) is not _marker:
         obj._code = None
-      if hasattr(aq_base(obj), 'Python_magic'):
+      if getattr(base_obj, 'Python_magic', _marker) is not _marker:
         obj.Python_magic = None
-    elif getattr(obj, 'meta_type', None) == 'ERP5 PDF Form' :
+    elif getattr(base_obj, 'meta_type', None) == 'ERP5 PDF Form' :
       if not obj.getProperty('business_template_include_content', 1) :
         obj.deletePdfContent()
     return obj
