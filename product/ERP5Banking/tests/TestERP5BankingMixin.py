@@ -543,6 +543,7 @@ class TestERP5BankingMixin:
     op_vault_type = surface_vault_type.newContent('operations_diverses')
     guichet_op_vault_type = op_vault_type.newContent('guichet')
     caveau_vault_type = site_vault_type.newContent('caveau')
+    salle_tri = surface_vault_type.newContent('salle_tri')
       
     if not no_site:
       for c in self.testsite.getCategoryChildValueList():
