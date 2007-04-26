@@ -164,6 +164,10 @@ return context.portal_catalog(**kw)\n
             <value> <string>ContributionTool_getMyContentList</string> </value>
         </item>
         <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get my documents</string> </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

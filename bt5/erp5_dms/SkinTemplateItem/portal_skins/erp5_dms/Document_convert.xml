@@ -83,7 +83,6 @@ filename = \'%s.%s\' % ((filename or context.title_or_id(), format))\n
 if typ == \'application/zip\':\n
   filename += \'.zip\'\n
 \n
-\n
 request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % filename)\n
 return data\n
 </string> </value>
@@ -158,6 +157,10 @@ return data\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Document_convert</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Convert document to given format</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

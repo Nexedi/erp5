@@ -68,12 +68,35 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This is proxy to portal_catalog, with the sole purpose\n
-  of performing calls when proxy roles are needed\n
+            <value> <string>""" \n
+    Generate current document\'s information structure needed to be rendered \n
+    by web widget Document_viewPopupTemplate.\n
 """\n
 \n
-return context.portal_catalog(*a, **kw)\n
+translateString = context.Base_translateString\n
+\n
+vals = {}\n
+owner_list = context.Base_getOwnerInfoList()\n
+vals[\'owner\'] = \'; \'.join([owner[\'title\'] for owner in owner_list])\n
+vals[\'moddate\'] = context.WebSite_getFancyRelativeDate(context.getModificationDate())\n
+publdate = context.Document_getLastWorkflowStateEntryDate(state=(\'public,\'), state_name=\'validation_state\')\n
+vals[\'publdate\'] = context.WebSite_getFancyRelativeDate(publdate)\n
+reldate = context.Document_getLastWorkflowStateEntryDate(state=(\'released,\'), state_name=\'validation_state\')\n
+vals[\'reldate\'] = context.WebSite_getFancyRelativeDate(reldate)\n
+try:\n
+  vals[\'status\'] = context.getTranslatedValidationStateTitle() or \'\'\n
+except AttributeError:\n
+  vals[\'status\'] = \'\'\n
+try:\n
+  vals[\'group\'] = context.getGroup() or \'\'\n
+except AttributeError:\n
+  vals[\'group\'] = \'\'\n
+try:\n
+  vals[\'project\'] = context.getSourceProjectTitle() or \'\'\n
+except AttributeError:\n
+  vals[\'project\'] = \'\'\n
+\n
+return context.Document_viewPopupTemplate(**vals)\n
 </string> </value>
         </item>
         <item>
@@ -89,19 +112,19 @@ return context.portal_catalog(*a, **kw)\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>*a, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Reviewer</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -128,11 +151,21 @@ return context.portal_catalog(*a, **kw)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>a</string>
-                            <string>kw</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>translateString</string>
+                            <string>vals</string>
+                            <string>owner_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>owner</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>publdate</string>
+                            <string>reldate</string>
+                            <string>AttributeError</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -149,7 +182,7 @@ return context.portal_catalog(*a, **kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_unrestrictedSearchResults</string> </value>
+            <value> <string>Document_getPopupInfo</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

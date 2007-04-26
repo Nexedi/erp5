@@ -69,13 +69,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Get latest documents sort.\n
+  Get latest documents sorted.\n
 """\n
-\n
 kw[\'portal_type\'] = context.getPortalDocumentTypeList()\n
-kw[\'sort_on\'] = ((\'creation_date\',\'descending\'),)\n
-res = context.portal_catalog(**kw)\n
-return res\n
+kw[\'sort_on\'] = ((\'creation_date\', \'descending\'),)\n
+result = context.portal_catalog(**kw)\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -124,7 +123,7 @@ return res\n
                             <string>context</string>
                             <string>_write_</string>
                             <string>_apply_</string>
-                            <string>res</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>
@@ -142,6 +141,10 @@ return res\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>ContributionTool_getLatestContentList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get latest documents</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

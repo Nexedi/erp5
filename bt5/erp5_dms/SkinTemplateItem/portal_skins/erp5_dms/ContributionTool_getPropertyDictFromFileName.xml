@@ -81,13 +81,11 @@
 """\n
 \n
 new_dict = {}\n
-\n
 for k, v in property_dict.items():\n
   if v:\n
     if k == \'language\':\n
       v = v.lower()\n
     new_dict[k] = v\n
-\n
 return new_dict\n
 </string> </value>
         </item>

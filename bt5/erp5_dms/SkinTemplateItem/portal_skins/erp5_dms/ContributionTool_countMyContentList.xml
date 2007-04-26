@@ -77,12 +77,10 @@
   that owner is being indexed.\n
 """\n
 if user is None:\n
-  from AccessControl import getSecurityManager\n
-  sm = getSecurityManager()\n
-  user = sm.getUser()\n
+  user = context.portal_membership.getAuthenticatedMember()\n
 \n
+kw[\'owner\'] = user\n
 kw[\'portal_type\'] = context.getPortalMyDocumentTypeList()\n
-kw[\'owner\'] = str(user)\n
 return context.portal_catalog.countResults(**kw)\n
 </string> </value>
         </item>
@@ -135,13 +133,9 @@ return context.portal_catalog.countResults(**kw)\n
                             <string>user</string>
                             <string>kw</string>
                             <string>None</string>
-                            <string>AccessControl</string>
-                            <string>getSecurityManager</string>
-                            <string>sm</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>_write_</string>
-                            <string>str</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
@@ -162,6 +156,10 @@ return context.portal_catalog.countResults(**kw)\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>ContributionTool_countMyContentList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Counts the number of documents for current user</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

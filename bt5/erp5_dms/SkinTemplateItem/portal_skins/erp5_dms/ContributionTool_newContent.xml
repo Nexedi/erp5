@@ -74,34 +74,22 @@
   redirects to what is returned\n
 """\n
 \n
-from Products.Formulator.Errors import FormValidationError\n
-\n
 translateString = context.Base_translateString\n
-request = context.REQUEST\n
 \n
-# a workaround for a strange problem\n
-# (if this line is not here, ZODB raises an exception when\n
-# committing transaction)\n
-del(kw[\'field_your_file\'])\n
+# clean up kw from file field otherwise \n
+# ZODB raises an exception when committing transaction\n
+kw.pop(\'field_your_file\', None)\n
 \n
 if kw[\'portal_type\'] == \'\':\n
   # we don\'t want to set portal_type to \'\' :)\n
-  del(kw[\'portal_type\'])\n
+  kw.pop(\'portal_type\', None)\n
 \n
+# ingest file\n
 doc = context.portal_contributions.newContent(file=file, **kw)\n
 \n
-msg = translateString("${portal_type} created successfully.",  mapping = {\'portal_type\':doc.getPortalType()})\n
+msg = translateString("${portal_type} created successfully.",\n
+                       mapping = {\'portal_type\':doc.getPortalType()})\n
 return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':msg})\n
-\n
-  \n
-# we leave this for later, because this way it is easier to debug\n
-try:\n
-  doc = context.portal_contributions.newContent(file=file, **kw)\n
-  if doc is None:\n
-    raise ValueError(\'new content could not be generated for unknown reason (check system log)\')\n
-except Exception, e:\n
-  msg = translateString("Sorry, object could not be created. Error returned was: ${exception}.", mapping = {\'exception\':str(e)})\n
-  return context.Base_redirect(dialog_id, keep_items={\'portal_status_message\':msg})\n
 </string> </value>
         </item>
         <item>
@@ -154,22 +142,14 @@ except Exception, e:\n
                             <string>form_id</string>
                             <string>file</string>
                             <string>kw</string>
-                            <string>Products.Formulator.Errors</string>
-                            <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
-                            <string>request</string>
-                            <string>_write_</string>
+                            <string>None</string>
                             <string>_getitem_</string>
                             <string>_apply_</string>
                             <string>doc</string>
                             <string>msg</string>
-                            <string>None</string>
-                            <string>ValueError</string>
-                            <string>Exception</string>
-                            <string>e</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
@@ -191,6 +171,10 @@ except Exception, e:\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>ContributionTool_newContent</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Contribute new file</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

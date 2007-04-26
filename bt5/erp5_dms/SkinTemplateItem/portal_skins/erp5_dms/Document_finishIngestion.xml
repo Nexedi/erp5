@@ -69,11 +69,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-Implementation layer - operations to be perfomed after converting data to text\n
-by discoverMetadata method or script.\n
+  This script is called after successful data ingestion.\n
+  XXX: It\'s possible to hook here some asynchrounous \n
+       notification for user that the ingestion was successful.\n
 """\n
-\n
-return\n
+pass\n
 </string> </value>
         </item>
         <item>
@@ -138,6 +138,10 @@ return\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Document_finishIngestion</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Finish ingestion hook script</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

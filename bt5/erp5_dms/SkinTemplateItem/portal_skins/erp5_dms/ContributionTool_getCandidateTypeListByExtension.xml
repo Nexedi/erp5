@@ -68,7 +68,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>pt = context.content_type_registry.findTypeName(\'a.%s\' %ext, None, None)\n
+            <value> <string>"""\n
+  Find by give filename extension which portal_type is the right one.\n
+  Use content_type_registry for that. \n
+"""\n
+\n
+pt = context.content_type_registry.findTypeName(\'a.%s\' %ext, None, None)\n
 return (pt,)\n
 </string> </value>
         </item>
@@ -134,6 +139,10 @@ return (pt,)\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>ContributionTool_getCandidateTypeListByExtension</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Find portal be filename extension</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
