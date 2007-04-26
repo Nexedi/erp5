@@ -101,21 +101,29 @@ if to_currency is not None:\n
     from Products.ERP5Type.Document import newTempBase\n
     temp_object = newTempBase(context.getPortalObject(),\'temp_object\')\n
     temp_kw = {\'category_list\':[\'resource/%s\' % from_currency,\n
-                                \'currency_exchange_type/%s\' % currency_exchange_type,\n
                                 \'price_currency/%s\' % to_currency],\n
                \'start_date\':start_date\n
               }\n
+    if currency_exchange_type is not None:\n
+      temp_kw[\'category_list\'].append(\'currency_exchange_type/%s\' % currency_exchange_type)\n
     temp_object.edit(**temp_kw)\n
     object = temp_object\n
     mapped_value = context.portal_domains.generateMappedValue(object, \n
                                                       has_cell_content=0, \n
                                                       sort_method=sort_by_date)\n
-    result = [getattr(mapped_value, \'base_price\', None), \n
-              getattr(mapped_value, \'discount\', None)]\n
+    base_price = getattr(mapped_value, \'base_price\', None)\n
+    discount = getattr(mapped_value, \'discount\', None)\n
+    if base_price is None and discount is None:\n
+      mapped_value = context.portal_domains.generateMappedValue(object, \n
+                                                      has_cell_content=1, \n
+                                                      sort_method=sort_by_date)\n
+      base_price = getattr(mapped_value, \'base_price\', None)\n
+      discount = getattr(mapped_value, \'discount\', None)\n
+    result = [base_price, discount]\n
     return result\n
   # The cache duration must not be too long, 300 is the maximum\n
   calculateExchangeFromParameters = CachingMethod(calculateExchangeFromParameters, \n
-                      id = \'calculateExchangeFromParameterss\', cache_factory = \'erp5_ui_short\')\n
+                      id = \'calculateExchangeFromParameters\', cache_factory = \'erp5_ui_short\')\n
   result = calculateExchangeFromParameters(start_date=start_date,\n
                        currency_exchange_type=currency_exchange_type,\n
                        from_currency=from_currency,to_currency=to_currency)\n
@@ -153,7 +161,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>from_currency=None,to_currency=None,currency_exchange_type=\'sale\',start_date=None,**kw</string> </value>
+            <value> <string>from_currency=None,to_currency=None,currency_exchange_type=None,start_date=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -214,7 +222,7 @@ return result\n
               <tuple>
                 <none/>
                 <none/>
-                <string>sale</string>
+                <none/>
                 <none/>
               </tuple>
             </value>
