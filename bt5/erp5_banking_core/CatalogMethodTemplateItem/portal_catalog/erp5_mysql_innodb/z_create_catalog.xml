@@ -129,7 +129,9 @@ CREATE TABLE `catalog` (\n
   KEY `simulation_state_title` (`simulation_state_title`, `portal_type`, `security_uid`),\n
   KEY `source_reference` (`parent_uid`, `source_reference`),\n
   KEY `start_date` (`parent_uid`, `start_date`),\n
-  KEY `reference` (`portal_type`, `reference`)\n
+  KEY `reference` (`portal_type`, `reference`),\n
+  KEY `Path` (`path`),\n
+  KEY `relative_url` (`relative_url`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
         </item>
@@ -202,7 +204,9 @@ CREATE TABLE `catalog` (\n
   KEY `simulation_state_title` (`simulation_state_title`, `portal_type`, `security_uid`),\n
   KEY `source_reference` (`parent_uid`, `source_reference`),\n
   KEY `start_date` (`parent_uid`, `start_date`),\n
-  KEY `reference` (`portal_type`, `reference`)\n
+  KEY `reference` (`portal_type`, `reference`),\n
+  KEY `Path` (`path`),\n
+  KEY `relative_url` (`relative_url`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
                     </item>
