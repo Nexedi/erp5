@@ -83,7 +83,13 @@ def initialize( context ):
                          content_constructors = content_constructors,
                          content_classes = content_classes)
   
+  # Allow some usefull classes and fonctions in TTW code
   ModuleSecurityInfo('ZODB.POSException').declarePublic('ConflictError')
+  ModuleSecurityInfo('pprint').declarePublic('pformat')
+  ModuleSecurityInfo('zExceptions').declarePublic('BadRequest', 'NotFound',
+                                                  'Redirect', 'Unauthorized')
+  ModuleSecurityInfo('Products.CMFCore.WorkflowCore').declarePublic(
+                                                   'WorkflowException')
 
 # backward compatibility names
 XML = None
