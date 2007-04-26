@@ -282,7 +282,8 @@ def getNodeTitleAndId(node_relative_url):\n
     return node_title_and_id_cache.setdefault(node_relative_url,\n
                   ( node.getUid(),\n
                     node.getTitle(),\n
-                    node.Account_getGapId()))\n
+                    node.Account_getGapId(),\n
+                    node.getProperty(\'string_index\') ))\n
 \n
 # include all accounts, even those not selected before (no movements in the\n
 # period)\n
@@ -517,7 +518,7 @@ if account_type_to_group_by_payment:\n
 line_list = []\n
 for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
                                     line_per_account.items():\n
-  node_uid, node_title, node_id = getNodeTitleAndId(node_relative_url)\n
+  node_uid, node_title, node_id, string_index = getNodeTitleAndId(node_relative_url)\n
   if mirror_section_uid is not MARKER:\n
     if mirror_section_uid is None:\n
       node_title = \'%s (%s)\' % ( node_title, N_(\'None\'))\n
@@ -530,6 +531,10 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
     else:\n
       payment = getObject(payment_uid)\n
       node_title = "%s (%s)" % ( node_title, payment.getTitle() )\n
+  \n
+  if not string_index:\n
+    string_index = \'%-10s\' % node_id\n
+  string_index = \'%s %s\' % (string_index, node_title)\n
 \n
   initial_debit_balance = data.get(\'initial_debit_balance\', 0)\n
   initial_credit_balance = data.get(\'initial_credit_balance\', 0)\n
@@ -547,6 +552,7 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
   line_list.append(Object(uid=\'new_\',\n
                           node_id=node_id,\n
                           node_title=node_title,\n
+                          string_index=string_index,\n
                           node_relative_url=node_relative_url,\n
                           initial_debit_balance=initial_debit_balance,\n
                           initial_credit_balance=initial_credit_balance,\n
@@ -566,7 +572,7 @@ if not show_empty_accounts:\n
 \n
 # sort\n
 def getStringIndex(obj):\n
-  return \'%-10s %s\' % (obj.node_id, obj.node_title)\n
+  return obj[\'string_index\']\n
 line_list.sort(key=getStringIndex)\n
 \n
 \n
@@ -694,6 +700,7 @@ return line_list\n
                             <string>data</string>
                             <string>node_title</string>
                             <string>node_id</string>
+                            <string>string_index</string>
                             <string>None</string>
                             <string>third_party</string>
                             <string>payment</string>
