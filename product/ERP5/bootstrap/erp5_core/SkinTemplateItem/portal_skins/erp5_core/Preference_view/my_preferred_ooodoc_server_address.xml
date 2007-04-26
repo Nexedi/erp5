@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>IntegerField</string>
+          <string>StringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_ooodoc_server_port_number</string> </value>
+            <value> <string>my_preferred_ooodoc_server_address</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -25,16 +31,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>integer_out_of_range</string> </key>
-                    <value> <string>The integer you entered was out of range.</string> </value>
-                </item>
-                <item>
-                    <key> <string>not_integer</string> </key>
-                    <value> <string>You did not enter an integer.</string> </value>
-                </item>
-                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>Too much input was given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -76,10 +78,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -92,15 +90,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -144,11 +150,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -163,15 +167,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -199,7 +211,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Hostname of the oood server</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -218,10 +230,6 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -234,16 +242,24 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Conversion Server Address</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Conversion server port</string> </value>
+                    <key> <string>truncate</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -251,6 +267,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.getPortalObject().portal_membership.checkPermission("Manage portal", here)</string> </value>
         </item>
       </dictionary>
     </pickle>

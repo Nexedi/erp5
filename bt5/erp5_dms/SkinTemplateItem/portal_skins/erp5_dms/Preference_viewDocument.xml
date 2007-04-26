@@ -74,8 +74,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_preferred_ooodoc_server_address</string>
-                        <string>my_preferred_ooodoc_server_port_number</string>
                         <string>my_preferred_document_file_name_regular_expression</string>
                         <string>my_preferred_document_reference_regular_expression</string>
                         <string>my_preferred_document_ingestion_email_notification</string>
