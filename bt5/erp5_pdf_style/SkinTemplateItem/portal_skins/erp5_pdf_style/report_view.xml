@@ -153,35 +153,21 @@
     <tal:block tal:condition="report_item/getTitle">\n
       <para style="Heading1" tal:content="report_item/getTitle"\n
                              i18n:translate=""\n
-                             tal:attributes="style python:\'Heading%s\' % report_item.getLevel()">toto</para>\n
-\n
-      <para/>\n
-    </tal:block>\n
+                             tal:attributes="style python:\'Heading%s\' % report_item.getLevel()">toto</para><para/></tal:block>\n
     <tal:block tal:condition="report_item/getTranslatedTitle">\n
       <para style="Heading1" tal:content="report_item/getTranslatedTitle"\n
-                             tal:attributes="style python:\'Heading%s\' % report_item.getLevel()">toto</para>\n
-\n
-      <para/>\n
-    </tal:block>\n
-  </tal:block>\n
+                             tal:attributes="style python:\'Heading%s\' % report_item.getLevel()">toto</para><para/></tal:block></tal:block>\n
   <tal:block tal:condition="report_item/getFormId">\n
     <tal:block tal:define="form python:getattr(here,report_item.getFormId())" >\n
       <tal:block tal:condition="python:form.pt == \'form_view\'">\n
-        <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
-      </tal:block>\n
+        <tal:block metal:use-macro="form/form_view/macros/form_layout"/></tal:block>\n
       <tal:block tal:condition="python:form.pt == \'form_list\'">\n
-        <tal:block metal:use-macro="form/form_list/macros/form_layout"/>\n
-      </tal:block>\n
-    </tal:block>\n
-  </tal:block>\n
-  </tal:block>\n
+        <tal:block metal:use-macro="form/form_list/macros/form_layout"/></tal:block></tal:block></tal:block></tal:block>\n
   <tal:block tal:define="dummy python:report_item.popReport(portal_object)"/>\n
 </tal:block>\n
 </tal:block>\n
 \n
-\n
   </content>\n
-\n
 </document>
 
 ]]></string> </value>
