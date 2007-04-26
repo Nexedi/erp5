@@ -26,17 +26,15 @@
 #
 ##############################################################################
 
+import re, socket
 from DateTime import DateTime
 from operator import add
 from xmlrpclib import Fault
-import re
-import socket
-
+from zLOG import LOG, INFO
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base
 from Globals import PersistentMapping
-from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.WebDAVSupport import TextContent
@@ -45,10 +43,10 @@ from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
 
-from zLOG import LOG, INFO
-
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
+# these property ids are unchangable
+FIXED_PROPERTY_IDS =  ('id', 'uid', 'rid', 'sid') 
 
 def makeSortedTuple(kw):
   items = kw.items()
@@ -710,15 +708,13 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
                                             version=self.getVersion(),
                                             language=self.getLanguage(),
                                             uid=self.getUid(),
-                validation_state="!=deleted" # XXX Either use a system pref
-                                              # or implement a class method
+                                            validation_state="!=cancelled"
                                             )[0][0]
     count = catalog.unrestrictedCountResults(portal_type=self.getPortalDocumentTypeList(),
                                             reference=self.getReference(),
                                             version=self.getVersion(),
                                             language=self.getLanguage(),
-                validation_state="<> deleted" # XXX Either use a system pref
-                                              # or implement a class method
+                                            validation_state="<> cancelled"
                                             )[0][0]
     # If self is not indexed yet, then if count == 1, version is not unique
     return count <= self_count
@@ -801,9 +797,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalDocumentTypeList(),
                 reference=self.getReference(),
-                validation_state="!=cancelled") # XXX Either use a system pref
-                                               # or implement a class method
-                                               # because !=delete is hardcoded
+                validation_state="!=cancelled")
       if self.getVersion(): kw['version'] = self.getVersion()
       if self.getLanguage(): kw['language'] = self.getLanguage()
       document_list = catalog.unrestrictedSearchResults(**kw)
@@ -830,7 +824,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
         else:
           update_kw = {}
           for k in self.propertyIds():
-            if k not in ('id', 'uid', 'rid', 'sid') and self.hasProperty(k): # XXX Use a global list instead
+            if k not in FIXED_PROPERTY_IDS and self.hasProperty(k):
               update_kw[k] = self.getProperty(k)
           existing_document.edit(**update_kw)
           # Erase self
