@@ -1012,8 +1012,8 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       script can for example allocate a reference number automatically if
       no reference was defined.
     """
-    return self._getTypeBasedMethod('finishIngestion',
-        fallback_script_id='Document_finishIngestion')
+    method = self._getTypeBasedMethod('finishIngestion', fallback_script_id='Document_finishIngestion')
+    return method()
 
   # Conversion methods
   security.declareProtected(Permissions.ModifyPortalContent, 'convert')
