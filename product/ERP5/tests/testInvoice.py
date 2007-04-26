@@ -165,7 +165,8 @@ class TestInvoice(TestPackingListMixin,
 
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
     """Create the rule for accounting. """
-    portal = self.getPortal() account_module = self.getAccountModule()
+    portal = self.getPortal()
+    account_module = self.getAccountModule()
     for account_id, account_gap in self.account_definition_list:
       if not account_id in account_module.objectIds():
         account = account_module.newContent(id=account_id)
