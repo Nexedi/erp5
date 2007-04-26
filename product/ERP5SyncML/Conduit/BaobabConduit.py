@@ -177,6 +177,10 @@ class BaobabConduit(ERP5Conduit):
         'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Cash Inventory Group'}
       }],
+    'inventory_date': [{
+        'erp5_property': 'start_date'
+      , 'conditions'   : {'erp5_portal_type':'Cash Inventory Group'}
+      }],
     'title': [{
         'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory'}
@@ -665,10 +669,10 @@ class BaobabConduit(ERP5Conduit):
         # before editing an object. This is used when there is no simple
         # equivalent between sql table and ERP5.
         method_id = "edit%s%s" % (kw['type'].replace(' ', ''), convertToUpperCase(k))
-        LOG( 'BaobabConduit:'
-           , 0
-           , "try to call conduit method %s on %s" % (repr(method_id), repr(object))
-           )
+        #LOG( 'BaobabConduit:'
+        #   , 0
+        #   , "try to call conduit method %s on %s" % (repr(method_id), repr(object))
+        #   )
         if v not in ('', None):
           if hasattr(self, method_id):
             # get the method itself
@@ -676,11 +680,11 @@ class BaobabConduit(ERP5Conduit):
             # This call the method, this exactly the same thing
             # as calling directly : self.editClientNatureEconomique(object,v)
             method(object, v)
-          else:
-            LOG( 'BaobabConduit:'
-               , 100
-               , "there is no method to handle <%s>%s</%s> data" % (k,repr(v),k)
-               )
+          #else:
+          #  LOG( 'BaobabConduit:'
+          #     , 100
+          #     , "there is no method to handle <%s>%s</%s> data" % (k,repr(v),k)
+          #     )
 
 
     if object.getPortalType() == 'Bank Account':
