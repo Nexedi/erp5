@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>matrix = state_change.object\n
+            <value> <string>matrix = state_change[\'object\']\n
 matrix.activate(\n
     after_path_and_method_id=([matrix.getPath(),],\n
         [\'immediateReindexObject\', \'recursiveImmediateReindexObject\'])\n
@@ -116,8 +116,9 @@ matrix.activate(\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>matrix</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

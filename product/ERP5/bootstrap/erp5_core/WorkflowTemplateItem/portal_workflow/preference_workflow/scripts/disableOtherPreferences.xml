@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import Message\n
 \n
-pref = sci.object\n
+pref = sci[\'object\']\n
 portal = sci.getPortal()\n
 LOG = lambda msg: pref.log("PreferenceWorkflow.disableOtherPreferences on %s"%pref, msg)\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
@@ -141,8 +141,9 @@ for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
                             <string>sci</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>pref</string>
+                            <string>_getattr_</string>
                             <string>portal</string>
                             <string>LOG</string>
                             <string>N_</string>
