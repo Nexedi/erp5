@@ -512,6 +512,9 @@ class Signature(Folder,SyncCode):
     Return the actual action for a partial synchronization
     """
     LOG('setConflictList, list',0,conflict_list)
+    for conflict in conflict_list:
+      if isinstance(conflict,str):
+        import pdb; pdb.set_trace()
     if conflict_list is None or conflict_list==[]:
       self.resetConflictList()
     else:

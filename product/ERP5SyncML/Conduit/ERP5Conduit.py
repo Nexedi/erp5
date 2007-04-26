@@ -125,6 +125,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     [object.getPath(),keyword,local_and_actual_value,subscriber_value]
     """
     conflict_list = []
+    sub_object = None
     xml = self.convertToXml(xml)
     LOG('addNode',0,'xml_reconstitued: %s' % str(xml))
     # In the case where this new node is a object to add
@@ -139,7 +140,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           xml = self.getElementFromXupdate(element)
           conflict_list += self.addNode(xml=xml,object=object,
                           previous_xml=previous_xml, force=force,
-                          simulate=simulate, **kw)
+                          simulate=simulate, **kw)['conflict_list']
     elif xml.nodeName == 'object':
       if object_id is None:
         object_id = self.getAttribute(xml,'id')
@@ -147,17 +148,17 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       LOG('addNode',0,'object_id: %s' % object_id)
       if object_id is not None:
         try:
-          subobject = object._getOb(object_id)
+          sub_object = object._getOb(object_id)
         except (AttributeError, KeyError, TypeError):
-          subobject = None
-        if subobject is None: # If so, it doesn't exist
+          sub_object = None
+        if sub_object is None: # If so, it doesn't exist
           portal_type = ''
           if xml.nodeName == 'object':
             portal_type = self.getObjectType(xml)
           elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD: # Deprecated ???
             portal_type = self.getXupdateObjectType(xml) # Deprecated ???
-          subobject = self.constructContent(object, object_id, docid, portal_type)
-        self.newObject(object=subobject,xml=xml,simulate=simulate)
+          sub_object = self.constructContent(object, object_id, docid, portal_type)
+        self.newObject(object=sub_object,xml=xml,simulate=simulate)
     elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD \
          and self.getSubObjectDepth(xml)>=1:
       sub_object_id = self.getSubObjectId(xml)
@@ -182,7 +183,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             # Then do the udpate
             conflict_list += self.addNode(xml=sub_xml,object=sub_object,
                             previous_xml=sub_previous_xml, force=force,
-                            simulate=simulate, **kw)
+                            simulate=simulate, **kw)['conflict_list']
     elif xml.nodeName == self.history_tag or self.isHistoryAdd(xml)>0:
       conflict_list += self.addWorkflowNode(object, xml, simulate)
     #elif xml.nodeName in self.local_role_list or self.isLocalRole(xml)>0 and not simulate:
@@ -193,7 +194,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     else:
       conflict_list += self.updateNode(xml=xml,object=object, force=force,
                                        simulate=simulate,  **kw)
-    return conflict_list
+    # We must returns the object created
+    return {'conflict_list':conflict_list, 'object': sub_object}
 
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
   def deleteNode(self, xml=None, object=None, object_id=None, force=None,
@@ -359,12 +361,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           # This is the case where we have to call addNode
           LOG('updateNode',0,'we will add sub-object')
           conflict_list += self.addNode(xml=subnode,object=object,force=force,
-                                        simulate=simulate, **kw)
+                                        simulate=simulate, **kw)['conflict_list']
         elif keyword == self.history_tag and not simulate:
           # This is the case where we have to call addNode
           LOG('updateNode',0,'we will add history')
           conflict_list += self.addNode(xml=subnode,object=object,force=force,
-                                        simulate=simulate,**kw)
+                                        simulate=simulate,**kw)['conflict_list']
         elif keyword in (self.local_role_tag,self.local_permission_tag) and not simulate:
           # This is the case where we have to update Roles or update permission
           LOG('updateNode',0,'we will add a local role')
@@ -373,7 +375,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           #object.manage_setLocalRoles(user,roles)
           xml = self.getElementFromXupdate(xml)
           conflict_list += self.addNode(xml=xml,object=object,force=force,
-                                        simulate=simulate,**kw)
+                                        simulate=simulate,**kw)['conflict_list']
       elif self.isSubObjectModification(xml):
         # We should find the object corresponding to
         # this update, so we have to look in the previous_xml
@@ -902,7 +904,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       selection_name = ''
       if subnode.nodeName in self.XUPDATE_INSERT_OR_ADD:
         conflict_list += conduit.addNode(xml=sub_xupdate,object=object, \
-                                         force=force, simulate=simulate, **kw)
+                                         force=force, simulate=simulate, **kw)['conflict_list']
       elif subnode.nodeName in self.XUPDATE_DEL:
         conflict_list += conduit.deleteNode(xml=sub_xupdate, object=object, \
                                          force=force, simulate=simulate, **kw)

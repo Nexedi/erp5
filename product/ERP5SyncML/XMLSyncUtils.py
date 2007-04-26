@@ -772,9 +772,12 @@ class XMLSyncUtilsMixin(SyncCode):
           if object is None:
             object_id = domain.generateNewIdWithGenerator(object=destination_path,gid=object_gid)
             #if object_id is not None:
-            conflict_list += conduit.addNode(xml=data_subnode, object=destination_path,
+            add_data = conduit.addNode(xml=data_subnode, object=destination_path,
                                              object_id=object_id)
-            object = domain.getObjectFromGid(object_gid)
+            conflict_list += add_data['conflict_list']
+            # Retrieve directly the object from addNode
+            object = add_data['object']
+            LOG('XMLSyncUtils, in ADD add_data',0,add_data)
             signature.setPath(object.getPhysicalPath())
             LOG('applyActionList',0,'object after add: %s' % repr(object))
           if object is not None:
