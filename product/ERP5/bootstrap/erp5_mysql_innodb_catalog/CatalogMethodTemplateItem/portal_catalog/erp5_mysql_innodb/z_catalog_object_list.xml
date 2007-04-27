@@ -33,13 +33,7 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>causality_state</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>event_state</string> </key>
+                                <key> <string>getCausalityState</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -75,6 +69,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getEventState</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getFloatIndex</string> </key>
                                 <value>
                                   <dictionary/>
@@ -99,7 +99,19 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getInvoiceState</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getModificationDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getOpportunityState</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -112,6 +124,12 @@
                             </item>
                             <item>
                                 <key> <string>getPath</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getPaymentState</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -159,6 +177,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getValidationState</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getViewPermissionOwner</string> </key>
                                 <value>
                                   <dictionary/>
@@ -177,25 +201,7 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>invoice_state</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>meta_type</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>opportunity_state</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>payment_state</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -208,12 +214,6 @@
                             </item>
                             <item>
                                 <key> <string>uid</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>validation_state</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -236,15 +236,15 @@
 <string>getTitle</string>
 <string>meta_type</string>
 <string>getPortalType</string>
-<string>opportunity_state</string>
+<string>getOpportunityState</string>
 <string>getCorporateRegistrationCode</string>
 <string>getEan13Code</string>
 <string>getSimulationState</string>
-<string>causality_state</string>
-<string>invoice_state</string>
-<string>validation_state</string>
-<string>payment_state</string>
-<string>event_state</string>
+<string>getCausalityState</string>
+<string>getInvoiceState</string>
+<string>getValidationState</string>
+<string>getPaymentState</string>
+<string>getEventState</string>
 <string>getImmobilisationState</string>
 <string>getReference</string>
 <string>getGroupingReference</string>
@@ -283,15 +283,15 @@ getDescription\r\n
 getTitle\r\n
 meta_type\r\n
 getPortalType\r\n
-opportunity_state\r\n
+getOpportunityState\r\n
 getCorporateRegistrationCode\r\n
 getEan13Code\r\n
 getSimulationState\r\n
-causality_state\r\n
-invoice_state\r\n
-validation_state\r\n
-payment_state\r\n
-event_state\r\n
+getCausalityState\r\n
+getInvoiceState\r\n
+getValidationState\r\n
+getPaymentState\r\n
+getEventState\r\n
 getImmobilisationState\r\n
 getReference\r\n
 getGroupingReference\r\n
@@ -358,15 +358,15 @@ VALUES\n
   <dtml-sqlvar expr="getTitle[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="meta_type[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getPortalType[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="opportunity_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getOpportunityState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getEan13Code[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getValidationState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="payment_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="event_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getCausalityState[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getInvoiceState[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getPaymentState[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getEventState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getImmobilisationState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getGroupingReference[loop_item]" type="string" optional>,\n
@@ -435,15 +435,15 @@ VALUES\n
   <dtml-sqlvar expr="getTitle[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="meta_type[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getPortalType[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="opportunity_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getOpportunityState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getEan13Code[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getValidationState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="payment_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="event_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getCausalityState[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getInvoiceState[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getPaymentState[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getEventState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getImmobilisationState[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getGroupingReference[loop_item]" type="string" optional>,\n
