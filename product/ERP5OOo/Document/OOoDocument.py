@@ -25,22 +25,14 @@
 #
 ##############################################################################
 
-import xmlrpclib
-from xmlrpclib import Fault
-import base64
-import re
-import zipfile
-import cStringIO
-import socket
+import xmlrpclib, base64, re, zipfile, cStringIO, socket
 from warnings import warn
 from DateTime import DateTime
-
+from xmlrpclib import Fault
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
-from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.utils import _setCacheHeaders
+from Products.CMFCore.utils import getToolByName, _setCacheHeaders
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
-
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Cache import CachingMethod
@@ -48,8 +40,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionCacheMixin, ConversionError
 from Products.ERP5.Document.File import _unpackData
-
-from zLOG import LOG
+from zLOG import LOG, INFO, ERROR
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -252,9 +243,15 @@ class OOoDocument(File, ConversionCacheMixin):
       z.close()
       return 'text/plain', s
     server_proxy = self._mkProxy()
-    kw = server_proxy.run_generate(self.getId(),
-                                   enc(_unpackData(self.getBaseData())),
-                                   None, format)
+    try:
+        kw = server_proxy.run_generate(self.getId(),
+                                       enc(_unpackData(self.getBaseData())),
+                                       None, 
+                                       format)
+    except Exception, inst:
+      # Catch, log and raise errors with converting server.Explicitly raise the exception!
+      LOG('[DMS]', ERROR, 'Error generating document %s' %inst)
+      raise Exception
     return kw['mime'], Pdata(dec(kw['data']))
 
   # Conversion API
@@ -361,10 +358,14 @@ class OOoDocument(File, ConversionCacheMixin):
       by invoking the conversion server. Store the result
       on the object. Update metadata information.
     """
-    # LOG('in _convertToBaseFormat', 0, self.getRelativeUrl())
     server_proxy = self._mkProxy()
-    kw = server_proxy.run_convert(self.getSourceReference() or self.getId(),
-                                  enc(_unpackData(self.getData())))
+    try:
+        kw = server_proxy.run_convert(self.getSourceReference() or self.getId(),
+                                      enc(_unpackData(self.getData())))
+    except Exception, inst:
+      # Catch, log and raise errors with converting server.Explicitly raise the exception!
+      LOG('[DMS]', ERROR, 'Error converting document to base format %s' %inst)
+      raise Exception
     self._setBaseData(dec(kw['data']))
     metadata = kw['meta']
     self._base_metadata = metadata
@@ -388,7 +389,12 @@ class OOoDocument(File, ConversionCacheMixin):
       through the invocation of the conversion server.
     """
     server_proxy = self._mkProxy()
-    kw = server_proxy.run_setmetadata(self.getId(),
+    try:
+      kw = server_proxy.run_setmetadata(self.getId(),
                                       enc(_unpackData(self.getBaseData())),
                                       kw)
+    except Exception, inst:
+      # Catch, log and raise errors with converting server.Explicitly raise the exception!
+      LOG('[DMS]', ERROR, 'Error getting document\'s metadata %s' %inst)
+      raise Exception
     self._setBaseData(dec(kw['data']))
