@@ -1668,7 +1668,7 @@ class Catalog( Folder,
   def uniqueValuesFor(self, name):
     """ return unique values for FieldIndex name """
     method = getattr(self, self.sql_unique_values)
-    return method()
+    return method(column=name)
 
   def getPaths(self):
     """ Returns all object paths stored inside catalog """
