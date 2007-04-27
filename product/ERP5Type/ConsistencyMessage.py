@@ -29,11 +29,12 @@
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.ObjectMessage import ObjectMessage
 
-class ConsistencyMessage(ObjectMessage): 
+class ConsistencyMessage(ObjectMessage):
   """
   Consistency Message is used for notifications to user after checkConsistency.
   """
-  def __init__(self, constraint, object_relative_url='', message='', mapping = {}, **kw):
+  def __init__(self, constraint, object_relative_url='',
+              message='', mapping = {}, **kw):
     """
     init specific variable to constraint
     """
@@ -55,7 +56,7 @@ class ConsistencyMessage(ObjectMessage):
       return '%s inconsistency' % self.class_name
     elif key == 2:
       return 104
-    elif key == 4:
+    elif key in (4, -1):
       return self.description
     else:
       return self.getTranslatedMessage()
