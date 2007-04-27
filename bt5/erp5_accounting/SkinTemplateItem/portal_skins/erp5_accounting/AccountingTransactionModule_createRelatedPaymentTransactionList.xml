@@ -71,6 +71,10 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.ERP5Type.Message import Message\n
+try:\n
+  from zExceptions import Redirect\n
+except:\n
+  Redirect = \'Redirect\'\n
 portal = context.getPortalObject()\n
 stool = portal.portal_selections\n
 getObject = portal.portal_catalog.getObject\n
@@ -106,7 +110,7 @@ for obj in object_list:\n
     obj = obj.getObject()\n
     if countMessage(path=obj.getPath(),\n
                     method_id=\'Invoice_createRelatedPaymentTransaction\'):\n
-      raise \'Redirect\', "%s/view?portal_status_message=%s" % (\n
+      raise Redirect, "%s/view?portal_status_message=%s" % (\n
                 context.absolute_url(), N_(\'Payment Creation already in\'\n
                 \' progress, abandon\'))\n
     obj.activate(tag=tag).Invoice_createRelatedPaymentTransaction(\n
@@ -184,6 +188,8 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>selection_name</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
+                            <string>zExceptions</string>
+                            <string>Redirect</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
