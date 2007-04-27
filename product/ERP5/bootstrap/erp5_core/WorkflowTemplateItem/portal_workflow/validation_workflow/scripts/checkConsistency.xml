@@ -68,22 +68,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
 object = state_change[\'object\']\n
-N_ = object.Base_translateString\n
 \n
 check_result = object.checkConsistency()\n
 \n
-if len(check_result) > 0:\n
-  check_type    = N_(check_result[0][-1])\n
-  # TODO: use nice url encoding method there instead of replace()\n
-  check_details = check_result[0][-2].replace(\'<\', \'&lt;\').replace(\'>\', \'&gt;\')\n
-  raise ValidationFailed, "%s : %s" % (check_type, check_details)\n
-
-
-]]></string> </value>
+if check_result:\n
+  err = check_result[0]\n
+  if hasattr(err, \'getTranslatedMessage\'):\n
+    raise ValidationFailed, err.getTranslatedMessage()\n
+  # backward compatibility:\n
+  raise ValidationFailed, "%s: %s" % (err[4], err[3])\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -134,14 +131,14 @@ if len(check_result) > 0:\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getitem_</string>
                             <string>object</string>
                             <string>_getattr_</string>
-                            <string>N_</string>
                             <string>check_result</string>
-                            <string>len</string>
-                            <string>check_type</string>
-                            <string>check_details</string>
+                            <string>err</string>
+                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>
