@@ -254,7 +254,7 @@ def getModuleIdList(product_path, module_id):
           module_name_list += [module_name]
   except:
     LOG('ERP5Type:', BLATHER,
-        'No PropertySheet directory in %s' % product_path)
+        'No %s directory in %s' % (module_id, product_path))
   return path, module_name_list
 
 # EPR5Type global modules update
