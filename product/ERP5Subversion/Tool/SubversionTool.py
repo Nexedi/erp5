@@ -629,7 +629,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         input_file = open(file_path, 'r')
         head = "<span style='font-weight: bold; color: black;'>"+file_path+'</span>  <a href="' + \
         self.editPath(business_template, file_path) + \
-        '"><img src="imgs/edit.png" style="border: 0" alt="edit" /></a><hr/>'
+        '"><img src="ERP5Subversion_imgs/edit.png" style="border: 0" alt="edit" /></a><hr/>'
         text = head + colorize(input_file.read())
         input_file.close()
     else:
