@@ -1462,9 +1462,8 @@ class Catalog( Folder,
         if index is not None and index < 0:
           raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
         if index:
-          # Use "is not" instead of "!=", because we want to make sure that
-          # uid becomes long, if it is int.
-          if uid is not index:
+          if uid != index or isinstance(uid, int):
+            # We want to make sure that uid becomes long if it is an int
             LOG('SQLCatalog', WARNING, 'uid of %r changed from %r (property) to %r (catalog, by path) !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
             uid = index
             object.uid = uid
