@@ -46,78 +46,124 @@ from zLOG import LOG
 
 class XMLSyncUtilsMixin(SyncCode):
 
-  def SyncMLHeader(self, session_id, msg_id, target, source):
+  def SyncMLHeader(self, session_id, msg_id, target, source, target_name=None, 
+      source_name=None):
     """
       Since the Header is always almost the same, this is the
       way to set one quickly.
     """
-    xml = ""
-    xml += ' <SyncHdr>\n'
-    xml += '  <VerDTD>1.1</VerDTD>\n'
-    xml += '  <VerProto>SyncML/1.1</VerProto>\n'
-    xml += '  <SessionID>%s</SessionID>\n' % session_id
-    xml += '  <MsgID>%s</MsgID>\n' % msg_id
-    xml += '  <Target>%s</Target>\n' % target
-    xml += '  <Source>%s</Source>\n' % source
-    xml += ' </SyncHdr>\n'
-    return xml
+    xml_list = []
+    xml = xml_list.append
+    xml(' <SyncHdr>\n')
+    xml('  <VerDTD>1.1</VerDTD>\n')
+    xml('  <VerProto>SyncML/1.1</VerProto>\n')
+    xml('  <SessionID>%s</SessionID>\n' % session_id)
+    xml('  <MsgID>%s</MsgID>\n' % msg_id)
+    xml('  <Target>\n')
+    xml('   <LocURI>%s</LocURI>\n' % target)
+    if target_name is not None:
+      xml('   <LocName>%s</LocName>\n' %target_name)
+    xml('  </Target>\n')
+    xml('  <Source>\n')
+    xml('   <LocURI>%s</LocURI>\n' % source) 
+    if source_name is not None:
+      xml('   <LocName>%s</LocName>\n' % source_name)
+    xml('  </Source>\n')
+    xml(' </SyncHdr>\n')
+    xml_a = ''.join(xml_list)
+    return xml_a
 
-  def SyncMLAlert(self, cmd_id, sync_code, target, source, last_anchor, next_anchor):
+  def SyncMLAlert(self, cmd_id, sync_code, target, source, last_anchor, 
+      next_anchor):
     """
       Since the Alert section is always almost the same, this is the
       way to set one quickly.
     """
-    xml = ""
-    xml += '  <Alert>\n'
-    xml += '   <CmdID>%s</CmdID>\n' % cmd_id
-    xml += '   <Data>%s</Data>\n' % sync_code
-    xml += '   <Item>\n'
-    xml += '    <Target>%s</Target>\n' % target
-    xml += '    <Source>%s</Source>\n' % source
-    xml += '    <Meta>\n'
-    xml += '     <Anchor xmlns=\'syncml:metinf\'>\n'
-    xml += '      <Last>%s</Last>\n' % last_anchor
-    xml += '      <Next>%s</Next>\n' % next_anchor
-    xml += '     </Anchor>\n'
-    xml += '    </Meta>\n'
-    xml += '   </Item>\n'
-    xml += '  </Alert>\n'
-    return xml
+    xml_list = []
+    xml = xml_list.append
+    xml('  <Alert>\n')
+    xml('   <CmdID>%s</CmdID>\n' % cmd_id)
+    xml('   <Data>%s</Data>\n' % sync_code)
+    xml('   <Item>\n')
+    xml('    <Target>\n')
+    xml('     <LocURI>%s</LocURI>\n' % target)
+    xml('    </Target>\n')
+    xml('    <Source>\n')
+    xml('     <LocURI>%s</LocURI>\n' % source)
+    xml('    </Source>\n')
+    xml('    <Meta>\n')
+    xml('     <Anchor xmlns=\'syncml:metinf\'>\n')
+    xml('      <Last>%s</Last>\n' % last_anchor)
+    xml('      <Next>%s</Next>\n' % next_anchor)
+    xml('     </Anchor>\n')
+    xml('    </Meta>\n')
+    xml('   </Item>\n')
+    xml('  </Alert>\n')
+    xml_a = ''.join(xml_list)
+    return xml_a
 
-  def SyncMLStatus(self, cmd_id, target_ref, source_ref, sync_code, next_anchor):
+  def SyncMLStatus(self, cmd_id, target_ref, source_ref, sync_code, 
+      next_anchor):
     """
       Since the Status section is always almost the same, this is the
       way to set one quickly.
     """
-    xml = ""
-    xml += '  <Status>\n'
-    xml += '   <CmdID>%s</CmdID>\n' % cmd_id
-    xml += '   <TargetRef>%s</TargetRef>\n' % target_ref
-    xml += '   <SourceRef>%s</SourceRef>\n' % source_ref
-    xml += '   <Data>%s</Data>\n' % sync_code
-    xml += '   <Item>\n'
-    xml += '    <Data>\n'
-    xml += '     <Anchor xmlns=\'syncml:metinf\'>\n'
-    xml += '      <Next>%s</Next>\n' % next_anchor
-    xml += '     </Anchor>\n'
-    xml += '    </Data>\n'
-    xml += '   </Item>\n'
-    xml += '  </Status>\n'
-    return xml
+    xml_list = []
+    xml = xml_list.append
+    xml('  <Status>\n')
+    xml('   <CmdID>%s</CmdID>\n' % cmd_id)
+    xml('   <TargetRef>%s</TargetRef>\n' % target_ref)
+    xml('   <SourceRef>%s</SourceRef>\n' % source_ref)
+    xml('   <Data>%s</Data>\n' % sync_code)
+    xml('   <Item>\n')
+    xml('    <Data>\n')
+    xml('     <Anchor xmlns=\'syncml:metinf\'>\n')
+    xml('      <Next>%s</Next>\n' % next_anchor)
+    xml('     </Anchor>\n')
+    xml('    </Data>\n')
+    xml('   </Item>\n')
+    xml('  </Status>\n')
+    xml_a = ''.join(xml_list)
+    return xml_a
 
   def SyncMLConfirmation(self, cmd_id, target_ref, sync_code, cmd):
     """
-    This is used in order ton confirm that an object was correctly
+    This is used in order to confirm that an object was correctly
     synchronized
     """
-    xml = ""
-    xml += '  <Status>\n'
-    xml += '   <CmdID>%s</CmdID>\n' % cmd_id
-    xml += '   <TargetRef>%s</TargetRef>\n' % target_ref
-    xml += '   <Cmd>%s</Cmd>' % cmd
-    xml += '   <Data>%s</Data>\n' % sync_code
-    xml += '  </Status>\n'
-    return xml
+    xml_list = []
+    xml = xml_list.append
+    xml('  <Status>\n')
+    xml('   <CmdID>%s</CmdID>\n' % cmd_id)
+    xml('   <TargetRef>%s</TargetRef>\n' % target_ref)
+    xml('   <Cmd>%s</Cmd>\n' % cmd)
+    xml('   <Data>%s</Data>\n' % sync_code)
+    xml('  </Status>\n')
+    xml_a = ''.join(xml_list)
+    return xml_a
+    
+  def SyncMLChal(self, cmd_id, cmd, target_ref, source_ref, auth_format, 
+      auth_type, data_code):
+    """
+    This is used in order to ask crendentials
+    """
+    xml_list = []
+    xml = xml_list.append
+    xml('  <Status>\n')
+    xml('   <CmdID>%s</CmdID>\n' % cmd_id)
+    xml('   <Cmd>%s</Cmd>\n' % cmd)
+    xml('   <TargetRef>%s</TargetRef>\n' % target_ref)
+    xml('   <SourceRef>%s</SourceRef>\n' % source_ref)
+    xml('   <Chal>\n')
+    xml('    <Meta>\n')
+    xml('     <Format>%s</Format>\n' % auth_format)
+    xml('     <Type>%s</Type>\n' % auth_type)
+    xml('    </Meta>\n')
+    xml('   </Chal>\n')
+    xml('   <Data>%s</Data>\n' % str(data_code))
+    xml('  </Status>\n')
+    xml_a = ''.join(xml_list)
+    return xml_a
 
   def sendMail(self, fromaddr, toaddr, id_sync, msg):
     """
@@ -140,55 +186,67 @@ class XMLSyncUtilsMixin(SyncCode):
     """
       Add an object with the SyncML protocol
     """
-    xml = ""
-    xml += '   <Add>\n'
-    xml += '    <CmdID>%s</CmdID>\n' % cmd_id
-    xml += '    <Meta><Type>%s</Type></Meta>\n' % object.portal_type
-    xml += '    <Item>\n'
-    xml += '     <Source><LocURI>%s</LocURI></Source>\n' % gid
-    xml += '     <Data>\n'
-    xml += xml_string
-    xml += '     </Data>\n'
+    xml_list = []
+    xml = xml_list.append
+    xml('   <Add>\n')
+    xml('    <CmdID>%s</CmdID>\n' % cmd_id)
+    xml('    <Meta><Type>%s</Type></Meta>\n' % object.portal_type)
+    xml('    <Item>\n')
+    xml('     <Source>\n')
+    xml('      <LocURI>%s</LocURI>\n' % gid)
+    xml('     </Source>\n')
+    xml('     <Data>\n')
+    xml(xml_string)
+    xml('     </Data>\n')
     if more_data == 1:
-      xml += '     <MoreData/>\n'
-    xml += '    </Item>\n'
-    xml += '   </Add>\n'
-    return xml
+      xml('     <MoreData/>\n')
+    xml('    </Item>\n')
+    xml('   </Add>\n')
+    xml_a = ''.join(xml_list)
+    return xml_a
 
   def deleteXMLObject(self, cmd_id=0, object_gid=None, xml_object=''):
     """
-      Add an object with the SyncML protocol
+      Delete an object with the SyncML protocol
     """
-    xml = ""
-    xml += '   <Delete>\n'
-    xml += '    <CmdID>%s</CmdID>\n' % cmd_id
-    xml += '    <Item>\n'
-    xml += '     <Source><LocURI>%s</LocURI></Source>\n' % object_gid
-    xml += '     <Data>\n'
-    xml += '     </Data>\n'
-    xml += '    </Item>\n'
-    xml += '   </Delete>\n'
-    return xml
+    xml_list = []
+    xml = xml_list.append
+    xml('   <Delete>\n')
+    xml('    <CmdID>%s</CmdID>\n' % cmd_id)
+    xml('    <Item>\n')
+    xml('     <Source>\n')
+    xml('      <LocURI>%s</LocURI>\n' % object_gid)
+    xml('     </Source>\n')
+    xml('     <Data>\n')
+    xml('     </Data>\n')
+    xml('    </Item>\n')
+    xml('   </Delete>\n')
+    xml_a = ''.join(xml_list)
+    return xml_a
 
   def replaceXMLObject(self, cmd_id=0, object=None, xml_string=None,
                        more_data=0,gid=None):
     """
-      Add an object with the SyncML protocol
+      Replace an object with the SyncML protocol
     """
-    xml = ""
-    xml += '   <Replace>\n'
-    xml += '    <CmdID>%s</CmdID>\n' % cmd_id
-    xml += '    <Meta><Type>%s</Type></Meta>\n' % object.portal_type
-    xml += '    <Item>\n'
-    xml += '     <Source><LocURI>%s</LocURI></Source>\n' % str(gid)
-    xml += '     <Data>\n'
-    xml += xml_string
-    xml += '     </Data>\n'
+    xml_list = []
+    xml = xml_list.append
+    xml('   <Replace>\n')
+    xml('    <CmdID>%s</CmdID>\n' % cmd_id)
+    xml('    <Meta><Type>%s</Type></Meta>\n' % object.portal_type)
+    xml('    <Item>\n')
+    xml('     <Source>\n')
+    xml('      <LocURI>%s</LocURI>\n' % str(gid))
+    xml('     </Source>\n')
+    xml('     <Data>\n')
+    xml(xml_string)
+    xml('     </Data>\n')
     if more_data == 1:
-      xml += '     <MoreData/>\n'
-    xml += '    </Item>\n'
-    xml += '   </Replace>\n'
-    return xml
+      xml('     <MoreData/>\n')
+    xml('    </Item>\n')
+    xml('   </Replace>\n')
+    xml_a = ''.join(xml_list)
+    return xml_a
 
   def getXupdateObject(self, object=None, xml_mapping=None, old_xml=None):
     """
@@ -206,7 +264,8 @@ class XMLSyncUtilsMixin(SyncCode):
     file2 = open('/tmp/%s'% old_filename,'w')
     file2.write(old_xml)
     file2.close()
-    xupdate = commands.getoutput('erp5diff /tmp/%s /tmp/%s' % (old_filename,new_filename))
+    xupdate = commands.getoutput('erp5diff /tmp/%s /tmp/%s' % 
+        (old_filename,new_filename))
     xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
     commands.getstatusoutput('rm -f /tmp/%s' % old_filename)
     commands.getstatusoutput('rm -f /tmp/%s' % new_filename)
@@ -240,6 +299,38 @@ class XMLSyncUtilsMixin(SyncCode):
               if subnode2.nodeName == 'SessionID':
                 session_id = int(subnode2.childNodes[0].data)
     return session_id
+    
+    
+  def getMessageId(self, xml):
+    """
+    We will retrieve the message id of the message
+    """
+    message_id = 0
+    for subnode in self.getElementNodeList(xml):
+      if subnode.nodeName == 'SyncML':
+        for subnode1 in self.getElementNodeList(subnode):
+          if subnode1.nodeName == 'SyncHdr':
+            for subnode2 in self.getElementNodeList(subnode1):
+              if subnode2.nodeName == 'MsgID':
+                message_id = int(subnode2.childNodes[0].data)
+    return message_id
+
+  def getTarget(self, xml):
+    """
+    return the target in the SyncHdr section
+    """
+    url = ''
+    for subnode in self.getElementNodeList(xml):
+      if subnode.nodeName == 'SyncML':
+        for subnode1 in self.getElementNodeList(subnode):
+          if subnode1.nodeName == 'SyncHdr':
+            for subnode2 in self.getElementNodeList(subnode1):
+              if subnode2.nodeName == 'Target':
+                for subnode3 in self.getElementNodeList(subnode2):
+                  if subnode3.nodeName == 'LocURI':
+                    url = subnode3.childNodes[0].data
+    return url
+
 
   def getAlertLastAnchor(self, xml_stream):
     """
@@ -251,18 +342,23 @@ class XMLSyncUtilsMixin(SyncCode):
     # Get informations from the body
     client_body = first_node.childNodes[3]
     for subnode in client_body.childNodes:
-      if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Alert":
+      if subnode.nodeType == subnode.ELEMENT_NODE and \
+          subnode.nodeName == "Alert":
         for subnode2 in subnode.childNodes:
-          if subnode2.nodeType == subnode2.ELEMENT_NODE and subnode2.nodeName == "Item":
+          if subnode2.nodeType == subnode2.ELEMENT_NODE and \
+              subnode2.nodeName == "Item":
             for subnode3 in subnode2.childNodes:
-              if subnode3.nodeType == subnode3.ELEMENT_NODE and subnode3.nodeName == "Meta":
-               for subnode4 in subnode3.childNodes:
-                  if subnode4.nodeType == subnode4.ELEMENT_NODE and subnode4.nodeName == "Anchor":
+              if subnode3.nodeType == subnode3.ELEMENT_NODE and \
+                  subnode3.nodeName == "Meta":
+                for subnode4 in subnode3.childNodes:
+                  if subnode4.nodeType == subnode4.ELEMENT_NODE and \
+                      subnode4.nodeName == "Anchor":
                     for subnode5 in subnode4.childNodes:
                       # Get the last time we had a synchronization
-                     if subnode5.nodeType == subnode5.ELEMENT_NODE and subnode5.nodeName == "Last":
+                     if subnode5.nodeType == subnode5.ELEMENT_NODE and \
+                         subnode5.nodeName == "Last":
                         last_anchor = subnode5.childNodes[0].data
-                        return last_anchor
+    return last_anchor
 
   def getAlertNextAnchor(self, xml_stream):
     """
@@ -278,16 +374,21 @@ class XMLSyncUtilsMixin(SyncCode):
     if client_body.nodeName != "SyncBody":
       print "This is not a SyncML Body"
     for subnode in client_body.childNodes:
-      if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Alert":
+      if subnode.nodeType == subnode.ELEMENT_NODE and \
+          subnode.nodeName == "Alert":
         for subnode2 in subnode.childNodes:
-          if subnode2.nodeType == subnode2.ELEMENT_NODE and subnode2.nodeName == "Item":
+          if subnode2.nodeType == subnode2.ELEMENT_NODE and \
+              subnode2.nodeName == "Item":
             for subnode3 in subnode2.childNodes:
-              if subnode3.nodeType == subnode3.ELEMENT_NODE and subnode3.nodeName == "Meta":
+              if subnode3.nodeType == subnode3.ELEMENT_NODE and \
+                  subnode3.nodeName == "Meta":
                 for subnode4 in subnode3.childNodes:
-                 if subnode4.nodeType == subnode4.ELEMENT_NODE and subnode4.nodeName == "Anchor":
+                 if subnode4.nodeType == subnode4.ELEMENT_NODE and \
+                     subnode4.nodeName == "Anchor":
                     for subnode5 in subnode4.childNodes:
                       # Get the last time we had a synchronization
-                      if subnode5.nodeType == subnode5.ELEMENT_NODE and subnode5.nodeName == "Next":
+                      if subnode5.nodeType == subnode5.ELEMENT_NODE and \
+                          subnode5.nodeName == "Next":
                         next_anchor = subnode5.childNodes[0].data
                         return next_anchor
 
@@ -298,7 +399,8 @@ class XMLSyncUtilsMixin(SyncCode):
     # Get informations from the body
     if xml.nodeName=='Status':
       for subnode in xml.childNodes:
-        if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == 'TargetRef':
+        if subnode.nodeType == subnode.ELEMENT_NODE and \
+            subnode.nodeName == 'TargetRef':
           return subnode.childNodes[0].data
     return None
 
@@ -309,9 +411,31 @@ class XMLSyncUtilsMixin(SyncCode):
     # Get informations from the body
     if xml.nodeName=='Status':
       for subnode in xml.childNodes:
-        if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == 'Data':
+        if subnode.nodeType == subnode.ELEMENT_NODE and \
+            subnode.nodeName == 'Data':
           return int(subnode.childNodes[0].data)
     return None
+
+
+  #def getStatusCode(self, xml):
+  #  """
+  #    Return the value of the alert code inside the xml_stream
+  #  """
+  #  # Get informations from the body
+  #  first_node = xml.childNodes[0]
+  #  if first_node.nodeName != "SyncML":
+  #    print "This is not a SyncML message"
+  #
+  #  client_body = first_node.childNodes[3]
+  #  if client_body.nodeName != "SyncBody":
+  #    print "This is not a SyncML Body"
+  #  
+  #  for subnode in client_body.childNodes:
+  #    if subnode.nodeName=='Status':
+  #      for subnode2 in subnode.childNodes:
+  #        if subnode2.nodeType == subnode.ELEMENT_NODE and subnode2.nodeName == 'Data':
+  #         return int(subnode2.childNodes[0].data)
+  #  return None
 
   def getStatusCommand(self, xml):
     """
@@ -333,6 +457,7 @@ class XMLSyncUtilsMixin(SyncCode):
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
       LOG('XMLSyncUtils.getAlertCode',0,"This is not a SyncML Body")
+      raise ValueError, "Sorry, This is not a SyncML Body"
     alert = 0
     for subnode in client_body.childNodes:
       if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName=='Alert':
@@ -341,9 +466,25 @@ class XMLSyncUtilsMixin(SyncCode):
             return int(subnode1.childNodes[0].data)
     return None
 
+  def checkCred(self, xml_stream):
+    """
+      Check if there's a Cred section in the xml_stream
+    """
+    first_node = xml_stream.childNodes[0]
+    # Get informations from the header
+    xml_header = first_node.childNodes[1]
+    if xml_header.nodeName != "SyncHdr":
+      LOG('PubSyncModif',0,'This is not a SyncML Header')
+      raise ValueError, "Sorry, This is not a SyncML Header"
+    cred = 0
+    for subnode in xml_header.childNodes:
+      if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Cred":
+        cred=1
+    return cred
+
   def checkAlert(self, xml_stream):
     """
-      Check if there's an Alert section in the xml_xtream
+      Check if there's an Alert section in the xml_stream
     """
     first_node = xml_stream.childNodes[0]
     client_body = first_node.childNodes[3]
@@ -363,6 +504,7 @@ class XMLSyncUtilsMixin(SyncCode):
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
       LOG('checkSync',0,"This is not a SyncML Body")
+      raise ValueError, "Sorry, This is not a SyncML Body"
     for subnode in client_body.childNodes:
       if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Sync":
         return 1
@@ -420,6 +562,7 @@ class XMLSyncUtilsMixin(SyncCode):
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
       LOG('getNextSyncBodyStatus',0,"This is not a SyncML Body")
+      raise ValueError, "Sorry, This is not a SyncML Body"
     next_status = None
     found = None
     for subnode in client_body.childNodes:
@@ -463,7 +606,7 @@ class XMLSyncUtilsMixin(SyncCode):
                 #  data = subnode3.data
                 #  data = data[data.find('<!--')+4:data.rfind('-->')]
                 xml = subnode3.data
-                if type(xml) is type(u'a'):
+		if isinstance(xml, unicode):
                   xml = xml.encode('utf-8')
                 return xml
 
@@ -936,6 +1079,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     xml_header = first_node.childNodes[1]
     if xml_header.nodeName != "SyncHdr":
       LOG('PubSyncModif',0,'This is not a SyncML Header')
+      raise ValueError, "Sorry, This is not a SyncML Header"
       return
 
     subscriber = domain # If we are the client, this is fine
@@ -944,14 +1088,17 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       simulate = 1
       for subnode in xml_header.childNodes:
         if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Source":
-          subscription_url = str(subnode.childNodes[0].data)
+	  for subnode2 in subnode.childNodes:
+	    if subnode2.nodeType == subnode2.ELEMENT_NODE and subnode2.nodeName == 'LocURI':
+	      subscription_url = str(subnode2.childNodes[0].data)
       subscriber = domain.getSubscriber(subscription_url)
 
     # We have to check if this message was not already, this can be dangerous
     # to update two times the same object
-    session_id = self.getSessionId(remote_xml)
-    correct_session = subscriber.checkCorrectRemoteSessionId(session_id)
-    if not correct_session: # We need to send again the message
+    message_id = self.getMessageId(remote_xml)
+    correct_message = subscriber.checkCorrectRemoteMessageId(message_id)
+    if not correct_message: # We need to send again the message
+      LOG('SyncModif, no correct message:',0,"sending again...")
       last_xml = subscriber.getLastSentMessage()
       if last_xml != '':
         has_response = 1
@@ -974,7 +1121,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     conduit_name = subscriber.getConduit()
     conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), globals(), locals(), [''])
     conduit = getattr(conduit_module, conduit_name)()
-    LOG('SyncModif, subscriber: ',0,subscriber)
+    LOG('SyncModif, subscriber:',0,subscriber)
     # Then apply the list of actions
     (xml_confirmation,has_next_action,cmd_id) = self.applyActionList(cmd_id=cmd_id,
                                          domain=domain,
@@ -984,16 +1131,17 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                          conduit=conduit, simulate=simulate)
     LOG('SyncModif, has_next_action:',0,has_next_action)
 
-    xml = ""
-    xml += '<SyncML>\n'
-
+    xml_list = []
+    xml = xml_list.append
+    xml('<SyncML>\n')
+    
     # syncml header
     if domain.domain_type == self.PUB:
-      xml += self.SyncMLHeader(subscriber.getSessionId(), "1",
-          subscriber.getSubscriptionUrl(), domain.getPublicationUrl())
+      xml(self.SyncMLHeader(subscriber.getSessionId(), subscriber.incrementMessageId(),
+          subscriber.getSubscriptionUrl(), domain.getPublicationUrl()))
     elif domain.domain_type == self.SUB:
-      xml += self.SyncMLHeader(domain.getSessionId(), "1",
-        domain.getPublicationUrl(), domain.getSubscriptionUrl())
+      xml(self.SyncMLHeader(domain.getSessionId(), domain.incrementMessageId(),
+        domain.getPublicationUrl(), domain.getSubscriptionUrl()))
 
 
     cmd_id += 1
@@ -1010,47 +1158,51 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                        conduit=conduit)
 
     # syncml body
-    xml += ' <SyncBody>\n'
+    xml(' <SyncBody>\n')
     destination_url = ''
     if domain.domain_type == self.PUB:
       subscriber.NewAnchor()
       destination_url = domain.getPublicationUrl()
-      xml += self.SyncMLStatus(cmd_id, subscriber.getSubscriptionUrl(),
+      xml(self.SyncMLStatus(cmd_id, subscriber.getSubscriptionUrl(),
                                domain.getDestinationPath(),
                                subscriber.getSynchronizationType(),
-                               subscriber.getNextAnchor())
+                               subscriber.getNextAnchor()))
     elif domain.domain_type == self.SUB:
       destination_url = domain.getPublicationUrl()
-      xml += self.SyncMLStatus(cmd_id, domain.getPublicationUrl(),
+      xml(self.SyncMLStatus(cmd_id, domain.getPublicationUrl(),
                                subscriber.getDestinationPath(),
                                subscriber.getSynchronizationType(),
-                               subscriber.getNextAnchor())
+                               subscriber.getNextAnchor()))
     # alert message if we want more data
     if destination_waiting_more_data == 1:
-      xml += self.SyncMLAlert(cmd_id, self.WAITING_DATA,
+      xml(self.SyncMLAlert(cmd_id, self.WAITING_DATA,
                               destination_url,
                               domain.getDestinationPath(),
-                              subscriber.getLastAnchor(), subscriber.getNextAnchor())
+                              subscriber.getLastAnchor(), 
+                              subscriber.getNextAnchor()))
     # Now we should send confirmations
-    xml += xml_confirmation
+    xml(xml_confirmation)
     if syncml_data != '':
-      xml += '  <Sync>\n'
-      xml += syncml_data
-      xml += '  </Sync>\n'
-    xml += '  <Final/>\n'
-    xml += ' </SyncBody>\n'
-    xml += '</SyncML>\n'
+      xml('  <Sync>\n')
+      xml(syncml_data)
+      xml('  </Sync>\n')
+    xml('  <Final/>\n')
+    xml(' </SyncBody>\n')
+    xml('</SyncML>\n')
+    xml_a = ''.join(xml_list)
     if domain.domain_type == self.PUB: # We always reply
-      subscriber.setLastSentMessage(xml)
-      self.sendResponse(from_url=domain.publication_url, to_url=subscriber.subscription_url,
-                sync_id=domain.getTitle(), xml=xml,domain=domain)
+      subscriber.setLastSentMessage(xml_a)
+      self.sendResponse(from_url=domain.publication_url, 
+          to_url=subscriber.subscription_url, sync_id=domain.getTitle(), 
+          xml=xml_a,domain=domain)
       has_response = 1
     elif domain.domain_type == self.SUB:
       if self.checkAlert(remote_xml) or \
          (xml_confirmation,syncml_data)!=('','') or \
           has_status_list:
-        subscriber.setLastSentMessage(xml)
-        self.sendResponse(from_url=domain.subscription_url, to_url=domain.publication_url,
-            sync_id=domain.getTitle(), xml=xml,domain=domain)
+        subscriber.setLastSentMessage(xml_a)
+        self.sendResponse(from_url=domain.subscription_url, 
+            to_url=domain.publication_url, sync_id=domain.getTitle(), 
+            xml=xml_a,domain=domain)
         has_response = 1
-    return {'has_response':has_response,'xml':xml}
+    return {'has_response':has_response,'xml':xml_a}

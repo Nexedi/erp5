@@ -734,9 +734,9 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
     if context is None:
       return context
-    elif type(context) is type(()):
+    elif isinstance(context, tuple):
       return context
-    elif type(context) is type('a'):
+    elif isinstance(context, tuple):
       return tuple(context.split('/'))
     else:
       return context.getPhysicalPath()
@@ -751,7 +751,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     LOG('sendResponse, to_url: ',0,to_url)
     LOG('sendResponse, from_url: ',0,from_url)
     LOG('sendResponse, sync_id: ',0,sync_id)
-    LOG('sendResponse, xml: ',0,xml)
+    LOG('sendResponse, xml: \n',0,xml)
     if domain is not None:
       gpg_key = domain.getGPGKey()
       if gpg_key not in ('',None):
@@ -768,14 +768,14 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
         commands.getstatusoutput('rm -f /tmp/%s.gz' % filename)
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
     if send:
-      if type(to_url) is type('a'):
+      if isinstance(to_url, str):
         if to_url.find('http://')==0:
           # XXX Make sure this is not a problem
           if domain.domain_type == self.PUB:
             return None
           # we will send an http response
           domain = aq_base(domain)
-          LOG('sendResponse, will start sendHttpResponse, xml',0,xml)
+          LOG('sendResponse, will start sendHttpResponse, xml\n',0,xml)
           self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
                                            xml=xml, domain=domain)
@@ -907,30 +907,38 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
-      LOG('readResponse, xml before parseSTring',0,text)
+      LOG('readResponse, xml before parseSTring\n',0,text)
       xml = parseString(text)
-      url = ''
-      for subnode in self.getElementNodeList(xml):
-        if subnode.nodeName == 'SyncML':
-          for subnode1 in self.getElementNodeList(subnode):
-            if subnode1.nodeName == 'SyncHdr':
-              for subnode2 in self.getElementNodeList(subnode1):
-                if subnode2.nodeName == 'Target':
-                  url = subnode2.childNodes[0].data 
+      
+      #XXX this function is not very optimized and should be improved
+      url = self.getTarget(xml)
+      
       for publication in self.getPublicationList():
         if publication.getPublicationUrl()==url and publication.getTitle()==sync_id:
           result = self.PubSync(sync_id,xml)
           # Then encrypt the message
           xml = result['xml']
-          xml = self.sendResponse(xml=xml,domain=publication,send=0)
+
+          #must be commented because this method is alredy called
+          #xml = self.sendResponse(xml=xml,domain=publication,send=0)
           return xml
       for subscription in self.getSubscriptionList():
-        if subscription.getSubscriptionUrl()==url and subscription.getTitle()==sync_id:
-          result = self.activate(activity='RAMQueue').SubSync(sync_id,xml)
+        if subscription.getSubscriptionUrl()==url and \
+            subscription.getTitle()==sync_id:
+          next_status = self.getNextSyncBodyStatus(xml, None)
+          if next_status is not None:
+            status_code = self.getStatusCode(next_status)
+            LOG('readResponse status code :',0,status_code)
+            if status_code == self.UNAUTHORIZED or \
+                status_code == self.AUTH_REQUIRED:
+              LOG('readResponse', 0, 'Authentication required')
+              raise ValueError, "Authentication required"
+          else: 
+            result = self.activate(activity='RAMQueue').SubSync(sync_id,xml)
           #result = self.SubSync(sync_id,xml)
 
     # we use from only if we have a file 
-    elif type(from_url) is type('a'):
+    elif isinstance(from_url, str):
       if from_url.find('file://')==0:
         try:
           filename = from_url[len('file:/'):]

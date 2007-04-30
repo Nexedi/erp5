@@ -44,38 +44,43 @@ class SubscriptionSynchronization(XMLSyncUtils):
     """
     LOG('SubSyncInit',0,'starting....')
     cmd_id = 1 # specifies a SyncML message-unique command identifier
-    xml = ""
-    xml += '<SyncML>\n'
-
+    xml_list = []
+    xml = xml_list.append
+    xml('<SyncML>\n')
     # syncml header
-    xml += self.SyncMLHeader(subscription.getSessionId(), "1",
-        subscription.getPublicationUrl(), subscription.getSubscriptionUrl())
+    xml(self.SyncMLHeader(subscription.incrementSessionId(), 
+      subscription.incrementMessageId(), subscription.getPublicationUrl(), 
+      subscription.getSubscriptionUrl()))
 
     # syncml body
-    xml += ' <SyncBody>\n'
+    xml(' <SyncBody>\n')
     subscription.NewAnchor()
+    subscription.initLastMessageId()
 
     # We have to set every object as NOT_SYNCHRONIZED
     subscription.startSynchronization()
 
     # alert message
-    xml += self.SyncMLAlert(cmd_id, subscription.getSynchronizationType(),
+    xml(self.SyncMLAlert(cmd_id, subscription.getSynchronizationType(),
                             subscription.getPublicationUrl(),
                             subscription.getDestinationPath(),
-                            subscription.getLastAnchor(), subscription.getNextAnchor())
+                            subscription.getLastAnchor(), 
+                            subscription.getNextAnchor()))
     cmd_id += 1
 
-    xml += '  <Put>\n'
-    xml += '   <CmdID>%s</CmdID>\n' % cmd_id ; cmd_id += 1
-    xml += '  </Put>\n'
-    xml += ' </SyncBody>\n'
+    xml('  <Put>\n')
+    xml('   <CmdID>%s</CmdID>\n' % cmd_id)
+    cmd_id += 1
+    xml('  </Put>\n')
+    xml(' </SyncBody>\n')
+    xml('</SyncML>\n')
+    xml_a = ''.join(xml_list)
 
-    xml += '</SyncML>\n'
+    self.sendResponse(from_url=subscription.subscription_url,
+        to_url=subscription.publication_url, sync_id=subscription.getTitle(), 
+        xml=xml_a,domain=subscription)
 
-    self.sendResponse(from_url=subscription.subscription_url, to_url=subscription.publication_url,
-                sync_id=subscription.getTitle(), xml=xml,domain=subscription)
-
-    return {'has_response':1,'xml':xml}
+    return {'has_response':1,'xml':xml_a}
 
   def SubSync(self, id, msg=None, RESPONSE=None):
     """
@@ -83,17 +88,17 @@ class SubscriptionSynchronization(XMLSyncUtils):
     """
     LOG('SubSync',0,'starting... id: %s' % str(id))
     LOG('SubSync',0,'starting... msg: %s' % str(msg))
-
     response = None #check if subsync replies to this messages
     subscription = self.getSubscription(id)
 
     if msg==None and (subscription.getSubscriptionUrl()).find('file')>=0:
-      msg = self.readResponse(sync_id=id,from_url=subscription.getSubscriptionUrl())
+      msg = self.readResponse(sync_id=id, 
+          from_url=subscription.getSubscriptionUrl())
     if msg==None:
       response = self.SubSyncInit(self.getSubscription(id))
     else:
       xml_client = msg
-      if type(xml_client) in (type('a'),type(u'a')):
+      if isinstance(xml_client, str) or isinstance(xml_client, unicode):
         xml_client = parseString(xml_client)
       response = self.SubSyncModif(self.getSubscription(id),xml_client)
 

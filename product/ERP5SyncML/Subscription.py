@@ -660,7 +660,7 @@ class Subscription(Folder, SyncCode):
     self.setConduit(conduit)
     Folder.__init__(self, id)
     self.title = title
-
+    
     #self.signatures = PersitentMapping()
 
   def getTitle(self):
@@ -723,6 +723,26 @@ class Subscription(Folder, SyncCode):
     self.last_session_id = session_id
     return 1
 
+  def checkCorrectRemoteMessageId(self, message_id):
+    """
+    We will see if the last message id was the same
+    wich means that the same message was sent again
+
+    return 1 if the message id was not seen, 0 if already seen
+    """
+    last_message_id = getattr(self,'last_message_id',None)
+    LOG('checkCorrectRemoteMessageId  last_message_id =',0,last_message_id)
+    LOG('checkCorrectRemoteMessageId  message_id =',0,message_id)
+    if last_message_id == message_id:
+      return 0
+    self.last_message_id = message_id
+    return 1
+
+  def initLastMessageId(self, last_message_id=None):
+    """
+    set the last message id to 0
+    """
+    self.last_message_id=last_message_id
 
   def getLastSentMessage(self):
     """
@@ -926,7 +946,7 @@ class Subscription(Folder, SyncCode):
     query_list = []
     if query is None:
       return query_list
-    if type(query) is type('a'):
+    if isinstance(query, str):
       query_method = getattr(destination,query,None)
       if query_method is not None:
         query_list = query_method()
@@ -1009,13 +1029,50 @@ class Subscription(Folder, SyncCode):
       return the current subscription
     """
     return self
+    
+  def setSessionId(self, session_id):
+    """
+      set the session id
+    """
+    self.session_id = session_id
 
   def getSessionId(self):
     """
       return the session id
     """
-    self.session_id += 1
+    #self.session_id += 1 #to be commented
     return self.session_id
+
+  def incrementSessionId(self):
+    """
+      increment and return the session id
+    """
+    self.session_id += 1
+    self.resetMessageId() # for a new session, the message Id must be reset
+    return self.session_id
+
+  def incrementMessageId(self):
+    """
+      return the message id
+    """
+    #self.message_id += 1
+    #return self.message_id
+    #return 5
+    value = getattr(self, 'message_id', 0)
+    self.message_id = value +1
+    return self.message_id
+
+  def getMessageId(self):
+    """
+      increment and return the message id
+    """
+    return self.message_id
+
+  def resetMessageId(self):
+    """
+      set the message id to 0
+    """
+    self.message_id = 0
 
   def getLastAnchor(self):
     """

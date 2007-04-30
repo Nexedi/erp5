@@ -47,6 +47,9 @@ class SyncCode(Persistent):
                        # whatever is needed to change(replace)
   CONFLICT_CLIENT_WIN = 208 # The client is the "winner", we keep
                             # the version of the client
+  UNAUTHORIZED = 401
+  AUTH_REQUIRED = 407
+  AUTH_ACCEPTED = 212
 
   # Difference between publication and subscription
   PUB = 1
