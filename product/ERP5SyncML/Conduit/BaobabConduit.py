@@ -336,9 +336,12 @@ class BaobabConduit(ERP5Conduit):
                                               )[0].getObject()
         subobject.setCareerSubordinationValue(organisation)
       else: # This is an organisation object
+        site_value = organisation_module_object.Baobab_getSiteFromCodification(
+                                                       object_id[:3])
         subobject = organisation_module_object.newContent( portal_type = 'Organisation'
-                                                         , id          = object_id
-                                                         )
+                                                 , id          = object_id
+                                                 , site  = site_value.getRelativeUrl()
+                                                 )
         subobject.setRole('client')
 
     ### handle bank account objects
