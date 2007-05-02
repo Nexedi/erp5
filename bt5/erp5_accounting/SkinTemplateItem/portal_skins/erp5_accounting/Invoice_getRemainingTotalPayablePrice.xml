@@ -90,16 +90,15 @@ else:\n
   is_source = 0\n
   section = context.getDestinationSection()\n
 \n
-# rememeber payable / receivable lines in context.\n
+# remember payable / receivable lines in context.\n
 accounts_in_context = []\n
 \n
 # calculate the total price of this invoice (according to accounting\n
 # transaction lines)\n
-groupped_line_list = []\n
 for line in context.getMovementList(\n
           portal_type=portal.getPortalAccountingMovementTypeList()):\n
   \n
-  if line.getGroupingReference():\n
+  if at_date is None and line.getGroupingReference():\n
     continue\n
 \n
   if is_source:\n
@@ -120,9 +119,6 @@ for line in context.getMovementList(\n
     total_payable_price_per_node_section[key] =\\\n
           total_payable_price_per_node_section.get(key, 0) + amount\n
     accounts_in_context.append(node_value)\n
-    if line.getGroupingReference():\n
-      # we rememeber this line to check if there is any line grouped with it\n
-      groupped_line_list.append(line)\n
 \n
 \n
 # substract all causalities\n
@@ -156,7 +152,7 @@ for related_transaction in context.getCausalityRelatedValueList(\n
   for line in related_transaction.getMovementList(\n
             portal_type=portal.getPortalAccountingMovementTypeList()):\n
     \n
-    if line.getGroupingReference():\n
+    if at_date is None and line.getGroupingReference():\n
       continue\n
     \n
     if related_transaction_is_source:\n
@@ -245,14 +241,13 @@ else:\n
                             <string>is_source</string>
                             <string>section</string>
                             <string>accounts_in_context</string>
-                            <string>groupped_line_list</string>
                             <string>_getiter_</string>
                             <string>line</string>
+                            <string>None</string>
                             <string>node_value</string>
                             <string>line_section</string>
                             <string>mirror_section</string>
                             <string>amount</string>
-                            <string>None</string>
                             <string>key</string>
                             <string>_write_</string>
                             <string>related_transaction</string>
