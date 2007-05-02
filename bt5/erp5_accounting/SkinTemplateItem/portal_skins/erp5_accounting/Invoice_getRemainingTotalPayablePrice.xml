@@ -76,6 +76,9 @@ For this, we use both causality relation between transactions and grouping\n
 reference for lines.\n
 If `detailed` argument is set to a true value, instead of returning the price\n
 as a float value, it returns a mapping (node, mirror_section) -> total_price.\n
+The `at_date` paremeter is when you want to know the remaining amount at a\n
+particuliar date. This simply ignores related payments or transactions after\n
+this date.\n
 """\n
 portal = context.getPortalObject()\n
 total_payable_price_per_node_section = dict()\n
@@ -109,6 +112,7 @@ for line in context.getMovementList(\n
     line_section = line.getDestinationSection()\n
     mirror_section = line.getSourceSection()\n
     amount = line.getDestinationInventoriatedTotalAssetPrice() or 0\n
+\n
   \n
   if node_value is not None and \\\n
       node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
@@ -160,14 +164,18 @@ for related_transaction in context.getCausalityRelatedValueList(\n
       line_section = line.getSourceSection()\n
       mirror_section = line.getDestinationSection()\n
       amount = line.getSourceInventoriatedTotalAssetPrice() or 0\n
+      date = line.getStartDate().earliestTime()\n
     else:\n
       node_value = line.getDestinationValue(portal_type=\'Account\')\n
       line_section = line.getDestinationSection()\n
       mirror_section = line.getSourceSection()\n
       amount = line.getDestinationInventoriatedTotalAssetPrice() or 0\n
+      date = line.getStopDate().earliestTime()\n
     \n
     if node_value is not None and \\\n
         node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
+      if at_date and date > at_date:\n
+        continue\n
       if node_value in accounts_in_context:\n
         key = (node_value.getRelativeUrl(), mirror_section)\n
         total_payable_price_per_node_section[key] =\\\n
@@ -201,7 +209,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>detailed=0</string> </value>
+            <value> <string>detailed=0, at_date=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -221,13 +229,14 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>detailed</string>
+                            <string>at_date</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -256,6 +265,7 @@ else:\n
                             <string>other_invoice_line_account</string>
                             <string>ValueError</string>
                             <string>related_transaction_is_source</string>
+                            <string>date</string>
                             <string>sum</string>
                           </tuple>
                         </value>
@@ -270,6 +280,7 @@ else:\n
             <value>
               <tuple>
                 <int>0</int>
+                <none/>
               </tuple>
             </value>
         </item>
