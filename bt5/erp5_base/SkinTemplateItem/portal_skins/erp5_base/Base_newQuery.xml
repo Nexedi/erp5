@@ -68,19 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>translateString = context.Base_translateString\n
-request = context.REQUEST\n
-ptype = context.getPortalType()\n
+            <value> <string>"""\n
+  A script which actually creates and returns the query object.\n
+"""\n
 \n
-if not description:\n
-  return context.Base_redirect(dialog_id,\n
-              keep_items = dict(portal_status_message = translateString("Question can not be empty.",), cancel_url = cancel_url))\n
-\n
-query = context.Base_newQuery(description=description)\n
-query_id = query.getId()\n
-return context.Base_redirect(form_id,\n
-              keep_items = dict(portal_status_message = translateString("A Query about the current ${portal_type} was posted with ID ${query_id}.", mapping = dict(query_id=query_id, portal_type=ptype)),\n
-              cancel_url = cancel_url))\n
+query_module = context.getPortalObject().query_module \n
+query = query_module.newContent(description=description, \n
+                                title=context.getPortalType(),\n
+                                agent_value=context)\n
+query.updateLocalRolesOnSecurityGroups()\n
+query.post()\n
+return query\n
 </string> </value>
         </item>
         <item>
@@ -96,14 +94,8 @@ return context.Base_redirect(form_id,\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None,form_id=None,description=None,cancel_url=\'\'</string> </value>
+            <value> <string>description</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -131,24 +123,17 @@ return context.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>dialog_id</string>
-                            <string>form_id</string>
                             <string>description</string>
-                            <string>cancel_url</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>translateString</string>
-                            <string>request</string>
-                            <string>ptype</string>
-                            <string>dict</string>
+                            <string>query_module</string>
                             <string>query</string>
-                            <string>query_id</string>
                           </tuple>
                         </value>
                     </item>
@@ -160,17 +145,12 @@ return context.Base_redirect(form_id,\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <string></string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_postQuery</string> </value>
+            <value> <string>Base_newQuery</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
