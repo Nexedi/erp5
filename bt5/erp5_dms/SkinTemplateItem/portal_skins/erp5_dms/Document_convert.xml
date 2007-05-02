@@ -100,6 +100,12 @@ return data\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>filename=None, format=None, force=0</string> </value>
         </item>

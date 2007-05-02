@@ -121,6 +121,12 @@ return [r for r in res if r.getUid()!=context.getUid()]\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference_list</string> </value>
         </item>
@@ -177,6 +183,10 @@ return [r for r in res if r.getUid()!=context.getUid()]\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getImplicitSuccessorValueList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get referenced by us objects</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

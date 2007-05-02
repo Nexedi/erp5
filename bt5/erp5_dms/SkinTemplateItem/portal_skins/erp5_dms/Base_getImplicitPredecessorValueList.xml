@@ -171,6 +171,10 @@ return lst\n
             <value> <string>Base_getImplicitPredecessorValueList</string> </value>
         </item>
         <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get objects that reference us</string> </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

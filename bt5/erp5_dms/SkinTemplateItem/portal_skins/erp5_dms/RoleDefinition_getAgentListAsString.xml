@@ -69,13 +69,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-Used by Base_viewLocalPermissionList which displays all agents set locally\n
-(by adding Role Definition objects) and their roles, in a listbox\n
-which shows roles and agents assigned this role.\n
-This scripts formats names of agents which have a certain role.\n
+   Used by Base_viewLocalPermissionList to display all agents set locally\n
+   (by adding Role Definition objects) and their roles, in a listbox.\n
 """\n
-\n
-return \', \'.join(brain.getObject().getAgentTitleList())\n
+return \', \'.join(context.getAgentTitleList())\n
 </string> </value>
         </item>
         <item>
@@ -91,8 +88,14 @@ return \', \'.join(brain.getObject().getAgentTitleList())\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain,selection</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,15 +115,14 @@ return \', \'.join(brain.getObject().getAgentTitleList())\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>brain</string>
-                            <string>selection</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
