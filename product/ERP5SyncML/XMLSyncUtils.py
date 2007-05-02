@@ -1118,13 +1118,14 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
 
     alert_code = self.getAlertCode(remote_xml)
     # Import the conduit and get it
+    conduit_name = subscriber.getConduit()
     if conduit_name.startswith('Products'):
       path = conduit_name
       conduit_name = conduit_name.split('.')[-1]
       conduit_module = __import__(path, globals(), locals(), [''])
       conduit = getattr(conduit_module, conduit_name)()
     else:
-      conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), 
+      conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]),
                                   globals(), locals(), [''])
       conduit = getattr(conduit_module, conduit_name)()
     # Then apply the list of actions
