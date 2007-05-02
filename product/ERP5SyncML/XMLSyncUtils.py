@@ -1121,14 +1121,12 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     if conduit_name.startswith('Products'):
       path = conduit_name
       conduit_name = conduit_name.split('.')[-1]
-      LOG('SyncMLUtils.SyncModif (path,conduit_name)',0,(path,conduit_name))
       conduit_module = __import__(path, globals(), locals(), [''])
       conduit = getattr(conduit_module, conduit_name)()
     else:
       conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), 
                                   globals(), locals(), [''])
       conduit = getattr(conduit_module, conduit_name)()
-    LOG('SyncModif, subscriber:',0,subscriber)
     # Then apply the list of actions
     (xml_confirmation,has_next_action,cmd_id) = self.applyActionList(cmd_id=cmd_id,
                                          domain=domain,
