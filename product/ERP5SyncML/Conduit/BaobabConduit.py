@@ -582,10 +582,6 @@ class BaobabConduit(ERP5Conduit):
         if k == 'currency'      : currency_id         = v
         if k == 'account_number': bank_account_number = v
       # try to find the bank account
-      LOG( 'bank_account_number:'
-                 , 200
-                 , bank_account_number
-                 )
       if bank_account_number != None:
         bank_account_object = None
         # We use here the catalog in order to find very quickly
@@ -594,10 +590,6 @@ class BaobabConduit(ERP5Conduit):
         bank_account_list = [x.getObject() for x in object.portal_catalog(
                                portal_type=('Bank Account'),
                                )]
-        LOG( 'bank_account_list:'
-                 , 200
-                 , bank_account_list
-                 )
         # Make sure we have found the right bank account
         for bank_account in bank_account_list:
            if bank_account.getInternalBankAccountNumber() == bank_account_number:
@@ -616,7 +608,7 @@ class BaobabConduit(ERP5Conduit):
             elif current_currency_id != currency_id:
               LOG( 'BaobabConduit inconsistency:'
                  , 200
-                 , 'found bank account has not the same currency as expected'
+                 , 'found bank account has not the expected currency (%s in stead of %s)' % (current_currency_id, currency_id)
                  )
         else:
             LOG( 'BaobabConduit inconsistency:'
