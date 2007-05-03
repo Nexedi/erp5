@@ -22,8 +22,31 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>delivered</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Delivered</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>cancel</string>
+                <string>cancel_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

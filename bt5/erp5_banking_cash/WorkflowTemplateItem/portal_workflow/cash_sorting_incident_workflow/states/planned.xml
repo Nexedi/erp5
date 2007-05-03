@@ -39,6 +39,8 @@
               <tuple>
                 <string>confirm</string>
                 <string>confirm_action</string>
+                <string>draft</string>
+                <string>draft_action</string>
               </tuple>
             </value>
         </item>

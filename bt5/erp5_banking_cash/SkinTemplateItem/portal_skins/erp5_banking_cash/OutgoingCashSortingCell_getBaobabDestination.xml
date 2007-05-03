@@ -70,16 +70,19 @@
 \n
 site_letter = context.getSourceValue().getCodification()[0].lower()\n
 site = context.Baobab_getVaultSite(context.getSource()).getRelativeUrl()\n
+cash_status = context.getCashStatus()\n
 \n
 emission_letter = context.getEmissionLetter()\n
 if emission_letter!=\'not_defined\' and not (emission_letter in site_letter):\n
   return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
+elif cash_status == "mixed":\n
+  return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
 elif emission_letter==\'not_defined\':\n
   # remaining banknote which are not sorted yet, or cancelled one\n
-  if not \'ventilation\' in context.getSource() and (context.getCashStatus() not in (\'mixed\',)):\n
+  if not \'ventilation\' in context.getSource():\n
     return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
   else:\n
-    if context.getCashStatus() in ("mixed", "to_sort"):\n
+    if context.getCashStatus() in ("to_sort",):\n
       return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
     else:\n
       # take classification into account here\n
@@ -147,6 +150,7 @@ else:\n
                             <string>_getitem_</string>
                             <string>site_letter</string>
                             <string>site</string>
+                            <string>cash_status</string>
                             <string>emission_letter</string>
                             <string>source_list</string>
                           </tuple>

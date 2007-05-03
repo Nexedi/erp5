@@ -31,12 +31,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Archived</string> </value>
+            <value> <string>Archived (Mutilated Banknote)</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>cancel</string>
+                <string>cancel_action</string>
+              </tuple>
             </value>
         </item>
         <item>

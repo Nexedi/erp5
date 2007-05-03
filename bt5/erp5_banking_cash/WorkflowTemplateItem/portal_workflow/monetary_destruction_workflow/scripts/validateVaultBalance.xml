@@ -75,17 +75,19 @@ transaction = state_change[\'object\']\n
 vault = transaction.getSource()\n
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
 \n
-if (\'encaisse_des_externes\' not in vault and \'encaisse_des_billets_retires_de_la_circulation\'  not in vault):\n
-   msg = Message(domain="ui", message="Invalid source.")\n
-   raise ValidationFailed, (msg,)\n
-\n
-\n
 source_object = context.portal_categories.getCategoryValue(vault)\n
 \n
 # check again that we are in the good accounting date\n
 if not transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate()):\n
   msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
   raise ValidationFailed, (msg,)\n
+\n
+if (\'encaisse_des_externes\' not in vault and \'encaisse_des_billets_retires_de_la_circulation\'  not in vault):\n
+   msg = Message(domain="ui", message="Invalid source.")\n
+   raise ValidationFailed, (msg,)\n
+\n
+\n
+\n
 \n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
@@ -154,9 +156,9 @@ elif resource <> 0 :\n
                             <string>_getattr_</string>
                             <string>vault</string>
                             <string>resource</string>
-                            <string>msg</string>
                             <string>context</string>
                             <string>source_object</string>
+                            <string>msg</string>
                             <string>amount</string>
                             <string>total_price</string>
                           </tuple>

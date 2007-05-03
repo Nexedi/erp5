@@ -90,6 +90,12 @@ if not transaction.Baobab_checkCounterDateOpen(site=outgoing_source, date=transa
   msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
   raise ValidationFailed, (msg,)\n
 \n
+# use of the constraint : Test cash status line\n
+vliste = transaction.checkConsistency()\n
+transaction.log(\'vliste\', vliste)\n
+if len(vliste) != 0:\n
+  raise ValidationFailed, (vliste[0].getMessage(),)\n
+\n
 \n
 \n
 resource_one = transaction.CashDelivery_checkCounterInventory(outgoing_source,portal_type=\'Outgoing Cash To Currency Sale Line\')\n
@@ -179,6 +185,9 @@ elif resource_one != 0 :\n
                             <string>counter_site</string>
                             <string>outgoing_source</string>
                             <string>msg</string>
+                            <string>vliste</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
                             <string>resource_one</string>
                             <string>billetage_entre</string>
                             <string>billetage_sorti</string>

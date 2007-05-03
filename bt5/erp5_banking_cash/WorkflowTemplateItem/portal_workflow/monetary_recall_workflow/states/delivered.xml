@@ -42,7 +42,10 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>cancel</string>
+                <string>cancel_action</string>
+              </tuple>
             </value>
         </item>
         <item>
