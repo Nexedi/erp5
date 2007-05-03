@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Documents submitted for review (%(count)s)</string> </value>
+            <value> <string>Documents to review (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>

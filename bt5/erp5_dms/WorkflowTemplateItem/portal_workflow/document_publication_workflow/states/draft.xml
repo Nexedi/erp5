@@ -45,8 +45,14 @@
                 <string>delete</string>
                 <string>delete_action</string>
                 <string>embed</string>
+                <string>publish</string>
+                <string>publish_action</string>
+                <string>release</string>
+                <string>release_action</string>
                 <string>request</string>
                 <string>request_action</string>
+                <string>share</string>
+                <string>share_action</string>
                 <string>submit</string>
                 <string>submit_action</string>
               </tuple>

@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>AUC KM</string> </value>
+            <value> <string>A generic publication workflow which combines versioning, staging and translation management.</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>
