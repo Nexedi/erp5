@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_sort</string> </value>
+            <value> <string>object_report</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sort_on</string> </value>
+            <value> <string>workflow_report</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -54,11 +54,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>10.0</float> </value>
+            <value> <float>41.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sort</string> </value>
+            <value> <string>Workflow Report</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Folder_viewSortOnDialog</string> </value>
+            <value> <string>string:${object_url}/Folder_generateWorkflowReportDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

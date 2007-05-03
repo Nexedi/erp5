@@ -94,12 +94,16 @@ Task Report Line | price_view
 Task Report Line | print
 Task Report Line | quantity_view
 Task Report Line | view
+Task Report Module | csv_export
+Task Report Module | csv_import
 Task Report Module | icalendar_export
 Task Report Module | list_ui
 Task Report Module | planning_report
+Task Report Module | print
 Task Report Module | search
 Task Report Module | sort_on
 Task Report Module | view
+Task Report Module | workflow_report
 Task Report | expense_view
 Task Report | history
 Task Report | jump_to_related_invoice
