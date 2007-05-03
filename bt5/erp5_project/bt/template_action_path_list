@@ -80,10 +80,14 @@ Task Line | price_view
 Task Line | print
 Task Line | quantity_view
 Task Line | view
+Task Module | csv_export
+Task Module | csv_import
 Task Module | list_ui
+Task Module | print
 Task Module | search
 Task Module | sort_on
 Task Module | view
+Task Module | workflow_report
 Task Report Line | history
 Task Report Line | metadata
 Task Report Line | price_view
