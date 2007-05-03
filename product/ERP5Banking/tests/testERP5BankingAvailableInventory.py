@@ -67,6 +67,8 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
 
   We will by the way check the way counter dates are working :
   - it must not be possible to open two counter dates by the same time
+  - it must not be possible to open two counter dates by the same time
+    even if there is different dates
   - make sure the reference defined on counter dates is increased every day
 
   Also, we must make sure it is not possible to deliver two check
@@ -124,7 +126,24 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     workflow_history = self.workflow_tool.getInfoFor(
            ob=self.counter_date_2, name='history', wf_id='counter_date_workflow')
     # check its len is 2
-    # check we get an "Insufficient balance" message in the workflow history because of the invalid line
+    msg = workflow_history[-1]['error_message']
+    self.assertTrue('there is already a counter date opened' in "%s" %(msg,))
+
+  def stepCheckOpenCounterDateTwiceWithOtherDateFail(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure we can not open the counter date twice
+    """
+    self.openCounterDate(site=self.paris,id='counter_date_7',open=0)
+    self.counter_date_7.setStartDate(DateTime()-1)
+    # open counter date and counter
+    self.assertRaises(ValidationFailed,
+                     self.workflow_tool.doActionFor,
+                     self.counter_date_7,'open_action',
+                     wf_id='counter_date_workflow')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(
+           ob=self.counter_date_7, name='history', wf_id='counter_date_workflow')
+    # check its len is 2
     msg = workflow_history[-1]['error_message']
     self.assertTrue('there is already a counter date opened' in "%s" %(msg,))
 
@@ -293,7 +312,8 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'CheckBadStockBeforeClosingDate ' \
                       'ResetInventoryInSortVault Tic ' \
                       'CheckRightStockBeforeClosingDate ' \
-                      'CheckReferenceIsIncreasedEveryDay '
+                      'CheckReferenceIsIncreasedEveryDay ' \
+                      'CheckOpenCounterDateTwiceWithOtherDateFail Tic ' 
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
