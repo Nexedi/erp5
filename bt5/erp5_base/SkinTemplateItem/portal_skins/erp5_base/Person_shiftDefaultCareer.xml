@@ -68,41 +68,46 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>object_list = []\n
-default_career = None\n
-new_start_date = None\n
+            <value> <string>from Products.CMFActivity.Errors import ActivityPendingError\n
+N_ = context.Base_translateString\n
 \n
-# Create a list of all career line except the default one\n
-for object in context.contentValues(filter={\'portal_type\':\'Career\'}):\n
-  if object.getId() != \'default_career\':    \n
-    object_list += [object]\n
-  else:\n
-    default_career = object\n
-    new_start_date = default_career.getStopDate()\n
+person = context\n
+career_list = []\n
 \n
-# No default career\n
-if default_career == None:\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/Person_viewCareer?portal_status_message=Current+career+must+exist.\')\n
+default_career = getattr(person, \'default_career\', None)\n
 \n
-# Inverse sort of the list by id\n
-object_list.sort(lambda x, y: -cmp(int(x.getId()), int(y.getId())))\n
 \n
-# Shift all career lines id values\n
-new_id = str(context.generateNewId())\n
-for career_line in object_list:\n
-  current_id = career_line.getId()\n
-  context.manage_renameObject(current_id, new_id)\n
-  new_id = current_id\n
+if default_career is None:\n
+  # No default career.\n
+  message = N_(\'Current career must exist.\')\n
+  return context.Base_redirect(form_id=\'Person_viewCareer\',\n
+                               keep_items={\'portal_status_message\': message})\n
+else:\n
+  # Copy and paste the default career.\n
+  # Change IDs\n
+  new_id = person.generateNewId()\n
+  try:\n
+    default_career.setId(new_id)\n
+  except ActivityPendingError, error:\n
+    message = N_("%s" % error)\n
+    return context.Base_redirect(form_id=\'Person_viewCareer\',\n
+                                 keep_items={\'portal_status_message\': message})\n
 \n
-# Create a new default_career\n
-context.manage_renameObject(\'default_career\', new_id)\n
-new_default = context.manage_copyObjects(ids=(new_id,))\n
-new_object = context.manage_pasteObjects(new_default)\n
-context.manage_renameObject(new_object[0][\'new_id\'], \'default_career\')\n
-context.setCareerStopDate(None)\n
-context.setCareerStartDate(new_start_date)\n
+  new_start_date = default_career.getStopDate()\n
 \n
-return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/Person_viewCareer?portal_status_message=Last+career+step+terminated.+New+career+step+added.\')\n
+  cb_data = person.manage_copyObjects(ids=(new_id,))\n
+  copied = person.manage_pasteObjects(cb_data)\n
+\n
+  new_default_career = getattr(person, copied[0][\'new_id\'])\n
+\n
+  new_default_career.edit(\n
+    id=\'default_career\',\n
+    start_date=new_start_date,\n
+    stop_date=None)\n
+\n
+  message = N_(\'Last career step terminated. New career step added.\')\n
+  return context.Base_redirect(form_id=\'Person_viewCareer\',\n
+                               keep_items={\'portal_status_message\': message})\n
 </string> </value>
         </item>
         <item>
@@ -151,21 +156,24 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/Person_view
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>object_list</string>
-                            <string>None</string>
-                            <string>default_career</string>
-                            <string>new_start_date</string>
-                            <string>_getiter_</string>
+                            <string>Products.CMFActivity.Errors</string>
+                            <string>ActivityPendingError</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>object</string>
-                            <string>str</string>
+                            <string>N_</string>
+                            <string>person</string>
+                            <string>career_list</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>default_career</string>
+                            <string>message</string>
                             <string>new_id</string>
-                            <string>career_line</string>
-                            <string>current_id</string>
-                            <string>new_default</string>
-                            <string>new_object</string>
+                            <string>error</string>
+                            <string>new_start_date</string>
+                            <string>cb_data</string>
+                            <string>copied</string>
                             <string>_getitem_</string>
+                            <string>new_default_career</string>
                           </tuple>
                         </value>
                     </item>
