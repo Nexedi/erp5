@@ -301,7 +301,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/hasOOFile</string> </value>
+            <value> <string>python: hasattr(here, \'hasOOFile\') and here.hasOOFile()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -320,7 +320,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/hasOOFile</string> </value>
+            <value> <string>python: hasattr(here, \'hasOOFile\') and here.hasOOFile()</string> </value>
         </item>
       </dictionary>
     </pickle>
