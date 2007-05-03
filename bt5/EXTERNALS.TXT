@@ -1,0 +1,10 @@
+#
+# Used for maintenance of external resources in this svn bundle.  Edit
+# this file as appropriate and then run the following command from within
+# the checkout directory where this file lives on your local machine:
+#
+# svn propset svn:externals -F ./EXTERNALS.TXT .
+#
+
+erp5_accounting_l10n_fr_m9 https://admisource.gouv.fr/svn/erp5-m9/trunk/bt5/erp5_accounting_l10n_fr_m9
+
