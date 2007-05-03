@@ -687,7 +687,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'newObject')
-  def newObject(self, object=None, xml=None, simulate=0):
+  def newObject(self, object=None, xml=None, simulate=0, reset_local_roles=1):
     """
       modify the object with datas from
       the xml (action section)
@@ -696,8 +696,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if simulate:
       return
     # Retrieve the list of users with a role and delete default roles
-    user_role_list = map(lambda x:x[0],object.get_local_roles())
-    object.manage_delLocalRoles(user_role_list)
+    if reset_local_roles:
+      user_role_list = map(lambda x:x[0],object.get_local_roles())
+      object.manage_delLocalRoles(user_role_list)
     if hasattr(object,'workflow_history'):
       object.workflow_history = PersistentMapping() 
     if xml.nodeName.find('xupdate')>= 0:

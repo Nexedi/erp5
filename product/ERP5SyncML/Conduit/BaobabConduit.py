@@ -334,7 +334,7 @@ class BaobabConduit(ERP5Conduit):
                                               portal_type='Organisation',
                                               id=organisation_id
                                               )[0].getObject()
-        subobject.setCareerSubordinationValue(organisation)
+        subobject._setCareerSubordinationValue(organisation)
       else: # This is an organisation object
         site_value = organisation_module_object.Baobab_getSiteFromCodification(
                                                        object_id[:3])
@@ -465,6 +465,8 @@ class BaobabConduit(ERP5Conduit):
                                    , id          = object_id
                                    )
 
+    if subobject.getPortalType() == 'Person':
+      subobject.updateLocalRolesOnSecurityGroups()
     return subobject
 
 
@@ -1014,3 +1016,10 @@ class BaobabConduit(ERP5Conduit):
     resource_url = 'currency_module/%s' % value
     resource_value = document.getPortalObject().restrictedTraverse(resource_url)
     document.setResourceValue(resource_value)
+
+  def newObject(self, object=None, xml=None, simulate=0, reset_local_roles=0):
+    """
+    define it here in order to make sure to not delete security
+    """
+    ERP5Conduit.newObject(self, object=object, xml=xml, simulate=simulate,
+                          reset_local_roles=reset_local_roles)
