@@ -35,11 +35,12 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
+from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import convertToUpperCase
 
 from zLOG import LOG
 
-class Predicate(Folder):
+class Predicate(XMLObject, Folder):
   """
     A Predicate object defines a list of criterions
     which can be applied to test a document or to search for documents.

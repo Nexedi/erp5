@@ -30,10 +30,11 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Type.XMLObject import XMLObject
 
 from zLOG import LOG
 
-class Bug( Folder ):
+class Bug(XMLObject, Folder):
     """
        Bug means a bug report, a feature request or an issue.
     """
