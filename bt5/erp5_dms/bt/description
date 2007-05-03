@@ -1,4 +1,1 @@
-For installation and usage guidelines, see wiki http://wiki.erp5.org/HowToUseERP5DMS
-----------------------------------------------------
-A simple document management system in which security is based on classification templates. Documents are supported either through OpenOffice (Text, Presentation, Spreadsheets, etc.) or through ImageMagics (images).
-NOTE: publication_section overlaps with erp5_web
+A simple document management system in which security is based on classification templates. Documents are supported either through OpenOffice (Text, Presentation, Spreadsheets, etc.) or through ImageMagics (images). For installation and usage guidelines, see wiki http://wiki.erp5.org/HowToUseERP5DMS.
