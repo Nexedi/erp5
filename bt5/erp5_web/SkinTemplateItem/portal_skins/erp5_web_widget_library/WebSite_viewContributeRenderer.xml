@@ -78,9 +78,6 @@
         </select>\n
         <input type="file" name="contribute_file" size="30" />\n
       </div>\n
-      <!--<a onclick="setMailString();" id="mail_contribute_button" href="mailto:dms@dms.nexedi.com?subject=Contribution&body=">\n
-        <img src="au_icons/kmail.png" align="right" alt="contribute by mail" title="contribute by mail"/>\n
-      </a>-->\n
       <div style="float:left"\n
            tal:define="contribute_prefix string:contribute_">\n
         <div metal:use-macro="here/au_macros/macros/contribute_properties">\n
@@ -129,7 +126,7 @@
   </div>\n
   \n
   <div class="tabbertab"\n
-    tal:define="user here/ERP5Site_getCurrentUserValue">\n
+    tal:define="user here/portal_membership/getAuthenticatedMember">\n
     <h2 value="" i18n:translate="" i18n:domain="ui">File</h2>\n
 \n
     <tal:block tal:repeat="file_group python:[\n
@@ -149,7 +146,7 @@
                title = \'Online Content:\',\n
               ),\n
               dict(\n
-               portal_type_list = here.getPortalFileDocumentTypeList() + here.getPortalTemplateDocumentTypeList(),\n
+               portal_type_list = here.getPortalFileDocumentTypeList(),\n
                id = \'content\',\n
                title = \'Offline Content:\',\n
               ),\n
