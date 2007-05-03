@@ -903,7 +903,7 @@ class ActivityTool (Folder, UniqueObject):
         Parameters allowed:
 
         method_id : the id of the method
-        path : for activities on an particular object
+        path : for activities on a particular object
         tag : activities with a particular tag
         message_uid : activities with a particular uid
       """
