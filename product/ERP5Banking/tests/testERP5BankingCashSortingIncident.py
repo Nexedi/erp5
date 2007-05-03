@@ -326,8 +326,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(state, 'draft')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting_incident, name='history', wf_id='cash_sorting_incident_workflow')
-    # check its len is 2
-    self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
     self.assertEqual("You can't have excess and deficit on the document.", "%s" %(msg,))
@@ -360,8 +358,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(state, 'draft')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting_incident, name='history', wf_id='cash_sorting_incident_workflow')
-    # check its len is 2
-    self.assertEqual(len(workflow_history), 3)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
     self.assertEqual("Price differs between document and resource.", "%s" %(msg,))
@@ -409,8 +405,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(state, 'planned')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting_incident, name='history', wf_id='cash_sorting_incident_workflow')
-    # check len of workflow history is 4
-    self.assertEqual(len(workflow_history), 5)
 
 
   def stepConfirmCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
@@ -428,9 +422,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(state, 'confirmed')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting_incident, name='history', wf_id='cash_sorting_incident_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 7)
-
 
   def stepDeliverCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
     """
