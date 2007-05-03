@@ -77,11 +77,12 @@ def getReference(reference):\n
   # First convert to float to avoid failing to convert if reference = \'1.0\'\n
   return int(float(reference))\n
 \n
-def generateReference(reference, ignored):\n
+def generateReference(reference, original_reference):\n
   """\n
-    Convert an int into a reference\n
+    Convert an int into a reference of correct length\n
   """\n
-  return str(reference)\n
+  reference = str(reference)\n
+  return \'%s%s\' % (\'0\' * (len(original_reference) - len(reference)), reference)\n
 \n
 def validateTravelerCheckReferenceFormat(traveler_check_reference):\n
   """\n

@@ -110,6 +110,11 @@ def convertTravelerCheckReferenceToInt(traveler_check_reference):\n
     raise ValueError\n
   return int(traveler_check_reference[4:])\n
 \n
+def convertCheckReferenceToInt(check_reference):\n
+  if len(check_reference) != 8:\n
+    raise ValueError, \'Check reference must be 8-char long.\'\n
+  return int(check_reference)\n
+\n
 # listbox is not passed at the first time when this script is called.\n
 # when the user clicks on the Update button, listbox is passed, and\n
 # the contents must be preserved in the form.\n
@@ -156,8 +161,8 @@ else:\n
         convert_func = convertTravelerCheckReferenceToInt\n
         value_denomination = \'traveler check reference\'\n
       else:\n
-        convert_func = int\n
-        value_denomination = \'number\'\n
+        convert_func = convertCheckReferenceToInt\n
+        value_denomination = \'check reference\'\n
       try:\n
         reference_range_min = convert_func(reference_range_min)\n
       except ValueError:\n
@@ -269,6 +274,7 @@ else:\n
                             <string>field_error_dict</string>
                             <string>generate_error</string>
                             <string>convertTravelerCheckReferenceToInt</string>
+                            <string>convertCheckReferenceToInt</string>
                             <string>_getiter_</string>
                             <string>range</string>
                             <string>i</string>
