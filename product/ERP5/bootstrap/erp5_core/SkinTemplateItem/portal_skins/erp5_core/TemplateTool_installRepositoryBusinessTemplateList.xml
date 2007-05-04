@@ -71,6 +71,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from ZTUtils import make_query\n
+from Products.PythonScripts.standard import url_quote\n
 \n
 REQUEST = container.REQUEST\n
 RESPONSE = REQUEST.RESPONSE\n
@@ -79,7 +80,10 @@ selection_name = kw[\'list_selection_name\']\n
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 \n
 if len(uids) == 0:\n
-  return context.REQUEST.RESPONSE.redirect(\'%s/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?portal_status_message=%s\'%(context.absolute_url(), context.urlQuote(\'No Business Template specified.\')))\n
+  return context.REQUEST.RESPONSE.redirect(\n
+           \'%s/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?\'\n
+           \'portal_status_message=%s\' % ( context.absolute_url(),\n
+                               url_quote(\'No Business Template Selected.\')))\n
 \n
 # Initilization\n
 id_list = []\n
@@ -116,7 +120,7 @@ for uid in uids:\n
 if portal_status_message != \'\' :\n
   #context.portal_selections.setSelectionCheckedUidsFor(REQUEST.get(\'selection_name\'), current_uid_list)\n
   context.portal_selections.setSelectionCheckedUidsFor(\'template_tool_install_selection\', current_uid_list)\n
-  return context.REQUEST.RESPONSE.redirect(\'%s/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?portal_status_message=%s\'%(context.absolute_url(), context.urlQuote(portal_status_message)))\n
+  return context.REQUEST.RESPONSE.redirect(\'%s/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?portal_status_message=%s\'%(context.absolute_url(), url_quote(portal_status_message)))\n
 \n
 # order uids according to dependencies before processing\n
 tuple_list = []\n
@@ -124,7 +128,6 @@ for uid in uids:\n
   tuple_list.append(context.decodeRepositoryBusinessTemplateUid(uid))\n
 tuple_list = context.sortBusinessTemplateList(tuple_list)\n
 \n
-context.log(\'uids = %s\' %(uids,), \'tuple list = %s\' %(tuple_list,))\n
 \n
 bt_list = []\n
 for repository, id in tuple_list:\n
@@ -186,6 +189,8 @@ RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=Busin
                             <string>kw</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>url_quote</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>REQUEST</string>
