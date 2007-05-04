@@ -80,6 +80,10 @@ if source is None:\n
   msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
   raise ValidationFailed, (msg,)\n
 \n
+if sum([len(x.getAggregateList()) for x in transaction.objectValues(portal_type=[\'Checkbook Delivery Line\'])]) == 0:\n
+  msg = Message(domain=\'ui\', message=\'No checkbook selected for delivery.\')\n
+  raise ValidationFailed, (msg,)  \n
+\n
 at_date = transaction.getStartDate()\n
 transaction.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = source)\n
 \n
@@ -149,6 +153,12 @@ if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
                             <string>None</string>
                             <string>source</string>
                             <string>msg</string>
+                            <string>sum</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>len</string>
                             <string>at_date</string>
                           </tuple>
                         </value>
