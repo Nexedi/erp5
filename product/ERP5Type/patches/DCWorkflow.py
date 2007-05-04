@@ -56,6 +56,49 @@ def WorkflowUIMixin_setProperties( self, title
 WorkflowUIMixin_class.setProperties = WorkflowUIMixin_setProperties
 WorkflowUIMixin_class.manage_properties = DTMLFile('workflow_properties', _dtmldir)
 
+def Guard_check(self, sm, wf_def, ob, **kw):
+    """Checks conditions in this guard.
+       This method was patched so that roles are not taken
+       into account here (but taken into account as local roles)
+    """
+    u_roles = None
+    if wf_def.manager_bypass:
+        # Possibly bypass.
+        u_roles = sm.getUser().getRolesInContext(ob)
+        if 'Manager' in u_roles:
+            return 1
+    if self.permissions:
+        for p in self.permissions:
+            if _checkPermission(p, ob):
+                break
+        else:
+            return 0
+    if self.groups:
+        # Require at least one of the specified groups.
+        u = sm.getUser()
+        b = aq_base( u )
+        if hasattr( b, 'getGroupsInContext' ):
+            u_groups = u.getGroupsInContext( ob )
+        elif hasattr( b, 'getGroups' ):
+            u_groups = u.getGroups()
+        else:
+            u_groups = ()
+        for group in self.groups:
+            if group in u_groups:
+                break
+        else:
+            return 0
+    expr = self.expr
+    if expr is not None:
+        econtext = createExprContext(
+            StateChangeInfo(ob, wf_def, kwargs=kw))
+        res = expr(econtext)
+        if not res:
+            return 0
+    return 1
+
+
+Guard.check = Guard_check
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
@@ -69,7 +112,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
     workflow_tool = getToolByName(self, 'portal_workflow')
     workflow = getattr(workflow_tool, self.id)
     _getPortalTypeListForWorkflow = CachingMethod(workflow.getPortalTypeListForWorkflow,
-                                                  id='_getPortalTypeListForWorkflow', 
+                                                  id=('_getPortalTypeListForWorkflow', self.id), 
                                                   cache_factory = 'erp5_ui_long')
     portal_type_list = _getPortalTypeListForWorkflow()
     if not portal_type_list:
@@ -86,7 +129,11 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       info.now = DateTime()
       for id, qdef in self.worklists.items():
           if qdef.actbox_name:
-              guard = qdef.guard
+            guard = qdef.guard
+            # Patch for ERP5 by JP Smets in order
+            # to take into account the expression of the guard
+            # and nothing else - ERP5Workflow definitely needed some day
+            if guard is None or guard.check(sm, self, portal):
               dict = {}
               # Patch for ERP5 by JP Smets in order
               # to implement worklists and search of local roles
@@ -96,9 +143,9 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                   # Check the catalog for items in the worklist.
                   catalog = getToolByName(self, 'portal_catalog')
                   for k in var_match_keys:
-                      v = qdef.getVarMatch(k)
-                      v_fmt = map(lambda x, info=info: x%info, v)
-                      dict[k] = v_fmt
+                    v = qdef.getVarMatch(k)
+                    v_fmt = map(lambda x, info=info: x%info, v)
+                    dict[k] = v_fmt
                   # Patch to automatically filter workflists per portal type
                   # so that the same state can be used for different
                   # worklists and they are not merged
@@ -106,13 +153,14 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                     dict['portal_type'] = portal_type_list
                   # Patch for ERP5 by JP Smets in order
                   # to implement worklists and search of local roles
-                  if not (guard is None or guard.check(sm, self, portal)):
-                      dict['local_roles'] = guard.roles
+                  # we do not take into account the guard here
+                  if guard is not None and guard.roles:
+                    dict['local_roles'] = guard.roles
                   # Patch to use ZSQLCatalog and get high speed
                   # LOG("PatchedDCWorkflowDefinition", 0, dict)
                   searchres_len = int(apply(catalog.countResults, (), dict)[0][0])
                   if searchres_len == 0:
-                      continue
+                    continue
               if fmt_data is None:
                   fmt_data = TemplateDict()
                   fmt_data._push(info)
@@ -120,11 +168,11 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
               # Patch for ERP5 by JP Smets in order to
               # filter per portal type more easily (ie. without
               # hardcoding it all)
-              fmt_data._push({'portal_type': ' OR '.join(portal_type_list)})
+              fmt_data._push({'portal_type': ' OR '.join(dict['portal_type'])})
               # Patch for ERP5 by JP Smets in order
               # to implement worklists and search of local roles
               if dict.has_key('local_roles'):
-                fmt_data._push({'local_roles': join(guard.roles,';')})
+                fmt_data._push({'local_roles': join(dict['local_roles'],';')})
               else:
                 fmt_data._push({'local_roles': ''})
               res.append((id, {'name': qdef.actbox_name % fmt_data,
