@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>public</string> </value>
+            <value> <string>published</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
