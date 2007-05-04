@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>_module</string> </key>
-            <value> <string>cutFound</string> </value>
+            <value> <string>DocumentExtraction</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

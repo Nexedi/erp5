@@ -1,3 +1,30 @@
+##############################################################################
+#
+# Copyright (c) 2006-2007 Nexedi SA and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
 import string, re
 
 redundant_chars='"\'.:;,-+<>()*~' # chars we need to strip from a word before we see if it matches, and from the searchwords to eliminate boolean mode chars
@@ -64,18 +91,22 @@ def generateParts(context,text,sw,tags,trail,maxlines):
           yield par # return the last marked part
 
 
-def cutFound(context,txt,sw,tags,trail,maxlines):
+def cutFound(context, txt, sw, tags, trail, maxlines):
+  """
+  Returns an excerpt of text found in the txt string
+  """
+  txt = str(txt)
   # initialize class
   FoundWord.tags=tags
   # strip html tags (in case it is a web page - we show result without formatting)
-  r=re.compile('<script>.*?</script>',re.DOTALL|re.IGNORECASE)
-  r=re.compile('<head>.*?</head>',re.DOTALL|re.IGNORECASE)
-  txt=re.sub(r,'',txt)
-  r=re.compile('<([^>]+)>',re.DOTALL|re.IGNORECASE)
-  txt=re.sub(r,'',txt)
-  r=re.compile('\s+')
-  txt=re.sub(r,' ',txt)
-  txt=txt.replace('-',' - ') # to find hyphenated occurrences
+  r = re.compile('<script>.*?</script>',re.DOTALL|re.IGNORECASE)
+  r = re.compile('<head>.*?</head>',re.DOTALL|re.IGNORECASE)
+  txt = re.sub(r,'',txt)
+  r = re.compile('<([^>]+)>',re.DOTALL|re.IGNORECASE)
+  txt = re.sub(r,'',txt)
+  r = re.compile('\s+')
+  txt = re.sub(r,' ',txt)
+  txt = txt.replace('-',' - ') # to find hyphenated occurrences
   text = ' '.join(txt.split('\n')).split(' ') # very rough tokenization
   return [p for p in generateParts(context,text,sw,tags,trail,maxlines)]
 
