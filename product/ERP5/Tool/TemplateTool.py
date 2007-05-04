@@ -45,7 +45,7 @@ from OFS.Traversable import NotFound
 from difflib import unified_diff
 from cStringIO import StringIO
 from zLOG import LOG
-from urllib import pathname2url, urlopen, splittype, urlretrieve, quote
+from urllib import pathname2url, urlopen, splittype, urlretrieve
 import re
 from xml.dom.minidom import parse
 import struct
@@ -704,13 +704,6 @@ class TemplateTool (BaseTool):
               return result_list
       raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repository %s'%(bt[1], bt[0])
                 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'urlQuote')
-    def urlQuote(self, url):
-      """ wrapper for urllib.quote()
-      """
-      return quote(url)
-    
     def findProviderInBTList(self, provider_list, bt_list):
       """
        Find one provider in provider_list which is present in
