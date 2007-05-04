@@ -130,7 +130,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
                              'quantity': self.quantity_200}
     
     
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.cash = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
     
     ###Comment this part because the destination is automatic
@@ -464,9 +464,6 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_recall, name='history', wf_id='monetary_recall_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 6)
-    
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -503,6 +500,17 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     #import pdb;pdb.set_trace()
     self.assertEqual(cell.getBaobabDestinationVariationText(), 'cash_status/retired\nemission_letter/p\nvariation/2003')
 
+  def stepResetInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    node = self.cash
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverFails(self, sequence=None, sequence_list=None, **kwd):
+    message = self.assertWorkflowTransitionFails(self.monetary_recall,
+              'monetary_recall_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests
@@ -526,6 +534,9 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'ConfirmMonetaryRecall ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
+                    + 'ResetInventory Tic ' \
+                    + 'DeliverFails ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverMonetaryRecall ' \
                     + 'CheckSourceDebit CheckDestinationCredit CheckCashDeliveryLine '
     sequence_list.addSequenceString(sequence_string)

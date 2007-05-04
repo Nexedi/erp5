@@ -100,7 +100,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_value': ('emission_letter/not_defined', 'cash_status/not_defined') + self.variation_list,
                              'quantity': self.quantity_200}
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.source = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
     self.destination = self.paris.caveau.auxiliaire.encaisse_des_billets_a_ventiler_et_a_detruire
     self.createCashInventory(source=None, destination=self.source, currency=self.currency_1,
@@ -448,6 +448,18 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.destination.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
 
 
+  def stepResetInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    node = self.source
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverMonetarySurveyFails(self, sequence=None, sequence_list=None, **kwd):
+    message = self.assertWorkflowTransitionFails(self.monetary_survey,
+              'monetary_survey_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
   ##################################
   ##  Tests
   ##################################
@@ -469,6 +481,9 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'ConfirmMonetarySurvey ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
+                    + 'ResetInventory Tic ' \
+                    + 'DeliverMonetarySurveyFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverMonetarySurvey ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)

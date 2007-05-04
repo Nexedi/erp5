@@ -130,7 +130,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_value': ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
                              'quantity': self.quantity_200}
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.usual_cash = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.counter = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
     self.counter_vault = self.counter.sortante
@@ -456,8 +456,6 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.counter_rendering, name='history', wf_id='counter_rendering_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 6)
 
   def stepCheckBaobabDestination(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -488,6 +486,18 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
+  def stepResetInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    node = self.counter_vault
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverFails(self, sequence=None, sequence_list=None, **kwd):
+    message = self.assertWorkflowTransitionFails(self.counter_rendering,
+              'counter_rendering_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
 
   ##################################
   ##  Tests
@@ -512,6 +522,9 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'ConfirmCounterRendering ' \
                     + 'Tic CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
+                    + 'ResetInventory Tic ' \
+                    + 'DeliverFails ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverCounterRendering ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)

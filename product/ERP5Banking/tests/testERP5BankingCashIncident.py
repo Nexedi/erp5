@@ -256,8 +256,6 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
             self.quantity_200)
     # execute tic
     self.stepTic()
-    # check the number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_incident.objectValues()), 2)
     # get the second cash transfer line
     self.valid_line_2 = getattr(self.cash_incident, 'valid_line_2')
     # check portal types
@@ -351,13 +349,16 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # check the total price
     self.assertEqual(self.cash_incident.getTotalPrice(), 10000 * 5.0)
 
+  def stepSetIncomingSourceTotalAssetPrice(self, sequence=None, sequence_list=None, **kwd):
+    self.cash_incident.setSourceTotalAssetPrice('50000.0')
+
+  def stepSetOutgoingSourceTotalAssetPrice(self, sequence=None, sequence_list=None, **kwd):
+    self.cash_incident.setSourceTotalAssetPrice('2400.0')
 
   def stepConfirmCashIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the cash transfer and check it
     """
-    # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.cash_incident.setSourceTotalAssetPrice('50000.0')
     # do the Workflow action
     self.workflow_tool.doActionFor(self.cash_incident, 'confirm_action', wf_id='cash_incident_workflow')
     # execute tic
@@ -368,8 +369,6 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'confirmed')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_incident, name='history', wf_id='cash_incident_workflow')
-    # check len of workflow history is 4
-    self.assertEqual(len(workflow_history), 5)
 
 
   def stepDeliverCashIncident(self, sequence=None, sequence_list=None, **kwd):
@@ -387,8 +386,6 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_incident, name='history', wf_id='cash_incident_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 7)
     
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -403,6 +400,11 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
+  def stepDeleteCashIncident(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Set the debit required
+    """
+    self.cash_incident_module.manage_delObjects(['cash_incident_1',])
 
   ##################################
   ##  Tests
@@ -422,9 +424,20 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'TryConfirmCashIncidentWithTwoDifferentLines DelOutgoingLine Tic ' \
                     + 'TryConfirmCashIncidentWithBadPrice ' \
                     + 'Tic CheckTotal ' \
+                    + 'Tic SetIncomingSourceTotalAssetPrice ' \
                     + 'ConfirmCashIncident ' \
                     + 'DeliverCashIncident ' \
                     + 'CheckFinalInventory '
+    sequence_list.addSequenceString(sequence_string)
+    # Try deliver with no stock and outgoing line
+    sequence_string = 'DeleteCashIncident Tic CheckObjects Tic CheckInitialInventory ' \
+                    + 'CreateCashIncident ' \
+                    + 'CreateOutgoingLine ' \
+                    + 'Tic ' \
+                    + 'Tic SetOutgoingSourceTotalAssetPrice ' \
+                    + 'ConfirmCashIncident ' \
+                    + 'Tic ' \
+                    + 'DeliverCashIncident ' 
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)

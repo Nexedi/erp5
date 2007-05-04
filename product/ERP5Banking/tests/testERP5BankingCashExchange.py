@@ -135,8 +135,8 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
 
 
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
-    line_list_guichet_2 = [inventory_dict_line_3, inventory_dict_line_4]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list_guichet_2 = line_list_guichet_2 = [inventory_dict_line_3, inventory_dict_line_4]
     self.guichet_1 = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
     self.guichet_2 = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.guichet = self.paris.surface.banque_interne.guichet_1
@@ -451,13 +451,6 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_exchange, name='history', wf_id='cash_exchange_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 3)
-
-
-
-
-
 
   def stepCheckFinalInventoryGuichet_1(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -492,6 +485,18 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.cash_exchange_module.deleteContent('cash_exchange_1')
 
+  def stepResetInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    node = self.guichet_2
+    line_list = self.line_list_guichet_2
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverFails(self, sequence=None, sequence_list=None, **kwd):
+    message = self.assertWorkflowTransitionFails(self.cash_exchange,
+              'cash_exchange_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
 
   ##################################
   ##  Tests
@@ -511,6 +516,9 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckInitialInventoryGuichet_1 CheckInitialInventoryGuichet_2 ' \
+                    + 'ResetInventory Tic ' \
+                    + 'DeliverFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverCashExchange Tic ' \
 		    + 'CheckFinalInventoryGuichet_1 ' \
                     + 'CheckFinalInventoryGuichet_2'

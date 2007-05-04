@@ -130,7 +130,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
                              'variation_value': ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
                              'quantity': self.quantity_200}
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.document_vault = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies
     self.gros_versement = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies.entrante
     self.counter_vault = self.paris.surface.gros_versement.guichet_1
@@ -508,9 +508,6 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.money_deposit_rendering, name='history', wf_id='money_deposit_rendering_workflow')
-    # check len of len workflow history is 8
-    self.assertEqual(len(workflow_history), 8)
-
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -534,6 +531,19 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     # check we have 12 coins of 200
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.auxiliaire.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.auxiliaire.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+
+  def stepResetInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    node = self.gros_versement
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverFails(self, sequence=None, sequence_list=None, **kwd):
+    message = self.assertWorkflowTransitionFails(self.money_deposit_rendering,
+              'money_deposit_rendering_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
 
 
   ##################################
@@ -559,6 +569,9 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'OrderMoneyDepositRendering ' \
                     + 'Tic CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'ConfirmMoneyDepositRendering ' \
+                    + 'ResetInventory Tic ' \
+                    + 'DeliverFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverMoneyDepositRendering ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)
