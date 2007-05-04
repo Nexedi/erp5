@@ -124,11 +124,15 @@ if memcache is not None:
       # We need to register in this function too to be able to flush cache at 
       # transaction end.
       self._register()
+      # Memcached refuses characters which are below ' ' (inclued) in
+      # ascii table. Just strip them here to avoid the raise.
+      stripped_key = ''.join([x for x in key if ord(x) > \
+                              MEMCACHED_MINIMUM_KEY_CHAR_ORD])
       result = self.local_cache.get(key, MARKER)
       if result is MARKER:
-        result = self.memcached_connection.get(key)
+        result = self.memcached_connection.get(stripped_key)
         if result is None:
-          raise KeyError, 'Key %s not found.' % (key, )
+          raise KeyError, 'Key %s (was %s) not found.' % (stripped_key, key)
         self.local_cache[key] = result
       return result
   
