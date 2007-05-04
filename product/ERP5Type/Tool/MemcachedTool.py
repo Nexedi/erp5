@@ -49,6 +49,7 @@ if memcache is not None:
   MARKER = tuple()
   UPDATE_ACTION = 'update'
   DELETE_ACTION = 'delete'
+  MEMCACHED_MINIMUM_KEY_CHAR_ORD = ord(' ')
   
   class MemcachedDict(TM):
     """
