@@ -108,6 +108,7 @@ search_words = search_argument_list.get(\'SearchableText\')\n
 if search_words is None or search_words == \'\':\n
   # if the searched text is empty (e.g. because we used only parameters without pure searchable text)\n
   # we return something\n
+  if not hasattr(txt, \'len\'): txt = str(txt)\n
   return txt[min(len(txt) - 300, 200) : 500] # a somewhat arbitrary choice to trim searchable attrs\n
 \n
 res = context.cutFound(context, txt, search_words, tags, trail, maxlines)\n
@@ -184,11 +185,11 @@ return \' \'.join(map(str, res))\n
                             <string>search_argument_list</string>
                             <string>search_words</string>
                             <string>None</string>
+                            <string>str</string>
                             <string>min</string>
                             <string>len</string>
                             <string>res</string>
                             <string>map</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
