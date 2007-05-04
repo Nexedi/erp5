@@ -646,13 +646,13 @@ class TestHR(ERP5TypeTestCase):
                             title = 'Another Organistion')
     new_career_title = 'new career title'
     # Create a new career step.
-    person.Career_shiftDefault()
+    person.Person_shiftDefaultCareer()
     self.assertEquals( 2,
           len(person.contentValues(filter={'portal_type':'Career'})))
     person.setCareerSubordination(other_organisation.getRelativeUrl())
     person.setCareerTitle(new_career_title)
     
-    # Get the new and the old career, as Career_shiftDefault changes
+    # Get the new and the old career, as Person_shiftDefaultCareer changes
     # objects id, this may be the only safe way ...
     old_career_step = None
     new_career_step = None
