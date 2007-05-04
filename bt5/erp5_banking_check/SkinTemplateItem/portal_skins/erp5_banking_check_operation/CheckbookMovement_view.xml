@@ -88,7 +88,6 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
@@ -113,6 +112,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_destination</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
