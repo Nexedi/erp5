@@ -66,21 +66,12 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
     if not self.worklists:
       return None  # Optimization
-
-    # Prevent including this worklist if
-    # the workflow is not used by any portal type
-    def getPortalTypeListForWorkflow(workflow_id):
-      workflow_tool = getToolByName(self, 'portal_workflow')
-      result = []
-      for type_info in workflow_tool._listTypeInfo():
-        portal_type = type_info.id
-        if workflow_id in workflow_tool.getChainFor(portal_type):
-          result.append(portal_type)
-      return result
-
-    _getPortalTypeListForWorkflow = CachingMethod(getPortalTypeListForWorkflow,
-                            id='_getPortalTypeListForWorkflow', cache_factory = 'erp5_ui_long')
-    portal_type_list = _getPortalTypeListForWorkflow(self.id)
+    workflow_tool = getToolByName(self, 'portal_workflow')
+    workflow = getattr(workflow_tool, self.id)
+    _getPortalTypeListForWorkflow = CachingMethod(workflow.getPortalTypeListForWorkflow,
+                                                  id='_getPortalTypeListForWorkflow', 
+                                                  cache_factory = 'erp5_ui_long')
+    portal_type_list = _getPortalTypeListForWorkflow()
     if not portal_type_list:
       return None
 
@@ -422,6 +413,22 @@ def updateRoleMappings(self, REQUEST=None):
     return count
 
 DCWorkflowDefinition.updateRoleMappings = updateRoleMappings
+
+# this patch allows to get list of portal types for workflow
+def getPortalTypeListForWorkflow(self):
+  """
+    Get list of portal types for workflow.
+  """
+  result = []
+  workflow_id = self.id
+  workflow_tool = getToolByName(self, 'portal_workflow')
+  for type_info in workflow_tool._listTypeInfo():
+    portal_type = type_info.id
+    if workflow_id in workflow_tool.getChainFor(portal_type):
+      result.append(portal_type)
+  return result
+  
+DCWorkflowDefinition.getPortalTypeListForWorkflow = getPortalTypeListForWorkflow
 
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD
