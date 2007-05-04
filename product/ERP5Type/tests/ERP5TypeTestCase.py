@@ -128,6 +128,8 @@ ZopeTestCase.installProduct('CMFCategory', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ERP5', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ZMySQLDDA', quiet=install_product_quiet)
 
+ZopeTestCase.installProduct('ParsedXML', quiet=install_product_quiet)
+
 # Install everything else which looks like related to ERP5
 from OFS.Application import get_products
 from App.config import getConfiguration
