@@ -74,11 +74,16 @@
 invoice and all payments that have been made on this invoice.\n
 For this, we use both causality relation between transactions and grouping\n
 reference for lines.\n
+\n
 If `detailed` argument is set to a true value, instead of returning the price\n
 as a float value, it returns a mapping (node, mirror_section) -> total_price.\n
+\n
 The `at_date` paremeter is when you want to know the remaining amount at a\n
 particuliar date. This simply ignores related payments or transactions after\n
 this date.\n
+\n
+The `account_id` parameter can be use to filter receivable / payable lines to a\n
+specific account.\n
 """\n
 portal = context.getPortalObject()\n
 total_payable_price_per_node_section = dict()\n
@@ -115,6 +120,8 @@ for line in context.getMovementList(\n
   \n
   if node_value is not None and \\\n
       node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
+    if account_id is not None and node_value.getId() != account_id:\n
+      continue\n
     key = (node_value.getRelativeUrl(), mirror_section)\n
     total_payable_price_per_node_section[key] =\\\n
           total_payable_price_per_node_section.get(key, 0) + amount\n
@@ -205,7 +212,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>detailed=0, at_date=None</string> </value>
+            <value> <string>detailed=0, at_date=None, account_id=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -225,7 +232,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -233,6 +240,7 @@ else:\n
                           <tuple>
                             <string>detailed</string>
                             <string>at_date</string>
+                            <string>account_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -275,6 +283,7 @@ else:\n
             <value>
               <tuple>
                 <int>0</int>
+                <none/>
                 <none/>
               </tuple>
             </value>
