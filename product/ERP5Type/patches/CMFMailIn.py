@@ -14,7 +14,7 @@
 
 import mimetypes
 import email
-from email.Header import decode_header
+from email.Header import decode_header, make_header
 from email.Utils import parseaddr
 from ZODB.POSException import ConflictError
 from zLOG import LOG
@@ -46,18 +46,15 @@ def MailInTool_postUTF8MailMessage(self, file=None):
   # Recode headers to UTF-8 if needed
   for key, value in msg.items():
     decoded_value_list = decode_header(value)
-    new_value_list = []
-    for x in decoded_value_list:
-      if x[1] != None:
-        new_value_list.append(unicode(x[0], x[1]).encode('utf-8'))
-      else:
-        new_value_list.append(x[0])
-    new_value = ''.join(new_value_list)
+    unicode_value = make_header(decoded_value_list)
+    new_value = unicode_value.__unicode__().encode('utf-8')
 #           msg.replace_header(key, new_value)
     theMail['headers'][key.lower()] = new_value
   # Filter mail
-  for header in ('to', 'from'):
-    theMail['headers'][header] = parseaddr(theMail['headers'][header])[1]
+  for header in ('resent-to', 'resent-from', 'resent-cc', 'resent-sender', 'to', 'from', 'cc', 'sender', 'reply-to'):
+    header_field = theMail['headers'].get(header)
+    if header_field:
+        theMail['headers'][header] = parseaddr(header_field)[1]
   # Get attachment
   body_found = 0
   for part in msg.walk():
