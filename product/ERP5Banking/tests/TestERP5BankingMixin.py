@@ -404,6 +404,7 @@ class TestERP5BankingMixin:
     self.cash_status_mutilated = self.cash_status_base_category.newContent(id='mutilated', portal_type='Category')
     self.cash_status_retired = self.cash_status_base_category.newContent(id='retired', portal_type='Category')
     self.cash_status_new_not_emitted = self.cash_status_base_category.newContent(id='new_not_emitted', portal_type='Category')
+    self.cash_status_mixed = self.cash_status_base_category.newContent(id='mixed', portal_type='Category')
 
     self.emission_letter_base_category = getattr(self.category_tool, 'emission_letter')
     # add the category k in emission letter that will be used fo banknotes and coins
@@ -449,6 +450,11 @@ class TestERP5BankingMixin:
     # create document for banknote of 200 euros from years 1992 and 2003
     self.billet_200 = self.currency_cash_module.newContent(id='billet_200',
          portal_type='Banknote', base_price=200,
+         price_currency_value=self.currency_1, variation_list=('1992', '2003'),
+         quantity_unit_value=self.unit)
+    # create document for banknote of 200 euros from years 1992 and 2003
+    self.billet_100 = self.currency_cash_module.newContent(id='billet_100',
+         portal_type='Banknote', base_price=100,
          price_currency_value=self.currency_1, variation_list=('1992', '2003'),
          quantity_unit_value=self.unit)
     # Create Resources Document (Banknotes & Coins) in USD
