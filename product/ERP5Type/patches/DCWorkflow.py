@@ -34,7 +34,7 @@ from zLOG import LOG
 
 # Patch WorkflowUIMixin to add description on workflows
 from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
-from Products.DCWorkflow.Guard import Guard
+from Products.DCWorkflow.Guard import Guard, _checkPermission, createExprContext, StateChangeInfo
 
 def WorkflowUIMixin_setProperties( self, title
                                  , description='' # the only addition to WorkflowUIMixin.setProperties
@@ -475,7 +475,7 @@ def getPortalTypeListForWorkflow(self):
     if workflow_id in workflow_tool.getChainFor(portal_type):
       result.append(portal_type)
   return result
-  
+
 DCWorkflowDefinition.getPortalTypeListForWorkflow = getPortalTypeListForWorkflow
 
 # This patch allows to use workflowmethod as an after_script
