@@ -418,9 +418,6 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
                               'version', 'short_title',
                               'subject', 'source_reference', 'source_project_title',)
 
-  data = '' # some day this will be in property sheets
-  base_format = 'base storage format'
-
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=None, **kw):
@@ -1131,7 +1128,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       msg = self._convertToBaseFormat() # Call implemetation method
       self.clearConversionCache() # Conversion cache is now invalid
       if msg is None:
-        msg = 'Converted to %s.' % self.base_format
+        msg = 'Converted to %s.' % self.getBaseContentType()
       self.convertFile(comment=msg) # Invoke workflow method
     except NotImplementedError:# we don't do any workflow action if nothing has been done
       msg = '' 
