@@ -129,11 +129,10 @@ class Publication(Subscription):
   """
 
   meta_type='ERP5 Publication'
-  portal_type='Publication' # may be useful in the future...
+  portal_type='SyncML Publication' # may be useful in the future...
   isPortalContent = 1
   isRADContent = 1
   icon = None
-
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
