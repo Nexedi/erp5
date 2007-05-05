@@ -125,6 +125,7 @@ class Image(File, OFSImage):
     self.size = len(self.data)
     self._setContentType(content_type)
 
+  
   def _upradeImage(self):
     """
       This method upgrades internal data structures is required
@@ -139,6 +140,10 @@ class Image(File, OFSImage):
       self.data = self._original.data
       self.height = self._original.height
       self.width = self._original.width
+
+    # Make sure old Image objects can still be accessed
+    if not hasattr(aq_base(self), 'data') and hasattr(aq_base(self), '_data'):
+      self.data = self._data
 
     # Make sure size is defined
     if not hasattr(aq_base(self), 'size') or not self.size:
@@ -166,6 +171,7 @@ class Image(File, OFSImage):
   def getContentType(self, format=''):
     """Original photo content_type."""
     self._upradeImage()
+    if self.get_size() and not self._baseGetContentType(): self._update_image_info()
     if format == '':
       return self._baseGetContentType()
     else:
