@@ -38,6 +38,9 @@ import commands
 from zLOG import LOG
 
 class PublicationSynchronization(XMLSyncUtils):
+  """
+    
+  """
 
   def PubSyncInit(self, publication=None, xml_client=None, subscriber=None, 
       sync_type=None, auth_required=0):
