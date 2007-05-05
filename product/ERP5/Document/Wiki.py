@@ -38,7 +38,9 @@ import re
 
 class Wiki( Document ):
     """
-       Bug means a bug report, a feature request or an issue.
+       A simple Wiki document. A Wiki page may contain
+       subobjects (File, Image, etc.) just like any text
+       based Document.
     """
 
     # Default Properties
@@ -51,7 +53,7 @@ class Wiki( Document ):
 
     # CMF Type Definition
     meta_type='ERP5 Wiki'
-    portal_type='Wiki'    
+    portal_type='Wiki'
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
@@ -219,7 +221,7 @@ class Wiki( Document ):
       line_list = []
       append = line_list.append
       
-      for line in content.split('\r\n'):
+      for line in content.split('\n'): # Used to be \r\n
         if preformatted:
           if line == '}}}':
             preformatted = False
