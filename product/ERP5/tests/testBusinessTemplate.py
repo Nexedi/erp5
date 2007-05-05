@@ -1099,7 +1099,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog = pc.getSQLCatalog()
     self.failUnless(catalog is not None)
     method_id = "z_fake_method"
-    addSQLMethod =catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
+    addSQLMethod = catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
     addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
                  arguments='', template='')
     zsql_method = catalog._getOb(method_id, None)
