@@ -90,6 +90,8 @@ def getAttrFromFilename(self, fname):
 def getLastWorkflowDate(self, state_name='simulation_state', state=('released','public')):
   '''we can make something more generic out of it
   or JP says "there is an API for it" and we trash this one'''
+  if not hasattr(self, 'workflow_history'):
+    return None
   for name,wflow in self.workflow_history.items():
     if len(wflow) == 0: continue # empty history
     if wflow[0].get(state_name) is None: continue # not the right one
@@ -99,7 +101,7 @@ def getLastWorkflowDate(self, state_name='simulation_state', state=('released','
       if act is not None and act.endswith('action'):
         if ch.get(state_name, '') in state:
           return ch['time']
-  return 0
+  return None
 
 #############################################################################
 # Mail management
