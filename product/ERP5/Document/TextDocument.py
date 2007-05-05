@@ -37,6 +37,8 @@ from Products.ERP5Type.WebDAVSupport import TextContent
 
 import re
 
+DEFAULT_TEXT_FORMAT = 'text/html'
+
 class TextDocument(Document, TextContent):
     """
         A Document contains text which can be formatted using
@@ -142,7 +144,7 @@ class TextDocument(Document, TextContent):
       if format == 'raw':
         return 'text/plain', self.getTextContent()
       mime_type = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
-      src_mimetype = self.getTextFormat()
+      src_mimetype = self.getTextFormat(DEFAULT_TEXT_FORMAT)
       if not src_mimetype.startswith('text/'):
         src_mimetype = 'text/%s' % src_mimetype
       return mime_type, getToolByName(self, 'portal_transforms').convertTo(mime_type,
