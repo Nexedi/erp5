@@ -112,6 +112,9 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
                       , PropertySheet.Codification
                       , PropertySheet.Reference
                       , PropertySheet.SortIndex)
+
+    # Inheritance
+    __init__ = Predicate.__init__
  
     # Experimental - virtual document access
     def _experimental_aq_dynamic(self, name):
