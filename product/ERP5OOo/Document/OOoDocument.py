@@ -184,12 +184,18 @@ class OOoDocument(File, ConversionCacheMixin):
     def cached_getTargetFormatItemList(content_type):
       server_proxy = self._mkProxy()
       try:
-        allowed = server_proxy.getAllowedTargetItemList(content_type)
+        response_code, response_dict, response_message = server_proxy.getAllowedTargetItemList(content_type)
+        if response_code == 200:
+          allowed = response_dict['response_data']
+        else:
+          # This is very temporary code - XXX needs to be changed
+          # so that the system can retry
+          raise ConversionError(response_code), response_message
       except Fault, f:
         allowed = server_proxy.getAllowedTargets(content_type)
         warn('Your oood version is too old, using old method '
             'getAllowedTargets instead of getAllowedTargetList',
-            DeprecationWarning)
+             DeprecationWarning)
 
       # tuple order is reversed to be compatible with ERP5 Form
       return [(y, x) for x, y in allowed]
@@ -243,16 +249,15 @@ class OOoDocument(File, ConversionCacheMixin):
       z.close()
       return 'text/plain', s
     server_proxy = self._mkProxy()
-    try:
-        kw = server_proxy.run_generate(self.getId(),
+    response_code, response_dict, response_message = server_proxy.run_generate(self.getId(),
                                        enc(_unpackData(self.getBaseData())),
                                        None, 
                                        format)
-    except Exception, inst:
-      # Catch, log and raise errors with converting server.Explicitly raise the exception!
-      LOG('[DMS]', ERROR, 'Error generating document %s' %inst)
-      raise Exception
-    return kw['mime'], Pdata(dec(kw['data']))
+    #except Exception, inst:
+    #  # Catch, log and raise errors with converting server.Explicitly raise the exception!
+    #  LOG('[DMS]', ERROR, 'Error generating document %s' % inst)
+    #  raise Exception
+    return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
   security.declareProtected(Permissions.View, 'convert')
