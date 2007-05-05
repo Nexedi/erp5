@@ -2104,7 +2104,14 @@ class Base( CopyContainer,
   def asContext(self, context=None, REQUEST=None, **kw):
     if context is None:
       # Make a copy
-      context = self.__class__(self.getId())
+      klass = self.__class__
+      if getattr(klass, 'id', None):
+        # If id is defined on the class, it is usually
+        # the sign that this is a tool and that
+        # __init__ takes no id parameter
+        context = klass()
+      else:
+        context = klass(self.getId())
       context.__dict__.update(self.__dict__)
       # Copy REQUEST properties to self
       if REQUEST is not None:
@@ -2518,6 +2525,9 @@ class Base( CopyContainer,
   def getModificationDate(self):
     """
       Returns the modification date of the document based on workflow information
+
+      NOTE: this method is not generic enough. Suggestion: define a modification_date
+      variable on the workflow which is an alias to time.
     """
     # Check if edit_workflow defined
     portal_workflow = getToolByName(self, 'portal_workflow')
@@ -2953,7 +2963,7 @@ class TempBase(Base):
     """
       Returns the title of this document
     """
-    return getattr(self,'title',None)
+    return getattr(self, 'title', None)
 
   security.declarePublic('setProperty')
 
