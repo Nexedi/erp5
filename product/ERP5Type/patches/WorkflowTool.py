@@ -37,7 +37,10 @@ def WorkflowTool_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
         _findAutomaticTransition in DC Workflows.
 
         TODO: make it possible to have multiple DC Workflow
-        per portal type per method_id
+        per portal type per method_id (XXX). This could be useful
+        for example to make the edit WorkflowMethod trigger
+        multiple automatic actions in different workflows.
+        More discussion needed on this.
     """
     # Check workflow containing the workflow method
     wf_list = []
