@@ -93,9 +93,14 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 
     def allowedRolesAndUsers(self):
         """
-        Return a list of roles and users with
-        View permission.
-        Used by PortalCatalog to filter out items you're not allowed to see.
+        Return a list of roles and users with View permission.
+        Used by Portal Catalog to filter out items you're not allowed to see.
+
+        WARNING (XXX): some user base local role association is currently
+        being stored (ex. to be determined). This should be prevented or it will
+        make the table explode. To analyse the symptoms, look at the
+        user_and_roles table. You will find some user:foo values
+        which are not necessary.
         """
         ob = self.__ob
         security_product = getSecurityProduct(ob.acl_users)
@@ -301,7 +306,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         try:
           # check for proxy role in stack
           eo = getSecurityManager()._context.stack[-1]
-          proxy_roles = getattr(eo,'_proxy_roles',None)
+          proxy_roles = getattr(eo, '_proxy_roles',None)
         except IndexError:
           proxy_roles = None
         if proxy_roles:
@@ -446,6 +451,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if self.getSQLCatalog().getColumnMap().has_key('owner'):
           if user != SUPER_USER:
             role_column_dict['owner'] = str(user)
+            # XXX this is inconsistent withe "check for proxy role in stack"
+            # in _listAllowedRolesAndUsers. We should use the proxy user
+            # to be consistent
 
       return allowedRolesAndUsers, role_column_dict
 
