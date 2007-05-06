@@ -46,6 +46,7 @@ enc=base64.encodestring
 dec=base64.decodestring
 
 _MARKER = []
+STANDARD_IMAGE_FORMAT_LIST = ('png', 'jpg', 'gif', )
 
 class OOoDocument(File, ConversionCacheMixin):
   """
@@ -90,7 +91,7 @@ class OOoDocument(File, ConversionCacheMixin):
   isPortalContent = 1
   isRADContent = 1
 
-  searchable_property_list = ('asTextContent', 'title', 'description', 'id', 'reference',
+  searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
                               'version', 'short_title',
                               'subject', 'source_reference', 'source_project_title',)
 
@@ -123,7 +124,7 @@ class OOoDocument(File, ConversionCacheMixin):
       delattr(self, 'base_data')
 
   security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, format=None, **kw):
+  def index_html(self, REQUEST, RESPONSE, format=None, display=None, **kw):
     """
       Default renderer with conversion support. Format is
       a string. The list of available formats can be obtained
@@ -133,15 +134,12 @@ class OOoDocument(File, ConversionCacheMixin):
     _setCacheHeaders(self, {'format' : format})
     # Return the original file by default
     if format is None:
-      if self.getSourceReference() is not None:
-        RESPONSE.setHeader('Content-Disposition', 
-                           'attachment; filename=%s' %self.getSourceReference())
       return File.index_html(self, REQUEST, RESPONSE)
     # Make sure file is converted to base format
     if not self.hasBaseData():
       self.convertToBaseFormat()
     # Else try to convert the document and return it
-    mime, result = self.convert(format=format)
+    mime, result = self.convert(format=format, display=display, **kw)
     if not mime:
       mime = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
     RESPONSE.setHeader('Content-Length', len(result))
@@ -261,7 +259,7 @@ class OOoDocument(File, ConversionCacheMixin):
 
   # Conversion API
   security.declareProtected(Permissions.View, 'convert')
-  def convert(self, format, **kw):
+  def convert(self, format, display=None, **kw):
     """
       Implementation of thGet file in a given format.
       Runs makeFile to make sure we have the requested version cached,
@@ -269,11 +267,15 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     # Make sure we can support html and pdf by default
     is_html = 0
+    original_format = format
     if format == 'base-data':
       if not self.hasBaseData(): self.convertToBaseFormat()
       return self.getBaseContentType(), self.getBaseData()
     if format == 'pdf':
       format_list = [x for x in self.getTargetFormatList() if x.endswith('pdf')]
+      format = format_list[0]
+    elif format in STANDARD_IMAGE_FORMAT_LIST:
+      format_list = [x for x in self.getTargetFormatList() if x.endswith(format)]
       format = format_list[0]
     elif format == 'html':
       format_list = [x for x in self.getTargetFormatList() if x.startswith('html')]
@@ -296,7 +298,11 @@ class OOoDocument(File, ConversionCacheMixin):
     if not self.hasBaseData():
       self.convertToBaseFormat()
     # Return converted file
-    if not self.hasConversion(format=format):
+    if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
+      has_format = self.hasConversion(format=format)
+    else:
+      has_format = self.hasConversion(format=format, display=display)
+    if not has_format:
       # Do real conversion
       mime, data = self._convert(format)
       if is_html:
@@ -314,9 +320,20 @@ class OOoDocument(File, ConversionCacheMixin):
         self.populateContent(zip_file=z)
         z.close()
         cs.close()
-      self.setConversion(data, mime, format=format)
-    return self.getConversion(format=format)
-  
+      if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
+        self.setConversion(data, mime, format=format)
+      else:
+        temp_image = self.portal_contributions.newContent(
+                                       portal_type='Image',
+                                       temp_object=1)
+        temp_image._setData(data)
+        mime, data = temp_image.convert(format, display=display)
+        self.setConversion(data, mime, format=format, display=display)
+    if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
+      return self.getConversion(format=format)
+    else:
+      return self.getConversion(format=format, display=display)
+
   security.declareProtected(Permissions.View, 'asTextContent')
   def asTextContent(self):
     """
