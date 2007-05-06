@@ -75,7 +75,7 @@ XXX - This script must be verified, written with clean syntax \n
 and using less horrible methods (request lookup yuk!)\n
 """\n
 \n
-ob=state_change.object\n
+ob=state_change[\'object\']\n
 kw=ob.REQUEST\n
 metafields=(\'title\',\'subject\',\'description\',\'reference\',\'version\',\'language\') # XXX hardcoded?\n
 f=kw.get(\'my_file\',None)\n
@@ -139,8 +139,9 @@ if ob.hasBaseData():\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>ob</string>
+                            <string>_getattr_</string>
                             <string>kw</string>
                             <string>metafields</string>
                             <string>None</string>
@@ -149,7 +150,6 @@ if ob.hasBaseData():\n
                             <string>_getiter_</string>
                             <string>mf</string>
                             <string>keymf</string>
-                            <string>_getitem_</string>
                             <string>_write_</string>
                           </tuple>
                         </value>

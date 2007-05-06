@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>o = state_change.object\n
+            <value> <string>o = state_change[\'object\']\n
 ref = o.getReference()\n
 if ref is None: # this shouldn\'t happen\n
   raise Exception(\'how on earth can reference be None?\')\n
@@ -121,8 +121,9 @@ for ob in [r.getObject() for r in res]: # again, this should never happen, but s
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>o</string>
+                            <string>_getattr_</string>
                             <string>ref</string>
                             <string>None</string>
                             <string>Exception</string>

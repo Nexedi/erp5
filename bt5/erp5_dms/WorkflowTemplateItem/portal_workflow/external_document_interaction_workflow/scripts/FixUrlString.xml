@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-o=state_change.object\n
+o=state_change[\'object\']\n
 u=o.getUrlString()\n
 i=u.find(\'://\')\n
 if i>-1:\n
@@ -124,11 +124,11 @@ if i>-1:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>o</string>
+                            <string>_getattr_</string>
                             <string>u</string>
                             <string>i</string>
-                            <string>_getitem_</string>
                             <string>prot</string>
                             <string>Exception</string>
                           </tuple>

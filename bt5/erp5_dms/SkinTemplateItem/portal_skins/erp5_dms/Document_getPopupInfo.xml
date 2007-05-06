@@ -78,11 +78,14 @@ translateString = context.Base_translateString\n
 vals = {}\n
 owner_list = context.Base_getOwnerInfoList()\n
 vals[\'owner\'] = \'; \'.join([owner[\'title\'] for owner in owner_list])\n
-vals[\'moddate\'] = context.WebSite_getFancyRelativeDate(context.getModificationDate())\n
+if context.getModificationDate() is not None:\n
+  vals[\'moddate\'] = context.WebSite_getFancyRelativeDate(context.getModificationDate())\n
 publdate = context.Document_getLastWorkflowStateEntryDate(state=(\'public,\'), state_name=\'validation_state\')\n
-vals[\'publdate\'] = context.WebSite_getFancyRelativeDate(publdate)\n
+if publdate is not None:\n
+  vals[\'publdate\'] = context.WebSite_getFancyRelativeDate(publdate)\n
 reldate = context.Document_getLastWorkflowStateEntryDate(state=(\'released,\'), state_name=\'validation_state\')\n
-vals[\'reldate\'] = context.WebSite_getFancyRelativeDate(reldate)\n
+if reldate is not None:\n
+  vals[\'reldate\'] = context.WebSite_getFancyRelativeDate(reldate)\n
 try:\n
   vals[\'status\'] = context.getTranslatedValidationStateTitle() or \'\'\n
 except AttributeError:\n
@@ -162,6 +165,7 @@ return context.Document_viewPopupTemplate(**vals)\n
                             <string>owner</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
+                            <string>None</string>
                             <string>publdate</string>
                             <string>reldate</string>
                             <string>AttributeError</string>

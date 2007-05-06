@@ -76,7 +76,7 @@ otherwise set a special variable and raise validation exception\n
 """\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
-ob=state_change.object\n
+ob=state_change[\'object\']\n
 res = ob.checkConsistency()\n
 if res:\n
   msg= \'The document is not consistent:<br/>\'\n
@@ -129,8 +129,9 @@ if res:\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>ob</string>
+                            <string>_getattr_</string>
                             <string>res</string>
                             <string>msg</string>
                           </tuple>

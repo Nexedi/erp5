@@ -73,7 +73,7 @@ this is not used in current implementation\n
 because we don\'t upload files in edit\n
 """\n
 \n
-ob=state_change.object\n
+ob=state_change[\'object\']\n
 kw=ob.REQUEST\n
 f=kw.get(\'my_file\', None)\n
 \n
@@ -123,8 +123,9 @@ if f is not None and f:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>ob</string>
+                            <string>_getattr_</string>
                             <string>kw</string>
                             <string>None</string>
                             <string>f</string>
