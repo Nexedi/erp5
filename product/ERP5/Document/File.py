@@ -99,6 +99,10 @@ class File(Document, CMFFile, ConversionCacheMixin):
                     , PropertySheet.Periodicity
     )
 
+  searchable_property_list = ('title', 'description', 'id', 'reference',
+                              'version', 'short_title',
+                              'subject', 'source_reference', 'source_project_title',)
+
   # Declarative interfaces
   #__implements__ = ( , )
 
