@@ -51,6 +51,7 @@ class Conflict(SyncCode, Base):
 
   """
   isIndexable = 0
+  isPortalContent = 0 # Make sure RAD generated accessors at the class level
 
   def __init__(self, object_path=None, keyword=None, xupdate=None, publisher_value=None,\
                subscriber_value=None, subscriber=None):
@@ -241,7 +242,8 @@ class Signature(Folder,SyncCode):
     xml -- the xml of the object at the time where it was synchronized
   """
   isIndexable = 0
-
+  isPortalContent = 0 # Make sure RAD generated accessors at the class level
+  
   # Constructor
   def __init__(self,gid=None, id=None, status=None, xml_string=None,object=None):
     self.setGid(gid)
@@ -511,7 +513,7 @@ class Signature(Folder,SyncCode):
     """
     Return the actual action for a partial synchronization
     """
-    LOG('setConflictList, list',0,conflict_list)
+    # LOG('setConflictList, list',0,conflict_list)
     for conflict in conflict_list:
       if isinstance(conflict,str):
         import pdb; pdb.set_trace()
@@ -524,7 +526,7 @@ class Signature(Folder,SyncCode):
     """
     Return the actual action for a partial synchronization
     """
-    LOG('delConflict, conflict',0,conflict)
+    # LOG('delConflict, conflict',0,conflict)
     conflict_list = []
     for c in self.getConflictList():
       LOG('delConflict, c==conflict',0,c==aq_base(conflict))
@@ -546,7 +548,7 @@ class Signature(Folder,SyncCode):
     We will look at date, if there is no changes, no need to syncrhonize
     """
     last_modification = DateTime(object.ModificationDate())
-    LOG('checkSynchronizationNeeded object.ModificationDate()',0,object.ModificationDate())
+    # LOG('checkSynchronizationNeeded object.ModificationDate()',0,object.ModificationDate())
     last_synchronization = self.getLastSynchronizationDate()
     parent = object.aq_parent
     # XXX CPS Specific
@@ -557,7 +559,7 @@ class Signature(Folder,SyncCode):
         self.getStatus()==self.NOT_SYNCHRONIZED:
         if last_synchronization > last_modification:
         #if 1:
-          LOG('checkSynchronizationNeeded, no modification on: ',0,object.id)
+          # LOG('checkSynchronizationNeeded, no modification on: ',0,object.id)
           self.setStatus(self.SYNCHRONIZED)
     
 
@@ -611,7 +613,7 @@ class Subscription(Folder, SyncCode):
   """
 
   meta_type='ERP5 Subscription'
-  portal_type='Subscription' # may be useful in the future...
+  portal_type='SyncML Subscription' # may be useful in the future...
   isPortalContent = 1
   isRADContent = 1
   icon = None
@@ -692,14 +694,14 @@ class Subscription(Folder, SyncCode):
     dict_sign = {}
     for o in self.objectValues():
       dict_sign[o.getId()] = o.getStatus()
-    LOG('getSignature',0,'signatures_status: %s' % str(dict_sign))
+    # LOG('getSignature',0,'signatures_status: %s' % str(dict_sign))
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     code = self.SLOW_SYNC
     if len(self.objectValues()) > 0:
       code = self.TWO_WAY
     if default is not None:
       code = default
-    LOG('Subscription',0,'getSynchronizationType: %s' % code)
+    # LOG('Subscription',0,'getSynchronizationType: %s' % code)
     return code
 
   def setXMLMapping(self, value):
@@ -731,8 +733,8 @@ class Subscription(Folder, SyncCode):
     return 1 if the message id was not seen, 0 if already seen
     """
     last_message_id = getattr(self,'last_message_id',None)
-    LOG('checkCorrectRemoteMessageId  last_message_id =',0,last_message_id)
-    LOG('checkCorrectRemoteMessageId  message_id =',0,message_id)
+    # LOG('checkCorrectRemoteMessageId  last_message_id =',0,last_message_id)
+    # LOG('checkCorrectRemoteMessageId  message_id =',0,message_id)
     if last_message_id == message_id:
       return 0
     self.last_message_id = message_id
@@ -878,23 +880,23 @@ class Subscription(Folder, SyncCode):
     """
     o_base = aq_base(object)
     o_gid = None
-    LOG('getGidFromObject',0,'gidgenerator : _%s_' % repr(self.getGidGenerator()))
+    # LOG('getGidFromObject',0,'gidgenerator : _%s_' % repr(self.getGidGenerator()))
     gid_gen = self.getGidGenerator()
     if callable(gid_gen):
-      LOG('getGidFromObject gid_generator',0,'is callable')
+      # LOG('getGidFromObject gid_generator',0,'is callable')
       o_gid=gid_gen(object)
-      LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
+      # LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
     elif getattr(o_base, gid_gen, None) is not None:
-      LOG('getGidFromObject',0,'there is the gid generator on o_base')
+      # LOG('getGidFromObject',0,'there is the gid generator on o_base')
       generator = getattr(object, gid_gen)
-      o_gid = generator()
-      LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
+      o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
+      # LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
     elif gid_gen is not None:
       # It might be a script python
-      LOG('getGidFromObject',0,'there is the gid generator')
+      # LOG('getGidFromObject',0,'there is the gid generator')
       generator = getattr(object,gid_gen)
-      o_gid = generator(object=object)
-      LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
+      o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
+      # LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
     return o_gid
 
   def getObjectFromGid(self, gid):
@@ -907,11 +909,12 @@ class Subscription(Folder, SyncCode):
     # the id and the gid
     object_list = self.getObjectList()
     destination = self.getDestination()
-    LOG('getObjectFromGid',0,'gid: %s' % repr(gid))
-    LOG('getObjectFromGid oject_list',0,object_list)
+    # LOG('getObjectFromGid', 0, 'self: %s' % self)    
+    # LOG('getObjectFromGid',0,'gid: %s' % repr(gid))
+    # LOG('getObjectFromGid oject_list',0,object_list)
     if signature is not None and signature.getId() is not None:
       o_id = signature.getId()
-      LOG('getObjectFromGid o_id',0,o_id)
+      # LOG('getObjectFromGid o_id',0,o_id)
       o = None
       try:
         o = destination._getOb(o_id)
@@ -920,11 +923,11 @@ class Subscription(Folder, SyncCode):
       if o is not None and o in object_list:
         return o
     for o in object_list:
-      LOG('getObjectFromGid',0,'working on : %s' % repr(o))
+      # LOG('getObjectFromGid',0,'working on : %s' % repr(o))
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
         return o
-    LOG('getObjectFromGid',0,'returning None')
+    # LOG('getObjectFromGid',0,'returning None')
     return None
 
 #  def setOneWaySyncFromServer(self,value):
@@ -950,7 +953,7 @@ class Subscription(Folder, SyncCode):
       query_method = getattr(destination,query,None)
       if query_method is not None:
         query_list = query_method()
-    if callable(query):
+    elif callable(query): # XXX - used to be if callable(query)
       query_list = query(destination)
     return [x for x in query_list
               if not getattr(x,'_conflict_resolution',False)]
@@ -959,10 +962,10 @@ class Subscription(Folder, SyncCode):
     """
     This tries to generate a new Id
     """
-    LOG('generateNewId, object: ',0,object.getPhysicalPath())
+    # LOG('generateNewId, object: ',0,object.getPhysicalPath())
     id_generator = self.getIdGenerator()
-    LOG('generateNewId, id_generator: ',0,id_generator)
-    LOG('generateNewId, portal_object: ',0,object.getPortalObject())
+    # LOG('generateNewId, id_generator: ',0,id_generator)
+    # LOG('generateNewId, portal_object: ',0,object.getPortalObject())
     if id_generator is not None:
       o_base = aq_base(object)
       new_id = None
