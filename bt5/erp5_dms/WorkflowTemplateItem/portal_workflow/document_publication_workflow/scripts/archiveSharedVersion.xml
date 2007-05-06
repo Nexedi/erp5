@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.archiveVersion(state_change, validation_state=\'released\')\n
+            <value> <string>context.archiveVersion(state_change, validation_state=\'shared\')\n
 </string> </value>
         </item>
         <item>
@@ -130,7 +130,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>archiveReleasedVersion</string> </value>
+            <value> <string>archiveSharedVersion</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

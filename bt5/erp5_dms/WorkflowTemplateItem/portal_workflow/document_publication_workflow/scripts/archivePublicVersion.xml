@@ -68,16 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>o = state_change[\'object\']\n
-ref = o.getReference()\n
-if ref is None: # this shouldn\'t happen\n
-  raise Exception(\'how on earth can reference be None?\')\n
-lng = o.getLanguage()\n
-if lng is None: # ibidem\n
-  raise Exception(\'how on earth can language be None?\')\n
-res = context.portal_catalog(reference=ref, language=lng, simulation_state=\'published\')\n
-for ob in [r.getObject() for r in res]: # again, this should never happen, but still\n
-  o.portal_workflow.doActionFor(ob, \'archive_action\')\n
+            <value> <string>context.archiveVersion(state_change, validation_state=\'published\')\n
 </string> </value>
         </item>
         <item>
@@ -121,20 +112,8 @@ for ob in [r.getObject() for r in res]: # again, this should never happen, but s
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>o</string>
                             <string>_getattr_</string>
-                            <string>ref</string>
-                            <string>None</string>
-                            <string>Exception</string>
-                            <string>lng</string>
                             <string>context</string>
-                            <string>res</string>
-                            <string>_getiter_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>r</string>
-                            <string>ob</string>
                           </tuple>
                         </value>
                     </item>

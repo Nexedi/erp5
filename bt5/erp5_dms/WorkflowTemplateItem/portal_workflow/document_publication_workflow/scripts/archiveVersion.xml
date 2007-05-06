@@ -69,12 +69,33 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-when a document is hidden\n
-we have to \'uncheck\' its consistency flag\n
-so that you know you have to check it again\n
-"""\n
+This script is invoked each time a new document is published.\n
+The previous version is archived automatically.\n
 \n
-#state_change.new_state.addVariable(\'consistency_state\', \'not checked\')\n
+This will only apply to documents with enough coordinates\n
+(ex. reference, language, version).\n
+"""\n
+o = state_change[\'object\']\n
+reference = o.getReference()\n
+if not reference:\n
+  # If this object has no reference, we can not do anything\n
+  return\n
+\n
+language = o.getLanguage()\n
+if not language:\n
+  # If language is None, we have to check is this document\n
+  # is language independent. In this case, archival is possible\n
+  # But if a document exists with same reference and defined\n
+  # language, we can not do anything\n
+  for o in context.portal_catalog(reference=reference, validation_state=validation_state):\n
+    document = o.getObject()\n
+    if not document.getLanguage():\n
+      document.archive()\n
+  return\n
+\n
+# We can now archive all documents with same reference and language in published state\n
+for o in context.portal_catalog(reference=reference, language=language, validation_state=validation_state):\n
+  o.getObject().archive()\n
 </string> </value>
         </item>
         <item>
@@ -90,14 +111,8 @@ so that you know you have to check it again\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, validation_state=\'published\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,13 +132,22 @@ so that you know you have to check it again\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>validation_state</string>
+                            <string>_getitem_</string>
+                            <string>o</string>
+                            <string>_getattr_</string>
+                            <string>reference</string>
+                            <string>language</string>
+                            <string>_getiter_</string>
+<string>context</string>
+                            <string>document</string>
                           </tuple>
                         </value>
                     </item>
@@ -135,12 +159,14 @@ so that you know you have to check it again\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>published</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>invalidateDocument</string> </value>
+            <value> <string>archiveVersion</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
