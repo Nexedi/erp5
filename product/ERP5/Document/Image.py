@@ -287,6 +287,28 @@ class Image(File, OFSImage):
                             })
       return displays
 
+
+  # Conversion API
+  security.declareProtected(Permissions.ModifyPortalContent, 'convert')
+  def convert(self, format, display=None, quality=75, resolution=None):
+    """
+    Implementation of conversion for PDF files
+    """
+    if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
+      return None, None
+    if (display is not None or resolution is not None or quality != 75 or format != '')\
+                                              and defaultdisplays.has_key(display):
+        if not self.hasConversion(display=display, format=format,
+                                  quality=quality,resolution=resolution):
+            # Generate photo on-the-fly
+            self._makeDisplayPhoto(display, format=format, quality=quality,resolution=resolution)
+        # Return resized image
+        mime, image = self.getConversion(display=display, format=format,
+                                         quality=quality ,resolution=resolution)
+        return mime, image.data
+    return self.getContentType(), self.getData()
+
+  # Display
   security.declareProtected('View', 'index_html')
   def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75, resolution=None):
       """Return the image data."""
