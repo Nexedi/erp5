@@ -2105,13 +2105,12 @@ class Base( CopyContainer,
     if context is None:
       # Make a copy
       klass = self.__class__
-      if getattr(klass, 'id', None):
-        # If id is defined on the class, it is usually
-        # the sign that this is a tool and that
-        # __init__ takes no id parameter
-        context = klass()
-      else:
+      try:
         context = klass(self.getId())
+      except TypeError:
+        # If __init__ does not take the id argument, the class is probably
+        # a tool, and the id is fixed.
+        context = klass()
       context.__dict__.update(self.__dict__)
       # Copy REQUEST properties to self
       if REQUEST is not None:
