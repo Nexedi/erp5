@@ -188,7 +188,8 @@ class OOoDocument(File, ConversionCacheMixin):
         else:
           # This is very temporary code - XXX needs to be changed
           # so that the system can retry
-          raise ConversionError(response_code), response_message
+          raise ConversionError("[DMS] Can not get list of allowed acceptable formats for conversion: %s (%s)"  
+                                       %(response_code, response_message))
       except Fault, f:
         allowed = server_proxy.getAllowedTargets(content_type)
         warn('Your oood version is too old, using old method '
@@ -290,7 +291,7 @@ class OOoDocument(File, ConversionCacheMixin):
         return 'text/plain', self.asTextContent()
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
-      raise ConversionError, 'Target format %s is not supported' % format
+      raise ConversionError("[DMS] Target format %s is not supported" % format)
     # Check if we have already a base conversion
     if not self.hasBaseData():
       self.convertToBaseFormat()
@@ -390,7 +391,8 @@ class OOoDocument(File, ConversionCacheMixin):
     else:
       # log and raise errors with converting server.Explicitly raise the exception!
       LOG('[DMS]', ERROR, 'Error converting document to base format %s:%s' %(response_code, response_message))
-      raise ConversionError(response_code), response_message
+      raise ConversionError("[DMS] Error converting document to base format %s:%s:"  
+                                       %(response_code, response_message))
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
@@ -416,5 +418,5 @@ class OOoDocument(File, ConversionCacheMixin):
       self._setBaseData(dec(response_dict['data']))
     else:
       # log and raise errors with converting server.Explicitly raise the exception!
-      LOG('[DMS]', ERROR, 'Error getting document\'s metadata %s:%s' %(response_code, response_message))
-      raise ConversionError(response_code), response_message
+      LOG('[DMS]', ERROR, "Error getting document's metadata %s:%s" %(response_code, response_message))
+      raise ConversionError("[DMS] Error getting document's metadata %s:%s" %(response_code, response_message))
