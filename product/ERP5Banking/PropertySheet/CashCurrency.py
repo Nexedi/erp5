@@ -32,7 +32,13 @@ class CashCurrency:
     Properties which allow to define a BankNote or a Coin.
   """
 
-  _properties = ()
+  _properties = (
+    {'id'          : 'former',
+     'description' : 'Tell if it is a former object or not',
+     'type'        : 'boolean',
+     'mode'        : 'w'
+     },
+    )
 
   _categories = ( 'emission_letter'
                 , 'cash_status'
