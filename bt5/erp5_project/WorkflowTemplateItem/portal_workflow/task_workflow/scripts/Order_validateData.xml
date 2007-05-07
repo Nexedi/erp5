@@ -72,7 +72,7 @@
 
 # This script check that necessary data exists on Order\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-order = state_change.object\n
+order = state_change[\'object\']\n
 error_message = \'\'\n
 message_list = []\n
 \n
@@ -138,10 +138,11 @@ if len(message_list) > 0:\n
                             <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>order</string>
                             <string>error_message</string>
                             <string>message_list</string>
+                            <string>_getattr_</string>
                             <string>None</string>
                             <string>_getiter_</string>
                             <string>line</string>

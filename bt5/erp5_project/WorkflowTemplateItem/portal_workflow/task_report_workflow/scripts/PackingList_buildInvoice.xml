@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>LOG=lambda msg:context.log("TaskReport_buildInvoice", msg)\n
 \n
-packing_list = sci.object\n
+packing_list = sci[\'object\']\n
 delivery_tool = sci.getPortal().portal_deliveries\n
 LOG("Task Report : %s"%packing_list.getPath())\n
 \n
@@ -129,8 +129,9 @@ if hasattr(sci.getPortal(), \'accounting_module\'):\n
                           <tuple>
                             <string>sci</string>
                             <string>LOG</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list</string>
+                            <string>_getattr_</string>
                             <string>delivery_tool</string>
                             <string>hasattr</string>
                           </tuple>

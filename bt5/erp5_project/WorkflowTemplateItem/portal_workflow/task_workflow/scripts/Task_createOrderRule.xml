@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>task = state_change.object\n
+            <value> <string>task = state_change[\'object\']\n
 \n
 tag = task.getPath() + \'_firstUpdateAppliedRule\'\n
 activate_kw = {\'tag\':tag,\'priority\':3}\n
@@ -117,8 +117,9 @@ task.activate(tag=tag).updateAppliedRule(rule_id = \'default_order_rule\',activa
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>task</string>
+                            <string>_getattr_</string>
                             <string>tag</string>
                             <string>activate_kw</string>
                           </tuple>

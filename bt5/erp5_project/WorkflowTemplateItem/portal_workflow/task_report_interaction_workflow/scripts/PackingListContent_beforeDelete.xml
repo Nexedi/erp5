@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list_content = state_change.object\n
+            <value> <string>packing_list_content = state_change[\'object\']\n
 \n
 # Clean simulation\n
 simulation_movement_list = packing_list_content.getDeliveryRelatedValueList(\n
@@ -133,8 +133,9 @@ for simulation_movement in simulation_movement_list:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list_content</string>
+                            <string>_getattr_</string>
                             <string>simulation_movement_list</string>
                             <string>_getiter_</string>
                             <string>simulation_movement</string>
