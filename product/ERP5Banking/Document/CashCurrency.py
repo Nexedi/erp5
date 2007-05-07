@@ -72,13 +72,17 @@ class CashCurrency(Resource):
       The title will depend on the Portal Type and the value, for example :
         Piece de 500
     """
+    former = getattr(self, 'former', 0)
     title = self.getPortalType()
     price = self.getBasePrice()
     if price is None:
       price = 'Not Defined'
     else:
       price = '%i' % int(price)
-    return '%s of %s' % (title, price)
+    if former:
+      return 'Former %s of %s' % (title, price)
+    else:
+      return '%s of %s' % (title, price)
 
   security.declareProtected(Permissions.View, 'getTranslatedTitle')
   def getTranslatedTitle(self,**kw):
@@ -86,13 +90,17 @@ class CashCurrency(Resource):
       The title will depend on the Portal Type and the value, for example :
         Piece de 500
     """
+    former = getattr(self, 'former', 0)
     title = self.getTranslatedPortalType()
     price = self.getBasePrice()
     if price is None:
       price = 'Not Defined'
     else:
       price = '%i' % int(price)
-    return  self.Base_translateString('${title} of ${value}', mapping = {'title' : str(title), 'value' : str(price)})
+    if former:
+      return  self.Base_translateString('Former ${title} of ${value}', mapping = {'title' : str(title), 'value' : str(price)})
+    else:
+      return  self.Base_translateString('${title} of ${value}', mapping = {'title' : str(title), 'value' : str(price)})
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setVariationList')
   def _setVariationList(self,value):
