@@ -78,8 +78,9 @@
                     <value>
                       <list>
                         <string>my_translated_title</string>
-                        <string>my_variation_list</string>
+                        <string>my_former</string>
                         <string>my_base_price</string>
+                        <string>my_variation_list</string>
                       </list>
                     </value>
                 </item>
