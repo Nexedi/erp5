@@ -109,6 +109,7 @@
                         <string>my_source_reference</string>
                         <string>my_resource_title</string>
                         <string>my_destination</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>

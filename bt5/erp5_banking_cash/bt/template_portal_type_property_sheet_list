@@ -1,4 +1,3 @@
-
 Account Incident | Amount
 Account Incident | Price
 Cash Balance Regulation | Amount
@@ -69,6 +68,7 @@ Monetary Recall Line | CashDeliveryLine
 Monetary Recall | Amount
 Monetary Recall | Price
 Monetary Reception | CashContainer
+Monetary Reception | Comment
 Monetary Survey | Amount
 Monetary Survey | Task
 Money Deposit Rendering | Amount

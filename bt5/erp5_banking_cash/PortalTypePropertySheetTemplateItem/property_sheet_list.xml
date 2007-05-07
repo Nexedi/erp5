@@ -137,6 +137,7 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Monetary Reception">
+  <item>Comment</item>
   <item>CashContainer</item>
  </portal_type>
  <portal_type id="Monetary Survey">

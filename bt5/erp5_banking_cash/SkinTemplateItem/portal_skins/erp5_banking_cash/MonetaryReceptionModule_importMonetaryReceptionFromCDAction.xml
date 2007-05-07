@@ -94,11 +94,15 @@ def isSameSet(a, b):\n
 \n
 reference_currency_id = context.Baobab_getPortalReferenceCurrencyID()\n
 \n
+from DateTime import DateTime\n
+today_date = DateTime()\n
+\n
 def create_movement(CD_head_dict, CD_line_list):\n
   # Head creation\n
   movement_head = context.newContent( portal_type       = \'Monetary Reception\'\n
                                     , reindex_object    = 1\n
-                                    , start_date        = CD_head_dict[\'start_date\']\n
+                                    , start_date        = today_date\n
+                                    , comment           = CD_head_dict[\'start_date\']\n
                                     , destination       = CD_head_dict[\'destination\']\n
                                     )\n
   # Container Creation\n
@@ -432,6 +436,8 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>reference_currency_id</string>
+                            <string>DateTime</string>
+                            <string>today_date</string>
                             <string>create_movement</string>
                             <string>split_head</string>
                             <string>split_lines</string>
