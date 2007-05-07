@@ -482,15 +482,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
               'cash_sorting_incident_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
-  def stepDeleteCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
-    self.cash_sorting_incident_module.manage_delObjects(['cash_sorting_incident_1',])
-
-  def stepCheckCashSortingIncidentFastInput(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Make sure to test the fast in input
-    """
-    listbox = 
-
   ##################################
   ##  Tests
   ##################################
@@ -533,16 +524,6 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'DeliverCashSortingIncident ' \
                     + 'Tic ' \
                     + 'CheckFinalOutgoingInventory '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_string = 'Tic DeleteCashSortingIncident Tic CheckInitialInventory ' \
-                    + 'CreateCashSortingIncident ' \
-                    + 'CreateOutgoingLine ' \
-                    + 'Tic CheckTotalOutgoing ' \
-                    + 'SetOutgoingTotalAssetPrice ' \
-                    + 'PlanCashSortingIncident ' \
-                    + 'ConfirmCashSortingIncident ' \
-                    + 'Tic ' \
-                    + 'CheckCashSortingIncidentFastInput ' \
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
