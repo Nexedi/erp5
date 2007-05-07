@@ -381,18 +381,19 @@ class OOoDocument(File, ConversionCacheMixin):
       on the object. Update metadata information.
     """
     server_proxy = self._mkProxy()
-    try:
-        kw = server_proxy.run_convert(self.getSourceReference() or self.getId(),
+    response_code, response_dict, response_message = server_proxy.run_convert(self.getSourceReference() or self.getId(),
                                       enc(_unpackData(self.getData())))
-    except Exception, inst:
-      # Catch, log and raise errors with converting server.Explicitly raise the exception!
+    if response_code == 200:
+      # sucessfully converted document
+      self._setBaseData(dec(response_dict['data']))
+      metadata = response_dict['meta']
+      self._base_metadata = metadata
+      if metadata.get('MIMEType', None) is not None:
+        self._setBaseContentType(metadata['MIMEType'])
+    else:
+      # log and raise errors with converting server.Explicitly raise the exception!
       LOG('[DMS]', ERROR, 'Error converting document to base format %s' %inst)
-      raise Exception
-    self._setBaseData(dec(kw['data']))
-    metadata = kw['meta']
-    self._base_metadata = metadata
-    if metadata.get('MIMEType', None):
-      self._setBaseContentType(metadata['MIMEType'])
+      raise ConversionError(response_code), response_message
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
@@ -400,7 +401,6 @@ class OOoDocument(File, ConversionCacheMixin):
       Returns the metadata extracted by the conversion
       server.
     """
-    # LOG('in getContentInformation', 0, self.getRelativeUrl())
     return self._base_metadata
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
@@ -411,12 +411,13 @@ class OOoDocument(File, ConversionCacheMixin):
       through the invocation of the conversion server.
     """
     server_proxy = self._mkProxy()
-    try:
-      kw = server_proxy.run_setmetadata(self.getId(),
-                                      enc(_unpackData(self.getBaseData())),
-                                      kw)
-    except Exception, inst:
-      # Catch, log and raise errors with converting server.Explicitly raise the exception!
+    response_code, response_dict, response_message = server_proxy.run_setmetadata(self.getId(),
+                                                          enc(_unpackData(self.getBaseData())),
+                                                          kw)
+    if response_code == 200:
+      # successful meta data extraction
+      self._setBaseData(dec(response_dict['data']))
+    else:
+      # log and raise errors with converting server.Explicitly raise the exception!
       LOG('[DMS]', ERROR, 'Error getting document\'s metadata %s' %inst)
-      raise Exception
-    self._setBaseData(dec(kw['data']))
+      raise ConversionError(response_code), response_message
