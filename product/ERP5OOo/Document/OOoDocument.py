@@ -251,10 +251,7 @@ class OOoDocument(File, ConversionCacheMixin):
                                        enc(_unpackData(self.getBaseData())),
                                        None, 
                                        format)
-    #except Exception, inst:
-    #  # Catch, log and raise errors with converting server.Explicitly raise the exception!
-    #  LOG('[DMS]', ERROR, 'Error generating document %s' % inst)
-    #  raise Exception
+    # XXX: handle possible OOOd server failure
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
@@ -392,7 +389,7 @@ class OOoDocument(File, ConversionCacheMixin):
         self._setBaseContentType(metadata['MIMEType'])
     else:
       # log and raise errors with converting server.Explicitly raise the exception!
-      LOG('[DMS]', ERROR, 'Error converting document to base format %s' %inst)
+      LOG('[DMS]', ERROR, 'Error converting document to base format %s:%s' %(response_code, response_message))
       raise ConversionError(response_code), response_message
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
@@ -419,5 +416,5 @@ class OOoDocument(File, ConversionCacheMixin):
       self._setBaseData(dec(response_dict['data']))
     else:
       # log and raise errors with converting server.Explicitly raise the exception!
-      LOG('[DMS]', ERROR, 'Error getting document\'s metadata %s' %inst)
+      LOG('[DMS]', ERROR, 'Error getting document\'s metadata %s:%s' %(response_code, response_message))
       raise ConversionError(response_code), response_message
