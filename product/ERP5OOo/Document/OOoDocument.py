@@ -179,6 +179,9 @@ class OOoDocument(File, ConversionCacheMixin):
       NOTE: it is the responsability of the conversion server
       to provide an extensive list of conversion formats.
     """
+    if not self.hasBaseData():
+      self.convertToBaseFormat()
+
     def cached_getTargetFormatItemList(content_type):
       server_proxy = self._mkProxy()
       try:
