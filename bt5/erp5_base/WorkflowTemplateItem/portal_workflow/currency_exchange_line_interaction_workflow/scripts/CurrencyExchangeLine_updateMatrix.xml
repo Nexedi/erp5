@@ -95,6 +95,8 @@ if cell_range_key_list != [[None, None]] :\n
            category_list = category_list,\n
     )\n
     c.setCriterion(\'stop_date\', min=context.getStartDate(), max=context.getStopDate())\n
+    if c.getBasePrice() is None and context.getBasePrice() is not None:\n
+      c.setBasePrice(context.getBasePrice())\n
 </string> </value>
         </item>
         <item>
