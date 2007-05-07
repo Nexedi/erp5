@@ -81,6 +81,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 <tal:block tal:define="title string:${template/title_or_id} - ${here/Title}">\n
   <tal:block  metal:use-macro="here/view_main/macros/master">\n
     <tal:block metal:fill-slot="main">\n
+      <tal:block metal:use-macro="here/form_render/macros/master" />\n
       <tal:block tal:define="portal_object here/getPortalObject">\n
         <tal:block tal:repeat="report_item report_method">\n
           <tal:block tal:define="here python: report_item.getObject(portal_object);\n
