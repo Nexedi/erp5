@@ -257,6 +257,7 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
                      id='checkbook_vault_transfer', portal_type='Checkbook Vault Transfer',
                      source_value=self.source_site, destination_value=self.destination_site,
                      description='test',
+                     start_date=self.date,
                      resource_value=self.currency_1)
     # check its portal type
     self.assertEqual(self.checkbook_vault_transfer.getPortalType(), 'Checkbook Vault Transfer')
@@ -358,7 +359,6 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_vault_transfer, 
                             name='history', wf_id='checkbook_vault_transfer_workflow')
-    self.assertEqual(len(workflow_history), 9)
 
 
   def stepCheckFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
@@ -373,6 +373,24 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     self.failIfDifferentSet(checkbook_object_list,[self.checkbook_1,self.check_1])
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(
                 node=self.destination_vault.getRelativeUrl())), 2)
+
+  def stepChangePreviousDeliveryDate(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    self.previous_delivery = self.checkbook_reception
+    self.previous_date = self.previous_delivery.getStartDate()
+    self.previous_delivery.edit(start_date=self.date+5)
+
+  def stepDeliverCheckbookVaultTransferFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.checkbook_vault_transfer,
+              'checkbook_vault_transfer_workflow','confirm_to_deliver_action')
+    self.failUnless(message.find('Sorry, the item with reference')>=0)
+    self.failUnless(message.find('is not available any more')>=0)
 
   ##################################
   ##  Tests
@@ -392,6 +410,9 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
                     + 'OrderCheckbookVaultTransfer Tic ' \
                     + 'ConfirmCheckbookVaultTransfer Tic ' \
                     + 'CheckConfirmedCheckbookInventory Tic ' \
+                    + 'ChangePreviousDeliveryDate Tic ' \
+                    + 'DeliverCheckbookVaultTransferFails Tic ' \
+                    + 'PutBackPreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookVaultTransfer Tic ' \
                     + 'CheckFinalCheckbookInventory'
     sequence_list.addSequenceString(sequence_string)

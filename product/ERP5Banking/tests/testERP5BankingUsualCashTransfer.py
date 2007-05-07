@@ -130,7 +130,7 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_200}
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.usual_cash = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.counter = self.paris.surface.banque_interne.guichet_1
     self.counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
@@ -455,8 +455,6 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.usual_cash_transfer, name='history', wf_id='usual_cash_transfer_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 6)
 
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
@@ -482,6 +480,24 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter_final_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter_final_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.usual_cash
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverUsualCashTransferFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.usual_cash_transfer,
+              'usual_cash_transfer_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
 
   ##################################
   ##  Tests
@@ -505,6 +521,9 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'ConfirmUsualCashTransfer ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'DeliverUsualCashTransferFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverUsualCashTransfer ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)

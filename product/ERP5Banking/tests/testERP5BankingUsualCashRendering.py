@@ -142,7 +142,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_200}
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
 
     self.caisse_courante = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
@@ -549,7 +549,6 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.usual_cash_rendering, name='history', wf_id='usual_cash_rendering_workflow')
     # check len of len workflow history is 10
-    self.assertEqual(len(workflow_history), 10)
 
   def stepOrderToDeliverUsualCashRendering(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -594,7 +593,23 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.auxiliaire.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.auxiliaire.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.caisse_courante
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
 
+  def stepDeliverUsualCashRenderingFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.usual_cash_rendering,
+              'usual_cash_rendering_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
 
   def test_01_ERP5BankingUsualCashRendering(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -616,6 +631,9 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'OrderUsualCashRendering ' \
                     + 'ConfirmUsualCashRendering ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'DeliverUsualCashRenderingFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverUsualCashRendering ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
 

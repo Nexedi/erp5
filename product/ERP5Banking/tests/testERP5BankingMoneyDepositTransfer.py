@@ -127,7 +127,7 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
                              'variation_value': ('emission_letter/p', 'cash_status/to_sort') + self.variation_list,
                              'quantity': self.quantity_200}
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.counter = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies
     self.tri = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=None, destination=self.counter, currency=self.currency_1,
@@ -451,9 +451,6 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.money_deposit_transfer, name='history', wf_id='money_deposit_transfer_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 6)
-
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -478,6 +475,24 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.tri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.tri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.counter
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverMoneyDepositTransferFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.money_deposit_transfer,
+              'money_deposit_transfer_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
 
   ##################################
   ##  Tests
@@ -501,6 +516,9 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
                     + 'ConfirmMoneyDepositTransfer ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'DeliverMoneyDepositTransferFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverMoneyDepositTransfer ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)

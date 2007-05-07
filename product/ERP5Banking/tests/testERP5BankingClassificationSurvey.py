@@ -96,7 +96,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
                              'quantity': self.quantity_200}
 
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.encaisse_des_billets_ventiles_et_detruits = self.paris.caveau.auxiliaire.encaisse_des_billets_ventiles_et_detruits
     self.encaisse_des_billets_retires_de_la_circulation = self.paris.caveau.serre.encaisse_des_billets_retires_de_la_circulation
     self.encaisse_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
@@ -458,8 +458,6 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.classification_survey, name='history', wf_id='classification_survey_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 5)
 
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
@@ -485,6 +483,23 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
 
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.encaisse_des_billets_ventiles_et_detruits
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverClassificationSurveyFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.classification_survey,
+              'classification_survey_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests
@@ -506,6 +521,9 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
                     + 'CheckSource CheckDestination ' \
                     + 'ConfirmClassificationSurvey Tic ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'DeliverClassificationSurveyFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverClassificationSurvey Tic ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)

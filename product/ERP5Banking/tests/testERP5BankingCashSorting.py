@@ -102,7 +102,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
                              'quantity': self.quantity_5000}
 
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
     self.encaisse_tri = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
     self.encaisse_reserve = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
     self.encaisse_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
@@ -589,9 +589,6 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting, name='history', wf_id='cash_sorting_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 7)
-
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -621,6 +618,24 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
 
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.encaisse_tri
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverCashSortingFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.cash_sorting,
+              'cash_sorting_workflow','deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
 
   ##################################
   ##  Tests
@@ -643,6 +658,9 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'OrderCashSorting Tic '\
                     + 'ConfirmCashSorting Tic ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'DeliverCashSortingFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverCashSorting Tic ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)

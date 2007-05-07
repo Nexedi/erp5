@@ -142,7 +142,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_200}
 
-    line_list = [inventory_dict_line_1, inventory_dict_line_2]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.usual_cash = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
     self.caisse_courante = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
@@ -672,8 +672,6 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.vault_transfer, name='history', wf_id='vault_transfer_workflow')
-    # check len of len workflow history is 10
-    self.assertEqual(len(workflow_history), 10)
 
   def stepOrderToDeliverVaultTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -737,6 +735,25 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     # check we have 12 coins of 200
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.salle_tri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.salle_tri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+
+  def stepResetSourceInventory(self, 
+               sequence=None, sequence_list=None, **kwd):
+    """
+    Reset a vault
+    """
+    node = self.usual_cash
+    line_list = self.line_list
+    self.resetInventory(destination=node, currency=self.currency_1,
+                        line_list=line_list,extra_id='_reset_out')
+
+  def stepDeliverVaultTransferFails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try if we get Insufficient balance
+    """
+    message = self.assertWorkflowTransitionFails(self.vault_transfer,
+              'vault_transfer_workflow','confirm_to_deliver_action')
+    self.failUnless(message.find('Insufficient balance')>=0)
+
   ##################################
   ##  Tests
   ##################################
@@ -761,6 +778,9 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'OrderVaultTransfer ' \
                     + 'ConfirmVaultTransfer ' \
+                    + 'ResetSourceInventory Tic ' \
+                    + 'DeliverVaultTransferFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'ConfirmToDeliverVaultTransfer ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
 
