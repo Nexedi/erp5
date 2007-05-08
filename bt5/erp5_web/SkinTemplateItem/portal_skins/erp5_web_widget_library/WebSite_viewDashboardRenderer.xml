@@ -48,18 +48,21 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<tal:block tal:define="NEWS_LEN NEWS_LEN | python:10;\n
+                       TASK_LEN TASK_LEN | python:10;">\n
 <tal:block metal:define-macro="act">\n
-  <tal:block tal:define="tasks here/WebSite_getPendingEventInfoList">\n
+  <tal:block tal:define="tasks python: list(here.WebSite_getPendingEventInfoList())[:TASK_LEN];">\n
     <div class="boxHeader" >\n
       <a  i18n:translate="" i18n:domain="ui"\n
-        tal:attributes="href string: searches/WebSite_viewPendingEventList">\n
+        tal:attributes="href string: search_area/WebSite_viewPendingEventList">\n
         Act <span class="details">(<span class="newItem" tal:content="python:len(tasks)"/>\n
         <tal:block i18n:translate="" i18n:domain="ui">total</tal:block>)</span>\n
       </a>\n
     </div>\n
     <div class="boxContent">\n
       <ul>\n
-        <li tal:repeat="doc python: tasks[:TASK_LEN]">\n
+        <li tal:repeat="doc tasks">\n
+          <tal:block tal:condition="python:doc is not None">\n
           <a tal:define="url python: \'%s/view\' % doc.absolute_url()"\n
             tal:attributes="href url">\n
             <span tal:replace="doc/portal_type"/>:\n
@@ -69,10 +72,11 @@
             (<span tal:content="python: doc.getValidationStateTitle()" \n
                     tal:attributes="class python:doc.getTranslatedValidationStateTitle()"/>)\n
           </a>\n
+          </tal:block>\n
         </li>\n
       </ul>\n
       <a tal:condition="python: len(tasks) > TASK_LEN" \n
-        tal:attributes="href string: searches/WebSite_viewPendingEventList" value="" i18n:translate="" i18n:domain="ui">More tasks...</a>\n
+        tal:attributes="href string: search_area/WebSite_viewPendingEventList" value="" i18n:translate="" i18n:domain="ui">More tasks...</a>\n
     </div>\n
   </tal:block>\n
 </tal:block>\n
@@ -81,7 +85,7 @@
   <tal:block tal:define="news_list python: here.WebSite_getLatestContentValueList(limit=NEWS_LEN)">\n
     <div class="boxHeader">\n
       <a  i18n:translate="" i18n:domain="ui"\n
-        tal:attributes="href string: searches/WebSite_viewLatestContentList">\n
+        tal:attributes="href string: search_area/WebSite_viewLatestContentList">\n
         Learn\n
       </a>\n
     </div>\n
@@ -90,15 +94,18 @@
         <li tal:repeat="newsitem python: news_list">\n
           <a tal:define="url python: \'%s/view\' % newsitem.absolute_url()"\n
             tal:attributes="href url">\n
-            <tal:block tal:replace="python: here.WebSite_getFancyRelativeDate(newsitem.getCreationDate())"/>&mdash;\n
-            <tal:block tal:replace="newsitem/getTitleOrId"/>\n
+            <tal:block tal:replace="python: here.WebSite_getFancyRelativeDate(newsitem.getCreationDate())"\n
+                       tal:on-error="string:"/>&mdash;\n
+            <tal:block tal:replace="newsitem/getTitleOrId"\n
+                       tal:on-error="string:"/>\n
           </a>\n
-          <tal:block tal:replace="python: \'(%s)\' % newsitem.getPortalType()"/>\n
+          <tal:block tal:replace="python: \'(%s)\' % newsitem.getPortalType()"\n
+                     tal:on-error="string:"/>\n
         </li>\n
       </ul>\n
       <tal:block tal:replace="nothing">this is a dummy</tal:block>\n
       <a tal:condition="python: len(news_list) > NEWS_LEN-1"\n
-              tal:attributes="href string: searches/WebSite_viewLatestContentList" value="" i18n:translate="" i18n:domain="ui">More news...</a>\n
+              tal:attributes="href string: search_area/WebSite_viewLatestContentList" value="" i18n:translate="" i18n:domain="ui">More news...</a>\n
     </div>\n
   </tal:block>\n
 </tal:block>\n
@@ -112,6 +119,7 @@
       Some nice evaluation parameters.\n
     </div>\n
   </tal:block>\n
+</tal:block>\n
 </tal:block>
 
 ]]></string> </value>
