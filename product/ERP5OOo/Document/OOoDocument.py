@@ -156,9 +156,9 @@ class OOoDocument(File, ConversionCacheMixin):
     preference_tool = getToolByName(self, 'portal_preferences')
     address = preference_tool.getPreferredOoodocServerAddress()
     port = preference_tool.getPreferredOoodocServerPortNumber()
-    if not address or not port:
-      raise ConversionError('Can not proceed with conversion: '
-                            'conversion server host and port is not defined in preferences')
+    if address in ('', None) or port in ('', None) :
+      raise ConversionError('''[DMS] Can not proceed with conversion:
+                               conversion server host and port is not defined in preferences''')
     return address, port
 
   def _mkProxy(self):
