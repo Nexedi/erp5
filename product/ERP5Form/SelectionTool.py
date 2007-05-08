@@ -671,7 +671,6 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST, query_string=query_string)
 
     # PlanningBox related methods
-
     security.declareProtected(ERP5Permissions.View, 'setZoomLevel')
     def setZoomLevel(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
@@ -706,7 +705,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
-        zoom_start = request.form.get('zoom_start')
+        zoom_start = request.form.get('zoom_start',0)
         params['zoom_start'] = zoom_start
         selection.edit(params= params)
       if REQUEST is not None:
@@ -724,7 +723,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
-        zoom_start = params.get('zoom_start')
+        zoom_start = params.get('zoom_start',0)
         params['zoom_start'] = int(zoom_start) + 1
         selection.edit(params= params)
       if REQUEST is not None:
@@ -742,7 +741,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
-        zoom_start = params.get('zoom_start')
+        zoom_start = params.get('zoom_start',0)
         params['zoom_start'] = int(zoom_start) - 1
         selection.edit(params= params)
       if REQUEST is not None:
