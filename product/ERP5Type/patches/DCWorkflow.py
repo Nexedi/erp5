@@ -56,10 +56,16 @@ def WorkflowUIMixin_setProperties( self, title
 WorkflowUIMixin_class.setProperties = WorkflowUIMixin_setProperties
 WorkflowUIMixin_class.manage_properties = DTMLFile('workflow_properties', _dtmldir)
 
-def Guard_check(self, sm, wf_def, ob, **kw):
+
+def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
     """Checks conditions in this guard.
-       This method was patched so that roles are not taken
-       into account here (but taken into account as local roles)
+       This function is the same as Guard.check, but roles are not taken
+       into account here (but taken into account as local roles). This version
+       is for worklist guards.
+
+       Note that this patched version is not a monkey patch on the class,
+       because we only want this specific behaviour for worklists (Guards are
+       also used in transitions).
     """
     u_roles = None
     if wf_def.manager_bypass:
@@ -98,8 +104,6 @@ def Guard_check(self, sm, wf_def, ob, **kw):
     return 1
 
 
-Guard.check = Guard_check
-
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
     Allows this workflow to
@@ -133,7 +137,8 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
             # Patch for ERP5 by JP Smets in order
             # to take into account the expression of the guard
             # and nothing else - ERP5Workflow definitely needed some day
-            if guard is None or guard.check(sm, self, portal):
+            if guard is None or Guard_checkWithoutRoles(
+                                          guard, sm, self, portal):
               dict = {}
               # Patch for ERP5 by JP Smets in order
               # to implement worklists and search of local roles
