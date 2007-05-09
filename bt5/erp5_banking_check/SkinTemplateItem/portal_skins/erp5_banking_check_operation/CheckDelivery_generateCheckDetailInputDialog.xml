@@ -132,9 +132,10 @@ else:\n
     check_amount = line.get(\'check_amount\',None)\n
     quantity = int(line.get(\'quantity\',0))\n
     if destination_payment_reference not in (None,\'\'):\n
+      # String index contains the internal bank account reference\n
       account_list = [x.getObject() for x in\n
                       context.portal_catalog(portal_type=\'Bank Account\',\n
-                      reference=destination_payment_reference)]\n
+                      string_index=destination_payment_reference)]\n
       if len(account_list)==0:\n
         message = \'This account number does not exist\'\n
         generate_error(line,\'destination_payment_reference\',message)\n
