@@ -998,11 +998,11 @@ class PatchedDateTimeValidator(DateTimeValidator):
 
         # check if things are within range
         start_datetime = field.get_value('start_datetime')
-        if (start_datetime is not None and
+        if (start_datetime not in (None, '') and
             result < start_datetime):
             self.raise_error('datetime_out_of_range', field)
         end_datetime = field.get_value('end_datetime')
-        if (end_datetime is not None and
+        if (end_datetime not in (None, '') and
             result >= end_datetime):
             self.raise_error('datetime_out_of_range', field)
 
