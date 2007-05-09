@@ -98,6 +98,7 @@ assignment = person.newContent(portal_type=\'Assignment\', \n
                                group=kw[\'group\'], \n
                                function=kw[\'function\'], \n
                                site=kw[\'site\'])\n
+person.submit()\n
 return person\n
 </string> </value>
         </item>
