@@ -67,6 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string># Note: this script is executed with the proxy role Manager, because this script needs\n
 #       to use checkbook_module.\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
@@ -76,7 +77,7 @@ check_number = transaction.getAggregateFreeText()\n
 \n
 check = transaction.Base_checkOrCreateCheck(reference=check_number)\n
 if not check.Check_isValid():\n
-  raise ValidationError, Message(domain=\'ui\', message=\'Check is in an invalid state\')\n
+  raise ValidationFailed, Message(domain=\'ui\', message=\'Check is in an invalid state\')\n
 \n
 line = transaction.get(\'movement\')\n
 if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
@@ -141,6 +142,8 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>_getitem_</string>
@@ -149,7 +152,6 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
                             <string>bank_account</string>
                             <string>check_number</string>
                             <string>check</string>
-                            <string>ValidationError</string>
                             <string>line</string>
                             <string>None</string>
                           </tuple>
