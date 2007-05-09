@@ -87,14 +87,32 @@ if contribute_portal_type:\n
 if contribute_file is not None:\n
   kw[\'file\'] = contribute_file\n
 \n
-# We want to discover metadata synchronously \n
-kw[\'discover_metadata\'] = 0 \n
+kw[\'discover_metadata\'] = 0 # We want to discover metadata synchronously\n
 \n
-new_content = context.portal_contributions.newContent(**kw)\n
-msg = context.Base_translateString(\'Document successfully created\')\n
+#try:\n
+if 1:\n
+  new_content = context.portal_contributions.newContent(**kw)\n
+  if hasattr(contribute_file, \'filename\'):\n
+    file_name = contribute_file.filename\n
+  else:\n
+    file_name = None\n
 \n
-return new_content.Base_redirect(\'view\', \n
-                                 keep_items=dict(portal_status_message=msg, editable_mode=1))\n
+  merged_content = new_content.discoverMetadata(file_name=file_name) # Consider putting an exception handler\n
+  if merged_content is not new_content:\n
+    msg = context.Base_translateString(\'Document successfully updated\')\n
+    target = merged_content\n
+  else:\n
+    msg = context.Base_translateString(\'Document successfully created\')\n
+    target = new_content\n
+  editable_mode = 1\n
+else:\n
+#except Exception, e:\n
+  msg = \'There was a problem: ${exception}\'\n
+  msg = context.Base_translateString(msg, mapping=dict(exception=str(e)))\n
+  target = context\n
+  editable_mode = 0\n
+\n
+return target.Base_redirect(\'view\', keep_items=dict(portal_status_message=msg, editable_mode=editable_mode))\n
 </string> </value>
         </item>
         <item>
@@ -105,6 +123,12 @@ return new_content.Base_redirect(\'view\', \n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -148,8 +172,15 @@ return new_content.Base_redirect(\'view\', \n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>new_content</string>
+                            <string>hasattr</string>
+                            <string>file_name</string>
+                            <string>merged_content</string>
                             <string>msg</string>
+                            <string>target</string>
+                            <string>editable_mode</string>
                             <string>dict</string>
+                            <string>str</string>
+                            <string>e</string>
                           </tuple>
                         </value>
                     </item>
