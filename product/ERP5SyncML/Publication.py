@@ -152,7 +152,9 @@ class Publication(Subscription):
   constructors =   (addPublication,)
 
   # Constructor
-  def __init__(self, id, title, publication_url, destination_path, query, xml_mapping, conduit, gpg_key):
+  def __init__(self, id, title, publication_url, destination_path, 
+      query, xml_mapping, conduit, gpg_key, auth_required=False, 
+      authentication_format='', authentication_type=''):
     """
       constructor
     """
@@ -169,6 +171,9 @@ class Publication(Subscription):
     self.setConduit(conduit)
     Folder.__init__(self, id)
     self.title = title
+    self.auth_required = auth_required 
+    self.authentication_format = authentication_format
+    self.authentication_type = authentication_type
 
   def getPublicationUrl(self):
     """
@@ -188,6 +193,42 @@ class Publication(Subscription):
       return the publication url
     """
     self.publication_url = publication_url
+
+  def isAuthenticationRequired(self):
+    """
+      return False if authentication not required, True else
+    """
+    return getattr(self, 'auth_required', False)
+
+  def setAuthentication(self, auth):
+    """
+      set the value of the authentication requirement
+    """
+    self.auth_required = auth
+
+  def getAuthenticationFormat(self):
+    """
+      return the format of authentication
+    """
+    return getattr(self, 'authentication_format', '')
+
+  def getAuthenticationType(self):
+    """
+      return the type of authentication
+    """
+    return getattr(self, 'authentication_type', '')
+
+  def setAuthenticationFormat(self, authentication_format):
+    """
+      set the format of authentication
+    """
+    self.authentication_format = authentication_format
+
+  def setAuthenticationType(self, authentication_type):
+    """
+      set the type of authentication
+    """
+    self.authentication_type = authentication_type
 
   def addSubscriber(self, subscriber):
     """

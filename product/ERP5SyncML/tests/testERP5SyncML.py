@@ -42,6 +42,10 @@ from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from Products.ERP5SyncML.SyncCode import SyncCode
 from zLOG import LOG
 
+try:
+    from base64 import b64encode, b64decode
+except ImportError:
+    from base64 import encodestring as b64encode, decodestring as b64decode
 class TestERP5SyncML(ERP5TypeTestCase):
 
   # Different variables used for this test
@@ -51,7 +55,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
   last_name1 = 'Robin'
   # At the beginning, I was using iso-8859-15 strings, but actually
   # erp5 is using utf-8 everywhere
-  #description1 = 'description1 --- $sdfr�_sdfs�df_oisfsopf'
+  #description1 = 'description1 --- $sdfrç_sdfsçdf_oisfsopf'
   description1 = 'description1 --- $sdfr\xc3\xa7_sdfs\xc3\xa7df_oisfsopf'
   lang1 = 'fr'
   format2 = 'html'
@@ -59,12 +63,12 @@ class TestERP5SyncML(ERP5TypeTestCase):
   format4 = 'txt'
   first_name2 = 'Jean-Paul'
   last_name2 = 'Smets'
-  #description2 = 'description2��@  $*< <<<  ----- >>>></title>&oekd'
+  #description2 = 'description2éà@  $*< <<<  ----- >>>></title>&oekd'
   description2 = 'description2\xc3\xa9\xc3\xa0@  $*< <<<  ----- >>>></title>&oekd'
   lang2 = 'en'
   first_name3 = 'Yoshinori'
   last_name3 = 'Okuji'
-  #description3 = 'description3 �sdf__sdf���_df___&&�]]]������'
+  #description3 = 'description3 çsdf__sdfççç_df___&&é]]]°°°°°°'
   description3 = 'description3 \xc3\xa7sdf__sdf\xc3\xa7\xc3\xa7\xc3\xa7_df___&&\xc3\xa9]]]\xc2\xb0\xc2\xb0\xc2\xb0\xc2\xb0\xc2\xb0\xc2\xb0'
   #description4 = 'description4 sdflkmooo^^^^]]]]]{{{{{{{'
   description4 = 'description4 sdflkmooo^^^^]]]]]{{{{{{{'
@@ -182,10 +186,10 @@ class TestERP5SyncML(ERP5TypeTestCase):
 
   def login(self, quiet=0):
     uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
+    uf._doAddUser('fab', 'myPassword', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     uf._doAddUser('syncml', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
+    user = uf.getUserById('fab').__of__(uf)
     newSecurityManager(None, user)
 
   def populatePersonServer(self, quiet=0, run=run_all_test):
@@ -317,7 +321,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
     to define it here because it is specific to the unit testing
     """
     portal_sync = self.getSynchronizationTool()
-    #portal_sync.email = None # XXX To be removed
     subscription = portal_sync.getSubscription(id)
     publication = None
     for publication in portal_sync.getPublicationList():
@@ -984,7 +987,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(person_s.getDescription()==self.description3)
     self.failUnless(person_c1.getDescription()==self.description3)
 
-  def test_25_MultiNodeConflict(self, quiet=0, run=run_all_test):
+  def test_25_MultiNodeConflict(self, quiet=0, run=1):
     """
     We will create conflicts with 3 differents nodes, and we will
     solve it by taking one full version of documents.
@@ -1097,9 +1100,9 @@ class TestERP5SyncML(ERP5TypeTestCase):
     person_client1 = self.getPersonClient1()
     person1_c = person_client1._getOb(self.id1)
     person2_c = person_client1._getOb(self.id2)
-    person1_s.manage_setLocalRoles('seb',['Manager','Owner'])
+    person1_s.manage_setLocalRoles('fab',['Manager','Owner'])
     person2_s.manage_setLocalRoles('jp',['Manager','Owner'])
-    person2_s.manage_delLocalRoles(['seb'])
+    person2_s.manage_delLocalRoles(['fab'])
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     role_1_s = person1_s.get_local_roles()
@@ -1182,7 +1185,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
 
   def test_30_GetSynchronizationType(self, quiet=0, run=run_all_test):
     # We will try to update some simple data, first
-    # we change on the server side, the on the client side
+    # we change on the server side, then on the client side
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Get Synchronization Type ')
@@ -1257,20 +1260,20 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.assertEqual(role_1_s,role_1_c)
     self.assertEqual(role_2_s,role_2_c)
 
-  def test_32_AddOneWaySubscription(self, quiet=0, run=1):
+  def test_32_AddOneWaySubscription(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Add One Way Subscription ')
       LOG('Testing... ',0,'test_32_AddOneWaySubscription')
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id1,self.publication_url,
-                          self.subscription_url1,'/%s/person_client1' % portal_id,'objectValues',
-                          '','ERP5Conduit','')
+    portal_sync.manage_addSubscription(self.sub_id1, self.publication_url, 
+        self.subscription_url1, '/%s/person_client1' % portal_id, 
+        'objectValues', '', 'ERP5Conduit', '')
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
 
-  def test_33_OneWaySync(self, quiet=0, run=1):
+  def test_33_OneWaySync(self, quiet=0, run=run_all_test):
     """
     We will test if we can synchronize only from to server to the client.
     We want to make sure in this case that all modifications on the client
@@ -1314,6 +1317,234 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.assertEquals(person1_s.getFirstName(),self.first_name1)
 
 
+  def test_34_encoding(self, quiet=0, run=run_all_test):
+    """
+    We will test if we can encode strings with b64encode to encode
+    the login and password for authenticated sessions
+    """
+    #when there will be other format implemented with encode method,
+    #there will be tested here
+
+    if not run: return
+    self.test_08_FirstSynchronization(quiet=1,run=1)
+    if not quiet:
+      ZopeTestCase._print('\nTest Strings Encoding ')
+      LOG('Testing... ',0,'test_34_encoding')
+      
+    #define some strings :
+    python = 'www.python.org'
+    awaited_result_python = "d3d3LnB5dGhvbi5vcmc="
+    long_string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNO\
+PQRSTUVWXYZéèçà@^~µ&²0123456789!@#0^&*();:<>,. []{}\xc3\xa7sdf__\
+sdf\xc3\xa7\xc3\xa7\xc3\xa7_df___&&\xc3\xa9]]]\xc2\xb0\xc2\xb0\xc2\
+\xb0\xc2\xb0\xc2\xb0\xc2\xb0"
+#= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZéèçà@^~µ&²012345
+#6789!@#0^&*();:<>,. []{}çsdf__sdfççç_df___&&é]]]°°°°°°'"
+
+    awaited_result_long_string = 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZH\
+SElKS0xNTk9QUVJTVFVWV1hZWsOpw6jDp8OgQF5+wrUmwrIwMTIzNDU2Nzg5IUAjMF4mKigpOzo8Pi\
+wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=='
+
+    #test just b64encode
+    self.assertEqual(b64encode(python), awaited_result_python)
+    self.assertEqual(b64encode(""), "")
+    self.assertEqual(b64encode(long_string), awaited_result_long_string)
+    
+    self.assertEqual(b64decode(awaited_result_python), python)
+    self.assertEqual(b64decode(""), "")
+    self.assertEqual(b64decode(awaited_result_long_string), long_string)
+
+    # test with the ERP5 functions
+    portal_sync = self.getSynchronizationTool()
+    publication = portal_sync.getPublication(self.pub_id)
+    subscription1 = portal_sync.getSubscription(self.sub_id1)
+      
+    string_encoded = subscription1.encode('b64', python)
+    self.assertEqual(string_encoded, awaited_result_python)
+    string_decoded = subscription1.decode('b64', awaited_result_python)
+    self.assertEqual(string_decoded, python)
+    self.failUnless(subscription1.isDecodeEncodeTheSame(string_encoded, 
+      python, 'b64'))
+    self.failUnless(subscription1.isDecodeEncodeTheSame(string_encoded, 
+      string_decoded, 'b64'))
+
+    string_encoded = subscription1.encode('b64', long_string) 
+    self.assertEqual(string_encoded, awaited_result_long_string)
+    string_decoded = subscription1.decode('b64', awaited_result_long_string)
+    self.assertEqual(string_decoded, long_string)
+    self.failUnless(subscription1.isDecodeEncodeTheSame(string_encoded, 
+      long_string, 'b64'))
+    self.failUnless(subscription1.isDecodeEncodeTheSame(string_encoded, 
+      string_decoded, 'b64'))
+
+    self.assertEqual(subscription1.encode('b64', ''), '')
+    self.assertEqual(subscription1.decode('b64', ''), '')
+    self.failUnless(subscription1.isDecodeEncodeTheSame(
+      subscription1.encode('b64', ''), '', 'b64'))
+
+  def addAuthenticationToPublication(self, publication_id, login, password, 
+      auth_format, auth_type):
+    """
+      add authentication to the publication
+    """
+    portal_sync = self.getSynchronizationTool()
+    pub = portal_sync.getPublication(publication_id)
+    pub.setAuthentication(True)
+    pub.setLogin(login)
+    pub.setPassword(password)
+    pub.setAuthenticationFormat(auth_format)
+    pub.setAuthenticationType(auth_type)
+
+
+  def addAuthenticationToSubscription(self, subscription_id, login, password, 
+      auth_format, auth_type):
+    """
+      add authentication to the subscription
+    """
+    portal_sync = self.getSynchronizationTool()
+    sub = portal_sync.getSubscription(subscription_id)
+    sub.setAuthentication(True)
+    sub.setAuthenticated(False)
+    sub.setLogin(login)
+    sub.setPassword(password)
+    sub.setAuthenticationFormat(auth_format)
+    sub.setAuthenticationType(auth_type)
+
+  def verifyFirstNameAndLastNameAreSynchronized(self, first_name, 
+      last_name, person_server, person_client):
+    """
+      verify if the first and last name are synchronized
+    """
+    self.failUnless(person_server.getFirstName()==first_name)
+    self.failUnless(person_server.getLastName()==last_name)
+    self.failUnless(person_client.getFirstName()==first_name)
+    self.failUnless(person_client.getLastName()==last_name)
+  
+  def verifyFirstNameAndLastNameAreNotSynchronized(self, first_name, 
+      last_name, person_server, person_client):
+    """
+      verify that the first and last name are NOT synchronized
+    """
+    self.failUnless(person_server.getFirstName()!=first_name)
+    self.failUnless(person_server.getLastName()!=last_name)
+    self.failUnless(person_client.getFirstName()==first_name)
+    self.failUnless(person_client.getLastName()==last_name)
+
+  def test_35_authentication(self, quiet=0, run=1):
+    """
+      we will test 
+      - if we can't synchronize without good authentication for an 
+      autentication required publication.
+      - if we can synchronize without of with (and bad or good) authentication
+      for an not required autentication publication
+    """
+
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Authentication ')
+      LOG('Testing... ',0,'test_35_authentication')
+    
+    self.test_08_FirstSynchronization(quiet=1,run=1)
+    # First we do only modification on client
+    portal_sync = self.getSynchronizationTool()
+    person_server = self.getPersonServer()
+    person1_s = person_server._getOb(self.id1)
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+
+    kw = {'first_name':self.first_name3,'last_name':self.last_name3}
+    person1_c.edit(**kw)
+   
+    #check that it's not synchronize
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name3,
+      self.last_name3, person1_s, person1_c)
+    self.synchronize(self.sub_id1)
+    #now it should be synchronize
+    self.checkSynchronizationStateIsSynchronized()
+    self.verifyFirstNameAndLastNameAreSynchronized(self.first_name3,
+      self.last_name3, person1_s, person1_c)
+ 
+    
+    #adding authentication :
+    self.addAuthenticationToPublication(self.pub_id, 'fab', 'myPassword', 'b64',
+        'syncml:auth-basic')
+    # try to synchronize without authentication on the subscription, it 
+    # should failed
+    kw = {'first_name':self.first_name2,'last_name':self.last_name2}
+    person1_c.edit(**kw)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name2, 
+      self.last_name2, person1_s, person1_c)
+    # here, before and after synchronization, the person1_s shoudn't have
+    # the name as the person1_c because the user isn't authenticated
+    self.synchronize(self.sub_id1)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name2, 
+      self.last_name2, person1_s, person1_c)
+
+    #try to synchronize whith an authentication on both the client and server
+    self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'myPassword', 
+        'b64', 'syncml:auth-basic')
+    #now it should be correctly synchronize
+    self.synchronize(self.sub_id1)
+    self.checkSynchronizationStateIsSynchronized()
+    self.verifyFirstNameAndLastNameAreSynchronized(self.first_name2, 
+      self.last_name2, person1_s, person1_c)
+
+    #try to synchronize with a bad login and/or password
+    #test if login is case sensitive (it should be !)
+    self.addAuthenticationToSubscription(self.sub_id1, 'fAb', 'myPassword', 
+        'b64', 'syncml:auth-basic')
+    kw = {'first_name':self.first_name1,'last_name':self.last_name1}
+    person1_c.edit(**kw)
+    self.synchronize(self.sub_id1)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name1, 
+      self.last_name1, person1_s, person1_c)
+
+    #with a paswword case sensitive
+    self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'mypassword', 
+        'b64', 'syncml:auth-basic')
+    kw = {'first_name':self.first_name1,'last_name':self.last_name1}
+    person1_c.edit(**kw)
+    self.synchronize(self.sub_id1)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name1, 
+      self.last_name1, person1_s, person1_c)
+
+    
+    #with the good password
+    self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'myPassword', 
+        'b64', 'syncml:auth-basic')
+    #now it should be correctly synchronize
+    self.synchronize(self.sub_id1)
+    self.checkSynchronizationStateIsSynchronized()
+    self.verifyFirstNameAndLastNameAreSynchronized(self.first_name1, 
+      self.last_name1, person1_s, person1_c)
+
+    #verify that the login and password with utf8 caracters are accecpted
+
+    # add a user with an utf8 login
+    uf = self.getPortal().acl_users
+    uf._doAddUser('\xc3\xa9pouet', 'ploum', ['Manager'], []) # \xc3\xa9pouet = épouet
+    user = uf.getUserById('\xc3\xa9pouet').__of__(uf)
+    newSecurityManager(None, user)
+
+    self.addAuthenticationToPublication(self.pub_id, '\xc3\xa9pouet', 'ploum', 
+        'b64', 'syncml:auth-basic')
+    #first, try with a wrong login :
+    self.addAuthenticationToSubscription(self.sub_id1, 'pouet', 'ploum', 
+        'b64', 'syncml:auth-basic')
+    kw = {'first_name':self.first_name3,'last_name':self.last_name3}
+    person1_c.edit(**kw)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name3, 
+      self.last_name3, person1_s, person1_c)
+    self.synchronize(self.sub_id1)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name3, 
+      self.last_name3, person1_s, person1_c)
+    #now with the good :
+    self.addAuthenticationToSubscription(self.sub_id1, '\xc3\xa9pouet', 'ploum',
+        'b64', 'syncml:auth-basic')
+    self.synchronize(self.sub_id1)
+    self.verifyFirstNameAndLastNameAreSynchronized(self.first_name3, 
+      self.last_name3, person1_s, person1_c)
+    self.checkSynchronizationStateIsSynchronized()
 
 if __name__ == '__main__':
     framework()

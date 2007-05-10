@@ -62,8 +62,8 @@ from zLOG import LOG
 
 
 
-class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronization, 
-                           UniqueObject, Folder):
+class SynchronizationTool( SubscriptionSynchronization, 
+    PublicationSynchronization, UniqueObject, Folder):
   """
     This tool implements the synchronization algorithm
 
@@ -159,9 +159,11 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
                     + '?manage_tabs_message=Tool+updated.'
                     )
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_addPublication')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manage_addPublication')
   def manage_addPublication(self, title, publication_url, destination_path,
-            query, xml_mapping, conduit, gpg_key, RESPONSE=None):
+            query, xml_mapping, conduit, gpg_key, auth_required=0,
+            authentication_format='', authentication_type='', RESPONSE=None):
     """
       create a new publication
     """
@@ -171,7 +173,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     folder = self.getObjectContainer()
     new_id = self.getPublicationIdFromTitle(title)
     pub = Publication(new_id, title, publication_url, destination_path,
-                      query, xml_mapping, conduit, gpg_key)
+                      query, xml_mapping, conduit, gpg_key, auth_required,
+                      authentication_format, authentication_type)
     folder._setObject( new_id, pub )
     #if len(self.list_publications) == 0:
     #  self.list_publications = PersistentMapping()
@@ -179,9 +182,12 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_addSubscription')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manage_addSubscription')
   def manage_addSubscription(self, title, publication_url, subscription_url,
-                       destination_path, query, xml_mapping, conduit, gpg_key, RESPONSE=None):
+                       destination_path, query, xml_mapping, conduit, gpg_key, 
+                       login=None, password=None, authentication_format='',
+                       authentication_type='',RESPONSE=None):
     """
       XXX should be renamed as addSubscription
       create a new subscription
@@ -192,7 +198,9 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     folder = self.getObjectContainer()
     new_id = self.getSubscriptionIdFromTitle(title)
     sub = Subscription(new_id, title, publication_url, subscription_url,
-                       destination_path, query, xml_mapping, conduit, gpg_key)
+                       destination_path, query, xml_mapping, conduit, gpg_key,
+                       login, password, authentication_format, 
+                       authentication_type)
     folder._setObject( new_id, sub )
     #if len(self.list_subscriptions) == 0:
     #  self.list_subscriptions = PersistentMapping()
@@ -200,10 +208,12 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_editPublication')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manage_editPublication')
   def manage_editPublication(self, title, publication_url, destination_path,
                        query, xml_mapping, conduit, gpg_key, id_generator,
-                       gid_generator, RESPONSE=None):
+                       gid_generator, auth_required=0, authentication_format='',
+                       authentication_type='', RESPONSE=None):
     """
       modify a publication
     """
@@ -217,13 +227,19 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     pub.setGPGKey(gpg_key)
     pub.setIdGenerator(id_generator)
     pub.setGidGenerator(gid_generator)
+    pub.setAuthentication(auth_required)
+    pub.setAuthenticationFormat(authentication_format)
+    pub.setAuthenticationType(authentication_type)
+
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_editSubscription')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manage_editSubscription')
   def manage_editSubscription(self, title, publication_url, subscription_url,
-             destination_path, query, xml_mapping, conduit, gpg_key, id_generator,
-             gid_generator, RESPONSE=None):
+      destination_path, query, xml_mapping, conduit, gpg_key, id_generator,
+      gid_generator,login='', password='', authentication_format='', 
+      authentication_type='', RESPONSE=None):
     """
       modify a subscription
     """
@@ -238,10 +254,15 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     sub.setSubscriptionUrl(subscription_url)
     sub.setIdGenerator(id_generator)
     sub.setGidGenerator(gid_generator)
+    sub.setLogin(login)
+    sub.setPassword(password)
+    sub.setAuthenticationFormat(authentication_format)
+    sub.setAuthenticationType(authentication_type)
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_deletePublication')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manage_deletePublication')
   def manage_deletePublication(self, title, RESPONSE=None):
     """
       delete a publication
@@ -252,7 +273,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_deleteSubscription')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manage_deleteSubscription')
   def manage_deleteSubscription(self, title, RESPONSE=None):
     """
       delete a subscription
@@ -263,7 +285,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_resetPublication')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manage_resetPublication')
   def manage_resetPublication(self, title, RESPONSE=None):
     """
       reset a publication
@@ -273,7 +296,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_resetSubscription')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manage_resetSubscription')
   def manage_resetSubscription(self, title, RESPONSE=None):
     """
       reset a subscription
@@ -284,7 +308,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manage_syncSubscription')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manage_syncSubscription')
   def manage_syncSubscription(self, title, RESPONSE=None):
     """
       reset a subscription
@@ -293,7 +318,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getPublicationList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getPublicationList')
   def getPublicationList(self):
     """
       Return a list of publications
@@ -303,7 +329,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     object_list = filter(lambda x: x.id.find('pub')==0,object_list)
     return object_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getPublication')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getPublication')
   def getPublication(self, title):
     """
       Return the  publications with this id
@@ -313,7 +340,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
         return p
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getObjectContainer')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getObjectContainer')
   def getObjectContainer(self):
     """
     this returns the external mount point if there is one
@@ -325,7 +353,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
       folder = root.external_mount_point
     return folder
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getSubscriptionList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getSubscriptionList')
   def getSubscriptionList(self):
     """
       Return a list of publications
@@ -345,7 +374,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     return None
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getSynchronizationList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getSynchronizationList')
   def getSynchronizationList(self):
     """
       Returns the list of subscriptions and publications
@@ -353,7 +383,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
     return self.getSubscriptionList() + self.getPublicationList()
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getSubscriberList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getSubscriberList')
   def getSubscriberList(self):
     """
       Returns the list of subscribers and subscriptions
@@ -364,13 +395,15 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
       s_list += publication.getSubscriberList()
     return s_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getConflictList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getConflictList')
   def getConflictList(self, context=None):
     """
     Retrieve the list of all conflicts
     Here the list is as follow :
     [conflict_1,conflict2,...] where conflict_1 is like:
-    ['publication',publication_id,object.getPath(),property_id,publisher_value,subscriber_value]
+    ['publication',publication_id,object.getPath(),property_id,
+    publisher_value,subscriber_value]
     """
     path = self.resolveContext(context)
     conflict_list = []
@@ -385,7 +418,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
             conflict_list += [conflict.__of__(subscriber)]
     for subscription in self.getSubscriptionList():
       sub_conflict_list = subscription.getConflictList()
-      LOG('SynchronizationTool.getConflictList, sub_conflict_list',0,sub_conflict_list)
+      LOG('SynchronizationTool.getConflictList, sub_conflict_list',0,
+          sub_conflict_list)
       for conflict in sub_conflict_list:
         if isinstance(conflict,str):
           import pdb; pdb.set_trace()
@@ -402,7 +436,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     #  return new_list
     return conflict_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getDocumentConflictList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getDocumentConflictList')
   def getDocumentConflictList(self, context=None):
     """
     Retrieve the list of all conflicts for a given document
@@ -411,7 +446,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     return self.getConflictList(context)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getSynchronizationState')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getSynchronizationState')
   def getSynchronizationState(self, context):
     """
     context : the context on which we are looking for state
@@ -464,7 +500,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
               state_list += [[subscriber,state]]
     return state_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'applyPublisherValue')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'applyPublisherValue')
   def applyPublisherValue(self, conflict):
     """
       after a conflict resolution, we have decided
@@ -494,7 +531,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
           directory._delObject(copy_id)
       signature.setStatus(self.PUB_CONFLICT_MERGE)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'applyPublisherDocument')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'applyPublisherDocument')
   def applyPublisherDocument(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -506,7 +544,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
         LOG('applyPublisherDocument, applying on conflict: ',0,conflict)
         c.applyPublisherValue()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPublisherDocumentPath')
+  security.declareProtected(Permissions.AccessContentsInformation, 
+      'getPublisherDocumentPath')
   def getPublisherDocumentPath(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -514,7 +553,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     subscriber = conflict.getSubscriber()
     return conflict.getObjectPath()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPublisherDocument')
+  security.declareProtected(Permissions.AccessContentsInformation, 
+      'getPublisherDocument')
   def getPublisherDocument(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -548,8 +588,9 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
         directory._delObject(object_id)
         # Import the conduit and get it
         conduit_name = subscriber.getConduit()
-	conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), globals(), locals(), [''])
-	conduit = getattr(conduit_module, conduit_name)()
+        conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), 
+            globals(), locals(), [''])
+        conduit = getattr(conduit_module, conduit_name)()
         conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
         subscriber_document = directory._getOb(object_id)
         for c in self.getConflictList(conflict.getObjectPath()):
@@ -570,24 +611,33 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
       object_id = repotool._getId(docid, new_rev)
     return object_id
   
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSubscriberDocumentPath')
+  security.declareProtected(Permissions.AccessContentsInformation, 
+      'getSubscriberDocumentPath')
   def getSubscriberDocumentPath(self, conflict):
     """
     apply the publisher value for all conflict of the given document
     """
     copy_path = conflict.getCopyPath()
     if copy_path is not None:
-        return copy_path
+      return copy_path
     subscriber = conflict.getSubscriber()
     publisher_object_path = conflict.getObjectPath()
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
-    publisher_xml = self.getXMLObject(object=publisher_object,xml_mapping = subscriber.getXMLMapping())
+    publisher_xml = self.getXMLObject(object=publisher_object, 
+        xml_mapping = subscriber.getXMLMapping())
     directory = publisher_object.aq_inner.aq_parent
     object_id = self._getCopyId(publisher_object)    
     # Import the conduit and get it
     conduit_name = subscriber.getConduit()
-    conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), globals(), locals(), [''])
-    conduit = getattr(conduit_module, conduit_name)()
+    if conduit_name.startswith('Products'):
+      path = conduit_name
+      conduit_name = conduit_name.split('.')[-1]
+      conduit_module = __import__(path, globals(), locals(), [''])
+      conduit = getattr(conduit_module, conduit_name)()
+    else:
+      conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), 
+          globals(), locals(), ['']) 
+      conduit = getattr(conduit_module, conduit_name)()
     conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
     subscriber_document = directory._getOb(object_id)
     subscriber_document._conflict_resolution = 1
@@ -598,7 +648,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     conflict.setCopyPath(copy_path)
     return copy_path
     
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSubscriberDocument')
+  security.declareProtected(Permissions.AccessContentsInformation, 
+      'getSubscriberDocument')
   def getSubscriberDocument(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -607,7 +658,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     subscriber_object = self.unrestrictedTraverse(subscriber_object_path)
     return subscriber_object
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'applySubscriberDocument')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'applySubscriberDocument')
   def applySubscriberDocument(self, conflict):
     """
     apply the subscriber value for all conflict of the given document
@@ -617,7 +669,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
       if c.getSubscriber() == subscriber:
         c.applySubscriberValue()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'applySubscriberValue')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'applySubscriberValue')
   def applySubscriberValue(self, conflict,object=None):
     """
       after a conflict resolution, we have decided
@@ -636,7 +689,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
     # Import the conduit and get it
     conduit_name = subscriber.getConduit()
-    conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), globals(), locals(), [''])
+    conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), 
+        globals(), locals(), [''])
     conduit = getattr(conduit_module, conduit_name)()
     for xupdate in conflict.getXupdateList():
       conduit.updateNode(xml=xupdate,object=object,force=1)
@@ -656,15 +710,18 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
             directory._delObject(copy_id)
         signature.setStatus(self.PUB_CONFLICT_MERGE)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'managePublisherValue')
-  def managePublisherValue(self, subscription_url, property_id, object_path, RESPONSE=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'managePublisherValue')
+  def managePublisherValue(self, subscription_url, property_id, object_path, 
+      RESPONSE=None):
     """
     Do whatever needed in order to store the local value on
     the remote server
 
     Suggestion (API)
       add method to view document with applied xupdate
-      of a given subscriber XX (ex. viewSubscriberDocument?path=ddd&subscriber_id=dddd)
+      of a given subscriber XX 
+      (ex. viewSubscriberDocument?path=ddd&subscriber_id=dddd)
       Version=Version CPS
     """
     # Retrieve the conflict object
@@ -681,8 +738,10 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manageSubscriberValue')
-  def manageSubscriberValue(self, subscription_url, property_id, object_path, RESPONSE=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manageSubscriberValue')
+  def manageSubscriberValue(self, subscription_url, property_id, object_path, 
+      RESPONSE=None):
     """
     Do whatever needed in order to store the remote value locally
     and confirmed that the remote box should keep it's value
@@ -700,7 +759,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
   
-  security.declareProtected(Permissions.ModifyPortalContent, 'manageSubscriberDocument')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'manageSubscriberDocument')
   def manageSubscriberDocument(self, subscription_url, object_path):
     """
     """
@@ -711,7 +771,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
           break
     self.managePublisherDocument(object_path)
   
-  security.declareProtected(Permissions.ModifyPortalContent, 'managePublisherDocument')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'managePublisherDocument')
   def managePublisherDocument(self, object_path):
     """
     """
@@ -742,7 +803,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
       return context.getPhysicalPath()
 
   security.declarePublic('sendResponse')
-  def sendResponse(self, to_url=None, from_url=None, sync_id=None,xml=None, domain=None, send=1):
+  def sendResponse(self, to_url=None, from_url=None, sync_id=None,xml=None, 
+      domain=None, send=1):
     """
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
@@ -760,7 +822,9 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
         decrypted.write(xml)
         decrypted.close()
         (status,output)=commands.getstatusoutput('gzip /tmp/%s' % filename)
-        (status,output)=commands.getstatusoutput('gpg --yes --homedir /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s" -se /tmp/%s.gz' % (gpg_key,filename))
+        (status,output)=commands.getstatusoutput('gpg --yes --homedir \
+            /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s" -se \
+            /tmp/%s.gz' % (gpg_key,filename))
         LOG('readResponse, gpg output:',0,output)
         encrypted = file('/tmp/%s.gz.gpg' % filename,'r')
         xml = encrypted.read()
@@ -775,7 +839,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
             return None
           # we will send an http response
           domain = aq_base(domain)
-          LOG('sendResponse, will start sendHttpResponse, xml\n',0,xml)
+          LOG('sendResponse, will start sendHttpResponse, xml',0,'')
           self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
                                            xml=xml, domain=domain)
@@ -814,7 +878,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     pass_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
     auth_handler = urllib2.HTTPBasicAuthHandler(pass_mgr)
     proxy_auth_handler = urllib2.ProxyBasicAuthHandler(pass_mgr)
-    opener = urllib2.build_opener(proxy_handler, proxy_auth_handler,auth_handler,urllib2.HTTPHandler)
+    opener = urllib2.build_opener(proxy_handler, proxy_auth_handler, 
+        auth_handler, urllib2.HTTPHandler)
     urllib2.install_opener(opener)
     to_encode = {'text':xml,'sync_id':sync_id}
     encoded = urllib.urlencode(to_encode)
@@ -825,7 +890,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     try:
       result = urllib2.urlopen(request).read()
     except socket.error, msg:
-      self.activate(activity='RAMQueue').sendHttpResponse(to_url=to_url,sync_id=sync_id,xml=xml,domain=domain)
+      self.activate(activity='RAMQueue').sendHttpResponse(to_url=to_url, 
+          sync_id=sync_id, xml=xml, domain=domain)
       LOG('sendHttpResponse, socket ERROR:',0,msg)
       return
 
@@ -853,7 +919,6 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
-    #user = uf.getUserById('syncml').__of__(uf)
     newSecurityManager(None, user)
     message_list = self.portal_activities.getMessageList()
     LOG('sync, message_list:',0,message_list)
@@ -871,12 +936,12 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     LOG('readResponse, ',0,'starting')
     LOG('readResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
     LOG('readResponse, sync_id: ',0,sync_id)
-    #LOG('readResponse, text:',0,text)
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = uf.getUserById('syncml').__of__(uf)
     user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
     newSecurityManager(None, user)
+    status_code = None
 
     if text is not None:
       # XXX We will look everywhere for a publication/subsription with
@@ -896,46 +961,38 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
         encrypted = file('/tmp/%s.gz.gpg' % filename,'w')
         encrypted.write(text)
         encrypted.close()
-        (status,output)=commands.getstatusoutput('gpg --homedir /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s"  --decrypt /tmp/%s.gz.gpg > /tmp/%s.gz' % (gpg_key,filename,filename))
-        LOG('readResponse, gpg output:',0,output)
+        (status,output)=commands.getstatusoutput('gpg --homedir \
+            /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s"  --decrypt \
+            /tmp/%s.gz.gpg > /tmp/%s.gz' % (gpg_key, filename, filename))
+        LOG('readResponse, gpg output:', 0, output)
         (status,output)=commands.getstatusoutput('gunzip /tmp/%s.gz' % filename)
         decrypted = file('/tmp/%s' % filename,'r')
         text = decrypted.read()
-        LOG('readResponse, text:',0,text)
+        LOG('readResponse, text:', 0, text)
         decrypted.close()
         commands.getstatusoutput('rm -f /tmp/%s' % filename)
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
-      LOG('readResponse, xml before parseSTring\n',0,text)
       xml = parseString(text)
-      
       #XXX this function is not very optimized and should be improved
       url = self.getTarget(xml)
-      
       for publication in self.getPublicationList():
-        if publication.getPublicationUrl()==url and publication.getTitle()==sync_id:
+        if publication.getPublicationUrl()==url and \
+        publication.getTitle()==sync_id:
           result = self.PubSync(sync_id,xml)
           # Then encrypt the message
           xml = result['xml']
-
           #must be commented because this method is alredy called
           #xml = self.sendResponse(xml=xml,domain=publication,send=0)
           return xml
+      
       for subscription in self.getSubscriptionList():
         if subscription.getSubscriptionUrl()==url and \
             subscription.getTitle()==sync_id:
-          next_status = self.getNextSyncBodyStatus(xml, None)
-          if next_status is not None:
-            status_code = self.getStatusCode(next_status)
-            LOG('readResponse status code :',0,status_code)
-            if status_code == self.UNAUTHORIZED or \
-                status_code == self.AUTH_REQUIRED:
-              LOG('readResponse', 0, 'Authentication required')
-              raise ValueError, "Authentication required"
-          else: 
-            result = self.activate(activity='RAMQueue').SubSync(sync_id,xml)
-          #result = self.SubSync(sync_id,xml)
+              result = self.activate(activity='RAMQueue').SubSync(sync_id, 
+                  text)
+              #result = self.SubSync(sync_id,xml)
 
     # we use from only if we have a file 
     elif isinstance(from_url, str):
@@ -953,14 +1010,16 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
           xml = None
         return xml
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getPublicationIdFromTitle')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'getPublicationIdFromTitle')
   def getPublicationIdFromTitle(self, title):
     """
     simply return an id from a title
     """
     return 'pub_' + title
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getPublicationIdFromTitle')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+      'getPublicationIdFromTitle')
   def getSubscriptionIdFromTitle(self, title):
     """
     simply return an id from a title
@@ -973,7 +1032,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
     # Import the conduit and get it
     from Products.ERP5SyncML import Conduit
-    conduit_module = __import__('.'.join([Conduit.__name__, conduit]), globals(), locals(), [''])
+    conduit_module = __import__('.'.join([Conduit.__name__, conduit]), 
+        globals(), locals(), [''])
     conduit_object = getattr(conduit_module, conduit)()
     return conduit_object.addNode(**kw)
 

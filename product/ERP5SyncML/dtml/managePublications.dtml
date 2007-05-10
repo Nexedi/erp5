@@ -127,6 +127,36 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <input type="text" name="gid_generator" value="<dtml-var getGidGenerator>" size="40" />
         </td>
       </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
+        Authentication Required
+        </label></div>
+        </td>
+        <td align="left" valign="top">          
+          <input type="checkbox" name="auth_required" value="1" <dtml-if expr="isAuthenticationRequired()">CHECKED</dtml-if>>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
+        Format authentication
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+        <input type="text" name="authentication_format" value="<dtml-var getAuthenticationFormat>" size="40" />
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
+        Type authentication
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+        <input type="text" name="authentication_type" value="<dtml-var getAuthenticationType>" size="40" />
+        </td>
+      </tr>
     </table>
     <table>
       <tr>

@@ -129,11 +129,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     xml = self.convertToXml(xml)
     LOG('addNode',0,'xml_reconstitued: %s' % str(xml))
     # In the case where this new node is a object to add
-    LOG('addNode',0,'object.id: %s' % object.getId())
-    LOG('addNode',0,'xml.nodeName: %s' % xml.nodeName)
-    LOG('addNode',0,'getSubObjectDepth: %i' % self.getSubObjectDepth(xml))
-    LOG('addNode',0,'isHistoryAdd: %i' % self.isHistoryAdd(xml))
-    LOG('addNode xml',0,repr(xml.toxml()))
     if xml.nodeName in self.XUPDATE_INSERT_OR_ADD and self.getSubObjectDepth(xml)==0:
       if self.isHistoryAdd(xml)!=-1: # bad hack XXX to be removed
         for element in self.getXupdateElementList(xml):
@@ -216,7 +211,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         object_id = self.getAttribute(xml,'id')
       elif self.getSubObjectDepth(xml)==1:
         object_id = self.getSubObjectId(xml)
-        #LOG('ERP5Conduit',0,'deleteNode, SubObjectDepth: %i' % self.getSubObjectDepth(xml))
       elif self.getSubObjectDepth(xml)==2:
         # we have to call delete node on a subsubobject
         sub_object_id = self.getSubObjectId(xml)
@@ -706,14 +700,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     for subnode in self.getElementNodeList(xml):
       if not(subnode.nodeName in self.NOT_EDITABLE_PROPERTY):
         keyword_type = self.getPropertyType(subnode)
-        LOG('newObject',0,str(subnode.childNodes))
         # This is the case where the property is a list
         keyword=str(subnode.nodeName)
         if len(subnode.childNodes) > 0: # We check that this tag is not empty
           data = subnode.childNodes[0].data
           args[keyword]=data
-        LOG('newObject',0,'keyword: %s' % str(keyword))
-        LOG('newObject',0,'keywordtype: %s' % str(keyword_type))
         #if args.has_key(keyword):
         #  LOG('newObject',0,'data: %s' % str(args[keyword]))
         if args.has_key(keyword):
@@ -722,8 +713,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         self.addNode(object=object,xml=subnode, force=1)
     # We should first edit the object
     args = self.getFormatedArgs(args=args)
-    LOG('newObject',0,"object.getphyspath: %s" % str(object.getPhysicalPath()))
-    LOG('newObject',0,"args: %s" % str(args))
     # edit the object with a dictionnary of arguments,
     # like {"telephone_number":"02-5648"}
     #object._edit(**args)
@@ -885,7 +874,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         dict_list = map(lambda x:x.split(':'),data[1:-1].split(','))
         data = map(lambda (x,y):(x.replace(' ','').replace("'",''),int(y)),dict_list)
         data = dict(data)
-    LOG('convertXmlValue',0,'data: %s' % str(data))
     return data
 
   # XXX is it the right place ? It should be in XupdateUtils, but here we
@@ -997,7 +985,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     add_action = self.isWorkflowActionAddable(object=object,
                                            status=status,wf_tool=wf_tool,
                                            wf_id=wf_id,xml=xml)
-    #LOG('addNode, workflow_history wf_conflict_list:',0,wf_conflict_list)
     LOG('addNode, workflow_history add_action:',0,add_action)
     if add_action and not simulate:
       LOG('addNode, setting status:',0,'ok')

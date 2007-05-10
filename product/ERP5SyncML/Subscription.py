@@ -41,6 +41,11 @@ from zLOG import LOG
 
 import md5
 
+try:
+    from base64 import b64encode, b64decode
+except ImportError:
+    from base64 import encodestring as b64encode, decodestring as b64decode
+
 #class Conflict(SyncCode, Implicit):
 class Conflict(SyncCode, Base):
   """
@@ -53,8 +58,8 @@ class Conflict(SyncCode, Base):
   isIndexable = 0
   isPortalContent = 0 # Make sure RAD generated accessors at the class level
 
-  def __init__(self, object_path=None, keyword=None, xupdate=None, publisher_value=None,\
-               subscriber_value=None, subscriber=None):
+  def __init__(self, object_path=None, keyword=None, xupdate=None, 
+      publisher_value=None, subscriber_value=None, subscriber=None):
     self.object_path=object_path
     self.keyword = keyword
     self.setLocalValue(publisher_value)
@@ -614,8 +619,8 @@ class Subscription(Folder, SyncCode):
   isPortalContent = 1
   isRADContent = 1
   icon = None
-
   isIndexable = 0
+  user = None
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
@@ -635,7 +640,8 @@ class Subscription(Folder, SyncCode):
                               )
 
   # Constructor
-  def __init__(self, id, title, publication_url, subscription_url, destination_path, query, xml_mapping, conduit, gpg_key):
+  def __init__(self, id, title, publication_url, subscription_url, destination_path, query, xml_mapping, conduit, gpg_key, login, password, 
+      authentication_format='', authentication_type=''):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
@@ -652,6 +658,10 @@ class Subscription(Folder, SyncCode):
     #self.signatures = PersistentMapping()
     self.last_anchor = '00000000T000000Z'
     self.next_anchor = '00000000T000000Z'
+    self.login=login
+    self.password=password
+    self.authentication_format=authentication_format
+    self.authentication_type=authentication_type
     self.domain_type = self.SUB
     self.gpg_key = gpg_key
     self.setGidGenerator(None)
@@ -714,28 +724,28 @@ class Subscription(Folder, SyncCode):
     We will see if the last session id was the same
     wich means that the same message was sent again
 
-    return 1 if the session id was not seen, 0 if already seen
+    return True if the session id was not seen, False if already seen
     """
     last_session_id = getattr(self,'last_session_id',None)
     if last_session_id == session_id:
-      return 0
+      return False 
     self.last_session_id = session_id
-    return 1
+    return True
 
   def checkCorrectRemoteMessageId(self, message_id):
     """
     We will see if the last message id was the same
     wich means that the same message was sent again
 
-    return 1 if the message id was not seen, 0 if already seen
+    return True if the message id was not seen, False if already seen
     """
     last_message_id = getattr(self,'last_message_id',None)
     # LOG('checkCorrectRemoteMessageId  last_message_id =',0,last_message_id)
     # LOG('checkCorrectRemoteMessageId  message_id =',0,message_id)
     if last_message_id == message_id:
-      return 0
+      return False
     self.last_message_id = message_id
-    return 1
+    return True
 
   def initLastMessageId(self, last_message_id=None):
     """
@@ -872,25 +882,74 @@ class Subscription(Folder, SyncCode):
     """
     return self.gid_generator
 
+  def getLogin(self):
+    """
+    This method return the login of this subscription
+    """
+    return getattr(self, 'login', '')
+
+  def setLogin(self, new_login):
+    """
+    set the login at new_login
+    """
+    self.login=new_login
+
+  def getPassword(self):
+    """
+    This method return the password of this subscription
+    """
+    return getattr(self, 'password', '')
+
+  def setPassword(self, new_password):
+    """
+    set the password at new_password
+    """
+    self.password=new_password
+  
+
+  def setAuthentication(self, auth):
+    """
+      set the value of the authentication requirement
+    """
+    self.auth_required = auth
+
+  def getAuthenticationFormat(self):
+    """
+      return the format of authentication
+    """
+    return getattr(self, 'authentication_format', '')
+
+  def getAuthenticationType(self):
+    """
+      return the type of authentication
+    """
+    return getattr(self, 'authentication_type', '')
+
+  def setAuthenticationFormat(self, authentication_format):
+    """
+      set the format of authentication
+    """
+    self.authentication_format = authentication_format
+
+  def setAuthenticationType(self, authentication_type):
+    """
+      set the type of authentication
+    """
+    self.authentication_type = authentication_type
+
   def getGidFromObject(self, object):
     """
     """
     o_base = aq_base(object)
     o_gid = None
-    # LOG('getGidFromObject',0,'gidgenerator : _%s_' % repr(self.getGidGenerator()))
     gid_gen = self.getGidGenerator()
     if callable(gid_gen):
-      # LOG('getGidFromObject gid_generator',0,'is callable')
       o_gid=gid_gen(object)
-      # LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
     elif getattr(o_base, gid_gen, None) is not None:
-      # LOG('getGidFromObject',0,'there is the gid generator on o_base')
       generator = getattr(object, gid_gen)
       o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
-      # LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
     elif gid_gen is not None:
       # It might be a script python
-      # LOG('getGidFromObject',0,'there is the gid generator')
       generator = getattr(object,gid_gen)
       o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
       # LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
@@ -911,7 +970,6 @@ class Subscription(Folder, SyncCode):
     # LOG('getObjectFromGid oject_list',0,object_list)
     if signature is not None and signature.getId() is not None:
       o_id = signature.getId()
-      # LOG('getObjectFromGid o_id',0,o_id)
       o = None
       try:
         o = destination._getOb(o_id)
@@ -920,7 +978,6 @@ class Subscription(Folder, SyncCode):
       if o is not None and o in object_list:
         return o
     for o in object_list:
-      # LOG('getObjectFromGid',0,'working on : %s' % repr(o))
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
         return o
@@ -1073,6 +1130,12 @@ class Subscription(Folder, SyncCode):
       set the message id to 0
     """
     self.message_id = 0
+  
+  def setMessageId(self, message_id):
+    """
+      set the message id to message_id
+    """
+    self.message_id = message_id
 
   def getLastAnchor(self):
     """
@@ -1230,3 +1293,67 @@ class Subscription(Folder, SyncCode):
         o.setTempXML(None)
     self.setRemainingObjectPathList(None)
 
+
+  def isAuthenticated(self):
+    """
+    return True if the subscriber is authenticated for this session, False 
+    in other case
+    """
+    return self.is_authenticated
+    
+  def setAuthenticated(self, value):
+    """
+      set at True or False the value of is_authenticated is the subscriber
+      is authenticated for this session or not
+    """
+    self.is_authenticated = value
+
+  def encode(self, format, string_to_encode):
+    """
+      return the string_to_encode encoded with format format
+    """
+    if format in ('', None):
+      return string_to_encode
+    if format == 'b64':
+      return b64encode(string_to_encode)
+    #elif format is .... put here the other formats
+    else:#if there is no format corresponding with format, raise an error
+      LOG('encode : unknown or not implemented format :', 0, format)
+      raise ValueError, "Sorry, the format %s is unknow or not implemented" % format
+
+  def decode(self, format, string_to_decode):
+    """
+      return the string_to_decode decoded with format format
+    """
+    string_to_decode = string_to_decode.encode('utf-8')
+    if format in ('', None):
+      return string_to_decode
+    if format == 'b64':
+      return b64decode(string_to_decode)
+    #elif format is .... put here the other formats
+    else:#if there is no format corresponding with format, raise an error
+      LOG('decode : unknown or not implemented format :', 0, format)
+      raise ValueError, "Sorry, the format %s is unknow or not implemented" % format
+
+  def isDecodeEncodeTheSame(self, string_encoded, string_decoded, format):
+    """
+      return True if the string_encoded is equal to string_decoded encoded 
+      in format
+    """
+    isTheSame=False
+    if self.encode(format, string_decoded) == string_encoded:
+      isTheSame=True
+    return isTheSame
+
+
+  def setUser(self, user):
+    """
+      save the user logged in to log him on each transaction
+    """
+    self.user=user
+
+  def getUser(self):
+    """
+      retrun the user logged in
+    """
+    return self.user

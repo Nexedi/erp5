@@ -125,6 +125,36 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   </tr>
   <tr>
     <td align="left" valign="top">
+    <div class="form-label">
+    Authentication Required
+    </label></div>
+    </td>
+    <td align="left" valign="top">
+      <input type="checkbox" name="auth_required" value="1">
+    </td>
+  </tr>
+  <tr>
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Format authentication
+    </label></div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="authentication_format" size="40" />
+    </td>
+  </tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Type authentication
+    </label></div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="authentication_type" size="40" />
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
     </td>
     <td align="left" valign="top">
     <div class="form-element">
