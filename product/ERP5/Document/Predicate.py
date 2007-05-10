@@ -129,15 +129,15 @@ class Predicate(XMLObject, Folder):
                             self.getMembershipCriterionCategoryList()
     if tested_base_category_list is not None:
       membership_criterion_category_list = [x for x in \
-          membership_criterion_category_list if x.split('/')[0] in \
+          membership_criterion_category_list if x.split('/', 1)[0] in \
           tested_base_category_list]
 
     for c in membership_criterion_category_list:
-      bc = c.split('/')[0]
-      if (not bc in tested_base_category.keys()) and \
+      bc = c.split('/', 1)[0]
+      if (bc not in tested_base_category) and \
          (bc in multimembership_criterion_base_category_list):
         tested_base_category[bc] = 1
-      elif (not bc in tested_base_category.keys()) and \
+      elif (bc not in tested_base_category) and \
            (bc in membership_criterion_base_category_list):
         tested_base_category[bc] = 0
       if (bc in multimembership_criterion_base_category_list):
@@ -243,7 +243,7 @@ class Predicate(XMLObject, Folder):
 
     # Build the join where expression
     join_select_list = []
-    for k in from_table_dict.keys():
+    for k in from_table_dict.iterkeys():
       join_select_list.append('%s.%s = %s.uid' % (join_table, join_column, k))
 
     sql_text = ' AND '.join(join_select_list + membership_select_list +
@@ -311,7 +311,7 @@ class Predicate(XMLObject, Folder):
       XXX - It would be better to return criteria in a Criterion class
             instance
     """
-    if not hasattr(aq_base(self), '_identity_criterion'):
+    if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = {}
       self._range_criterion = {}
     criterion_dict = {}
@@ -342,10 +342,10 @@ class Predicate(XMLObject, Folder):
                   is greater than max
 
     """
-    if not hasattr(aq_base(self), '_identity_criterion'):
+    if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = {}
       self._range_criterion = {}
-    if identity != None :
+    if identity is not None :
       self._identity_criterion[property] = identity
     if min != '' or max != '' :
       self._range_criterion[property] = (min, max)
@@ -358,17 +358,17 @@ class Predicate(XMLObject, Folder):
       criterion_property_list property is defined, a list of criteria
       is created to match the provided criterion_property_list.
     """
-    if not hasattr(aq_base(self), '_identity_criterion'):
+    if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = {}
       self._range_criterion = {}
-    if 'criterion_property_list' in kwd.keys() :
+    if 'criterion_property_list' in kwd:
       criterion_property_list = kwd['criterion_property_list']
       identity_criterion = {}
       range_criterion = {}
-      for criterion in self._identity_criterion.keys() :
+      for criterion in self._identity_criterion.iterkeys() :
         if criterion in criterion_property_list :
           identity_criterion[criterion] = self._identity_criterion[criterion]
-      for criterion in self._range_criterion.keys() :
+      for criterion in self._range_criterion.iterkeys() :
         if criterion in criterion_property_list :
           range_criterion[criterion] = self._range_criterion[criterion]
       self._identity_criterion = identity_criterion
