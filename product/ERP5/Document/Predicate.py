@@ -471,10 +471,10 @@ class Predicate(XMLObject, Folder):
           new_criterion_property_list.append(property)
           property_min = property + '_range_min'
           property_max = property + '_range_max'
-          if hasattr(self,'get%s' % convertToUpperCase(property)) \
+          if getattr(self, 'get%s' % convertToUpperCase(property), None) is not None\
             and self.getProperty(property) is not None:
             identity_criterion[property] = self.getProperty(property)
-          elif hasattr(self,'get%s' % convertToUpperCase(property_min)):
+          elif getattr(self, 'get%s' % convertToUpperCase(property_min), None) is not None:
             min = self.getProperty(property_min)
             max = self.getProperty(property_max)
             range_criterion[property] = (min,max)
