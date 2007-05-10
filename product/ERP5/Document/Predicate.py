@@ -92,18 +92,18 @@ class Predicate(XMLObject, Folder):
     """
     self = self.asPredicate()
     result = 1
-    if not hasattr(aq_base(self), '_identity_criterion'):
+    if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = {}
       self._range_criterion = {}
 #    LOG('PREDICATE TEST', 0,
 #        'testing %s on context of %s' % \
 #        (self.getRelativeUrl(), context.getRelativeUrl()))
-    for property, value in self._identity_criterion.items():
+    for property, value in self._identity_criterion.iteritems():
       result = result and (context.getProperty(property) == value)
 #      LOG('predicate test', 0,
 #          '%s after prop %s : %s == %s' % \
 #          (result, property, context.getProperty(property), value))
-    for property, (min, max) in self._range_criterion.items():
+    for property, (min, max) in self._range_criterion.iteritems():
       value = context.getProperty(property)
       if min is not None:
         result = result and (value >= min)
