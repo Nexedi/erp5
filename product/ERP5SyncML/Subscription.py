@@ -254,6 +254,8 @@ class Signature(Folder,SyncCode):
     self.setGid(gid)
     if object is not None:
       self.setPath(object.getPhysicalPath())
+    else:
+      self.setPath(None)
     self.setId(id)
     self.status = status
     self.setXML(xml_string)
