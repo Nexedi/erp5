@@ -948,8 +948,16 @@ class XMLSyncUtilsMixin(SyncCode):
             # Retrieve directly the object from addNode
             object = add_data['object']
             LOG('XMLSyncUtils, in ADD add_data',0,add_data)
-            signature.setPath(object.getPhysicalPath())
             LOG('applyActionList',0,'object after add: %s' % repr(object))
+          else:
+            #Object was retrieve but need to be updated without recreated
+            #usefull when an object is only deleted by workflow.
+            object_id = domain.generateNewIdWithGenerator(object=destination_path,gid=object_gid)
+            add_data = conduit.addNode(xml=data_subnode,
+                                       object=destination_path,
+                                       object_id=object_id,
+                                       sub_object=object)
+            conflict_list += add_data['conflict_list']
           if object is not None:
             LOG('SyncModif',0,'addNode, found the object')
             #mapping = getattr(object,domain.getXMLMapping(),None)
