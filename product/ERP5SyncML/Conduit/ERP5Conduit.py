@@ -108,7 +108,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
   def addNode(self, xml=None, object=None, previous_xml=None,
-              object_id=None, force=0, simulate=0, **kw):
+              object_id=None, sub_object=None, force=0, simulate=0, **kw):
     """
     A node is added
 
@@ -124,9 +124,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     [conflict1,conflict2,...] where conclict1 is of the form :
     [object.getPath(),keyword,local_and_actual_value,subscriber_value]
     """
+    reset_local_roles = 1
+    reset_workflow = 1
     conflict_list = []
-    sub_object = None
     xml = self.convertToXml(xml)
+    if xml is None:
+      return {'conflict_list':conflict_list, 'object':sub_object}
     LOG('addNode',0,'xml_reconstitued: %s' % str(xml))
     # In the case where this new node is a object to add
     if xml.nodeName in self.XUPDATE_INSERT_OR_ADD and self.getSubObjectDepth(xml)==0:
@@ -142,10 +145,15 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       docid = self.getObjectDocid(xml)
       LOG('addNode',0,'object_id: %s' % object_id)
       if object_id is not None:
-        try:
-          sub_object = object._getOb(object_id)
-        except (AttributeError, KeyError, TypeError):
-          sub_object = None
+        if sub_object is None:
+          try:
+            sub_object = object._getOb(object_id)
+          except (AttributeError, KeyError, TypeError):
+            sub_object = None
+        else:
+          #We prevent reset_workflow an reset_local_roles
+          reset_local_roles = 0
+          reset_workflow = 0
         if sub_object is None: # If so, it doesn't exist
           portal_type = ''
           if xml.nodeName == 'object':
@@ -153,7 +161,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD: # Deprecated ???
             portal_type = self.getXupdateObjectType(xml) # Deprecated ???
           sub_object = self.constructContent(object, object_id, docid, portal_type)
-        self.newObject(object=sub_object,xml=xml,simulate=simulate)
+        self.newObject(
+                  object=sub_object,
+                  xml=xml,
+                  simulate=simulate,
+                  reset_local_roles=reset_local_roles,
+                  reset_workflow=reset_workflow)
     elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD \
          and self.getSubObjectDepth(xml)>=1:
       sub_object_id = self.getSubObjectId(xml)
@@ -622,6 +635,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     if xml is a string, convert it to a node
     """
+    if xml is None:
+      return
     if type(xml) in (type('a'),type(u'a')):
       LOG('Conduit.convertToXml xml',0,repr(xml))
       if type(xml) is type(u'a'):
@@ -681,7 +696,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'newObject')
-  def newObject(self, object=None, xml=None, simulate=0, reset_local_roles=1):
+  def newObject(self, object=None, xml=None, simulate=0, reset_local_roles=1, reset_workflow=1):
     """
       modify the object with datas from
       the xml (action section)
@@ -693,8 +708,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if reset_local_roles:
       user_role_list = map(lambda x:x[0],object.get_local_roles())
       object.manage_delLocalRoles(user_role_list)
-    if hasattr(object,'workflow_history'):
-      object.workflow_history = PersistentMapping() 
+    if hasattr(object,'workflow_history') and reset_workflow:
+      object.workflow_history = PersistentMapping()
     if xml.nodeName.find('xupdate')>= 0:
       xml = self.getElementNodeList(xml)[0]
     for subnode in self.getElementNodeList(xml):
