@@ -121,22 +121,15 @@ class TestIngestion(ERP5TypeTestCase):
 
   def createTools(self):
     """
-      Set up contribution tool and content type registry
-
-      NOTE: portal_contributions is not created yet
-      by ERP5Site bootstrap. This is why me must create it
-      here. We also delete it and recreate it in case
-      it was saved by a previous --save run of the test.
-
-      XXX - what about mimetype registry ?
+      Set up missing portal_mailin tool.
     """
     # Delete and create portal_contributions
-    try:
-      self.portal._delObject('portal_contributions')
-    except AttributeError:
-      pass
-    addTool = self.portal.manage_addProduct['ERP5'].manage_addTool
-    addTool('ERP5 Contribution Tool', None)
+    #try:
+    #  self.portal._delObject('portal_contributions')
+    #except AttributeError:
+    #  pass
+    #addTool = self.portal.manage_addProduct['ERP5'].manage_addTool
+    #addTool('ERP5 Contribution Tool', None)
     # Delete and create portal_mailin
     try:
       self.portal._delObject('portal_mailin')
