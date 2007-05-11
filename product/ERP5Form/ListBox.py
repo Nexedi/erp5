@@ -378,6 +378,8 @@ class ListBoxWidget(Widget.Widget):
 
           which is intended to simplify operation with a spreadsheet or a pagetemplate
         """
+        if REQUEST is None:
+          REQUEST = get_request()
         if render_format == 'list':
           renderer = ListBoxListRenderer(self, field, REQUEST)
         else:
