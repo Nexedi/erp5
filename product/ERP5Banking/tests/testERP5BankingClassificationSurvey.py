@@ -334,6 +334,10 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
       cell = self.valid_outgoing_line.getCell('emission_letter/p', variation, 'cash_status/cancelled')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Outgoing Classification Survey Cell')
+      variation_text = cell.getBaobabDestinationVariationText()
+      cash_status = [x for x in variation_text.split('\n') 
+                     if x.startswith('cash_status')][0]
+      self.assertEquals(cash_status, 'cash_status/retired')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 2.0)
@@ -373,6 +377,10 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
       cell = self.valid_outgoing_line.getCell('emission_letter/s', variation, 'cash_status/cancelled')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Outgoing Classification Survey Cell')
+      variation_text = cell.getBaobabDestinationVariationText()
+      cash_status = [x for x in variation_text.split('\n') 
+                     if x.startswith('cash_status')][0]
+      self.assertEquals(cash_status, 'cash_status/cancelled')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 5.0)
