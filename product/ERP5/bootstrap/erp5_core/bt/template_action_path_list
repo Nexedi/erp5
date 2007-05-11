@@ -110,9 +110,8 @@ Order Tool | view
 Predicate | print_pdf
 Predicate | view
 Preference Tool | advanced
-Preference Tool | localroles
-Preference Tool | metadata
-Preference Tool | syndication
+Preference Tool | list_ui
+Preference Tool | sort_on
 Preference Tool | view
 Preference | history
 Preference | html_style_preferences
