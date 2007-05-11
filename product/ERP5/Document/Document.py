@@ -987,6 +987,10 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
 
     # Prepare the content edit parameters - portal_type should not be changed
     kw.pop('portal_type', None)
+    # if we still do not have reference extracted try to use group_reference_path
+    # XXX: We must catch inconsistent 're' patterns earlier and raise an exception
+    if kw.get('reference', None) is None:
+      kw['reference'] = kw.pop('group_reference_path', None)
     # Try not to invoke an automatic transition here
     self._edit(**kw)
     # Finish ingestion by calling method
