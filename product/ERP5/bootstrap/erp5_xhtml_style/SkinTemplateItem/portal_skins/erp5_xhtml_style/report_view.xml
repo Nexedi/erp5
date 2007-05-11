@@ -86,6 +86,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <tal:block tal:repeat="report_item report_method">\n
           <tal:block tal:define="here python: report_item.getObject(portal_object);\n
                                  dummy python: report_item.pushReport(portal_object)">\n
+            <span tal:condition="report_item/getTitle"\n
+                  tal:content="report_item/getTitle"\n
+                  tal:attributes="class string:report_title_level_${report_item/getLevel}"/>\n
             <tal:block tal:condition="report_item/getFormId">\n
               <tal:block tal:define="form python:getattr(here,report_item.getFormId())" >\n
                 <tal:block metal:use-macro="here/form_render/macros/master" />\n
@@ -97,7 +100,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
