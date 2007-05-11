@@ -42,6 +42,7 @@ from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
+from AccessControl import Unauthorized
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -723,6 +724,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       based on a suffix
     """
     # Change the document reference
+    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
     reference = self.getReference() + '-%s-' % suffix + '%s'
     ref_count = 0
     kw = dict(portal_type=self.getPortalDocumentTypeList())
@@ -987,10 +989,6 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
 
     # Prepare the content edit parameters - portal_type should not be changed
     kw.pop('portal_type', None)
-    # if we still do not have reference extracted try to use group_reference_path
-    # XXX: We must catch inconsistent 're' patterns earlier and raise an exception
-    if kw.get('reference', None) is None:
-      kw['reference'] = kw.pop('group_reference_path', None)
     # Try not to invoke an automatic transition here
     self._edit(**kw)
     # Finish ingestion by calling method
@@ -998,7 +996,9 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     self.reindexObject()
     # Revision merge is tightly coupled
     # to metadata discovery - refer to the documentation of mergeRevision method
-    return self.mergeRevision() 
+    merged_doc = self.mergeRevision()
+    merged_doc.reindexObject()
+    return merged_doc 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'finishIngestion')
   def finishIngestion(self):
