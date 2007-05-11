@@ -79,6 +79,9 @@ if is_source:\n
 else:\n
   specific_reference = context.getDestinationReference()\n
 \n
+causality_value_list = context.getCausalityValueList()\n
+causality_value_list.append(context)\n
+\n
 reversal = accounting_module.newContent (\n
     portal_type=context.getPortalType(),\n
     source_section=context.getSourceSection(),\n
@@ -93,7 +96,7 @@ reversal = accounting_module.newContent (\n
                \'specific_reference\': specific_reference}),\n
     resource=context.getResource(),\n
     reference=context.getReference(),\n
-    causality_value=context,\n
+    causality_value_list=causality_value_list,\n
     created_by_builder=1 # XXX to prevent init script to create lines\n
   )\n
 \n
@@ -189,6 +192,7 @@ return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
                             <string>accounting_module</string>
                             <string>is_source</string>
                             <string>specific_reference</string>
+                            <string>causality_value_list</string>
                             <string>unicode</string>
                             <string>reversal</string>
                             <string>line_list</string>
