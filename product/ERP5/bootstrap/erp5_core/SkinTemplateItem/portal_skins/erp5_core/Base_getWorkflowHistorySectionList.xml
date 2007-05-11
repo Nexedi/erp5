@@ -77,10 +77,10 @@ for workflow_id, workflow_history in history_dict.items():\n
   result.append(\n
     ReportSection(\n
       path=context.getPhysicalPath(),\n
-      title=workflow_id,\n
       level=1,\n
       form_id=\'Base_viewWorkflowHistory\',\n
-      selection_params={\'workflow_id\': workflow_id, \'workflow_title\' : workflow_title},\n
+      selection_params={\'workflow_id\': workflow_id,\n
+                        \'workflow_title\' : workflow_title},\n
       listbox_display_mode=\'FlatListMode\')\n
   )\n
 \n
