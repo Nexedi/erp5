@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getDestinationPaymentValue().getPriceCurrencyTitle()</string> </value>
+            <value> <string>python: here.getDestinationPaymentValue() is not None and here.getDestinationPaymentValue().getPriceCurrencyTitle() or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>

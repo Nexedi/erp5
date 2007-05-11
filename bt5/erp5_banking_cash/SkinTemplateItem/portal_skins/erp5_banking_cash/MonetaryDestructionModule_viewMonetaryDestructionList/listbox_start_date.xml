@@ -196,6 +196,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hidden_day_is_last_day</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_day</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>input_order</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -456,18 +464,15 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreferredDateOrder()</string> </value>
+            <value> <string>preferences/getPreferredDateOrder | string:ymd</string> </value>
         </item>
       </dictionary>
     </pickle>
