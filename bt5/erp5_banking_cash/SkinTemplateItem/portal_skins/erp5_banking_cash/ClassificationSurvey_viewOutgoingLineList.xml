@@ -96,6 +96,7 @@
                       <list>
                         <string>listbox_total_price</string>
                         <string>listbox_quantity</string>
+                        <string>listbox_cash_status_translated_title</string>
                       </list>
                     </value>
                 </item>
