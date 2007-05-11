@@ -207,7 +207,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Port of the oood server</string> </value>
+                    <value> <string>Port of the oood server.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
