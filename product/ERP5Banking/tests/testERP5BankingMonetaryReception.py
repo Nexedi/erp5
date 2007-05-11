@@ -359,8 +359,8 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(container_list), 2)
     # check we have cash container 1
     container_object_list = [x.getObject() for x in container_list]
-    self.assertEqual(container_object_list[0], self.container_1)
-    self.assertEqual(container_object_list[1], self.container_2)
+    self.failIfDifferentSet([self.container_1, self.container_2],
+                            container_object_list)
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(node=self.reception.getRelativeUrl())), 2)
 
   ##################################
