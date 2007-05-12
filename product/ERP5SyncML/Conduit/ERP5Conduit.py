@@ -298,13 +298,29 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         data_xml = xml
         data = None
         LOG('updateNode',0,'keyword: %s' % str(keyword))
-        if not (xml.nodeName in self.XUPDATE_INSERT_OR_ADD):
+        if xml.nodeName not in self.XUPDATE_INSERT_OR_ADD:
           for subnode in self.getElementNodeList(xml):
             if subnode.nodeName=='xupdate:element':
               for subnode1 in subnode.attributes:
                 if subnode1.nodeName=='name':
                   keyword = subnode1.nodeValue
               data_xml = subnode
+        else:
+          #We can call add node
+          conflict_list += self.addNode(xml=xml,
+                                        object=object,
+                                        force=force,
+                                        simulate=simulate,
+                                        **kw)
+          return conflict_list
+
+        if xml.nodeName in self.XUPDATE_DEL:
+          conflict_list += self.deleteNode(xml=xml,
+                                           object=object,
+                                           force=force,
+                                           simulate=simulate,
+                                           **kw)
+          return conflict_list
         if keyword is None: # This is not a selection, directly the property
           keyword = xml.nodeName
         if len(self.getElementNodeList(data_xml))==0:
@@ -367,7 +383,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if keyword == 'object':
           # This is the case where we have to call addNode
           LOG('updateNode',0,'we will add sub-object')
-          conflict_list += self.addNode(xml=subnode,object=object,force=force,
+          conflict_list += self.addNode(xml=xml,object=object,force=force,
                                         simulate=simulate, **kw)['conflict_list']
         elif keyword == self.history_tag and not simulate:
           # This is the case where we have to call addNode
@@ -387,7 +403,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         # We should find the object corresponding to
         # this update, so we have to look in the previous_xml
         sub_object_id = self.getSubObjectId(xml)
-        LOG('updateNode',0,'getSubObjectModification number: %s' % sub_object_id)
+        LOG('updateNode',0,'isSubObjectModification sub_object_id: %s' % sub_object_id)
         if previous_xml is not None and sub_object_id is not None:
           LOG('updateNode',0,'previous xml is not none and also sub_object_id')
           sub_previous_xml = self.getSubObjectXml(sub_object_id,previous_xml)
@@ -407,6 +423,19 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               # Then do the udpate
               conflict_list += self.updateNode(xml=sub_xml,object=sub_object, force=force,
                               previous_xml=sub_previous_xml,simulate=simulate, **kw)
+        elif previous_xml is None and xml is not None and sub_object_id is not None:
+          sub_object = None
+          try:
+            sub_object = object[sub_object_id]
+          except KeyError:
+            pass
+          if sub_object is not None:
+            sub_xml = self.getSubObjectXupdate(xml)
+            conflict_list += self.updateNode(xml=sub_xml,
+                                             object=sub_object,
+                                             force=force,
+                                             simulate=simulate,
+                                             **kw)
     return conflict_list
 
   security.declareProtected(Permissions.AccessContentsInformation,'getFormatedArgs')
@@ -490,7 +519,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     for subnode in self.getAttributeNodeList(xml) :
       if subnode.nodeName=='select':
         value = subnode.nodeValue
-        LOG('isSubObjectModification',0,'value: %s' % value)
         for good_string in good_list:
           if re.search(good_string,value) is not None:
             return 1
@@ -902,7 +930,20 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     conflict_list = []
     if type(xupdate) in (type('a'),type(u'a')):
       xupdate = parseString(xupdate)
-
+    #When xupdate mix different object, (like object and his subobject) we need to treat them separatly
+    if self.isMixedXupdate(xupdate):
+      #return to updateNode with only one line
+      #del all sub_element
+      sub_node_list = self.getElementNodeList(xupdate)
+      #clean the node
+      for subnode in sub_node_list:
+        #Create one xupdate:modification per update node
+        conflict_list += self.updateNode(xml=subnode,
+                                         object=object,
+                                         force=force,
+                                         simulate=simulate,
+                                         **kw)
+      return conflict_list
     for subnode in self.getElementNodeList(xupdate):
       sub_xupdate = self.getSubObjectXupdate(subnode)
       selection_name = ''
@@ -919,6 +960,19 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       #  conflict_list += conduit.addNode(xml=subnode, object=object, force=force, **kw)
 
     return conflict_list
+
+  def isMixedXupdate(self, xml):
+    #If an xupdate:modifications contains modification which concerns different objects
+    subnode_list = self.getElementNodeList(xml)
+    nb_sub = len(subnode_list)
+    comp = 0
+    for subnode in subnode_list:
+      value = subnode.getAttribute('select')
+      if re.search(self.object_exp, value):
+        comp += 1
+    if nb_sub == comp:
+      return 0
+    return 1
 
   def isWorkflowActionAddable(self, object=None,status=None,wf_tool=None,
                               wf_id=None,xml=None):
