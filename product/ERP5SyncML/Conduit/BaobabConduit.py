@@ -279,7 +279,7 @@ class BaobabConduit(ERP5Conduit):
     # Function to search the parent object where the new content must be construct.
     # Given parameter is the special encoded portal type that represent the path to
     #   the wanted destination.
-    def findObjectFromSpecialPortalType(special_portal_type):
+    def findObjectFromSpecialPortalType(special_portal_type,object_id=None):
       # The first part or portal type, for example "Mandataire"
       source_portal_type = special_portal_type.split('_')[0]
       # The place where we should build,
@@ -371,7 +371,7 @@ class BaobabConduit(ERP5Conduit):
     ### handle agent objects
     elif portal_type.startswith('Mandataire'):
       # Get the person or organisation thanks to the portal_type
-      dest = findObjectFromSpecialPortalType(portal_type)
+      dest = findObjectFromSpecialPortalType(portal_type,object_id=object_id)
       if dest == None: return None
       subobject = dest.newContent( portal_type = 'Agent'
                                  , id          = object_id
