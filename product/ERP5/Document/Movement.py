@@ -212,7 +212,7 @@ class Movement(XMLObject, Amount):
       return default
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
-  def getPrice(self, default=None, context=None, REQUEST=None, **kw):
+  def getPrice(self, default=None, **kw):
     """
       Get the Price in the context.
 
@@ -234,11 +234,14 @@ class Movement(XMLObject, Amount):
       context = default
       default = None
 
+    if len(kw):
+      warn('Passing keyword arguments to Movement.getPrice has no effect',
+           DeprecationWarning)
+
     local_price = self._baseGetPrice()
     if local_price is None:
       # We must find a price for this movement
-      local_price = self._getPrice(context=self.asContext(
-                            context=context, REQUEST=REQUEST, **kw))
+      local_price = self._getPrice(context=self)
       # And store it localy
       if local_price is not None:
         self.setPrice(local_price)
