@@ -106,13 +106,15 @@ context.portal_categories.activate(\n
                                          passive_commit=passive_commit)\n
 \n
 print "#### Indexing alarms ####"\n
+print "#### Indexing active processes ####"\n
 print "#### Indexing preferences ####"\n
 folder_tag = \'module\'\n
 folder_after_tag = (\'person_stage_1\', \'group_person_stage_1\')\n
 object_tag = \'document\'\n
 object_after_tag = (\'module\', \'category\', \'person_stage_1\', \'group_person_stage_1\')\n
 object_priority = 2\n
-for folder in [context.portal_alarms, context.portal_preferences]:\n
+for folder in [context.portal_alarms, context.portal_activities,\n
+               context.portal_preferences]:\n
   folder.activate(\n
                     tag=folder_tag,\n
                     after_tag=folder_after_tag).Folder_reindexAll(\n
