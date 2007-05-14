@@ -185,14 +185,25 @@ class OOoDocument(File, ConversionCacheMixin):
     def cached_getTargetFormatItemList(content_type):
       server_proxy = self._mkProxy()
       try:
-        response_code, response_dict, response_message = server_proxy.getAllowedTargetItemList(content_type)
+        allowed_target_item_list = server_proxy.getAllowedTargetItemList(
+                                                      content_type)
+        try:
+          response_code, response_dict, response_message = \
+                                             allowed_target_item_list
+        except ValueError:
+          # Compatibility with older oood where getAllowedTargetItemList only
+          # returned response_dict
+          response_code, response_dict, response_message = \
+                         200, dict(response_data=allowed_target_item_list), ''
+        
         if response_code == 200:
           allowed = response_dict['response_data']
         else:
           # This is very temporary code - XXX needs to be changed
           # so that the system can retry
-          raise ConversionError("[DMS] Can not get list of allowed acceptable formats for conversion: %s (%s)"  
+          raise ConversionError("[DMS] Can not get list of allowed acceptable formats for conversion: %s (%s)"
                                        %(response_code, response_message))
+
       except Fault, f:
         allowed = server_proxy.getAllowedTargets(content_type)
         warn('Your oood version is too old, using old method '
@@ -251,10 +262,18 @@ class OOoDocument(File, ConversionCacheMixin):
       z.close()
       return 'text/plain', s
     server_proxy = self._mkProxy()
-    response_code, response_dict, response_message = server_proxy.run_generate(self.getId(),
+    
+    generate_result = server_proxy.run_generate(self.getId(),
                                        enc(_unpackData(self.getBaseData())),
                                        None, 
                                        format)
+    try:
+      response_code, response_dict, response_message = generate_result
+    except ValueError:
+      # This is for backward compatibility with older oood version returning
+      # only response_dict
+      response_dict = generate_result
+      
     # XXX: handle possible OOOd server failure
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
