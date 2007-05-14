@@ -958,7 +958,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
 
       user_login - this is a login string of a person; can be None if the user is
                    currently logged in, then we'll get him from session
-    """   
+    """
     if file_name is not None:
       # filename is often undefined....
       self._setSourceReference(file_name)
@@ -1138,13 +1138,16 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       msg = '' 
     except ConversionError, e:
       msg = 'Problem: %s' % (str(e) or 'undefined.')
-      self.processFile(comment=msg)
+      #self.processFile(comment=msg)
+      raise ConversionError, msg
     except Fault, e:
       msg = 'Problem: %s' % (repr(e) or 'undefined.')
-      self.processFile(comment=msg)
+      #self.processFile(comment=msg)
+      raise Fault, msg
     except socket.error, e:
       msg = 'Problem: %s' % (repr(e) or 'undefined.')
-      self.processFile(comment=msg)
+      #self.processFile(comment=msg)
+      raise socket.error, msg
     return msg
 
   def _convertToBaseFormat(self):
