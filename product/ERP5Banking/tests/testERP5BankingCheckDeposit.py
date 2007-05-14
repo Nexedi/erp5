@@ -37,6 +37,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -214,6 +215,23 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertNotEqual(self.check_operation_line_1, None)
     self.assertEqual(len(self.check_deposit.objectIds()), 1)
 
+
+  def stepAddWrongCheckOperationLine(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Add a check to the check deposit, check number is not defined into site
+    so transition must failed
+    """
+    self.check_operation_line_1 = self.check_deposit.newContent(id='check_operation_line_1',
+                                                                portal_type="Check Operation Line",
+                                                                aggregate_free_text="CHKNB6",
+                                                                source_payment_value = self.bank_account_2,
+                                                                price=2000,
+                                                                quantity=1,
+                                                                quantity_unit_value=self.unit)
+    self.assertNotEqual(self.check_operation_line_1, None)
+    self.assertEqual(len(self.check_deposit.objectIds()), 1)
+
+
   def stepPlanCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
     """
     Send the check deposit document to first validation level
@@ -221,6 +239,15 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.check_deposit.getTotalPrice(portal_type="Check Operation Line"), 2000.0)
     self.workflow_tool.doActionFor(self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
     self.assertEqual(self.check_deposit.getSimulationState(), 'planned')
+
+  def stepTryPlanCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Send the check deposit document to first validation level
+    """
+    self.assertEqual(self.check_deposit.getTotalPrice(portal_type="Check Operation Line"), 2000.0)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
+    #self.workflow_tool.doActionFor(self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
+    self.assertEqual(self.check_deposit.getSimulationState(), 'draft')
 
   def stepOrderCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -294,7 +321,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                        + 'PlanCheckDepositOperation Tic OrderCheckDepositOperation ' \
                        + 'Tic DeliverCheckDepositOperation Tic ' \
                        + 'CheckBankAccountInventoryAfterCheckDepositDelivered'
-
+    # one to test reject
     sequence_string2 = 'Tic ClearCheck ClearCheckDepositModule Tic '\
                        + 'CheckObjects Tic CheckInitialInventory ' \
                        + 'CreateCheckDepositOperation Tic ' \
@@ -302,9 +329,17 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                        + 'PlanCheckDepositOperation Tic OrderCheckDepositOperation ' \
                        + 'Tic RejectCheckDepositOperation Tic ' \
                        + 'CheckBankAccountInventoryAfterCheckDepositRejected'
+    # one to test check not defined
+    sequence_string3 =  'Tic ClearCheck ClearCheckDepositModule Tic '\
+                       + 'Tic CheckObjects Tic CheckInitialInventory ' \
+                       + 'CreateCheckDepositOperation Tic ' \
+                       + 'AddWrongCheckOperationLine Tic ' \
+                       + 'TryPlanCheckDepositOperation Tic ' \
+                       + 'CheckInitialInventory'
 
     sequence_list.addSequenceString(sequence_string1)
     sequence_list.addSequenceString(sequence_string2)
+    sequence_list.addSequenceString(sequence_string3)
     # play the sequence
     sequence_list.play(self)
 
