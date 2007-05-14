@@ -236,8 +236,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     class_list = [getattr(MovementGroup, x) \
                   for x in self.getCollectOrderList()]
     last_line_class_name = self.getDeliveryCollectOrderList()[-1]
-    # XXX Bug when nothing is defined ...
-    separate_method_name_list = self.getDeliveryCellSeparateOrderList()
+    separate_method_name_list = self.getDeliveryCellSeparateOrderList([])
     my_root_group = MovementGroup.RootMovementGroup(
                            class_list,
                            last_line_class_name=last_line_class_name,
