@@ -29,7 +29,8 @@
 import smtplib # to send emails
 from Publication import Publication,Subscriber
 from Subscription import Signature
-from Ft.Xml import Parse
+from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
+from xml.dom.minidom import parse, parseString
 from XMLSyncUtils import XMLSyncUtils
 from Conduit.ERP5Conduit import ERP5Conduit
 from Products.CMFCore.utils import getToolByName
@@ -220,7 +221,7 @@ class PublicationSynchronization(XMLSyncUtils):
 
     if xml_client is not None:
       if isinstance(xml_client, str) or isinstance(xml_client, unicode):
-        xml_client = Parse(xml_client)
+        xml_client = parseString(xml_client)
       first_node = xml_client.childNodes[0]
 
       if first_node.nodeName != "SyncML":

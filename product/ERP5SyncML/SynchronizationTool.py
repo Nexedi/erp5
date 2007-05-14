@@ -40,7 +40,8 @@ from Products.ERP5SyncML import Conduit
 from Publication import Publication,Subscriber
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Subscription import Subscription,Signature
-from Ft.Xml import Parse
+from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
+from xml.dom.minidom import parse, parseString
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
@@ -49,6 +50,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import UnrestrictedUser
 from Acquisition import aq_base
+from xml.parsers.expat import ExpatError # parseString error
 import urllib
 import urllib2
 import socket
@@ -972,7 +974,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
-      xml = Parse(text)
+      xml = parseString(text)
       #XXX this function is not very optimized and should be improved
       url = self.getTarget(xml)
       for publication in self.getPublicationList():
