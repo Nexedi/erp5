@@ -277,6 +277,9 @@ class SQLDict(RAMDict):
         else:
           get_transaction().abort()
       except:
+        LOG('SQLDict', ERROR, 
+            'an uncatched exception happened during processing %r' % (uid_list_list,),
+            error=sys.exc_info())
         # If an exception occurs, abort the transaction to minimize the impact,
         try:
           get_transaction().abort()
