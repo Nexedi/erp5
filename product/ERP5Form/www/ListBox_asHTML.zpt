@@ -22,6 +22,9 @@
               ">
   <!-- ListBox starts here.  -->
   <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />
+  <input type="hidden" name="list_selection_name" value="default"
+                       tal:attributes="value selection_name;
+                                       name string:${field_id}_list_selection_name" />
   <input tal:condition="md5_string" type="hidden" name="md5_object_uid_list" value="checksum" tal:attributes="value md5_string" />
 
   <tal:replace tal:content="nothing">
@@ -144,6 +147,7 @@
                   id="listbox_previous_page" type="image" src="1leftarrowv.png"
                   title="Previous Page" name="previousPage:method"
                   tal:attributes="id string:${field_id}_previous_page;
+                                  name string:${field_id}_previousPage:method;
                                   src string:${portal_url_string}/images/1leftarrowv.png"
                   i18n:domain="ui" i18n:attributes="title" />
               </td>
@@ -151,7 +155,8 @@
                 <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"
                   tal:define="lines here/getMaxLineNumber"
                   tal:attributes="id string:${field_id}_page_selection;
-                                  onChange string:submitAction(this.form, '${context_url}/setPage')"
+                                  name string:${field_id}_list_start;
+                                  onChange string:submitAction(this.form, '${context_url}/${field_id}_setPage')"
                   i18n:domain="ui" i18n:attributes="title">
                   <option value="0"
                     tal:repeat="p python: range(0, here.total_pages)"
@@ -165,6 +170,7 @@
                   id="listbox_next_page" type="image" src="1rightarrowv.png"
                   title="Next Page" name="nextPage:method"
                   tal:attributes="id string:${field_id}_next_page;
+                                  name string:${field_id}_nextPage:method;
                                   src string:${portal_url_string}/images/1rightarrowv.png"
                   i18n:domain="ui" i18n:attributes="title" />
               </td>
@@ -192,10 +198,12 @@
                   name="checkAll:method" value="1"
                   src="checkall.png" alt="Check All" title="Check All"
                   tal:attributes="id string:${field_id}_check_all;
+                                  name string:${field_id}_checkAll:method;
                                   src string:${portal_url_string}/images/checkall.png"
                   i18n:domain="ui" i18n:attributes="title" />&nbsp;<input id="listbox_uncheck_all" type="image" name="uncheckAll:method" value="1"
                   src="%(portal_url_string)s/images/decheckall.png" style="border: 0" alt="Uncheck All" title="Uncheck All"
                   tal:attributes="id string:${field_id}_uncheck_all;
+                                  name string:${field_id}_uncheckAll:method;
                                   src string:${portal_url_string}/images/decheckall.png"
                   i18n:domain="ui" i18n:attributes="title" />
               </td>

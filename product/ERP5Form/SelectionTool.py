@@ -1465,6 +1465,9 @@ from ZPublisher.mapply import mapply
 method_id_filter_list = [x for x in FolderMixIn.__dict__ if callable(getattr(FolderMixIn, x))]
 candidate_method_id_list = [x for x in SelectionTool.__dict__ if callable(getattr(SelectionTool, x)) and not x.startswith('_') and not x.endswith('__roles__') and x not in method_id_filter_list]
 
+# Monkey patch FolderMixIn with SelectionTool methods
+#   kept here for compatibility with previous implementations
+#   of Listbox HTML renderer. See bellow new implementation
 for property_id in candidate_method_id_list:
   def portal_selection_wrapper(self, wrapper_property_id=property_id, *args, **kw):
     """
@@ -1480,3 +1483,50 @@ for property_id in candidate_method_id_list:
   security_property = getattr(SelectionTool, security_property_id, None)
   if security_property is not None:
     setattr(FolderMixIn, security_property_id, security_property)
+
+def createFolderMixInPageSelectionMethod(listbox_id):
+  """
+  This method must be called by listbox at rendering time.
+  It dynamically creates methods on FolderMixIn in line
+  with the naming of the listbox field. Generated method
+  are able to convert request parameters in order to
+  mimic the API of a listbox with ID "listbox". This
+  approach was required for example to implement
+  multiple multi-page listboxes in view mode. It also
+  opens the way towards multiple editable listboxes in the same
+  page although this is something which we can not recommend.
+  """
+  # Immediately return in the method already exists
+  test_method_id = "%s_nextPage" % listbox_id
+  if hasattr(FolderMixIn, test_method_id):
+    return
+  # Monkey patch FolderMixIn
+  for property_id in candidate_method_id_list:
+    def portal_selection_wrapper(self, wrapper_listbox_id=listbox_id,
+                                       wrapper_property_id=property_id, *args, **kw):
+      """
+        Wrapper method for SelectionTool.
+      """
+      portal_selection = getToolByName(self, 'portal_selections')
+      request = self.REQUEST
+      selection_name_property_id = "%s_list_selection_name" % listbox_id
+      listbox_uid_property_id = "%s_uid" % listbox_id
+      list_start_property_id = "%s_list_start" % listbox_id
+      # Rename request parameters
+      if request.has_key(selection_name_property_id):
+        request.form['list_selection_name'] = request[selection_name_property_id]
+      if request.has_key(listbox_uid_property_id):
+        request.form['listbox_uid'] = request[listbox_uid_property_id]
+      if request.has_key(list_start_property_id):
+        request.form['list_start'] = request[list_start_property_id]
+      # Call the wrapper
+      method = getattr(portal_selection, wrapper_property_id)
+      return mapply(method, positional=args, keyword=request,
+                    context=self, bind=1)
+    new_property_id = "%s_%s" % (listbox_id, property_id)
+    setattr(FolderMixIn, new_property_id, portal_selection_wrapper)
+    security_property_id = '%s__roles__' % (property_id, )
+    security_property = getattr(SelectionTool, security_property_id, None)
+    if security_property is not None:
+      new_security_property_id = '%s__roles__' % (new_property_id, )
+      setattr(FolderMixIn, new_security_property_id, security_property)

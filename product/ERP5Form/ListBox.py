@@ -34,6 +34,7 @@ from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from Selection import Selection, DomainSelection
+from SelectionTool import createFolderMixInPageSelectionMethod
 from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
@@ -1943,6 +1944,9 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     ignore_layout = int(self.renderer.request.get('ignore_layout', 0))
 
     html_list = []
+
+    # Generate page selection methods based on the Listbox id
+    createFolderMixInPageSelectionMethod(field_id)
 
     # Check is there is a validation error at the level of the listbox
     # as a whole. This will be required later to decide wherer to
