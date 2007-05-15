@@ -91,7 +91,7 @@ class NotificationTool(BaseTool):
 
     # Change all strings to object values
     if isinstance(sender, basestring):
-      sender = catalog_tool.getObject(portal_type='Person', reference=sender)
+      sender = catalog_tool(portal_type='Person', reference=sender)[0]
 
     email_from_address = None
     if sender is not None:
@@ -109,7 +109,7 @@ class NotificationTool(BaseTool):
       recipient = [recipient]
     to_list = []
     for user in recipient:
-      user_value = catalog_tool.getObject(portal_type='Person', reference=user)
+      user_value = catalog_tool(portal_type='Person', reference=user)[0]
       if user_value is not None:
         to_list.append(user_value)
 
