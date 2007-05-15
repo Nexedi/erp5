@@ -317,20 +317,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>source_reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
                           <string>source_logical_path</string>
-                          <string>Source Vault</string>
+                          <string>Counter</string>
                         </tuple>
                         <tuple>
                           <string>description</string>

@@ -309,15 +309,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>Id</string>
-                        </tuple>
-                        <tuple>
                           <string>source_reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>

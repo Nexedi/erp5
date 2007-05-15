@@ -129,22 +129,22 @@ def assertReferenceMatchListEmpty(match_list):\n
       matched_reference_list.append(match.getReference())\n
     raise ValidationFailed, \'The following references are already allocated : %s\' % (matched_reference_list, )\n
 \n
-def checkReferenceListUniqueness(reference_list, model):\n
+def checkReferenceListUniqueness(reference_list, model, destination_payment):\n
   """\n
     Check each given reference not to already exist.\n
   """\n
-  match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list)\n
+  match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment.getUid())\n
   assertReferenceMatchListEmpty(match_list)\n
   for reference in reference_list:\n
     if portal_activities.countMessageWithTag(\'check_%s_%s\' % (model, reference)) != 0:\n
       raise ValidationFailed, \'This reference is alredy scheduled for indexing, and so is already allocated : %s\' % (reference, )\n
 \n
 portal_activities = context.getPortalObject().portal_activities\n
-def checkReferenceUniqueness(reference, model):\n
+def checkReferenceUniqueness(reference, model, destination_payment):\n
   """\n
     Check the given reference not to already exist.\n
   """\n
-  checkReferenceListUniqueness([reference, ], model)\n
+  checkReferenceListUniqueness([reference, ], model, destination_payment)\n
 \n
 # Check getBaobabSource and getBaobabDestination\n
 transaction.Base_checkBaobabSourceAndDestination()\n
@@ -207,7 +207,7 @@ for line in line_list:\n
       destination_section = item.getDestinationSection()\n
       item.setStartDate(start_date)\n
       reference_list = range(reference_to_int(reference_range_min), last_reference_value + 1)\n
-      checkReferenceListUniqueness(reference_list, model)\n
+      checkReferenceListUniqueness(reference_list, model, item.getDestinationPaymentValue())\n
       for j in reference_list:\n
         reference = int_to_reference(j, reference_range_min)\n
         check = item.newContent(portal_type=\'Check\', title=str(reference), activate_kw={\'tag\': \'check_%s_%s\' % (model, reference)})\n
@@ -215,7 +215,7 @@ for line in line_list:\n
         check.setStartDate(start_date)\n
         check.setReference(reference)\n
     else:\n
-      checkReferenceUniqueness(reference_range_min, model)\n
+      checkReferenceUniqueness(reference_range_min, model, line.getDestinationPaymentValue())\n
       item.setReference(reference_range_min)\n
       item.setTitle(reference_range_min)\n
       if len(resource.objectValues()) > 0:\n
