@@ -85,12 +85,15 @@ trail = 5\n
 # maximum lines to show\n
 maxlines = 5\n
 \n
+# try to convert object to text\n
 try:\n
-  txt = context.asText() or \'\'\n
-except AttributeError:\n
+  txt = context.asText()\n
+except:\n
   txt = \'\'\n
 \n
-argument_names = (\'advanced_search_text\', \'title\', \'reference\', \'SearchableText\', \'SearchableText_any\', \'SearchableText_all\', \'SearchableText_phrase\')\n
+argument_names = (\'advanced_search_text\', \'title\', \'reference\', \\\n
+                  \'SearchableText\', \'SearchableText_any\', \\\n
+                  \'SearchableText_all\', \'SearchableText_phrase\')\n
 \n
 # a quick hack because sometimes we get a list\n
 params = [selection.params.get(name, \'\') for name in argument_names]\n
@@ -171,7 +174,6 @@ return \' \'.join(map(str, res))\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>txt</string>
-                            <string>AttributeError</string>
                             <string>argument_names</string>
                             <string>append</string>
                             <string>$append0</string>
