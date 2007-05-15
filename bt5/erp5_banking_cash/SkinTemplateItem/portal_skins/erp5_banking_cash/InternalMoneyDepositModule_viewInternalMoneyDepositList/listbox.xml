@@ -315,7 +315,28 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_logical_path</string>
+                          <string>Vault</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_total_asset_price</string>
+                          <string>Amount</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -357,9 +378,7 @@
                 </item>
                 <item>
                     <key> <string>count_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -399,7 +418,7 @@
                       <list>
                         <tuple>
                           <string>start_date</string>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                         </tuple>
                         <tuple>
                           <string>source_total_asset_price</string>
@@ -437,7 +456,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -546,22 +565,6 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>countFolder</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>

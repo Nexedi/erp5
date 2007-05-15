@@ -65,38 +65,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># check that we don\'t have both incoming and outgoing line on the document\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
+            <value> <string>cash_detail_dict = {\'line_portal_type\'          : \'Cash Delivery Line\'\n
+                    , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
+                    , \'cash_status_list\'          : [\'valid\']\n
+                    , \'emission_letter_list\'      : None\n
+                    , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1)\n
+                    , \'currency_cash_portal_type\'  :  None\n
+                    , \'read_only\'           : False\n
+                    , \'column_base_category\'               : \'variation\'\n
+                    }\n
 \n
-txn = state_change[\'object\']\n
-in_list = txn.objectValues(portal_type=\'Incoming Cash Incident Line\')\n
-out_list = txn.objectValues(portal_type=\'Outgoing Cash Incident Line\')\n
-\n
-# check that we are in the good accounting date\n
-vault = txn.getSource()\n
-\n
-if not txn.Baobab_checkCounterDateOpen(site=vault, date=txn.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
-\n
-\n
-\n
-\n
-price = txn.getSourceTotalAssetPrice()\n
-in_price = txn.getTotalPrice(portal_type=[\'Incoming Cash Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
-out_price = txn.getTotalPrice(portal_type=[\'Outgoing Cash Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
-\n
-\n
-if len(in_list) != 0 and len(out_list) != 0:\n
-  msg = Message(domain = "ui", message="You can\'t have excess and deficit on the document.")\n
-  raise ValidationFailed, (msg,)\n
-elif len(in_list) == 0 and len(out_list) == 0:\n
-  msg = Message(domain = "ui", message="No resource.")\n
-  raise ValidationFailed, (msg,)\n
-elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != price):\n
-  msg = Message(domain = "ui", message="Price differs between document and resource.")\n
-  raise ValidationFailed, (msg,)\n
+return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
+                                                          , cash_detail_dict = cash_detail_dict\n
+                                                          , destination = context.getObject().absolute_url())\n
 </string> </value>
         </item>
         <item>
@@ -112,8 +93,14 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -133,28 +120,17 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>txn</string>
                             <string>_getattr_</string>
-                            <string>in_list</string>
-                            <string>out_list</string>
-                            <string>vault</string>
-                            <string>msg</string>
-                            <string>price</string>
-                            <string>in_price</string>
-                            <string>out_price</string>
-                            <string>len</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>False</string>
+                            <string>cash_detail_dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -171,7 +147,7 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkConsistency</string> </value>
+            <value> <string>CashSortingStatistic_viewCashSortingStatisticLineFastInputAction</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -325,12 +319,8 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>destination_logical_path</string>
-                          <string>Destination Vault</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>site_title</string>
+                          <string>Site</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -362,12 +352,8 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>destination_logical_path</string>
-                          <string>Destination Vault</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>site_title</string>
+                          <string>Site</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -401,17 +387,12 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>destination_site_domain</string>
-                          <string>Destination Vault</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -423,7 +404,11 @@
                       <list>
                         <tuple>
                           <string>start_date</string>
-                          <string>Date</string>
+                          <string>start_date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_total_asset_price</string>
+                          <string>price</string>
                         </tuple>
                       </list>
                     </value>
@@ -437,6 +422,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>float_rounding</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>force_alignment</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>
@@ -448,11 +445,11 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>30</int> </value>
+                    <value> <int>15</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>MonetaryReceptionModule_viewMonetaryReceptionList</string> </value>
+                    <value> <string>CashSortinStatisticModule_viewCashSortingStatisticList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -475,8 +472,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Monetary Reception</string>
-                          <string>Monetary Reception</string>
+                          <string>Cash Sorting Statistic</string>
+                          <string>Cash Sorting Statistic</string>
                         </tuple>
                       </list>
                     </value>
@@ -507,7 +504,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>monetay_reception_list_selection</string> </value>
+                    <value> <string>cash_sorting_statistic_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -546,7 +543,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Monetary Receptions</string> </value>
+                    <value> <string>Cash Sorting Statistics</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
