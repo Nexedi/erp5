@@ -3,6 +3,7 @@
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #               Guy Oswald OBAMA <guy@nexedi.com>
 #               thomas <thomas@nexedi.com>
+#               Mame C.Sall <mame@nexedi.com>
 #
 # This program is Free Software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -28,7 +29,7 @@
 
 from Products.PythonScripts.Utility import allow_class
 from ZPublisher.HTTPRequest import FileUpload
-#from xml.dom.ext.reader import PyExpat
+from xml.dom.ext.reader import PyExpat
 from xml.dom import Node, minidom
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, get_request
@@ -41,7 +42,7 @@ import getopt, sys, os
 from urllib import quote
 
 from Products.ERP5.ERP5Site import ERP5Site
-
+from Products.Formulator.TALESField import TALESMethod
 # defining global variables
 # ANFLAG tag
 # these values can be found in the Scribus document format
@@ -77,6 +78,7 @@ class ManageModule:
     """
     temp_portal_type = object_portal_type_id.replace(' ','')
     object_names = {}
+    real_object_names={}
     # declaring object that generate pdf output
     object_names['view_pdf'] = temp_portal_type + '_view' +\
                     temp_portal_type + 'AsPdf'
@@ -143,8 +145,8 @@ class ManageModule:
     form_list_id = form_view_list_object.id
     form_list = form_view_list_object.restrictedTraverse(form_list_id)
     # defining groups for objects listing
-    form_view_list_object.rename_group('Default','left')
-    default_groups = ['right','center','bottom','hidden']
+    form_view_list_object.rename_group('Default','bottom')
+    default_groups = []
     # adding groups
     for group in default_groups:
       form_view_list_object.add_group(group)
@@ -157,7 +159,6 @@ class ManageModule:
     title = title_module
     field_type = 'ListBox'
     form_view_list_object.manage_addField(id,title,field_type)
-    form_view_list_object.move_field_group(['listbox'], 'left', 'bottom')
     # manage ListBox settings
     values_settings = {}
     values_settings['pt'] = "form_list"
@@ -171,7 +172,8 @@ class ManageModule:
     # adding field columns
     field_attributes.values['columns'] = [('id','ID'),
                                           ('title','Title'),
-                                          ('description','Description')]
+                                          ('description','Description'),
+					  ('translated_simulation_state','State')]
     field_attributes.values['list_action'] = 'list'
     field_attributes.values['search'] = 1
     field_attributes.values['select'] = 1
@@ -184,7 +186,7 @@ class ManageModule:
                     object_names,
                     option_html,
                     global_properties,
-                    object_portal_type,
+                    object_portal_type
                     ):
     """
     create and manage erp5 form to handle object, and update its
@@ -196,6 +198,7 @@ class ManageModule:
     form_view_id_object = skin_folder[object_names['view_id']]
     form_id = form_view_id_object.id
     form = form_view_id_object.restrictedTraverse(form_id)
+    #get the scaling factor
     # managing form groups
     default_groups = []
     if option_html !=1:
@@ -205,6 +208,7 @@ class ManageModule:
     else:
       # using special page positioning convention for
       # pdf-like rendering
+      del default_groups[0:]
       for page_iterator in range(global_properties['page']):
         page_number = 'page_%s' % str(page_iterator)
         default_groups.append(page_number)
@@ -238,8 +242,7 @@ class ManageModule:
     # using the dict declared just above to set the attributes
     for key, value in values.items():
       setattr(form,key,value)
-    return default_groups
-
+    return (default_groups)
 
   security.declarePublic('setFieldsInObjectForm')
   def setFieldsInObjectForm(self,
@@ -286,6 +289,7 @@ class ManageModule:
           field_type = field_values['erp_type']
           field_title = field_values['title']
           field_order = field_values['order']
+          #field_tales = field_values['tales']
           # creating new field in form
           form_view_id_object.manage_addField(field_id,
                                             field_title,
@@ -296,6 +300,15 @@ class ManageModule:
                                              field_order)
           # recover field
           access_field = getattr(form_view_id_object,field_id)
+          if field_type == 'CheckBoxField':
+            test_name= field_id[3:]
+            tales = {field_id : {'default' : 'here'+ '/'+ test_name}}
+
+            forms = [object_names['view_id']]
+            form = form_view_id_object.restrictedTraverse(forms[0])
+            for k, v in tales.items() :
+              if hasattr(form, k) :
+                form[k].manage_tales_xmlrpc(v)
           #if field_type == 'CheckBoxField':
           #  print "    dir(%s) > %s" % (field_id,dir(access_field))
           #  print "---manage_tales > %s \n\n" % dir(access_field.manage_tales)
@@ -465,7 +478,7 @@ class ManageModule:
                        portal_type = str(module_portal_type),
                        title       = title_module)
 
-
+   
 class ManageFiles:
   """
   Manages PDF file, by importing the PDF document and then getting
@@ -532,26 +545,35 @@ class ManageFiles:
               if cell_process_name_list[-1] == 'List':
                 TALES = "python: " + ", ".join(
                      "here.get" + "".join(cell_process_name_list) + "()" )
+
               else:
                 TALES = "python: here.get" + "".join(
                      cell_process_name_list) + "()"
+
             else:
               # PropertySheet and Document 
               if cell_process_name_list[-1] == 'List':
                 TALES = "python: " + ", ".join(
                       "here.getProperty('" + cell_name[3:] + "')")
+
               else:
                 TALES = "python: here.getProperty('" + cell_name[3:] +"')"
             print "   %s > %s " % (cell_name,TALES)
             c.setCellTALES(cell_name,TALES)
 
+  def getPDFFile(self, file_descriptor):
+    """ Get file content """
 
+    return file_descriptor.open()
 
   security.declarePublic('setBackgroundPictures')
   def setBackgroundPictures(self,
                             pdf_file,
                             object_names,
-                            skin_folder
+                            skin_folder,
+	                    desired_height,
+	                    desired_width,
+	                    resolution
                             ):
     """
     extract background pictures from pdf file and convert them
@@ -566,22 +588,50 @@ class ManageFiles:
     image (i.e page_0) and returns them.
     """
     import commands
+    import tempfile
+    from tempfile import NamedTemporaryFile
     # opening new file on HDD to save PDF content
-    temp_pdf = open('/tmp/ScribusUtilsTempPDF','w')
+    #temp_test= NamedTemporaryFile(mode= "w+b")
+    #tempFile= NamedTemporaryFile().name
+    ScribusUtilsTempPDF= NamedTemporaryFile(mode= "w+b")
+    ScribusUtilstempsPDFName= NamedTemporaryFile().name
+    # going to the begining of the input file
+
+    # XXX - this is really bad because the appropriate 
+    # way to run zope is to create a local instance
+    # it should be removed XXX - some people
+    # do this just to make sure "it works" 
+    # but it is not even multiplatform
+    os.putenv('TMPDIR', '/tmp')
+    # saving content
+    temp_pdf = open(ScribusUtilstempsPDFName,'w')
+
     # going to the begining of the input file
     pdf_file.seek(0)
     # saving content
     temp_pdf.write(pdf_file.read())
     temp_pdf.close()
+
     # launching first soft to convert from PDF to PPM
-    result = commands.getstatusoutput( \
-         'pdftoppm -r 72 /tmp/ScribusUtilsTempPDF /tmp/ScribusUtilsTempPPM')
+    ScribusUtilstempsPPM = NamedTemporaryFile(mode="w+b")
+    ScribusUtilstempsPPMName = NamedTemporaryFile().name
+    result = commands.getstatusoutput('pdftoppm -r %s %s %s' % (resolution, ScribusUtilstempsPDFName, ScribusUtilstempsPPMName))
     # launching second soft to convert from PPM to JPEG
-    result = commands.getstatusoutput( \
-         'convert /tmp/ScribusUtilsTempPPM* jpg:/tmp/ScribusUtilsTempJPG')
+    ScribusUtilstempsJPG = NamedTemporaryFile(mode="w+b")
+    ScribusUtilstempsJPGName = NamedTemporaryFile().name
+    
+    original_result= commands.getstatusoutput('identify %s' % (ScribusUtilstempsPDFName))
+    result = commands.getstatusoutput('convert -density %s -resize %sx%s %s %s' % (resolution,desired_width,desired_height,ScribusUtilstempsPPMName + '*', 'jpg:' + ScribusUtilstempsJPGName))
+    
+    number = ScribusUtilstempsJPGName.find('tmp')
+    directory_tmp= ScribusUtilstempsJPGName[:(number+4)]
+
     # getting list of JPG output files
-    result = commands.getstatusoutput( \
-         'ls /tmp/ | grep ScribusUtilsTempJPG')
+    result = commands.getstatusoutput('ls %s | grep  %s' % (directory_tmp, ScribusUtilstempsJPGName.split('/')[-1]))
+    # deleting all temporary files
+    # getting the original size of the file
+    real_size_x= 0
+    real_size_y= 0
     image_number = 0
     if result[1] != '':
       # result[1] contains the output string from the command,
@@ -594,17 +644,57 @@ class ManageFiles:
         addImage(form_page_id,temp_jpg,"background image")
         image_number += 1
     # deleting all temporary files
-    result = commands.getstatusoutput('rm -f /tmp/ScribusUtilsTemp*')
+    result = commands.getstatusoutput('rm -f /tmp/tmp*') # JPS-XXX Extremely dangerous
     # open page_0's final background picture to recover size_x and size_y
     final_image = getattr(skin_folder, object_names['page'] + '0')
-    size_x = final_image.getProperty('height')
-    size_y = final_image.getProperty('width')
-    # return size
-    #print size_x
-    #print size_y
-    return (size_x, size_y)
+    size_x = desired_height
+    size_y = desired_width
+    
+    return (size_x, size_y,real_size_x,real_size_y)
 
-
+  security.declarePublic('getPageattributes')
+  def getPageattributes (self,
+                    global_properties,
+	            pdf_file
+                    ):
+    import commands
+    from tempfile import NamedTemporaryFile
+    # opening new file on HDD to save PDF content
+    ScribusUtilsOriginalTempPDF= NamedTemporaryFile(mode= "w+b")
+    ScribusUtilsOriginaltempsPDFName= NamedTemporaryFile().name
+    
+    # going to the begining of the input file
+    
+    # saving content
+    temp_pdf = open(ScribusUtilsOriginaltempsPDFName,'w')
+    # going to the begining of the input file
+    pdf_file.seek(0)
+    # saving content
+    temp_pdf.write(pdf_file.read())
+    temp_pdf.close()	  
+    width_groups = []
+    height_groups = []
+    # launching first soft to convert from PDF to PPM
+    ScribusUtilsOriginaltempsPPM = NamedTemporaryFile(mode="w+b")
+    ScribusUtilsOriginaltempsPPMName = NamedTemporaryFile().name
+    original_result = commands.getstatusoutput('pdftoppm -r %s %s %s' % (72, ScribusUtilsOriginaltempsPDFName, ScribusUtilsOriginaltempsPPMName))
+    original_result= commands.getstatusoutput('identify %s' % (ScribusUtilsOriginaltempsPPMName + '*'))
+	 	  
+    pg_nbr = len(original_result[1].split('\n'))
+    real_size_x = {}
+    real_size_y = {}
+    for i in range(0,pg_nbr):
+      real_size_x[i]= \
+         float(original_result[1].split('\n')[i].split(' ')[2].split('x')[1])
+      real_size_y[i]= \
+         float(original_result[1].split('\n')[i].split(' ')[2].split('x')[0])
+    for page_iterator in range(global_properties['page']):  
+      actual_page_height = real_size_x[page_iterator]
+      actual_page_width = real_size_y[page_iterator]
+      width_groups.append(actual_page_width)
+      height_groups.append(actual_page_height)
+    return (width_groups,height_groups)
+    
   security.declarePublic('setPropertySheetAndDocument')
   def setPropertySheetAndDocument(self,
                        global_properties,
@@ -695,14 +785,16 @@ class ManageCSS:
     # return dict
     return properties_css_dict
 
-
-
   security.declarePublic('setPageProperties')
   def setPageProperties(self
-          ,properties_css_dict
-          ,page_iterator
+          ,properties_css_dict,
+          page_iterator
           ,page_id
-          ,page_height):
+          ,page_height,
+	  page_width,
+	  original_page_width,
+	  original_page_height,
+	  width_groups,height_groups):
     """
     recover all CSS data relative to the current page and save these
     information in the output dict
@@ -710,6 +802,7 @@ class ManageCSS:
     # Processing current page for CSS data
     # getting properties
     properties_css_page = {}
+    properties_page = {}
     properties_css_page['position'] = 'relative'
     # creating image class for background
     properties_css_background = {}
@@ -721,14 +814,34 @@ class ManageCSS:
     if page_iterator == 0:
       # margin-top = 0 (first page)
       properties_css_page['margin-top'] = "0px"
+      properties_css_background['height'] = \
+        str(page_height) + 'px'
+      properties_css_background['width']= \
+        str (page_width) + 'px'
+      properties_page['actual_width'] = width_groups[page_iterator]
+      properties_page['actual_height'] = height_groups[page_iterator]
+      actual_width = width_groups[page_iterator]
+      actual_height = height_groups[page_iterator] 	
+      #properties_css_background['margin-top'] = \
+      #   str((y_pos -10))+ 'px'
+      #properties_css_background['margin-left']= \
+      #   str((x_pos- 5))+   'px'	
     else:
       # margin-top = page height
-      properties_css_page['margin-top'] = "%spx" % (page_height + 20)
+      properties_css_page['margin-top'] = "%spx" %(page_height + 20)
+      properties_page['actual_width'] = width_groups[page_iterator]
+      properties_page['actual_height'] = height_groups[page_iterator] 
+      actual_width = width_groups[page_iterator-1]
+      actual_height = height_groups[page_iterator -1]
+      properties_css_background['height'] = \
+        str(page_height) + 'px'
+      properties_css_background['width']= \
+        str (page_width) + 'px'
     # adding properties dict to global dicts
     properties_css_dict['head'][page_id] = properties_css_page
     properties_css_dict['head'][background_id] = properties_css_background
     # return updated dict
-    return properties_css_dict
+    return (properties_css_dict,properties_page,actual_width,actual_height)
 
 
 
@@ -739,25 +852,35 @@ class ManageCSS:
             ,properties_css_dict
             ,field
             ,page_width
-            ,page_height
-            ,page_iterator
+            ,page_height,
+            page_iterator
             ,page_gap
-            ,keep_page):
+            ,keep_page,
+	  original_page_width,
+	  original_page_height,properties_page,actual_width,actual_height):
     """
     recover all CSS data relative to the current page_object (field)
     and save these informations in the output dict
     """
     (field_name, properties_field) = field
     print "   => %s : %s" % (field_name,properties_field['rendering'])
+    	    
     # updating field properties if necessary
     if keep_page == 1:
       # document format is 1.3.* and define object position from the top-left
       # corner of the first page, whereas the field position is expected to
       # be found from the current's page top left corner.
       # that's why Y position must be updated
+      
+      scaling_factor1= (page_width)/(properties_page['actual_width'])		
+      scaling_factor2= (page_height)/(properties_page['actual_height'])
+      
       properties_field['position_y'] = \
          str(float(properties_field['position_y']) - \
-         (page_height + page_gap)* page_iterator)
+         (actual_height + page_gap)* page_iterator)
+      
+
+			 
     # Processing object for CSS data
     # declaring dict containing all css data
     # _stand for general display
@@ -776,25 +899,35 @@ class ManageCSS:
     properties_css_object_err_d['padding'] = '0px'
     # getting field height
     properties_css_object_stand['height'] = \
-        str(properties_field['size_y']) + 'px'
+        str(scaling_factor2 *float(properties_field['size_y'])) + 'px'
     properties_css_object_error['height'] = \
-        str(properties_field['size_y']) + 'px'
+        str(scaling_factor2 *float(properties_field['size_y'])) + 'px'
     # defining font-size from height - 2 (this value seems to have a good
     # rendering on Mozilla and Konqueror)
     # do not match for TextArea (as it is a multiline object)
     if properties_field['type'] != 'TextAreaField':
+      if float(properties_field['size_y']) > 8.0:	    
+        properties_css_object_stand['font-size'] = \
+          str((scaling_factor2 *float(properties_field['size_y']))-5.5 ) + 'px'
+        properties_css_object_error['font-size'] = \
+          str((scaling_factor2 *float(properties_field['size_y']))-5.5) + 'px'
+      else:
+	properties_css_object_stand['font-size'] = \
+          str((scaling_factor2 *float(properties_field['size_y']))-3.5 ) + 'px'
+        properties_css_object_error['font-size'] = \
+          str((scaling_factor2 *float(properties_field['size_y']))-3.5) + 'px'    
+    else:
       properties_css_object_stand['font-size'] = \
-        str(int(properties_field['size_y']) - 2) + 'px'
+        str(12) + 'px'
       properties_css_object_error['font-size'] = \
-        str(int(properties_field['size_y']) - 2) + 'px'
-    # getting field position
+        str(12) + 'px'
     properties_css_object_err_d['margin-left'] = str(page_width + 20 ) + 'px'
     properties_css_object_stand['margin-top'] = \
-        str(properties_field['position_y']) + 'px'
+      str((scaling_factor2 *float(properties_field['position_y']))) + 'px'
     properties_css_object_error['margin-top'] = \
-        str(properties_field['position_y']) + 'px'
+      str((scaling_factor2 *float(properties_field['position_y']))) + 'px'
     properties_css_object_err_d['margin-top'] = \
-        str(properties_field['position_y']) + 'px'
+      str((scaling_factor2 *float(properties_field['position_y']))) + 'px'
     # adding special text_color for text error
     properties_css_object_err_d['color'] = 'rgb(255,0,0)'
     # then getting additional properties
@@ -804,8 +937,11 @@ class ManageCSS:
       # color = 'green' when error
       properties_css_object_stand['background'] = 'rgb(192,192,255)'
       properties_css_object_error['background'] = 'rgb(128,128,255)'
+    elif properties_field['type'] != 'TextAreaField':
+      properties_css_object_stand['background'] = '#F5F5DC'
+      properties_css_object_error['background'] = 'rgb(255,64,64)'      
     else:
-      properties_css_object_stand['background'] = '#F6FFFF'
+      properties_css_object_stand['background'] = '#F5F5DC'
       properties_css_object_error['background'] = 'rgb(255,64,64)'
 
     # add completed properties (in our case only the class rendering the text
@@ -819,13 +955,13 @@ class ManageCSS:
       # single rendering (like StringField, TextArea, etc.).
       # Do not need any special treatment
       properties_css_object_stand['width'] = \
-        str(properties_field['size_x']) + 'px'
+        str(scaling_factor1 *float(properties_field['size_x'])) + 'px'
       properties_css_object_error['width'] = \
-        str(properties_field['size_x']) + 'px'
+        str(scaling_factor1 *float(properties_field['size_x'])) + 'px'
       properties_css_object_stand['margin-left'] = \
-        str(properties_field['position_x']) + 'px'
+        str((scaling_factor1 *float(properties_field['position_x']))) + 'px'
       properties_css_object_error['margin-left'] = \
-        str(properties_field['position_x']) + 'px'
+        str((scaling_factor1 *float(properties_field['position_x']))) + 'px'
       # in case of checkboxfield, '_class_2' is used because field is rendered
       # as two fields, the first one hidden. (supports xhtml_style)
       # UPDATE : modified because need to keep compatibility with html_style
@@ -836,7 +972,6 @@ class ManageCSS:
       # adding all these properties to the global dicts
       properties_css_dict['standard'][field_id] = properties_css_object_stand
       properties_css_dict['error'][field_id] = properties_css_object_error
-
     else:
       sub_field_dict = {}
       field_dict = {}
@@ -853,16 +988,16 @@ class ManageCSS:
         # processing main StringField
         field_dict[1] = {}
         field_dict[1]['width'] = \
-           str(int(properties_field['size_x']) / 2) + 'px'
+           str(scaling_factor1*(float(properties_field['size_x']) / 2)) + 'px'
         field_dict[1]['margin-left'] = \
-           str(properties_field['position_x']) + 'px'
+           str(scaling_factor1*float(properties_field['position_x'])) + 'px'
 
         # processing secondary input picture
         field_dict[2] = {}
-        field_dict[2]['width'] = str(int(properties_field['size_x']) /2) + 'px'
+        field_dict[2]['width'] = str(scaling_factor1*(float(properties_field['size_x']) /2)) + 'px'
         field_dict[2]['margin-left'] = \
-              str(int(properties_field['size_x']) /2  +\
-              int(properties_field['position_x'])) + 'px'
+              str(scaling_factor1*(float(properties_field['size_x']) /2  +\
+              float(properties_field['position_x']))) + 'px'
       elif properties_field['type'] == 'DateTimeField':
         # rendering DateTimeField, composed at least of three input
         # areas, and their order can be changed
@@ -885,54 +1020,54 @@ class ManageCSS:
           print "   Option : Date Only"
           field_nb = 3
           # same as before but without hours and minutes
-          width_part = int(float(properties_field['size_x']) / 4)
+          width_part = int((float(properties_field['size_x']) / 4))
 
 
         print "  input_order=%s" % properties_field['input_order']
         # defining global field rendering (for Date), ignoring for the moment
         # the whole part about the time
         if properties_field['input_order'] in \
-               ['day/month/year','dmy','month/day/year','mdy']:
+             ['day/month/year','dmy','month/day/year','mdy']:
           # specified input order. must be dd/mm/yyyy or mm/dd/yyyy (year is
           # the last field).
           # processing first field
           field_dict[1] = {}
-          field_dict[1]['width'] = str(width_part) + 'px'
+          field_dict[1]['width'] = str(scaling_factor1*float(width_part)) + 'px'
           field_dict[1]['margin-left'] = \
-             str(properties_field['position_x']) + 'px'
+             str(scaling_factor1 *float(properties_field['position_x'])) + 'px'
 
           # processing second field
           field_dict[2] = {}
-          field_dict[2]['width'] = str(width_part) + 'px'
+          field_dict[2]['width'] = str(scaling_factor1*float(width_part)) + 'px'
           field_dict[2]['margin-left'] = \
-             str(int(properties_field['position_x']) + width_part) + 'px'
+             str(scaling_factor1 *(float(properties_field['position_x']) + width_part)) + 'px'
 
           # processing last field
           field_dict[3] = {}
-          field_dict[3]['width'] = str(width_part*2) + 'px'
+          field_dict[3]['width'] = str(scaling_factor1*float(width_part*2)) + 'px'
           field_dict[3]['margin-left'] = \
-             str(int(properties_field['position_x']) + width_part*2) + 'px'
+             str(scaling_factor1 *(float(properties_field['position_x']) + width_part*2)) + 'px'
         else:
           # all other cases, including default one (year/month/day)
           width_part = int(int(properties_field['size_x']) / 4)
 
           # processing year field
           field_dict[1] = {}
-          field_dict[1]['width'] = str(width_part *2) + 'px'
+          field_dict[1]['width'] = str(scaling_factor1*float(width_part *2)) + 'px'
           field_dict[1]['margin-left'] = \
-             str(properties_field['position_x']) + 'px'
+             str(scaling_factor1 *float(properties_field['position_x'])) + 'px'
 
           # processing second field (two digits only)
           field_dict[2] = {}
-          field_dict[2]['width'] = str(width_part) + 'px'
+          field_dict[2]['width'] = str(scaling_factor1*float(width_part)) + 'px'
           field_dict[2]['margin-left'] = \
-            str(int(properties_field['position_x']) + width_part*2) + 'px'
+            str(scaling_factor1 *(float(properties_field['position_x']) + width_part*2)) + 'px'
 
           # processing day field
           field_dict[3] = {}
-          field_dict[3]['width'] = str(width_part) + 'px'
+          field_dict[3]['width'] = str(scaling_factor1*float(width_part)) + 'px'
           field_dict[3]['margin-left'] = \
-            str(int(properties_field['position_x']) + width_part*3) + 'px'
+            str(scaling_factor1 *(float(properties_field['position_x']) + width_part*3)) + 'px'
 
 
         # rendering time if necessary
@@ -989,12 +1124,13 @@ class ManageCSS:
         print "    class=%s" % class_name
         for prop_id in properties_css_dict['standard'][class_name].keys():
           print "      prop:%s=%s" % (prop_id,properties_css_dict['standard'][class_name][prop_id])
+	
       
     return properties_css_dict
 
-    
-    
-    
+  
+ 
+  
   security.declarePublic('setFinalProperties')
   def setFinalProperties(self
                         ,properties_css_dict
@@ -1215,23 +1351,22 @@ class ScribusParser:
         return (returned_page_dict,keep_page,0)
 
         # end parsing document version 1.2.*
-        
+
       else:
         print " found Scribus Doucment format 1.3"
         # assuming version is compliant with 1.3.* specifications
 
-	keep_page = 1
-
-	
+        keep_page = 1
 
         # first of all getting DOCUMENT element to recover Scratch coordinates
         document_list = dom_root.getElementsByTagName("DOCUMENT")
         scratch_left = int(float(document_list[0].attributes["ScratchLeft"].value))
         scratch_top  = int(float(document_list[0].attributes["ScratchTop"].value))
-	page_gap = int(float(document_list[0].attributes["BORDERTOP"].value))
-
+        page_gap = int(float(document_list[0].attributes["BORDERTOP"].value))
+        scribus_page_width= int(float(document_list[0].attributes["PAGEWIDTH"].value))
+        scribus_page_height = \
+           int(float(document_list[0].attributes["PAGEHEIGHT"].value)) 
         print " DOCUMENT > scratch_left = %s      scratch_top = %s" % (scratch_left,scratch_top)
-        
         #page_list = dom_root.getElementsByTagName("PAGE")
         page_object_list = dom_root.getElementsByTagName("PAGEOBJECT")
 
@@ -1322,34 +1457,36 @@ class ScribusParser:
       # nb attribte are added t othe end of the 'has nb' list
       nb_property_nbkey_list = []
       nb_property_nonbkey_list = []
-      
+
       # declaring output object
       returned_object_dict = {}
-      
+
       # if page_content.haskey('my_fax_field')
       # print "my_fax_field"
       for object_data in page_content:
         # iterating through 'PAGEOBJECT' of the page
         # id = object_name
         # content = object_content
+
         object_name = object_data['ANNAME']
         del object_data['ANNAME']
         object_content = object_data
-
+        multiline_field= 0
+        #multiline_field= object_content['ANFLAG']
         print "  => PAGEOBJECT = " + str(object_name)
         # recovering other attributes list (string format) from 'ANTOOLTIP'
         text_tooltipfield_properties = \
            sp.getObjectTooltipProperty('ANTOOLTIP','',object_name,object_content)
+        #recovering the page attributes
+
         #declaring output file
         tooltipfield_properties_dict = {}
         #splitting the different attributes
         tooltipfield_properties_list =  \
                     text_tooltipfield_properties.split('#')
-        
+
         print "      " + str(tooltipfield_properties_list)
-        
-        
-        
+
         # test if first argument is nb according to previous
         # naming-conventions i.e composed of three digits without
         # id 'nb:' written
@@ -1387,6 +1524,7 @@ class ScribusParser:
         #and 'ANTOOLTIP'
         #
         object_properties = {} 
+	page_properties = {}
         # getting object position and size
         object_properties['position_x'] = \
               sp.getObjectTooltipProperty('XPOS',
@@ -1398,6 +1536,7 @@ class ScribusParser:
                                           '0',
                                           object_name,
                                           object_content)
+					  
         object_properties['size_x'] = \
              sp.getObjectTooltipProperty('WIDTH',
                                          '100',
@@ -1405,10 +1544,11 @@ class ScribusParser:
                                          object_content)
         object_properties['size_y'] = \
               sp.getObjectTooltipProperty('HEIGHT',
-                                          '17',
+                                           '17',
                                           object_name,
                                           object_content)
-
+				  
+       
         
         # converting values to integer-compliant to prevent errors
         # when using them for that converting from 'str' -> 'float'
@@ -1423,8 +1563,8 @@ class ScribusParser:
               str(int(float(object_properties['size_x'])))
         object_properties['size_y'] = \
               str(int(float(object_properties['size_y'])))
-        
-        
+	
+       
         # getting object title
         # object title can only be user-specified in the 'tooltip' dict
         object_properties['title'] = \
@@ -1775,7 +1915,7 @@ class ScribusParser:
     
     # returning final dict containing all the modified data
     print "  => end ScribusParser.getPropertiesConversion"
-    return returned_page_dict
+    return (returned_page_dict)
 
 
 
@@ -1794,6 +1934,8 @@ class ScribusParser:
     global_properties = {}
     global_properties['object'] = global_object_dict
     global_properties['page'] = global_page_number
+    global_properties['page_width']= 595
+    global_properties['page_height']= 842
     # return final main dict
     return global_properties
 
@@ -1896,6 +2038,10 @@ class ScribusParser:
   def getContentFile(self, file_descriptor):
     """ Get file content """
     return file_descriptor.read()
+  security.declareProtected('Import/Export objects', 'getFileOpen')
+  def getFileOpen(self, file_descriptor):
+    """ Get file content """
+    return file_descriptor.open('r')
   
 InitializeClass(ScribusParser)
 allow_class(ScribusParser)  

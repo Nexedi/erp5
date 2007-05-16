@@ -1,7 +1,7 @@
 def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
         portal_skins_folder=None, object_portal_type=None, object_title=None, module_id=None,
         module_title=None, selection_index=None, selection_name=None, import_scribus_file=None,
-        import_pdf_file=None, option_html=None, import_image_1=None, import_image_2=None,
+        import_pdf_file=None, option_html=None,desired_height=None, desired_width=None, import_image_1=None, import_image_2=None,
         import_image_3=None, **kw) :
   """ Creates a module, portal_type and ERP5Form from a scribus and
       PDFForm file"""
@@ -27,29 +27,28 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
   ManageCSS = ManageCSS()
   generator = LocalGenerator()
 
-
   # DECLARING VARIABLES
-  def_lineNumberInList = 20
-  def_colorRequired = 'rgb(192,192,255)'
-  def_colorRequiredError = 'rgb(128,128,255)'
-  def_color = '#F6FFFF'
-  def_colorError = 'rgb(255,64,64)'
-  
-
+  def_lineNumberInList = 20 # JPS-XXX - hardcoded
+  def_colorRequired = 'rgb(192,192,255)' # JPS-XXX - hardcoded
+  def_colorRequiredError = 'rgb(128,128,255)' # JPS-XXX - hardcoded
+  def_color = '#F6FFFF' # JPS-XXX - hardcoded
+  def_colorError = 'rgb(255,64,64)' # JPS-XXX - hardcoded
 
   # recovering objects
   portal = context.getPortalObject()
   portal_types = portal.portal_types
   object_portal_type_id = object_portal_type
-
+  desired_height= desired_height
+  desired_width= desired_width
+  resolution= 300 # JPS-XXX - hardcoded
+  option_html = option_html
 
   # DECLARING NAMES
   # declaring names for ERP5 objects, such as Form, DTML Document, etc.
   # these names are stored in a dict (object_names)
   object_names = ManageModule.setObjectNames(object_portal_type_id,
                                              object_title)
-  
-  
+
   # CREATING NEW PORTAL TYPE FOR THE MODULE
   # Manage the creation of a ne portal_type for the module
   # (module is not saved for the moment, but properties can be
@@ -66,7 +65,7 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
   skin_folder = ManageModule.setSkinFolder(portal,
                                            portal_skins_folder)
       
-      
+     
   # ERP FORM LIST PROCESSING
   # Create ERP5 Form in order to view the module
   # set up the factory based on skin_folder
@@ -94,6 +93,7 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
   # parsing, allowing them to be updated when needed
   # and used if necessary.
   global_properties = ScribusParser.initFieldDict()
+  
 
   
   # PARSER VARIABLES DECLARATION
@@ -105,14 +105,11 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
   properties_css_dict = {}
   # init page number
   page_number_int = 0
-
-
+  scale_factor=0
   # import scribus file
   # take the input ScribusFile and read the content
   xml_string = ScribusParser.getContentFile(import_scribus_file)
-  
   if xml_string == None:
-    LOG("ScribusParser",1,"Scribus file is empty !")
     print "no field was defined in the Scribus file"
     pass
   else:
@@ -120,7 +117,6 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
     # GETTING FULL SCRIBUS DOCUMENT PROPERTIES
     # get string from ScribusFile content
     output_string = str(xml_string)
-    
     
     print " createmodule > ScribusParser.getXmlObjectPropertiesDict"
     # building a tree from the output string elaborated from the
@@ -141,8 +137,11 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
     # to extract all the usefull properties and organize elements. Then check
     # attributes to get properties values.
     # This represents the main process of the script.
-    widget_properties = ScribusParser.getPropertiesConversionDict(text_field_list)
+    (widget_properties) = ScribusParser.getPropertiesConversionDict(text_field_list)
+
     print " createmodule < ScribusParser.getPropertiesConversionDict\n"
+    
+   
     
 
     # testing if final rendering is PDF-like
@@ -153,35 +152,30 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
       # format (JPG) and add them to the skin folder as Image objects.
       # used only with option_html == 1
       # recover image_size
-      image_size = ManageFiles.setBackgroundPictures(import_pdf_file,
-                                        object_names,
-                                        skin_folder)
-      page_height, page_width = image_size
+      image_size=ManageFiles.setBackgroundPictures(import_pdf_file,object_names,skin_folder,desired_height,desired_width,resolution)
+      
+      page_height,page_width,original_page_height,original_page_width = image_size
+      
       print "   height = " + str(page_height)
       print "   width = " + str(page_width)
       print " createmodule < background generated\n"    
-      
       
     # add field from OrderedWidgetProperties in ERP5 Module created
     # radiofield_widget_properties = {}
     position = {}
     # personal_properties_list is used to create PropertySheet
     personal_properties_list = []
+
     # recovering number of pages
     global_properties['page'] = len(widget_properties)  
-    
-    
-    
+
     # CSS FILE INIT
     # init the CSS dict by creating sub-dicts to store various information
     # i.e : 'head', 'standard' ,'error', etc.
     # these sub-dicts are stored in the properties_css_dict
     properties_css_dict = ManageCSS.setInit()
 
-       
-    
     # BEGINING DATA INTERPRETATION
-    LOG("ScribusParser",0,"begining interpretation of data")
     print " createmodule > begining data interpretation"
     #iterating pages
     #print "   %s" % int(global_properties['page'])
@@ -189,31 +183,31 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
       page_number = str(page_iterator)
       page_content = widget_properties[page_number]
       page_id = "page_" + page_number
-      
-      
-      
+
       if option_html == 1:
         # CSS PAGE DEFINITION (PAGE AND BACKGROUND IMAGE)
         # get CSS class properties relative to the actual page
         # (background picture position, picture size, etc.)
         # and add them to the css dict
-        properties_css_dict = ManageCSS.setPageProperties(
+  width_groups,height_groups = ManageFiles.getPageattributes(
+                                              global_properties,
+                                              import_pdf_file)
+        properties_css_dict,properties_page,actual_width,actual_height = ManageCSS.setPageProperties(
                                    properties_css_dict,
                                    page_iterator,
                                    page_id,
-                                   page_height)
-        
-       
-      
-          
-          
+                                   page_height,
+           page_width,
+           original_page_width,
+           original_page_height,width_groups,height_groups)
+
       # RESUME DATA INTERPRETATION
       # iterating pageobjects in page
       for index in range(len(page_content)):
         (id, properties_field) = page_content[index]
-        # testing each page_content              
+        # testing each page_content
         if properties_field.has_key('type'):
-          
+
           if option_html ==1:
             # CSS FIELD PROPERTIES
             # get CSS class properties related to the actual page_object
@@ -223,19 +217,24 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
                                            properties_css_dict,
                                            page_content[index],
                                            page_width,
-					   page_height,
-					   page_iterator,
-					   page_gap,
-					   keep_page)
+             page_height,
+             page_iterator,
+             page_gap,
+             keep_page,
+             0,
+             0,
+             properties_page,actual_width,actual_height)
+
 
           # recover useful page_object attributes from scribus dict
           # to be able to create and update correctly the fields
           # composing the form
+
           ScribusParser.getFieldAttributes(page_content[index],
                                            option_html,
                                            page_id,
                                            global_properties)
-          
+
     # CSS CLASS (generateOutputContent)
     if option_html ==1:
 
@@ -248,7 +247,7 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
 
       # save CSS string content into ERP5
       ManageFiles.setCSSFile(factory,object_names['css'],form_css_content)
-
+      
 
 
 
@@ -270,13 +269,15 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
 
   # create fields corresponding to the page_objects
   # recovered from the scribus file
+  
   ManageModule.setFieldsInObjectForm(skin_folder,
                                      object_names,
                                      default_groups,
                                      global_properties,
                                      option_html
                                      )
-  print " createmodue < fields created in ERP5 Form\n"
+  
+  print " createmodule < fields created in ERP5 Form\n"
 
                                      
                                      
@@ -296,6 +297,7 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
 
 
   # PROPERTYSHEET AND DOCUMENT CREATION
+  
   print " createmodule > PropertySheet and Document creation"
   # recover personal properties and save them in a PropertySheet
   # then create the Document related to the object
@@ -346,4 +348,4 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
                             )
 
   # redirect
-  portal.REQUEST.RESPONSE.redirect( redirect_url )
+  portal.REQUEST.RESPONSE.redirect(redirect_url )
