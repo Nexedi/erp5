@@ -100,17 +100,17 @@ for workflow_item in workflow_item_list:\n
     if key.endswith(\'state\'): \n
       key = \'state\'\n
       if display:\n
-        value = wf_states[value].title\n
+        value = wf_states.get(value, None) and wf_states[value].title\n
       else:\n
-        value = wf_states[value].id\n
+        value = wf_states.get(value, None) and wf_states[value].id\n
     if key == \'action\':\n
       if value != \'\' and value is not None:\n
         if value == "\'edit\'":\n
           value = "edit"\n
         if display:\n
-          value = wf_transitions[value].title or wf_transitions[value].actbox_name or value\n
+          value = wf_transitions.get(value, None) and (wf_transitions[value].title or wf_transitions[value].actbox_name) or value\n
         else:\n
-          value = wf_transitions[value].id or wf_transitions[value].actbox_name or value\n
+          value = wf_transitions.get(value, None) and (wf_transitions[value].id or wf_transitions[value].actbox_name) or value\n
     if display:\n
       if key == \'error_message\' and not same_type(value, \'\'):\n
         value = \'%s\' %value\n
@@ -118,6 +118,8 @@ for workflow_item in workflow_item_list:\n
         value = context.Localizer.erp5_ui.gettext(value)\n
       elif same_type(value, \'\') and key in ( \'action\', \'state\' ): \n
         value = context.Localizer.erp5_ui.gettext(value)\n
+    if value is None:\n
+      value = \'Does not exist\'\n
     o.setProperty(key, value)\n
  \n
   # record current serial as "next serial" for the previous revision\n
@@ -138,6 +140,12 @@ return result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
