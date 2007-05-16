@@ -928,7 +928,6 @@ class PlanningBoxWidget(Widget.Widget):
     external PageTemplate (or DTML depending) to render the CSS code
     relative to the structure that need to be rendered
     """
-
     here = REQUEST['here']
     # build structure
     # render_structure will call all method necessary to build the entire
@@ -936,7 +935,6 @@ class PlanningBoxWidget(Widget.Widget):
     # creates and fill up self.basic, self.planning and self.build_error_list
     self.render_structure(field=field, key=key, value=value,
                                     REQUEST=REQUEST, here=here)
-
     # getting CSS script generator
     planning_css_method = getattr(REQUEST['here'],'planning_css')
     # recover CSS data buy calling DTML document
@@ -975,7 +973,6 @@ class PlanningBoxWidget(Widget.Widget):
         """
     # XXX testing : uncoment to put selection to null => used for debugging
     #here.portal_selections.setSelectionFor(selection_name, None)
-
     ####### DATA DEFINITION #######
     self.build_error_list = None
     # recovering usefull planning properties
@@ -1194,7 +1191,7 @@ class BasicStructure:
       selection_report_current = ()
     else:
       selection_report_current = self.selection.getReportList()
-
+    
     # building report_tree_list
     report_tree_list = makeTreeList(here=self.here, form=self.form,
                                     root_dict=None,
@@ -1271,7 +1268,7 @@ class BasicStructure:
 
         # processing all cases
         self.selection.edit(params = kw)
-
+        
         # recovering object list
         if self.list_method not in (None,''):
           # valid list_method has been found
@@ -1713,7 +1710,7 @@ class BasicStructure:
                                 secondary_axis_stop  = group_stop,
                                 property_dict = property_dict)
 
-        if object_list != None:
+        if object_list not in [None, []]:
           child_group.setBasicActivities(object_list,self.list_error,
                                          secondary_axis_bounds)
 
@@ -1722,7 +1719,7 @@ class BasicStructure:
         except (AttributeError):
           self.basic_group_list = []
           self.basic_group_list.append(child_group)
-
+	
       return 1
 
 
@@ -2491,7 +2488,6 @@ class Activity:
         # passive
         block_color = '#D1E8FF'
         block_link = ''
-
       new_block = Bloc(name= block_name,color=block_color,link=block_link,
                        number = block_number,
                        calendar_view=self.calendar_view, parent_activity=self,
