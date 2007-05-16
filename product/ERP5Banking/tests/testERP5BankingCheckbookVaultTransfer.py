@@ -87,6 +87,7 @@ class TestERP5BankingCheckbookVaultTransferMixin:
     self.checkbook_reception = self.checkbook_reception_module.newContent(
                      id='checkbook_reception', portal_type='Checkbook Reception',
                      source_value=None, destination_value=self.reception_destination_site,
+                     destination_payment_value=self.bank_account_1,
                      description='test',
                      start_date=(self.date-4))
     # get the checkbook reception document
