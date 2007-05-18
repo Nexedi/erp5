@@ -346,7 +346,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                       </list>
@@ -430,7 +430,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>10</int> </value>
+                    <value> <int>30</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -451,6 +451,10 @@
                 <item>
                     <key> <string>not_viewable</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
