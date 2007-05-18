@@ -71,59 +71,96 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-Used by email ingestor (Document_ingestEmail) to notify the user\n
-about ingestion of a document (can also be used by other ingestion channels).\n
-Checks consistency and lets the user know if everything is ok (this is a bit of a duplication\n
-because consistency is checked also upon an attempt to validate).\n
+  Used by email ingestor (Document_ingestEmail) to notify the user\n
+  about ingestion of a document (can also be used by other ingestion channels).\n
+  Checks consistency and lets the user know if everything is ok (this is a bit of a duplication\n
+  because consistency is checked also upon an attempt to validate).\n
 \n
-Preferences decide if the notification is sent always, only if something is wrong or never.\n
+  Preferences decide if the notification is sent always, only if something is wrong or never.\n
 \n
-Notifcation contains url of the document, so that one can click and do something.\n
+  Notifcation contains url of the document, so that one can click and do something.\n
 """\n
 \n
-pref = context.portal_preferences.getPreferredDocumentIngestionEmailNotification()\n
+# check if we send or not email at all\n
+original_email = kw.get(\'original_email\', None)\n
+portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
+portal_catalog = portal.portal_catalog\n
+pref = portal_preferences.getPreferredDocumentIngestionEmailNotification()\n
 if pref is not None and len(pref) != 0:\n
   pref=pref[0]\n
-  if pref == \'never\': return\n
-\n
-ob = kw[\'object\']\n
-if ob.getPortalType() == \'Memo\': # we don\'t check constistency for Memo XXX use type groups, or what?\n
-  res = \'\'\n
-else:\n
-  res = ob.checkConsistency()\n
-  res = [c for c in res if c[1] == \'DocumentCoordinatesConstraint inconsistency\']\n
-\n
-# shall we send?\n
-send = (pref == \'always\' or len(res) > 0)\n
-if not send: return\n
-\n
-if len(res) > 0:\n
-  errmsg = \'<br/>\'.join(str(c[3]) for c in res)\n
-  subjecttpl = \'ingested %(name)s - there was a problem\'\n
-  msgtpl = """Your document "%(name)s" was ingested.\n
+  if pref == \'never\':\n
+    # do not send any email notifications at all \n
+    return\n
+  \n
+if event in (\'ingestion_success\',):\n
+  # successful ingestion socheck if ingested document is consistent\n
+  if doc.getPortalType() == \'Memo\': \n
+    # we don\'t check constistency for Memo XXX use type groups, or what?\n
+    isObjectConsistent = True\n
+  else:\n
+    consistency_result = doc.checkConsistency()\n
+    consistency_result = [x for x in consistency_result if x[1] == \'DocumentCoordinatesConstraint inconsistency\']\n
+    isObjectConsistent = len(consistency_result) == 0\n
+  if not isObjectConsistent:\n
+    error_msg = \'<br/>\'.join(str(c[3]) for x in consistency_result)\n
+    subject_template =  \'[DMS] Failure ingestion %(name)s\'\n
+    email_template = """Your document "%(name)s" was not successfuly ingested.\n
   \n
   The following problems were detected:\n
 \n
-  %(errmsg)s\n
+  %(error_msg)s\n
   \n
   click here: %(url)s/view to proceed and fix the problems.\n
   """\n
+  else:\n
+    error_msg = \'\'\n
+    subject_template = \'[DMS] Successful ingestion for %(name)s\'\n
+    email_template = """Your document "%(name)s" was successfully ingested.\n
+\n
+click here: %(url)s/view to proceed with your work."""\n
+elif event in (\'ingestion_failure\',):\n
+  # there was an error during ingestion process, inform user to try again\n
+  error_msg = \'Failure during ingestion.\'\n
+  subject_template =  \'[DMS] Unsuccessful ingestion\'\n
+  email_template = """Your document was not successfuly ingested.\n
+  \n
+The following problems were detected:\n
+\n
+  %(error_msg)s\n
+  \n
+Please try again after some time. \n
+We applogize for inconvinience."""\n
+  \n
+  \n
+# compose email\n
+email_from = portal_preferences.getPreferredDocumentEmailIngestionAddress()\n
+email_kw = dict(error_msg = error_msg)\n
+\n
+# not always we have ingested document passed (i.e when failure happens)\n
+if getattr(doc, \'getSourceReference\', None) is not None:\n
+  subject = subject_template % {\'name\': doc.getSourceReference()}\n
+  email_kw[\'name\'] = doc.getSourceReference()\n
+  email_kw[\'url\'] = doc.absolute_url()\n
 else:\n
-  errmsg = \'\'\n
-  subjecttpl = \'ingested %(name)s\'\n
-  msgtpl = """Your document "%(name)s" was successfully ingested.\n
+  subject = subject_template\n
 \n
-  click here: %(url)s/view to proceed with your work.\n
-  """\n
-\n
-subject = subjecttpl % {\'name\': ob.getSourceReference()}\n
-\n
-msg = msgtpl % {\'url\': ob.absolute_url(), \'name\': ob.getSourceReference(), \'errmsg\': errmsg}\n
-\n
-mto = kw[\'address\']\n
-mfro = \'dms@dms.nexedi.com\' # XXX this should be in preferences\n
-\n
-context.MailHost.send(msg, mto, mfro, subject)\n
+# get original email text\n
+original_email_text = None\n
+if original_email is not None:\n
+  original_email_text = \'Subject:%s\\n\\nBody:\\n%s\'  %(original_email[\'headers\'][\'subject\'], \n
+                                                     original_email[\'body\'])\n
+email_text = email_template % email_kw\n
+# add part of original email if failure happens\n
+if event in (\'ingestion_failure\',) and original_email_text is not None:\n
+  email_text = \'%s\\n\\n%s\\nOriginal email text (see below):\\n\\n%s\' %(email_text, \n
+                                                                  \'=\'*80, \n
+                                                                  original_email_text)\n
+# send email\n
+context.MailHost.send(email_text, \n
+                      email_to, \n
+                      email_from, \n
+                      subject)\n
 
 
 ]]></string> </value>
@@ -142,7 +179,7 @@ context.MailHost.send(msg, mto, mfro, subject)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>email_to, event, doc, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -162,33 +199,44 @@ context.MailHost.send(msg, mto, mfro, subject)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>email_to</string>
+                            <string>event</string>
+                            <string>doc</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>pref</string>
                             <string>None</string>
+                            <string>original_email</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>portal_preferences</string>
+                            <string>portal_catalog</string>
+                            <string>pref</string>
                             <string>len</string>
                             <string>_getitem_</string>
-                            <string>ob</string>
-                            <string>res</string>
+                            <string>True</string>
+                            <string>isObjectConsistent</string>
+                            <string>consistency_result</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>c</string>
-                            <string>send</string>
-                            <string>errmsg</string>
-                            <string>subjecttpl</string>
-                            <string>msgtpl</string>
+                            <string>x</string>
+                            <string>error_msg</string>
+                            <string>subject_template</string>
+                            <string>email_template</string>
+                            <string>email_from</string>
+                            <string>dict</string>
+                            <string>email_kw</string>
+                            <string>getattr</string>
                             <string>subject</string>
-                            <string>msg</string>
-                            <string>mto</string>
-                            <string>mfro</string>
+                            <string>_write_</string>
+                            <string>original_email_text</string>
+                            <string>email_text</string>
                           </tuple>
                         </value>
                     </item>

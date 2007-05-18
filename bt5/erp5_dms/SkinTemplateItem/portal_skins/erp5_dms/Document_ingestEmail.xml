@@ -71,63 +71,69 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-The email ingestion script, called by ZMailIn upon reception of an email.\n
-Finds out who sent the letter, finds the sender, discovers properties that may\n
-be contained in the mail body (using Document_getPropertyListFromMail),\n
-then creates and object from every attachment and sends notifications to the\n
-sender.\n
+  The email ingestion script, called by ZMailIn upon reception of an email.\n
+  Finds out who sent the letter, finds the sender, discovers properties that may\n
+  be contained in the mail body (using Document_getPropertyListFromMail),\n
+  then creates and object from every attachment and sends notifications to the \n
+  sender.\n
 \n
-If it returns anything, it is bounced back to the sender as an error message. No return\n
-value means everything was fine.\n
+  If it returns anything, it is bounced back to the sender as an error message. No return\n
+  value means everything was fine.\n
 """\n
 \n
-#from Products.ERP5Type.Message import Message\n
-# translating doesn\'t make sense since we have no session, so no preferences\n
-\n
-noSenderInHeaderMsg = "no sender in headers"\n
-noSenderMsg = "you are not in user database"\n
-manySendersMsg = "very serious error: your address has multiple entries"\n
-\n
-# get sender from headers\n
-fromraw = theMail[\'headers\'][\'from\']\n
-\n
-senderemail = context.findAddress(fromraw)\n
-if senderemail is None:\n
-  print noSenderInHeaderMsg\n
+# get sender from email headers\n
+raw_sender_email = theMail[\'headers\'][\'from\']\n
+sender_email = context.findAddress(raw_sender_email)\n
+if sender_email is None:\n
+  print "no sender in headers"\n
   return printed\n
 \n
-# find sender\n
-context.log(senderemail)\n
-r = context.portal_catalog(portal_type=\'Email\', url_string=senderemail)\n
-if len(r) == 0:\n
-  print noSenderMsg\n
-  return printed\n
-if len(r) > 1:\n
-  print manySendersMsg\n
-  return printed\n
+# find sender in ERP5\n
+found_persons = context.portal_catalog(portal_type=\'Person\', reference=sender_email)\n
+if len(found_persons) == 0:\n
+  msg = \'[DMS] You are not in user database\'\n
+  context.log(msg)\n
+  return msg\n
+if len(found_persons) > 1:\n
+  msg = \'[DMS] Your email address has multiple entries\'\n
+  context.log(msg)\n
+  return msg\n
 \n
-senderm = r[0]\n
-person = senderm.getParent()\n
-context.log(script.getId(), \'ok, this address belongs to \' + person.getRelativeUrl())\n
+person = found_persons[0]\n
 \n
+# get mail properties out of mail body\n
 mailprops = context.Document_getPropertyDictFromMail(theMail[\'body\'])\n
-context.log(mailprops)\n
 \n
-# create objects from attachments\n
+# try to ingest document for each attachment\n
 try:\n
-  for fname, data in theMail[\'attachments\'].items():\n
-    obj  = context.portal_contributions.newContent(file_name=fname, \n
-                                                       data=data, \n
-                                                       portal_type=mailprops.get(\'document_type\'), \n
-                                                       user_login=person.getReference(),\n
-                                                       **mailprops)\n
-    gr = person.Person_getPrincipalGroup()\n
-    obj.manage_setLocalRoles(person.getReference(), [\'Owner\',])\n
-    context.Document_notifyByEmail(address=senderemail, event=\'ingest\', object=obj)\n
+  for attachment in theMail[\'attachment_list\']:\n
+    file_name, content_type, data = attachment\n
+    kw = dict(file_name = file_name,\n
+              data = data,\n
+              discover_metadata = 0)\n
+    new_content = context.portal_contributions.newContent(**kw)\n
+    merged_content = new_content.discoverMetadata(file_name = file_name)\n
+    if new_content == merged_content:\n
+      # we have a new document in the system, so set local role owner to email sender\n
+      new_content.manage_setLocalRoles(person.getReference(), [\'Owner\',])\n
+   \n
+    new_content.immediateReindexObject()\n
+    merged_content.immediateReindexObject()\n
+    # notify sender for successful email ingestion\n
+    context.Document_notifyByEmail(sender_email, \'ingestion_success\', merged_content)\n
+    context.log(\'[DMS] Finished email ingestion for %s <%s> (%s)\' \n
+                                                 %(person.getTitle(), sender_email, file_name))\n
+    return \'OK\'\n
 except Exception, e:\n
-  context.log(e)\n
-  raise\n
-return\n
+  # failure during ingestion, inform user to try again later\n
+  context.Document_notifyByEmail(sender_email, \n
+                                 \'ingestion_failure\', \n
+                                 context, \n
+                                 original_email = theMail)\n
+  context.log(\'[DMS] Failure (%s) email ingestion for %s <%s> (%s)\' \n
+                                                 %(e, person.getTitle(), sender_email, file_name))\n
+  raise Exception, e\n
+  return \'ERROR\'\n
 
 
 ]]></string> </value>
@@ -152,8 +158,6 @@ return\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Author</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -185,27 +189,27 @@ return\n
                             <string>theMail</string>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>noSenderInHeaderMsg</string>
-                            <string>noSenderMsg</string>
-                            <string>manySendersMsg</string>
                             <string>_getitem_</string>
-                            <string>fromraw</string>
+                            <string>raw_sender_email</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>senderemail</string>
+                            <string>sender_email</string>
                             <string>None</string>
-                            <string>r</string>
+                            <string>found_persons</string>
                             <string>len</string>
-                            <string>senderm</string>
+                            <string>msg</string>
                             <string>person</string>
-                            <string>script</string>
                             <string>mailprops</string>
                             <string>_getiter_</string>
-                            <string>fname</string>
+                            <string>attachment</string>
+                            <string>file_name</string>
+                            <string>content_type</string>
                             <string>data</string>
+                            <string>dict</string>
+                            <string>kw</string>
                             <string>_apply_</string>
-                            <string>obj</string>
-                            <string>gr</string>
+                            <string>new_content</string>
+                            <string>merged_content</string>
                             <string>Exception</string>
                             <string>e</string>
                           </tuple>

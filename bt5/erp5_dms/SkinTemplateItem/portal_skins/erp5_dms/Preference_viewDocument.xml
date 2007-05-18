@@ -76,6 +76,7 @@
                       <list>
                         <string>my_preferred_document_file_name_regular_expression</string>
                         <string>my_preferred_document_reference_regular_expression</string>
+                        <string>my_preferred_document_email_ingestion_address</string>
                         <string>my_preferred_document_ingestion_email_notification</string>
                         <string>my_preferred_document_reference_method_id</string>
                       </list>
