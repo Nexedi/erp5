@@ -89,7 +89,7 @@ section_uid = context.Base_getSectionUidListForSectionCategory(\n
 # a third party regardless of the account).\n
 node = request[\'node\']\n
 mirror_section = request.get(\'mirror_section\', None)\n
-source_payment = request.get(\'source_payment\', None)\n
+payment = request.get(\'payment\', None)\n
 simulation_state = request[\'simulation_state\']\n
 from_date = request.get(\'from_date\', None)\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
@@ -112,9 +112,9 @@ params = dict(at_date=at_date,\n
               simulation_state=simulation_state, )\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
-if source_payment :\n
-  params[\'payment_uid\'] = traverse(source_payment).getUid()\n
-if mirror_section :\n
+if payment:\n
+  params[\'payment_uid\'] = traverse(payment).getUid()\n
+if mirror_section:\n
   params[\'mirror_section_uid\'] = traverse(mirror_section).getUid()\n
 if parent_portal_type:\n
   params[\'parent_portal_type\'] = parent_portal_type\n
@@ -197,7 +197,7 @@ return [ ReportSection(\n
                             <string>node</string>
                             <string>None</string>
                             <string>mirror_section</string>
-                            <string>source_payment</string>
+                            <string>payment</string>
                             <string>simulation_state</string>
                             <string>from_date</string>
                             <string>omit_grouping_reference</string>
