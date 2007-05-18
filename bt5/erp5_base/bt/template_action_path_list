@@ -51,10 +51,8 @@ Email | history
 Email | metadata
 Email | print
 Email | view
-Fax | fax
 Fax | history
 Fax | metadata
-Fax | previous_call
 Fax | print
 Fax | view
 File | download
@@ -113,10 +111,8 @@ Query Module | view
 Query | history
 Query | metadata
 Query | view
-Telephone | call
 Telephone | history
 Telephone | metadata
-Telephone | previous_call
 Telephone | print
 Telephone | view
 portal_actions | jump_query
