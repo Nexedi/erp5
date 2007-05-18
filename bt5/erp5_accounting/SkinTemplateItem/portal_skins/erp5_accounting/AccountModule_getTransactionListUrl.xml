@@ -135,7 +135,6 @@ return object.getPath() + \'/\' + method + \'?\' + make_query(kw)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>index</string>
-                            <string>context</string>
                             <string>object</string>
                             <string>method</string>
                             <string>str</string>

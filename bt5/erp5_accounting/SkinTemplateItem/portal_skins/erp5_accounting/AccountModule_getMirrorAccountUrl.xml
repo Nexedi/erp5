@@ -129,7 +129,6 @@ return url\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>index</string>
-                            <string>context</string>
                             <string>object</string>
                             <string>None</string>
                             <string>url</string>

@@ -76,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
                         <string>your_gap_root_path</string>
