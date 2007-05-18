@@ -28,7 +28,8 @@
 
 from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import registerActivity
-from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY
+from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY, \
+        abortTransactionSynchronously
 from RAMDict import RAMDict
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
@@ -275,14 +276,14 @@ class SQLDict(RAMDict):
             get_transaction().commit()
             break
         else:
-          get_transaction().abort()
+          abortTransactionSynchronously()
       except:
         LOG('SQLDict', ERROR, 
             'an uncatched exception happened during processing %r' % (uid_list_list,),
             error=sys.exc_info())
         # If an exception occurs, abort the transaction to minimize the impact,
         try:
-          get_transaction().abort()
+          abortTransactionSynchronously()
         except:
           # Unfortunately, database adapters may raise an exception against abort.
           LOG('SQLDict', WARNING,

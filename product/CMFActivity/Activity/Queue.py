@@ -48,6 +48,40 @@ INVALID_ORDER  = 2
 MAX_PROCESSING_TIME = 900 # in seconds
 VALIDATION_ERROR_DELAY = 30 # in seconds
 
+def abortTransactionSynchronously():
+  """Abort a transaction in a synchronous manner.
+  
+  Manual invocation of transaction abort does not synchronize
+  connections with databases, thus invalidations are not cleared out.
+  This may cause an infinite loop, because a read conflict error happens
+  again and again on the same object.
+
+  So, in this method, collect (potential) Connection objects used
+  for current transaction, and invoke the sync method on every Connection
+  object, then abort the transaction. In most cases, aborting the
+  transaction is redundant, because sync should call abort implicitly.
+  But if no connection is present, it is still required to call abort
+  explicitly, and it does not cause any harm to call abort more than once.
+
+  XXX this is really a hack. This touches the internal code of Transaction.
+  """
+  try:
+    import transaction
+    # Zope 2.8 and later.
+    manager_list = transaction.get()._adapters.keys()
+    for manager in manager_list:
+      if hasattr(manager, 'sync'):
+        manager.sync()
+    transaction.abort()
+  except ImportError:
+    # Zope 2.7 and earlier.
+    t = get_transaction()
+    jar_list = t._get_jars(t._objects, 0)
+    for jar in jar_list:
+      if hasattr(jar, 'sync'):
+        jar.sync()
+    t.abort()
+
 class Queue:
   """
     Step 1: use lists

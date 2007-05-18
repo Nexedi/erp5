@@ -1751,6 +1751,49 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.checkIsMessageRegisteredMethod('SQLDict')
 
+  def test_79_AbortTransactionSynchronously(self, quiet=0, run=run_all_test):
+    """
+      This test tests if abortTransactionSynchronously really aborts
+      a transaction synchronously.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest Aborting Transaction Synchronously'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+
+    # Make a new persistent object, and commit it so that an oid gets
+    # assigned.
+    module = self.getOrganisationModule()
+    organisation = module.newContent(portal_type = 'Organisation')
+    organisation_id = organisation.getId()
+    get_transaction().commit()
+    organisation = module[organisation_id]
+
+    # Now fake a read conflict.
+    from ZODB.POSException import ReadConflictError
+    tid = organisation._p_serial
+    oid = organisation._p_oid
+    conn = organisation._p_jar
+    if getattr(conn, '_mvcc', 0):
+      conn._mvcc = 0 # XXX disable MVCC forcibly
+    try:
+      conn.db().invalidate({oid: tid})
+    except TypeError:
+      conn.db().invalidate(tid, {oid: tid})
+    conn._cache.invalidate(oid)
+
+    # Usual abort should not remove a read conflict error.
+    organisation = module[organisation_id]
+    self.assertRaises(ReadConflictError, getattr, organisation, 'uid')
+    get_transaction().abort()
+    self.assertRaises(ReadConflictError, getattr, organisation, 'uid')
+
+    # Synchronous abort.
+    from Products.CMFActivity.Activity.Queue import abortTransactionSynchronously
+    abortTransactionSynchronously()
+    getattr(organisation, 'uid')
+
 if __name__ == '__main__':
     framework()
 else:

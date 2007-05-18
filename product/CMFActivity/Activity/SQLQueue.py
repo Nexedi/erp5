@@ -29,7 +29,8 @@
 from Products.CMFActivity.ActivityTool import registerActivity
 from RAMQueue import RAMQueue
 from DateTime import DateTime
-from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY
+from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY, \
+        abortTransactionSynchronously
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
 from ZODB.POSException import ConflictError
@@ -118,7 +119,7 @@ class SQLQueue(RAMQueue):
       except:
         # If an exception occurs, abort the transaction to minimize the impact,
         try:
-          get_transaction().abort()
+          abortTransactionSynchronously()
         except:
           # Unfortunately, database adapters may raise an exception against abort.
           LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
@@ -142,7 +143,7 @@ class SQLQueue(RAMQueue):
         else:
           try:
             # If not, abort transaction and start a new one
-            get_transaction().abort()
+            abortTransactionSynchronously()
           except:
             # Unfortunately, database adapters may raise an exception against abort.
             LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
