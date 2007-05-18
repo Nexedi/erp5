@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Base Category</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category</type>
   <workflow>edit_workflow</workflow>
  </chain>
