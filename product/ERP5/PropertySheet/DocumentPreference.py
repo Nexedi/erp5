@@ -63,6 +63,11 @@ class DocumentPreference:
       'select_variable' : 'getDocumentIngestionEmailNotificationSelectionList',
       'preference'      : 1,
       'mode'            : '' },
+    { 'id'          : 'preferred_document_email_ingestion_address',
+      'description' : 'Email ingestion address',
+      'type'        : 'string',
+      'preference'  : 1,
+      'mode'        : '' },    
     # XXX-JPS. This is not a real property - it is somehow a hack.
     # BG: I was advised by somebody from Nexedi (I think it was Jerome)
     { 'id'              : 'document_ingestion_email_notification_selection',
