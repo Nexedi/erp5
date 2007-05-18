@@ -49,12 +49,12 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <html>\n
-<head><title>Test for Creating Reversal Transaction for an Accounting Transaction</title></head>\n
+<head><title>Test for Payment Transaction with Multiple partners</title></head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
 <tr><td rowspan="1" colspan="4">\n
-Test for Creating Reversal Transaction for an Accounting Transaction\n
+Test Simple view of an Accounting Transaction\n
 </td></tr>\n
 <!-- XXX we do not need init method here ! -->\n
 </thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
@@ -83,11 +83,11 @@ Test for Creating Reversal Transaction for an Accounting Transaction\n
 </tr>\n
 <!-- }}} -->\n
 \n
-<!-- Add an accounting transaction and check the default view {{{ -->\n
+<!-- Add a payment transaction and check the default view {{{ -->\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
-  <td>Add Accounting Transaction</td>\n
+  <td>Add Payment Transaction</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
@@ -105,49 +105,85 @@ Test for Creating Reversal Transaction for an Accounting Transaction\n
   <td>currency_module/euro</td>\n
 </tr>\n
 <tr>\n
-  <td>type</td>\n
-  <td>field_my_title</td>\n
-  <td>A Dummy Transaction</td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>subfield_field_my_start_date_year</td>\n
-  <td>2005</td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>subfield_field_my_start_date_month</td>\n
-  <td>01</td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>subfield_field_my_start_date_day</td>\n
-  <td>01</td>\n
-</tr>\n
-<tr>\n
   <td>assertText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>2 record(s)</td>\n
+  <td>3 record(s)</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[2]/select</td>\n
-  <td>label=2 - Fixed Assets</td>\n
+  <td>label=40 - Payable</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[2]/select</td>\n
-  <td>label=3 - Stocks</td>\n
+  <td>label=41 - Receivable</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[2]/select</td>\n
+  <td>label=5 - Bank</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
-  <td>20.0</td>\n
+  <td>field_my_destination_section_title</td>\n
+  <td>Client 1</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'Base_edit:method\']</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Check values we just entered {{{ -->\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Data Updated.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_source_section</td>\n
+  <td>organisation_module/my_organisation</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_destination_section_title</td>\n
+  <td>Client 1</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_resource</td>\n
+  <td>currency_module/euro</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/select</td>\n
+  <td>account_module/payable</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/select</td>\n
+  <td>account_module/receivable</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[2]/select</td>\n
+  <td>account_module/bank</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Edit the party on a line {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=payable</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
-  <td>20.0</td>\n
+  <td>field_my_destination_section_title</td>\n
+  <td>Supplier</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -159,135 +195,28 @@ Test for Creating Reversal Transaction for an Accounting Transaction\n
   <td>Data Updated.</td>\n
   <td></td>\n
 </tr>\n
-<!-- }}} -->\n
-\n
-<!-- Post the transaction to the GL {{{\n
-because the \'create reversal\' action is only available when simulation_state =\n
-delivered. FIXME: we won\'t be able to delete the transaction later\n
--->\n
-<tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_action</td>\n
-  <td>Validate Transaction</td>\n
-</tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>Base_callDialogMethod:method</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertPortalStatusMessage</td>\n
-  <td>Status changed.</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertTextPresent</td>\n
-  <td>Validated</td>\n
-  <td></td>\n
-</tr>\n
-<!-- next step to delivered step. -->\n
-<tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_action</td>\n
-  <td>Close Accounting Transaction</td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>Base_callDialogMethod:method</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertPortalStatusMessage</td>\n
-  <td>Status changed.</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertTextPresent</td>\n
-  <td>Closed</td>\n
+  <td>//a[3]/span[1]</td> <!-- FIXME -->\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
-<!-- Create the reversal transaction and check values {{{ -->\n
+<!-- Check new column is here {{{ -->\n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_action</td>\n
-  <td>Create Reversal Transaction</td>\n
-</tr>\n
-<tr>\n
-  <td>assertPortalStatusMessage</td>\n
-  <td>Reversal Transaction for * created.</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertValue</td>\n
-  <td>field_my_source_section</td>\n
-  <td>organisation_module/my_organisation</td>\n
-</tr>\n
-<tr>\n
-  <td>assertValue</td>\n
-  <td>field_my_title</td>\n
-  <td>Reversal Transaction for A Dummy Transaction</td>\n
-</tr>\n
-<tr>\n
-  <td>assertValue</td>\n
-  <td>field_my_destination_section_title</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>subfield_field_my_start_date_year</td>\n
-  <td>2005</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>subfield_field_my_start_date_month</td>\n
-  <td>01</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>subfield_field_my_start_date_day</td>\n
-  <td>01</td>\n
-</tr>\n
-<tr>\n
-  <td>assertValue</td>\n
-  <td>field_my_resource</td>\n
-  <td>currency_module/euro</td>\n
+  <td>assertText</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]</td>\n
+  <td>Supplier</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>2 record(s)</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]</td>\n
+  <td>Client 1</td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/select</td>\n
-  <td>account_module/stocks</td>\n
-</tr>\n
-<tr>\n
-  <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/select</td>\n
-  <td>account_module/fixed_assets</td>\n
-</tr>\n
-<tr>\n
-  <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
-  <td>20.0</td> \n
-</tr>\n
-<tr>\n
-  <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
-  <td>0.0</td> \n
-</tr>\n
-<tr>\n
-  <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/input</td>\n
-  <td>0.0</td>\n
-</tr>\n
-<tr>\n
-  <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
-  <td>20.0</td>\n
+  <td>assertText</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[3]</td>\n
+  <td>Client 1</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -309,7 +238,7 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_accounting_transaction_create_reversal.html</string> </value>
+            <value> <string>test_payment_transaction_input_multiple_partners.html</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
