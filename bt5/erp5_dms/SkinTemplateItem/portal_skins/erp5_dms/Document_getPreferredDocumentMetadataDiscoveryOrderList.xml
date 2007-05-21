@@ -83,7 +83,6 @@ order = [\n
   \'user_login\',\n
   \'content\' ]\n
 \n
-order.reverse()\n
 return order\n
 </string> </value>
         </item>
@@ -136,7 +135,6 @@ return order\n
                             <string>fname</string>
                             <string>user_name</string>
                             <string>order</string>
-                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
