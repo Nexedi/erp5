@@ -394,6 +394,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
   body_parser = re.compile('<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
   title_parser = re.compile('<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
   base_parser = re.compile('<base[^>]*href=[\'"](.*?)[\'"][^>]*>', re.IGNORECASE + re.DOTALL)
+  charset_parser = re.compile('charset="?([a-z0-9\-]+)', re.IGNORECASE)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -1083,14 +1084,20 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       (without html and body tags, etc.) which can be used to inline
       a preview of the document.
     """
-    if self.hasConversion(format='stripped-html'):
+    if self.hasConversion(format='stripped-html'): # XXX this is redundant since we never set it
       mime, data = self.getConversion(format='stripped-html')
       return data
     mime, html = self.convert(format='html')
     body_list = re.findall(self.body_parser, str(html))
     if len(body_list):
-      return body_list[0]
-    return html
+      stripped_html = body_list[0]
+    else:
+      stripped_html = html
+    # find charset and convert to utf-8
+    charset_list = self.charset_parser.findall(html)
+    if charset_list:
+      stripped_html = unicode(stripped_html, charset_list[0]).encode('utf-8')
+    return stripped_html
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
