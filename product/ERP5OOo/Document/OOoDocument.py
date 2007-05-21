@@ -298,7 +298,7 @@ class OOoDocument(File, ConversionCacheMixin):
       format_list = [x for x in self.getTargetFormatList() if x.endswith(format)]
       format = format_list[0]
     elif format == 'html':
-      format_list = [x for x in self.getTargetFormatList() if x.startswith('html')]
+      format_list = [x for x in self.getTargetFormatList() if x.startswith('html') or x.endswith('html')]
       format = format_list[0]
       is_html = 1
     elif format in ('txt', 'text', 'text-content'):
