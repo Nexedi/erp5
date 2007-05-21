@@ -959,9 +959,6 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       user_login - this is a login string of a person; can be None if the user is
                    currently logged in, then we'll get him from session
     """
-    if file_name is not None:
-      # filename is often undefined....
-      self._setSourceReference(file_name)
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
@@ -987,6 +984,9 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       if result is not None:
         kw.update(result)
 
+    if file_name is not None:
+      # filename is often undefined....
+      kw['source_reference'] = file_name
     # Prepare the content edit parameters - portal_type should not be changed
     kw.pop('portal_type', None)
     # Try not to invoke an automatic transition here
