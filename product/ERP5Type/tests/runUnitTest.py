@@ -17,8 +17,8 @@ Options:
   --data_fs_path=STRING      Path to the original Data.fs to run tests on an
                              existing environment. The Data.fs is opened read
                              only
-  --recreate_catalog=0 or 1  recreate the content of the sql catalog. Defaults
-                             is to recreate, when using an existing Data.fs
+  --recreate_catalog=0 or 1  recreate the content of the sql catalog. Default
+                             is to recreate, unless using --data_fs_path
   --save                     add erp5 sites and business templates in Data.fs
                              and exit without invoking any tests
   --load                     load Data.fs and skip adding erp5 sites and
