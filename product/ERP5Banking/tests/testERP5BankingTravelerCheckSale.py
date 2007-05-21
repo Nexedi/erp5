@@ -264,8 +264,12 @@ class TestERP5BankingTravelerCheckSale(TestERP5BankingCheckbookUsualCashTransfer
     checkbook_object_list = [x.getObject() for x in checkbook_list]
     self.failIfDifferentSet(checkbook_object_list,[self.traveler_check])
     # check the inventory of the bank account
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(
+                     payment=self.bank_account_1.getRelativeUrl(),
+                     resource=self.currency_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(
+                     payment=self.bank_account_1.getRelativeUrl(),
+                     resource=self.currency_1.getRelativeUrl()), 100000)
 
 
 
@@ -288,9 +292,11 @@ class TestERP5BankingTravelerCheckSale(TestERP5BankingCheckbookUsualCashTransfer
     self.assertEquals(len(checkbook_object_list),0)
     # check the inventory of the bank account
     self.assertEqual(self.simulation_tool.getCurrentInventory(
-                     payment=self.bank_account_1.getRelativeUrl()), 67500)
+                     payment=self.bank_account_1.getRelativeUrl(),
+                     resource=self.currency_1.getRelativeUrl()), 67500)
     self.assertEqual(self.simulation_tool.getFutureInventory(
-                     payment=self.bank_account_1.getRelativeUrl()), 67500)
+                     payment=self.bank_account_1.getRelativeUrl(),
+                     resource=self.currency_1.getRelativeUrl()), 67500)
 
   ##################################
   ##  Tests
