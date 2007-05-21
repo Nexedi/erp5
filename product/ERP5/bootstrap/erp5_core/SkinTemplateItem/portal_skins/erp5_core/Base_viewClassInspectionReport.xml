@@ -69,7 +69,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>doc = context.getPortalObject().portal_classes.asDocumentationHelper(class_id)\n
-return doc.Documentation_view()\n
+if doc is not None:\n
+  return doc.Documentation_view()\n
+return "Class Tool is Disabled"\n
 </string> </value>
         </item>
         <item>
@@ -122,6 +124,7 @@ return doc.Documentation_view()\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>doc</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
