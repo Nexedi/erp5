@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -99,7 +105,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_solver_list</string>
+                        <string>my_solver_script_list</string>
                       </list>
                     </value>
                 </item>

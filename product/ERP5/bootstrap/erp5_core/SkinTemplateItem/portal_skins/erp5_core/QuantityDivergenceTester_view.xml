@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -73,13 +79,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
                         <string>my_description</string>
@@ -87,7 +93,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
@@ -95,10 +101,10 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_solver_list</string>
+                        <string>my_solver_script_list</string>
                       </list>
                     </value>
                 </item>
