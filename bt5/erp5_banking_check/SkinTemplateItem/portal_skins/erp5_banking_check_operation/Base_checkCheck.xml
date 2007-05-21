@@ -67,6 +67,9 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ERP5Type.Message import Message\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
 # Check that a check exists for given bank account and reference.\n
 result = context.Base_checkOrCreateCheck(reference=reference, bank_account=bank_account)\n
 result_len = len(result)\n
@@ -145,14 +148,16 @@ return check\n
                           <tuple>
                             <string>bank_account</string>
                             <string>reference</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>result</string>
                             <string>len</string>
                             <string>result_len</string>
-                            <string>Message</string>
                             <string>msg</string>
-                            <string>ValidationFailed</string>
                             <string>_getitem_</string>
                             <string>check</string>
                             <string>bad_simulation_state_dict</string>
