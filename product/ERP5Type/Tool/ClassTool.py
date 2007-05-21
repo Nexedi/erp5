@@ -29,6 +29,8 @@
 import os
 import shutil
 import tempfile
+import inspect
+from pprint import pformat
 
 from Products.CMFCore.utils import UniqueObject
 
@@ -44,6 +46,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Type import Document
 
 from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, getLocalPropertySheetList
 from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, getLocalExtensionList
@@ -53,6 +56,7 @@ from Products.ERP5Type.Utils import readLocalConstraint, writeLocalConstraint, g
 from Products.ERP5Type.InitGenerator import getProductDocumentPathList
 
 from Products.ERP5Type.Base import _aq_reset
+from Products.ERP5Type.Base import newTempDocumentationHelper
 
 from Products.ERP5Type import allowClassTool
 
@@ -833,9 +837,6 @@ def initialize( context ):
 
           XXX: this code is (almost) duplicated from ERP5Types/Base.py:asDocumentationHelper
         """
-        from Products.ERP5Type import Document # XXX : Move to top
-        import inspect # XXX: Move to top
-        from pprint import pformat # XXX: move at top
 
         my_class = getattr(getattr(Document, class_id), class_id)
         method_list = []

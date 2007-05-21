@@ -2968,6 +2968,7 @@ class TempBase(Base):
 
   security.declarePublic('edit')
 
+
 def newTempDocumentationHelper(folder, id, REQUEST=None, **kw):
   o = TempDocumentationHelper(id)
   o = o.__of__(folder)
@@ -2975,7 +2976,8 @@ def newTempDocumentationHelper(folder, id, REQUEST=None, **kw):
     o._edit(force_update=1, **kw)
   return o
 
-class TempDocumentationHelper(TempBase):
+
+class DocumentationHelper(Base):
   """
     Contains information about a documentable item.
     Documentable item can be any python type, instanciated or not.
@@ -2988,7 +2990,7 @@ class TempDocumentationHelper(TempBase):
                     , PropertySheet.DublinCore
                     , PropertySheet.DocumentationHelper
                     , )
-
+  
   def _funcname_cmp_prepare(self, funcname):
     for pos in range(len(funcname)):
       if funcname[pos] != '_':
@@ -2996,6 +2998,8 @@ class TempDocumentationHelper(TempBase):
     return '%s%s' % (funcname[pos:], funcname[:pos])
 
   def __cmp__(self, documentationhelper):
+    if not isinstance(documentationhelper, DocumentationHelper):
+      return -1
     my_title = self._funcname_cmp_prepare(self.getTitle())
     his_title = self._funcname_cmp_prepare(documentationhelper.getTitle())
     if my_title < his_title:
@@ -3003,3 +3007,14 @@ class TempDocumentationHelper(TempBase):
     if my_title > his_title:
       return 1
     return 0
+
+class TempDocumentationHelper(DocumentationHelper, TempBase):
+  """Temporary version of Documentation Helper.
+
+  Actually we only use temporary instances of DocumentationHelper, but
+  as _aq_dynamic initialize methods on the base class for temp objects, it's
+  required that all temp objects have a corresponding "real" class as
+  klass.__bases__[0]
+  """
+ 
+

@@ -94,6 +94,29 @@ class TestClassTool(ERP5TypeTestCase):
     self.assertEqual(portal_classes.getLocalDocumentList(), ['Toto'])
 
 
+  # Test self-documentating features of ERP5Type documents through
+  # portal_classes.
+  def test_AsDocumentationHelperOnDocument(self):
+    # All Documents can be turned into a documentation helper
+    portal = self.getPortal()
+    folder = portal.newContent(portal_type='Folder', id='test_folder')
+    doc_helper = folder.asDocumentationHelper()
+    self.assertNotEquals(doc_helper, None)
+    # We simply check that we can access methods of the documentation helper
+    self.failUnless('Base' in doc_helper.getInheritanceList())
+    self.assertNotEquals([], doc_helper.getStaticMethodList())
+
+
+  def test_AsDocumentationHelperOnClassTool(self):
+    # From the class tool, we can get documentation helper for classes defining
+    # a Document
+    class_tool = self.getPortal().portal_classes
+    class_doc_helper = class_tool.asDocumentationHelper(class_id='Folder')
+    self.assertNotEquals(class_doc_helper, None)
+    # We simply check that we can access methods of the documentation helper
+    self.assertNotEquals([], class_doc_helper.getStaticPropertyList())
+
+
 import unittest
 def test_suite():
     suite = unittest.TestSuite()
