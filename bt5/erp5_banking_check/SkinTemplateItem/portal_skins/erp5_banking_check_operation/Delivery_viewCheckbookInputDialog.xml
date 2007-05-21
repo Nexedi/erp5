@@ -94,7 +94,7 @@ if listbox is None:\n
   listbox = []\n
   if node is not None or disable_node:\n
     getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
-    context.log(\'current_tracking_list src\',getCurrentTrackingList(at_date=reference_date, node=node,src__=1,where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'"))\n
+    #context.log(\'Delivery_viewCheckbookInputDialog\', getCurrentTrackingList(at_date=reference_date, node=node,src__=1,where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'"))\n
     #return [x.path for x in  getCurrentTrackingList(at_date=reference_date, node=node)]\n
     if disable_node:\n
       node=None\n
