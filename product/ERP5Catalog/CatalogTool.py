@@ -49,7 +49,7 @@ from MethodObject import Method
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 
 import os, time, urllib, warnings
-from zLOG import LOG
+from zLOG import LOG, PROBLEM
 
 SECURITY_USING_NUX_USER_GROUPS, SECURITY_USING_PAS = range(2)
 try:
@@ -710,6 +710,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       For exemple it will generate:
       destination_title | category,catalog/title/z_related_destination
       default_destination_title | category,catalog/title/z_related_destination
+      strict_destination_title | category,catalog/title/z_related_strict_destination
+
+      strict_ related keys only returns documents which are strictly member of
+      the category.
       """
       related_key_list = []
       base_cat_id_list = self.portal_categories.getBaseCategoryDict()
@@ -763,20 +767,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           (not name.endswith(zope_security))):
           if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
             base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):]
-            method = RelatedBaseCategory(base_category_id,strict_membership=1)
+            method = RelatedBaseCategory(base_category_id, strict_membership=1)
           else:
             base_category_id = name[len(DYNAMIC_METHOD_NAME):]
             method = RelatedBaseCategory(base_category_id)
-          setattr(self.__class__, name, 
-                  method)
+          setattr(self.__class__, name, method)
           klass = aq_base(self).__class__
           if hasattr(klass, 'security'):
             from Products.ERP5Type import Permissions as ERP5Permissions
             klass.security.declareProtected(ERP5Permissions.View, name)
           else:
-            # XXX security declaration always failed....
-            LOG('WARNING ERP5Form SelectionTool, security not defined on',
-                0, klass.__name__)
+            LOG('ERP5Catalog', PROBLEM,
+                'Security not defined on %s' % klass.__name__)
           return getattr(self, name)
         else:
           return aq_base_name
