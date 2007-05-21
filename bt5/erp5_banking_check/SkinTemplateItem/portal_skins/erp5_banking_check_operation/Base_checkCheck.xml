@@ -69,7 +69,7 @@
 
 # Check that a check exists for given bank account and reference.\n
 result = context.Base_checkOrCreateCheck(reference=reference, bank_account=bank_account)\n
-resul_len = len(result)\n
+result_len = len(result)\n
 if result_len == 0:\n
   msg = Message(domain=\'ui\', message="No such check")\n
   raise ValidationFailed, (msg,)\n
@@ -146,10 +146,9 @@ return check\n
                             <string>bank_account</string>
                             <string>reference</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>result</string>
                             <string>len</string>
-                            <string>resul_len</string>
                             <string>result_len</string>
                             <string>Message</string>
                             <string>msg</string>
