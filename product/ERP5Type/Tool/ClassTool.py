@@ -789,7 +789,7 @@ def initialize( context ):
                          portal_tools = (),
                          content_constructors = (),
                          content_classes = ())
-''' % s
+''' % COPYRIGHT
           f = open(init, 'w')
           try:
             f.write(text)
