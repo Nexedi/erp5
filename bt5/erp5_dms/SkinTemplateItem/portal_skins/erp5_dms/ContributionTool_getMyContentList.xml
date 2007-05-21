@@ -76,13 +76,9 @@
   WARNING: implementation depends on the fact\n
   that owner is being indexed.\n
 """\n
-if user is None:\n
-  from AccessControl import getSecurityManager\n
-  sm = getSecurityManager()\n
-  user = sm.getUser()\n
 \n
 kw[\'portal_type\'] = context.getPortalMyDocumentTypeList()\n
-kw[\'owner\'] = str(user)\n
+kw[\'owner\'] = context.portal_membership.getAuthenticatedMember()\n
 return context.portal_catalog(**kw)\n
 </string> </value>
         </item>
@@ -134,14 +130,9 @@ return context.portal_catalog(**kw)\n
                           <tuple>
                             <string>user</string>
                             <string>kw</string>
-                            <string>None</string>
-                            <string>AccessControl</string>
-                            <string>getSecurityManager</string>
-                            <string>sm</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>_write_</string>
-                            <string>str</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>

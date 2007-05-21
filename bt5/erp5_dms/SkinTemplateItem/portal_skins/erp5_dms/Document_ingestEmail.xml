@@ -80,13 +80,13 @@
   If it returns anything, it is bounced back to the sender as an error message. No return\n
   value means everything was fine.\n
 """\n
-\n
 # get sender from email headers\n
 raw_sender_email = theMail[\'headers\'][\'from\']\n
 sender_email = context.findAddress(raw_sender_email)\n
 if sender_email is None:\n
-  print "no sender in headers"\n
-  return printed\n
+  msg = \'[DMS] No sender in email message\'\n
+  context.log(msg)\n
+  return msg\n
 \n
 # find sender in ERP5\n
 found_persons = context.portal_catalog(portal_type=\'Person\', reference=sender_email)\n
@@ -123,7 +123,7 @@ try:\n
     context.Document_notifyByEmail(sender_email, \'ingestion_success\', merged_content)\n
     context.log(\'[DMS] Finished email ingestion for %s <%s> (%s)\' \n
                                                  %(person.getTitle(), sender_email, file_name))\n
-    return \'OK\'\n
+    return 0\n
 except Exception, e:\n
   # failure during ingestion, inform user to try again later\n
   context.Document_notifyByEmail(sender_email, \n
@@ -133,7 +133,6 @@ except Exception, e:\n
   context.log(\'[DMS] Failure (%s) email ingestion for %s <%s> (%s)\' \n
                                                  %(e, person.getTitle(), sender_email, file_name))\n
   raise Exception, e\n
-  return \'ERROR\'\n
 
 
 ]]></string> </value>
@@ -187,17 +186,15 @@ except Exception, e:\n
                         <value>
                           <tuple>
                             <string>theMail</string>
-                            <string>_print_</string>
-                            <string>_print</string>
                             <string>_getitem_</string>
                             <string>raw_sender_email</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>sender_email</string>
                             <string>None</string>
+                            <string>msg</string>
                             <string>found_persons</string>
                             <string>len</string>
-                            <string>msg</string>
                             <string>person</string>
                             <string>mailprops</string>
                             <string>_getiter_</string>
@@ -229,6 +226,10 @@ except Exception, e:\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Document_ingestEmail</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Ingest document from an email message</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

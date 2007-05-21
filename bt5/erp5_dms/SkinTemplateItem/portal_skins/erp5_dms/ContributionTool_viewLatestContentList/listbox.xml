@@ -338,10 +338,6 @@
                           <string>language</string>
                         </tuple>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>creation_date</string>
-                        </tuple>
-                        <tuple>
                           <string>modification_date</string>
                           <string>modification_date</string>
                         </tuple>
@@ -358,31 +354,35 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>portal_type</string>
+                          <string>Portal Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
-                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>version</string>
-                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>language</string>
-                          <string>language</string>
+                          <string>Language</string>
                         </tuple>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>Created</string>
+                          <string>revision</string>
+                          <string>Revision</string>
+                        </tuple>
+                        <tuple>
+                          <string>validation_state</string>
+                          <string>State</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
@@ -530,8 +530,40 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>None</string>
-                          <string>None</string>
+                          <string>id</string>
+                          <string>id</string>
+                        </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>portal_type</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>version</string>
+                        </tuple>
+                        <tuple>
+                          <string>language</string>
+                          <string>language</string>
+                        </tuple>
+                        <tuple>
+                          <string>revision</string>
+                          <string>Revision</string>
+                        </tuple>
+                        <tuple>
+                          <string>validation_state</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modified</string>
                         </tuple>
                       </list>
                     </value>

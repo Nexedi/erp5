@@ -73,8 +73,7 @@
 """\n
 kw[\'portal_type\'] = context.getPortalDocumentTypeList()\n
 kw[\'sort_on\'] = ((\'creation_date\', \'descending\'),)\n
-result = context.portal_catalog(**kw)\n
-return result\n
+return context.portal_catalog(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -129,7 +128,6 @@ return result\n
                             <string>context</string>
                             <string>_write_</string>
                             <string>_apply_</string>
-                            <string>result</string>
                           </tuple>
                         </value>
                     </item>
