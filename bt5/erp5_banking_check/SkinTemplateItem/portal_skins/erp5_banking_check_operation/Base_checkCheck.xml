@@ -67,66 +67,32 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-from DateTime import DateTime\n
-\n
-transaction = state_change[\'object\']\n
-\n
-site = transaction.Baobab_getUserAssignedSiteList()\n
-\n
-if len(site) > 0:\n
-  site = site[0]\n
-else:\n
-  site = None\n
-  # try to guess site from document if source is defined\n
-  # XXX useful for unit test\n
-  site = transaction.getSourceValue()\n
-  while True:\n
-    if not hasattr(site, \'getVaultTypeList\'):\n
-      msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
-      raise ValidationFailed, (msg,)\n
-    if \'site\' in site.getVaultTypeList():\n
-      break\n
-    site = site.getParentValue()\n
-\n
-if site is None:\n
-  msg = Message(domain = \'ui\', message = \'Impossible to determine site for the transaction.\')\n
+# Check that a check exists for given bank account and reference.\n
+result = context.Base_checkOrCreateCheck(reference=reference, bank_account=bank_account)\n
+resul_len = len(result)\n
+if result_len == 0:\n
+  msg = Message(domain=\'ui\', message="No such check")\n
+  raise ValidationFailed, (msg,)\n
+elif result_len > 1:\n
+  msg = Message(domain=\'ui\', message=\'Duplicate checks for the same check number\')\n
   raise ValidationFailed, (msg,)\n
 \n
+check = result[0].getObject()\n
 \n
-date = transaction.getStartDate()\n
+bad_simulation_state_dict = {\'draft\': \'The check is not issued yet.\',\n
+                             \'cancelled\': \'The check has been stopped.\',\n
+                             \'delivered\': \'The check has already been cashed.\',\n
+                             \'stopped\': \'The check is stopped.\'}\n
 \n
-# check accounting date\n
-current_date = DateTime().Date()\n
-document_date = DateTime(date).Date()\n
-# transaction.log("check_payment_workflow/scripts/validateConsistency", "date = %s, current_date = %s, document_date = %s, site = %s" %(date, current_date, document_date, site))\n
-if not document_date > current_date:\n
-  if not  transaction.Baobab_checkCounterDateOpen(site=site, date=date):\n
-    msg = Message(domain=\'ui\', message = \'Cannot validate document because of closed counter date\')\n
-    raise ValidationFailed, (msg,) \n
-\n
-\n
-# Check the amount.\n
-price = transaction.getSourceTotalAssetPrice() \n
-if price is None or price <= 0:\n
-  msg = Message(domain="ui", message="Amount is not valid.")\n
+simulation_state = check.getSimulationState()\n
+if simulation_state != \'confirmed\':\n
+  if simulation_state in bad_simulation_state_dict:\n
+    msg = Message(domain=\'ui\', message=bad_simulation_state_dict[simulation_state])\n
+  else:\n
+    msg = \'Invalid and unhandled simulation state: %s\' % (simulation_state, )\n
   raise ValidationFailed, (msg,)\n
 \n
-# Check the bank account.\n
-bank_account = transaction.getDestinationPaymentValue()\n
-if bank_account is None:\n
-  msg = Message(domain=\'ui\', message=\'Bank account is not defined.\')\n
-  raise ValidationFailed, (msg,)\n
-\n
-# Check the check.\n
-check_number = transaction.getAggregateFreeText()\n
-if not check_number:\n
-  msg = Message(domain=\'ui\', message="Check not defined.")\n
-  raise ValidationFailed, (msg,)\n
-transaction.Base_checkCheck(reference=check_number, bank_account=bank_account)\n
-\n
-context.updateBankingOperation(state_change)\n
+return check\n
 
 
 ]]></string> </value>
@@ -151,15 +117,7 @@ context.updateBankingOperation(state_change)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>bank_account, reference</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -179,34 +137,27 @@ context.updateBankingOperation(state_change)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>DateTime</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
-                            <string>_getattr_</string>
-                            <string>site</string>
-                            <string>len</string>
-                            <string>None</string>
-                            <string>True</string>
-                            <string>hasattr</string>
-                            <string>msg</string>
-                            <string>date</string>
-                            <string>current_date</string>
-                            <string>document_date</string>
-                            <string>price</string>
                             <string>bank_account</string>
-                            <string>check_number</string>
-                            <string>context</string>
+                            <string>reference</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>result</string>
+                            <string>len</string>
+                            <string>resul_len</string>
+                            <string>result_len</string>
+                            <string>Message</string>
+                            <string>msg</string>
+                            <string>ValidationFailed</string>
+                            <string>_getitem_</string>
+                            <string>check</string>
+                            <string>bad_simulation_state_dict</string>
+                            <string>simulation_state</string>
                           </tuple>
                         </value>
                     </item>
@@ -223,7 +174,7 @@ context.updateBankingOperation(state_change)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validateConsistency</string> </value>
+            <value> <string>Base_checkCheck</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

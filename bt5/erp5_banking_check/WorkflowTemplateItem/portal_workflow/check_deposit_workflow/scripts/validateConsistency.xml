@@ -116,36 +116,7 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
     msg = Message(domain=\'ui\', message="Unknown error code.")\n
     raise ValidationFailed, (msg,)\n
 \n
-  result = context.portal_catalog(portal_type = \'Check\', reference = check_number)\n
-  if len(result) == 0:\n
-    # Until a certain date, ERP5 allows the user to generate a check automatically.\n
-    from DateTime import DateTime\n
-    now = DateTime()\n
-    stop_date = context.Baobab_getAutomaticCheckCreationStopDate()\n
-    if now > stop_date:\n
-      msg = Message(domain=\'ui\', message=\'No such check.\')\n
-      raise ValidationFailed, (msg,)\n
-  elif len(result) == 1:\n
-    # Check if this check has the same bank account as the payment.\n
-    check = result[0].getObject()\n
-    if check_operation_line.getSourcePaymentReference() != check.getDestinationPaymentReference():\n
-      msg = Message(domain=\'ui\', message=\'Bank account do not match between payment and check.\')\n
-      raise ValidationFailed, (msg,)\n
-    # Check the state of this check.\n
-    state = check.getSimulationState()\n
-    if state != \'confirmed\':\n
-      if state == \'draft\':\n
-        msg = Message(domain=\'ui\', message=\'The check is not issued yet.\')\n
-      elif state == \'cancelled\':\n
-        msg = Message(domain=\'ui\', message=\'The check has been canceled.\')\n
-      elif state == \'delivered\':\n
-        msg = Message(domain=\'ui\', message=\'The check has already been cashed.\')\n
-      elif state == \'stopped\':\n
-        msg = Message(domain=\'ui\', message=\'The check has been stopped.\')\n
-      raise ValidationFailed, (msg,)\n
-  else:\n
-    msg = Message(domain=\'ui\', message="Duplicated checks for the same check number.")\n
-    raise ValidationFailed, (msg,)\n
+  transaction.Base_checkCheck(bank_account=source_bank_account, reference=check_number)\n
 \n
 if transaction.getSimulationState() == "draft":\n
   context.updateBankingOperation(state_change)\n
@@ -225,13 +196,6 @@ if transaction.getSimulationState() == "draft":\n
                             <string>source_bank_account</string>
                             <string>context</string>
                             <string>error</string>
-                            <string>result</string>
-                            <string>len</string>
-                            <string>DateTime</string>
-                            <string>now</string>
-                            <string>stop_date</string>
-                            <string>check</string>
-                            <string>state</string>
                           </tuple>
                         </value>
                     </item>
