@@ -74,17 +74,15 @@ transaction = state_change[\'object\']\n
 bank_account = transaction.getDestinationPaymentValue()\n
 check_number = transaction.getAggregateFreeText()\n
 \n
-\n
-check = transaction.Base_checkOrCreateCheck(reference=check_number)\n
-if not check.Check_isValid():\n
-  raise ValidationFailed, Message(domain=\'ui\', message=\'Check is in an invalid state\')\n
+# Already done before in validateConsistency\n
+#check = transaction.Base_checkOrCreateCheck(reference=check_number)\n
+#if not check.Check_isValid():\n
+#  raise ValidationFailed, Message(domain=\'ui\', message=\'Check is in an invalid state\')\n
 \n
 line = transaction.get(\'movement\')\n
 if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
   # This is a single currency operation, so it is not necessary to convert the price.\n
   line.setSourceDebit(transaction.getSourceTotalAssetPrice())\n
-\n
-transaction.edit(aggregate = check.getRelativeUrl())\n
 </string> </value>
         </item>
         <item>
@@ -151,7 +149,6 @@ transaction.edit(aggregate = check.getRelativeUrl())\n
                             <string>_getattr_</string>
                             <string>bank_account</string>
                             <string>check_number</string>
-                            <string>check</string>
                             <string>line</string>
                             <string>None</string>
                           </tuple>

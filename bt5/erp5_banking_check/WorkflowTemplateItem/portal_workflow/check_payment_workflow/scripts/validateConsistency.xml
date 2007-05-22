@@ -129,8 +129,9 @@ if check_resource is None:\n
   msg = Message(domain=\'ui\', message="Check type not defined.")\n
   raise ValidationFailed, (msg,)\n
 \n
-transaction.Base_checkCheck(reference=check_number, bank_account=bank_account, \n
+check = transaction.Base_checkCheck(reference=check_number, bank_account=bank_account, \n
                             resource=check_resource)\n
+transaction.edit(aggregate=check.getRelativeUrl())\n
 \n
 context.updateBankingOperation(state_change)\n
 
@@ -213,6 +214,7 @@ context.updateBankingOperation(state_change)\n
                             <string>bank_account</string>
                             <string>check_number</string>
                             <string>check_resource</string>
+                            <string>check</string>
                             <string>context</string>
                           </tuple>
                         </value>
