@@ -85,14 +85,17 @@ REQUEST=context.REQUEST\n
 qs = \'\'\n
 ret_url = \'\'\n
 \n
-def Object_hasRelation(object):\n
+def Object_hasRelation(obj):\n
   # Check if there is some related objets.\n
   result = 0\n
-  for o in object.getIndexableChildValueList():\n
-    for related in object.portal_categories.getRelatedValueList(o):\n
-      if related.getRelativeUrl().startswith(object.getRelativeUrl()):\n
+  for o in obj.getIndexableChildValueList():\n
+    for related in obj.portal_categories.getRelatedValueList(o):\n
+      related_url = related.getRelativeUrl()\n
+      if related_url.startswith(obj.getRelativeUrl()):\n
         continue\n
-      elif related.getRelativeUrl().startswith(\'portal_simulation\') :\n
+      elif related_url.startswith(\'portal_simulation\'):\n
+        continue\n
+      elif related_url.startswith(\'portal_trash\'):\n
         continue\n
       else:\n
         result = 1\n
@@ -135,14 +138,14 @@ elif uids is not None:\n
         object_to_delete_list.append(object)\n
 \n
     # Remove some objects\n
-    try: \n
+    try:\n
       if object_to_remove_list != []:\n
         context.manage_delObjects(\n
                       uids=[x.getUid() for x in object_to_remove_list],\n
                       REQUEST=REQUEST)\n
-    except ConflictError: \n
+    except ConflictError:\n
       raise\n
-    except Exception, message : \n
+    except Exception, message:\n
       qs = \'?portal_status_message=%s\' % message\n
     else:\n
       object_ids = [x.getId() for x in object_to_remove_list]\n
