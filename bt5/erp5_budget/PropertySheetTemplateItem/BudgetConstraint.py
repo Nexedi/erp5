@@ -34,7 +34,8 @@ class BudgetConstraint:
   _constraints = (
     { 'id'            : 'property_existence',
       'type'          : 'PropertyExistence',
-      'start_date'    : None,
-      'description'   : 'Start date is not defined.'
+      'start_date_range_min'    : None,
+      'start_date_range_max'    : None,
+      'description'   : 'Budget term is not defined.'
     },
   )

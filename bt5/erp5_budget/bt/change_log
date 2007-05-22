@@ -1,3 +1,6 @@
+2007-05-22 yo
+* The budget constraint should check start_date_range_min and start_date_range_max, instead of start_date.
+
 2005-02-16 Romain
 * Build for CVS.
 
