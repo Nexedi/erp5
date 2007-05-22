@@ -96,7 +96,7 @@ class ERP5UserManager(BasePlugin):
             user = user_list[0]
 
             sm = getSecurityManager()
-            if sm.getUser() != SUPER_USER:
+            if sm.getUser().getId() != SUPER_USER:
               newSecurityManager(self, self.getUser(SUPER_USER))
             try:
               if pw_validate(user.getPassword(), password) and\
@@ -175,7 +175,7 @@ class ERP5UserManager(BasePlugin):
         # because we aren't logged in, we have to create our own
         # SecurityManager to be able to access the Catalog
         sm = getSecurityManager()
-        if sm.getUser() != SUPER_USER:
+        if sm.getUser().getId() != SUPER_USER:
           newSecurityManager(self, self.getUser(SUPER_USER))
 
         try:

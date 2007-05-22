@@ -93,7 +93,7 @@ class ERP5GroupManager(BasePlugin):
       # because we aren't logged in, we have to create our own
       # SecurityManager to be able to access the Catalog
       sm = getSecurityManager()
-      if sm.getUser() != SUPER_USER:
+      if sm.getUser().getId() != SUPER_USER:
         newSecurityManager(self, self.getUser(SUPER_USER))
       try:
         # To get the complete list of groups, we try to call the
