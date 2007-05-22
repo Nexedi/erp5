@@ -139,7 +139,7 @@ for check_reference in reference_list:\n
       msg = Message(domain = "ui", message="Sorry, this reference does not exist")\n
       raise ValidationFailed, (msg,)\n
 \n
-  elif result_len >= 1:\n
+  elif result_len > 1:\n
     msg = Message(domain=\'ui\', message=\'Duplicate checks for the same check number\')\n
     raise ValidationFailed, (msg,)\n
 \n
