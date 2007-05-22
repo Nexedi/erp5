@@ -1060,7 +1060,7 @@ class Base( CopyContainer,
     else:
       # Check in local properties (which obviously were defined at some point)
       for p_id in self.propertyIds():
-        if key==p_id:
+        if key == p_id:
           return 1
       return 0
 
@@ -2069,13 +2069,11 @@ class Base( CopyContainer,
     """
     Check the constitency of objects.
 
-    For example we can check if every Organisation has at least
-    one Address.
+    For example we can check if every Organisation has at least one Address.
 
-    This method looks the constraints defines inside the propertySheets
-    then check each of them
+    This method looks the constraints defined inside the propertySheets then
+    check each of them
 
-    constraint_list -- the list of constraint we have to check
     """
     error_list = self._checkConsistency(fixit = fixit)
     # We are looking inside all instances in constraints, then we check
@@ -2087,7 +2085,7 @@ class Base( CopyContainer,
       else:
         error_list += constraint_instance.checkConsistency(self)
 
-    if len(error_list) > 0 and fixit:
+    if fixit and len(error_list) > 0:
       self.reindexObject()
 
     return error_list

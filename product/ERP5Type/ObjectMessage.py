@@ -26,10 +26,9 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.Utility import allow_class
 
-class ObjectMessage: 
+class ObjectMessage:
   """
   Object Message is used for notifications to user.
   """
@@ -78,7 +77,7 @@ class ObjectMessage:
 
   def getObject(self):
      """
-     Get the Object 
+     Get the Object.
      """
      from Globals import get_request
      request = get_request()['PARENTS']
@@ -89,4 +88,4 @@ class ObjectMessage:
 
      return None
 
-allow_class(ObjectMessage)   
+allow_class(ObjectMessage)

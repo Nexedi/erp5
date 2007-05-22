@@ -56,9 +56,12 @@ class Constraint:
         Remove unwanted attributes from constraint definition and keep
         them as instance attributes
       """
-      if id is not None: self.id = id
-      if description is not None: self.description = description
-      if type is not None: self.type = type
+      if id is not None:
+        self.id = id
+      if description is not None:
+        self.description = description
+      if type is not None:
+        self.type = type
       self.constraint_definition.update(constraint_definition)
 
     def _generateError(self, obj, error_message, mapping={}):
@@ -66,7 +69,8 @@ class Constraint:
         Generic method used to generate error in checkConsistency.
       """
       if error_message is not None:
-        msg = ConsistencyMessage(self, obj.getRelativeUrl(), error_message, mapping)
+        msg = ConsistencyMessage(self, obj.getRelativeUrl(),
+                                 error_message, mapping)
         return msg
 
     def _checkConstraintCondition(self, obj):

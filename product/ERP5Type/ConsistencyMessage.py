@@ -68,4 +68,4 @@ class ConsistencyMessage(ObjectMessage):
     """
     pass
 
-allow_class(ConsistencyMessage)   
+allow_class(ConsistencyMessage)
