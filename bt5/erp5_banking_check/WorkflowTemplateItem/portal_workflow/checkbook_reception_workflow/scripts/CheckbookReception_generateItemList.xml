@@ -133,11 +133,13 @@ def checkReferenceListUniqueness(reference_list, model, destination_payment):\n
   """\n
     Check each given reference not to already exist.\n
   """\n
-  match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment.getUid())\n
+  destination_payment_uid = destination_payment.getUid()\n
+  match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model)\n
   assertReferenceMatchListEmpty(match_list)\n
   for reference in reference_list:\n
-    if portal_activities.countMessageWithTag(\'check_%s_%s\' % (model, reference)) != 0:\n
-      raise ValidationFailed, \'This reference is alredy scheduled for indexing, and so is already allocated : %s\' % (reference, )\n
+    tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference)\n
+    if encountered_check_identifiers_dict.has_key(tag) or portal_activities.countMessageWithTag(tag) != 0:\n
+      raise ValidationFailed, \'The following references are already allocated : %s\' % ([reference, ], )\n
 \n
 portal_activities = context.getPortalObject().portal_activities\n
 def checkReferenceUniqueness(reference, model, destination_payment):\n
@@ -157,6 +159,8 @@ portal = context.getPortalObject()\n
 # because everything is already checked in the fast input\n
 line_list = delivery.objectValues(portal_type=delivery.getPortalType() + \' Line\')\n
 \n
+encountered_check_identifiers_dict = {}\n
+\n
 for line in line_list:\n
   quantity = line.getQuantity()\n
   resource = line.getResourceValue()\n
@@ -169,7 +173,7 @@ for line in line_list:\n
   if resource_portal_type == \'Checkbook Model\':\n
     is_checkbook = True\n
     module = portal.checkbook_module\n
-    model = resource.getTitle().replace(\'Ch\xc3\xa9quier\', \'Ch\xc3\xa8que\') # XXX: Yuck yuck.\n
+    model = resource.getComposition()\n
     # XXX: portal_type value is hardcoded because I don\'t want to get the\n
     # portaltype on each created object as it will always be the same.\n
     # We need a method to get the default content portaltype on a Folder.\n
@@ -180,7 +184,7 @@ for line in line_list:\n
   else:\n
     is_checkbook = False\n
     module = portal.check_module\n
-    model = resource.getTitle()\n
+    model = resource.getRelativeUrl()\n
     # XXX: portal_type value is hardcoded, see XXX above.\n
     if resource_portal_type == \'Check Model\' and resource.isFixedPrice():\n
       reference_to_int = getTravelerCheckReferenceNumber\n
@@ -193,9 +197,10 @@ for line in line_list:\n
   for i in xrange(quantity):\n
     item = module.newContent()\n
     item.setDestinationPayment(line.getDestinationPayment())\n
+    item.getDestinationPaymentValue().serialize() # To prevent multiple zeo nodes from creating checks for the same account, since they would not be able to see each other\'s activities.\n
     item.setDestinationTrade(line.getDestinationTrade())\n
-    item.setResourceValue(resource)\n
     if is_checkbook:\n
+      item.setResourceValue(resource)\n
       item.setReferenceRangeMin(reference_range_min)\n
       last_reference_value = reference_to_int(reference_range_min) + check_quantity - 1\n
       reference_range_max = int_to_reference(last_reference_value, reference_range_min)\n
@@ -208,21 +213,30 @@ for line in line_list:\n
       item.setStartDate(start_date)\n
       reference_list = range(reference_to_int(reference_range_min), last_reference_value + 1)\n
       checkReferenceListUniqueness(reference_list, model, item.getDestinationPaymentValue())\n
+      destination_payment_uid = item.getDestinationPaymentValue().getUid()\n
       for j in reference_list:\n
         reference = int_to_reference(j, reference_range_min)\n
-        check = item.newContent(portal_type=\'Check\', title=str(reference), activate_kw={\'tag\': \'check_%s_%s\' % (model, reference)})\n
+        tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference)\n
+        encountered_check_identifiers_dict[tag] = None\n
+        check = item.newContent(portal_type=\'Check\', title=str(reference), activate_kw={\'tag\': tag})\n
         check.setDestination(destination_section)\n
         check.setStartDate(start_date)\n
         check.setReference(reference)\n
+        check.setResource(model)\n
     else:\n
       checkReferenceUniqueness(reference_range_min, model, line.getDestinationPaymentValue())\n
       item.setReference(reference_range_min)\n
+      item.setResource(model)\n
       item.setTitle(reference_range_min)\n
       if len(resource.objectValues()) > 0:\n
         item_type = line.getCheckTypeValue()\n
         item.setPrice(item_type.getPrice())\n
         item.setPriceCurrency(line.getPriceCurrency())\n
       last_reference_value = reference_to_int(reference_range_min)\n
+      # Trigger a dummy activity just to avoi dbeing able to create that check multiple times in the same checkbook reception\n
+      tag = \'check_%s_%s_%s\' % (model, line.getDestinationPaymentValue().getUid(), reference_range_min)\n
+      encountered_check_identifiers_dict[tag] = None\n
+      item.activate(tag=tag).getUid()\n
     # update reference_range_min for the next pass\n
     reference_range_min = int_to_reference(last_reference_value + 1, reference_range_min)\n
     # I (seb) think this is a big mistake\n
@@ -296,6 +310,7 @@ for line in line_list:\n
                             <string>generateTravelerCheckReference</string>
                             <string>assertReferenceMatchListEmpty</string>
                             <string>portal</string>
+                            <string>encountered_check_identifiers_dict</string>
                             <string>portal_activities</string>
                             <string>checkReferenceListUniqueness</string>
                             <string>context</string>
@@ -328,8 +343,12 @@ for line in line_list:\n
                             <string>destination_section</string>
                             <string>range</string>
                             <string>reference_list</string>
+                            <string>destination_payment_uid</string>
                             <string>j</string>
                             <string>reference</string>
+                            <string>tag</string>
+                            <string>None</string>
+                            <string>_write_</string>
                             <string>str</string>
                             <string>check</string>
                             <string>len</string>
