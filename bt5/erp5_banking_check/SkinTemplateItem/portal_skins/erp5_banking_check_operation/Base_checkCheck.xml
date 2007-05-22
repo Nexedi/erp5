@@ -65,24 +65,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Type.Message import Message\n
+            <value> <string>from Products.ERP5Type.Message import Message\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 # Check that a check exists for given bank account and reference.\n
-result = context.Base_checkOrCreateCheck(reference=reference, \n
+check = context.Base_checkOrCreateCheck(reference=reference, \n
                                          bank_account=bank_account,\n
                                          resource=resource)\n
-result_len = len(result)\n
-if result_len == 0:\n
-  msg = Message(domain=\'ui\', message="No such check")\n
-  raise ValidationFailed, (msg,)\n
-elif result_len > 1:\n
-  msg = Message(domain=\'ui\', message=\'Duplicate checks for the same check number\')\n
-  raise ValidationFailed, (msg,)\n
-\n
-check = result[0].getObject()\n
 \n
 bad_simulation_state_dict = {\'draft\': \'The check is not issued yet.\',\n
                              \'cancelled\': \'The check has been stopped.\',\n
@@ -98,9 +87,7 @@ if simulation_state != \'confirmed\':\n
   raise ValidationFailed, (msg,)\n
 \n
 return check\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -157,14 +144,11 @@ return check\n
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>result</string>
-                            <string>len</string>
-                            <string>result_len</string>
-                            <string>msg</string>
-                            <string>_getitem_</string>
                             <string>check</string>
                             <string>bad_simulation_state_dict</string>
                             <string>simulation_state</string>
+                            <string>_getitem_</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

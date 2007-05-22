@@ -121,6 +121,9 @@ check_list = []\n
 bank_account_uid = bank_account.getUid()\n
 resource_value = None\n
 generic_model = None\n
+reference_dict = {}\n
+# First we must parse everyting to make sure there is no error,\n
+# this is safer because we catch Validation in workflow scripts\n
 for check_reference in reference_list:\n
   message_tag = \'check_%s_%s_%s\' % (resource, bank_account_uid, check_reference)\n
   # just raise an error.\n
@@ -130,11 +133,26 @@ for check_reference in reference_list:\n
   result = context.portal_catalog(portal_type = \'Check\', reference = check_reference, \n
                                   destination_payment_uid = bank_account.getUid(),\n
                                   default_resource_relative_url = resource)\n
-  if len(result) == 0:\n
+  result_len = len(result)\n
+  if result_len == 0:\n
     if not context.Base_isAutomaticCheckCreationAllowed():\n
       msg = Message(domain = "ui", message="Sorry, this reference does not exist")\n
       raise ValidationFailed, (msg,)\n
 \n
+  elif result_len >= 1:\n
+    msg = Message(domain=\'ui\', message=\'Duplicate checks for the same check number\')\n
+    raise ValidationFailed, (msg,)\n
+\n
+  reference_dict[check_reference] = {}\n
+  reference_dict[check_reference][\'result\'] = result\n
+  reference_dict[check_reference][\'result_len\'] = result_len\n
+  reference_dict[check_reference][\'message_tag\'] = message_tag\n
+\n
+for check_reference in reference_list:\n
+  result_len = reference_dict[check_reference][\'result_len\']\n
+  result = reference_dict[check_reference][\'result\']\n
+  message_tag = reference_dict[check_reference][\'message_tag\']\n
+  if result_len == 0:\n
     # This happens only if automatic creation is allowed. So create a new check at this point.\n
     # Get a checkbook for this bank account.\n
     checkbook = None\n
@@ -260,13 +278,16 @@ return check_list\n
                             <string>bank_account_uid</string>
                             <string>resource_value</string>
                             <string>generic_model</string>
+                            <string>reference_dict</string>
                             <string>check_reference</string>
                             <string>message_tag</string>
                             <string>result</string>
                             <string>len</string>
+                            <string>result_len</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
                             <string>checkbook</string>
                             <string>composition_related_list</string>
-                            <string>_getitem_</string>
                             <string>brain</string>
                             <string>obj</string>
                             <string>checkbook_tag</string>
