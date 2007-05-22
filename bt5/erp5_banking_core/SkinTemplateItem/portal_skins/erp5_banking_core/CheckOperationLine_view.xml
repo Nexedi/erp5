@@ -102,6 +102,7 @@
                     <value>
                       <list>
                         <string>my_source_payment_reference</string>
+                        <string>my_source_payment_title</string>
                         <string>my_price</string>
                         <string>price_string</string>
                       </list>
@@ -113,6 +114,7 @@
                       <list>
                         <string>my_aggregate_reference</string>
                         <string>my_aggregate_free_text</string>
+                        <string>my_aggregate_resource</string>
                       </list>
                     </value>
                 </item>

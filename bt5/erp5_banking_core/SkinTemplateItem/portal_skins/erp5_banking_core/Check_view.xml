@@ -106,6 +106,7 @@
                         <string>my_destination_title</string>
                         <string>my_destination_payment_title</string>
                         <string>my_price_string</string>
+                        <string>my_resource</string>
                       </list>
                     </value>
                 </item>
