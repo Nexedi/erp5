@@ -53,9 +53,6 @@ class Constraint(Interface):
         'type': 'MyConstraintClass',
       
         # Constraint have a description.
-        # XXX today, this is used to present errors to the user, because it's
-        # the only thing we can translate because it's static, wether other
-        # messages are dynamic.
         'description': 'Constraint description', 
        
         # XXX condition is a TALES Expression; is it part of the API ?
@@ -73,7 +70,9 @@ class Constraint(Interface):
   instance as `self.constraint_definition` (a dict).
 
   Calling checkConsistency() method on any ERP5Type document will check all
-  constraint defined on an object.
+  constraint defined on this document. If the document is a subclass of
+  Products.ERP5Type.Core.Folder.Folder, checkConsistency will be called
+  recursivly.
     
   XXX How to call only one constraint, even if this constraint is not defined
   on property sheet ?
@@ -87,7 +86,7 @@ class Constraint(Interface):
     This method should return a list of errors, which are a list for now.
     """
     
-  def _generateError(obj, error_message):
+  def _generateError(obj, error_message, mapping={}):
     """Generate an error for `obj` with the corresponding `error_message`.
     This method is usefull for Constraint authors, in case of an error, they
     can simply call:
@@ -95,13 +94,16 @@ class Constraint(Interface):
     >>> if something_is_wrong:
     >>>   errors.append(self._generateError(obj, 'Something is wrong !')
     
-    It's also possible to use a Message for dynamic translation:
+    Then this message ('Something is wrong !') will be translated when the
+    caller of document.checkConsistency() calls getTranslatedMessage() on
+    ConsistencyMessage instances returned by checkConsistency.
+
+    The implementation uses ERP5Type's Messages, so it's possible to use a
+    `mapping` for substitution, like this:
     >>> if something_is_wrong:
-    >>>   errors.append(self._generateError(obj, Message('erp5_ui', 
-    ...     'Something is wrong: ${wrong_thing}',
-    ...      mapping=dict(wrong_thing=obj.getTheWrongThing()))))
+    >>>   errors.append(self._generateError(obj,
+    ...      'Something is wrong: ${wrong_thing}',
+    ...      mapping=dict(wrong_thing=obj.getTheWrongThing())))
    
-    XXX it's probably not possible today, but it would be great to be able to
-    use Message here.
     """
 
