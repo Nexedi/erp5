@@ -2,12 +2,15 @@
  <portal_type id="Check Deposit">
   <item>site</item>
  </portal_type>
+ <portal_type id="Check Payment">
+  <item>aggregate_resource</item>
+ </portal_type>
  <portal_type id="Checkbook Delivery">
   <item>currency_exchange_type</item>
  </portal_type>
  <portal_type id="Checkbook Delivery Line">
-  <item>check_amount</item>
   <item>check_type</item>
+  <item>check_amount</item>
   <item>currency_exchange_type</item>
  </portal_type>
  <portal_type id="Checkbook Reception Line">

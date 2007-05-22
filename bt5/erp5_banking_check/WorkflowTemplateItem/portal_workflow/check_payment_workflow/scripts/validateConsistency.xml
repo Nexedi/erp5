@@ -121,10 +121,16 @@ if bank_account is None:\n
 \n
 # Check the check.\n
 check_number = transaction.getAggregateFreeText()\n
+check_resource = transaction.getAggregateResource()\n
 if not check_number:\n
   msg = Message(domain=\'ui\', message="Check not defined.")\n
   raise ValidationFailed, (msg,)\n
-transaction.Base_checkCheck(reference=check_number, bank_account=bank_account)\n
+if check_resource is None:\n
+  msg = Message(domain=\'ui\', message="Check type not defined.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+transaction.Base_checkCheck(reference=check_number, bank_account=bank_account, \n
+                            resource=check_resource)\n
 \n
 context.updateBankingOperation(state_change)\n
 
@@ -206,6 +212,7 @@ context.updateBankingOperation(state_change)\n
                             <string>price</string>
                             <string>bank_account</string>
                             <string>check_number</string>
+                            <string>check_resource</string>
                             <string>context</string>
                           </tuple>
                         </value>
