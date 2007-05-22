@@ -160,11 +160,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
       if self.isMemcachedUsed():
         return []
-      user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-      if user_id is not None:
-        prefix = '%s-' % user_id
-        return [x.replace(prefix, '', 1) for x in self.getSelectionContainer().keys() if x.startswith(prefix)]
-      return []
+      return self._getSelectionNameListFromContainer()
 
     # backward compatibility
     security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
@@ -182,34 +178,16 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         return None
       return selection(context=context)
 
-    def getSelectionContainer(self):
-      """
-        Return the selection container.
-      """
-      if self.isMemcachedUsed():
-        value = getattr(self, '_v_selection_data', None)
-        if value is None:
-          value = self.getPortalObject().portal_memcached.getMemcachedDict(key_prefix='selection_tool')
-          setattr(self, '_v_selection_data', value)
-      else:
-        value = getattr(self, '_selection_data', None)
-        if value is None:
-          value = PersistentMapping()
-          setattr(self, '_selection_data', value)
-      return value
-
     security.declareProtected(ERP5Permissions.View, 'getSelectionFor')
     def getSelectionFor(self, selection_name, REQUEST=None):
       """
         Returns the selection instance for a given selection_name
       """
-      user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-      if user_id is not None:
-        if isinstance(selection_name, (tuple, list)):
-          selection_name = selection_name[0]
-        selection = self.getSelectionContainer().get('%s-%s' % (user_id, selection_name))
-        if selection is not None:
-          return selection.__of__(self)
+      if isinstance(selection_name, (tuple, list)):
+        selection_name = selection_name[0]
+      selection = self._getSelectionFromContainer(selection_name)
+      if selection is not None:
+        return selection.__of__(self)
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionFor')
     def setSelectionFor(self, selection_name, selection_object, REQUEST=None):
@@ -220,10 +198,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         # Set the name so that this selection itself can get its own name.
         selection_object.edit(name = selection_name)
 
-      user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-      if user_id is not None:
-        self.getSelectionContainer()['%s-%s' % (user_id, selection_name)] = aq_base(selection_object)
-      return
+      self._setSelectionToContainer(selection_name, selection_object)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionParamsFor')
     def getSelectionParamsFor(self, selection_name, params=None, REQUEST=None):
@@ -1314,7 +1289,72 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
           return aq_base_name
       return aq_base_name
 
+    def _getUserId(self):
+      return self.portal_membership.getAuthenticatedMember().getUserName()
+
+    def _getSelectionFromContainer(self, selection_name):
+      user_id = self._getUserId()
+      if user_id is None: return None
+      if self.isMemcachedUsed():
+        return self._getMemcachedContainer().get('%s-%s' %
+                                                 (user_id, selection_name))
+      else:
+        return self._getPersistentContainer(user_id).get(selection_name,
+                                                         None)
+
+    def _setSelectionToContainer(self, selection_name, selection):
+      user_id = self._getUserId()
+      if user_id is None: return
+      if self.isMemcachedUsed():
+        self._getMemcachedContainer().set('%s-%s' % (user_id, selection_name), aq_base(selection))
+      else:
+        self._getPersistentContainer(user_id)[selection_name] = aq_base(selection)
+
+    def _getSelectionNameListFromContainer(self):
+      if self.isMemcachedUsed():
+        return []
+      else:
+        user_id = self._getUserId()
+        if user_id is None: return []
+        return self._getPersistentContainer(user_id).keys()
+
+    def _getMemcachedContainer(self):
+      value = getattr(self, '_v_selection_data', None)
+      if value is None:
+        value = self.getPortalObject().portal_memcached.getMemcachedDict(key_prefix='selection_tool')
+        setattr(self, '_v_selection_data', value)
+      return value
+
+    def _getPersistentContainer(self, user_id):
+      if getattr(self, 'selection_data', None) is None:
+        self.selection_data = PersistentMapping()
+      if not self.selection_data.has_key(user_id):
+        self.selection_data[user_id] = SelectionPersistentMapping()
+      return self.selection_data[user_id]
+
 InitializeClass( SelectionTool )
+
+
+class SelectionPersistentMapping(PersistentMapping):
+  """A conflict-free PersistentMapping.
+
+  Like selection objects, the purpose is to only prevent restarting
+  transactions.
+  """
+  def _p_independent(self) :
+    return 1
+
+  def _p_resolveConflict(self, oldState, savedState, newState):
+    # update keys that only savedState has
+    oldState = newState
+    # dict returned by PersistentMapping.__getstate__ contains the data
+    # under _container key, so only compare this key (this is coupled with
+    # PersistentMapping implementation, but this implementation is lot likely
+    # to change, because it would break existing pickles).
+    oldState['_container'].update(savedState['_container'])
+
+    return oldState
+
 
 class TreeListLine:
   def __init__(self,object,is_pure_summary,depth, is_open,select_domain_dict,exception_uid_list):

@@ -68,8 +68,9 @@ class TestSelectionTool(ERP5TypeTestCase):
                       self.portal_selections.getSelectionNameList())
     self.assertEquals(['test_selection'],
                       self.portal_selections.getSelectionNames())
-    self.assert_(self.portal_selections.getSelectionContainer() is not None)
-    self.assert_(getattr(self.portal_selections, '_selection_data', None)
+    self.assert_(self.portal_selections._getPersistentContainer('manager')
+                 is not None)
+    self.assert_(getattr(self.portal_selections, 'selection_data', None)
                  is not None)
     # use memcached tool
     self.portal_selections.setStorage('Memcached Tool')
@@ -77,7 +78,7 @@ class TestSelectionTool(ERP5TypeTestCase):
                       self.portal_selections.getSelectionNameList())
     self.assertEquals([],
                       self.portal_selections.getSelectionNames())
-    self.assert_(self.portal_selections.getSelectionContainer() is not None)
+    self.assert_(self.portal_selections._getMemcachedContainer() is not None)
     self.assert_(getattr(self.portal_selections, '_v_selection_data', None)
                  is not None)
 

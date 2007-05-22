@@ -176,6 +176,15 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
                 v = v.encode('ascii')
               setattr(self, k, v)
 
+    def _p_independent(self) :
+      return 1
+
+    def _p_resolveConflict(self, oldState, savedState, newState) :
+      """Selection are edited by listboxs, so many conflicts can happen,
+         this is a workaround, so that no unnecessary transaction is
+         restarted."""
+      return newState
+
     def __call__(self, method = None, context=None, REQUEST=None):
         #LOG("Selection", 0, str((self.__dict__)))
         #LOG("Selection", 0, str(method))
