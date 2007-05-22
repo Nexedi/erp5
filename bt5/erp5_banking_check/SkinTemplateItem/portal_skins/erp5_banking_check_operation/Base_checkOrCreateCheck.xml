@@ -74,6 +74,8 @@
 from Products.ERP5Type.Message import Message\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
+portal = context.getPortalObject()\n
+\n
 if bank_account is None:\n
   if destination:\n
     bank_account = context.getDestinationPaymentValue()\n
@@ -82,6 +84,10 @@ if bank_account is None:\n
   \n
 if bank_account is None:\n
   msg = Message(domain=\'ui\',message=\'Sorry, you must select an account\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+if resource is None:\n
+  msg = Message(domain=\'ui\',message=\'Sorry, you must select a resource\')\n
   raise ValidationFailed, (msg,)\n
 \n
 if reference is not None:\n
@@ -112,13 +118,18 @@ elif reference_range_min is not None or reference_range_max is not None:\n
     reference_list.append(ref)\n
 \n
 check_list = []\n
+bank_account_uid = bank_account.getUid()\n
+resource_value = None\n
+generic_model = None\n
 for check_reference in reference_list:\n
-  message_tag = \'check_%s\' % (check_reference, )\n
+  message_tag = \'check_%s_%s_%s\' % (resource, bank_account_uid, check_reference)\n
   # just raise an error.\n
   if context.portal_activities.countMessageWithTag(message_tag) != 0:\n
     msg = Message(domain=\'ui\', message="This check number is already being indexed.")\n
     raise ValidationFailed, (msg,)\n
-  result = context.portal_catalog(portal_type = \'Check\', reference = check_reference, destination_payment_uid = bank_account.getUid())\n
+  result = context.portal_catalog(portal_type = \'Check\', reference = check_reference, \n
+                                  destination_payment_uid = bank_account.getUid(),\n
+                                  default_resource_relative_url = resource)\n
   if len(result) == 0:\n
     if not context.Base_isAutomaticCheckCreationAllowed():\n
       msg = Message(domain = "ui", message="Sorry, this reference does not exist")\n
@@ -127,23 +138,41 @@ for check_reference in reference_list:\n
     # This happens only if automatic creation is allowed. So create a new check at this point.\n
     # Get a checkbook for this bank account.\n
     checkbook = None\n
+    if resource_value is None:\n
+      resource_value = portal.restristedTraverse(resource)\n
+      composition_related_list = resource_value.getCompositionRelatedValueList()\n
+      if len(composition_related_list) == 0:\n
+        msg = Message(domain = "ui", message="Sorry, no checkbook model found")\n
+        raise ValidationFailed, (msg,)\n
+      if len(composition_related_list) != 1:\n
+        msg = Message(domain = "ui", message="Sorry, too many many checkbook model found")\n
+        raise ValidationFailed, (msg,)\n
+      generic_model = composition_related_list[0]\n
+\n
     generic_model = context.portal_catalog(portal_type = \'Checkbook Model\', title = \'Generic\')[0].getObject()\n
     # XXX it would be better to use a related key for this, but z_related_resource is too specific to\n
     # movement at the moment.\n
     for brain in context.portal_catalog(portal_type = \'Checkbook\',\n
-                                        destination_payment_uid = bank_account.getUid()):\n
+                                        title = \'Generic\',\n
+                                        destination_payment_uid = bank_account.getUid(),\n
+                                        default_resource_uid = generic_model.getUid()):\n
       obj = brain.getObject()\n
-      if obj.getResourceUid() == generic_model.getUid():\n
-        checkbook = obj\n
-        break\n
+      #if obj.getResourceUid() == generic_model.getUid():\n
+      checkbook = obj\n
+      #  break\n
     if checkbook is None:\n
       # Create a checkbook.\n
       # To prevent duplicated checkbooks for a single bank account, index this new checkbook immediately.\n
       # This has a performance penalty, but this part of the script will rarely be called (once per bank account).\n
+      checkbook_tag = "checkbook_%s_%s" % (resource, bank_account_uid) \n
+      if context.portal_activities.countMessageWithTag(checkbook_tag) != 0:\n
+        msg = Message(domain=\'ui\', message="There is already a checkbook being indexed.")\n
+        raise ValidationFailed, (msg,)\n
       checkbook = context.checkbook_module.newContent(portal_type = \'Checkbook\',\n
+                                                      title = \'Generic\',\n
                                                       resource_value = generic_model,\n
                                                       destination_payment_value = bank_account,\n
-                                                      immediate_reindex = 1)\n
+                                                      activate_kw={\'tag\' : checkbook_tag} )\n
     # Create a check.\n
     check = checkbook.newContent(portal_type = \'Check\', reference = check_reference, activate_kw={\'tag\': message_tag})\n
     # Automatically issue this check.\n
@@ -179,7 +208,7 @@ return check_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference=None, reference_range_min=None, reference_range_max=None, source=0, destination=1, bank_account=None</string> </value>
+            <value> <string>reference=None, reference_range_min=None, reference_range_max=None, source=0, destination=1, bank_account=None, resource=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -199,7 +228,7 @@ return check_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
+                        <value> <int>7</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -211,13 +240,15 @@ return check_list\n
                             <string>source</string>
                             <string>destination</string>
                             <string>bank_account</string>
+                            <string>resource</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>None</string>
                             <string>msg</string>
                             <string>reference_list</string>
                             <string>int</string>
@@ -226,15 +257,19 @@ return check_list\n
                             <string>range</string>
                             <string>ref</string>
                             <string>check_list</string>
+                            <string>bank_account_uid</string>
+                            <string>resource_value</string>
+                            <string>generic_model</string>
                             <string>check_reference</string>
                             <string>message_tag</string>
                             <string>result</string>
                             <string>len</string>
                             <string>checkbook</string>
+                            <string>composition_related_list</string>
                             <string>_getitem_</string>
-                            <string>generic_model</string>
                             <string>brain</string>
                             <string>obj</string>
+                            <string>checkbook_tag</string>
                             <string>check</string>
                           </tuple>
                         </value>
@@ -253,6 +288,7 @@ return check_list\n
                 <none/>
                 <int>0</int>
                 <int>1</int>
+                <none/>
                 <none/>
               </tuple>
             </value>

@@ -71,7 +71,9 @@ from Products.ERP5Type.Message import Message\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 # Check that a check exists for given bank account and reference.\n
-result = context.Base_checkOrCreateCheck(reference=reference, bank_account=bank_account)\n
+result = context.Base_checkOrCreateCheck(reference=reference, \n
+                                         bank_account=bank_account,\n
+                                         resource=resource)\n
 result_len = len(result)\n
 if result_len == 0:\n
   msg = Message(domain=\'ui\', message="No such check")\n
@@ -120,7 +122,7 @@ return check\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>bank_account, reference</string> </value>
+            <value> <string>bank_account, reference, resource</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -140,7 +142,7 @@ return check\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -148,6 +150,7 @@ return check\n
                           <tuple>
                             <string>bank_account</string>
                             <string>reference</string>
+                            <string>resource</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>

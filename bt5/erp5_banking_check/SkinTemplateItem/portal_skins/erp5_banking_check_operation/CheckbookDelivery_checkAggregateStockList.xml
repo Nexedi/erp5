@@ -137,7 +137,7 @@ for line in context.getMovementList():\n
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>x</string>
                             <string>current_tracking_list</string>
                             <string>aggregate_uid_list</string>

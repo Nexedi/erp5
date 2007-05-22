@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Vault Controler Validated</string> </value>
+            <value> <string>Controler Validated</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -40,6 +40,7 @@
                 <string>confirm</string>
                 <string>confirm_action</string>
                 <string>deliver</string>
+                <string>order_to_deliver_action</string>
                 <string>reject</string>
                 <string>reject_action</string>
               </tuple>

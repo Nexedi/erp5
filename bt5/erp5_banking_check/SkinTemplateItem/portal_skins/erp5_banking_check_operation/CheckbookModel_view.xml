@@ -114,6 +114,7 @@
                     <value>
                       <list>
                         <string>my_price_currency</string>
+                        <string>my_composition</string>
                       </list>
                     </value>
                 </item>
