@@ -796,14 +796,15 @@ class TestERP5BankingMixin:
                                             reference_range_max = max,
                                             start_date = date)
 
-  def createCheckbookModel(self, id):
+  def createCheckbookModel(self, id, check_model):
     """
     Create a checkbook for the given bank account
     with 3 variations
     """
     model =  self.checkbook_model_module.newContent(id = id,
                                             portal_type = 'Checkbook Model',
-                                            title='Generic')
+                                            title='Generic',
+                                            composition=check_model.getRelativeUrl())
     model.newContent(id='variant_1',portal_type='Checkbook Model Check Amount Variation',
                      quantity=50,title='50')
     model.newContent(id='variant_2',portal_type='Checkbook Model Check Amount Variation',
@@ -822,14 +823,16 @@ class TestERP5BankingMixin:
                                             title = 'Check',
                                             )
 
-  def createCheck(self, id, reference, checkbook,bank_account=None):
+  def createCheck(self, id, reference, checkbook, bank_account=None,
+                        resource_value=None):
     """
     Create Check in a checkbook
     """
     check = checkbook.newContent(id=id,
                                  portal_type = 'Check',
                                  reference=reference,
-                                 destination_payment_value=bank_account
+                                 destination_payment_value=bank_account,
+                                 resource_value=resource_value
                                 )
 
     # mark the check as issued

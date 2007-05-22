@@ -183,8 +183,9 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
 
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
-    self.checkbook_model_1 = self.createCheckbookModel('checkbook_model_1')
     self.check_model_1 = self.createCheckModel('check_model_1')
+    self.checkbook_model_1 = self.createCheckbookModel('checkbook_model_1',
+                                  check_model=self.check_model_1)
     self.destination_site = self.paris
     self.createBanknotesAndCoins()
     self.reception_destination_site = self.paris
@@ -349,9 +350,9 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     """
     state = self.checkbook_vault_transfer.getSimulationState()
     # check that state is draft
-    self.assertEqual(state, 'confirmed')
+    self.assertEqual(state, 'ordered')
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 
-                                   'confirm_to_deliver_action', 
+                                   'order_to_deliver_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
     # get state of cash sorting
     state = self.checkbook_vault_transfer.getSimulationState()
@@ -389,7 +390,7 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     Try if we get Insufficient balance
     """
     message = self.assertWorkflowTransitionFails(self.checkbook_vault_transfer,
-              'checkbook_vault_transfer_workflow','confirm_to_deliver_action')
+              'checkbook_vault_transfer_workflow','order_to_deliver_action')
     self.failUnless(message.find('Sorry, the item with reference')>=0)
     self.failUnless(message.find('is not available any more')>=0)
 
@@ -409,13 +410,13 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
                     + 'CreateCheckAndCheckbookLineList Tic ' \
                     + 'PlanCheckbookVaultTransfer Tic ' \
                     + 'OrderCheckbookVaultTransfer Tic ' \
-                    + 'ConfirmCheckbookVaultTransfer Tic ' \
                     + 'CheckConfirmedCheckbookInventory Tic ' \
                     + 'ChangePreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookVaultTransferFails Tic ' \
                     + 'PutBackPreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookVaultTransfer Tic ' \
                     + 'CheckFinalCheckbookInventory'
+                    #+ 'ConfirmCheckbookVaultTransfer Tic ' \
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)

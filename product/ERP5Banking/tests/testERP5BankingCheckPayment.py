@@ -140,6 +140,8 @@ class TestERP5BankingCheckPaymentMixin:
     self.openCounterDate(site=self.paris)
     self.openCounter(site=self.bi_counter_vault)
 
+    self.check_model = self.createCheckModel(id='check_model')
+    self.createCheckbookModel(id='checkbook_model', check_model=self.check_model)
     # create a check
     self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
                                             vault=self.bi_counter,
@@ -150,24 +152,29 @@ class TestERP5BankingCheckPaymentMixin:
 
     self.check_1 = self.createCheck(id='check_1',
                                     reference='50',
+                                    resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_2 = self.createCheck(id='check_2',
                                     reference='51',
+                                    resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_3 = self.createCheck(id='check_3',
                                     reference='52',
+                                    resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_4 = self.createCheck(id='check_4',
                                     reference='53',
+                                    resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_5 = self.createCheck(id='check_5',
                                     reference='54',
+                                    resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_5 = self.createCheck(id='check_6',
                                     reference='56',
+                                    resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.non_existant_check_reference = '55'
-    self.createCheckbookModel(id='checkbook_model')
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -205,15 +212,17 @@ class TestERP5BankingCheckPaymentMixin:
     """
     Create a check payment document and check it
     """
-    self.check_payment = self.check_payment_module.newContent(id = 'check_payment', portal_type = 'Check Payment',
-                                         destination_payment_value = self.bank_account_1,
-                                         # aggregate_value = self.check_1,
-                                         resource_value = self.currency_1,
-                                         aggregate_free_text = "50",
-                                         description = "test",
-                                         # source_value = self.bi_counter,
-                                         start_date = DateTime().Date(),
-                                         source_total_asset_price = 20000.0)
+    self.check_payment = self.check_payment_module.newContent(id = 'check_payment', 
+                                   portal_type = 'Check Payment',
+                                   destination_payment_value = self.bank_account_1,
+                                   # aggregate_value = self.check_1,
+                                   resource_value = self.currency_1,
+                                   aggregate_free_text = "50",
+                                   aggregate_resource_value = self.check_model,
+                                   description = "test",
+                                   # source_value = self.bi_counter,
+                                   start_date = DateTime().Date(),
+                                   source_total_asset_price = 20000.0)
     # call set source to go into the interaction workflow to update local roles
     self.check_payment._setSource(self.bi_counter.getRelativeUrl())
     self.assertNotEqual(self.check_payment, None)
@@ -264,10 +273,9 @@ class TestERP5BankingCheckPaymentMixin:
                                 insuffisient_balance=0, **kwd):
     new_payment = self.check_payment_module.newContent(portal_type = 'Check Payment',
                                          destination_payment_value = self.bank_account_1,
-                                         # aggregate_value = self.check_1,
                                          resource_value = self.currency_1,
+                                         aggregate_resource_value = self.check_model,
                                          aggregate_free_text = number,
-                                         # source_value = self.bi_counter,
                                          start_date = DateTime().Date(),
                                          source_total_asset_price = 20000.0)
     new_payment._setSource(self.bi_counter.getRelativeUrl())
