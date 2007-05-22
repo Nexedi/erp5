@@ -157,7 +157,7 @@ for check_reference in reference_list:\n
     # Get a checkbook for this bank account.\n
     checkbook = None\n
     if resource_value is None:\n
-      resource_value = portal.restristedTraverse(resource)\n
+      resource_value = portal.restrictedTraverse(resource)\n
       composition_related_list = resource_value.getCompositionRelatedValueList()\n
       if len(composition_related_list) == 0:\n
         msg = Message(domain = "ui", message="Sorry, no checkbook model found")\n
