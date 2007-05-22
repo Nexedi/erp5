@@ -272,10 +272,14 @@ if user_vault == 1:\n
 \n
 if current_url != None :\n
   if \'site\' not in current_url:\n
-    current_url = \'site/\'+current_url\n
-  current_category = context.portal_categories.getCategoryValue(current_url)\n
+    current_category_relative_url = \'site/\'+current_url\n
+    if with_base:\n
+      current_url = current_category_relative_url\n
+  else:\n
+    current_category_relative_url = current_url\n
+  current_category = context.portal_categories.getCategoryValue(current_category_relative_url)\n
   if current_category is not None :\n
-    if current_category.getRelativeUrl() not in [x[1] for x in vault_list] :\n
+    if current_url not in [x[1] for x in vault_list] :\n
       # Get the logical path of the current category\n
       logical_path_list = current_category.getLogicalPath().split(\'/\')\n
       title = \'/\'.join(context.Base_calculateBeautifulSiteLogicalPath(logical_path_list,path_len=len(logical_path_list)))\n
@@ -377,6 +381,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>$append0</string>
                             <string>x</string>
                             <string>new_vault_list</string>
+                            <string>current_category_relative_url</string>
                             <string>current_category</string>
                             <string>logical_path_list</string>
                             <string>title</string>

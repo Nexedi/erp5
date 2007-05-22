@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Banking Operation Line">
+  <item>aggregate_resource</item>
+ </portal_type>
  <portal_type id="Cash Delivery Cell">
   <item>variation</item>
  </portal_type>
@@ -11,6 +14,9 @@
  <portal_type id="Checkbook">
   <item>resource</item>
   <item>check_amount</item>
+ </portal_type>
+ <portal_type id="Checkbook Model">
+  <item>composition</item>
  </portal_type>
  <portal_type id="Counter Date">
   <item>site</item>

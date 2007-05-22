@@ -71,9 +71,10 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 bank_account = state_change[\'object\']\n
 \n
 # use of the constraint\n
-vliste = bank_account.checkConsistency()\n
-if len(vliste) != 0 and bank_account.getParentValue().getPortalType()!=\'Person\':\n
-  raise ValidationFailed, (vliste[0].getTranslatedMessage(),)\n
+if bank_account.getParentValue().getPortalType()!=\'Person\':\n
+  vliste = bank_account.checkConsistency()\n
+  if len(vliste) != 0:\n
+    raise ValidationFailed, (vliste[0].getTranslatedMessage(),)\n
 </string> </value>
         </item>
         <item>

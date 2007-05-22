@@ -88,12 +88,19 @@ resource_dict = {}\n
 vault_dict = {}\n
 vault_inventory_dict = {}\n
 \n
+portal = context.getPortalObject()\n
 \n
-vault_url = vault\n
-vault_dict[vault_url] = 1\n
+\n
+vault_url_list = vault\n
+if same_type(vault, \'a\'):\n
+  vault_url_list = [vault]\n
+\n
+for vault_url in vault_url_list:\n
+  vault_dict[vault_url] = 1\n
+  vault_inventory_dict[vault_url] = {}\n
+\n
+\n
 total_inventory_list = []\n
-\n
-vault_inventory_dict[vault_url] = {}\n
 inventory_kw = {}\n
 #context.log(\'CounterModule_getVaultTransactionList, vault_report_type\',vault_report_type)\n
 if vault_report_type is None or vault_report_type==\'inventory\':\n
@@ -145,25 +152,39 @@ if column_names == 1:\n
 \n
 #context.log(\'node_category\',vault)\n
 #context.log(\'inventory_kw\',inventory_kw)\n
-vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node=vault\n
+vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node=vault_url_list\n
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
                                                                  )\n
-#context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault\n
-#                                                                , ignore_variation=0,src__=1\n
-#                                                               ,**inventory_kw\n
-#                                                              ))\n
+context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault_url_list\n
+                                                                , ignore_variation=0,src__=1\n
+                                                               ,**inventory_kw\n
+                                                              ))\n
+\n
+if summarise:\n
+  total_quantity = 0\n
+  total_price = 0\n
+  for vault_inventory in vault_inventory_list:\n
+    if only_positive:\n
+      total_quantity += abs(vault_inventory.total_quantity)\n
+      total_price += abs(vault_inventory.total_price)\n
+    else:\n
+      total_quantity += vault_inventory.total_quantity\n
+      total_price += vault_inventory.total_price\n
+  return [newTempBase(context, "summary", total_quantity=total_quantity, total_price=total_price), ]\n
 \n
 #context.log(\'len(vault_inventory_list:\',len(vault_inventory_list))\n
 for vault_inventory in vault_inventory_list:\n
+  node_relative_url = vault_inventory.node_relative_url\n
   if vault_inventory.total_quantity in (0.0,0,None):\n
     continue\n
   #context.log(\'vault_inventory total_quantity\',vault_inventory.total_quantity)\n
   #context.log(\'vault_inventory total_price\',vault_inventory.total_price)\n
-  resource = (vault_inventory.resource_uid, vault_inventory.variation_text or \'\')\n
+  resource = (vault_inventory.resource_relative_url, vault_inventory.variation_text or \'\')\n
   if vault_report_type==\'history\':\n
-    resource = (vault_inventory.resource_uid, vault_inventory.variation_text or \'\',vault_inventory.stock_uid)\n
-  if not vault_inventory_dict[vault_url].has_key(resource):\n
+    #resource = (vault_inventory.resource_relative_url, vault_inventory.variation_text or \'\',vault_inventory.stock_uid)\n
+    resource = (vault_inventory.resource_relative_url, vault_inventory.variation_text or \'\',vault_inventory.path)\n
+  if not vault_inventory_dict[node_relative_url].has_key(resource):\n
     total_quantity = vault_inventory.total_quantity\n
     if total_quantity is None:\n
       total_quantity = 0\n
@@ -175,7 +196,7 @@ for vault_inventory in vault_inventory_list:\n
       total_quantity = abs(total_quantity)\n
 #     context.log(\'type\',type(total_price))\n
 #     context.log(\'sql total_price\',total_price)\n
-    vault_inventory_dict[vault_url][resource] = {\'quantity\':total_quantity, \'total_price\':total_price,\n
+    vault_inventory_dict[node_relative_url][resource] = {\'quantity\':total_quantity, \'total_price\':total_price,\n
                                                  \'date\':vault_inventory.date}\n
 \n
   resource_dict[resource] = 1\n
@@ -189,7 +210,7 @@ i = 0\n
 #for resource in context.Baobab_sortResourceTitleList(resource_dict.keys()):\n
 for resource in resource_dict.keys():\n
   variation_text = resource[1]\n
-  tmp_dict = {\'resource_uid\':resource[0], \'variation_text\':variation_text}\n
+  tmp_dict = {\'resource_relative_url\':resource[0], \'variation_text\':variation_text}\n
   for variation in variation_text.split(\'\\n\'):\n
     if variation.startswith(\'cash_status\'):\n
       tmp_dict[\'cash_status\'] = variation\n
@@ -198,23 +219,31 @@ for resource in resource_dict.keys():\n
     elif variation.startswith(\'emission_letter\'):\n
       tmp_dict[\'emission_letter\'] = variation\n
       tmp_dict[\'emission_letter_title\'] = getTitleFromCategoryUrl(variation)\n
+      tmp_dict[\'emission_letter_translated_title\'] = getTranslatedTitleFromCategoryUrl(variation)\n
     elif variation.startswith(\'variation\'):\n
       tmp_dict[\'variation\'] = variation\n
       tmp_dict[\'variation_title\'] = getTitleFromCategoryUrl(variation)\n
+      tmp_dict[\'variation_translated_title\'] = getTranslatedTitleFromCategoryUrl(variation)\n
   tmp_dict[\'variation_text_title\'] = \' \'.join(getVariationTitleList(resource[1]))\n
   #resource = (vault_inventory.resource_uid, tuple(getVariationTitleList(vault_inventory.variation_text or \'\')))\n
-  resource_value = context.portal_catalog.getObject(resource[0])\n
+  #resource_value = context.portal_catalog.getObject(resource[0])\n
+  resource_value = portal.restrictedTraverse(resource[0])\n
   current_resource_portal_type = resource_value.getPortalType()\n
   if current_resource_portal_type not in resource_portal_type:\n
     continue\n
   if len(resource)==3: # case of history\n
     context.log(\'movement uid before error\',resource[2])\n
-    movement = context.portal_catalog.getObject(resource[2])\n
+    #movement = context.portal_catalog.getObject(resource[2])\n
+    movement = portal.restrictedTraverse(resource[2])\n
     #context.log(\'movement\',movement)\n
     explanation_value = movement\n
     if getattr(movement,\'getExplanationValue\',None) is not None:\n
       explanation_value = movement.getExplanationValue()\n
     tmp_dict[\'explanation_relative_url\'] = explanation_value.getRelativeUrl()\n
+    source_reference = explanation_value.getSourceReference() or \'\'\n
+    tmp_dict[\'source_reference\'] = source_reference\n
+    tmp_dict[\'explanation_translated_relative_url\'] = "%s/%s" % \\\n
+          (explanation_value.getTranslatedPortalType(),source_reference)\n
   tmp_dict[\'base_price\'] = resource_value.getBasePrice()\n
   tmp_dict[\'resource_title\'] = resource_value.getTitle()\n
   #context.log(\'resource_value\',resource_value.getRelativeUrl())\n
@@ -230,7 +259,9 @@ for resource in resource_dict.keys():\n
     try:\n
       resource_in_vault = vault_inventory_dict[vault][resource]\n
     except KeyError:\n
-      resource_in_vault = {\'quantity\' : 0,\'total_price\' : 0}\n
+      # This resource does not exist for this vault\n
+      #resource_in_vault = {\'quantity\' : 0,\'total_price\' : 0}\n
+      continue\n
     total_quantity = resource_in_vault[\'quantity\']\n
     total_price = resource_in_vault[\'total_price\']\n
     if banknote_quantity_divisor is not None:\n
@@ -242,9 +273,9 @@ for resource in resource_dict.keys():\n
     if vault_report_type==\'history\':\n
       tmp_dict.update({\'date\':resource_in_vault[\'date\']})\n
     general_total_price += resource_in_vault[\'total_price\']\n
-  tmp_dict[\'general_total_price\'] = general_total_price\n
-  total_inventory_list.append(newTempBase(context, "new_%03i" % i, **tmp_dict))\n
-  i += 1\n
+    tmp_dict[\'general_total_price\'] = general_total_price\n
+    total_inventory_list.append(newTempBase(context, "new_%03i" % i, **tmp_dict))\n
+    i += 1\n
 \n
 def sort_base_price(a,b):\n
   return -cmp(a.base_price,b.base_price)\n
@@ -277,7 +308,7 @@ return repr([x for x in total_inventory_list])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, banknote_quantity_divisor=None,**kw</string> </value>
+            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, banknote_quantity_divisor=None, summarise=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -297,7 +328,7 @@ return repr([x for x in total_inventory_list])\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -311,6 +342,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>resource_portal_type</string>
                             <string>only_positive</string>
                             <string>banknote_quantity_divisor</string>
+                            <string>summarise</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
@@ -320,27 +352,32 @@ return repr([x for x in total_inventory_list])\n
                             <string>resource_dict</string>
                             <string>vault_dict</string>
                             <string>vault_inventory_dict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>vault_url_list</string>
+                            <string>same_type</string>
+                            <string>_getiter_</string>
                             <string>vault_url</string>
                             <string>_write_</string>
                             <string>total_inventory_list</string>
                             <string>inventory_kw</string>
                             <string>None</string>
-                            <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>len</string>
                             <string>kw_has_cash_status</string>
                             <string>kw_has_emission_letter</string>
                             <string>variation_text_list</string>
                             <string>column_list</string>
-                            <string>_getiter_</string>
                             <string>_apply_</string>
-                            <string>context</string>
                             <string>vault_inventory_list</string>
-                            <string>vault_inventory</string>
-                            <string>resource</string>
                             <string>total_quantity</string>
                             <string>total_price</string>
+                            <string>vault_inventory</string>
+                            <string>_inplacevar_</string>
                             <string>abs</string>
+                            <string>node_relative_url</string>
+                            <string>resource</string>
                             <string>i</string>
                             <string>variation_text</string>
                             <string>tmp_dict</string>
@@ -350,11 +387,11 @@ return repr([x for x in total_inventory_list])\n
                             <string>movement</string>
                             <string>explanation_value</string>
                             <string>getattr</string>
+                            <string>source_reference</string>
                             <string>KeyError</string>
                             <string>general_total_price</string>
                             <string>resource_in_vault</string>
                             <string>round</string>
-                            <string>_inplacevar_</string>
                             <string>sort_base_price</string>
                             <string>repr</string>
                             <string>append</string>
@@ -383,6 +420,7 @@ return repr([x for x in total_inventory_list])\n
                 </tuple>
                 <int>0</int>
                 <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>

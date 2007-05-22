@@ -355,11 +355,11 @@
                           <string>Cash Status</string>
                         </tuple>
                         <tuple>
-                          <string>emission_letter_title</string>
+                          <string>emission_letter_translated_title</string>
                           <string>Emission Letter</string>
                         </tuple>
                         <tuple>
-                          <string>variation_title</string>
+                          <string>variation_translated_title</string>
                           <string>Variation</string>
                         </tuple>
                         <tuple>
@@ -367,7 +367,7 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>explanation_relative_url</string>
+                          <string>explanation_translated_relative_url</string>
                           <string>Explanation</string>
                         </tuple>
                         <tuple>

@@ -104,6 +104,10 @@
             <value> <string>CheckOperationLine_init</string> </value>
         </item>
         <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
               <tuple/>

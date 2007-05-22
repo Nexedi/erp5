@@ -93,8 +93,14 @@ inv_account_dict = {}\n
 for account_uid in account_uids:\n
   acc_dict = inv_account_dict[account_uid] = {}\n
   account = account_dict[account_uid]\n
+#   context.log(\'account\',account)\n
   acc_dict[\'account_reference\'] = account.getReference()\n
-  acc_dict[\'account_owner\'] = account.getParentValue().getTitle()\n
+  acc_dict[\'internal_bank_account_number\'] = account.getInternalBankAccountNumber()\n
+  parent_value = account.getParentValue()\n
+  acc_dict[\'account_owner\'] = parent_value.getTitle()\n
+  acc_dict[\'activity\'] = None\n
+  if parent_value.getPortalType() == \'Organisation\':\n
+    acc_dict[\'activity\'] = parent_value.getActivity()\n
   acc_dict[\'currency_title\'] = account.getPriceCurrencyTitle()\n
   acc_dict[\'transaction_list\'] = []\n
 \n
@@ -166,7 +172,7 @@ if transaction_list:\n
     if description is None:\n
       description = \'\'\n
     tmp_dict[\'description\'] = description\n
-    tmp_dict[\'start_date\'] = delivery.getStartDate()\n
+    tmp_dict[\'start_date\'] = inventory.date\n
     tmp_dict[\'module_title\'] = delivery.getParentValue().getTranslatedTitle()\n
 \n
     # Common to bank account\n
@@ -210,6 +216,14 @@ return inv_account_dict.values()\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>from_date=None, at_date=None, reference=None, current_inventory=0, available_inventory=0, future_inventory=0, transaction_list=0</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -259,6 +273,7 @@ return inv_account_dict.values()\n
                             <string>inv_account_dict</string>
                             <string>account_uid</string>
                             <string>acc_dict</string>
+                            <string>parent_value</string>
                             <string>_apply_</string>
                             <string>current_available_inventory_list</string>
                             <string>inv</string>

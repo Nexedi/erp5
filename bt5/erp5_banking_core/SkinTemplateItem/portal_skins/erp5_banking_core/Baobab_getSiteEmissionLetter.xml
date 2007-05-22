@@ -65,36 +65,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-account = None\n
-portal = context.getPortalObject()\n
-catalog = portal.portal_catalog\n
-portal_type = "Bank Account"\n
+            <value> <string># Rerturns the emission letter corresponding to a particular site\n
+from Products.ERP5Type.Cache import CachingMethod\n
 \n
-if reference is None:\n
-  message = Message(domain="ui", message="Please give a reference")\n
-  raise ValueError, message\n
+def getSiteEmissionLetter(site=None):\n
+  portal = context.getPortalObject()\n
+  site_object = portal.portal_categories.restrictedTraverse(site)\n
+  return site_object.getCodification()[0].lower()\n
 \n
-account_list = catalog(string_index=reference, portal_type=portal_type, validation_state=\'valid\')\n
-if len(account_list) == 0:\n
-  account_list = catalog(string_index="%%%s%%" % reference, portal_type=portal_type, validation_state=\'valid\')\n
-if len(account_list) == 0:\n
-  message = Message(domain="ui", message="No bank account have this reference")\n
-  raise ValueError, message\n
+getSiteEmissionLetter = CachingMethod(getSiteEmissionLetter,\n
+                             id = \'Baobab_getSiteEmissionLetter\',\n
+                             cache_factory = \'erp5_ui_long\')\n
 \n
-account_list = [x.getObject() for x in account_list]\n
-\n
-if total_price:\n
-  tmp_dict = {}\n
-  new_list = []\n
-  for account in account_list:\n
-    quantity = account.BankAccount_getCurrentPosition()\n
-    tmp_dict[\'total_price\'] = quantity\n
-    new_list.append(account.asContext(**tmp_dict))\n
-  account_list = new_list\n
-\n
-# context.log("final account list",account_list)\n
-return account_list\n
+return getSiteEmissionLetter(site=site)\n
 </string> </value>
         </item>
         <item>
@@ -117,15 +100,7 @@ return account_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference=None, total_price=0</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>site=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -145,36 +120,17 @@ return account_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>reference</string>
-                            <string>total_price</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>site</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                             <string>None</string>
-                            <string>account</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>catalog</string>
-                            <string>portal_type</string>
-                            <string>message</string>
-                            <string>ValueError</string>
-                            <string>account_list</string>
-                            <string>len</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>tmp_dict</string>
-                            <string>new_list</string>
-                            <string>quantity</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
+                            <string>getSiteEmissionLetter</string>
                           </tuple>
                         </value>
                     </item>
@@ -188,13 +144,12 @@ return account_list\n
             <value>
               <tuple>
                 <none/>
-                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankAccount_getReportInformationList</string> </value>
+            <value> <string>Baobab_getSiteEmissionLetter</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
