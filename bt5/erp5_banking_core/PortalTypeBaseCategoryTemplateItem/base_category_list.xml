@@ -11,6 +11,9 @@
  <portal_type id="Check Model Type Variation">
   <item>check_type</item>
  </portal_type>
+ <portal_type id="Check Operation Line">
+  <item>aggregate_resource</item>
+ </portal_type>
  <portal_type id="Checkbook">
   <item>resource</item>
   <item>check_amount</item>
