@@ -51,7 +51,7 @@
 <tal:block tal:define="NEWS_LEN NEWS_LEN | python:10;\n
                        TASK_LEN TASK_LEN | python:10;">\n
 <tal:block metal:define-macro="act">\n
-  <tal:block tal:define="tasks python: list(here.WebSite_getPendingEventInfoList())[:TASK_LEN];">\n
+ <tal:block tal:define="tasks python: list(here.WebSite_getPendingEventInfoList())[:TASK_LEN];">\n
     <div class="boxHeader" >\n
       <a  i18n:translate="" i18n:domain="ui"\n
         tal:attributes="href string: search_area/WebSite_viewPendingEventList">\n
@@ -61,8 +61,8 @@
     </div>\n
     <div class="boxContent">\n
       <ul>\n
-        <li tal:repeat="doc tasks">\n
-          <tal:block tal:condition="python:doc is not None">\n
+         <li tal:repeat="doc tasks">\n
+         <tal:block tal:condition="python:doc is not None">\n
           <a tal:define="url python: \'%s/view\' % doc.absolute_url()"\n
             tal:attributes="href url">\n
             <span tal:replace="doc/portal_type"/>:\n
@@ -72,7 +72,7 @@
             (<span tal:content="python: doc.getValidationStateTitle()" \n
                     tal:attributes="class python:doc.getTranslatedValidationStateTitle()"/>)\n
           </a>\n
-          </tal:block>\n
+         </tal:block>\n
         </li>\n
       </ul>\n
       <a tal:condition="python: len(tasks) > TASK_LEN" \n
@@ -111,12 +111,58 @@
 </tal:block>\n
 \n
 <tal:block metal:define-macro="evaluate">\n
-  <tal:block>\n
+  <tal:block tal:define="stats here/WebSite_calculateStatistics;\n
+                         persons_stats stats/persons;\n
+                         document_stats stats/documents;">\n
     <div class="boxHeader" value="" i18n:translate="" i18n:domain="ui">\n
       Evaluate\n
     </div>\n
     <div class="boxContent">\n
-      Some nice evaluation parameters.\n
+      <h5>Documents (overall)</h5>\n
+      <ul>\n
+        <li>Published: <span tal:content="document_stats/total_documents_published"/></li>\n
+        <li>Released: <span tal:content="document_stats/total_documents_released"/></li>\n
+        <li>Shared: <span tal:content="document_stats/total_documents_shared"/></li>\n
+        <li>Draft: <span tal:content="document_stats/total_documents_draft"/></li>\n
+        <li>Total: <span tal:content="document_stats/total_documents"/></li>\n
+      </ul>\n
+\n
+      <h5>Documents (classified)</h5>\n
+        <ul>\n
+          <li tal:repeat="classification python:document_stats[\'classifications\'].items()">\n
+            <tal:block tal:define="classification_obj python: here.restrictedTraverse(\'portal_categories/classification/%s\' %classification[0])">\n
+            <span tal:content="classification_obj/getTitle"/>: \n
+            <span tal:content="python: classification[1]"/>\n
+            </tal:block>\n
+          </li>\n
+        </ul>\n
+\n
+      <h5>Most productive</h5>\n
+      <ul tal:define="group python: document_stats[\'documents_groups_sorted\'][0];\n
+                      group_obj python: here.restrictedTraverse(\'portal_categories/group/%s\' %group[0]);\n
+                      person python: document_stats[\'documents_owners_sorted\'][0];\n
+                      person_obj python: here.ERP5Site_getAuthenticatedMemberPersonValue(person[0]);">\n
+        <li><b>Person:</b> \n
+             <a href="" tal:attributes="href person_obj/absolute_url">\n
+               <span tal:content="person_obj/getTitle"/>\n
+              (<span tal:content="python: person[1]"/>)\n
+             </a>\n
+        </li>\n
+        <li><b>Devision:</b> \n
+             <a href="" tal:attributes="href group_obj/absolute_url">\n
+               <span tal:content="group_obj/getTitle"/>\n
+              (<span tal:content="python: group[1]"/>)\n
+             </a>\n
+        </li>\n
+      </ul>\n
+\n
+      <h5>Human Resources</h5>\n
+      <ul>\n
+        <li>Total: <span tal:content="persons_stats/total_persons"/></li>\n
+        <li>Validated: <span tal:content="persons_stats/total_persons_validated"/></li>\n
+        <li>Draft: <span tal:content="persons_stats/total_persons_draft"/></li>\n
+      </ul>\n
+\n
     </div>\n
   </tal:block>\n
 </tal:block>\n

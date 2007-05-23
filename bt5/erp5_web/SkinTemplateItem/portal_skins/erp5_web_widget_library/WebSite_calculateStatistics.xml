@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  A simple script to calculate some statistics\n
+  about documents and persons in the system.\n
+\n
+"""\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+def sortDictByValues(adict):\n
+  """ \n
+    Sort a dictionary by maximal values. \n
+    Return sorted list of tuples [(key, value),...]\n
+  """\n
+  items = adict.items()\n
+  items.sort(lambda x,y: cmp(x[1], y[1]))\n
+  items.reverse()\n
+  return items\n
+\n
+def calculateStatistics():\n
+  portal = context.getPortalObject()\n
+  portal_catalog = portal.portal_catalog\n
+  portal_types = context.portal_types\n
+\n
+  # document statistics\n
+  documents_groups = {}\n
+  documents_owners = {}\n
+  documents_classifications = {}\n
+  document_content_types = portal_types[\'Document Module\'].allowed_content_types\n
+  all_documents = portal_catalog.searchResults(portal_type = document_content_types)\n
+  total_documents = portal_catalog.countResults(portal_type = document_content_types)[0][0]\n
+  total_documents_released = portal_catalog.countResults(portal_type = document_content_types,\n
+                                                         validation_state = \'released\')[0][0]\n
+  total_documents_shared = portal_catalog.countResults(portal_type = document_content_types,\n
+                                                       validation_state = \'shared\')[0][0]\n
+  total_documents_draft = portal_catalog.countResults(portal_type = document_content_types,\n
+                                                      validation_state = \'draft\')[0][0]\n
+  total_documents_published = portal_catalog.countResults(portal_type = document_content_types,\n
+                                                        validation_state = \'published\')[0][0]\n
+  # get what\'s still not in catalog as info\n
+  for doc in all_documents:\n
+    obj = doc.getObject()\n
+    # count classification\n
+    classification = obj.getClassification()\n
+    if classification is not None:\n
+      documents_classifications[classification] = documents_classifications.get(classification, 0) + 1\n
+    # count devision\n
+    group = obj.getGroup()\n
+    if group is not None:\n
+      documents_groups[group] = documents_groups.get(group, 0) + 1\n
+    # XXX: count owner\n
+    doc_metadata = portal_catalog.getMetadataForUid(doc.getUid())\n
+    doc_owner = doc_metadata.get(\'owner\', None)\n
+    if doc_owner is not None and doc_owner.find(\'@\')!=-1:\n
+      # we have a website user. we wanted to filter Zope users\n
+      documents_owners[doc_owner] = documents_owners.get(doc_owner, 0) + 1\n
+  # sort the most "productive" devision group by number of documents contributed\n
+  documents_groups_sorted = sortDictByValues(documents_groups)\n
+  # sort sort the most "productive" person by number of documents contributed\n
+  documents_owners_sorted = sortDictByValues(documents_owners)\n
+  documents_stats = dict(total_documents = total_documents,\n
+                         total_documents_released = total_documents_released,\n
+                         total_documents_shared = total_documents_shared,\n
+                         total_documents_draft = total_documents_draft,\n
+                         total_documents_published = total_documents_published,\n
+                         documents_groups_sorted = documents_groups_sorted,\n
+                         documents_owners_sorted = documents_owners_sorted,\n
+                         classifications = documents_classifications)\n
+  # person statistics\n
+  total_persons = portal_catalog.countResults(portal_type = \'Person\')[0][0]\n
+  total_persons_draft = portal_catalog.countResults(portal_type = \'Person\',\n
+                                                    validation_state = \'draft\')[0][0]\n
+  total_persons_validated = portal_catalog.countResults(portal_type = \'Person\',\n
+                                                      validation_state = \'validated\')[0][0]\n
+  persons_stats = dict(total_persons = total_persons,\n
+                       total_persons_draft = total_persons_draft,\n
+                       total_persons_validated = total_persons_validated)\n
+  # final statistics\n
+  statistics = dict(documents = documents_stats,\n
+                    persons = persons_stats)\n
+  return statistics\n
+\n
+# cache statistics for a short period\n
+cached_method = CachingMethod(calculateStatistics, \n
+                              script.id, \n
+                              \'erp5_content_short\')\n
+stats = cached_method() #calculateStatistics()\n
+\n
+return stats\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>sortDictByValues</string>
+                            <string>calculateStatistics</string>
+                            <string>_getattr_</string>
+                            <string>script</string>
+                            <string>cached_method</string>
+                            <string>stats</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_calculateStatistics</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
