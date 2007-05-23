@@ -133,6 +133,7 @@ if check_resource is None:\n
     check_model_reference = \'CCOP\'\n
   check_resource = transaction.Base_getCheckModelByReference(\n
                     reference=check_model_reference).getRelativeUrl()\n
+  transaction.edit(aggregate_resource=check_resource)\n
 \n
 if not check_number:\n
   msg = Message(domain=\'ui\', message="Check not defined.")\n
