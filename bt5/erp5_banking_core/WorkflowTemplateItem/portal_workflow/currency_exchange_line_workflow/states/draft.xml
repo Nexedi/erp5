@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Documents in draft state should never be accounted and should only be visible by their ownner</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>draft</string> </value>
+        </item>
+        <item>
+            <key> <string>permission_roles</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Draft</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>confirm</string>
+                <string>confirm_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Access contents information</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Modify portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>View</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

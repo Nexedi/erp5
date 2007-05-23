@@ -65,21 +65,50 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if bank_account is None:\n
-  msg = "Please give an account"\n
-  raise ValueError, (msg,)\n
+            <value> <string encoding="cdata"><![CDATA[
+
+exchange_line = state_change[\'object\']\n
 \n
-# Automated calculation of the aggregate resource\n
-entity_portal_type = bank_account.getParentValue().getPortalType()\n
-check_model_reference = None\n
-if entity_portal_type == \'Person\':\n
-  check_model_reference = \'CCOP\'\n
-elif entity_portal_type == \'Organisation\':\n
-  check_model_reference = \'CCCO\'\n
-check_resource = context.Base_getCheckModelByReference(\n
-                  reference=check_model_reference).getRelativeUrl()\n
-return check_resource\n
-</string> </value>
+# In this script, we will make sure it is impossible to get two \n
+# exchange lines opened in the same time.\n
+\n
+if exchange_line.getBasePrice() in (None, 0, 0.0):\n
+  msg = Message(domain = \'ui\', message = \'Sorry, you must define a fixing price.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+from DateTime import DateTime\n
+\n
+# We have to looking for other currency exchanges lines\n
+from Products.ERP5Type.Document import newTempBase\n
+temp_object = newTempBase(context.getPortalObject(),\'temp_object\')\n
+start_date = exchange_line.getStartDate()\n
+temp_kw = {\'category_list\':[\'resource/%s\' % exchange_line.getParentValue().getRelativeUrl(),\n
+                            \'price_currency/%s\' % exchange_line.getPriceCurrency()],\n
+           \'start_date\':start_date\n
+          }\n
+temp_object.edit(**temp_kw)\n
+line_list = [x for x in exchange_line.portal_domains.searchPredicateList(temp_object,\n
+                                            portal_type=\'Currency Exchange Line\',\n
+                                            validation_state=\'validated\',\n
+                                            test=1)\n
+             if x.getUid()!=exchange_line.getUid()]\n
+\n
+\n
+start_date = exchange_line.getStartDate()\n
+if start_date is None:\n
+  msg = Message(domain = \'ui\', message = \'Sorry, you must define a start date.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Make sure there is not two exchange lines wich defines the same dates\n
+# for this particular ressource and price_currency\n
+for line in line_list:\n
+  if line.getStopDate() is None or line.getStopDate()>line.getStartDate():\n
+    line.setStopDate(start_date)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -94,14 +123,16 @@ return check_resource\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change,**kw</string> </value>
         </item>
         <item>
-            <key> <string>_params</string> </key>
-            <value> <string>bank_account=None</string> </value>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -127,15 +158,31 @@ return check_resource\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>bank_account</string>
-                            <string>None</string>
-                            <string>msg</string>
-                            <string>ValueError</string>
+                            <string>state_change</string>
+                            <string>kw</string>
+                            <string>_getitem_</string>
+                            <string>exchange_line</string>
                             <string>_getattr_</string>
-                            <string>entity_portal_type</string>
-                            <string>check_model_reference</string>
-<string>context</string>
-                            <string>check_resource</string>
+                            <string>None</string>
+                            <string>Message</string>
+                            <string>msg</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>DateTime</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>context</string>
+                            <string>temp_object</string>
+                            <string>start_date</string>
+                            <string>temp_kw</string>
+                            <string>_apply_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>line_list</string>
+                            <string>line</string>
                           </tuple>
                         </value>
                     </item>
@@ -147,14 +194,12 @@ return check_resource\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getCheckModelByBankAccount</string> </value>
+            <value> <string>checkSingleExchangeLine</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
