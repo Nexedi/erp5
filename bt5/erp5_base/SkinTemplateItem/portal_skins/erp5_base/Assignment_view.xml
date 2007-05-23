@@ -94,7 +94,6 @@
                         <string>my_destination_project_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -107,6 +106,7 @@
                         <string>my_activity</string>
                         <string>my_function</string>
                         <string>my_site</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
