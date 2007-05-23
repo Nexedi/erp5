@@ -253,7 +253,7 @@ def getModuleIdList(product_path, module_id):
           module_name = file_name[0:-3]
           module_name_list += [module_name]
   except:
-    LOG('ERP5Type:', BLATHER,
+    LOG('ERP5Type', BLATHER,
         'No %s directory in %s' % (module_id, product_path))
   return path, module_name_list
 
@@ -334,7 +334,7 @@ class DocumentConstructor(Method):
       o = self.klass(id)
       if activate_kw is not None:
         o.__of__(folder).setDefaultActivateParameters(**activate_kw)
-      if is_indexable is not None:   
+      if is_indexable is not None:
         o.isIndexable = is_indexable
       folder._setObject(id, o)
       o = folder._getOb(id)
