@@ -71,12 +71,13 @@ def get_value(self, id, **kw):
         kw['form'] = form
         kw['request'] = REQUEST
         kw['here'] = obj
+        kw['context'] = obj
         kw['modules'] = SecureModuleImporter
         kw['container'] = container
         try :
             kw['preferences'] = obj.getPortalObject().portal_preferences
         except AttributeError :
-            LOG('ERP5Form', 0,
+            LOG('ERP5Form', PROBLEM,
               'portal_preferences not put in TALES context (not installed?)')
         # This allows to pass some pointer to the local object
         # through the REQUEST parameter. Not very clean.
