@@ -946,8 +946,19 @@ def initializeProduct( context,
                        fti=contentFactoryTypeInformations,
                       ).initialize( context )
 
-  # Register Help
-  context.registerHelp(directory='help')
+  # Register Help and API Reference
+  # This trick to make registerHelp work with 2 directories is taken from
+  # CMFCore
+  help = context.getProductHelp()
+  lastRegistered = help.lastRegistered
+  context.registerHelp(directory='help', clear=1)
+  context.registerHelp(directory='Interface', clear=1)
+  if help.lastRegistered != lastRegistered:
+    help.lastRegistered = None
+    context.registerHelp(directory='help', clear=1)
+    help.lastRegistered = None
+    context.registerHelp(directory='Interface', clear=0)
+
   context.registerHelpTitle('%s Help' % product_name)
 
   # Register Objets
