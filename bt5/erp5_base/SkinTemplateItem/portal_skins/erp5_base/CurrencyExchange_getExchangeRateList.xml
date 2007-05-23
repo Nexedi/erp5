@@ -110,12 +110,14 @@ if to_currency is not None:\n
     object = temp_object\n
     mapped_value = context.portal_domains.generateMappedValue(object, \n
                                                       has_cell_content=0, \n
+                                                      validation_state=\'validated\',\n
                                                       sort_method=sort_by_date)\n
     base_price = getattr(mapped_value, \'base_price\', None)\n
     discount = getattr(mapped_value, \'discount\', None)\n
     if base_price is None and discount is None:\n
       mapped_value = context.portal_domains.generateMappedValue(object, \n
                                                       has_cell_content=1, \n
+                                                      validation_state=\'validated\',\n
                                                       sort_method=sort_by_date)\n
       base_price = getattr(mapped_value, \'base_price\', None)\n
       discount = getattr(mapped_value, \'discount\', None)\n
