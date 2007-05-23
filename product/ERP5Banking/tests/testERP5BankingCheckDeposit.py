@@ -135,6 +135,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
 
     # the checkbook module
     self.checkbook_module = self.getCheckbookModule()
+    self.createCheckAndCheckbookModel()
     # create a check
     self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
                                             vault=None,
@@ -145,6 +146,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
 
     self.check_1 = self.createCheck(id='check_1',
                                     reference='CHKNB1',
+                                    resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
 
 
@@ -205,13 +207,15 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Add a check to the check deposit
     """
-    self.check_operation_line_1 = self.check_deposit.newContent(id='check_operation_line_1',
-                                                                portal_type="Check Operation Line",
-                                                                aggregate_free_text="CHKNB1",
-                                                                source_payment_value = self.bank_account_2,
-                                                                price=2000,
-                                                                quantity=1,
-                                                                quantity_unit_value=self.unit)
+    self.check_operation_line_1 = self.check_deposit.newContent(
+        id='check_operation_line_1',
+        portal_type="Check Operation Line",
+        aggregate_free_text="CHKNB1",
+        aggregate_resource=self.check_model.getRelativeUrl(),
+        source_payment_value = self.bank_account_2,
+        price=2000,
+        quantity=1,
+        quantity_unit_value=self.unit)
     self.assertNotEqual(self.check_operation_line_1, None)
     self.assertEqual(len(self.check_deposit.objectIds()), 1)
 
@@ -221,13 +225,15 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     Add a check to the check deposit, check number is not defined into site
     so transition must failed
     """
-    self.check_operation_line_1 = self.check_deposit.newContent(id='check_operation_line_1',
-                                                                portal_type="Check Operation Line",
-                                                                aggregate_free_text="CHKNB6",
-                                                                source_payment_value = self.bank_account_2,
-                                                                price=2000,
-                                                                quantity=1,
-                                                                quantity_unit_value=self.unit)
+    self.check_operation_line_1 = self.check_deposit.newContent(
+          id='check_operation_line_1',
+          portal_type="Check Operation Line",
+          aggregate_free_text="CHKNB6",
+          aggregate_resource=self.check_model.getRelativeUrl(),
+          source_payment_value = self.bank_account_2,
+          price=2000,
+          quantity=1,
+          quantity_unit_value=self.unit)
     self.assertNotEqual(self.check_operation_line_1, None)
     self.assertEqual(len(self.check_deposit.objectIds()), 1)
 
@@ -294,11 +300,13 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepClearCheck(self, sequence=None, sequence_list=None, **kw):
     """
-    Remove previous check and create a new one with same reference
+    Remove previous check and create a new one with same reference,
+    like this we make sure the workflow history is empty
     """
     self.checkbook_1.manage_delObjects([self.check_1.getId(),])
     self.check_1 = self.createCheck(id='check_1',
                                     reference='CHKNB1',
+                                    resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
 
   def stepClearCheckDepositModule(self, sequence=None, sequence_list=None, **kw):

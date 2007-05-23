@@ -118,8 +118,7 @@ class TestERP5BankingTravelerCheckSaleMixin:
 
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
-    self.checkbook_model_1 = self.createCheckbookModel('checkbook_model_1')
-    self.check_model_1 = self.createCheckModel('check_model_1')
+    self.createCheckAndCheckbookModel()
     self.createBanknotesAndCoins()
     self.vault_transfer_source_site = self.paris.caveau
     self.vault_transfer_destination_site = self.paris.surface

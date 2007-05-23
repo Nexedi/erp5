@@ -84,8 +84,7 @@ class TestERP5BankingCheckbookDeliveryMixin:
 
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
-    self.checkbook_model_1 = self.createCheckbookModel('checkbook_model_1')
-    self.check_model_1 = self.createCheckModel('check_model_1')
+    self.createCheckAndCheckbookModel()
     self.createBanknotesAndCoins()
     self.vault_transfer_source_site = self.paris.caveau
     self.vault_transfer_destination_site = self.paris.surface
@@ -218,7 +217,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     # Add a line for check and checkbook
     self.line_1 = self.checkbook_delivery.newContent(quantity=1,
                                  resource_value=self.checkbook_model_1,
-                                 check_amount_value=self.checkbook_model_1.variant_1,
+                                 check_amount_value=self.checkbook_model.variant_1,
                                  reference_range_min=1,
                                  description='test',
                                  reference_range_max=50,

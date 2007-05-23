@@ -78,9 +78,7 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
                                    wf_id='checkbook_vault_transfer_workflow')
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action', 
-                                   wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_to_deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_to_deliver_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
 
   def createCheckbookVaultTransferWithTravelerCheck(self, sequence=None, 
@@ -106,9 +104,7 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
                                    wf_id='checkbook_vault_transfer_workflow')
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action', 
-                                   wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_to_deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_to_deliver_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
 
 class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCashTransferMixin,
@@ -150,8 +146,7 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
 
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
-    self.checkbook_model_1 = self.createCheckbookModel('checkbook_model_1')
-    self.check_model_1 = self.createCheckModel('check_model_1')
+    self.createCheckAndCheckbookModel()
     self.createBanknotesAndCoins()
     self.vault_transfer_source_site = self.paris.caveau
     self.vault_transfer_destination_site = self.paris.surface

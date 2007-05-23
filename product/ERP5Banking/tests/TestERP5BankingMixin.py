@@ -309,6 +309,7 @@ class TestERP5BankingMixin:
   def createCurrency(self, id='EUR', title='Euro'):
     # create the currency document for euro inside the currency module
     currency = self.getCurrencyModule().newContent(id=id, title=title, reference=id)
+    exchange_line = None
     if id=='USD':
       # Create an exchange line
       exchange_line = currency.newContent(portal_type='Currency Exchange Line',
@@ -337,6 +338,10 @@ class TestERP5BankingMixin:
       self.assertEquals(len(cell_list),3)
       for cell in cell_list:
         cell.setBasePrice(1./650.0)
+
+    if exchange_line is not None:
+      exchange_line.confirm()
+      exchange_line.validate()
 
     return currency
 
@@ -804,6 +809,7 @@ class TestERP5BankingMixin:
     model =  self.checkbook_model_module.newContent(id = id,
                                             portal_type = 'Checkbook Model',
                                             title='Generic',
+                                            account_number_enabled=True,
                                             composition=check_model.getRelativeUrl())
     model.newContent(id='variant_1',portal_type='Checkbook Model Check Amount Variation',
                      quantity=50,title='50')
@@ -822,6 +828,7 @@ class TestERP5BankingMixin:
                                             portal_type = 'Check Model',
                                             title = 'Check',
                                             reference = reference,
+                                            account_number_enabled=True,
                                             )
 
   def createCheckAndCheckbookModel(self):

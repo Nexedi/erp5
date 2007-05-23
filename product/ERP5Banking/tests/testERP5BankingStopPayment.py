@@ -129,6 +129,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
                      description='test',
                      start_date=self.date,
                      reference_range_min=51,
+                     aggregate_resource_value=self.check_model_1,
                      source_total_asset_price=20000)
     # set source reference
     self.setDocumentSourceReference(self.stop_payment)
