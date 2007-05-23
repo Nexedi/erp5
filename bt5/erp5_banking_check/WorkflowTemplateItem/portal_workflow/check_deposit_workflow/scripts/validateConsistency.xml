@@ -98,6 +98,12 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
   if not check_number:\n
     msg = Message(domain=\'ui\', message=\'Check is not defined.\')\n
     raise ValidationFailed, (msg,)\n
+\n
+  check_type = check_operation_line.getAggregateResource()\n
+  if check_type is None:\n
+    msg = Message(domain=\'ui\', message=\'Check type is not defined.\')\n
+    raise ValidationFailed, (msg,)\n
+\n
   \n
   source_bank_account = check_operation_line.getSourcePaymentValue()\n
   if source_bank_account is None:\n
@@ -116,7 +122,8 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
     msg = Message(domain=\'ui\', message="Unknown error code.")\n
     raise ValidationFailed, (msg,)\n
 \n
-  transaction.Base_checkCheck(bank_account=source_bank_account, reference=check_number)\n
+  transaction.Base_checkCheck(bank_account=source_bank_account, reference=check_number,\n
+                              resource=check_type)\n
 \n
 if transaction.getSimulationState() == "draft":\n
   context.updateBankingOperation(state_change)\n
@@ -193,6 +200,7 @@ if transaction.getSimulationState() == "draft":\n
                             <string>_getiter_</string>
                             <string>check_operation_line</string>
                             <string>check_number</string>
+                            <string>check_type</string>
                             <string>source_bank_account</string>
                             <string>context</string>
                             <string>error</string>
