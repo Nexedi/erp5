@@ -142,7 +142,10 @@ def checkReferenceListUniqueness(reference_list, model, destination_payment_uid)
     Check each given reference not to already exist.\n
   """\n
   context.log(\'query\', portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model, src__=1))\n
-  match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model)\n
+  if destination_payment_uid is None:\n
+    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, resource_relative_url=model)\n
+  else:\n
+    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model)\n
   context.log(\'len\', len(match_list))\n
   assertReferenceMatchListEmpty(match_list)\n
   for reference in reference_list:\n
@@ -197,7 +200,7 @@ for line in line_list:\n
     destination_trade = line.getDestinationTrade()\n
   else:\n
     destination_payment_value = None\n
-    destination_payment_uid = "dummy"\n
+    destination_payment_uid = None\n
 \n
   aggregate_list = []\n
   for i in xrange(quantity):\n
@@ -217,13 +220,13 @@ for line in line_list:\n
       item.setTitle(\'%s - %s\' % (reference_range_min, reference_range_max))\n
       item.setCheckAmount(check_amount)\n
       destination_section = item.getDestinationSection()\n
-      for reference in reference_list:\n
-        tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference)\n
+      for j in reference_list:\n
+        tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, j)\n
         encountered_check_identifiers_dict[tag] = None\n
-        check = item.newContent(portal_type=\'Check\', title=str(reference), activate_kw={\'tag\': tag})\n
+        check = item.newContent(portal_type=\'Check\', title=j, activate_kw={\'tag\': tag})\n
         check.setDestination(destination_section)\n
         check.setStartDate(start_date)\n
-        check.setReference(reference)\n
+        check.setReference(j)\n
         check.setResource(model)\n
     else:\n
       checkReferenceUniqueness(reference_range_min, model, destination_payment_uid)\n
@@ -350,10 +353,9 @@ for line in line_list:\n
                             <string>reference_list</string>
                             <string>reference_range_max</string>
                             <string>destination_section</string>
-                            <string>reference</string>
+                            <string>j</string>
                             <string>tag</string>
                             <string>_write_</string>
-                            <string>str</string>
                             <string>check</string>
                             <string>len</string>
                             <string>item_type</string>

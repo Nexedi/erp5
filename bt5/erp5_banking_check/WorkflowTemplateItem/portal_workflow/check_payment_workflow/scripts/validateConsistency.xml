@@ -125,14 +125,8 @@ check_resource = transaction.getAggregateResource()\n
 \n
 # Automated calculation of the aggregate resource\n
 if check_resource is None:\n
-  entity_portal_type = bank_account.getParentValue().getPortalType()\n
-  check_model_reference = None\n
-  if entity_portal_type == \'Person\':\n
-    check_model_reference = \'CCOP\'\n
-  elif entity_portal_type == \'Organisation\':\n
-    check_model_reference = \'CCOP\'\n
-  check_resource = transaction.Base_getCheckModelByReference(\n
-                    reference=check_model_reference).getRelativeUrl()\n
+  check_resource = transaction.Base_getCheckModelByBankAccount(\n
+                    bank_account=bank_account).getRelativeUrl()\n
   transaction.edit(aggregate_resource=check_resource)\n
 \n
 if not check_number:\n
@@ -227,8 +221,6 @@ context.updateBankingOperation(state_change)\n
                             <string>bank_account</string>
                             <string>check_number</string>
                             <string>check_resource</string>
-                            <string>entity_portal_type</string>
-                            <string>check_model_reference</string>
                             <string>check</string>
                             <string>context</string>
                           </tuple>
