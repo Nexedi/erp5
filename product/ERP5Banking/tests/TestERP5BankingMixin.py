@@ -814,14 +814,25 @@ class TestERP5BankingMixin:
     return model
 
 
-  def createCheckModel(self, id):
+  def createCheckModel(self, id, reference='CCOP'):
     """
     Create a checkbook for the given bank account
     """
     return self.checkbook_model_module.newContent(id = id,
                                             portal_type = 'Check Model',
                                             title = 'Check',
+                                            reference = reference,
                                             )
+
+  def createCheckAndCheckbookModel(self):
+    """
+    create default checkbook and check models
+    """
+    self.check_model = self.createCheckModel(id='check_model')
+    self.check_model_1 = self.check_model
+    self.checkbook_model = self.createCheckbookModel(
+           id='checkbook_model', check_model=self.check_model)
+    self.checkbook_model_1 = self.checkbook_model
 
   def createCheck(self, id, reference, checkbook, bank_account=None,
                         resource_value=None):
