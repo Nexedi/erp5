@@ -71,8 +71,6 @@ from Products.ERP5Type.Message import Message\n
 from Products.ERP5Type.Document import newTempBase\n
 \n
 request = context.REQUEST\n
-resource = request.get(\'resource\',None)\n
-previous_resource = request.get(\'previous_resource\',None)\n
 item_model = context.getPortalObject().restrictedTraverse(resource)\n
 \n
 # We must make sure that the selection is not None\n
@@ -228,7 +226,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None,batch_mode=0,**kw</string> </value>
+            <value> <string>listbox=None,batch_mode=0,resource=None,previous_resource=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -248,7 +246,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -256,6 +254,8 @@ else:\n
                           <tuple>
                             <string>listbox</string>
                             <string>batch_mode</string>
+                            <string>resource</string>
+                            <string>previous_resource</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
@@ -264,13 +264,11 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>None</string>
-                            <string>resource</string>
-                            <string>previous_resource</string>
                             <string>item_model</string>
                             <string>Products.ERP5Form.Selection</string>
                             <string>Selection</string>
                             <string>selection</string>
+                            <string>None</string>
                             <string>error_value</string>
                             <string>field_error_dict</string>
                             <string>generate_error</string>
@@ -318,6 +316,8 @@ else:\n
               <tuple>
                 <none/>
                 <int>0</int>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>

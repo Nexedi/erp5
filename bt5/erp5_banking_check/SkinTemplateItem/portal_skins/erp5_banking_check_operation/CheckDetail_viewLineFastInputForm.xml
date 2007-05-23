@@ -111,6 +111,7 @@
                     <value>
                       <list>
                         <string>my_resource</string>
+                        <string>your_resource</string>
                         <string>my_previous_resource</string>
                       </list>
                     </value>
