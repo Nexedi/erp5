@@ -140,8 +140,7 @@ class TestERP5BankingCheckPaymentMixin:
     self.openCounterDate(site=self.paris)
     self.openCounter(site=self.bi_counter_vault)
 
-    self.check_model = self.createCheckModel(id='check_model')
-    self.createCheckbookModel(id='checkbook_model', check_model=self.check_model)
+    self.createCheckAndCheckbookModel()
     # create a check
     self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
                                             vault=self.bi_counter,
@@ -218,7 +217,6 @@ class TestERP5BankingCheckPaymentMixin:
                                    # aggregate_value = self.check_1,
                                    resource_value = self.currency_1,
                                    aggregate_free_text = "50",
-                                   aggregate_resource_value = self.check_model,
                                    description = "test",
                                    # source_value = self.bi_counter,
                                    start_date = DateTime().Date(),
