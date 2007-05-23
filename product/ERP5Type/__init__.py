@@ -67,7 +67,7 @@ def initialize( context ):
   portal_tools = ( ClassTool.ClassTool,
                    CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
-		   SessionTool.SessionTool )
+                   SessionTool.SessionTool )
   # Do initialization step
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
@@ -90,10 +90,13 @@ def initialize( context ):
   initializeLocalDocumentRegistry()
 
 from AccessControl.SecurityInfo import allow_module
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 
 allow_module('Products.ERP5Type.Cache')
-allow_module('Products.ERP5Type.Utils') # XXX this looks dangerous
-                                        # selected methods only should be allowed eg. cartesianProduct
+ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
+    'sortValueList', 'convertToUpperCase', 'convertToMixedCase',
+    'cartesianProduct', 'sleep')
+
 allow_module('Products.ERP5Type.Message')
 allow_module('Products.ERP5Type.Error')
 allow_module('Products.ERP5Type.Log')
