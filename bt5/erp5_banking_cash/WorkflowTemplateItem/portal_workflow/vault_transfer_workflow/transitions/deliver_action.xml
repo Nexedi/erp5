@@ -25,7 +25,7 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=confirm_to_deliver_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=deliver_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirm_to_deliver_action</string> </value>
+            <value> <string>deliver_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -74,13 +74,35 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>expr</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>DestinationAssignee</string>
+                <string>DestinationAssignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: \'salle_tri\' not in here.getDestination()</string> </value>
         </item>
       </dictionary>
     </pickle>

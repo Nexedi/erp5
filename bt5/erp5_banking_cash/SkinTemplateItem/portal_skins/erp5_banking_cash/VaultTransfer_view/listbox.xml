@@ -457,16 +457,20 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Cash Delivery Line</string>
-                          <string>Cash Delivery Line</string>
+                          <string>Vault Transfer Line</string>
+                          <string>Vault Transfer Line</string>
                         </tuple>
                         <tuple>
-                          <string>Cash Delivery Cell</string>
-                          <string>Cash Delivery Cell</string>
+                          <string>Vault Transfer Cell</string>
+                          <string>Vault Transfer Cell</string>
                         </tuple>
                       </list>
                     </value>
@@ -497,7 +501,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>vault_transfer_selection</string> </value>
+                    <value> <string>vault_transfer_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -540,11 +544,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

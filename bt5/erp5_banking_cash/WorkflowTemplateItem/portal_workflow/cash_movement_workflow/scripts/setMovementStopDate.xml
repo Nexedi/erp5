@@ -65,38 +65,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-currency = context.getResourceId()\n
-if currency is None :\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                              , \'view\'\n
-                              , \'portal_status_message=Please+select+a+currency.\'\n
-                              )\n
-  return request.RESPONSE.redirect( redirect_url )\n
-\n
-if currency != context.Baobab_getPortalReferenceCurrencyID():\n
-  cash_status = [\'valid\']\n
-  emission_letter = [\'not_defined\']\n
-  variation = [\'not_defined\']\n
-else:\n
-  cash_status = None\n
-  emission_letter = None\n
-  variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
-\n
-cash_detail_dict = {\'line_portal_type\'           : \'Cash Delivery Line\'\n
-                    , \'operation_currency\'       : currency\n
-                    , \'cash_status_list\'         : cash_status\n
-                    , \'emission_letter_list\'     : emission_letter\n
-                    , \'variation_list\'           : variation\n
-                    , \'currency_cash_portal_type\': None\n
-                    , \'read_only\'                : False\n
-                    , \'column_base_category\'     : \'variation\'\n
-                    }\n
-\n
-return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
-                                                          , cash_detail_dict = cash_detail_dict\n
-                                                          , destination = context.getObject().absolute_url()\n
-                                                          )\n
+            <value> <string># This scripts sets the stop date on current cash movement.\n
+# This is done to prevent users from destination site from\n
+# editing the document values, but still allowing them to set that value.\n
+# Hence, this script must have a proxy role to modify what user cannot.\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+transaction = state_change.object\n
+stop_date_key = \'your_stop_date\'\n
+if not kw.has_key(stop_date_key):\n
+  msg = Message(domain = "ui", message="No stop date provided")\n
+  raise ValidationFailed, (msg,)\n
+transaction.setStopDate(kw[stop_date_key])\n
+del kw[stop_date_key]\n
+context.validateDestinationCounterDate(state_change, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -119,7 +101,15 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,23 +129,26 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>state_change</string>
+                            <string>kw</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>currency</string>
-                            <string>None</string>
-                            <string>redirect_url</string>
-                            <string>cash_status</string>
-                            <string>emission_letter</string>
-                            <string>variation</string>
-                            <string>False</string>
-                            <string>cash_detail_dict</string>
+                            <string>transaction</string>
+                            <string>stop_date_key</string>
+                            <string>msg</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -172,11 +165,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ForeignCashReception_viewLineFastInputDialog</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>setMovementStopDate</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

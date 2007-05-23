@@ -72,7 +72,7 @@ var_ressource_title = var_ressource_title.replace(" ", "_")\n
 #context.log(\'var_ressource_title\', var_ressource_title)\n
 \n
 #encaisse_devise = "/encaisse_des_devises/%s/entrante" %(context.getParentValue().getResourceTitle().lower())\n
-encaisse_devise = "/encaisse_des_devises/%s/entrante" %(var_ressource_title)\n
+encaisse_devise = "/encaisse_des_devises/%s/sortante" %(var_ressource_title)\n
 \n
 #context.log(\'encaisse_devise\', encaisse_devise)\n
 \n

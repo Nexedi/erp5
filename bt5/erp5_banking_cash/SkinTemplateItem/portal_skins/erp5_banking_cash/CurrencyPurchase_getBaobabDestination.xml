@@ -70,9 +70,9 @@ from Products.ERP5Type.Message import Message\n
 \n
 var_ressource_title = context.getResourceTitle().lower()\n
 var_ressource_title = var_ressource_title.replace(" ", "_")\n
-encaisse_devise = "/encaisse_des_devises/%s/entrante" %(var_ressource_title)\n
+encaisse_devise = "/encaisse_des_devises/%s/sortante" %(var_ressource_title)\n
 \n
-#encaisse_devise = "/encaisse_des_devises/%s/entrante" %(context.getResourceTitle().lower())\n
+#encaisse_devise = "/encaisse_des_devises/%s/sortante" %(context.getResourceTitle().lower())\n
 \n
 # first get the source of the document,\n
 # we will need to add the counter\n

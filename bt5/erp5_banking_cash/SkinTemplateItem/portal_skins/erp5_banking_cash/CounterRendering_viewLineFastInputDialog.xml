@@ -76,7 +76,7 @@ if currency is None :\n
   return request.RESPONSE.redirect( redirect_url )\n
 \n
 if currency != context.Baobab_getPortalReferenceCurrencyID():\n
-  cash_status = [\'not_defined\']\n
+  cash_status = [\'valid\']\n
   emission_letter = [\'not_defined\']\n
   variation = [\'not_defined\']\n
 else:\n

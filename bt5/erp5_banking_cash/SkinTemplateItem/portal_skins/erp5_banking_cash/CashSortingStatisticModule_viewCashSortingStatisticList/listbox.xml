@@ -323,7 +323,7 @@
                           <string>Site</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -356,7 +356,7 @@
                           <string>Site</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>

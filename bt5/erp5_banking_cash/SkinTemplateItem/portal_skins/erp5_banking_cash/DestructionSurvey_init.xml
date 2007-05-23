@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>site_list = context.Baobab_getUserAssignedSiteList()\n
+            <value> <string>site_list = context.Baobab_getUserAssignedRootSiteList()\n
 if len(site_list) == 0:\n
   from Products.ERP5Type.Message import Message\n
   message = Message(domain="ui", message="The owner is not assigned to the right vault.")\n

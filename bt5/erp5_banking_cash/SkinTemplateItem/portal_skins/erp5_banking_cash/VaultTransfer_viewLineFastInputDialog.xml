@@ -76,7 +76,7 @@ if currency is None :\n
   return request.RESPONSE.redirect( redirect_url )\n
 \n
 if currency != context.Baobab_getPortalReferenceCurrencyID():\n
-  cash_status = [\'not_defined\']\n
+  cash_status = [\'valid\']\n
   emission_letter = [\'not_defined\']\n
   variation = [\'not_defined\']\n
 else:\n
@@ -84,7 +84,7 @@ else:\n
   emission_letter = None\n
   variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n
-cash_detail_dict = {\'line_portal_type\'           : \'Cash Delivery Line\'\n
+cash_detail_dict = {\'line_portal_type\'           : \'Vault Transfer Line\'                #\'Cash Delivery Line\'\n
                     , \'operation_currency\'       : currency\n
                     , \'cash_status_list\'         : cash_status\n
                     , \'emission_letter_list\'     : emission_letter\n

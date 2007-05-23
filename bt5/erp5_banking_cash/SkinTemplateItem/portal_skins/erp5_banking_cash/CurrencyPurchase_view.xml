@@ -120,7 +120,6 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_price</string>
-                        <string>my_discount</string>
                         <string>my_discount_ratio</string>
                         <string>my_quantity</string>
                         <string>my_description</string>
