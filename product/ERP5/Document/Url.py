@@ -31,10 +31,13 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Coordinate import Coordinate
 from cStringIO import StringIO
-from MimeWriter import MimeWriter
-from base64 import encode
-from mimetools import choose_boundary
 from mimetypes import guess_type
+
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
+from email.MIMEBase import MIMEBase
+from email.Header import make_header
+from email import Encoders
 
 no_crawl_protocol_list = ['mailto', 'javascript', ]
 no_host_protocol_list = ['mailto', 'news', 'javascript',]
@@ -138,7 +141,8 @@ class Url(Coordinate, Base, UrlMixIn):
     return ("http://www.erp5.org", "mailto:info@erp5.org")
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
-  def send(self, from_url=None, to_url=None, msg=None, subject=None,  attachment_list=None):
+  def send(self, from_url=None, to_url=None, msg=None, 
+           subject=None,  attachment_list=None):
     """
     This method was previously named 'SendMail' and is used to send email
     attachment_list is a list of dictionnary wich has keys :
@@ -159,62 +163,47 @@ class Url(Coordinate, Base, UrlMixIn):
       if from_url is None or to_url is None:
         raise AttributeError, "No mail defined"
 
-      # Create multi-part MIME message.
-      message = StringIO()
-      writer = MimeWriter(message)
-      writer.addheader('From', from_url)
-      writer.addheader('To', to_url)
-      writer.addheader('Subject', subject)
-      writer.addheader('MimeVersion', '1.0')
-      # Don't forget to flush the headers for Communicator
-      writer.flushheaders()
-      # Generate a unique section boundary:
-      outer_boundary = choose_boundary()
+      if attachment_list == None:
+        # Create non multi-part MIME message.
+        message = MIMEText(msg, _charset='utf-8')
+        attachment_list = []
+      else:
+        # Create multi-part MIME message.
+        message = MIMEMultipart()
+        message.preamble = "If you can read this, your mailreader\n" \
+                           "can not handle multi-part messages!\n"
+        message.attach(MIMEText(msg, _charset='utf-8')) 
 
-      # Start the main message body. Write a brief message
-      # for non-MIME-capable readers:
-      dummy_file=writer.startmultipartbody("mixed",outer_boundary)
-      dummy_file.write("If you can read this, your mailreader\n")
-      dummy_file.write("can not handle multi-part messages!\n")
+      message.add_header('Subject', 
+                         make_header([(subject, 'utf-8')]).encode())
+      message.add_header('From', from_url)
+      message.add_header('To', to_url)
 
-      submsg = writer.nextpart()
-      submsg.addheader("Content-Transfer-Encoding", "7bit")
-      FirstPartFile=submsg.startbody("text/plain", [("charset","UTF8")])
-      FirstPartFile.write(msg)
-
-      if attachment_list!=None:
-        for attachment in attachment_list:
-          if attachment.has_key('name'):
-            attachment_name = attachment['name']
+      for attachment in attachment_list:
+        if attachment.has_key('name'):
+          attachment_name = attachment['name']
+        else:
+          attachment_name = ''
+        # try to guess the mime type
+        if not attachment.has_key('mime_type'):
+          type, encoding = guess_type( attachment_name )
+          if type != None:
+            attachment['mime_type'] = type
           else:
-            attachment_name = ''
-          # try to guess the mime type
-          if not attachment.has_key('mime_type'):
-            type, encoding = guess_type( attachment_name )
-            if type != None:
-              attachment['mime_type'] = type
-            else:
-              attachment['mime_type'] = 'application/octet-stream'
-          # attach it
-          submsg = writer.nextpart()
-          if attachment['mime_type'] == 'text/plain':
-            attachment_file = StringIO(attachment['content'] )
-            submsg.addheader("Content-Transfer-Encoding", "7bit")
-            submsg.addheader("Content-Disposition", "attachment;\nfilename="+attachment_name)
-            submsg.flushheaders()
+            attachment['mime_type'] = 'application/octet-stream'
 
-            f = submsg.startbody(attachment['mime_type'] , [("name", attachment_name)])
-            f.write(attachment_file.getvalue())
-          else:
-            #  encode non-plaintext attachment in base64
-            attachment_file = StringIO(attachment['content'] )
-            submsg.addheader("Content-Transfer-Encoding", "base64")
-            submsg.flushheaders()
+        # attach it
+        if attachment['mime_type'] == 'text/plain':
+          part = MIMEText(attachment['content'], 'utf-8')
+        else:
+          #  encode non-plaintext attachment in base64
+          part = MIMEBase(*attachment['mime_type'].split('/', 1))
+          part.set_payload(attachment['content'])
 
-            f = submsg.startbody(attachment['mime_type'] , [("name", attachment_name)])
-            encode(attachment_file, f)
-      # close the writer
-      writer.lastpart()
+        Encoders.encode_base64(part)
+        part.add_header('Content-Disposition', 
+                        'attachment; filename=%s' % attachment_name)
+        message.attach(part)
+
       # send mail to user
-      mailhost.send(message.getvalue(), to_url, from_url)
-      return None
+      mailhost.send(message.as_string(), to_url, from_url)
