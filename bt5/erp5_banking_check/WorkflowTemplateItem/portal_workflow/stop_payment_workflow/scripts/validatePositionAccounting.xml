@@ -89,9 +89,11 @@ ref_max = transaction.getReferenceRangeMax()\n
 # We will first retrieve all checks\n
 check_list = []\n
 if ref_min is not None or ref_max is not None:\n
+  aggregate_resource = transaction.getAggregateResource()\n
   check_list = transaction.Base_checkOrCreateCheck(\n
                           reference_range_min = ref_min,\n
-                          reference_range_max = ref_max)\n
+                          reference_range_max = ref_max,\n
+                          resource=aggregate_resource())\n
 if len(check_list)>0:\n
   # First make sure there is no delivery line\n
   line_list = transaction.objectValues(portal_type=\'Cash Delivery Line\')\n
@@ -240,6 +242,7 @@ if debit_required:\n
                             <string>ref_min</string>
                             <string>ref_max</string>
                             <string>check_list</string>
+                            <string>aggregate_resource</string>
                             <string>len</string>
                             <string>line_list</string>
                             <string>append</string>

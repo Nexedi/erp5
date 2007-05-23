@@ -6,6 +6,7 @@ Checkbook Delivery Line | currency_exchange_type
 Checkbook Delivery | currency_exchange_type
 Checkbook Reception Line | check_amount
 Checkbook Reception Line | check_type
+Stop Payment | aggregate_resource
 Stop Payment | currency_exchange_type
 Traveler Check Purchase | currency_exchange_type
 Traveler Check Sale | currency_exchange_type

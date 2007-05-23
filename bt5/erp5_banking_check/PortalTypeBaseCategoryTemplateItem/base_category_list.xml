@@ -18,6 +18,7 @@
   <item>check_type</item>
  </portal_type>
  <portal_type id="Stop Payment">
+  <item>aggregate_resource</item>
   <item>currency_exchange_type</item>
  </portal_type>
  <portal_type id="Traveler Check Purchase">
