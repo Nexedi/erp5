@@ -318,6 +318,9 @@ class ContributionTool(BaseTool):
       return {}
     property_dict = {}
     rx_src = self.portal_preferences.getPreferredDocumentFileNameRegularExpression()
+    if rx_src in ('', None):
+      # we must have file name regular expression defined in preferences
+      raise ValueError, '[DMS] No file name regular expression defined in preferences.'
     if rx_src:
       rx_parse = re.compile(rx_src)
       if rx_parse is not None:
