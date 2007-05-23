@@ -61,7 +61,7 @@ except ImportError:
     pass
 
 # minimal IP:Port regexp
-NODE_RE = re.compile('\d+\.\d+\.\d+\.\d+:\d+')
+NODE_RE = re.compile('^\d+\.\d+\.\d+\.\d+:\d+$')
 
 # Using a RAM property (not a property of an instance) allows
 # to prevent from storing a state in the ZODB (and allows to restart...)
