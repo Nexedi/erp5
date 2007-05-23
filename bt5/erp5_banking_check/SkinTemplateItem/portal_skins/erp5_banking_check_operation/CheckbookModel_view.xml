@@ -105,6 +105,7 @@
                         <string>my_title</string>
                         <string>my_account_number_enabled</string>
                         <string>my_fixed_price</string>
+                        <string>my_reference</string>
                         <string>my_description</string>
                       </list>
                     </value>

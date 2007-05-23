@@ -122,8 +122,10 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
     msg = Message(domain=\'ui\', message="Unknown error code.")\n
     raise ValidationFailed, (msg,)\n
 \n
-  transaction.Base_checkCheck(bank_account=source_bank_account, reference=check_number,\n
+  check = transaction.Base_checkCheck(bank_account=source_bank_account, reference=check_number,\n
                               resource=check_type)\n
+  if check_operation_line.getAggregate() != check.getRelativeUrl():\n
+    check_operation_line.edit(aggregate=check.getRelativeUrl())\n
 \n
 if transaction.getSimulationState() == "draft":\n
   context.updateBankingOperation(state_change)\n
@@ -204,6 +206,7 @@ if transaction.getSimulationState() == "draft":\n
                             <string>source_bank_account</string>
                             <string>context</string>
                             <string>error</string>
+                            <string>check</string>
                           </tuple>
                         </value>
                     </item>

@@ -65,16 +65,45 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transaction = state_change[\'object\']\n
+            <value> <string># Look at all items availables for the source and then\n
+# display them on a listbox so that the user will be able\n
+# to select them\n
+from DateTime import DateTime\n
+request = context.REQUEST\n
+item_portal_type_list = ["Checkbook","Check"]\n
+node = context.getBaobabSource()\n
+#item_portal_type_list = request.get(\'item_portal_type_list\', ["Checkbook","Check"])\n
+#node = request.get(\'node\', request.get(\'vault\', context.getBaobabSource()))\n
+reference_date = DateTime()\n
+item_list = []\n
+listbox = []\n
+invalid_check_state_list = (\'draft\', \'confirmed\')\n
 \n
-for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
-  source_bank_account = check_operation_line.getSourcePaymentValue()\n
-  # immediate reindex is required to make this operation atomic.\n
-  transaction.newContent(portal_type = \'Banking Operation Line\',\n
-                         source_credit = check_operation_line.getPrice(),\n
-                         source_payment_value = source_bank_account,)\n
-  # this prevents multiple transactions from being committed at the same time for this bank account.\n
-  source_bank_account.serialize()\n
+getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
+current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
+                           at_date=reference_date, node=node,\n
+                           where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
+for item in current_tracking_list:\n
+  item_portal_type = item.getPortalType()\n
+  if item_portal_type in item_portal_type_list:\n
+    item_dict = {}\n
+    if item_portal_type==\'Check\':\n
+      if item.getSimulationState() not in invalid_check_state_list:\n
+        continue\n
+      item_dict[\'reference_range_max\'] = item.getReference()\n
+      item_dict[\'reference_range_min\'] = item.getReference()\n
+    else:\n
+      item_dict[\'reference_range_min\'] = item.getReferenceRangeMin()\n
+      item_dict[\'reference_range_max\'] = item.getReferenceRangeMax()\n
+    item_dict[\'resource_title\'] = item.getResourceTitle()\n
+    item_dict[\'destination_trade\'] = item.getDestinationTradeTitle()\n
+    item_dict[\'check_amount_title\'] = item.getCheckAmountTitle()\n
+    item_dict[\'selection\'] = 0\n
+    item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
+    listbox.append(item_dict)\n
+\n
+context.Base_updateDialogForm(listbox=listbox)\n
+return context.ListBox_initializeFastInput()\n
 </string> </value>
         </item>
         <item>
@@ -97,13 +126,7 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,19 +146,34 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
-                            <string>_getiter_</string>
+                            <string>args</string>
+                            <string>kw</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
-                            <string>check_operation_line</string>
-                            <string>source_bank_account</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>item_portal_type_list</string>
+                            <string>node</string>
+                            <string>reference_date</string>
+                            <string>item_list</string>
+                            <string>listbox</string>
+                            <string>invalid_check_state_list</string>
+                            <string>getCurrentTrackingList</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>current_tracking_list</string>
+                            <string>item</string>
+                            <string>item_portal_type</string>
+                            <string>item_dict</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
@@ -152,7 +190,7 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>updateBankingOperation</string> </value>
+            <value> <string>ListBox_listCheckbook</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

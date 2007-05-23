@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_title</string> </value>
+            <value> <string>my_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -246,7 +246,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Name</string> </value>
+                    <value> <string>Reference</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

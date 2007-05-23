@@ -535,7 +535,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>ListBox_initializeFastInput</string> </value>
+            <value> <string>ListBox_listCheckbook</string> </value>
         </item>
       </dictionary>
     </pickle>
