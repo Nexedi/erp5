@@ -117,12 +117,14 @@ class NotificationTool(BaseTool):
     for person in to_list:
       email_value = person.getDefaultEmailValue()
       if email_value is not None:
-        email_value.activate(activity='SQLQueue').send(
-                                    from_url=email_from_address,
-                                    to_url=email_value.asText(),
-                                    subject=subject,
-                                    msg=message,
-                                    attachment_list=attachment_list)
+        # Activity can not handle attachment
+        # Queuing messages has to be managed by the MTA
+        email_value.send(
+              from_url=email_from_address,
+              to_url=email_value.asText(),
+              subject=subject,
+              msg=message,
+              attachment_list=attachment_list)
     
     # Future implemetation could consist in implementing
     # policies such as grouped notification (per hour, per day,
