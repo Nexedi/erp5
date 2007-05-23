@@ -301,7 +301,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not request.get(\'resource\', False)</string> </value>
+            <value> <string>python: not request.get(\'previous_resource\', False)</string> </value>
         </item>
       </dictionary>
     </pickle>
