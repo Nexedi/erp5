@@ -1,13 +1,16 @@
-ERP5 is based on a Rapid Application Developpment (RAD)
-framework: **ERP5Type**. ERP5Type allows to reduce by 50% or more
-the number of lines of code needed to develop a Zope / CMF application.
-It provides an efficient way to create complex forms. It implements
-categories and relations. It also includes a flexible and fast
-cataloging mechanism for ERP documents based on simple SQL queries.
-**With ERP5Type, the Zope object database can be queried using
-simple or complex SQL queries and implements relations.**
+Overview
 
-In this chapter, we shall introduce the ERP5 RAD.
+  ERP5 is based on a Rapid Application Developpment (RAD) framework:
+  **ERP5Type**. ERP5Type allows to reduce by 50% or more the number of lines of
+  code needed to develop a Zope / CMF application.  It provides an efficient
+  way to create complex forms. It implements categories and relations. It also
+  includes a flexible and fast cataloging mechanism for ERP documents based on
+  simple SQL queries. 
+  
+  **With ERP5Type, the Zope object database can be queried using simple or
+  complex SQL queries and implements relations.**
+  
+  In this chapter, we shall introduce the ERP5 RAD.
 
 ERP5Type: professional ERP applications in a matter of minutes
 

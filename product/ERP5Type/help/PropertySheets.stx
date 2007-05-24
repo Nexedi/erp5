@@ -1,440 +1,442 @@
-ERP systems involve many different attribute names which
-can be used in different contexts. For example, a resource
-may have a default global price. A path may define a default price
-for specific source.
-
-ERP5 uses PropertySheets in order to provide an explicit data model
-which is used independently from interfaces. The role of interfaces
-is to define common explicit behaviour which can be implemented through
-by different classes. The role of property sheets is
-to define common **attribute sets** which can be stored on instances
-of different documents.
-
-PropertySheets also hold explicit information about of the ERP data structure.
-For example, some documents may not hold themselves pricing information
-but rather acquire it through the order or the sourcing contract they depend from.
-
-ERP5 implements this feature through **explicit acquisition**. The value
-of attributes can be obtained by looking up the value of that attribute
-on another related document or by calling a method on another related document.
-
-Explicit acquisition requires to define relations between documents. The general
-model adopted by ERP5 is a **categorization** model which is equivalent to
-a DACG model (Direct Acyclic Colored Graph). Thanks to Zope acquisition, this model
-is theoretically equivalent to a relationnal model.
-
-We will explain bellow how those three concepts (attribute sets, categorization and
-explicit acquisition) relate and how to define new Property Sheets in ERP5.
-
-Attribute Sets
-
-  ERP5 uses Attribute  Sets based on an approach which was originally developped
-  by Max M. for its Zope Easy Product (http://www.zope.org/Members/maxm/HowTo/easyProduct).
-  This approach consists in defining a set of attributes in the following way::
-
-    class Organisation:
-      """
-        Organisation properties and categories
-      """
-
-      _properties = (
-        { 'id'          : 'corporate_name',
-          'description' : 'The official name of this organisation',
-          'type'        : 'string',
-          'mode'        : 'w' },
-        { 'id'          : 'social_capital',
-          'description' : 'The social capital of this organisation',
-          'type'        : 'int',
-          'mode'        : 'w' },
-        { 'id'          : 'social_capital_currency',
-          'description' : "The currency in which the social capital is"
-                          "expressed",
-          'type'        : 'string',
-          'mode'        : 'w' },
-      )
-
-  The class *Organisation* is simply a place holder for an class attribute
-  called *_properties* which holds a list of dictionnaries, each of which
-  describes the *id*, the *purpose* and the *type* of an attribute. In the
-  above example, the attribute *corporate_name* is of type *string*, is
-  in *write mode* which means it can be read and modified and is described
-  as *The official name of this organisation*.
-
-  Attribute sets allow to group related attributes in a common *package*
-  and reuse them to define ERP5 classes. For example, the *Organisation* class
-  in ERP5 is defined as::
-
-    class Organisation(Entity, MetaNode, XMLObject):
+PropertySheets
+  
+  ERP systems involve many different attribute names which
+  can be used in different contexts. For example, a resource
+  may have a default global price. A path may define a default price
+  for specific source.
+  
+  ERP5 uses PropertySheets in order to provide an explicit data model
+  which is used independently from interfaces. The role of interfaces
+  is to define common explicit behaviour which can be implemented through
+  by different classes. The role of property sheets is
+  to define common **attribute sets** which can be stored on instances
+  of different documents.
+  
+  PropertySheets also hold explicit information about of the ERP data structure.
+  For example, some documents may not hold themselves pricing information
+  but rather acquire it through the order or the sourcing contract they depend from.
+  
+  ERP5 implements this feature through **explicit acquisition**. The value
+  of attributes can be obtained by looking up the value of that attribute
+  on another related document or by calling a method on another related document.
+  
+  Explicit acquisition requires to define relations between documents. The general
+  model adopted by ERP5 is a **categorization** model which is equivalent to
+  a DACG model (Direct Acyclic Colored Graph). Thanks to Zope acquisition, this model
+  is theoretically equivalent to a relationnal model.
+  
+  We will explain bellow how those three concepts (attribute sets, categorization and
+  explicit acquisition) relate and how to define new Property Sheets in ERP5.
+  
+  Attribute Sets
+  
+    ERP5 uses Attribute  Sets based on an approach which was originally developped
+    by Max M. for its Zope Easy Product (http://www.zope.org/Members/maxm/HowTo/easyProduct).
+    This approach consists in defining a set of attributes in the following way::
+  
+      class Organisation:
         """
-          An Organisation object holds the information about
-          an organisation (ex. a division in a company, a company,
-          a service in a public administration).
-
-          Organisation objects can contain Coordinate objects
-          (ex. Telephone, Url) as well a documents of various types.
-
-          Organisation objects can be synchronized accross multiple
-          sites.
-
-          Organisation objects inherit from the MetaNode base class
-          (one of the 5 base classes in the ERP5 universal business model)
+          Organisation properties and categories
         """
-
-        meta_type = 'ERP5 Organisation'
-        portal_type = 'Organisation'
-        isPortalContent = 1
-        isRADContent = 1
-
-        # Declarative security
-        security = ClassSecurityInfo()
-        security.declareObjectProtected(ERP5Permissions.AccessContentsInformation)
-
-        # Declarative properties
-        property_sheets = ( PropertySheet.Base
-                          , PropertySheet.XMLObject
-                          , PropertySheet.CategoryCore
-                          , PropertySheet.DublinCore
-                          , PropertySheet.Organisation
-                          )
-
-        # Factory Type Information
-        factory_type_information = \
-          {    'id'             : portal_type
-             , 'meta_type'      : meta_type
-             , 'description'    : """\
-    An Organisation object holds the information about
-    an organisation (ex. a division in a company, a company,
-    a service in a public administration)."""
-             , 'icon'           : 'organisation_icon.gif'
-             , 'product'        : 'ERP5'
-             , 'factory'        : 'addOrganisation'
-             , 'immediate_view' : 'organisation_edit'
-             , 'actions'        :
-            ( { 'id'            : 'view'
-              , 'name'          : 'View'
-              , 'category'      : 'object_view'
-              , 'action'        : 'organisation_edit'
-              , 'permissions'   : (
-                  ERP5Permissions.View, )
-              }
-            , { 'id'            : 'print'
-              , 'name'          : 'Print'
-              , 'category'      : 'object_print'
-              , 'action'        : 'organisation_print'
-              , 'permissions'   : (
-                  ERP5Permissions.View, )
-              }
-            , { 'id'            : 'metadata'
-              , 'name'          : 'Metadata'
-              , 'category'      : 'object_edit'
-              , 'action'        : 'metadata_edit'
-              , 'permissions'   : (
-                  ERP5Permissions.View, )
-              }
-            , { 'id'            : 'translate'
-              , 'name'          : 'Translate'
-              , 'category'      : 'object_action'
-              , 'action'        : 'translation_template_view'
-              , 'permissions'   : (
-                  ERP5Permissions.TranslateContent, )
-              }
-            )
-          }
-
-    InitializeClass(Organisation)
-
-  The reader should take notice of two ERP5 specific features in the
-  class definition:
-
-  - the attribute *isRADContent* is set to 1, which is used by ERP5
-    to determine that a given class definition should be considered
-    as an **ERP5 RAD Class** or not. The meaning of *RAD* is *Rapid
-    Application Development*. Classes which set the
-    the attribute *isRADContent* to 1 will automatically benefit from
-    ERP5 RAD features (ex. automatic generation of accessors, automatic
-    generation of default values, etc.)
-
-  - the attribute *property_sheets* contains a list of PropertySheets. This
-    list defines the default attributes for all instances of the *Organisation*
-    class
-
-  During the initialization of an **ERP5 RAD Class**, the following
-  class attributes and methods will be automatically generated:
-
-  - a class attribute holding a **default value**. In
-    the example of the *Organisation* class, a class attribute
-    named *corporate_name* is created and set to
-    the default string ('').
-
-  - a default **getter** accessor method if no such accessor
-    is already defined by the class. In
-    the example of the *Organisation* class, a method
-    named *getCorporateName* is created, which returns
-    the value of the *corporate_name* instance attribute.
-
-  - a default **setter** accessor method if no such accessor
-    is already defined by the class. In
-    the example of the *Organisation* class, a method
-    named *setCorporateName* is created, which changes
-    the value of the *corporate_name* document attribute
-    and reindexes the document. Another method
-    named *_setCorporateName* is created to change
-    the value of the *corporate_name* document attribute
-    without reindexing it.
-
-  Besides *getters* and *setters*, all ERP5 documents
-  which are implemented by an **ERP5 RAD Class** can
-  be modified with the **edit** method. For example::
-
-    document.edit(corporate_name='ACME')
-
-  is equivalent to::
-
-    document.setCorporateName('ACME')
-
-  The use of *edit* allows to reindex documents only once.
-  For example::
-
-    document.edit(corporate_name='ACME',social_capital=30000)
-
-  is equivalent to::
-
-    document._setCorporateName('ACME')
-    document.setSocialCapital(30000)
-
-  Default attribute values and types are defined in the Utils.py
-  file at the root of the ERP5 Product::
-
-    defaults = {
-        'float'              : 0.0,
-        'int'                : 0,
-        'long'               : 0L,
-        'date'               : DateTime(),
-        'string'             : '',
-        'text'               : '',
-        'boolean'            : 0,
-        'lines'              : [],
-        'tokens'             : [],
-        'selection'          : [],
-        'multiple selection' : [],
-    }
-
-  **The use of getters and setters in ERP5 is not only recommended
-  but is considered as COMPULSORY** since they provide a functional
-  approach to content access and allow a more consistent implementation
-  of complex interactions between documents. **NEVER ACCESS DIRECTLY
-  A DOCUMENT ATTRIBUTE IN ERP5 OUTSIDE A PRIVATE METHOD.
-  ONLY USE GETTERS AND SETTERS**
   
-  *Implementation*: functions createDefaultAccessors and
-
-Categories
-
-
-  First of all, a certain number
-  of base categories is defined. Such categories can are identified by a string such
-  as: region, client, skill, function, etc. Each category can hold subcategories,
-  sub-subcategories, etc. For example, regions allow to categorize geography in EPR5::
-
-    region/americas
-    region/americas/central
-    region/americas/north
-    region/americas/south
-    region/americas/south/brazil
-    region/europe
-    region/europe/central
-    region/europe/central/poland
-    region/europe/east
-    region/europe/north
-    region/europe/west
-    region/europe/west/france
-    region/europe/west/netherlands
-
-  (we only included the countries where people contribute to ERP5 currently - if you
-  contribute to ERP5 and your country is not list, let us know)
-
-  Each ERP5 document holds a *categories* attribute which contains a tuple
-  of category paths storever as a tuple of lines. Categories are considered
-  as a *slowly evolving* in an ERP5 system.
-
-  Documents which are implemented as **ERP5 RAD Class** can also benefit
-  from the automatic creation of accessors in the area of categories. For example,
-  the *Organisation* property sheet includes references to some default
-  base categories of ERP5::
-
-    class Organisation:
-      """
-        Organisation properties and categories
-      """
-
-      _properties = (
-        { 'id'          : 'corporate_name',
-          'description' : 'The official name of this organisation',
-          'type'        : 'string',
-          'mode'        : 'w' },
-        { 'id'          : 'social_capital',
-          'description' : 'The social capital of this organisation',
-          'type'        : 'int',
-          'mode'        : 'w' },
-        { 'id'          : 'social_capital_currency',
-          'description' : "The currency in which the social capital is"
-                          "expressed",
-          'type'        : 'string',
-          'mode'        : 'w' },
-      )
-
-      _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment',
-                        'social_form', 'function' )
-
-
-  The *_categories* attributes holds a tuple of strings which defines
-  which ids of base categories should be implemented by documents of
-  type Organisation. Based on this definition, the following getter and
-  setter methods are defined::
-
-    getRole            getDefaultRole           setRole           _setRole
-    getGroup           getDefaultGroup          setGroup          _setGroup
-    getActivity        getDefaultActivity       setActivity       _setActivity
-    getSkill           getDefaultSkill          setSkill          _setSkill
-    getMarketSegment   getDefaultMarketSegment  setMarketSegment  _setMarketSegment
-    getSocialForm      getDefaultSocialForm     setSocialForm     _setSocialForm
-    getFunction        getDefaultFunction       setFunction       _setFunction
-
-
-  Each of these getters and setters sets or returns a list of partial path values except
-  for the *Default* category getter which returns the first value in of the base
-  category membership of a document.
-
-  Ordered Categories
-
-    Categories are ordered.
-
-
-  *Implementation*: all this is implemented by createCategoryAccessors
-  in Utils.py
-
-
-Categories and relations
-
-  Categories allow to implement document categorization but also relations.
-  In ERP5, categories are managed by a portal tool names **portal_categories**.
-  Because ERP5 is based on Zope and because provides implicit acquisition,
-  if an EPR5 document has for example the following path::
-
-    /portal_root/organisation/3
-
-  Then, this object can also be accessed as::
-
-    /portal_root/portal_categories/client/organisation/3
-
-  This allows to define virtual categories in a base category
-  without having to create many subcategories. For example,
-  the category::
-
-    client/organisation/3
-
-  only exists through acquisition. Including in the list of category paths
-  of a document a paths such as::
-
-    client/organisation/3
-
-  is equivalent to creating an **arc** of coulor *client* between
-  that document and the document
-
-    /portal_root/organisation/3
-
-  Since relaltional models are equivalent to graphs, we can see
-  here that the ERP5 categorization model provides the same expressive
-  power as a relational model. Base categories are the equivalent
-  to a relation identifier. Arcs are created between a document
-  and a virtual subcategory acquired through implicit acquisition.
-
-  **All relations are therefore treated in ERP5 as categories**
-
-
-Explicit Relational Acquisition
-
-
-  One of the purpose of property sheets is to create
-  a complete documentation of all attributes which can be used
-  in a complexe ERP5 system, and to make sure that no name conflict
-  happens. We want the *getTitle* or the *getPrice* accessor to mean the same thing
-  wherever it is used from.
+        _properties = (
+          { 'id'          : 'corporate_name',
+            'description' : 'The official name of this organisation',
+            'type'        : 'string',
+            'mode'        : 'w' },
+          { 'id'          : 'social_capital',
+            'description' : 'The social capital of this organisation',
+            'type'        : 'int',
+            'mode'        : 'w' },
+          { 'id'          : 'social_capital_currency',
+            'description' : "The currency in which the social capital is"
+                            "expressed",
+            'type'        : 'string',
+            'mode'        : 'w' },
+        )
   
-  In some cases, some attribute values can be *acquired* by one
-  document from another document. In the Zope environment,
-  acquisition allows to get the value of an attribute of one
-  document from the value of its parents. However, in ERP5,
-  we have multiple hierarchies. We may want to get the telephone
-  of a person based on the office he/she is working (which is a region
-  based tree) while we want to get the name of his product line 
-  through the division he/she belongs to (this is a product line tree).
-
-  Explicit Relational Acquisition provides a simple way to implement
-  this feature. Let us look at the example bellow::
-
-
-    class SalesOpportunity:
-      """
-        Sales Opportunity properties and categories
-      """
-
-      _properties = (
-        { 'id'          : 'client_organisation',
-          'description' : 'The organisation involved',
-          'type'        : 'string',
-          'acquisition' : {
-                            'base_category' : ('client',),
-                            'portal_type'   : ('Organisation',),
-                            'copy_value'    : 0,
-                            'accessor_id'   : 'getTitle',
-                            'depends'       : None
-                            },
-          'mode'        : 'w' },
-        { 'id'          : 'client_person',
-          'description' : "The contact person involved",
-          'type'        : 'string',
-          'acquisition' : {
-                            'base_category' : ('client',),
-                            'portal_type'   : ('Person',),
-                            'copy_value'    : 0,
-                            'accessor_id'   : 'getTitle',
-                            'depends'       : None
-                            },
-          'mode'        : 'w' },
-      )
-
-      _categories = ('role', 'group', 'activity', 'function',
-               'social_form', 'skill', 'market_segment')
-
-
-  The name of the client_person is acquired by look at documents
-  of type *Person* in the *client* tree (or relation) and applying
-  the getTitle method. The attribute can be calculated each time
-  (copy_value is 0) or copied once for all (copy_value is 0).
-
-  Accessors:
-
-    _getReference
-    _getReferencePath
-    _getReferenceList
-
-
-FAQ
-
-  Do I need to create an attribute for a category ?
-
-  It depends : if some information can be in a different application,
-  you need to holde the information somewhere, ....
-
-Possible scenario
-
-  copy_value
-  mask_value
-  sync_value
-
+    The class *Organisation* is simply a place holder for an class attribute
+    called *_properties* which holds a list of dictionnaries, each of which
+    describes the *id*, the *purpose* and the *type* of an attribute. In the
+    above example, the attribute *corporate_name* is of type *string*, is
+    in *write mode* which means it can be read and modified and is described
+    as *The official name of this organisation*.
   
-Future
+    Attribute sets allow to group related attributes in a common *package*
+    and reuse them to define ERP5 classes. For example, the *Organisation* class
+    in ERP5 is defined as::
   
-  Atribute lookup should be put outside property sheet
-  into a tool ?
+      class Organisation(Entity, MetaNode, XMLObject):
+          """
+            An Organisation object holds the information about
+            an organisation (ex. a division in a company, a company,
+            a service in a public administration).
+  
+            Organisation objects can contain Coordinate objects
+            (ex. Telephone, Url) as well a documents of various types.
+  
+            Organisation objects can be synchronized accross multiple
+            sites.
+  
+            Organisation objects inherit from the MetaNode base class
+            (one of the 5 base classes in the ERP5 universal business model)
+          """
+  
+          meta_type = 'ERP5 Organisation'
+          portal_type = 'Organisation'
+          isPortalContent = 1
+          isRADContent = 1
+  
+          # Declarative security
+          security = ClassSecurityInfo()
+          security.declareObjectProtected(ERP5Permissions.AccessContentsInformation)
+  
+          # Declarative properties
+          property_sheets = ( PropertySheet.Base
+                            , PropertySheet.XMLObject
+                            , PropertySheet.CategoryCore
+                            , PropertySheet.DublinCore
+                            , PropertySheet.Organisation
+                            )
+  
+          # Factory Type Information
+          factory_type_information = \
+            {    'id'             : portal_type
+               , 'meta_type'      : meta_type
+               , 'description'    : """\
+      An Organisation object holds the information about
+      an organisation (ex. a division in a company, a company,
+      a service in a public administration)."""
+               , 'icon'           : 'organisation_icon.gif'
+               , 'product'        : 'ERP5'
+               , 'factory'        : 'addOrganisation'
+               , 'immediate_view' : 'organisation_edit'
+               , 'actions'        :
+              ( { 'id'            : 'view'
+                , 'name'          : 'View'
+                , 'category'      : 'object_view'
+                , 'action'        : 'organisation_edit'
+                , 'permissions'   : (
+                    ERP5Permissions.View, )
+                }
+              , { 'id'            : 'print'
+                , 'name'          : 'Print'
+                , 'category'      : 'object_print'
+                , 'action'        : 'organisation_print'
+                , 'permissions'   : (
+                    ERP5Permissions.View, )
+                }
+              , { 'id'            : 'metadata'
+                , 'name'          : 'Metadata'
+                , 'category'      : 'object_edit'
+                , 'action'        : 'metadata_edit'
+                , 'permissions'   : (
+                    ERP5Permissions.View, )
+                }
+              , { 'id'            : 'translate'
+                , 'name'          : 'Translate'
+                , 'category'      : 'object_action'
+                , 'action'        : 'translation_template_view'
+                , 'permissions'   : (
+                    ERP5Permissions.TranslateContent, )
+                }
+              )
+            }
+  
+      InitializeClass(Organisation)
+  
+    The reader should take notice of two ERP5 specific features in the
+    class definition:
+  
+    - the attribute *isRADContent* is set to 1, which is used by ERP5
+      to determine that a given class definition should be considered
+      as an **ERP5 RAD Class** or not. The meaning of *RAD* is *Rapid
+      Application Development*. Classes which set the
+      the attribute *isRADContent* to 1 will automatically benefit from
+      ERP5 RAD features (ex. automatic generation of accessors, automatic
+      generation of default values, etc.)
+  
+    - the attribute *property_sheets* contains a list of PropertySheets. This
+      list defines the default attributes for all instances of the *Organisation*
+      class
+  
+    During the initialization of an **ERP5 RAD Class**, the following
+    class attributes and methods will be automatically generated:
+  
+    - a class attribute holding a **default value**. In
+      the example of the *Organisation* class, a class attribute
+      named *corporate_name* is created and set to
+      the default string ('').
+  
+    - a default **getter** accessor method if no such accessor
+      is already defined by the class. In
+      the example of the *Organisation* class, a method
+      named *getCorporateName* is created, which returns
+      the value of the *corporate_name* instance attribute.
+  
+    - a default **setter** accessor method if no such accessor
+      is already defined by the class. In
+      the example of the *Organisation* class, a method
+      named *setCorporateName* is created, which changes
+      the value of the *corporate_name* document attribute
+      and reindexes the document. Another method
+      named *_setCorporateName* is created to change
+      the value of the *corporate_name* document attribute
+      without reindexing it.
+  
+    Besides *getters* and *setters*, all ERP5 documents
+    which are implemented by an **ERP5 RAD Class** can
+    be modified with the **edit** method. For example::
+  
+      document.edit(corporate_name='ACME')
+  
+    is equivalent to::
+  
+      document.setCorporateName('ACME')
+  
+    The use of *edit* allows to reindex documents only once.
+    For example::
+  
+      document.edit(corporate_name='ACME',social_capital=30000)
+  
+    is equivalent to::
+  
+      document._setCorporateName('ACME')
+      document.setSocialCapital(30000)
+  
+    Default attribute values and types are defined in the Utils.py
+    file at the root of the ERP5 Product::
+  
+      defaults = {
+          'float'              : 0.0,
+          'int'                : 0,
+          'long'               : 0L,
+          'date'               : DateTime(),
+          'string'             : '',
+          'text'               : '',
+          'boolean'            : 0,
+          'lines'              : [],
+          'tokens'             : [],
+          'selection'          : [],
+          'multiple selection' : [],
+      }
+  
+    **The use of getters and setters in ERP5 is not only recommended
+    but is considered as COMPULSORY** since they provide a functional
+    approach to content access and allow a more consistent implementation
+    of complex interactions between documents. **NEVER ACCESS DIRECTLY
+    A DOCUMENT ATTRIBUTE IN ERP5 OUTSIDE A PRIVATE METHOD.
+    ONLY USE GETTERS AND SETTERS**
+    
+    *Implementation*: functions createDefaultAccessors and
+  
+  Categories
+  
+  
+    First of all, a certain number
+    of base categories is defined. Such categories can are identified by a string such
+    as: region, client, skill, function, etc. Each category can hold subcategories,
+    sub-subcategories, etc. For example, regions allow to categorize geography in EPR5::
+  
+      region/americas
+      region/americas/central
+      region/americas/north
+      region/americas/south
+      region/americas/south/brazil
+      region/europe
+      region/europe/central
+      region/europe/central/poland
+      region/europe/east
+      region/europe/north
+      region/europe/west
+      region/europe/west/france
+      region/europe/west/netherlands
+  
+    (we only included the countries where people contribute to ERP5 currently - if you
+    contribute to ERP5 and your country is not list, let us know)
+  
+    Each ERP5 document holds a *categories* attribute which contains a tuple
+    of category paths storever as a tuple of lines. Categories are considered
+    as a *slowly evolving* in an ERP5 system.
+  
+    Documents which are implemented as **ERP5 RAD Class** can also benefit
+    from the automatic creation of accessors in the area of categories. For example,
+    the *Organisation* property sheet includes references to some default
+    base categories of ERP5::
+  
+      class Organisation:
+        """
+          Organisation properties and categories
+        """
+  
+        _properties = (
+          { 'id'          : 'corporate_name',
+            'description' : 'The official name of this organisation',
+            'type'        : 'string',
+            'mode'        : 'w' },
+          { 'id'          : 'social_capital',
+            'description' : 'The social capital of this organisation',
+            'type'        : 'int',
+            'mode'        : 'w' },
+          { 'id'          : 'social_capital_currency',
+            'description' : "The currency in which the social capital is"
+                            "expressed",
+            'type'        : 'string',
+            'mode'        : 'w' },
+        )
+  
+        _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment',
+                          'social_form', 'function' )
+  
+  
+    The *_categories* attributes holds a tuple of strings which defines
+    which ids of base categories should be implemented by documents of
+    type Organisation. Based on this definition, the following getter and
+    setter methods are defined::
+  
+      getRole            getDefaultRole           setRole           _setRole
+      getGroup           getDefaultGroup          setGroup          _setGroup
+      getActivity        getDefaultActivity       setActivity       _setActivity
+      getSkill           getDefaultSkill          setSkill          _setSkill
+      getMarketSegment   getDefaultMarketSegment  setMarketSegment  _setMarketSegment
+      getSocialForm      getDefaultSocialForm     setSocialForm     _setSocialForm
+      getFunction        getDefaultFunction       setFunction       _setFunction
+  
+  
+    Each of these getters and setters sets or returns a list of partial path values except
+    for the *Default* category getter which returns the first value in of the base
+    category membership of a document.
+  
+    Ordered Categories
+  
+      Categories are ordered.
+  
+  
+    *Implementation*: all this is implemented by createCategoryAccessors
+    in Utils.py
+  
+  
+  Categories and relations
+  
+    Categories allow to implement document categorization but also relations.
+    In ERP5, categories are managed by a portal tool names **portal_categories**.
+    Because ERP5 is based on Zope and because provides implicit acquisition,
+    if an EPR5 document has for example the following path::
+  
+      /portal_root/organisation/3
+  
+    Then, this object can also be accessed as::
+  
+      /portal_root/portal_categories/client/organisation/3
+  
+    This allows to define virtual categories in a base category
+    without having to create many subcategories. For example,
+    the category::
+  
+      client/organisation/3
+  
+    only exists through acquisition. Including in the list of category paths
+    of a document a paths such as::
+  
+      client/organisation/3
+  
+    is equivalent to creating an **arc** of coulor *client* between
+    that document and the document
+  
+      /portal_root/organisation/3
+  
+    Since relaltional models are equivalent to graphs, we can see
+    here that the ERP5 categorization model provides the same expressive
+    power as a relational model. Base categories are the equivalent
+    to a relation identifier. Arcs are created between a document
+    and a virtual subcategory acquired through implicit acquisition.
+  
+    **All relations are therefore treated in ERP5 as categories**
+  
+  
+  Explicit Relational Acquisition
+  
+  
+    One of the purpose of property sheets is to create
+    a complete documentation of all attributes which can be used
+    in a complexe ERP5 system, and to make sure that no name conflict
+    happens. We want the *getTitle* or the *getPrice* accessor to mean the same thing
+    wherever it is used from.
+    
+    In some cases, some attribute values can be *acquired* by one
+    document from another document. In the Zope environment,
+    acquisition allows to get the value of an attribute of one
+    document from the value of its parents. However, in ERP5,
+    we have multiple hierarchies. We may want to get the telephone
+    of a person based on the office he/she is working (which is a region
+    based tree) while we want to get the name of his product line 
+    through the division he/she belongs to (this is a product line tree).
+  
+    Explicit Relational Acquisition provides a simple way to implement
+    this feature. Let us look at the example bellow::
+  
+  
+      class SalesOpportunity:
+        """
+          Sales Opportunity properties and categories
+        """
+  
+        _properties = (
+          { 'id'          : 'client_organisation',
+            'description' : 'The organisation involved',
+            'type'        : 'string',
+            'acquisition' : {
+                              'base_category' : ('client',),
+                              'portal_type'   : ('Organisation',),
+                              'copy_value'    : 0,
+                              'accessor_id'   : 'getTitle',
+                              'depends'       : None
+                              },
+            'mode'        : 'w' },
+          { 'id'          : 'client_person',
+            'description' : "The contact person involved",
+            'type'        : 'string',
+            'acquisition' : {
+                              'base_category' : ('client',),
+                              'portal_type'   : ('Person',),
+                              'copy_value'    : 0,
+                              'accessor_id'   : 'getTitle',
+                              'depends'       : None
+                              },
+            'mode'        : 'w' },
+        )
+  
+        _categories = ('role', 'group', 'activity', 'function',
+                 'social_form', 'skill', 'market_segment')
+  
+  
+    The name of the client_person is acquired by look at documents
+    of type *Person* in the *client* tree (or relation) and applying
+    the getTitle method. The attribute can be calculated each time
+    (copy_value is 0) or copied once for all (copy_value is 0).
+  
+    Accessors:
+  
+      _getReference
+      _getReferencePath
+      _getReferenceList
+  
+  
+  FAQ
+  
+    Do I need to create an attribute for a category ?
+  
+    It depends : if some information can be in a different application,
+    you need to holde the information somewhere, ....
+  
+  Possible scenario
+  
+    copy_value
+    mask_value
+    sync_value
+  
+    
+  Future
+    
+    Atribute lookup should be put outside property sheet
+    into a tool ?
