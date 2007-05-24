@@ -217,4 +217,10 @@
   <item>Amount</item>
   <item>Price</item>
  </portal_type>
+ <portal_type id="Vault Transfer Cell">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Vault Transfer Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
 </property_sheet_list>

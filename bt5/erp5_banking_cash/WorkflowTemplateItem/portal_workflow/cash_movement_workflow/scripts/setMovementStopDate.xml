@@ -72,7 +72,7 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 transaction = state_change[\'object\']\n
-stop_date_key = \'your_stop_date\'\n
+stop_date_key = \'stop_date\'\n
 if not state_change.kwargs.has_key(stop_date_key):\n
   msg = Message(domain = "ui", message="No stop date provided")\n
   raise ValidationFailed, (msg,)\n

@@ -73,4 +73,5 @@ Usual Cash Incident | Incoming Usual Cash Incident Line
 Usual Cash Incident | Outgoing Usual Cash Incident Line
 Usual Cash Rendering | Cash Delivery Line
 Usual Cash Transfer | Cash Delivery Line
-Vault Transfer | Cash Delivery Line
+Vault Transfer Line | Vault Transfer Cell
+Vault Transfer | Vault Transfer Line

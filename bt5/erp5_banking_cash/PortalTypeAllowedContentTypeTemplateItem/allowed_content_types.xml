@@ -275,7 +275,10 @@
   <item>Usual Cash Transfer</item>
  </portal_type>
  <portal_type id="Vault Transfer">
-  <item>Cash Delivery Line</item>
+  <item>Vault Transfer Line</item>
+ </portal_type>
+ <portal_type id="Vault Transfer Line">
+  <item>Vault Transfer Cell</item>
  </portal_type>
  <portal_type id="Vault Transfer Module">
   <item>Vault Transfer</item>

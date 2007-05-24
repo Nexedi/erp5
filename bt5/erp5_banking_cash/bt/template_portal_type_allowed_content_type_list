@@ -103,5 +103,6 @@ Usual Cash Rendering Module | Usual Cash Rendering
 Usual Cash Rendering | Cash Delivery Line
 Usual Cash Transfer Module | Usual Cash Transfer
 Usual Cash Transfer | Cash Delivery Line
+Vault Transfer Line | Vault Transfer Cell
 Vault Transfer Module | Vault Transfer
-Vault Transfer | Cash Delivery Line
+Vault Transfer | Vault Transfer Line

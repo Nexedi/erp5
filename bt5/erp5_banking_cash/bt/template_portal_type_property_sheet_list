@@ -100,5 +100,7 @@ Usual Cash Rendering | Amount
 Usual Cash Rendering | Price
 Usual Cash Transfer | Amount
 Usual Cash Transfer | Price
+Vault Transfer Cell | CashDeliveryLine
+Vault Transfer Line | CashDeliveryLine
 Vault Transfer | Amount
 Vault Transfer | Price

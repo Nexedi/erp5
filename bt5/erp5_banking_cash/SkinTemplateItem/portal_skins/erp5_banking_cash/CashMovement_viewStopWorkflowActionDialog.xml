@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Workflow_statusModify</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -126,6 +126,10 @@
             <value> <string>CashMovement_viewStopWorkflowActionDialog</string> </value>
         </item>
         <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view_dialog</string> </value>
+        </item>
+        <item>
             <key> <string>row_length</string> </key>
             <value> <int>4</int> </value>
         </item>
@@ -135,11 +139,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Validate Workflow Action</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

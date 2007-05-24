@@ -360,6 +360,11 @@ Usual Cash Transfer | history
 Usual Cash Transfer | metadata
 Usual Cash Transfer | print
 Usual Cash Transfer | view
+Vault Transfer Cell | metadata
+Vault Transfer Cell | view
+Vault Transfer Line | metadata
+Vault Transfer Line | print
+Vault Transfer Line | view
 Vault Transfer Module | list
 Vault Transfer Module | list_ui
 Vault Transfer Module | print_pdf
