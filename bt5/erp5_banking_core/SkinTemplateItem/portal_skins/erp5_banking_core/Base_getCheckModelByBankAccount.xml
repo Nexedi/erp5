@@ -77,7 +77,7 @@ if entity_portal_type == \'Person\':\n
 elif entity_portal_type == \'Organisation\':\n
   check_model_reference = \'CCCO\'\n
 check_resource = context.Base_getCheckModelByReference(\n
-                  reference=check_model_reference).getRelativeUrl()\n
+                  reference=check_model_reference)\n
 return check_resource\n
 </string> </value>
         </item>
