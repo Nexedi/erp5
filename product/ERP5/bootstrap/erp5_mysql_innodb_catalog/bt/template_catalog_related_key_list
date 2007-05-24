@@ -40,3 +40,5 @@ parent_float_index | catalog/float_index/z_related_parent
 parent_reference | catalog/reference/z_related_parent
 parent_description | catalog/description/z_related_parent
 parent_portal_type | catalog/portal_type/z_related_parent
+translated_causality_state | translation/translated_message/z_related_translated_causality_state
+translated_causality_state_title | translation/translated_message/z_related_translated_causality_state_title
