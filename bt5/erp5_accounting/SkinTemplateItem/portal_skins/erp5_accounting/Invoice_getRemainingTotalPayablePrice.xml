@@ -93,7 +93,7 @@ portal = context.getPortalObject()\n
 total_payable_price_per_node_section = dict()\n
 \n
 if simulation_state is None:\n
-  state_list = [x[0] for x in Base_getTranslatedWorkflowStateItemList()]\n
+  state_list = [x[1] for x in context.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n
   simulation_state = [x for x in state_list if x not in (\'draft\', \'cancelled\', \'deleted\')]\n
 \n
 if context.AccountingTransaction_isSourceView():\n
@@ -258,7 +258,6 @@ else:\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>Base_getTranslatedWorkflowStateItemList</string>
                             <string>x</string>
                             <string>_getitem_</string>
                             <string>state_list</string>
