@@ -297,7 +297,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Create the vault transfer line 1 with banknotes of 10000 and check it has been well created
     """
     # create the vault transfer line
-    self.addCashLineToDelivery(self.vault_transfer, 'valid_line_1', 'Cash Delivery Line', self.billet_10000,
+    self.addCashLineToDelivery(self.vault_transfer, 'valid_line_1', 'Vault Transfer Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
@@ -307,7 +307,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     # get the vault transfer line
     self.valid_line_1 = getattr(self.vault_transfer, 'valid_line_1')
     # check its portal type
-    self.assertEqual(self.valid_line_1.getPortalType(), 'Cash Delivery Line')
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Vault Transfer Line')
     # check the resource is banknotes of 10000
     self.assertEqual(self.valid_line_1.getResourceValue(), self.billet_10000)
     # chek the value of the banknote
@@ -321,7 +321,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
       # get the delivery cell
       cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/valid')
       # chek portal types
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getPortalType(), 'Vault Transfer Cell')
       # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       # check the source vault is usual_cash
@@ -345,7 +345,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Create the vault transfer line 1 with banknotes of 10000 and check it has been well created
     """
     # create the vault transfer line
-    self.addCashLineToDelivery(self.vault_transfer, 'valid_line_1', 'Cash Delivery Line', self.billet_10000,
+    self.addCashLineToDelivery(self.vault_transfer, 'valid_line_1', 'Vault Transfer Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
@@ -355,7 +355,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     # get the vault transfer line
     self.valid_line_1 = getattr(self.vault_transfer, 'valid_line_1')
     # check its portal type
-    self.assertEqual(self.valid_line_1.getPortalType(), 'Cash Delivery Line')
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Vault Transfer Line')
     # check the resource is banknotes of 10000
     self.assertEqual(self.valid_line_1.getResourceValue(), self.billet_10000)
     # chek the value of the banknote
@@ -369,7 +369,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
       # get the delivery cell
       cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/valid')
       # chek portal types
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getPortalType(), 'Vault Transfer Cell')
       # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       # check the source vault is usual_cash
@@ -402,7 +402,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Create the vault transfer line 2 wiht coins of 200 and check it has been well created
     """
     # create the line
-    self.addCashLineToDelivery(self.vault_transfer, 'valid_line_2', 'Cash Delivery Line', self.piece_200,
+    self.addCashLineToDelivery(self.vault_transfer, 'valid_line_2', 'Vault Transfer Line', self.piece_200,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
     # execute tic
@@ -412,7 +412,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     # get the second vault transfer line
     self.valid_line_2 = getattr(self.vault_transfer, 'valid_line_2')
     # check portal types
-    self.assertEqual(self.valid_line_2.getPortalType(), 'Cash Delivery Line')
+    self.assertEqual(self.valid_line_2.getPortalType(), 'Vault Transfer Line')
     # check the resource is coin of 200
     self.assertEqual(self.valid_line_2.getResourceValue(), self.piece_200)
     # check the value of coin
@@ -425,7 +425,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
       # get the delivery  cell
       cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/valid')
       # check the portal type
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getPortalType(), 'Vault Transfer Cell')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 5.0)
@@ -443,7 +443,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # create a line in which quanity of banknotes of 5000 is higher that quantity available at source
     # here create a line with 24 (11+13) banknotes of 500 although the vault usual_cash has no banknote of 5000
-    self.addCashLineToDelivery(self.vault_transfer, 'invalid_line', 'Cash Delivery Line', self.billet_5000,
+    self.addCashLineToDelivery(self.vault_transfer, 'invalid_line', 'Vault Transfer Line', self.billet_5000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_5000)
     # execute tic
@@ -663,7 +663,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     and check that the deliver of a cash tranfer have achieved
     """
     # do the workflow transition "deliver_action"
-    self.workflow_tool.doActionFor(self.vault_transfer, 'confirm_to_deliver_action', wf_id='vault_transfer_workflow')
+    self.workflow_tool.doActionFor(self.vault_transfer, 'deliver_action', wf_id='vault_transfer_workflow')
     # execute tic
     self.stepTic()
     # get state of vault_transfer
@@ -751,7 +751,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Try if we get Insufficient balance
     """
     message = self.assertWorkflowTransitionFails(self.vault_transfer,
-              'vault_transfer_workflow','confirm_to_deliver_action')
+              'vault_transfer_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
   ##################################
@@ -777,12 +777,12 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'OrderVaultTransfer ' \
-                    + 'ConfirmVaultTransfer ' \
                     + 'ResetSourceInventory Tic ' \
                     + 'DeliverVaultTransferFails Tic ' \
                     + 'DeleteResetInventory Tic ' \
                     + 'ConfirmToDeliverVaultTransfer ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
+                    #+ 'ConfirmVaultTransfer ' \
 
     sequence_list.addSequenceString(sequence_string)
 

@@ -160,6 +160,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.logout()
     self.login('super_user')
     self.openCounterDate(site=self.paris)
+    self.openCounterDate(site=self.madrid, id='counter_date_2')
 
 
 
@@ -228,6 +229,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
                                 source=self.vault_source.getRelativeUrl(),
                                 destination=self.vault_destination.getRelativeUrl(), 
                                 description='test',
+                                start_date=self.date,
                                 source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
@@ -370,7 +372,9 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
     self.cash_movement.setSourceTotalAssetPrice('172400.0')
     # try to do the workflow action "stop_action', cath the exception ValidationFailed raised by workflow transition
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.cash_movement, 'stop_action', wf_id='cash_movement_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, 
+                  self.cash_movement, 'stop_action', 
+                  wf_id='cash_movement_workflow', your_stop_date=self.date)
     # execute tic
     self.stepTic()
     # get state of the cash_movement
@@ -442,8 +446,10 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # fix amount (10000 * 5.0 + 200 * 12.0)
     self.cash_movement.setSourceTotalAssetPrice('52400.0')
+
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.cash_movement, 'stop_action', wf_id='cash_movement_workflow')
+    self.workflow_tool.doActionFor(self.cash_movement, 'stop_action',
+                  wf_id='cash_movement_workflow', your_stop_date=self.date)
     # execute tic
     self.stepTic()
     # get state

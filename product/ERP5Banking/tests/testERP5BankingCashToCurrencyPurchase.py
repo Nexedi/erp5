@@ -127,7 +127,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
 
     line_list_sortante = [inventory_dict_line_1, inventory_dict_line_2]
 
-    self.guichet_entrante = self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.entrante
+    self.guichet_entrante = self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.sortante
     self.guichet_sortante= self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.guichet = self.paris.surface.banque_interne.guichet_1
 
@@ -273,7 +273,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
       # check the source vault is encaisse_paris
       self.assertEqual(cell.getBaobabSource(), None)
       # check the destination vault is guichet_1
-      self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_devises/usd/entrante')
+      self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_devises/usd/sortante')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity of banknote 20
         self.assertEqual(cell.getQuantity(), 5.0)

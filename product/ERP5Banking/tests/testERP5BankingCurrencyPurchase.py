@@ -93,7 +93,7 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
 
     self.bi_counter = self.paris.surface.banque_interne
     self.counter_site = self.paris.surface.banque_interne.guichet_1
-    self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.entrante
+    self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.sortante
     self.stepTic()
     # create a person and a bank account
     self.person_1 = self.createPerson(id='person_1',
@@ -292,7 +292,7 @@ class TestERP5BankingCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCase):
       # check the source vault is encaisse_paris
       self.assertEqual(cell.getBaobabSource(), None)
       # check the destination vault is guichet_1
-      self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_devises/usd/entrante')
+      self.assertEqual(cell.getBaobabDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_devises/usd/sortante')
 
   def test_01_ERP5BankingCurrencyPurchase(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
