@@ -93,11 +93,11 @@ if \'reserve\' in vault and \'salle_tri\' in vaultDestination:\n
                          \'destination\':transaction.getDestinationValue().getParentValue().getTitle()})\n
 \n
   raise ValidationFailed, (msg,)\n
-resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
+resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Vault Transfer Line\')\n
 \n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
+total_price = transaction.getTotalPrice(portal_type=[\'Vault Transfer Line\',\'Vault Transfer Cell\'],fast=0)\n
 \n
 if resource == 2:\n
   msg = Message(domain="ui", message="No Resource.")\n

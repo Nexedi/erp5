@@ -71,7 +71,7 @@
 # Hence, this script must have a proxy role to modify what user cannot.\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 stop_date_key = \'your_stop_date\'\n
 if not kw.has_key(stop_date_key):\n
   msg = Message(domain = "ui", message="No stop date provided")\n
@@ -141,14 +141,14 @@ context.validateDestinationCounterDate(state_change, **kw)\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
                             <string>stop_date_key</string>
+                            <string>_getattr_</string>
                             <string>msg</string>
-                            <string>_getitem_</string>
                             <string>_write_</string>
                             <string>_apply_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
