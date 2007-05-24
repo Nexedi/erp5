@@ -26,6 +26,9 @@
 #
 ##############################################################################
 
+"""Constraint Interface.
+"""
+
 try:
     from Interface import Interface
 except ImportError:
@@ -41,33 +44,33 @@ class Constraint(Interface):
   
   A property sheet can contain _constraints slot ( just like _properties and
   _categories ).  _constraints is a list of constraint definition represented
-  as dictionnaries, for example we can have:
-
-  _constraints = (
-    {   # we need to have an id
-        'id': 'the_constraint',
+  as dictionnaries, for example we can have::
+  
+    _constraints = (
+      {   # we need to have an id
+          'id': 'the_constraint',
+          
+          # Specify the class name of the constraint. The class name must be
+          # registered to ERP5Type. If the class is not found, a
+          # ConstraintNotFound error will be raised when trying to use it.
+          'type': 'MyConstraintClass',
         
-        # Specify the class name of the constraint. The class name must be
-        # registered to ERP5Type. If the class is not found, a
-        # ConstraintNotFound error will be raised when trying to use it.
-        'type': 'MyConstraintClass',
-      
-        # Constraint have a description.
-        'description': 'Constraint description', 
-       
-        # XXX condition is a TALES Expression; is it part of the API ?
-        # how to use condition based on a workflow state in a workflow before
-        # script, where the document is not in that state yet ?
-        'condition': 'python: object.getPortalType() == "Foo"'
-
-        # Additional Constraint parameters are configured here.
-        # Constraint docstring should provide a configuration example and a
-        # documentation on parameter they accept.
-    }
-  )
+          # Constraint have a description.
+          'description': 'Constraint description', 
+         
+          # XXX condition is a TALES Expression; is it part of the API ?
+          # how to use condition based on a workflow state in a workflow before
+          # script, where the document is not in that state yet ?
+          'condition': 'python: object.getPortalType() == "Foo"'
+  
+          # Additional Constraint parameters are configured here.
+          # Constraint docstring should provide a configuration example and a
+          # documentation on parameter they accept.
+      }
+    )
 
   Those constraint definition parameters will be available from the Constraint
-  instance as `self.constraint_definition` (a dict).
+  instance as 'self.constraint_definition' (a dict).
 
   Calling checkConsistency() method on any ERP5Type document will check all
   constraint defined on this document. If the document is a subclass of
@@ -80,30 +83,31 @@ class Constraint(Interface):
   """
   
   def checkConsistency(obj, fixit=0):
-    """This method checks the consistency of object `obj`, and fix errors if
-    the argument `fixit` is true. Not all constraint have to support error
+    """This method checks the consistency of object 'obj', and fix errors if
+    the argument 'fixit' is true. Not all constraint have to support error
     repairing, in that case, simply ignore the fixit parameter.
     This method should return a list of errors, which are a list for now.
     """
     
   def _generateError(obj, error_message, mapping={}):
-    """Generate an error for `obj` with the corresponding `error_message`.
+    """Generate an error for 'obj' with the corresponding 'error_message'.
     This method is usefull for Constraint authors, in case of an error, they
-    can simply call:
+    can simply call::
+       
+      >>> if something_is_wrong:
+      >>>   errors.append(self._generateError(obj, 'Something is wrong !')
     
-    >>> if something_is_wrong:
-    >>>   errors.append(self._generateError(obj, 'Something is wrong !')
-    
-    Then this message ('Something is wrong !') will be translated when the
+    Then this message ("Something is wrong !") will be translated when the
     caller of document.checkConsistency() calls getTranslatedMessage() on
     ConsistencyMessage instances returned by checkConsistency.
 
     The implementation uses ERP5Type's Messages, so it's possible to use a
-    `mapping` for substitution, like this:
-    >>> if something_is_wrong:
-    >>>   errors.append(self._generateError(obj,
-    ...      'Something is wrong: ${wrong_thing}',
-    ...      mapping=dict(wrong_thing=obj.getTheWrongThing())))
+    'mapping' for substitution, like this::
+    
+      >>> if something_is_wrong:
+      >>>   errors.append(self._generateError(obj,
+      ...      'Something is wrong: ${wrong_thing}',
+      ...      mapping=dict(wrong_thing=obj.getTheWrongThing())))
    
     """
 
