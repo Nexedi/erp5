@@ -3295,7 +3295,7 @@ InitializeClass(ListBoxLine)
 allow_class(ListBoxLine)
 
 # Psyco
-import psyco
+from Products.ERP5Type.PsycoWrapper import psyco
 #psyco.bind(ListBoxWidget.render)
 psyco.bind(ListBoxValidator.validate)
 

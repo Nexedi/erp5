@@ -1487,5 +1487,5 @@ class CategoryTool( UniqueObject, Folder, Base ):
 InitializeClass( CategoryTool )
 
 # Psyco
-import psyco
+from Products.ERP5Type.PsycoWrapper import psyco
 psyco.bind(CategoryTool)

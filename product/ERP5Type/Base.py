@@ -67,7 +67,7 @@ from Products.ERP5Type.Accessor.TypeDefinition import asDate
 
 from string import join
 import sys
-import psyco
+from Products.ERP5Type.PsycoWrapper import psyco
 
 from cStringIO import StringIO
 from socket import gethostname, gethostbyaddr

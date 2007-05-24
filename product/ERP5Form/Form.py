@@ -43,7 +43,7 @@ from ZODB.POSException import ConflictError
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ERP5Type.Utils import UpperCase
 
-import psyco
+from Products.ERP5Type.PsycoWrapper import psyco
 import sys
 
 # Patch the fiels methods to provide improved namespace handling
