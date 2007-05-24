@@ -87,6 +87,7 @@
                       <list>
                         <string>listbox_source_logical_path</string>
                         <string>listbox_start_date</string>
+                        <string>listbox_source_total_asset_price</string>
                       </list>
                     </value>
                 </item>

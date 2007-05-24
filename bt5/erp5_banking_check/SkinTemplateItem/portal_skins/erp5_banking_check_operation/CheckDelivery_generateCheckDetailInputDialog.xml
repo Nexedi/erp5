@@ -118,10 +118,6 @@ def convertCheckReferenceToInt(check_reference):\n
 # the contents must be preserved in the form.\n
 if listbox in (None,()) or (previous_resource not in(\'\',None) and previous_resource!=resource):\n
   listbox = []\n
-  for i in range(0,10):\n
-    #listbox.append({\'quantity\':1,\'uid\':\'new_%03i\' % i})\n
-    listbox.append({\'quantity\':1})\n
-\n
 else:\n
   for line in listbox:\n
     destination_payment_reference = line.get(\'destination_payment_reference\',None)\n
@@ -185,6 +181,9 @@ else:\n
         message = \'The range is not valid\'\n
         generate_error(line,\'reference_range_min\',message)\n
         generate_error(line,\'reference_range_max\',message)\n
+\n
+for i in xrange(len(listbox), 10):\n
+  listbox.append({\'quantity\':1})\n
 \n
 if batch_mode:\n
   return error_value\n
@@ -275,8 +274,6 @@ else:\n
                             <string>convertTravelerCheckReferenceToInt</string>
                             <string>convertCheckReferenceToInt</string>
                             <string>_getiter_</string>
-                            <string>range</string>
-                            <string>i</string>
                             <string>line</string>
                             <string>destination_payment_reference</string>
                             <string>reference_range_min</string>
@@ -301,6 +298,8 @@ else:\n
                             <string>check_amount_value</string>
                             <string>check_quantity</string>
                             <string>same_type</string>
+                            <string>xrange</string>
+                            <string>i</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
