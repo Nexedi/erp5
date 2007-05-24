@@ -65,9 +65,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>cash_detail_dict = {\'line_portal_type\'           : \'Outgoing Mutilated Banknote Line\'\n
+            <value> <string>#cash_status = [\'valid\', \'new_emitted\']\n
+cash_status = [\'valid\']\n
+\n
+cash_detail_dict = {\'line_portal_type\'           : \'Outgoing Mutilated Banknote Line\'\n
                     , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
-                    , \'cash_status_list\'         : [\'new_emitted\', \'valid\']\n
+                    , \'cash_status_list\'         : cash_status\n
                     , \'emission_letter_list\'     : context.Baobab_getUserEmissionLetterList()\n
                     , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1)\n
                     , \'currency_cash_portal_type\': \'Banknote\'\n
@@ -126,6 +129,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>cash_status</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>False</string>

@@ -65,9 +65,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>cash_detail_dict= { \'line_portal_type\'          : \'Outgoing Cash Exchange Line\'        # The portal type that the fastinput will create\n
+            <value> <string>#cash_status = [\'valid\', \'new_emitted\']\n
+cash_status = [\'valid\']\n
+cash_detail_dict= { \'line_portal_type\'          : \'Outgoing Cash Exchange Line\'        # The portal type that the fastinput will create\n
                     , \'operation_currency\'       : \'XOF\'                            # The operation currently\n
-                    , \'cash_status_list\'          : [\'valid\', \'new_emitted\']             # List of possible cashStatus or None if all\n
+                    , \'cash_status_list\'          : cash_status             # List of possible cashStatus or None if all\n
                     , \'emission_letter_list\'      : context.Baobab_getUserEmissionLetterList()                                     # List of possible emissionLetter or None if all\n
                     , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=1)      # List of possible variation or None if all   #[\'2003\']      # List of possible variation or None if all\n
                     , \'currency_cash_portal_type\': None                                                   # \'Coin\' or \'Banknote\' or None if both\n
@@ -127,6 +129,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>cash_status</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>

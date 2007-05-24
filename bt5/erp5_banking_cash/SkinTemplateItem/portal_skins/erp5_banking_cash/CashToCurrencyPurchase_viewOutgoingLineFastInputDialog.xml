@@ -69,7 +69,8 @@
 source = context.getSource()\n
 source_section = context.getSourceSection()\n
 \n
-cash_status = [\'valid\', \'new_emitted\']\n
+#cash_status = [\'valid\', \'new_emitted\']\n
+cash_status = [\'valid\']\n
 #emission_letter = None\n
 #emission_letter = list((context.getSourceValue().getCodification()[0]).lower())\n
 emission_letter = context.Baobab_getUserEmissionLetterList()\n
