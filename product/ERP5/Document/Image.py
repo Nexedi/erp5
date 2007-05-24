@@ -146,7 +146,8 @@ class Image(File, OFSImage):
       self.data = self._data
 
     # Make sure size is defined
-    if not hasattr(aq_base(self), 'size') or not self.size:
+    if (not hasattr(aq_base(self), 'size') or not self.size) and \
+                      hasattr(aq_base(self), 'data'):
       self.size = len(self.data)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWidth')
