@@ -57,14 +57,12 @@
         <item>
             <key> <string>acquisition_object_id</string> </key>
             <value>
-              <tuple>
-                <string>source</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: [\'Accounting Transaction Line\']</string> </value>
+            <value> <string>python: []</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
@@ -90,7 +88,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
