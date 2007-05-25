@@ -84,12 +84,6 @@ class Renderer(Filter):
 
     - *base*: if set to 0, do not include the base category. If set to 1,
               include the base category. If set to a string, use the string as base.
-
-              (implementation trick: if set to string, use that string as the base string
-              when recursing) IMPLEMENTATION HACK
-
-    - *base*: if set to 0, do not include the base category. If set to 1,
-              include the base category. If set to a string, use the string as base.
               This is useful for creationg multiple base categories sharing the same categories.
               (ex. target_region/region/europe)
 
