@@ -834,6 +834,56 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertSameSet(c1.getCategoryChildValueList(is_self_excluded=0),
                                                     (c1, c11, c111))
 
+  def test_24_getCategoryChildValueListLocalSortMethod(self,
+                              quiet=quiet, run=run_all_test) :
+    if not run: return
+    if not quiet:
+      message = 'Test getCategoryChildValueList local sort method'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ', 0, message)
+
+    pc = self.getCategoriesTool()
+    bc = pc.newContent(portal_type='Base Category', id='child_test')
+    c1 = bc.newContent(portal_type='Category', id='1', int_index=10, title='C')
+    c11 = c1.newContent(portal_type='Category', id='1.1', int_index=5, title='X')
+    c111 = c11.newContent(portal_type='Category', id='1.1.1',
+                          int_index=2, title='C')
+    c12 = c1.newContent(portal_type='Category', id='1.2', int_index=3, title='Z')
+    c2 = bc.newContent(portal_type='Category', id='2', int_index=30, title='B')
+    c3 = bc.newContent(portal_type='Category', id='3', int_index=20, title='A')
+    
+    # the default ordering is preorder:
+    self.assertEquals(list(bc.getCategoryChildValueList()),
+                      [c1, c11, c111, c12, c2, c3])
+    self.assertEquals(list(c1.getCategoryChildValueList()), [c11, c111, c12])
+    
+    # but this order can be controlled for categories of the same depth, ie. we
+    # can sort each level independantly (this is different from sort_on /
+    # sort_order which sort the whole list regardless of the original
+    # structure).
+
+    # This can be done either with a function (like cmp argument to python
+    # list sort)
+    def sort_func(a, b):
+      return cmp(a.getTitle(), b.getTitle())
+    # here c1, c2, c3 are sorted by their titles
+    self.assertEquals(list(bc.getCategoryChildValueList(
+                                        local_sort_method=sort_func)),
+                      [c3, c2, c1, c11, c111, c12])
+    # here c11 & c12 are sorted by their titles
+    self.assertEquals(list(c1.getCategoryChildValueList(
+                              local_sort_method=sort_func)), [c11, c111, c12])
+
+    # This can also be done with a local_sort_id, then objects are sorted by
+    # comparing this 'sort_id' property (using getProperty())
+    # here c1, c2, c3 are sorted by their int_index
+    self.assertEquals(list(bc.getCategoryChildValueList(
+                                        local_sort_id='int_index')),
+                      [c1, c11, c111, c12, c3, c2])
+    # here c11 & c12 are sorted by their titles
+    self.assertEquals(list(c1.getCategoryChildValueList(
+                              local_sort_id='int_index')), [c12, c11, c111])
+
 
 if __name__ == '__main__':
     framework()

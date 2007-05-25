@@ -215,40 +215,63 @@ class Category(Folder):
                                                     'getCategoryChildValueList')
     def getCategoryChildValueList(self, recursive=1, include_if_child=1,
                                   is_self_excluded=1, sort_on=None,
-                                  sort_order=None, **kw):
+                                  sort_order=None, local_sort_method=None,
+                                  local_sort_id=None, **kw):
       """
           List the child objects of this category and all its subcategories.
 
-          recursive - if set to 1, list recursively
+          recursive         - if set to 1, list recursively
 
-          include_if_child - if set to 1, categories having child categories
-                             are not included
+          include_if_child  - if set to 1, categories having child categories
+                              are not included
           
-          is_self_excluded - if set to 1, exclude this category from the list
+          is_self_excluded  - if set to 1, exclude this category from the list
 
           sort_on, sort_order - the same semantics as ZSQLCatalog
-                                sort_on specifies properties used for sorting
-                                sort_order specifies how categories are sorted
+                              sort_on specifies properties used for sorting
+                              sort_order specifies how categories are sorted.
+                              The default is to do a preorder tree traversal on
+                              all sub-objects.
 
-                                WARNING: using these parameters can slow down
-                                significantly, because this is written in
-                                Python
+                              WARNING: using these parameters can slow down
+                              significantly, because this is written in Python
+          
+          local_sort_method - When using the default preorder traversal, use
+                              this function to sort objects of the same depth.
+          
+          local_sort_id     - When using the default preorder traversal, sort
+                              objects of the same depth by comparing their
+                              'local_sort_id' property.
+          
+          Renderer parameter are also supported here.
       """
       if is_self_excluded or (
                     not(include_if_child) and
-                    len(self.objectValues(self.allowed_types)) > 0):
+                    len(self.objectIds(self.allowed_types)) > 0):
         value_list = []
       else:
         value_list = [self]
+      
+      child_value_list = self.objectValues(self.allowed_types)
+      if local_sort_id:
+        local_sort_method = lambda a, b: cmp(a.getProperty(local_sort_id),
+                                             b.getProperty(local_sort_id))
+      if local_sort_method:
+        # sort objects at the current level
+        child_value_list = list(child_value_list)
+        child_value_list.sort(local_sort_method)
+
       if recursive:
-        for c in self.objectValues(self.allowed_types):
-          # Do not pass sort parameters intentionally, because sorting
+        for c in child_value_list:
+          # Do not global pass sort parameters intentionally, because sorting
           # needs to be done only at the end of recursive calls.
           value_list.extend(c.getCategoryChildValueList(recursive=1,
                                        is_self_excluded=0,
-                                       include_if_child=include_if_child))
+                                       include_if_child=include_if_child,
+                                       local_sort_method=local_sort_method,
+                                       local_sort_id=local_sort_id))
       else:
-        for c in self.objectValues(self.allowed_types):
+        for c in child_value_list:
           value_list.append(c)
 
       return sortValueList(value_list, sort_on, sort_order, **kw)
@@ -390,6 +413,9 @@ class Category(Folder):
       display_id -- method called to build the couple
 
       recursive -- if set to 0 do not apply recursively
+
+      All parameter supported by getCategoryChildValueList and Render are
+      supported here.
       """
       def _renderCategoryChildItemList(recursive=1, base=0, **kw):
         value_list = self.getCategoryChildValueList(recursive=recursive,**kw)
@@ -650,7 +676,8 @@ class BaseCategory(Category):
     security.declareProtected(Permissions.AccessContentsInformation,
                                                  'getCategoryChildValueList')
     def getCategoryChildValueList(self, is_self_excluded=1, recursive=1,
-                     include_if_child=1, sort_on=None, sort_order=None, **kw):
+                     include_if_child=1, sort_on=None, sort_order=None,
+                     local_sort_method=None, local_sort_id=None, **kw):
       """
           List the child objects of this category and all its subcategories.
 
@@ -667,28 +694,50 @@ class BaseCategory(Category):
                         region/europe/france
                         region/europe/germany
                         ...
+          sort_on, sort_order - sort categories in 'sort_order' by comparing
+                  the 'sort_on' attribute. The default is to do a preorder tree
+                  traversal on all subobjects.
+
+          local_sort_method - When using the default preorder traversal, use
+                              this function to sort objects of the same depth.
+          
+          local_sort_id     - When using the default preorder traversal, sort
+                              objects of the same depth by comparing their
+                              'local_sort_id' property.
+          
+          Renderer parameter are also supported here.
 
       """
       if is_self_excluded:
         value_list = []
       else:
         value_list = [self]
+
+      child_value_list = self.objectValues(self.allowed_types)
+      if local_sort_id:
+        local_sort_method = lambda a, b: cmp(a.getProperty(local_sort_id),
+                                             b.getProperty(local_sort_id))
+      if local_sort_method:
+        # sort objects at the current level
+        child_value_list = list(child_value_list)
+        child_value_list.sort(local_sort_method)
+
       if recursive:
-        for c in self.objectValues(self.allowed_types):
+        for c in child_value_list:
           value_list.extend(c.getCategoryChildValueList(recursive=1,
                                         is_self_excluded=0,
                                         include_if_child=include_if_child))
       else:
-        for c in self.objectValues(self.allowed_types):
+        for c in child_value_list:
           if include_if_child:
             value_list.append(c)
           else:
-            if len(c.objectValues(self.allowed_types))==0:
+            if len(c.objectIds(self.allowed_types))==0:
               value_list.append(c)
       return sortValueList(value_list, sort_on, sort_order, **kw)
 
     # Alias for compatibility
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getBaseCategory')
     getBaseCategory = getBaseCategoryValue
 
