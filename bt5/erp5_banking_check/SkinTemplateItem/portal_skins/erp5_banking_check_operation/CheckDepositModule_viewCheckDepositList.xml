@@ -78,6 +78,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_source_total_asset_price</string>
                       </list>
                     </value>
                 </item>

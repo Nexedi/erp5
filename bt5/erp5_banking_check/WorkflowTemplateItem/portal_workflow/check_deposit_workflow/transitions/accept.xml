@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>plan</string> </value>
+            <value> <string>accept</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Plan</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

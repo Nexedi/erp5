@@ -49,11 +49,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>plan</string> </value>
+            <value> <string>wait</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>planned</string> </value>
+            <value> <string>waiting</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Plan</string> </value>
+            <value> <string>Wait</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

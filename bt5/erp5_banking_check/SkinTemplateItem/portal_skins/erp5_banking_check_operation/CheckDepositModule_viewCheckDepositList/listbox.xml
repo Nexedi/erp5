@@ -428,6 +428,10 @@
                           <string>start_date</string>
                           <string>start_date</string>
                         </tuple>
+                        <tuple>
+                          <string>source_total_asset_price</string>
+                          <string>source_total_asset_price</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

@@ -23,11 +23,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Documents in draft state should never be accounted and should only be visible by their ownner</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>waiting</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -37,20 +37,16 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>accept</string>
+                <string>accept_action</string>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>plan</string>
-                <string>plan_action</string>
-                <string>wait</string>
-                <string>wait_action</string>
               </tuple>
             </value>
         </item>
@@ -66,17 +62,14 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -84,29 +77,21 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>DestinationAssignee</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
@@ -114,8 +99,8 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>DestinationAssignee</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
