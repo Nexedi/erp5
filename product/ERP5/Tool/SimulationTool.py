@@ -151,7 +151,7 @@ class SimulationTool(BaseTool):
     #######################################################
     # Stock Management
 
-    def _generatePropertyUidList(self, property, as_text=0):
+    def _generatePropertyUidList(self, prop, as_text=0):
       """
       converts relative_url or text (single element or list or dict)
         to an object usable by buildSQLQuery
@@ -159,20 +159,20 @@ class SimulationTool(BaseTool):
       as_text == 0: tries to lookup an uid from the relative_url
       as_text == 1: directly passes the argument as text
       """
-      if property is None :
+      if prop is None :
         return []
       category_tool = getToolByName(self, 'portal_categories')
       property_uid_list = []
-      if type(property) is type('') :
+      if isinstance(prop, str):
         if not as_text:
-          prop_value = category_tool.getCategoryValue(property)
+          prop_value = category_tool.getCategoryValue(prop)
           if prop_value is None:
-            raise ValueError, 'Category %s does not exists' % property
+            raise ValueError, 'Category %s does not exists' % prop
           property_uid_list.append(prop_value.getUid())
         else:
-          property_uid_list.append(property)
-      elif type(property) is type([]) or type(property) is type(()) :
-        for property_item in property :
+          property_uid_list.append(prop)
+      elif isinstance(prop, (list, tuple)):
+        for property_item in prop :
           if not as_text:
             prop_value = category_tool.getCategoryValue(property_item)
             if prop_value is None:
@@ -180,11 +180,11 @@ class SimulationTool(BaseTool):
             property_uid_list.append(prop_value.getUid())
           else:
             property_uid_list.append(property_item)
-      elif type(property) is type({}) :
+      elif isinstance(prop, dict):
         tmp_uid_list = []
-        if type(property['query']) is type('') :
-          property['query'] = [property['query']]
-        for property_item in property['query'] :
+        if isinstance(prop['query'], str):
+          prop['query'] = [prop['query']]
+        for property_item in prop['query'] :
           if not as_text:
             prop_value = category_tool.getCategoryValue(property_item)
             if prop_value is None:
@@ -194,7 +194,7 @@ class SimulationTool(BaseTool):
             tmp_uid_list.append(property_item)
         if tmp_uid_list:
           property_uid_list = {}
-          property_uid_list['operator'] = property['operator']
+          property_uid_list['operator'] = prop['operator']
           property_uid_list['query'] = tmp_uid_list
       return property_uid_list
 
@@ -536,7 +536,7 @@ class SimulationTool(BaseTool):
         else:
           simulation_query = omit_query
       if reserved_kw is not None:
-        if type(reserved_kw) != dict:
+        if not isinstance(reserved_kw, dict):
           # Not a dict when taken from URL, so, cast is needed 
           # to make pop method available
           reserved_kw = dict(reserved_kw)
@@ -1404,7 +1404,7 @@ class SimulationTool(BaseTool):
               return new_item_list
 
             # Convert this to a string if necessary, for convenience.
-            if type(resource_aggregation_base_category) not in (type([]), type(())):
+            if not isinstance(resource_aggregation_base_category, (tuple, list)):
               resource_aggregation_base_category = (resource_aggregation_base_category,)
 
             done = 0
