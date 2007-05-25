@@ -141,12 +141,10 @@ def checkReferenceListUniqueness(reference_list, model, destination_payment_uid)
   """\n
     Check each given reference not to already exist.\n
   """\n
-  context.log(\'query\', portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model, src__=1))\n
   if destination_payment_uid is None:\n
     match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, resource_relative_url=model)\n
   else:\n
     match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model)\n
-  context.log(\'len\', len(match_list))\n
   assertReferenceMatchListEmpty(match_list)\n
   for reference in reference_list:\n
     tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference)\n

@@ -76,8 +76,11 @@ for line in context.getMovementList():\n
   for aggregate_uid in line.getAggregateUidList():\n
     if aggregate_uid not in aggregate_uid_list:\n
       aggregate_value = context.portal_catalog(uid=aggregate_uid)[0].getObject()\n
+      reference = aggregate_value.getReference()\n
+      if reference is None:\n
+        reference = \'%s - %s\' % (aggregate_value.getReferenceRangeMin() or \'\', aggregate_value.getReferenceRangeMax() or \'\')\n
       msg = Message(domain="ui", message="Sorry, the item with reference $reference is not available any more",\n
-                    mapping={\'reference\':aggregate_value.getReference()})\n
+                    mapping={\'reference\':reference})\n
       raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
@@ -145,6 +148,8 @@ for line in context.getMovementList():\n
                             <string>aggregate_uid</string>
                             <string>_getitem_</string>
                             <string>aggregate_value</string>
+                            <string>reference</string>
+                            <string>None</string>
                             <string>msg</string>
                           </tuple>
                         </value>
