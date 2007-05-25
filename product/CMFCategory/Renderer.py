@@ -29,20 +29,22 @@
 
 from Products.CMFCategory.Filter import Filter
 from ZODB.POSException import ConflictError
-from zLOG import LOG
+from zLOG import LOG, PROBLEM
 
 class Renderer(Filter):
   """
     Produces Item list out of category list
 
     FIXME: translation
+    ( update: translation is not implemented in Renderer but in calling
+      methods, so maybe it should be removed from this API ? -jerome)
   """
 
   def __init__(self, spec = None, filter = None, portal_type = None,
                      display_id = None, sort_id = None,
                      display_method = None, sort_method = None, filter_method = None,
                      filter_node=0, filter_leave=0,
-                     is_right_display = 0, translate_display = 0, 
+                     is_right_display = 0, translate_display = 0,
                      translatation_domain = None, display_base_category = 0,
                      base_category = None, base = 1,
                      display_none_category = 1, current_category = None,**kw):
@@ -102,7 +104,6 @@ class Renderer(Filter):
 
 
     """
-    #LOG('Renderer', 0, 'spec = %s, filter = %s, portal_type = %s, display_id = %s, sort_id = %s, display_method = %s, sort_method = %s, is_right_display = %s, translate_display = %s, translatation_domain = %s, base_category = %s, base = %s, display_none_category = %s, current_category = %s' % (repr(spec), repr(filter), repr(portal_type), repr(display_id), repr(sort_id), repr(display_method), repr(sort_method), repr(is_right_display), repr(translate_display), repr(translatation_domain), repr(base_category), repr(base), repr(display_none_category), repr(current_category)))
     Filter.__init__(self, spec=spec, filter=filter,
                     portal_type=portal_type, filter_method=filter_method,
                     filter_node=filter_node, filter_leave=filter_leave)
@@ -131,12 +132,8 @@ class Renderer(Filter):
     """
       Returns rendered items
     """
-    #LOG('render', 0, repr(self.filter))
-    #LOG('render', 10, repr(value_list))
     value_list = self.getObjectList(value_list)
-    #LOG('render', 5, repr(value_list))
     value_list = self.filter(value_list)
-    #LOG('render', 10, repr(value_list))
     if self.sort_method is not None:
       value_list.sort(self.sort_method)
     elif self.sort_id is not None:
@@ -172,11 +169,9 @@ class Renderer(Filter):
       item_list.append(item)
     if self.display_none_category:
       if self.is_right_display:
-        #item = [None, '']
-        item = ['', ''] # XXX Formulator prefer '' to None.
+        item = ['', '']
       else:
-        #item = ['', None]
-        item = ['', ''] # XXX Formulator prefer '' to None.
+        item = ['', '']
       item_list.append(item)
 
     for value in value_list:
@@ -190,8 +185,8 @@ class Renderer(Filter):
         except ConflictError:
           raise
         except:
-          LOG('WARNING: Renderer', 0,
-              'Unable to call %s on %s' % (self.display_id, value.getRelativeUrl()))
+          LOG('CMFCategory', PROBLEM, 'Renderer was unable to call %s on %s'
+               % (self.display_id, value.getRelativeUrl()))
           label = None
       else:
         label = None
@@ -202,11 +197,11 @@ class Renderer(Filter):
           # Prepend the specified base category to the url.
           url = self.base_category + '/' + url
         else:
-          # If the base category of this category does not match the guessed base category,
-          # merely ignore this category.
-          # This is not the job for a Renderer to automatically remove values if we don not
-          # specify a filter
-          if not hasattr(value, 'getBaseCategoryId'):
+          # If the base category of this category does not match the guessed
+          # base category, merely ignore this category.
+          # This is not the job for a Renderer to automatically remove values
+          # if we do not specify a filter
+          if getattr(value, 'getBaseCategoryId', None) is not None:
             continue
           # Remove from now, it might be outdated and useless
           #if value.getBaseCategoryId() != guessed_base_category:
@@ -227,11 +222,11 @@ class Renderer(Filter):
       if self.display_base_category:
         if self.base_category:
           bc = value.portal_categories.resolveCategory(self.base_category)
-          label = '%s/%s' % (bc.getTitleOrId(), label) 
+          label = '%s/%s' % (bc.getTitleOrId(), label)
         else:
-          if hasattr(value, 'getBaseCategoryValue'):
+          if getattr(value, 'getBaseCategoryValue', None) is not None:
             bc = value.getBaseCategoryValue()
-            label = '%s/%s' % (bc.getTitleOrId(), label) 
+            label = '%s/%s' % (bc.getTitleOrId(), label)
 
       if self.is_right_display:
         item = [url, label]
