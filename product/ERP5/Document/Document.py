@@ -965,7 +965,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
     order_list = list(method())
     order_list.reverse()
-    # Start with everything until content - build a dictionary according to the order
+    # build a dictionary according to the order
     kw = {}
     for order_id in order_list:
       result = None
@@ -1071,6 +1071,8 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       A private method which converts to HTML. This method
       is the one to override in subclasses.
     """
+    if not self.getData():
+      return ''
     if self.hasConversion(format='base-html'):
       mime, data = self.getConversion(format='base-html')
       return data
@@ -1084,6 +1086,8 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       (without html and body tags, etc.) which can be used to inline
       a preview of the document.
     """
+    if not self.getData():
+      return ''
     if self.hasConversion(format='stripped-html'): # XXX this is redundant since we never set it
       mime, data = self.getConversion(format='stripped-html')
       return data
