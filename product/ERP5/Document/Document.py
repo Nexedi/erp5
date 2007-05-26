@@ -797,7 +797,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalDocumentTypeList(),
                 reference=self.getReference(),
-                validation_state="!=cancelled")
+                where_expression="validation_state NOT IN ('cancelled', 'deleted')")
       if self.getVersion(): kw['version'] = self.getVersion()
       if self.getLanguage(): kw['language'] = self.getLanguage()
       document_list = catalog.unrestrictedSearchResults(**kw)
@@ -820,7 +820,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
           raise ValueError, "[DMS] Ingestion may not change the type of an existing document"
         elif not _checkPermission(Permissions.ModifyPortalContent, existing_document):
           self.setUniqueReference(suffix='unauthorized')
-          raise Unauthorized, "[DMS] You are not allowed to update this document"
+          raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % existing_document.getId()
         else:
           update_kw = {}
           for k in self.propertyIds():
