@@ -263,7 +263,8 @@ elif import_type == \'create_subvaults\' :\n
             if c.getId() != context.Baobab_getPortalReferenceCurrencyID():\n
               if counter_name in two_way_counter_list:\n
                 #context.log(\'add encaisse des billets et monnaies E/S\',counter_subvault)\n
-                subvault_dict[vault].append([\'%s/%s/%s\' % (counter_subvault, c.getTitle(), "entrante"), None])\n
+                # Do not create "entrante" vault for currency subvaults, we only use sortante\n
+                #subvault_dict[vault].append([\'%s/%s/%s\' % (counter_subvault, c.getTitle(), "entrante"), None])\n
                 subvault_dict[vault].append([\'%s/%s/%s\' % (counter_subvault, c.getTitle(), "sortante"), None])\n
               else:\n
                 #context.log(\'add encaisse des billets et monnaies\',counter_subvault)\n
