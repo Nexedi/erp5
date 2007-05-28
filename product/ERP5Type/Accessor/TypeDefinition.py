@@ -103,7 +103,7 @@ type_definition = {
                              'isList'  : 0,
                            },
     'date'               : { 'cast'    : asDate,
-                             'null'    : ('', 'None', None, DateTime(0.0)),
+                             'null'    : ('', 'None', None,),
                              'default' : DateTime(0.0),
                              'isList'  : 0,
                            },
