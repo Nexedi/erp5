@@ -449,7 +449,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
 
     # do the Workflow action
     self.workflow_tool.doActionFor(self.cash_movement, 'stop_action',
-                  wf_id='cash_movement_workflow', your_stop_date=self.date)
+                  wf_id='cash_movement_workflow', stop_date=self.date)
     # execute tic
     self.stepTic()
     # get state
