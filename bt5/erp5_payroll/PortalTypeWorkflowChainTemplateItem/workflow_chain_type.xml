@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Pay Sheet Transaction</type>
-  <workflow>edit_workflow, accounting_workflow, delivery_edit_workflow</workflow>
+  <workflow>invoice_causality_workflow, edit_workflow, accounting_workflow, delivery_edit_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Transaction Line</type>
