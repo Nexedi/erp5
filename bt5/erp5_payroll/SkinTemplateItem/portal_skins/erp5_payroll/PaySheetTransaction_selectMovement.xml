@@ -71,15 +71,19 @@
             <value> <string>DEBUG = 0\n
 LOG = lambda msg:context.log("PaySheetTransaction_selectMovement", msg)\n
 \n
-kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
-kw[\'explanation_portal_type\']       = [\'Pay Sheet Transaction\',]\n
-kw[\'portal_type\']                   = \'Simulation Movement\'\n
-kw[\'grand_parent_simulation_state\'] = [\'confirmed\']\n
+search_kw=dict( \n
+    parent_specialise_portal_type=\'Invoice Transaction Rule\',\n
+    explanation_portal_type=[\'Pay Sheet Transaction\'],\n
+    portal_type=\'Simulation Movement\',\n
+    grand_parent_simulation_state=[\'confirmed\', ])\n
 \n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+if explanation_uid:\n
+  search_kw[\'explanation_uid\'] = explanation_uid\n
+\n
+kw.update(context.portal_catalog.buildSQLQuery(**search_kw))\n
 \n
 if DEBUG :\n
-  LOG("SQL used = %s"%context.InvoiceTransaction_zSelectMovement(src__=1, **kw))\n
+  LOG("SQL used (for %s) = %s" % (kw, context.InvoiceTransaction_zSelectMovement(src__=1, **kw)))\n
 \n
 movement_list = [] \n
 for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
@@ -115,7 +119,7 @@ return movement_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>explanation_uid=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,15 +139,18 @@ return movement_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>explanation_uid</string>
                             <string>kw</string>
                             <string>DEBUG</string>
                             <string>LOG</string>
+                            <string>dict</string>
+                            <string>search_kw</string>
                             <string>_write_</string>
                             <string>_getattr_</string>
                             <string>_apply_</string>
@@ -163,7 +170,9 @@ return movement_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
