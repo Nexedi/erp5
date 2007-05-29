@@ -201,7 +201,7 @@ class Renderer(Filter):
           # base category, merely ignore this category.
           # This is not the job for a Renderer to automatically remove values
           # if we do not specify a filter
-          if getattr(value, 'getBaseCategoryId', None) is not None:
+          if getattr(value, 'getBaseCategoryId', None) is None:
             continue
           # Remove from now, it might be outdated and useless
           #if value.getBaseCategoryId() != guessed_base_category:
