@@ -366,13 +366,15 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       )
       # XXX: Pictures directory not managed (seems facultative)
       #  <manifest:file-entry manifest:media-type="" manifest:full-path="ObjBFE4F50D/Pictures/"/>
+      is_legacy = ('oasis.opendocument' not in self.content_type)
       replacement = """<draw:image draw:style-name="%s" draw:name="ERP5Image%d"
       text:anchor-type="paragraph" svg:x="%s" svg:y="%s"
-      svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="#Pictures/%s"
+      svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="%sPictures/%s"
       xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
       """ % (options_dict['style'], actual_idx,
              options_dict['x'], options_dict['y'],
              w, h,
+             is_legacy and '# ' or '',
              pic_name.split('/')[-1] )
       if not (self.content_type.endswith('draw') or
               self.content_type.endswith('presentation') or
