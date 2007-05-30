@@ -245,6 +245,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.check_deposit.getTotalPrice(portal_type="Check Operation Line"), 2000.0)
     self.workflow_tool.doActionFor(self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
     self.assertEqual(self.check_deposit.getSimulationState(), 'planned')
+    self.assertEqual(len(self.check_deposit.contentValues(filter = {'portal_type' : 'Banking Operation Line'})), 1)
 
   def stepTryPlanCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
     """
