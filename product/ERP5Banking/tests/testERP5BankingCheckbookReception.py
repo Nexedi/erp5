@@ -139,17 +139,19 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(node=self.reception.getRelativeUrl())), 0)
 
 
-  def stepCreateCheckbookReception(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateCheckbookReception(self, sequence=None, sequence_list=None, 
+                                   id='checkbook_reception', **kwd):
     """
     Create a checkbook reception document and check it
     """
     # Checkbook reception
-    self.checkbook_reception = self.checkbook_reception_module.newContent(
-                     id='checkbook_reception', portal_type='Checkbook Reception',
+    checkbook_reception = self.checkbook_reception_module.newContent(
+                     id=id, portal_type='Checkbook Reception',
                      source_value=None, destination_value=self.destination_site,
                      resource_value=self.currency_1,
                      description='test',
                      start_date=self.date)
+    setattr(self, id, checkbook_reception)
     # get the checkbook reception document
     self.checkbook_reception = getattr(self.checkbook_reception_module, 'checkbook_reception')
     # check its portal type
@@ -159,7 +161,58 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     # check that its destination is caisse_2
     self.assertEqual(self.checkbook_reception.getBaobabDestination(), 
                      'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
+    return self.checkbook_reception
 
+  def stepCreateCheckbookReception2(self, sequence=None, sequence_list=None, **kwd):
+    self.stepCreateCheckbookReception(id='checkbook_reception2')
+
+  def stepCreateCheckbookReception3(self, sequence=None, sequence_list=None, **kwd):
+    self.stepCreateCheckbookReception(id='checkbook_reception3')
+
+  def stepCreateCheckbookReception4(self, sequence=None, sequence_list=None, **kwd):
+    self.stepCreateCheckbookReception(id='checkbook_reception4')
+
+  def stepCreateCheckAndCheckbookLineList2(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create the checkbook
+    """
+    # Add a line for check and checkbook
+    self.line_1 = self.checkbook_reception2.newContent(quantity=1,
+                                 resource_value=self.checkbook_model_1,
+                                 check_amount_value=self.checkbook_model_1.variant_1,
+                                 destination_payment_value=self.bank_account_1,
+                                 reference_range_min=50,
+                                 reference_range_max=99,
+                                 )
+
+  def stepCreateCheckAndCheckbookLineList3(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create the checkbook
+    """
+    # Add a line for check and checkbook
+    self.line_1 = self.checkbook_reception3.newContent(quantity=1,
+                                 resource_value=self.checkbook_model_1,
+                                 check_amount_value=self.checkbook_model_1.variant_1,
+                                 destination_payment_value=self.bank_account_1,
+                                 reference_range_min=150,
+                                 reference_range_max=199,
+                                 )
+
+  def stepCreateCheckAndCheckbookLineList4(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create the checkbook
+    """
+    # This is not required to create checkbook items, they will be
+    # automatically created with the confirm action worfklow transition
+
+    # Add a line for check and checkbook
+    self.line_1 = self.checkbook_reception4.newContent(quantity=1,
+                                 resource_value=self.checkbook_model_1,
+                                 check_amount_value=self.checkbook_model_1.variant_1,
+                                 destination_payment_value=self.bank_account_1,
+                                 reference_range_min=101,
+                                 reference_range_max=150,
+                                 )
 
   def stepCreateCheckAndCheckbookLineList(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -222,6 +275,59 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     # check len of len workflow history is 6
     self.assertEqual(len(workflow_history), 3)
 
+  def stepConfirmCheckbookReception2(self, sequence=None, sequence_list=None, **kwd):
+    """
+    confirm the monetary reception
+    """
+    self.workflow_tool.doActionFor(self.checkbook_reception2, 'confirm_action', 
+                                   wf_id='checkbook_reception_workflow')
+    self.assertEqual(self.checkbook_reception2.getSimulationState(), 'confirmed')
+
+  def stepConfirmCheckbookReception3(self, sequence=None, sequence_list=None, **kwd):
+    """
+    confirm the monetary reception
+    """
+    self.workflow_tool.doActionFor(self.checkbook_reception3, 'confirm_action', 
+                                   wf_id='checkbook_reception_workflow')
+    self.assertEqual(self.checkbook_reception3.getSimulationState(), 'confirmed')
+
+  def stepConfirmCheckbookReception4(self, sequence=None, sequence_list=None, **kwd):
+    """
+    confirm the monetary reception
+    """
+    self.workflow_tool.doActionFor(self.checkbook_reception4, 'confirm_action', 
+                                   wf_id='checkbook_reception_workflow')
+    self.assertEqual(self.checkbook_reception4.getSimulationState(), 'confirmed')
+
+  def stepDeliverCheckbookReception2Fails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    confirm the monetary reception
+    """
+    #import pdb; pdb.set_trace()
+    msg = self.assertWorkflowTransitionFails(self.checkbook_reception2, 
+        'checkbook_reception_workflow', 'deliver_action') 
+    self.failUnless(msg.find('The following references are already allocated')
+                    >=0)
+    self.failUnless(msg.find('50')>=0)
+
+  def stepDeliverCheckbookReception3(self, sequence=None, sequence_list=None, **kwd):
+    """
+    confirm the monetary reception
+    """
+    self.workflow_tool.doActionFor(self.checkbook_reception3, 'deliver_action', 
+                                   wf_id='checkbook_reception_workflow')
+    self.assertEqual(self.checkbook_reception3.getSimulationState(), 'delivered')
+
+  def stepDeliverCheckbookReception4Fails(self, sequence=None, sequence_list=None, **kwd):
+    """
+    confirm the monetary reception
+    """
+    #import pdb; pdb.set_trace()
+    msg = self.assertWorkflowTransitionFails(self.checkbook_reception4, 
+        'checkbook_reception_workflow', 'deliver_action') 
+    self.failUnless(msg.find('The following references are already allocated')
+                    >=0)
+    self.failUnless(msg.find('150')>=0)
 
   def stepDeliverCheckbookReception(self, sequence=None, sequence_list=None, **kw):
     """
@@ -273,6 +379,31 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CheckItemsCreated  ' \
                     + 'CheckFinalCheckbookInventory'
     sequence_list.addSequenceString(sequence_string)
+
+    # Make sure it is impossible to create a checkbook with a reference
+    # wich is inside the range of another checkbook
+    sequence_string = 'Tic ' \
+                    + 'CreateCheckbookReception2 Tic ' \
+                    + 'CreateCheckAndCheckbookLineList2 Tic ' \
+                    + 'ConfirmCheckbookReception2 Tic ' \
+                    + 'DeliverCheckbookReception2Fails Tic '
+    sequence_list.addSequenceString(sequence_string)
+
+    # Make sure it is impossible to create in the same time
+    # two checkbooks with the same reference, so we must
+    # do deliver without tic
+    sequence_string = 'Tic ' \
+                    + 'CreateCheckbookReception3 Tic ' \
+                    + 'CreateCheckbookReception4 Tic ' \
+                    + 'CreateCheckAndCheckbookLineList3 Tic ' \
+                    + 'ConfirmCheckbookReception3 Tic ' \
+                    + 'CreateCheckAndCheckbookLineList4 Tic ' \
+                    + 'ConfirmCheckbookReception4 Tic ' \
+                    + 'DeliverCheckbookReception3 ' \
+                    + 'DeliverCheckbookReception4Fails '
+    sequence_list.addSequenceString(sequence_string)
+
+
     # play the sequence
     sequence_list.play(self)
 
