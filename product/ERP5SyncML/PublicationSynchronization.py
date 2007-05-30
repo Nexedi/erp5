@@ -29,8 +29,7 @@
 import smtplib # to send emails
 from Publication import Publication,Subscriber
 from Subscription import Signature
-from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
-from xml.dom.minidom import parse, parseString
+from Ft.Xml import Parse
 from XMLSyncUtils import XMLSyncUtils
 from Conduit.ERP5Conduit import ERP5Conduit
 from Products.CMFCore.utils import getToolByName
@@ -142,6 +141,13 @@ class PublicationSynchronization(XMLSyncUtils):
           xml(' <SyncBody>\n')
           xml(self.SyncMLStatus(cmd_id, subscriber.getSubscriptionUrl(), 
             publication.getPublicationUrl(), auth_code))
+          cmd_id += 1
+          if auth_code == self.AUTH_ACCEPTED:
+            # alert message
+            xml(self.SyncMLAlert(cmd_id, sync_type, 
+              subscriber.getSubscriptionUrl(), publication.getPublicationUrl(),
+              subscriber.getLastAnchor(), subscriber.getNextAnchor()))
+            cmd_id += 1
           xml(' </SyncBody>\n')
           xml('</SyncML>\n')
           xml_a = ''.join(xml_list)
@@ -221,7 +227,7 @@ class PublicationSynchronization(XMLSyncUtils):
 
     if xml_client is not None:
       if isinstance(xml_client, str) or isinstance(xml_client, unicode):
-        xml_client = parseString(xml_client)
+        xml_client = Parse(xml_client)
       first_node = xml_client.childNodes[0]
 
       if first_node.nodeName != "SyncML":

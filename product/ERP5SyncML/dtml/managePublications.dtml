@@ -114,7 +114,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         </label></div>
         </td>
         <td align="left" valign="top">
-        <input type="text" name="id_generator" value="<dtml-var getIdGenerator>" size="40" />
+        <input type="text" name="synchronization_id_generator" value="<dtml-var getSynchronizationIdGenerator>" size="40" />
         </td>
       </tr>
       <tr>
@@ -125,6 +125,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         </td>
         <td align="left" valign="top">
         <input type="text" name="gid_generator" value="<dtml-var getGidGenerator>" size="40" />
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
+        Flow Type
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+        <SELECT name="flow_type" size="1">
+          <dtml-if expr="getFlowType() != 'text'">
+            <OPTION value="xml" selected>XML</option>
+            <OPTION value="text">text</option>
+          <dtml-else>
+            <OPTION value="xml">XML</option>
+            <OPTION value="text" selected>text</option>
+          </dtml-if>
+        </SELECT>
         </td>
       </tr>
       <tr>

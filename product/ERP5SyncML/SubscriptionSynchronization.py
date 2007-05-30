@@ -28,9 +28,7 @@
 
 import smtplib # to send emails
 from Subscription import Subscription,Signature
-from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
-from xml.dom.minidom import parse, parseString
-from xml.dom.ext import PrettyPrint
+from Ft.Xml import Parse
 from XMLSyncUtils import XMLSyncUtils
 import commands
 from Conduit.ERP5Conduit import ERP5Conduit
@@ -99,13 +97,21 @@ class SubscriptionSynchronization(XMLSyncUtils):
     else:
       xml_client = msg
       if isinstance(xml_client, str) or isinstance(xml_client, unicode):
-        xml_client = parseString(xml_client)
+        xml_client = Parse(xml_client)
         next_status = self.getNextSyncBodyStatus(xml_client, None)
         #LOG('readResponse, next status :',0,next_status)
         if next_status is not None:
           status_code = self.getStatusCode(next_status)
           #LOG('readResponse status code :',0,status_code)
           if status_code == self.AUTH_REQUIRED:
+            if self.checkChal(xml_client):
+              authentication_format, authentication_type = self.getChal(xml_client)
+              subscription.setAuthenticationFormat(authentication_format)
+              subscription.setAuthenticationType(authentication_type)
+            else:
+              raise ValueError, "Sorry, the server chalenge for an \
+                  authentication, but the authentication format is not find"
+
             #LOG('readResponse', 0, 'Authentication required')
             response = self.SubSyncCred(id, xml_client)
           elif status_code == self.UNAUTHORIZED:

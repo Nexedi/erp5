@@ -46,10 +46,11 @@ try:
     from base64 import b64encode, b64decode
 except ImportError:
     from base64 import encodestring as b64encode, decodestring as b64decode
-class TestERP5SyncML(ERP5TypeTestCase):
+
+
+class TestERP5SyncMLMixin:
 
   # Different variables used for this test
-  run_all_test = 1
   workflow_id = 'edit_workflow'
   first_name1 = 'Sebastien'
   last_name1 = 'Robin'
@@ -91,10 +92,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
   #subscription_url1 = 'client1@localhost'
   #subscription_url2 = 'client2@localhost'
 
-  def getTitle(self):
-    """
-    """
-    return "ERP5 SyncML"
 
   def afterSetUp(self):
     """Setup."""
@@ -117,7 +114,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       /person_client1 : empty
       /person_client2 : empty
     """
-    return ('erp5_base',)
+    return ('erp5_base','fabien_bt')
 
   def getSynchronizationTool(self):
     return getattr(self.getPortal(), 'portal_synchronizations', None)
@@ -134,56 +131,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
   def getPortalId(self):
     return self.getPortal().getId()
 
-  def test_01_HasEverything(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Has Everything ')
-      LOG('Testing... ',0,'test_01_HasEverything')
-    self.failUnless(self.getSynchronizationTool()!=None)
-    #self.failUnless(self.getPersonServer()!=None)
-    #self.failUnless(self.getPersonClient1()!=None)
-    #self.failUnless(self.getPersonClient2()!=None)
-
-  def test_02_AddPublication(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Add a Publication ')
-      LOG('Testing... ',0,'test_02_AddPublication')
-    portal_id = self.getPortalName()
-    portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addPublication(self.pub_id,self.publication_url,
-                                      '/%s/person_server' % portal_id,'objectValues',
-                                      self.xml_mapping,'ERP5Conduit','')
-    pub = portal_sync.getPublication(self.pub_id)
-    self.failUnless(pub is not None)
-
-  def test_03_AddSubscription1(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Add First Subscription ')
-      LOG('Testing... ',0,'test_03_AddSubscription1')
-    portal_id = self.getPortalId()
-    portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id1,self.publication_url,
-                          self.subscription_url1,'/%s/person_client1' % portal_id,'objectValues',
-                          self.xml_mapping,'ERP5Conduit','')
-    sub = portal_sync.getSubscription(self.sub_id1)
-    self.failUnless(sub is not None)
-
-  def test_04_AddSubscription2(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Add Second Subscription ')
-      LOG('Testing... ',0,'test_04_AddSubscription2')
-    portal_id = self.getPortalId()
-    portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id2,self.publication_url,
-                          self.subscription_url2,'/%s/person_client2' % portal_id,'objectValues',
-                          self.xml_mapping,'ERP5Conduit','')
-    sub = portal_sync.getSubscription(self.sub_id2)
-    self.failUnless(sub is not None)
-
   def login(self, quiet=0):
     uf = self.getPortal().acl_users
     uf._doAddUser('fab', 'myPassword', ['Manager'], [])
@@ -192,7 +139,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     user = uf.getUserById('fab').__of__(uf)
     newSecurityManager(None, user)
 
-  def populatePersonServer(self, quiet=0, run=run_all_test):
+  def populatePersonServer(self, quiet=0, run=0):
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Populate Person Server ')
@@ -225,12 +172,209 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(nb_person==2)
     return nb_person
 
-  def setupPublicationAndSubscription(self, quiet=0, run=1):
+  def synchronize(self, id, run=1):
+    """
+    This just define how we synchronize, we have
+    to define it here because it is specific to the unit testing
+    """
+    portal_sync = self.getSynchronizationTool()
+    subscription = portal_sync.getSubscription(id)
+    publication = None
+    for publication in portal_sync.getPublicationList():
+      if publication.getPublicationUrl()==subscription.getSubscriptionUrl():
+        publication = publication
+    self.failUnless(publication is not None)
+    # reset files, because we do sync by files
+    file = open('/tmp/sync_client1','w')
+    file.write('')
+    file.close()
+    file = open('/tmp/sync_client2','w')
+    file.write('')
+    file.close()
+    file = open('/tmp/sync','w')
+    file.write('')
+    file.close()
+    nb_message = 1
+    result = portal_sync.SubSync(subscription.getTitle())
+    while result['has_response']==1:
+      portal_sync.PubSync(publication.getTitle())
+      result = portal_sync.SubSync(subscription.getTitle())
+      nb_message += 1 + result['has_response']
+    return nb_message
+
+  def synchronizeWithBrokenMessage(self, id, run=1):
+    """
+    This just define how we synchronize, we have
+    to define it here because it is specific to the unit testing
+    """
+    portal_sync = self.getSynchronizationTool()
+    #portal_sync.email = None # XXX To be removed
+    subscription = portal_sync.getSubscription(id)
+    publication = None
+    for publication in portal_sync.getPublicationList():
+      if publication.getPublicationUrl()==subscription.getSubscriptionUrl():
+        publication = publication
+    self.failUnless(publication is not None)
+    # reset files, because we do sync by files
+    file = open('/tmp/sync_client1','w')
+    file.write('')
+    file.close()
+    file = open('/tmp/sync_client2','w')
+    file.write('')
+    file.close()
+    file = open('/tmp/sync','w')
+    file.write('')
+    file.close()
+    nb_message = 1
+    result = portal_sync.SubSync(subscription.getTitle())
+    while result['has_response']==1:
+      # We do thing three times, so that we will test
+      # if we manage well duplicate messages
+      portal_sync.PubSync(publication.getTitle())
+      portal_sync.PubSync(publication.getTitle())
+      portal_sync.PubSync(publication.getTitle())
+      result = portal_sync.SubSync(subscription.getTitle())
+      result = portal_sync.SubSync(subscription.getTitle())
+      result = portal_sync.SubSync(subscription.getTitle())
+      nb_message += 1 + result['has_response']
+    return nb_message
+
+  def checkSynchronizationStateIsSynchronized(self, quiet=0, run=1):
+    portal_sync = self.getSynchronizationTool()
+    person_server = self.getPersonServer()
+    for person in person_server.objectValues():
+      state_list = portal_sync.getSynchronizationState(person)
+      for state in state_list:
+        self.failUnless(state[1]==state[0].SYNCHRONIZED)
+    person_client1 = self.getPersonClient1()
+    for person in person_client1.objectValues():
+      state_list = portal_sync.getSynchronizationState(person)
+      for state in state_list:
+        self.failUnless(state[1]==state[0].SYNCHRONIZED)
+    person_client2 = self.getPersonClient2()
+    for person in person_client2.objectValues():
+      state_list = portal_sync.getSynchronizationState(person)
+      for state in state_list:
+        self.failUnless(state[1]==state[0].SYNCHRONIZED)
+    # Check for each signature that the tempXML is None
+    for sub in portal_sync.getSubscriptionList():
+      for m in sub.getSignatureList():
+        self.assertEquals(m.getTempXML(),None)
+        self.assertEquals(m.getPartialXML(),None)
+    for pub in portal_sync.getPublicationList():
+      for sub in pub.getSubscriberList():
+        for m in sub.getSignatureList():
+          self.assertEquals(m.getPartialXML(),None)
+
+  def verifyFirstNameAndLastNameAreSynchronized(self, first_name, 
+      last_name, person_server, person_client):
+    """
+      verify if the first and last name are synchronized
+    """
+    self.failUnless(person_server.getFirstName()==first_name)
+    self.failUnless(person_server.getLastName()==last_name)
+    self.failUnless(person_client.getFirstName()==first_name)
+    self.failUnless(person_client.getLastName()==last_name)
+  
+  def verifyFirstNameAndLastNameAreNotSynchronized(self, first_name, 
+      last_name, person_server, person_client):
+    """
+      verify that the first and last name are NOT synchronized
+    """
+    self.failUnless(person_server.getFirstName()!=first_name)
+    self.failUnless(person_server.getLastName()!=last_name)
+    self.failUnless(person_client.getFirstName()==first_name)
+    self.failUnless(person_client.getLastName()==last_name)
+
+  def checkFirstSynchronization(self, id=None, nb_person=0):
+
+    portal_sync = self.getSynchronizationTool()
+    subscription1 = portal_sync.getSubscription(self.sub_id1)
+    subscription2 = portal_sync.getSubscription(self.sub_id2)
+    self.failUnless(len(subscription1.getObjectList())==nb_person)
+    person_server = self.getPersonServer() # We also check we don't
+                                           # modify initial ob
+    person1_s = person_server._getOb(self.id1)
+    self.failUnless(person1_s.getId()==self.id1)
+    self.failUnless(person1_s.getFirstName()==self.first_name1)
+    self.failUnless(person1_s.getLastName()==self.last_name1)
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(id)
+    self.failUnless(person1_c.getId()==id)
+    self.failUnless(person1_c.getFirstName()==self.first_name1)
+    self.failUnless(person1_c.getLastName()==self.last_name1)
+    self.failUnless(len(subscription2.getObjectList())==nb_person)
+    person_client2 = self.getPersonClient2()
+    person2_c = person_client2._getOb(id) 
+    self.failUnless(person2_c.getId()==id)
+    self.failUnless(person2_c.getFirstName()==self.first_name1)
+    self.failUnless(person2_c.getLastName()==self.last_name1)
+
+
+class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
+  
+  run_all_test = True
+  def getTitle(self):
+    """
+    """
+    return "ERP5 SyncML"
+
+  def test_01_HasEverything(self, quiet=0, run=run_all_test):
+    # Test if portal_synchronizations was created
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Has Everything ')
+      LOG('Testing... ',0,'test_01_HasEverything')
+    self.failUnless(self.getSynchronizationTool()!=None)
+    #self.failUnless(self.getPersonServer()!=None)
+    #self.failUnless(self.getPersonClient1()!=None)
+    #self.failUnless(self.getPersonClient2()!=None)
+
+  def test_02_AddPublication(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Add a Publication ')
+      LOG('Testing... ',0,'test_02_AddPublication')
+    portal_id = self.getPortalName()
+    portal_sync = self.getSynchronizationTool()
+    portal_sync.manage_addPublication(self.pub_id,self.publication_url, 
+        '/%s/person_server' % portal_id,'objectValues', self.xml_mapping, 
+        'ERP5Conduit','')
+    pub = portal_sync.getPublication(self.pub_id)
+    self.failUnless(pub is not None)
+
+  def test_03_AddSubscription1(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Add First Subscription ')
+      LOG('Testing... ',0,'test_03_AddSubscription1')
+    portal_id = self.getPortalId()
+    portal_sync = self.getSynchronizationTool()
+    portal_sync.manage_addSubscription(self.sub_id1, self.publication_url, 
+        self.subscription_url1,'/%s/person_client1' % portal_id,'objectValues', 
+        self.xml_mapping,'ERP5Conduit','')
+    sub = portal_sync.getSubscription(self.sub_id1)
+    self.failUnless(sub is not None)
+
+  def test_04_AddSubscription2(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Add Second Subscription ')
+      LOG('Testing... ',0,'test_04_AddSubscription2')
+    portal_id = self.getPortalId()
+    portal_sync = self.getSynchronizationTool()
+    portal_sync.manage_addSubscription(self.sub_id2,self.publication_url, 
+        self.subscription_url2,'/%s/person_client2' % portal_id,'objectValues', 
+        self.xml_mapping,'ERP5Conduit','')
+    sub = portal_sync.getSubscription(self.sub_id2)
+    self.failUnless(sub is not None)
+
+  def setupPublicationAndSubscription(self, quiet=0, run=run_all_test):
     self.test_02_AddPublication(quiet=1,run=1)
     self.test_03_AddSubscription1(quiet=1,run=1)
     self.test_04_AddSubscription2(quiet=1,run=1)
       
-  def setupPublicationAndSubscriptionAndGid(self, quiet=0, run=1):
+  def setupPublicationAndSubscriptionAndGid(self, quiet=0, run=run_all_test):
     self.setupPublicationAndSubscription(quiet=1,run=1)
     def getGid(object):
       return object.getTitle()
@@ -241,9 +385,9 @@ class TestERP5SyncML(ERP5TypeTestCase):
     pub.setGidGenerator(getGid)
     sub1.setGidGenerator(getGid)
     sub2.setGidGenerator(getGid)
-    pub.setIdGenerator('_generateNextId')
-    sub1.setIdGenerator('_generateNextId')
-    sub2.setIdGenerator('_generateNextId')
+    pub.setSynchronizationIdGenerator('_generateNextId')
+    sub1.setSynchronizationIdGenerator('_generateNextId')
+    sub2.setSynchronizationIdGenerator('_generateNextId')
 
   def test_05_GetSynchronizationList(self, quiet=0, run=run_all_test):
     # This test the getSynchronizationList, ie,
@@ -315,73 +459,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
     c_local_role = person_client1.get_local_roles()
     self.assertEqual(s_local_role,c_local_role)
 
-  def synchronize(self, id, run=1):
-    """
-    This just define how we synchronize, we have
-    to define it here because it is specific to the unit testing
-    """
-    portal_sync = self.getSynchronizationTool()
-    subscription = portal_sync.getSubscription(id)
-    publication = None
-    for publication in portal_sync.getPublicationList():
-      if publication.getPublicationUrl()==subscription.getSubscriptionUrl():
-        publication = publication
-    self.failUnless(publication is not None)
-    # reset files, because we do sync by files
-    file = open('/tmp/sync_client1','w')
-    file.write('')
-    file.close()
-    file = open('/tmp/sync_client2','w')
-    file.write('')
-    file.close()
-    file = open('/tmp/sync','w')
-    file.write('')
-    file.close()
-    nb_message = 1
-    result = portal_sync.SubSync(subscription.getTitle())
-    while result['has_response']==1:
-      portal_sync.PubSync(publication.getTitle())
-      result = portal_sync.SubSync(subscription.getTitle())
-      nb_message += 1 + result['has_response']
-    return nb_message
-
-  def synchronizeWithBrokenMessage(self, id, run=1):
-    """
-    This just define how we synchronize, we have
-    to define it here because it is specific to the unit testing
-    """
-    portal_sync = self.getSynchronizationTool()
-    #portal_sync.email = None # XXX To be removed
-    subscription = portal_sync.getSubscription(id)
-    publication = None
-    for publication in portal_sync.getPublicationList():
-      if publication.getPublicationUrl()==subscription.getSubscriptionUrl():
-        publication = publication
-    self.failUnless(publication is not None)
-    # reset files, because we do sync by files
-    file = open('/tmp/sync_client1','w')
-    file.write('')
-    file.close()
-    file = open('/tmp/sync_client2','w')
-    file.write('')
-    file.close()
-    file = open('/tmp/sync','w')
-    file.write('')
-    file.close()
-    nb_message = 1
-    result = portal_sync.SubSync(subscription.getTitle())
-    while result['has_response']==1:
-      # We do thing three times, so that we will test
-      # if we manage well duplicate messages
-      portal_sync.PubSync(publication.getTitle())
-      portal_sync.PubSync(publication.getTitle())
-      portal_sync.PubSync(publication.getTitle())
-      result = portal_sync.SubSync(subscription.getTitle())
-      result = portal_sync.SubSync(subscription.getTitle())
-      result = portal_sync.SubSync(subscription.getTitle())
-      nb_message += 1 + result['has_response']
-    return nb_message
-
   def test_08_FirstSynchronization(self, quiet=0, run=run_all_test):
     # We will try to populate the folder person_client1
     # with the data form person_server
@@ -408,26 +485,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     for sub in portal_sync.getSubscriptionList():
       self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
     self.failUnless(nb_message2==self.nb_message_first_synchronization)
-    subscription1 = portal_sync.getSubscription(self.sub_id1)
-    subscription2 = portal_sync.getSubscription(self.sub_id2)
-    self.failUnless(len(subscription1.getObjectList())==nb_person)
-    person_server = self.getPersonServer() # We also check we don't
-                                           # modify initial ob
-    person1_s = person_server._getOb(self.id1)
-    self.failUnless(person1_s.getId()==self.id1)
-    self.failUnless(person1_s.getFirstName()==self.first_name1)
-    self.failUnless(person1_s.getLastName()==self.last_name1)
-    person_client1 = self.getPersonClient1()
-    person1_c = person_client1._getOb(self.id1)
-    self.failUnless(person1_c.getId()==self.id1)
-    self.failUnless(person1_c.getFirstName()==self.first_name1)
-    self.failUnless(person1_c.getLastName()==self.last_name1)
-    self.failUnless(len(subscription2.getObjectList())==nb_person)
-    person_client2 = self.getPersonClient2()
-    person2_c = person_client2._getOb(self.id1)
-    self.failUnless(person2_c.getId()==self.id1)
-    self.failUnless(person2_c.getFirstName()==self.first_name1)
-    self.failUnless(person2_c.getLastName()==self.last_name1)
+    self.checkFirstSynchronization(id=self.id1, nb_person=nb_person)
 
   def test_09_FirstSynchronizationWithLongLines(self, quiet=0, run=run_all_test):
     # We will try to populate the folder person_client1
@@ -496,33 +554,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(len(state_list_c)==1) # one state
                                         # for each subscriber
     self.checkSynchronizationStateIsSynchronized()
-
-  def checkSynchronizationStateIsSynchronized(self, quiet=0, run=1):
-    portal_sync = self.getSynchronizationTool()
-    person_server = self.getPersonServer()
-    for person in person_server.objectValues():
-      state_list = portal_sync.getSynchronizationState(person)
-      for state in state_list:
-        self.failUnless(state[1]==state[0].SYNCHRONIZED)
-    person_client1 = self.getPersonClient1()
-    for person in person_client1.objectValues():
-      state_list = portal_sync.getSynchronizationState(person)
-      for state in state_list:
-        self.failUnless(state[1]==state[0].SYNCHRONIZED)
-    person_client2 = self.getPersonClient2()
-    for person in person_client2.objectValues():
-      state_list = portal_sync.getSynchronizationState(person)
-      for state in state_list:
-        self.failUnless(state[1]==state[0].SYNCHRONIZED)
-    # Check for each signature that the tempXML is None
-    for sub in portal_sync.getSubscriptionList():
-      for m in sub.getSignatureList():
-        self.assertEquals(m.getTempXML(),None)
-        self.assertEquals(m.getPartialXML(),None)
-    for pub in portal_sync.getPublicationList():
-      for sub in pub.getSubscriberList():
-        for m in sub.getSignatureList():
-          self.assertEquals(m.getPartialXML(),None)
 
   def checkSynchronizationStateIsConflict(self, quiet=0, run=1):
     portal_sync = self.getSynchronizationTool()
@@ -987,7 +1018,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(person_s.getDescription()==self.description3)
     self.failUnless(person_c1.getDescription()==self.description3)
 
-  def test_25_MultiNodeConflict(self, quiet=0, run=1):
+  def test_25_MultiNodeConflict(self, quiet=0, run=run_all_test):
     """
     We will create conflicts with 3 differents nodes, and we will
     solve it by taking one full version of documents.
@@ -1410,27 +1441,7 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=='
     sub.setAuthenticationFormat(auth_format)
     sub.setAuthenticationType(auth_type)
 
-  def verifyFirstNameAndLastNameAreSynchronized(self, first_name, 
-      last_name, person_server, person_client):
-    """
-      verify if the first and last name are synchronized
-    """
-    self.failUnless(person_server.getFirstName()==first_name)
-    self.failUnless(person_server.getLastName()==last_name)
-    self.failUnless(person_client.getFirstName()==first_name)
-    self.failUnless(person_client.getLastName()==last_name)
-  
-  def verifyFirstNameAndLastNameAreNotSynchronized(self, first_name, 
-      last_name, person_server, person_client):
-    """
-      verify that the first and last name are NOT synchronized
-    """
-    self.failUnless(person_server.getFirstName()!=first_name)
-    self.failUnless(person_server.getLastName()!=last_name)
-    self.failUnless(person_client.getFirstName()==first_name)
-    self.failUnless(person_client.getLastName()==last_name)
-
-  def test_35_authentication(self, quiet=0, run=1):
+  def test_35_authentication(self, quiet=0, run=run_all_test):
     """
       we will test 
       - if we can't synchronize without good authentication for an 
@@ -1507,7 +1518,6 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=='
     self.synchronize(self.sub_id1)
     self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name1, 
       self.last_name1, person1_s, person1_c)
-
     
     #with the good password
     self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'myPassword', 

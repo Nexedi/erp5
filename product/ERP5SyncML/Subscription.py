@@ -642,8 +642,9 @@ class Subscription(Folder, SyncCode):
                               )
 
   # Constructor
-  def __init__(self, id, title, publication_url, subscription_url, destination_path, query, xml_mapping, conduit, gpg_key, login, password, 
-      authentication_format='', authentication_type=''):
+  def __init__(self, id, title, publication_url, subscription_url, 
+      destination_path, query, xml_mapping, conduit, gpg_key, id_generator, 
+      gid_generator, flow_type, login, password):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
@@ -660,14 +661,13 @@ class Subscription(Folder, SyncCode):
     #self.signatures = PersistentMapping()
     self.last_anchor = '00000000T000000Z'
     self.next_anchor = '00000000T000000Z'
-    self.login=login
+    self.flow_type = flow_type
+    self.login = login
     self.password=password
-    self.authentication_format=authentication_format
-    self.authentication_type=authentication_type
     self.domain_type = self.SUB
     self.gpg_key = gpg_key
-    self.setGidGenerator(None)
-    self.setIdGenerator(None)
+    self.setGidGenerator(gid_generator)
+    self.setSynchronizationIdGenerator(id_generator)
     self.setConduit(conduit)
     Folder.__init__(self, id)
     self.title = title
@@ -715,7 +715,7 @@ class Subscription(Folder, SyncCode):
 
   def setXMLMapping(self, value):
     """
-    this the name of the method used in order to get the xml
+    this the name of the method used in order to set the xml
     """
     if value == '':
       value = None
@@ -884,6 +884,20 @@ class Subscription(Folder, SyncCode):
     """
     return self.gid_generator
 
+  def getFlowType(self):
+    """
+    This method return the type of the data within the xml message :
+      - text for VCard's
+      - xml for others
+    """
+    return getattr(self, 'flow_type', 'xml')
+
+  def setFlowType(self, flow_type):
+    """
+    set the flow type (xml or text)
+    """
+    self.flow_type=flow_type
+
   def getLogin(self):
     """
     This method return the login of this subscription
@@ -954,7 +968,7 @@ class Subscription(Folder, SyncCode):
       # It might be a script python
       generator = getattr(object,gid_gen)
       o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
-      # LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
+    LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
     return o_gid
 
   def getObjectFromGid(self, gid):
@@ -1018,10 +1032,7 @@ class Subscription(Folder, SyncCode):
     """
     This tries to generate a new Id
     """
-    # LOG('generateNewId, object: ',0,object.getPhysicalPath())
-    id_generator = self.getIdGenerator()
-    # LOG('generateNewId, id_generator: ',0,id_generator)
-    # LOG('generateNewId, portal_object: ',0,object.getPortalObject())
+    id_generator = self.getSynchronizationIdGenerator()
     if id_generator is not None:
       o_base = aq_base(object)
       new_id = None
@@ -1038,20 +1049,20 @@ class Subscription(Folder, SyncCode):
       return new_id
     return None
 
-  def setIdGenerator(self, method):
+  def setSynchronizationIdGenerator(self, method):
     """
     This set the method name wich allows to generate
     a new id
     """
     if method in ('','None'):
       method = None
-    self.id_generator = method
+    self.synchronization_id_generator = method
 
-  def getIdGenerator(self):
+  def getSynchronizationIdGenerator(self):
     """
     This get the method name wich allows to generate a new id
     """
-    return self.id_generator
+    return getattr(self, 'synchronization_id_generator', None)
 
   def getSubscriptionUrl(self):
     """
@@ -1185,7 +1196,7 @@ class Subscription(Folder, SyncCode):
     """
     if signature.getGid() in self.objectIds():
       self._delObject(signature.getGid())
-    self._setObject( signature.getGid(), aq_base(signature) )
+    self._setObject(signature.getGid(), aq_base(signature) )
 
   def delSignature(self, gid):
     """
@@ -1321,7 +1332,7 @@ class Subscription(Folder, SyncCode):
     #elif format is .... put here the other formats
     else:#if there is no format corresponding with format, raise an error
       LOG('encode : unknown or not implemented format :', 0, format)
-      raise ValueError, "Sorry, the format %s is unknow or not implemented" % format
+      raise ValueError, "Sorry, the server ask for the format %s but it's unknow or not implemented" % format
 
   def decode(self, format, string_to_decode):
     """

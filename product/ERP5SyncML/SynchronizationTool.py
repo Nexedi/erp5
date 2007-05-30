@@ -40,8 +40,7 @@ from Products.ERP5SyncML import Conduit
 from Publication import Publication,Subscriber
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Subscription import Subscription,Signature
-from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
-from xml.dom.minidom import parse, parseString
+from Ft.Xml import Parse
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
@@ -50,7 +49,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import UnrestrictedUser
 from Acquisition import aq_base
-from xml.parsers.expat import ExpatError # parseString error
 import urllib
 import urllib2
 import socket
@@ -162,9 +160,11 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_addPublication')
   def manage_addPublication(self, title, publication_url, destination_path,
-            query, xml_mapping, conduit, gpg_key, auth_required=0,
-            authentication_format='', authentication_type='', RESPONSE=None):
-    """
+            query, xml_mapping, conduit, gpg_key, 
+            synchronization_id_generator=None, gid_generator=None, 
+            flow_type='xml', auth_required=0, authentication_format='', 
+            authentication_type='', RESPONSE=None):
+    """ 
       create a new publication
     """
     #if not('publications' in self.objectIds()):
@@ -173,8 +173,9 @@ class SynchronizationTool( SubscriptionSynchronization,
     folder = self.getObjectContainer()
     new_id = self.getPublicationIdFromTitle(title)
     pub = Publication(new_id, title, publication_url, destination_path,
-                      query, xml_mapping, conduit, gpg_key, auth_required,
-                      authentication_format, authentication_type)
+                      query, xml_mapping, conduit, gpg_key, 
+                      synchronization_id_generator, gid_generator, flow_type,
+                      auth_required, authentication_format, authentication_type)
     folder._setObject( new_id, pub )
     #if len(self.list_publications) == 0:
     #  self.list_publications = PersistentMapping()
@@ -186,8 +187,9 @@ class SynchronizationTool( SubscriptionSynchronization,
       'manage_addSubscription')
   def manage_addSubscription(self, title, publication_url, subscription_url,
                        destination_path, query, xml_mapping, conduit, gpg_key, 
-                       login=None, password=None, authentication_format='',
-                       authentication_type='',RESPONSE=None):
+                       synchronization_id_generator=None, gid_generator=None, 
+                       flow_type='xml', login=None, password=None, 
+                       RESPONSE=None):
     """
       XXX should be renamed as addSubscription
       create a new subscription
@@ -199,8 +201,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     new_id = self.getSubscriptionIdFromTitle(title)
     sub = Subscription(new_id, title, publication_url, subscription_url,
                        destination_path, query, xml_mapping, conduit, gpg_key,
-                       login, password, authentication_format, 
-                       authentication_type)
+                       synchronization_id_generator, gid_generator, flow_type, 
+                       login, password)
     folder._setObject( new_id, sub )
     #if len(self.list_subscriptions) == 0:
     #  self.list_subscriptions = PersistentMapping()
@@ -211,9 +213,11 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_editPublication')
   def manage_editPublication(self, title, publication_url, destination_path,
-                       query, xml_mapping, conduit, gpg_key, id_generator,
-                       gid_generator, auth_required=0, authentication_format='',
-                       authentication_type='', RESPONSE=None):
+                       query, xml_mapping, conduit, gpg_key, 
+                       synchronization_id_generator, gid_generator, 
+                       flow_type='xml', auth_required=0, 
+                       authentication_format='', authentication_type='', 
+                       RESPONSE=None):
     """
       modify a publication
     """
@@ -225,8 +229,9 @@ class SynchronizationTool( SubscriptionSynchronization,
     pub.setConduit(conduit)
     pub.setXMLMapping(xml_mapping)
     pub.setGPGKey(gpg_key)
-    pub.setIdGenerator(id_generator)
+    pub.setSynchronizationIdGenerator(synchronization_id_generator)
     pub.setGidGenerator(gid_generator)
+    pub.setFlowType(flow_type)
     pub.setAuthentication(auth_required)
     pub.setAuthenticationFormat(authentication_format)
     pub.setAuthenticationType(authentication_type)
@@ -237,9 +242,9 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_editSubscription')
   def manage_editSubscription(self, title, publication_url, subscription_url,
-      destination_path, query, xml_mapping, conduit, gpg_key, id_generator,
-      gid_generator,login='', password='', authentication_format='', 
-      authentication_type='', RESPONSE=None):
+      destination_path, query, xml_mapping, conduit, gpg_key, 
+      synchronization_id_generator, gid_generator, flow_type='xml', login='', 
+      password='', RESPONSE=None):
     """
       modify a subscription
     """
@@ -252,12 +257,11 @@ class SynchronizationTool( SubscriptionSynchronization,
     sub.setXMLMapping(xml_mapping)
     sub.setGPGKey(gpg_key)
     sub.setSubscriptionUrl(subscription_url)
-    sub.setIdGenerator(id_generator)
+    sub.setSynchronizationIdGenerator(synchronization_id_generator)
     sub.setGidGenerator(gid_generator)
+    sub.setFlowType(flow_type)
     sub.setLogin(login)
     sub.setPassword(password)
-    sub.setAuthenticationFormat(authentication_format)
-    sub.setAuthenticationType(authentication_type)
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
@@ -613,6 +617,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   
   security.declareProtected(Permissions.AccessContentsInformation, 
       'getSubscriberDocumentPath')
+
   def getSubscriberDocumentPath(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -974,7 +979,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
-      xml = parseString(text)
+      xml = Parse(text)
       #XXX this function is not very optimized and should be improved
       url = self.getTarget(xml)
       for publication in self.getPublicationList():
