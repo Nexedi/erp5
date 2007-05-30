@@ -67,6 +67,10 @@
             <key> <string>_body</string> </key>
             <value> <string>transaction = state_change[\'object\']\n
 \n
+banking_operation_line_list = transaction.contentValues(filter = {\'portal_type\' : \'Banking Operation Line\'})\n
+if len(banking_operation_line_list) != 0:\n
+  id_list = [x.getId() for x in banking_operation_line_list]\n
+  transaction.manage_delOb(id_list)\n
 for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
   source_bank_account = check_operation_line.getSourcePaymentValue()\n
   # immediate reindex is required to make this operation atomic.\n
@@ -132,8 +136,14 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
                             <string>state_change</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
+                            <string>banking_operation_line_list</string>
+                            <string>len</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>id_list</string>
                             <string>check_operation_line</string>
                             <string>source_bank_account</string>
                           </tuple>
