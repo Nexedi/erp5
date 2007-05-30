@@ -60,15 +60,13 @@ class CashInventory(Inventory, BankingOperation):
                       , PropertySheet.FlowCapacity
                       )
 
-    security.declarePublic('alternateReindexObject')
-    def alternateReindexObject(self, **kw):
-      """This method is called when an inventory object is included in a
-      group of catalogged objects.
-
-      Here we use TempCashDeliveryLine class so that methods specific to
-      banking application will work, like getBaobabVariationText
+    security.declarePublic('immediateReindexObject')
+    def immediateReindexObject(self, **kw):
+      """Call the Cash Inventory immediateReindexObject by 
+      setting another kind of temp delivery line.
       """
       from Products.ERP5Type.Document import newTempCashDeliveryLine
       temp_constructor = newTempCashDeliveryLine
-      return self.immediateReindexObject(temp_constructor=temp_constructor,**kw)
+      return Inventory.immediateReindexObject(self,
+                           temp_constructor=temp_constructor,**kw)
 
