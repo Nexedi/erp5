@@ -470,8 +470,7 @@ class ERP5TypeTestCase(PortalTestCase):
       if portal_activities is not None:
         count = 1000
         while len(portal_activities.getMessageList()) > 0:
-          portal_activities.distribute()
-          portal_activities.tic()
+          portal_activities.process_timer(None, None)
           # This prevents an infinite loop.
           count -= 1
           if count == 0:
