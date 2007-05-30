@@ -70,7 +70,7 @@
 banking_operation_line_list = transaction.contentValues(filter = {\'portal_type\' : \'Banking Operation Line\'})\n
 if len(banking_operation_line_list) != 0:\n
   id_list = [x.getId() for x in banking_operation_line_list]\n
-  transaction.manage_delOb(id_list)\n
+  transaction.manage_delObjects(id_list)\n
 for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
   source_bank_account = check_operation_line.getSourcePaymentValue()\n
   # immediate reindex is required to make this operation atomic.\n
