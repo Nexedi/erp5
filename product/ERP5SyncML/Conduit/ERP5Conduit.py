@@ -33,7 +33,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5SyncML.XupdateUtils import XupdateUtils
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
-from Ft.Xml import Parse
+from Products.ERP5SyncML.XMLSyncUtils import Parse
 from DateTime.DateTime import DateTime
 from email.MIMEBase import MIMEBase
 from email import Encoders
@@ -47,11 +47,19 @@ from cStringIO import StringIO
 from xml.sax.saxutils import escape, unescape
 import re, copy
 import cStringIO
-from Ft.Xml.Domlette import Print, PrettyPrint
-
-
 
 from zLOG import LOG
+try:
+  from Ft.Xml.Domlette import Print, PrettyPrint
+except ImportError:
+  LOG('ERP5Conduit',0,"Can't import Print and PrettyPrint")
+  class Print:
+    def __init__(self, *args, **kw):
+      raise ImportError, "Sorry, it was not possible to import Ft library"
+
+  class PrettyPrint:
+    def __init__(self, *args, **kw):
+      raise ImportError, "Sorry, it was not possible to import Ft library"
 
 class ERP5Conduit(XMLSyncUtilsMixin):
   """

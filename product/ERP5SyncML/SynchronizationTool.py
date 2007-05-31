@@ -40,7 +40,8 @@ from Products.ERP5SyncML import Conduit
 from Publication import Publication,Subscriber
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Subscription import Subscription,Signature
-from Ft.Xml import Parse
+from XMLSyncUtils import Parse
+#from Ft.Xml import Parse
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
@@ -162,7 +163,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_addPublication(self, title, publication_url, destination_path,
             query, xml_mapping, conduit, gpg_key, 
             synchronization_id_generator=None, gid_generator=None, 
-            flow_type='xml', auth_required=0, authentication_format='', 
+            media_type=None, auth_required=0, authentication_format='', 
             authentication_type='', RESPONSE=None):
     """ 
       create a new publication
@@ -174,7 +175,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     new_id = self.getPublicationIdFromTitle(title)
     pub = Publication(new_id, title, publication_url, destination_path,
                       query, xml_mapping, conduit, gpg_key, 
-                      synchronization_id_generator, gid_generator, flow_type,
+                      synchronization_id_generator, gid_generator, media_type, 
                       auth_required, authentication_format, authentication_type)
     folder._setObject( new_id, pub )
     #if len(self.list_publications) == 0:
@@ -188,7 +189,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_addSubscription(self, title, publication_url, subscription_url,
                        destination_path, query, xml_mapping, conduit, gpg_key, 
                        synchronization_id_generator=None, gid_generator=None, 
-                       flow_type='xml', login=None, password=None, 
+                       media_type=None, login=None, password=None, 
                        RESPONSE=None):
     """
       XXX should be renamed as addSubscription
@@ -201,7 +202,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     new_id = self.getSubscriptionIdFromTitle(title)
     sub = Subscription(new_id, title, publication_url, subscription_url,
                        destination_path, query, xml_mapping, conduit, gpg_key,
-                       synchronization_id_generator, gid_generator, flow_type, 
+                       synchronization_id_generator, gid_generator, media_type, 
                        login, password)
     folder._setObject( new_id, sub )
     #if len(self.list_subscriptions) == 0:
@@ -215,7 +216,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_editPublication(self, title, publication_url, destination_path,
                        query, xml_mapping, conduit, gpg_key, 
                        synchronization_id_generator, gid_generator, 
-                       flow_type='xml', auth_required=0, 
+                       media_type=None, auth_required=0, 
                        authentication_format='', authentication_type='', 
                        RESPONSE=None):
     """
@@ -231,7 +232,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     pub.setGPGKey(gpg_key)
     pub.setSynchronizationIdGenerator(synchronization_id_generator)
     pub.setGidGenerator(gid_generator)
-    pub.setFlowType(flow_type)
+    pub.setMediaType(media_type)
     pub.setAuthentication(auth_required)
     pub.setAuthenticationFormat(authentication_format)
     pub.setAuthenticationType(authentication_type)
@@ -243,7 +244,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       'manage_editSubscription')
   def manage_editSubscription(self, title, publication_url, subscription_url,
       destination_path, query, xml_mapping, conduit, gpg_key, 
-      synchronization_id_generator, gid_generator, flow_type='xml', login='', 
+      synchronization_id_generator, gid_generator, media_type=None,login='', 
       password='', RESPONSE=None):
     """
       modify a subscription
@@ -259,7 +260,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     sub.setSubscriptionUrl(subscription_url)
     sub.setSynchronizationIdGenerator(synchronization_id_generator)
     sub.setGidGenerator(gid_generator)
-    sub.setFlowType(flow_type)
+    sub.setMediaType(media_type)
     sub.setLogin(login)
     sub.setPassword(password)
     if RESPONSE is not None:

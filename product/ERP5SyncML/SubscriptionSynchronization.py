@@ -28,8 +28,7 @@
 
 import smtplib # to send emails
 from Subscription import Subscription,Signature
-from Ft.Xml import Parse
-from XMLSyncUtils import XMLSyncUtils
+from XMLSyncUtils import XMLSyncUtils, Parse
 import commands
 from Conduit.ERP5Conduit import ERP5Conduit
 from zLOG import LOG

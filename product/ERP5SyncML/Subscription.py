@@ -644,7 +644,7 @@ class Subscription(Folder, SyncCode):
   # Constructor
   def __init__(self, id, title, publication_url, subscription_url, 
       destination_path, query, xml_mapping, conduit, gpg_key, id_generator, 
-      gid_generator, flow_type, login, password):
+      gid_generator, media_type, login, password):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
@@ -661,7 +661,7 @@ class Subscription(Folder, SyncCode):
     #self.signatures = PersistentMapping()
     self.last_anchor = '00000000T000000Z'
     self.next_anchor = '00000000T000000Z'
-    self.flow_type = flow_type
+    self.setMediaType(media_type)
     self.login = login
     self.password=password
     self.domain_type = self.SUB
@@ -884,19 +884,20 @@ class Subscription(Folder, SyncCode):
     """
     return self.gid_generator
 
-  def getFlowType(self):
+  def getMediaType(self):
     """
-    This method return the type of the data within the xml message :
-      - text for VCard's
-      - xml for others
+    This method return the type of media used in this session,
+    for example, it could be "text/vcard" or "xml/text",...
     """
-    return getattr(self, 'flow_type', 'xml')
+    return getattr(self, 'media_type', self.MEDIA_TYPE['TEXT_XML'])
 
-  def setFlowType(self, flow_type):
+  def setMediaType(self, media_type):
     """
-    set the flow type (xml or text)
+    set the type of media used
     """
-    self.flow_type=flow_type
+    if media_type in (None,''):
+      media_type = self.MEDIA_TYPE['TEXT_XML']
+    self.media_type = media_type
 
   def getLogin(self):
     """

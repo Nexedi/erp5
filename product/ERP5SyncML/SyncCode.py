@@ -110,3 +110,10 @@ class SyncCode(Persistent):
   bad_history_exp = "/%s\[@id='.*'\]/" % history_tag
   local_role_and_group_list = (local_group_exp,local_role_exp)
   bad_local_role_and_group_list = (bad_local_group_exp,bad_local_role_exp)
+
+
+  #media types :
+
+  MEDIA_TYPE = {}
+  MEDIA_TYPE['TEXT_XML'] = 'text/xml'
+  MEDIA_TYPE['TEXT_VCARD'] = 'text/vcard'

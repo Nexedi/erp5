@@ -29,7 +29,7 @@
 import smtplib # to send emails
 from Publication import Publication,Subscriber
 from Subscription import Signature
-from Ft.Xml import Parse
+from XMLSyncUtils import Parse
 from XMLSyncUtils import XMLSyncUtils
 from Conduit.ERP5Conduit import ERP5Conduit
 from Products.CMFCore.utils import getToolByName

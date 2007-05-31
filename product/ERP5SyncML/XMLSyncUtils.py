@@ -29,7 +29,6 @@
 import smtplib
 from Products.ERP5SyncML.SyncCode import SyncCode
 from Products.ERP5SyncML.Subscription import Signature
-from Ft.Xml import Parse
 from DateTime import DateTime
 from cStringIO import StringIO
 from xml.dom.ext import PrettyPrint
@@ -42,6 +41,13 @@ except ImportError:
     pass
 import commands
 from zLOG import LOG
+try:
+  from Ft.Xml import Parse
+except ImportError:
+  LOG('XMLSyncUtils',0,"Can't import Parse")
+  class Parse:
+    def __init__(self, *args, **kw):
+      raise ImportError, "Sorry, it was not possible to import Ft library"
 
 class XMLSyncUtilsMixin(SyncCode):
 
@@ -191,7 +197,7 @@ class XMLSyncUtilsMixin(SyncCode):
     server.quit()
 
   def addXMLObject(self, cmd_id=0, object=None, xml_string=None,
-                   more_data=0,gid=None):
+                  more_data=0,gid=None, media_type=None):
     """
       Add an object with the SyncML protocol
     """
@@ -200,7 +206,7 @@ class XMLSyncUtilsMixin(SyncCode):
     xml('   <Add>\n')
     xml('    <CmdID>%s</CmdID>\n' % cmd_id)
     xml('    <Meta>\n')
-    xml('     <Type>%s</Type>\n' % object.portal_type)
+    xml('     <Type>%s</Type>\n' % media_type)
     xml('    </Meta>\n')
     xml('    <Item>\n')
     xml('     <Source>\n')
@@ -236,7 +242,7 @@ class XMLSyncUtilsMixin(SyncCode):
     return xml_a
 
   def replaceXMLObject(self, cmd_id=0, object=None, xml_string=None,
-                       more_data=0,gid=None):
+                       more_data=0, gid=None, media_type=None):
     """
       Replace an object with the SyncML protocol
     """
@@ -245,7 +251,7 @@ class XMLSyncUtilsMixin(SyncCode):
     xml('   <Replace>\n')
     xml('    <CmdID>%s</CmdID>\n' % cmd_id)
     xml('    <Meta>\n')
-    xml('     <Type>%s</Type>\n' % object.portal_type)
+    xml('     <Type>%s</Type>\n' % media_type)
     xml('    </Meta>\n')
     xml('    <Item>\n')
     xml('     <Source>\n')
@@ -663,6 +669,8 @@ class XMLSyncUtilsMixin(SyncCode):
       status = self.SENT
       #gid_generator = getattr(object,domain.getGidGenerator(),None)
       object_gid = domain.getGidFromObject(object)
+      if object_gid in ('', None):
+        continue;
       local_gid_list += [object_gid]
       #if gid_generator is not None:
       #  object_gid = gid_generator()
@@ -670,7 +678,6 @@ class XMLSyncUtilsMixin(SyncCode):
       if syncml_data.count('\n') < self.MAX_LINES and not \
           object.id.startswith('.'): # If not we have to cut
         #LOG('getSyncMLData',0,'xml_mapping: %s' % str(domain.xml_mapping))
-        #LOG('getSyncMLData', 0, 'FlowType: %s' % str(subscriber.getFlowType()))
         #LOG('getSyncMLData',0,'code: %s' % str(self.getAlertCode(remote_xml)))
         #LOG('getSyncMLData',0,'gid_list: %s' % str(local_gid_list))
         #LOG('getSyncMLData',0,'hasSignature: %s' % str(subscriber.hasSignature(object_gid)))
@@ -712,7 +719,8 @@ class XMLSyncUtilsMixin(SyncCode):
             signature.setAction('Add')
             xml_string = '<!--' + short_string + '-->'
           syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object, 
-              gid=object_gid, xml_string=xml_string, more_data=more_data)
+              gid=object_gid, xml_string=xml_string, more_data=more_data, 
+              media_type=subscriber.getMediaType())
           cmd_id += 1
           signature.setStatus(status)
           subscriber.addSignature(signature)
@@ -748,11 +756,12 @@ class XMLSyncUtilsMixin(SyncCode):
               signature.setAction('Replace')
               xml_string = '<!--' + short_string + '-->'
             signature.setStatus(status)
-            if(subscriber.getFlowType() == 'text'):
+            if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
               xml_string = self.getXMLObject(object=object, 
                   xml_mapping=domain.xml_mapping)
             syncml_data += self.replaceXMLObject(cmd_id=cmd_id, object=object, 
-                gid=object_gid, xml_string=xml_string, more_data=more_data)
+                gid=object_gid, xml_string=xml_string, more_data=more_data, 
+                media_type=subscriber.getMediaType())
             cmd_id += 1
             signature.setTempXML(xml_object)
           # Now we can apply the xupdate from the subscriber
@@ -771,7 +780,7 @@ class XMLSyncUtilsMixin(SyncCode):
             signature.setStatus(self.SYNCHRONIZED)
         elif signature.getStatus()==self.PUB_CONFLICT_CLIENT_WIN:
           # We have decided to apply the update
-          # XXX previous_xml will be getXML instead of getTempXML because
+          # XXX previous_xml will be geXML instead of getTempXML because
           # some modification was already made and the update
           # may not apply correctly
           xml_update = signature.getPartialXML()
@@ -798,16 +807,18 @@ class XMLSyncUtilsMixin(SyncCode):
             xml_string = xml_string.replace('--','@-@@-@')
           xml_string = '<!--' + xml_string + '-->'
           signature.setStatus(status)
-          if(subscriber.getFlowType() == 'text'):
+          if(subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']):
             xml_string = self.getXMLObject(object=object, 
                 xml_mapping=domain.xml_mapping)
           LOG('xml_string =', 0, xml_string)
           if signature.getAction()=='Replace':
             syncml_data += self.replaceXMLObject(cmd_id=cmd_id, object=object,
-                gid=object_gid, xml_string=xml_string, more_data=more_data)
+                gid=object_gid, xml_string=xml_string, more_data=more_data,
+                media_type=subscriber.getMediaType())
           elif signature.getAction()=='Add':
             syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object, 
-                gid=object_gid, xml_string=xml_string, more_data=more_data)
+                gid=object_gid, xml_string=xml_string, more_data=more_data, 
+                media_type=subscriber.getMediaType())
     return (syncml_data,xml_confirmation,cmd_id)
 
   def applyActionList(self, domain=None, subscriber=None,destination_path=None,
@@ -846,12 +857,12 @@ class XMLSyncUtilsMixin(SyncCode):
             data_subnode = partial_data
           LOG('SyncModif',0,'data_subnode: %s' % data_subnode)
           #data_subnode = FromXml(data_subnode)
-          if subscriber.getFlowType() == 'xml':
+          if subscriber.getMediaType() == self.MEDIA_TYPE['TEXT_XML']:
             data_subnode = Parse(data_subnode)
             data_subnode = data_subnode.childNodes[0] # Because we just created a new xml
           # document, with childNodes[0] a DocumentType and childNodes[1] the Element Node
         else:
-          if subscriber.getFlowType() == 'text':
+          if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
             data_subnode = self.getDataText(next_action)
           else:
             data_subnode = self.getDataSubNode(next_action)
@@ -934,7 +945,7 @@ class XMLSyncUtilsMixin(SyncCode):
 
         elif next_action.nodeName == 'Delete':
           object_id = signature.getId()
-          if subscriber.getFlowType == 'text': 
+          if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']: 
             data_subnode = self.getDataText(next_action)
           else:
             data_subnode = self.getDataSubNode(next_action)

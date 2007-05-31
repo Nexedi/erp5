@@ -153,8 +153,8 @@ class Publication(Subscription):
 
   # Constructor
   def __init__(self, id, title, publication_url, destination_path, 
-      query, xml_mapping, conduit, gpg_key, id_generator, gid_generator,
-      flow_type, auth_required=False, authentication_format='', 
+      query, xml_mapping, conduit, gpg_key, id_generator, gid_generator, 
+      media_type, auth_required=False, authentication_format='', 
       authentication_type=''):
     """
       constructor
@@ -168,7 +168,7 @@ class Publication(Subscription):
     self.domain_type = self.PUB
     self.gpg_key = gpg_key
     self.setGidGenerator(gid_generator)
-    self.setFlowType(flow_type)
+    self.setMediaType(media_type)
     self.setSynchronizationIdGenerator(id_generator)
     self.setConduit(conduit)
     Folder.__init__(self, id)

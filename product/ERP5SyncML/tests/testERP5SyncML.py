@@ -741,11 +741,11 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person1 = person_server._getOb(self.id1)
     sub_person1 = person1.newContent(id=self.id1,portal_type='Person')
     kw = {'first_name':self.first_name1,'last_name':self.last_name1,
-          'description':self.description1}
+        'description':self.description1}
     sub_person1.edit(**kw)
     sub_sub_person1 = sub_person1.newContent(id=self.id1,portal_type='Person')
     kw = {'first_name':self.first_name1,'last_name':self.last_name1,
-          'description':self.description1}
+        'description':self.description1, 'default_telephone_text':'0689778308'}
     sub_sub_person1.edit(**kw)
     sub_sub_person2 = sub_person1.newContent(id=self.id2,portal_type='Person')
     kw = {'first_name':self.first_name2,'last_name':self.last_name2,
@@ -785,6 +785,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.failUnless(sub_sub_person1.getDescription()==self.description1)
     self.failUnless(sub_sub_person1.getFirstName()==self.first_name1)
     self.failUnless(sub_sub_person1.getLastName()==self.last_name1)
+    self.failUnless(sub_sub_person1.getDefaultTelephoneText()=='+(0)-0689778308')
     self.failUnless(sub_sub_person2.getDescription()==self.description2)
     self.failUnless(sub_sub_person2.getFirstName()==self.first_name2)
     self.failUnless(sub_sub_person2.getLastName()==self.last_name2)
