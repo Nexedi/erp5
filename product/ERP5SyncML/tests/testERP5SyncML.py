@@ -114,7 +114,7 @@ class TestERP5SyncMLMixin:
       /person_client1 : empty
       /person_client2 : empty
     """
-    return ('erp5_base','fabien_bt')
+    return ('erp5_base')
 
   def getSynchronizationTool(self):
     return getattr(self.getPortal(), 'portal_synchronizations', None)
