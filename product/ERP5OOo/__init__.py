@@ -28,7 +28,7 @@
 ##############################################################################
 """
     ERP5OOo is a product containing general purpose tools to parse
-    and handle OpenOffice v1.x documents.
+    and handle OpenOffice documents.
 """
 
 # Update ERP5 Globals
