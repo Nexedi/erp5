@@ -63,7 +63,11 @@ class Telephone(Coordinate, Base):
 
     # The standard parser is used to read phone numbers
     # written in a standard syntax
-    standard_parser = re.compile('\+(.*)\((.*)\)(.*)\-(.*)')
+    # +[country]([area])[number]/[extension]
+    # or in syntax retured by asText
+    # +[country](0)[area]-[number]/[extension]
+    standard_parser = re.compile('\+(?P<country>\d{,2})\(0\)(?P<area>\d+)-(?P<number>[^/]+)(\/(?P<ext>\d+))?')
+    input_parser = re.compile('(\+(?P<country>\d*))?(\((?P<area>\d*)\))?(?P<number>[^/]*)(\/(?P<ext>\d+))?')
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
@@ -81,15 +85,19 @@ class Telephone(Coordinate, Base):
         
         if coordinate_text is None:
             coordinate_text = ''
-        if self.standard_parser.match(coordinate_text):
-            (country, temp, area, number) = \
-                self.standard_parser.match(coordinate_text).groups()
-        else:
-            country = area = ''
-            number = coordinate_text
+        number_match = self.standard_parser.match(coordinate_text) or self.input_parser.match(coordinate_text)
+        if not number_match:
+          return
+        number_dict = number_match.groupdict()
+        self.log(number_dict)
+        country = (number_dict.get('country', '') or '').strip()
+        area = (number_dict.get('area', '') or '').strip()
+        number = (number_dict.get('number', '') or '').strip().replace('-', ' ')
+        extension = (number_dict.get('ext', '') or '').strip()
         self.edit(telephone_country = country,
                   telephone_area = area,
-                  telephone_number = number, )
+                  telephone_number = number, 
+                  telephone_extension = extension)
 
     security.declareProtected(Permissions.ModifyPortalContent, '_setText')
     _setText = fromText
@@ -115,8 +123,12 @@ class Telephone(Coordinate, Base):
 
         text += '-'
         telephone_number = self.getTelephoneNumber()
-        if self.telephone_number is not None:
+        if telephone_number is not None:
           text += telephone_number
+
+        telephone_extension = self.getTelephoneExtension()
+        if telephone_extension is not None:
+          text += '/' + telephone_extension
 
         if text == '+(0)-':
           text = ''
