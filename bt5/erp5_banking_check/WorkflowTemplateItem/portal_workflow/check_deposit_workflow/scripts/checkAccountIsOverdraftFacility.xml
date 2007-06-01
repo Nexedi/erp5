@@ -97,7 +97,7 @@ if not account.isOverdraftFacility():\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,18 +117,18 @@ if not account.isOverdraftFacility():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>_getitem_</string>
-                            <string>state_change</string>
                             <string>txn</string>
                             <string>_getattr_</string>
                             <string>account</string>
