@@ -879,7 +879,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # here c1, c2, c3 are sorted by their int_index
     self.assertEquals(list(bc.getCategoryChildValueList(
                                         local_sort_id='int_index')),
-                      [c1, c11, c111, c12, c3, c2])
+                      [c1, c12, c11, c111, c3, c2])
     # here c11 & c12 are sorted by their titles
     self.assertEquals(list(c1.getCategoryChildValueList(
                               local_sort_id='int_index')), [c12, c11, c111])

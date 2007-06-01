@@ -254,8 +254,8 @@ class Category(Folder):
       
       child_value_list = self.objectValues(self.allowed_types)
       if local_sort_id:
-        local_sort_method = lambda a, b: cmp(a.getProperty(local_sort_id),
-                                             b.getProperty(local_sort_id))
+        local_sort_method = lambda a, b: cmp(a.getProperty(local_sort_id, 0),
+                                             b.getProperty(local_sort_id, 0))
       if local_sort_method:
         # sort objects at the current level
         child_value_list = list(child_value_list)
@@ -715,18 +715,22 @@ class BaseCategory(Category):
 
       child_value_list = self.objectValues(self.allowed_types)
       if local_sort_id:
-        local_sort_method = lambda a, b: cmp(a.getProperty(local_sort_id),
-                                             b.getProperty(local_sort_id))
+        local_sort_method = lambda a, b: cmp(a.getProperty(local_sort_id, 0),
+                                             b.getProperty(local_sort_id, 0))
       if local_sort_method:
         # sort objects at the current level
         child_value_list = list(child_value_list)
         child_value_list.sort(local_sort_method)
+      
+      LOG('self %s' % self, 0, (local_sort_id, local_sort_method))
 
       if recursive:
         for c in child_value_list:
           value_list.extend(c.getCategoryChildValueList(recursive=1,
                                         is_self_excluded=0,
-                                        include_if_child=include_if_child))
+                                        include_if_child=include_if_child,
+                                        local_sort_id=local_sort_id,
+                                        local_sort_method=local_sort_method))
       else:
         for c in child_value_list:
           if include_if_child:
