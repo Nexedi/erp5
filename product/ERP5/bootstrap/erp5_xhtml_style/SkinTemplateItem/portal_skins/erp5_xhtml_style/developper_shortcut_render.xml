@@ -81,7 +81,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
 \n
 <tal:block metal:define-macro="edit_link">\n
-  <a tal:condition="python: hasattr(object, \'meta_type\')"\n
+  <a disabled="disabled" tal:condition="python: hasattr(object, \'meta_type\')"\n
      tal:attributes="href python: \'%s/manage_main\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):])) # XXX: quick hack to get path;\n
                      title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
                                                        alt info;"/></a>\n
@@ -89,7 +89,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
 \n
 <tal:block metal:define-macro="translate_link">\n
-  <a tal:define="image image | python: \'translate.png\'"\n
+  <a disabled="disabled" tal:define="image image | python: \'translate.png\'"\n
      tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message.replace(\'(\', \'\\(\').replace(\')\', \'\\)\'), selected_language);\n
                      title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
                                                        alt info;"/></a>\n
