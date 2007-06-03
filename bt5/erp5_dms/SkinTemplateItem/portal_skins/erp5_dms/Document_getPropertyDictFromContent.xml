@@ -94,7 +94,7 @@ for k, v in information.items():  \n
     elif key == \'author\':\n
       p = context.portal_catalog.getResultValue(title = v)\n
       if p is not None:\n
-        result[contributor] = p.getRelativeUrl()\n
+        result[\'contributor\'] = p.getRelativeUrl()\n
     elif key == \'keywords\':\n
       result[\'subject_list\'] = v.split()\n
 \n
@@ -180,7 +180,6 @@ return result\n
                             <string>_write_</string>
                             <string>p</string>
                             <string>None</string>
-                            <string>contributor</string>
                             <string>title</string>
                           </tuple>
                         </value>

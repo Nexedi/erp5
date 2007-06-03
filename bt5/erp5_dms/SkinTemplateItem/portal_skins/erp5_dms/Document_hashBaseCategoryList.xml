@@ -114,9 +114,6 @@ for base_category in item_list:\n
     sub_field_dict[base_category] = sub_field_property_dict\n
 \n
 return sub_field_dict.values()\n
-\n
-\n
-# vim: syntax=python shiftwidth=2\n
 </string> </value>
         </item>
         <item>
