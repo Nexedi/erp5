@@ -88,12 +88,6 @@ class Organisation:
       'description' : 'The social code of this organisation',
       'type'        : 'string',
       'mode'        : 'w' },
-    # (Kev) This property is too banking-centric to appear here as a general organisation property. The following must be renamed to something more abstract like  "business_code", "domain_uid", "business_domain_special_organisation_id" or something like that.
-    { 'id'          : 'bic_code',
-      'description' : 'The Bank Identifier Code is a unique code that identifies individual banking and financial institution offices around the world.',
-      'type'        : 'string',
-      'mode'        : 'w' },
-
 
     # Acquisition
     { 'id'          : 'address',
