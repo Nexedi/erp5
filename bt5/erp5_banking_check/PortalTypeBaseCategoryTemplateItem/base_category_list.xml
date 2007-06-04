@@ -3,6 +3,7 @@
   <item>site</item>
  </portal_type>
  <portal_type id="Check Payment">
+  <item>source_trade</item>
   <item>aggregate_resource</item>
  </portal_type>
  <portal_type id="Checkbook Delivery">
@@ -14,12 +15,12 @@
   <item>currency_exchange_type</item>
  </portal_type>
  <portal_type id="Checkbook Reception Line">
-  <item>check_amount</item>
   <item>check_type</item>
+  <item>check_amount</item>
  </portal_type>
  <portal_type id="Stop Payment">
-  <item>aggregate_resource</item>
   <item>currency_exchange_type</item>
+  <item>aggregate_resource</item>
  </portal_type>
  <portal_type id="Traveler Check Purchase">
   <item>currency_exchange_type</item>

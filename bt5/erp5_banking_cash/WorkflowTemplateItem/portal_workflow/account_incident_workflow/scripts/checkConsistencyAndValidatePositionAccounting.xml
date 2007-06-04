@@ -96,28 +96,27 @@ if not transaction.Baobab_checkCounterDateOpen(site=source_object, date=date):\n
   raise ValidationFailed, (msg,)\n
 \n
 \n
-in_list = transaction.objectValues(portal_type=\'Incoming Account Incident Line\')\n
-out_list = transaction.objectValues(portal_type=\'Outgoing Account Incident Line\')\n
 vault = "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(transaction.getSource(),)\n
 price = transaction.getSourceTotalAssetPrice()\n
 in_price = transaction.getTotalPrice(portal_type=[\'Incoming Account Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
 out_price = transaction.getTotalPrice(portal_type=[\'Outgoing Account Incident Line\',\'Cash Delivery Cell\'],fast=0)\n
 \n
-if len(in_list) != 0 and len(out_list) != 0:\n
-  msg = Message(domain = "ui", message="You can\'t have excess and deficit on the document.")\n
-  raise ValidationFailed, (msg,)\n
-elif len(in_list) == 0 and len(out_list) == 0:\n
+if in_price == 0 and out_price == 0: # Both prices cannot be equal to 0 at the same time\n
   msg = Message(domain = "ui", message="No resource.")\n
   raise ValidationFailed, (msg,)\n
-elif len(out_list) !=0:\n
+elif 0 not in (in_price, out_price): # Both prices cannot be different from 0 at the same time\n
+  msg = Message(domain = "ui", message="You can\'t have excess and deficit on the document.")\n
+  raise ValidationFailed, (msg,)\n
+elif price not in (in_price, out_price):\n
+  msg = Message(domain = "ui", message="Price differs between document and resource.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+if out_price != 0:\n
   #resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Account Incident Line\')\n
   resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Account Incident Line\')\n
   if resource <> 0 :\n
     msg = Message(domain="ui", message="Insufficient Balance.")\n
     raise ValidationFailed, (msg,)\n
-elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != price):\n
-  msg = Message(domain = "ui", message="Price differs between document and resource.")\n
-  raise ValidationFailed, (msg,)\n
 \n
 # Now we will validate the accounting position\n
 transaction = state_change[\'object\']\n
@@ -229,18 +228,18 @@ if debit:\n
                             <string>site_value</string>
                             <string>source_object</string>
                             <string>msg</string>
-                            <string>in_list</string>
-                            <string>out_list</string>
                             <string>vault</string>
                             <string>price</string>
                             <string>in_price</string>
                             <string>out_price</string>
-                            <string>len</string>
                             <string>resource</string>
                             <string>bank_account</string>
                             <string>exchange_rate_list</string>
+                            <string>len</string>
                             <string>ValidationError</string>
                             <string>line</string>
+                            <string>in_list</string>
+                            <string>out_list</string>
                             <string>debit</string>
                             <string>error</string>
                           </tuple>

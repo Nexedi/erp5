@@ -76,10 +76,10 @@ resource = transaction.CashDelivery_checkCounterInventory(source = destination, 
 #transaction.log("call to CashDelivery_getCounterInventory return", resource)\n
 \n
 # use of the constraint : Test cash status line\n
-vliste = transaction.checkConsistency()\n
-transaction.log(\'vliste\', vliste)\n
-if len(vliste) != 0:\n
-  raise ValidationFailed, (vliste[0].getMessage(),)\n
+#vliste = transaction.checkConsistency()\n
+#transaction.log(\'vliste\', vliste)\n
+#if len(vliste) != 0:\n
+#  raise ValidationFailed, (vliste[0].getMessage(),)\n
 \n
 user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()\n
 site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
@@ -171,8 +171,6 @@ elif price != cash_detail:\n
                             <string>_getattr_</string>
                             <string>destination</string>
                             <string>resource</string>
-                            <string>vliste</string>
-                            <string>len</string>
                             <string>user_id</string>
                             <string>context</string>
                             <string>site_list</string>

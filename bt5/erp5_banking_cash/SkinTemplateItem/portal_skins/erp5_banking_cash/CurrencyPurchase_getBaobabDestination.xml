@@ -65,29 +65,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-var_ressource_title = context.getResourceTitle().lower()\n
-var_ressource_title = var_ressource_title.replace(" ", "_")\n
-encaisse_devise = "/encaisse_des_devises/%s/sortante" %(var_ressource_title)\n
-\n
-#encaisse_devise = "/encaisse_des_devises/%s/sortante" %(context.getResourceTitle().lower())\n
-\n
-# first get the source of the document,\n
-# we will need to add the counter\n
-# Get the history of the workflow\n
-user_id = context.Base_getLastUserIdByTransition(workflow_id=\'currency_purchase_workflow\', transition_id=\'deliver_action\')\n
-if user_id is None:\n
-  return None\n
-site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-destination = context.getSource()\n
-for site in site_list:\n
-  site_value = context.portal_categories.getCategoryValue(site)\n
-  if site_value.getVaultType().endswith(\'guichet\') and destination in site:\n
-    return site + encaisse_devise\n
-msg = Message(domain=\'ui\', message=\'Your user is not well assigned\')\n
-raise ValidationFailed, (msg,)\n
+            <value> <string>source_trade = context.getSourceTrade()\n
+if source_trade is None:\n
+  encaisse_devise = "/encaisse_des_devises/%s/sortante" %(context.getResourceTitle(\'\').lower().replace(" ", "_"),)\n
+  user_id = context.Base_getLastUserIdByTransition(workflow_id=\'currency_purchase_workflow\', transition_id=\'deliver_action\')\n
+  if user_id is None:\n
+    return None\n
+  site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+  destination = context.getSource()\n
+  for site in site_list:\n
+    site_value = context.portal_categories.getCategoryValue(site)\n
+    if site_value.getVaultType().endswith(\'guichet\') and destination in site:\n
+      source_trade = site + encaisse_devise\n
+      if context.getSimulationState() == "delivered":\n
+        context.setSourceTrade(source_trade)\n
+      return source_trade\n
+      \n
+  from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+  from Products.ERP5Type.Message import Message\n
+  msg = Message(domain=\'ui\', message=\'Your user is not well assigned\')\n
+  raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -138,21 +135,21 @@ raise ValidationFailed, (msg,)\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>var_ressource_title</string>
+                            <string>source_trade</string>
+                            <string>None</string>
                             <string>encaisse_devise</string>
                             <string>user_id</string>
-                            <string>None</string>
                             <string>site_list</string>
                             <string>destination</string>
                             <string>_getiter_</string>
                             <string>site</string>
                             <string>site_value</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>msg</string>
                           </tuple>
                         </value>

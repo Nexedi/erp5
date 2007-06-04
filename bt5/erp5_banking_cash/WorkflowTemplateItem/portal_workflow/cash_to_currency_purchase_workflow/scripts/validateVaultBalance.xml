@@ -69,7 +69,7 @@
 
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 currency = transaction.getResourceTitle()\n
 encaisse_billets_et_monnaies = "/encaisse_des_billets_et_monnaies/sortante"\n
@@ -82,6 +82,10 @@ encaisse_devise = "/encaisse_des_devises/%s/entrante" %(var_ressource_title)\n
 #encaisse_devise = "/encaisse_des_devises/%s/entrante" %(transaction.getResourceTitle().lower())\n
 \n
 counter_site = transaction.getSource()\n
+\n
+# check we don\'t change of user\n
+transaction.Baobab_checkSameUserVault(counter_site)\n
+\n
 incoming_destination = counter_site + encaisse_devise\n
 outgoing_source = counter_site + encaisse_billets_et_monnaies\n
 \n
@@ -180,8 +184,9 @@ elif resource_two!= 0 :\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>currency</string>
                             <string>encaisse_billets_et_monnaies</string>
                             <string>var_ressource_title</string>

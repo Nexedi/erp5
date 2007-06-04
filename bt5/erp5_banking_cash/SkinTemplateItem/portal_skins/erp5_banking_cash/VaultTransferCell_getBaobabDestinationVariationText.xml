@@ -73,6 +73,7 @@ if source.split("/")[-1] == destination.split("/")[-1]:\n
     variation = context.getVariationText()\n
     result = variation.replace(\'new_emitted\', \'valid\')\n
     return result\n
+return context.getVariationText()\n
 </string> </value>
         </item>
         <item>

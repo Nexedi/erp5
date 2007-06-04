@@ -14,11 +14,14 @@ Container Line | cash_status
 Container Line | emission_letter
 Container Line | variation
 Currency Purchase | currency_exchange_type
+Currency Purchase | source_trade
 Currency Sale | currency_exchange_type
+Currency Sale | source_trade
 Foreign Cash Reception | currency_exchange_type
 Internal Money Deposit | external_software
 Monetary Recall Cell | variation
 Money Deposit | external_software
+Money Deposit | source_trade
 Mutilated Banknote | source_decision
 Mutilated Banknote | source_trade
 Outgoing Cash Sorting Cell | variation

@@ -66,16 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>currency = context.getResourceTitle()\n
-#context.log(\'currency\', currency)\n
-var_ressource_title = context.getParentValue().getResourceTitle().lower()\n
-var_ressource_title = var_ressource_title.replace(" ", "_")\n
-#context.log(\'var_ressource_title\', var_ressource_title)\n
-\n
-#encaisse_devise = "/encaisse_des_devises/%s/entrante" %(context.getParentValue().getResourceTitle().lower())\n
-encaisse_devise = "/encaisse_des_devises/%s/sortante" %(var_ressource_title)\n
-\n
-#context.log(\'encaisse_devise\', encaisse_devise)\n
-\n
+encaisse_devise = "/encaisse_des_devises/%s/sortante" %(context.getParentValue().getResourceTitle(\'\').lower().replace(" ", "_"))\n
 counter_site = context.getSource()\n
 destination = counter_site + encaisse_devise\n
 return destination\n
@@ -155,7 +146,6 @@ return destination\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>currency</string>
-                            <string>var_ressource_title</string>
                             <string>encaisse_devise</string>
                             <string>counter_site</string>
                             <string>destination</string>

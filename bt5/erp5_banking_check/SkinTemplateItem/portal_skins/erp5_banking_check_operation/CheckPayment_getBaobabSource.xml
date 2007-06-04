@@ -65,16 +65,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>user_id = context.Base_getLastUserIdByTransition(workflow_id=\'check_payment_workflow\', transition_id=\'deliver_action\')\n
-if user_id is None:\n
-  return None\n
-site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-source = context.getSource()\n
-for site in site_list:\n
-  site_value = context.portal_categories.getCategoryValue(site)\n
-  if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
-    return site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
-return None\n
+            <value> <string>source_trade = context.getSourceTrade()\n
+if source_trade is None:\n
+  user_id = context.Base_getLastUserIdByTransition(workflow_id=\'check_payment_workflow\', transition_id=\'deliver_action\')\n
+  if user_id is not None:\n
+    site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+    source = context.getSource()\n
+    for site in site_list:\n
+      site_value = context.portal_categories.getCategoryValue(site)\n
+      if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
+        source_trade = site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
+        # Save it only once we are sure that the document will not change any more\n
+        # and that we will not have many users trying to do deliver_action\n
+        if context.getSimulationState() == \'delivered\':\n
+          context.setSourceTrade(source_trade)\n
+return source_trade\n
 </string> </value>
         </item>
         <item>
@@ -126,8 +131,9 @@ return None\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>user_id</string>
+                            <string>source_trade</string>
                             <string>None</string>
+                            <string>user_id</string>
                             <string>site_list</string>
                             <string>source</string>
                             <string>_getiter_</string>

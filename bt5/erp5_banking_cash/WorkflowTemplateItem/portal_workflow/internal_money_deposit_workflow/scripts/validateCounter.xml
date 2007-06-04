@@ -78,7 +78,9 @@ if transaction.getResource() is None:\n
 #transaction.Base_checkBaobabSourceAndDestination()\n
 \n
 date = transaction.getStartDate()\n
-destination= transaction.getDestination(None)\n
+destination= transaction.getDestination()\n
+# check we don\'t change of user\n
+transaction.Baobab_checkSameUserVault(destination)\n
 \n
 lettering = transaction.getGroupingReference()\n
 \n

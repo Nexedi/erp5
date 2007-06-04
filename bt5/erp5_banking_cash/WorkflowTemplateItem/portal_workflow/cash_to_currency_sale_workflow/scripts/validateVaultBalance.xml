@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 currency = transaction.getResourceTitle()\n
 \n
@@ -82,6 +82,8 @@ encaisse_billets_et_monnaies = "/encaisse_des_billets_et_monnaies/entrante"\n
 \n
 counter_site = transaction.getSource()\n
 \n
+# check we don\'t change of user\n
+transaction.Baobab_checkSameUserVault(counter_site)\n
 \n
 outgoing_source = counter_site + encaisse_devise\n
 \n
@@ -91,10 +93,10 @@ if not transaction.Baobab_checkCounterDateOpen(site=outgoing_source, date=transa
   raise ValidationFailed, (msg,)\n
 \n
 # use of the constraint : Test cash status line\n
-vliste = transaction.checkConsistency()\n
-transaction.log(\'vliste\', vliste)\n
-if len(vliste) != 0:\n
-  raise ValidationFailed, (vliste[0].getMessage(),)\n
+#vliste = transaction.checkConsistency()\n
+#transaction.log(\'vliste\', vliste)\n
+#if len(vliste) != 0:\n
+#  raise ValidationFailed, (vliste[0].getMessage(),)\n
 \n
 \n
 \n
@@ -176,8 +178,9 @@ elif resource_one != 0 :\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>currency</string>
                             <string>var_ressource_title</string>
                             <string>encaisse_devise</string>
@@ -185,9 +188,6 @@ elif resource_one != 0 :\n
                             <string>counter_site</string>
                             <string>outgoing_source</string>
                             <string>msg</string>
-                            <string>vliste</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
                             <string>resource_one</string>
                             <string>billetage_entre</string>
                             <string>billetage_sorti</string>

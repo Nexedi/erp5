@@ -78,6 +78,9 @@ if source is None:\n
   msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
   raise ValidationFailed, (msg,)\n
 \n
+# check we don\'t change of user\n
+transaction.Baobab_checkSameUserVault(source)\n
+\n
 # check we are in an opened accounting day\n
 if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
   msg = Message(domain = "ui", message="Counter Date is not opened")\n
@@ -199,6 +202,7 @@ if total_credit>0:\n
                             <string>item</string>
                             <string>category_list</string>
                             <string>base_price</string>
+                            <string>_inplacevar_</string>
                             <string>round</string>
                           </tuple>
                         </value>

@@ -75,6 +75,9 @@ transaction = state_change.object\n
 vault = transaction.getSource()\n
 date = transaction.getStartDate()\n
 \n
+# check we don\'t change of user\n
+transaction.Baobab_checkSameUserVault(vault)\n
+\n
 # check we are in an opened accounting day\n
 if not transaction.Baobab_checkCounterDateOpen(site=vault, date=date):\n
   msg = Message(domain = "ui", message="Counter Date is not opened")\n

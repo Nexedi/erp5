@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 currency = transaction.getResourceTitle()\n
 encaisse_billets_et_monnaies_sortante = "/encaisse_des_billets_et_monnaies/sortante"\n
@@ -78,6 +78,8 @@ counter_site = transaction.getSource()\n
 caisse_incoming = counter_site + encaisse_billets_et_monnaies_entrante\n
 caisse_outgoing = counter_site + encaisse_billets_et_monnaies_sortante\n
 \n
+# check we don\'t change of user\n
+transaction.Baobab_checkSameUserVault(counter_site)\n
 \n
 # check again that we are in the good accounting date\n
 if not transaction.Baobab_checkCounterDateOpen(site=caisse_outgoing, date=transaction.getStartDate()):\n
@@ -85,10 +87,10 @@ if not transaction.Baobab_checkCounterDateOpen(site=caisse_outgoing, date=transa
   raise ValidationFailed, (msg,)\n
 \n
 # use of the constraint : Test cash status line\n
-vliste = transaction.checkConsistency()\n
-transaction.log(\'vliste\', vliste)\n
-if len(vliste) != 0:\n
-  raise ValidationFailed, (vliste[0].getMessage(),)\n
+#vliste = transaction.checkConsistency()\n
+#transaction.log(\'vliste\', vliste)\n
+#if len(vliste) != 0:\n
+#  raise ValidationFailed, (vliste[0].getMessage(),)\n
 \n
 \n
 resource_two = transaction.CashDelivery_checkCounterInventory(caisse_outgoing, portal_type=\'Outgoing Cash Exchange Line\')\n
@@ -169,8 +171,9 @@ if amount_total != outgoing_total:\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>currency</string>
                             <string>encaisse_billets_et_monnaies_sortante</string>
                             <string>encaisse_billets_et_monnaies_entrante</string>
@@ -178,9 +181,6 @@ if amount_total != outgoing_total:\n
                             <string>caisse_incoming</string>
                             <string>caisse_outgoing</string>
                             <string>msg</string>
-                            <string>vliste</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
                             <string>resource_two</string>
                             <string>incoming_total</string>
                             <string>outgoing_total</string>
