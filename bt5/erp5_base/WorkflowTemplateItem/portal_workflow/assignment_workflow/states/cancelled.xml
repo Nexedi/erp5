@@ -39,6 +39,14 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
+              <tuple>
+                <string>delete_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
               <tuple/>
             </value>
         </item>
