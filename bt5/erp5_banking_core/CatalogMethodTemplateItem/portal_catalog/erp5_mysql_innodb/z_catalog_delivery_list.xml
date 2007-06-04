@@ -250,7 +250,7 @@ VALUES\n
   <dtml-sqlvar expr="getSourcePaymentReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getDestinationPaymentReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSourcePaymentInternalBankAccountNumber[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getDestinationPaymentInternalBankAccountNumber[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="getDestinationPaymentInternalBankAccountNumber[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSourceTotalAssetPrice[loop_item]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
@@ -322,7 +322,7 @@ VALUES\n
   <dtml-sqlvar expr="getSourcePaymentReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getDestinationPaymentReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSourcePaymentInternalBankAccountNumber[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getDestinationPaymentInternalBankAccountNumber[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="getDestinationPaymentInternalBankAccountNumber[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSourceTotalAssetPrice[loop_item]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
