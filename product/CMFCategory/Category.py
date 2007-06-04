@@ -243,7 +243,7 @@ class Category(Folder):
                               objects of the same depth by comparing their
                               'local_sort_id' property.
           
-          Renderer parameter are also supported here.
+          Renderer parameters are also supported here.
       """
       if is_self_excluded or (
                     not(include_if_child) and
@@ -305,7 +305,8 @@ class Category(Folder):
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getTitle as default method
       """
-      return self.getCategoryChildItemList(recursive=recursive, display_id='title', base=base, **kw)
+      return self.getCategoryChildItemList(recursive=recursive,
+                                           display_id='title', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                     'getCategoryChildTranslatedTitleItemList')
@@ -414,11 +415,11 @@ class Category(Folder):
 
       recursive -- if set to 0 do not apply recursively
 
-      All parameter supported by getCategoryChildValueList and Render are
+      All parameters supported by getCategoryChildValueList and Render are
       supported here.
       """
       def _renderCategoryChildItemList(recursive=1, base=0, **kw):
-        value_list = self.getCategoryChildValueList(recursive=recursive,**kw)
+        value_list = self.getCategoryChildValueList(recursive=recursive, **kw)
         return Renderer(base=base, **kw).render(value_list)
 
       if not cache:
@@ -426,7 +427,7 @@ class Category(Folder):
 
       # Some methods are language dependent so we include the language in the key
       localizer = getToolByName(self, 'Localizer')
-      language = localizer.get_selected_language() 
+      language = localizer.get_selected_language()
       m = CachingMethod(_renderCategoryChildItemList,
                         ('Category_getCategoryChildItemList', language, self.getPath()))
 
@@ -490,8 +491,6 @@ class Category(Folder):
         can be useful to create reporting trees based on the
         ZSQLCatalog
       """
-      #LOG('Category.asSQLExpression self', 0, str(self))
-      #LOG('asSQLExpression parent', 0, str(self.aq_parent))
       if base_category is None:
         base_category = self
       elif type(base_category) is type('a'):
@@ -705,7 +704,7 @@ class BaseCategory(Category):
                               objects of the same depth by comparing their
                               'local_sort_id' property.
           
-          Renderer parameter are also supported here.
+          Renderer parameters are also supported here.
 
       """
       if is_self_excluded:
@@ -722,8 +721,6 @@ class BaseCategory(Category):
         child_value_list = list(child_value_list)
         child_value_list.sort(local_sort_method)
       
-      LOG('self %s' % self, 0, (local_sort_id, local_sort_method))
-
       if recursive:
         for c in child_value_list:
           value_list.extend(c.getCategoryChildValueList(recursive=1,
