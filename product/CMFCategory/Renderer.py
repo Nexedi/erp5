@@ -194,8 +194,7 @@ class Renderer(Filter):
       url = value.getRelativeUrl()
       if self.base:
         if self.base_category:
-          # Prepend the specified base category to the url.
-          url = self.base_category + '/' + url
+          url = '%s/%s' % (self.base_category, url)
         else:
           # If the base category of this category does not match the guessed
           # base category, merely ignore this category.
@@ -206,6 +205,10 @@ class Renderer(Filter):
           # Remove from now, it might be outdated and useless
           #if value.getBaseCategoryId() != guessed_base_category:
           #  continue
+
+        # Prepend the specified base category to the url.
+        if isinstance(self.base, str):
+          url = '%s/%s' % (self.base, url)
       else:
         if self.base_category:
           # Nothing to do.

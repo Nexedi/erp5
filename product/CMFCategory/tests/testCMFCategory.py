@@ -884,6 +884,21 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEquals(list(c1.getCategoryChildValueList(
                               local_sort_id='int_index')), [c12, c11, c111])
 
+  
+  def test_25_getCategoryChildItemList_base_parameter(self):
+    pc = self.getCategoriesTool()
+    bc = pc.newContent(portal_type='Base Category', id='foo')
+    c1 = bc.newContent(portal_type='Category', id='1', title='C')
+    
+    self.assertEquals([['', ''], ['C', '1']],
+                      bc.getCategoryChildTitleItemList())
+    self.assertEquals([['', ''], ['C', '1']],
+                      bc.getCategoryChildTitleItemList(base=0))
+    self.assertEquals([['', ''], ['C', 'foo/1']],
+                      bc.getCategoryChildTitleItemList(base=1))
+    self.assertEquals([['', ''], ['C', 'bar/foo/1']],
+                      bc.getCategoryChildTitleItemList(base='bar'))
+
 
 if __name__ == '__main__':
     framework()
