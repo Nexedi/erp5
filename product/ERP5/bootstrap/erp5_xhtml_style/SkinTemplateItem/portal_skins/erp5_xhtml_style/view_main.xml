@@ -100,7 +100,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                tal:condition="python: (not is_web_mode or editable_mode) and len(actions)">\n
             <button tal:condition="python: not is_web_mode and form_action"\n
                     type="submit" class="save" title="Save"\n
-                    tal:attributes="name python: \'%s:method\' % (form_action, )"\n
+                    tal:attributes="name string:${form_action}:method;\n
+                                    onClick string:javascript:clickSaveButton(\'${form_action}\');"\n
                     i18n:attributes="title" i18n:domain="ui">\n
               <span class="image"></span>\n
               <span class="description" i18n:translate="" i18n:domain="ui">Save</span>\n

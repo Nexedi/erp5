@@ -61,10 +61,20 @@ You should have received a copy of the GNU General Public License\n
 along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
-function submitAction(form,act) {\n
+\n
+function submitAction(form, act) {\n
   form.action = act;\n
   form.submit();\n
 }\n
+\n
+// This function will be called when the user click the save button. As \n
+// submitAction function may have changed the action before, it\'s better to\n
+// reset the form action to it\'s original behaviour. This is actually\n
+// usefull when the user click the back button.\n
+function clickSaveButton(act) {\n
+  document.forms[0].action = act;\n
+}\n
+\n
 \n
 // The first input element with an "autofocus" class will get the focus,\n
 // else, nothing done\n
