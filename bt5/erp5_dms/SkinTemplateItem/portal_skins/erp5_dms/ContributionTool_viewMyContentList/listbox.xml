@@ -323,7 +323,7 @@
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>Portal Type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
@@ -342,16 +342,12 @@
                           <string>Language</string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>revision</string>
-                          <string>Revision</string>
-                        </tuple>
-                        <tuple>
-                          <string>validation_state</string>
+                          <string>translated_validation_state</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Created</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
@@ -370,7 +366,7 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>source_reference</string>
@@ -378,11 +374,15 @@
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>Portal Type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>version</string>
@@ -393,16 +393,12 @@
                           <string>Language</string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>revision</string>
-                          <string>Revision</string>
-                        </tuple>
-                        <tuple>
-                          <string>validation_state</string>
+                          <string>translated_validation_state</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Created</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
@@ -447,6 +443,10 @@
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>creation_date</string>
+                        </tuple>
                         <tuple>
                           <string>modification_date</string>
                           <string>modification_date</string>
@@ -551,31 +551,27 @@
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>portal_type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
-                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>version</string>
-                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>language</string>
-                          <string>language</string>
+                          <string>Language</string>
                         </tuple>
                         <tuple>
-                          <string>revision</string>
-                          <string>Revision</string>
-                        </tuple>
-                        <tuple>
-                          <string>validation_state</string>
-                          <string>State</string>
+                          <string>creation_date</string>
+                          <string>Created</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
