@@ -71,7 +71,6 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.ERP5OOo.OOoUtils import OOoParser\n
-from Products.ERP5Type.Utils import convertToUpperCase\n
 OOoParser = OOoParser()\n
 \n
 \n
@@ -81,7 +80,7 @@ def getIDFromString(string=None):\n
     This function transform a string to a safe and beautiful ID.\n
     It is used here to create a safe category ID from a string.\n
   """\n
-  if string == None:\n
+  if string is None:\n
     return None\n
   clean_id = \'\'\n
   translation_map = { \'a\'  : [u\'\\xe0\', u\'\\xe3\']\n
@@ -149,7 +148,8 @@ for table_name in spreadsheets.keys():\n
       # else : The path definition is not started or is finished, so ignore the column\n
     # The column has a normal header\n
     else:\n
-      # If there is a new column with a header and the path definition has started, that seems the path definition has ended\n
+      # If there is a new column with a header and the path definition has\n
+      # started, that seems the path definition has ended\n
       if \'path_0\' in property_map.values():\n
         path_index == None\n
       property_map[column_index] = column_id\n
@@ -274,28 +274,22 @@ for table_name in spreadsheets.keys():\n
       # Set the category properties\n
       for key in keys:\n
         if key not in [\'path\', \'id\']:\n
-          setter_method_id = "set" + convertToUpperCase(key)\n
-          getter_method_id = "get" + convertToUpperCase(key)\n
           value = category[key]\n
           if value not in (\'\', None):\n
             # Get the current value of the attribute\n
-            if hasattr(new_category, getter_method_id):\n
-              getter = getattr(new_category, getter_method_id)\n
-              previous_value = getter()\n
-              new_value = value.encode(\'UTF-8\')\n
-              # Do not update or set object attribute if the vale remain the same.\n
-              if previous_value != new_value:\n
-                if hasattr(new_category, setter_method_id):\n
-                  setter = getattr(new_category, setter_method_id)\n
-                  setter(new_value)\n
-                # Update statistics\n
-                if not is_new_category:\n
-                  updated_category_counter += 1\n
-\n
+            previous_value = new_category.getProperty(key)\n
+            new_value = value.encode(\'UTF-8\')\n
+            # Do not update or set object attribute if the vale remain the same.\n
+            if previous_value != new_value:\n
+              new_category.setProperty(key, new_value)\n
+              # Update statistics\n
+              if not is_new_category:\n
+                updated_category_counter += 1\n
 \n
 \n
 # Import is a success, go back to the portal_categories tool\n
 return context.REQUEST.RESPONSE.redirect(\n
+    # TODO translate\n
   "%s/view?portal_status_message=%s+categories+found+in+%s+:+%s+created,+%s+updated,+%s+untouched."\n
   % ( context.portal_categories.absolute_url()\n
     , total_category_counter\n
@@ -353,8 +347,6 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>kw</string>
                             <string>Products.ERP5OOo.OOoUtils</string>
                             <string>OOoParser</string>
-                            <string>Products.ERP5Type.Utils</string>
-                            <string>convertToUpperCase</string>
                             <string>None</string>
                             <string>getIDFromString</string>
                             <string>_getattr_</string>
@@ -409,15 +401,9 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>category_type</string>
                             <string>new_category</string>
                             <string>key</string>
-                            <string>setter_method_id</string>
-                            <string>getter_method_id</string>
                             <string>value</string>
-                            <string>hasattr</string>
-                            <string>getattr</string>
-                            <string>getter</string>
                             <string>previous_value</string>
                             <string>new_value</string>
-                            <string>setter</string>
                           </tuple>
                         </value>
                     </item>
