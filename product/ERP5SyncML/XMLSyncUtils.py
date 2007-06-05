@@ -390,7 +390,7 @@ class XMLSyncUtilsMixin(SyncCode):
   def getCred(self, xml):
     """
       return the credential information : type, format and data
-    """    
+    """
     format=''
     type=''
     data=''
@@ -878,7 +878,8 @@ class XMLSyncUtilsMixin(SyncCode):
             # Retrieve directly the object from addNode
             object = add_data['object']
             LOG('XMLSyncUtils, in ADD add_data',0,add_data)
-            signature.setPath(object.getPhysicalPath())
+            if object is not None:
+              signature.setPath(object.getPhysicalPath())
             LOG('applyActionList',0,'object after add: %s' % repr(object))
           else:
             #Object was retrieve but need to be updated without recreated
