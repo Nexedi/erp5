@@ -70,7 +70,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 site_list = context.Baobab_getUserAssignedSiteList()\n
-if site in site_list:\n
+for site in site_list:\n
   if site in vault:\n
     return\n
 \n
@@ -132,6 +132,7 @@ raise ValidationFailed, (msg,)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>site_list</string>
+                            <string>_getiter_</string>
                             <string>site</string>
                             <string>msg</string>
                           </tuple>
