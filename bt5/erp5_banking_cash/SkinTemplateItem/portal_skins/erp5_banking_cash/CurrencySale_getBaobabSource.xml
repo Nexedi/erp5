@@ -89,6 +89,7 @@ if source_trade is None:\n
   from Products.ERP5Type.Message import Message\n
   msg = Message(domain=\'ui\', message=\'Your user is not well assigned\')\n
   raise ValidationFailed, (msg,)\n
+return source_trade\n
 </string> </value>
         </item>
         <item>
