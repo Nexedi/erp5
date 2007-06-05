@@ -1,4 +1,5 @@
 portal_categories/account_type/**
+portal_categories/financial_section/*
 portal_deliveries/payment_transaction_builder
 portal_deliveries/sale_invoice_builder
 portal_deliveries/sale_invoice_transaction_builder
