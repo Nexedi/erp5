@@ -70,9 +70,12 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 site_list = context.Baobab_getUserAssignedSiteList()\n
-if vault not in site_list:\n
-  msg = Message(domain = "ui", message="Vault differ between initialisation and transition")\n
-  raise ValidationFailed, (msg,)\n
+if site in site_list:\n
+  if site in vault:\n
+    return\n
+\n
+msg = Message(domain = "ui", message="Vault differ between initialisation and transition")\n
+raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -127,8 +130,9 @@ if vault not in site_list:\n
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>site_list</string>
+                            <string>site</string>
                             <string>msg</string>
                           </tuple>
                         </value>
