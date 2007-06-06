@@ -424,7 +424,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     for subscription in self.getSubscriptionList():
       sub_conflict_list = subscription.getConflictList()
       #LOG('SynchronizationTool.getConflictList, sub_conflict_list',0,
-          sub_conflict_list)
+          #sub_conflict_list)
       for conflict in sub_conflict_list:
         if isinstance(conflict,str):
           import pdb; pdb.set_trace()
