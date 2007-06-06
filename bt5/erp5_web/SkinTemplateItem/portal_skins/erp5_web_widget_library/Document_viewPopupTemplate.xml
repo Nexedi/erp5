@@ -51,21 +51,27 @@
 <span class="popup_label" i18n:translate="" i18n:domain="ui">Owner(s):</span>\n
 <tal:block tal:replace="options/owner|nothing"/>\n
 <br/>\n
+\n
 <span class="popup_label" i18n:translate="" i18n:domain="ui">Last modified:</span>\n
-<tal:block tal:replace="options/moddate|nothing"/>\n
+<tal:block tal:replace="options/modification_date|nothing"/>\n
 <br/>\n
+\n
 <span class="popup_label" i18n:translate="" i18n:domain="ui">Released:</span>\n
-<tal:block tal:replace="options/reldate|nothing"/>\n
+<tal:block tal:replace="options/release_date|nothing"/>\n
 <br/>\n
+\n
 <span class="popup_label" i18n:translate="" i18n:domain="ui">Published:</span>\n
-<tal:block tal:replace="options/publdate|nothing"/>\n
+<tal:block tal:replace="options/publication_date|nothing"/>\n
 <br/>\n
+\n
 <span class="popup_label" i18n:translate="" i18n:domain="ui">Status:</span>\n
 <tal:block tal:replace="options/status|nothing"/>\n
 <br/>\n
+\n
 <span class="popup_label" i18n:translate="" i18n:domain="ui">Group:</span>\n
 <tal:block tal:replace="options/group|nothing"/>\n
 <br/>\n
+\n
 <span class="popup_label" i18n:translate="" i18n:domain="ui">Project:</span>\n
 <tal:block tal:replace="options/project|nothing"/>
 
