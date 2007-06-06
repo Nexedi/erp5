@@ -39,7 +39,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     """
       Send the first XML message from the client
     """
-    LOG('SubSyncInit',0,'starting....')
+    #LOG('SubSyncInit',0,'starting....')
     cmd_id = 1 # specifies a SyncML message-unique command identifier
     subscription.NewAnchor()
     subscription.initLastMessageId()
@@ -83,8 +83,8 @@ class SubscriptionSynchronization(XMLSyncUtils):
     """
       This is the synchronization method for the client
     """
-    LOG('SubSync',0,'starting... id: %s' % str(id))
-    LOG('SubSync',0,'starting... msg: %s' % str(msg))
+    #LOG('SubSync',0,'starting... id: %s' % str(id))
+    #LOG('SubSync',0,'starting... msg: %s' % str(msg))
     response = None #check if subsync replies to this messages
     subscription = self.getSubscription(id)
 
@@ -132,8 +132,8 @@ class SubscriptionSynchronization(XMLSyncUtils):
       This method send crendentials
     """
     
-    LOG('SubSyncCred',0,'starting... id: %s' % str(id))
-    LOG('SubSyncCred',0,'starting... msg: %s' % str(msg))
+    #LOG('SubSyncCred',0,'starting... id: %s' % str(id))
+    #LOG('SubSyncCred',0,'starting... msg: %s' % str(msg))
     
     cmd_id = 1 # specifies a SyncML message-unique command identifier
     subscription = self.getSubscription(id)

@@ -33,6 +33,7 @@ from DateTime import DateTime
 from cStringIO import StringIO
 from xml.dom.ext import PrettyPrint
 import random
+from zLOG import LOG
 try:
   from Products.CMFActivity.ActiveObject import ActiveObject
 except ImportError:
@@ -40,7 +41,7 @@ except ImportError:
   class ActiveObject:
     pass
 import commands
-from zLOG import LOG
+
 try:
   from Ft.Xml import Parse
 except ImportError:
@@ -189,7 +190,7 @@ class XMLSyncUtilsMixin(SyncCode):
     header = "Subject: %s\n" % id_sync
     header += "To: %s\n\n" % toaddr
     msg = header + msg
-    LOG('SubSendMail',0,'from: %s, to: %s' % (fromaddr,toaddr))
+    #LOG('SubSendMail',0,'from: %s, to: %s' % (fromaddr,toaddr))
     server = smtplib.SMTP('localhost')
     server.sendmail(fromaddr, toaddr, msg)
     # if we want to send the email to someone else (debugging)
@@ -305,7 +306,7 @@ class XMLSyncUtilsMixin(SyncCode):
         xml = xml_method()
       else:
         raise ValueError, "Sorry the script or method was not found"
-    LOG('getXMLObject', 0, 'xml_mapping:%s, xml:%s, object:%s xml_method:%s' % (xml_mapping, xml, object, xml_method))
+    #LOG('getXMLObject', 0, 'xml_mapping:%s, xml:%s, object:%s xml_method:%s' % (xml_mapping, xml, object, xml_method))
     return xml
 
   def getSessionId(self, xml):
@@ -515,7 +516,7 @@ class XMLSyncUtilsMixin(SyncCode):
     first_node = xml_stream.childNodes[0]
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
-      LOG('getNextSyncBodyStatus',0,"This is not a SyncML Body")
+      #LOG('getNextSyncBodyStatus',0,"This is not a SyncML Body")
       raise ValueError, "Sorry, This is not a SyncML Body"
     next_status = None
     found = None
@@ -810,7 +811,7 @@ class XMLSyncUtilsMixin(SyncCode):
           if(subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']):
             xml_string = self.getXMLObject(object=object, 
                 xml_mapping=domain.xml_mapping)
-          LOG('xml_string =', 0, xml_string)
+          #LOG('xml_string =', 0, xml_string)
           if signature.getAction()=='Replace':
             syncml_data += self.replaceXMLObject(cmd_id=cmd_id, object=object,
                 gid=object_gid, xml_string=xml_string, more_data=more_data,
@@ -841,12 +842,12 @@ class XMLSyncUtilsMixin(SyncCode):
       signature = subscriber.getSignature(object_gid)
       object = domain.getObjectFromGid(object_gid)
       if signature == None:
-        LOG('applyActionList, signature is None',0,signature)
+        #LOG('applyActionList, signature is None',0,signature)
         signature = Signature(gid=object_gid, status=self.NOT_SYNCHRONIZED, 
             object=object).__of__(subscriber)
         subscriber.addSignature(signature)
       force = signature.getForce()
-      LOG('applyActionList',0,'object: %s' % repr(object))
+      #LOG('applyActionList',0,'object: %s' % repr(object))
       if self.checkActionMoreData(next_action) == 0:
         data_subnode = None
         if partial_data != None:
@@ -855,7 +856,7 @@ class XMLSyncUtilsMixin(SyncCode):
             data_subnode = signature.getPartialXML() + partial_data
           else:
             data_subnode = partial_data
-          LOG('SyncModif',0,'data_subnode: %s' % data_subnode)
+          #LOG('SyncModif',0,'data_subnode: %s' % data_subnode)
           #data_subnode = FromXml(data_subnode)
           if subscriber.getMediaType() == self.MEDIA_TYPE['TEXT_XML']:
             data_subnode = Parse(data_subnode)
@@ -877,10 +878,10 @@ class XMLSyncUtilsMixin(SyncCode):
               conflict_list += add_data['conflict_list']
             # Retrieve directly the object from addNode
             object = add_data['object']
-            LOG('XMLSyncUtils, in ADD add_data',0,add_data)
+            #LOG('XMLSyncUtils, in ADD add_data',0,add_data)
             if object is not None:
               signature.setPath(object.getPhysicalPath())
-            LOG('applyActionList',0,'object after add: %s' % repr(object))
+            #LOG('applyActionList',0,'object after add: %s' % repr(object))
           else:
             #Object was retrieve but need to be updated without recreated
             #usefull when an object is only deleted by workflow.
@@ -892,7 +893,7 @@ class XMLSyncUtilsMixin(SyncCode):
             if add_data['conflict_list'] not in ('', None, []):
               conflict_list += add_data['conflict_list']
           if object is not None:
-            LOG('SyncModif',0,'addNode, found the object')
+            #LOG('SyncModif',0,'addNode, found the object')
             #mapping = getattr(object,domain.getXMLMapping(),None)
             xml_object = domain.getXMLFromObject(object)
             #if mapping is not None:
@@ -905,11 +906,11 @@ class XMLSyncUtilsMixin(SyncCode):
                  self.SyncMLConfirmation(cmd_id,object_gid,self.SUCCESS,'Add')
             cmd_id +=1
         elif next_action.nodeName == 'Replace':
-          LOG('SyncModif',0,'object: %s will be updated...' % str(object))
+          #LOG('SyncModif',0,'object: %s will be updated...' % str(object))
           if object is not None:
-            LOG('SyncModif',0,'object: %s will be updated...' % object.id)
+            #LOG('SyncModif',0,'object: %s will be updated...' % object.id)
             signature = subscriber.getSignature(object_gid)
-            LOG('SyncModif',0,'previous signature: %s' % str(signature))
+            #LOG('SyncModif',0,'previous signature: %s' % str(signature))
             previous_xml = signature.getXML()
             #LOG('SyncModif',0,'previous signature: %i' % len(previous_xml))
             conflict_list += conduit.updateNode(xml=data_subnode, object=object,
@@ -941,7 +942,7 @@ class XMLSyncUtilsMixin(SyncCode):
               string_io = StringIO()
               PrettyPrint(data_subnode,stream=string_io)
               data_subnode_string = string_io.getvalue()
-              LOG('applyActionList, subscriber_xupdate:',0,data_subnode_string)
+              #LOG('applyActionList, subscriber_xupdate:',0,data_subnode_string)
               signature.setSubscriberXupdate(data_subnode_string)
 
         elif next_action.nodeName == 'Delete':
@@ -963,7 +964,7 @@ class XMLSyncUtilsMixin(SyncCode):
         previous_partial += partial_data
         signature.setPartialXML(previous_partial)
         #LOG('SyncModif',0,'previous_partial: %s' % str(previous_partial))
-        LOG('SyncModif',0,'waiting more data for :%s' % signature.getId())
+        #LOG('SyncModif',0,'waiting more data for :%s' % signature.getId())
         xml_confirmation += self.SyncMLConfirmation(cmd_id, object_gid, 
             self.WAITING_DATA, next_action.nodeName)
       if conflict_list != [] and signature is not None:
@@ -979,7 +980,7 @@ class XMLSyncUtilsMixin(SyncCode):
     This method have to change status codes on signatures
     """
     next_status = self.getNextSyncBodyStatus(remote_xml, None)
-    LOG('applyStatusList, next_status',0,next_status)
+    #LOG('applyStatusList, next_status',0,next_status)
     # We do not want the first one
     next_status = self.getNextSyncBodyStatus(remote_xml, next_status)
     has_status_list = 0
@@ -991,7 +992,7 @@ class XMLSyncUtilsMixin(SyncCode):
       status_code = self.getStatusCode(next_status)
       status_cmd = self.getStatusCommand(next_status)
       signature = subscriber.getSignature(object_gid)
-      LOG('SyncModif',0,'next_status: %s' % str(status_code))
+      #LOG('SyncModif',0,'next_status: %s' % str(status_code))
       if status_cmd in ('Add','Replace'):
         if status_code == self.CHUNK_OK:
           destination_waiting_more_data = 1
@@ -1043,7 +1044,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     from Products.ERP5SyncML import Conduit
     has_response = 0 #check if syncmodif replies to this messages
     cmd_id = 1 # specifies a SyncML message-unique command identifier
-    LOG('SyncModif',0,'Starting... domain: %s' % str(domain))
+    #LOG('SyncModif',0,'Starting... domain: %s' % str(domain))
     # Get the destination folder
     destination_path = self.unrestrictedTraverse(domain.getDestinationPath())
 
@@ -1051,7 +1052,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     # Get informations from the header
     xml_header = first_node.childNodes[1]
     if xml_header.nodeName != "SyncHdr":
-      LOG('PubSyncModif',0,'This is not a SyncML Header')
+      #LOG('PubSyncModif',0,'This is not a SyncML Header')
       raise ValueError, "Sorry, This is not a SyncML Header"
 
     subscriber = domain # If we are the client, this is fine
@@ -1072,9 +1073,9 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     message_id = self.getMessageId(remote_xml)
     correct_message = subscriber.checkCorrectRemoteMessageId(message_id)
     if not correct_message: # We need to send again the message
-      LOG('SyncModif, no correct message:',0,"sending again...")
+      #LOG('SyncModif, no correct message:',0,"sending again...")
       last_xml = subscriber.getLastSentMessage()
-      LOG("last_xml :", 0, last_xml)
+      #LOG("last_xml :", 0, last_xml)
       if last_xml != '':
         has_response = 1
         if domain.domain_type == self.PUB: # We always reply

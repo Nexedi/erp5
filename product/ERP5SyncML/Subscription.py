@@ -533,7 +533,7 @@ class Signature(Folder,SyncCode):
     # LOG('delConflict, conflict',0,conflict)
     conflict_list = []
     for c in self.getConflictList():
-      LOG('delConflict, c==conflict',0,c==aq_base(conflict))
+      #LOG('delConflict, c==conflict',0,c==aq_base(conflict))
       if c != aq_base(conflict):
         conflict_list += [c]
     if conflict_list != []:
@@ -969,7 +969,7 @@ class Subscription(Folder, SyncCode):
       # It might be a script python
       generator = getattr(object,gid_gen)
       o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
-    LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
+    #LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
     return o_gid
 
   def getObjectFromGid(self, gid):
@@ -1043,10 +1043,10 @@ class Subscription(Folder, SyncCode):
         generator = getattr(object, id_generator)
         new_id = generator()
       else: 
-        # This is probably a python scrip
+        # This is probably a python script
         generator = getattr(object, id_generator)
         new_id = generator(object=object,gid=gid)
-      LOG('generateNewId, new_id: ',0,new_id)
+      #LOG('generateNewId, new_id: ',0,new_id)
       return new_id
     return None
 
@@ -1332,7 +1332,7 @@ class Subscription(Folder, SyncCode):
       return b64encode(string_to_encode)
     #elif format is .... put here the other formats
     else:#if there is no format corresponding with format, raise an error
-      LOG('encode : unknown or not implemented format :', 0, format)
+      #LOG('encode : unknown or not implemented format :', 0, format)
       raise ValueError, "Sorry, the server ask for the format %s but it's unknow or not implemented" % format
 
   def decode(self, format, string_to_decode):
@@ -1346,7 +1346,7 @@ class Subscription(Folder, SyncCode):
       return b64decode(string_to_decode)
     #elif format is .... put here the other formats
     else:#if there is no format corresponding with format, raise an error
-      LOG('decode : unknown or not implemented format :', 0, format)
+      #LOG('decode : unknown or not implemented format :', 0, format)
       raise ValueError, "Sorry, the format %s is unknow or not implemented" % format
 
   def isDecodeEncodeTheSame(self, string_encoded, string_decoded, format):
