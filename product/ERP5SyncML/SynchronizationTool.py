@@ -423,7 +423,7 @@ class SynchronizationTool( SubscriptionSynchronization,
             conflict_list += [conflict.__of__(subscriber)]
     for subscription in self.getSubscriptionList():
       sub_conflict_list = subscription.getConflictList()
-      LOG('SynchronizationTool.getConflictList, sub_conflict_list',0,
+      #LOG('SynchronizationTool.getConflictList, sub_conflict_list',0,
           sub_conflict_list)
       for conflict in sub_conflict_list:
         if isinstance(conflict,str):
@@ -471,30 +471,30 @@ class SynchronizationTool( SubscriptionSynchronization,
     path = self.resolveContext(context)
     conflict_list = self.getConflictList()
     state_list= []
-    LOG('getSynchronizationState',0,'path: %s' % str(path))
+    #LOG('getSynchronizationState',0,'path: %s' % str(path))
     for conflict in conflict_list:
       if conflict.getObjectPath() == path:
-        LOG('getSynchronizationState',0,'found a conflict: %s' % str(conflict))
+        #LOG('getSynchronizationState',0,'found a conflict: %s' % str(conflict))
         state_list += [[conflict.getSubscriber(),self.CONFLICT]]
     for domain in self.getSynchronizationList():
       destination = domain.getDestinationPath()
-      LOG('getSynchronizationState',0,'destination: %s' % str(destination))
+      #LOG('getSynchronizationState',0,'destination: %s' % str(destination))
       j_path = '/'.join(path)
-      LOG('getSynchronizationState',0,'j_path: %s' % str(j_path))
+      #LOG('getSynchronizationState',0,'j_path: %s' % str(j_path))
       if j_path.find(destination)==0:
         o_id = j_path[len(destination)+1:].split('/')[0]
-        LOG('getSynchronizationState',0,'o_id: %s' % o_id)
+        #LOG('getSynchronizationState',0,'o_id: %s' % o_id)
         subscriber_list = []
         if domain.domain_type==self.PUB:
           subscriber_list = domain.getSubscriberList()
         else:
           subscriber_list = [domain]
-        LOG('getSynchronizationState, subscriber_list:',0,subscriber_list)
+        #LOG('getSynchronizationState, subscriber_list:',0,subscriber_list)
         for subscriber in subscriber_list:
           signature = subscriber.getSignature(o_id)
           if signature is not None:
             state = signature.getStatus()
-            LOG('getSynchronizationState:',0,'sub.dest :%s, state: %s' % \
+            #LOG('getSynchronizationState:',0,'sub.dest :%s, state: %s' % \
                                    (subscriber.getSubscriptionUrl(),str(state)))
             found = None
             # Make sure there is not already a conflict giving the state
@@ -515,21 +515,21 @@ class SynchronizationTool( SubscriptionSynchronization,
     object = self.unrestrictedTraverse(conflict.getObjectPath())
     subscriber = conflict.getSubscriber()
     # get the signature:
-    LOG('p_sync.applyPublisherValue, subscriber: ',0,subscriber)
+    #LOG('p_sync.applyPublisherValue, subscriber: ',0,subscriber)
     signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
     copy_path = conflict.getCopyPath()
-    LOG('p_sync.applyPublisherValue, copy_path: ',0,copy_path)
+    #LOG('p_sync.applyPublisherValue, copy_path: ',0,copy_path)
     signature.delConflict(conflict)
     if signature.getConflictList() == []:
       if copy_path is not None:
-        LOG('p_sync.applyPublisherValue, conflict_list empty on : ',0,signature)
+        #LOG('p_sync.applyPublisherValue, conflict_list empty on : ',0,signature)
         # Delete the copy of the object if the there is one
         directory = object.aq_parent
         copy_id = copy_path[-1]
-        LOG('p_sync.applyPublisherValue, copy_id: ',0,copy_id)
+        #LOG('p_sync.applyPublisherValue, copy_id: ',0,copy_id)
         if hasattr(directory.aq_base, 'hasObject'):
           # optimize the case of a BTree folder
-          LOG('p_sync.applyPublisherValue, deleting...: ',0,copy_id)
+          #LOG('p_sync.applyPublisherValue, deleting...: ',0,copy_id)
           if directory.hasObject(copy_id):
             directory._delObject(copy_id)
         elif copy_id in directory.objectIds():
@@ -543,10 +543,10 @@ class SynchronizationTool( SubscriptionSynchronization,
     apply the publisher value for all conflict of the given document
     """
     subscriber = conflict.getSubscriber()
-    LOG('applyPublisherDocument, subscriber: ',0,subscriber)
+    #LOG('applyPublisherDocument, subscriber: ',0,subscriber)
     for c in self.getConflictList(conflict.getObjectPath()):
       if c.getSubscriber() == subscriber:
-        LOG('applyPublisherDocument, applying on conflict: ',0,conflict)
+        #LOG('applyPublisherDocument, applying on conflict: ',0,conflict)
         c.applyPublisherValue()
 
   security.declareProtected(Permissions.AccessContentsInformation, 
@@ -565,9 +565,9 @@ class SynchronizationTool( SubscriptionSynchronization,
     apply the publisher value for all conflict of the given document
     """
     publisher_object_path = self.getPublisherDocumentPath(conflict)
-    LOG('getPublisherDocument publisher_object_path',0,publisher_object_path)
+    #LOG('getPublisherDocument publisher_object_path',0,publisher_object_path)
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
-    LOG('getPublisherDocument publisher_object',0,publisher_object)
+    #LOG('getPublisherDocument publisher_object',0,publisher_object)
     return publisher_object
 
 
@@ -691,7 +691,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       solve_conflict=0
     subscriber = conflict.getSubscriber()
     # get the signature:
-    LOG('p_sync.setRemoteObject, subscriber: ',0,subscriber)
+    #LOG('p_sync.setRemoteObject, subscriber: ',0,subscriber)
     signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
     # Import the conduit and get it
     conduit_name = subscriber.getConduit()
@@ -731,13 +731,13 @@ class SynchronizationTool( SubscriptionSynchronization,
       Version=Version CPS
     """
     # Retrieve the conflict object
-    LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
-                                           str(property_id),
-                                           str(object_path)))
+    #LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
+    #                                       str(property_id),
+    #                                       str(object_path)))
     for conflict in self.getConflictList():
-      LOG('manageLocalValue, conflict:',0,conflict)
+      #LOG('manageLocalValue, conflict:',0,conflict)
       if conflict.getPropertyId() == property_id:
-        LOG('manageLocalValue',0,'found the property_id')
+        #LOG('manageLocalValue',0,'found the property_id')
         if '/'.join(conflict.getObjectPath())==object_path:
           if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
             conflict.applyPublisherValue()
@@ -752,13 +752,13 @@ class SynchronizationTool( SubscriptionSynchronization,
     Do whatever needed in order to store the remote value locally
     and confirmed that the remote box should keep it's value
     """
-    LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
+    #LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
                                            str(property_id),
                                            str(object_path)))
     for conflict in self.getConflictList():
-      LOG('manageLocalValue, conflict:',0,conflict)
+      #LOG('manageLocalValue, conflict:',0,conflict)
       if conflict.getPropertyId() == property_id:
-        LOG('manageLocalValue',0,'found the property_id')
+        #LOG('manageLocalValue',0,'found the property_id')
         if '/'.join(conflict.getObjectPath())==object_path:
           if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
             conflict.applySubscriberValue()
@@ -815,11 +815,11 @@ class SynchronizationTool( SubscriptionSynchronization,
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    LOG('sendResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
-    LOG('sendResponse, to_url: ',0,to_url)
-    LOG('sendResponse, from_url: ',0,from_url)
-    LOG('sendResponse, sync_id: ',0,sync_id)
-    LOG('sendResponse, xml: \n',0,xml)
+    #LOG('sendResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
+    #LOG('sendResponse, to_url: ',0,to_url)
+    #LOG('sendResponse, from_url: ',0,from_url)
+    #LOG('sendResponse, sync_id: ',0,sync_id)
+    #LOG('sendResponse, xml: \n',0,xml)
     if domain is not None:
       gpg_key = domain.getGPGKey()
       if gpg_key not in ('',None):
@@ -831,7 +831,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         (status,output)=commands.getstatusoutput('gpg --yes --homedir \
             /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s" -se \
             /tmp/%s.gz' % (gpg_key,filename))
-        LOG('readResponse, gpg output:',0,output)
+        #LOG('readResponse, gpg output:',0,output)
         encrypted = file('/tmp/%s.gz.gpg' % filename,'r')
         xml = encrypted.read()
         encrypted.close()
@@ -845,7 +845,7 @@ class SynchronizationTool( SubscriptionSynchronization,
             return None
           # we will send an http response
           domain = aq_base(domain)
-          LOG('sendResponse, will start sendHttpResponse, xml',0,'')
+          #LOG('sendResponse, will start sendHttpResponse, xml',0,'')
           self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
                                            xml=xml, domain=domain)
@@ -853,7 +853,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         elif to_url.find('file://')==0:
           filename = to_url[len('file:/'):]
           stream = file(filename,'w')
-          LOG('sendResponse, filename: ',0,filename)
+          #LOG('sendResponse, filename: ',0,filename)
           stream.write(xml)
           stream.close()
           # we have to use local files (unit testing for example
@@ -866,8 +866,8 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   security.declarePrivate('sendHttpResponse')
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, domain=None ):
-    LOG('sendHttpResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
-    LOG('sendHttpResponse, starting with domain:',0,domain)
+    #LOG('sendHttpResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
+    #LOG('sendHttpResponse, starting with domain:',0,domain)
     #LOG('sendHttpResponse, xml:',0,xml)
     if domain is not None:
       if domain.domain_type == self.PUB:
@@ -876,7 +876,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     proxy_url = ''
     if os.environ.has_key('http_proxy'):
       proxy_url = os.environ['http_proxy']
-    LOG('sendHttpResponse, proxy_url:',0,proxy_url)
+    #LOG('sendHttpResponse, proxy_url:',0,proxy_url)
     if proxy_url !='':
       proxy_handler = urllib2.ProxyHandler({"http" :proxy_url})
     else:
@@ -902,7 +902,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       return
 
     
-    LOG('sendHttpResponse, before result, domain:',0,domain)
+    #LOG('sendHttpResponse, before result, domain:',0,domain)
     #LOG('sendHttpResponse, result:',0,result)
     if domain is not None:
       if domain.domain_type == self.SUB:
@@ -927,10 +927,10 @@ class SynchronizationTool( SubscriptionSynchronization,
     user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
     newSecurityManager(None, user)
     message_list = self.portal_activities.getMessageList()
-    LOG('sync, message_list:',0,message_list)
+    #LOG('sync, message_list:',0,message_list)
     if len(message_list) == 0:
       for subscription in self.getSubscriptionList():
-        LOG('sync, subcription:',0,subscription)
+        #LOG('sync, subcription:',0,subscription)
         self.activate(activity='RAMQueue').SubSync(subscription.getTitle())
 
   security.declarePublic('readResponse')
@@ -939,9 +939,9 @@ class SynchronizationTool( SubscriptionSynchronization,
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    LOG('readResponse, ',0,'starting')
-    LOG('readResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
-    LOG('readResponse, sync_id: ',0,sync_id)
+    #LOG('readResponse, ',0,'starting')
+    #LOG('readResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
+    #LOG('readResponse, sync_id: ',0,sync_id)
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = uf.getUserById('syncml').__of__(uf)
@@ -970,11 +970,11 @@ class SynchronizationTool( SubscriptionSynchronization,
         (status,output)=commands.getstatusoutput('gpg --homedir \
             /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s"  --decrypt \
             /tmp/%s.gz.gpg > /tmp/%s.gz' % (gpg_key, filename, filename))
-        LOG('readResponse, gpg output:', 0, output)
+        #LOG('readResponse, gpg output:', 0, output)
         (status,output)=commands.getstatusoutput('gunzip /tmp/%s.gz' % filename)
         decrypted = file('/tmp/%s' % filename,'r')
         text = decrypted.read()
-        LOG('readResponse, text:', 0, text)
+        #LOG('readResponse, text:', 0, text)
         decrypted.close()
         commands.getstatusoutput('rm -f /tmp/%s' % filename)
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
