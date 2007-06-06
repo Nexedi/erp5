@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>total = context.AccountModule_getBalance(brain=brain, selection=selection, **kw)\n
 account = brain.getObject()\n
-if account.getIsCreditAccount():\n
+if account.isCreditAccount():\n
   total = - total\n
 return total\n
 </string> </value>
