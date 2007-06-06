@@ -98,7 +98,7 @@ for wf in context.portal_workflow.objectValues():\n
         if state.title != \'\' :\n
           state_var_title = \'%s_title\' % state_var\n
           translated_message = context.Localizer.erp5_ui.gettext(state.title.decode(\'utf-8\'), lang=lang).encode(\'utf-8\')\n
-          key = (lang, state_var_title, state_id)\n
+          key = (lang, state_var_title, state.title)\n
           if not translated_keys.has_key(key):\n
             translated_keys[key] = None # mark as translated\n
             obj = newTempBase(context, \'temp_translation_%d\' % i,\n
