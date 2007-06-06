@@ -345,7 +345,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>destination_payment_reference</string>
+                          <string>destination_payment_internal_bank_account_number</string>
                           <string>Account</string>
                         </tuple>
                         <tuple>
@@ -402,7 +402,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>destination_payment_internal_bank_account_number</string>
+                          <string>destination_payment_internal_bank_account_number</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

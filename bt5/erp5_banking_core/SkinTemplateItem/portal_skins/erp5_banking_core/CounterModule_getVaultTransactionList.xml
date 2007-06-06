@@ -73,6 +73,10 @@
 \n
 from Products.ERP5Type.Document import newTempBase\n
 \n
+if from_date is not None:\n
+  if from_date == at_date:\n
+    from_date=None\n
+\n
 #context.log(\'CounterModule_getVaultTransactionList vault:\',vault)\n
 def getTranslatedTitleFromCategoryUrl(category):\n
   return context.portal_categories.getCategoryValue(category).getTranslatedTitle()\n
@@ -346,6 +350,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
+                            <string>None</string>
                             <string>getTranslatedTitleFromCategoryUrl</string>
                             <string>getTitleFromCategoryUrl</string>
                             <string>getVariationTitleList</string>
@@ -362,7 +367,6 @@ return repr([x for x in total_inventory_list])\n
                             <string>_write_</string>
                             <string>total_inventory_list</string>
                             <string>inventory_kw</string>
-                            <string>None</string>
                             <string>_getitem_</string>
                             <string>len</string>
                             <string>kw_has_cash_status</string>

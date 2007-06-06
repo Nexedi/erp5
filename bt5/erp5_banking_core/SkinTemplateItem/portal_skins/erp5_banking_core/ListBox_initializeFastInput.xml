@@ -67,62 +67,83 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# Make sure that there is no stock on counters and that there\n
-# is not too much money into the usual cash\n
-# This is usefull when we close a counter date\n
-\n
-from Products.ERP5Type.Message import Message\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-\n
-if site is None:\n
-  root_site_url = context.Baobab_getUserAssignedRootSiteList()[0]\n
-  site = context.portal_categories.restrictedTraverse(root_site_url)\n
-\n
-resource_uid_list = [x.uid for x in context.currency_cash_module.searchFolder()]\n
+from Products.ERP5Type.Document import newTempBase\n
+from string import zfill\n
 \n
 \n
-counter_vault_list = context.Delivery_getVaultItemList(\n
-    user_site=0,base_site=site.getRelativeUrl(),all=1,\n
-    vault_type=(\'site/surface/banque_interne\',\'site/surface/gros_paiement\',\n
-               \'site/surface/gros_versement\',\'site/surface/operations_diverses\',\n
-               \'site/surface/salle_tri\',\n
-               \'site/surface/caisse_courante/encaisse_des_devises\'))\n
-for counter_vault in counter_vault_list:\n
-  counter_vault_url = counter_vault[1]\n
-  if counter_vault_url==\'\':\n
-    continue\n
-  counter_title = counter_vault[0]\n
-  inventory_list = context.portal_simulation.getCurrentInventoryList(\n
-                                                     node=counter_vault_url,\n
-                                                     resource_uid=resource_uid_list,\n
-                                                     group_by_resource=1,\n
-                                                     group_by_variation=1,\n
-                                                     ignore_variation=0)\n
-  if len(inventory_list)>0:\n
-    for inventory in inventory_list:\n
-      if inventory.total_quantity>0:\n
-        message = Message(domain=\'ui\',\n
-                    message=\'Sorry, some resources are still remaining here : $counter_title\',\n
-                    mapping={\'counter_title\':counter_title})\n
-        raise ValidationFailed,message\n
+request = context.REQUEST\n
 \n
-max_price = context.portal_preferences.getPreferredUsualCashMaxRenderingPrice()\n
-if max_price is None:\n
-  message = Message(domain=\'ui\',\n
-              message=\'Sorry, you must defined the max price for the usual cash in your preference\')\n
-  raise ValidationFailed,message\n
+# It must be possible to initialise the fast input, and to add empty lines after\n
+if request.has_key(\'my_empty_line_number\'):\n
+  empty_line_number = request[\'my_empty_line_number\']\n
 \n
-usual_cash = site.getRelativeUrl() + \'/surface/caisse_courante/encaisse_des_billets_et_monnaies\'\n
-inventory_list = context.portal_simulation.getCurrentInventoryList(\n
-                         node=usual_cash,\n
-                         resource_uid=resource_uid_list)\n
-total_price = sum([x.total_price for x in inventory_list])\n
-context.log(\'current_price\',total_price)\n
 \n
-if total_price > max_price:\n
-  message = Message(domain=\'ui\',\n
-              message=\'Sorry, the amount in the usual cash is too high\')\n
-  raise ValidationFailed,message\n
+l = []\n
+first_empty_line_id = 1\n
+portal_object = context.getPortalObject()\n
+int_len = 3\n
+\n
+def get_fast_input_discriminant(line_id):\n
+  line = listbox.get(line_id)\n
+  if line is not None:\n
+    resource_id = line.get(\'resource_id\')\n
+    if resource_id is not None:\n
+      cash_currency = context.currency_cash_module.get(resource_id)\n
+      if cash_currency is not None and cash_currency.hasBasePrice():\n
+        return (cash_currency.getPortalType(), -cash_currency.getBasePrice(), line_id) # First sort by base price (desc), then by line id (asc)\n
+  return line_id\n
+\n
+def sort_fast_input_lines(x, y):\n
+  criterion_x = get_fast_input_discriminant(x)\n
+  criterion_y = get_fast_input_discriminant(y)\n
+  if criterion_x < criterion_y:\n
+    return -1\n
+  elif criterion_x > criterion_y:\n
+    return 1\n
+  else:\n
+    return 0\n
+\n
+if hasattr(request, \'listbox\'):\n
+  # initialize the listbox \n
+  listbox=request[\'listbox\']\n
+\n
+  keys_list = listbox.keys()\n
+\n
+  if keys_list != []:\n
+    #keys_list.sort(lambda x,y: cmp(int(x),int(y)))\n
+    keys_list.sort(sort_fast_input_lines)\n
+    first_empty_line_id = int(keys_list[-1])+1\n
+\n
+  for i in keys_list:\n
+    o = newTempBase(portal_object, i)\n
+    o.setUid(\'new_%s\' % zfill(i,int_len))\n
+\n
+    is_empty = 1\n
+\n
+    for key in listbox[i]:\n
+      value = listbox[i][key]\n
+      # 0 was added because of checkbox field in some fast input\n
+      if (value not in [\'\',None,0]) and (key != \'listbox_key\'):\n
+        is_empty = 0\n
+      if (request.has_key(\'field_errors\')):\n
+        is_empty = 0\n
+      #o.edit(key=listbox[i][key])\n
+      o.setProperty(key,listbox[i][key])\n
+\n
+    if not is_empty:\n
+      l.append(o)\n
+    \n
+# add empty lines\n
+if not(request.has_key(\'field_errors\')):\n
+  for i in range(first_empty_line_id,first_empty_line_id+empty_line_number):\n
+\n
+    o = newTempBase(portal_object, str(i))\n
+    o.setUid(\'new_%s\' % zfill(i,int_len))   \n
+    # zfill is used here to garantee sort order - XXX - cleaner approach required\n
+    l.append(o)\n
+\n
+\n
+return l\n
 
 
 ]]></string> </value>
@@ -147,7 +168,7 @@ if total_price > max_price:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site=None</string> </value>
+            <value> <string>empty_line_number=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -173,33 +194,35 @@ if total_price > max_price:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>site</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>None</string>
-                            <string>_getitem_</string>
+                            <string>empty_line_number</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>string</string>
+                            <string>zfill</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>root_site_url</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>request</string>
+                            <string>_getitem_</string>
+                            <string>l</string>
+                            <string>first_empty_line_id</string>
+                            <string>portal_object</string>
+                            <string>int_len</string>
+                            <string>listbox</string>
+                            <string>get_fast_input_discriminant</string>
+                            <string>sort_fast_input_lines</string>
+                            <string>hasattr</string>
+                            <string>keys_list</string>
+                            <string>int</string>
                             <string>_getiter_</string>
-                            <string>x</string>
-                            <string>resource_uid_list</string>
-                            <string>counter_vault_list</string>
-                            <string>counter_vault</string>
-                            <string>counter_vault_url</string>
-                            <string>counter_title</string>
-                            <string>inventory_list</string>
-                            <string>len</string>
-                            <string>inventory</string>
-                            <string>message</string>
-                            <string>max_price</string>
-                            <string>usual_cash</string>
-                            <string>sum</string>
-                            <string>total_price</string>
+                            <string>i</string>
+                            <string>o</string>
+                            <string>is_empty</string>
+                            <string>key</string>
+                            <string>value</string>
+                            <string>None</string>
+                            <string>range</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
@@ -212,13 +235,17 @@ if total_price > max_price:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_checkStockBeforeClosingDate</string> </value>
+            <value> <string>ListBox_initializeFastInput</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

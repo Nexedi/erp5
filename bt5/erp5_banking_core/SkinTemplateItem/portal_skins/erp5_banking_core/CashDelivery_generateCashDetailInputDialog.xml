@@ -71,6 +71,9 @@
 # when the user clicks on the Update button, listbox is passed, and\n
 # the contents must be preserved in the form.\n
 \n
+from Products.ERP5Type.Cache import CachingMethod\n
+portal = context.getPortalObject()\n
+\n
 if listbox is None:\n
   # This is the first time.\n
   cash_status_list          = cash_detail_dict[\'cash_status_list\']\n
@@ -140,9 +143,27 @@ if listbox is None:\n
 \n
   # Get the currency cash objects for a given currency.\n
   currency = \'currency_module/%s\' % operation_currency\n
-  result = context.portal_catalog(portal_type = currency_cash_portal_type)\n
-  currency_cash_list = [x.getObject() for x in result if x.getObject().getPriceCurrency() == currency and len(x.getObject().getVariationList())>0]\n
-  #context.log(\'CashDelivery_generateCashDetailInputDialog\', \'currency_list = %r, operation_cur = %s\' % (currency_cash_list, operation_currency))\n
+  # This is very bad to call catalog each time, it is the bottleneck,\n
+  # So we will add a caching method here\n
+  def getCurrencyCashRelativeUrlList(currency=None, currency_cash_portal_type=None):\n
+    result = context.portal_catalog(portal_type = currency_cash_portal_type)\n
+    currency_cash_list = [x.getObject() for x in result \n
+                          if x.getObject().getPriceCurrency() == currency \n
+                          and len(x.getObject().getVariationList())>0]\n
+    return [x.getRelativeUrl() for x in currency_cash_list]\n
+  getCurrencyCashRelativeUrlList = CachingMethod(getCurrencyCashRelativeUrlList, \n
+                               id=(\'CashDelivery_generateCashDetailInputDialog\', \n
+                                              \'getCurrencyCashRelativeUrlList\'), \n
+                               cache_factory=\'erp5_ui_long\')\n
+  currency_cash_url_list = getCurrencyCashRelativeUrlList(currency=currency,\n
+                              currency_cash_portal_type=currency_cash_portal_type)\n
+  currency_cash_list = [portal.restrictedTraverse(x) for x in currency_cash_url_list]\n
+\n
+  # This is the same thing, but by using catalog, so this is not nice at all\n
+  #result = context.portal_catalog(portal_type = currency_cash_portal_type)\n
+  #currency_cash_list = [x.getObject() for x in result if x.getObject().getPriceCurrency() == currency and len(x.getObject().getVariationList())>0]\n
+\n
+  context.log(\'CashDelivery_generateCashDetailInputDialog\', \'currency_list = %r, operation_cur = %s\' % ([x.getTitle() for x in currency_cash_list], operation_currency))\n
 \n
   # If only one variation is specified, we want to display a part of cash currencies which\n
   # exists in this variation (creation year, such as 2003).\n
@@ -155,6 +176,7 @@ if listbox is None:\n
     currency_cash_list = new_currency_cash_list\n
 \n
   currency_cash_list = context.Base_sortCurrencyCashList(currency_cash_list)\n
+  context.log(\'CashDelivery_generateCashDetailInputDialog after sort\', \'currency_list = %r, operation_cur = %s\' % ([x.getTitle() for x in currency_cash_list], operation_currency))\n
 \n
   # Get the axis information based on the specified column base category.\n
   # axis_list_dict contains the lists of objects, while axis_dict contains\n
@@ -290,6 +312,7 @@ if listbox is None:\n
         currency_dict[\'column%d\' % (counter + 1)] = 0\n
       listbox.append(currency_dict)\n
       \n
+  context.log(\'generateFastInput, listbox\',listbox)\n
   other_parameter_list = (operation_currency, line_portal_type, read_only, column_base_category, use_inventory)\n
   context.Base_updateDialogForm(listbox=listbox\n
                                 , calculated_price=total_price\n
@@ -355,9 +378,13 @@ else :\n
   for line in listbox:\n
     # must get the resource\n
     resource_id = line[\'resource_id\']\n
-    resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\') ,id = resource_id)\n
-    resource_price = resource_list[0].getObject().getBasePrice()\n
-    line[\'resource_translated_title\'] = resource_list[0].getObject().getTranslatedTitle()\n
+    # This is a huge performance problem to call many times the catalog\n
+    # for each fast input !!!!\n
+    #resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\') ,id = resource_id)\n
+    #resource_price = resource_list[0].getObject().getBasePrice()\n
+    resource_value = context.currency_cash_module[resource_id]\n
+    resource_price = resource_value.getObject().getBasePrice()\n
+    line[\'resource_translated_title\'] = resource_value.getTranslatedTitle()\n
     # get the number of lines to add\n
     if line.has_key(\'number_line_to_add\'):\n
       lines_to_add = int(line[\'number_line_to_add\'])\n
@@ -452,6 +479,11 @@ else :\n
                             <string>listbox</string>
                             <string>cash_detail_dict</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
                             <string>None</string>
                             <string>_getitem_</string>
                             <string>cash_status_list</string>
@@ -465,8 +497,6 @@ else :\n
                             <string>False</string>
                             <string>use_inventory</string>
                             <string>list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>generic_prioritized_sort</string>
                             <string>prioritized_banknote_emission_letter_list</string>
                             <string>prioritized_coin_cash_status_list</string>
@@ -483,9 +513,10 @@ else :\n
                             <string>banknote_emission_letter_list</string>
                             <string>coin_emission_letter_list</string>
                             <string>currency</string>
-                            <string>result</string>
-                            <string>len</string>
+                            <string>getCurrencyCashRelativeUrlList</string>
+                            <string>currency_cash_url_list</string>
                             <string>currency_cash_list</string>
+                            <string>len</string>
                             <string>new_currency_cash_list</string>
                             <string>variation</string>
                             <string>currency_cash</string>
@@ -527,7 +558,7 @@ else :\n
                             <string>int</string>
                             <string>next_listbox_key</string>
                             <string>resource_id</string>
-                            <string>resource_list</string>
+                            <string>resource_value</string>
                             <string>lines_to_add</string>
                             <string>xrange</string>
                             <string>num</string>

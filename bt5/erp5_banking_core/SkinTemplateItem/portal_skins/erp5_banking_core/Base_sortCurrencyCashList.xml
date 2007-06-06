@@ -79,13 +79,13 @@
       a = a_source.getResourceValue()\n
       b = b_source.getResourceValue()\n
 \n
-    # First, compare the base prices (such as 1000 and 2000 Francs CFA).\n
-    result = - cmp(a.getBasePrice(), b.getBasePrice())\n
+    # Second, compare the portal types.\n
+    result = cmp(a.getPortalType(), b.getPortalType())\n
     if result != 0:\n
       return result\n
 \n
-    # Second, compare the portal types.\n
-    result = cmp(a.getPortalType(), b.getPortalType())\n
+    # First, compare the base prices (such as 1000 and 2000 Francs CFA).\n
+    result = - cmp(a.getBasePrice(), b.getBasePrice())\n
     if result != 0:\n
       return result\n
 \n

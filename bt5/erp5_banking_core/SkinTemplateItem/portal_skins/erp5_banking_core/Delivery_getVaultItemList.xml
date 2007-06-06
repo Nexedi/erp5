@@ -97,7 +97,7 @@ from Products.ERP5Type.Cache import CachingMethod\n
 def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
     user_site=1, leaf_node=1, strict_membership=0, assignment_list=None,\n
     site_list=None, with_base=1, all=0, first_level=0,main_agency=0,\n
-    exclude_site_list=None):\n
+    exclude_site_list=None,mode_test=0):\n
 \n
   if vault_type is None:\n
     organisation_list = []\n
@@ -184,11 +184,6 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
   vault_dict = {}\n
   # Transform each line of the vault list\n
   keep_level = []\n
-  erp5_site = context.getPortalObject()\n
-  mode_test = 0\n
-  if hasattr(erp5_site, \'functionnal_test_mode\'):\n
-    if getattr(erp5_site,  \'functionnal_test_mode\') == 1:\n
-      mode_test = 1\n
   for vault_item in vault_list:\n
     # do not include testsite if not in test mode\n
     if mode_test == 0 and \'testsite\' in vault_item[1]:\n
@@ -223,6 +218,12 @@ if vault_type is None:\n
   assignment_list = context.Baobab_getUserAssignmentList()\n
 else:\n
   assignment_list = None\n
+\n
+erp5_site = context.getPortalObject()\n
+mode_test = 0\n
+if hasattr(erp5_site, \'functionnal_test_mode\'):\n
+  if getattr(erp5_site,  \'functionnal_test_mode\') == 1:\n
+    mode_test = 1\n
 \n
 user_site_list = []\n
 if user_site == 1 or owner_site==1:\n
@@ -260,7 +261,8 @@ if exclude_user_site:\n
 vault_list = getVaultItemList(vault_type=vault_type, exclude_vault_type=exclude_vault_type,\n
   user_site=user_site, leaf_node=leaf_node, strict_membership=strict_membership,\n
   assignment_list=assignment_list, site_list=site_list, with_base=with_base, all=all,\n
-  first_level=first_level,main_agency=main_agency,exclude_site_list=exclude_site_list)\n
+  first_level=first_level,main_agency=main_agency,exclude_site_list=exclude_site_list,\n
+  mode_test=mode_test)\n
 \n
 if user_vault == 1:\n
   if len(user_site_list)==0:\n
@@ -366,6 +368,10 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>assignment_list</string>
+                            <string>erp5_site</string>
+                            <string>mode_test</string>
+                            <string>hasattr</string>
+                            <string>getattr</string>
                             <string>user_site_list</string>
                             <string>_getitem_</string>
                             <string>new_site_list</string>
