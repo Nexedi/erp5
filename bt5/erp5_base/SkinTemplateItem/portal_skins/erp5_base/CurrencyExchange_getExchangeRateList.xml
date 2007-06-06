@@ -135,6 +135,7 @@ else:\n
       start_date = context.getStartDate()\n
   mapped_value = context.portal_domains.generateMappedValue(object, \n
                                                    has_cell_content=0, \n
+                                                   validation_state=\'validated\',\n
                                                    sort_method=sort_by_date)\n
   result = [getattr(mapped_value, \'base_price\', None), \n
             getattr(mapped_value, \'discount\', None)]\n
