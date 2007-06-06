@@ -74,32 +74,39 @@
 """\n
 \n
 translateString = context.Base_translateString\n
-\n
-vals = {}\n
+doc_info = {}\n
 owner_list = context.Base_getOwnerInfoList()\n
-vals[\'owner\'] = \'; \'.join([owner[\'title\'] for owner in owner_list])\n
-if context.getModificationDate() is not None:\n
-  vals[\'moddate\'] = context.WebSite_getFancyRelativeDate(context.getModificationDate())\n
-publdate = context.Document_getLastWorkflowStateEntryDate(state=(\'public,\'), state_name=\'validation_state\')\n
-if publdate is not None:\n
-  vals[\'publdate\'] = context.WebSite_getFancyRelativeDate(publdate)\n
-reldate = context.Document_getLastWorkflowStateEntryDate(state=(\'released,\'), state_name=\'validation_state\')\n
-if reldate is not None:\n
-  vals[\'reldate\'] = context.WebSite_getFancyRelativeDate(reldate)\n
-try:\n
-  vals[\'status\'] = context.getTranslatedValidationStateTitle() or \'\'\n
-except AttributeError:\n
-  vals[\'status\'] = \'\'\n
-try:\n
-  vals[\'group\'] = context.getGroup() or \'\'\n
-except AttributeError:\n
-  vals[\'group\'] = \'\'\n
-try:\n
-  vals[\'project\'] = context.getSourceProjectTitle() or \'\'\n
-except AttributeError:\n
-  vals[\'project\'] = \'\'\n
+doc_info[\'owner\'] = \'; \'.join([owner[\'title\'] for owner in owner_list])\n
 \n
-return context.Document_viewPopupTemplate(**vals)\n
+if context.getModificationDate() is not None:\n
+  doc_info[\'modification_date\'] = context.WebSite_getFancyRelativeDate(context.getModificationDate())\n
+  \n
+publication_date = context.Document_getLastWorkflowStateEntryDate(state=(\'public,\'),\n
+                                                                  state_name=\'validation_state\')\n
+if publication_date is not None:\n
+  doc_info[\'publication_date\'] = context.WebSite_getFancyRelativeDate(publication_date)\n
+  \n
+release_date = context.Document_getLastWorkflowStateEntryDate(state=(\'released,\'),\n
+                                                              state_name=\'validation_state\')\n
+if release_date is not None:\n
+  doc_info[\'release_date\'] = context.WebSite_getFancyRelativeDate(release_date)\n
+  \n
+try:\n
+  doc_info[\'status\'] = context.getTranslatedValidationStateTitle() or \'\'\n
+except AttributeError:\n
+  doc_info[\'status\'] = \'\'\n
+  \n
+try:\n
+  doc_info[\'group\'] = context.getGroup() or \'\'\n
+except AttributeError:\n
+  doc_info[\'group\'] = \'\'\n
+  \n
+try:\n
+  doc_info[\'project\'] = context.getSourceProjectTitle() or \'\'\n
+except AttributeError:\n
+  doc_info[\'project\'] = \'\'\n
+\n
+return context.Document_viewPopupTemplate(**doc_info)\n
 </string> </value>
         </item>
         <item>
@@ -157,7 +164,7 @@ return context.Document_viewPopupTemplate(**vals)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
-                            <string>vals</string>
+                            <string>doc_info</string>
                             <string>owner_list</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -166,8 +173,8 @@ return context.Document_viewPopupTemplate(**vals)\n
                             <string>_getitem_</string>
                             <string>_write_</string>
                             <string>None</string>
-                            <string>publdate</string>
-                            <string>reldate</string>
+                            <string>publication_date</string>
+                            <string>release_date</string>
                             <string>AttributeError</string>
                             <string>_apply_</string>
                           </tuple>
