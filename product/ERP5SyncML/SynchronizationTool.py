@@ -426,8 +426,6 @@ class SynchronizationTool( SubscriptionSynchronization,
       #LOG('SynchronizationTool.getConflictList, sub_conflict_list',0,
           #sub_conflict_list)
       for conflict in sub_conflict_list:
-        if isinstance(conflict,str):
-          import pdb; pdb.set_trace()
         #conflict.setDomain('Subscription')
         conflict.setSubscriber(subscription)
         #conflict.setDomainId(subscription.getId())
