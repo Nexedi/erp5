@@ -493,7 +493,7 @@ class SynchronizationTool( SubscriptionSynchronization,
           if signature is not None:
             state = signature.getStatus()
             #LOG('getSynchronizationState:',0,'sub.dest :%s, state: %s' % \
-                                   (subscriber.getSubscriptionUrl(),str(state)))
+                                   #(subscriber.getSubscriptionUrl(),str(state)))
             found = None
             # Make sure there is not already a conflict giving the state
             for state_item in state_list:
