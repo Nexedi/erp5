@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="StringField" module="Products.Formulator.StandardFields"/>
+        <global name="FloatField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_reference</string> </value>
+            <value> <string>your_destination_payment_available_position</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -28,12 +28,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
+                    <key> <string>not_float</string> </key>
+                    <value> <string>You did not enter a floating point number.</string> </value>
                 </item>
                 <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>Too much input was given.</string> </value>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -87,7 +87,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>input_style</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -96,14 +100,6 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -127,7 +123,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -147,7 +145,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -162,7 +162,13 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>input_style</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -171,14 +177,6 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -198,7 +196,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>figure</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -237,8 +235,12 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>input_style</string> </key>
+                    <value> <string>-1234.5</string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <int>2</int> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -246,15 +248,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Reference</string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Available Position</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -262,6 +256,54 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getDestinationPaymentValue().BankAccount_getAvailablePosition()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: \'banking/comptable\' in here.Baobab_getUserAssignedFunctionList()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>string:-1 234.5 | preferences/getPreferredMoneyQuantityStyle</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -109,7 +109,8 @@
                         <string>my_resource</string>
                         <string>my_translated_portal_type</string>
                         <string>my_destination_payment_reference</string>
-                        <string>my_destination_reference</string>
+                        <string>your_destination_payment_available_position</string>
+                        <string>your_destination_payment_position</string>
                       </list>
                     </value>
                 </item>
