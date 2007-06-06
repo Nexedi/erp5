@@ -76,9 +76,11 @@
   WARNING: implementation depends on the fact\n
   that owner is being indexed.\n
 """\n
+if user is None:\n
+  user = context.portal_membership.getAuthenticatedMember()  \n
 \n
 kw[\'portal_type\'] = context.getPortalMyDocumentTypeList()\n
-kw[\'owner\'] = context.portal_membership.getAuthenticatedMember()\n
+kw[\'owner\'] = user\n
 return context.portal_catalog(**kw)\n
 </string> </value>
         </item>
@@ -130,6 +132,7 @@ return context.portal_catalog(**kw)\n
                           <tuple>
                             <string>user</string>
                             <string>kw</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>_write_</string>
