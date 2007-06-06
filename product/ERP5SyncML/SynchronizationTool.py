@@ -751,8 +751,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     and confirmed that the remote box should keep it's value
     """
     #LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
-                                           str(property_id),
-                                           str(object_path)))
+                         #                  str(property_id),
+                         #                  str(object_path)))
     for conflict in self.getConflictList():
       #LOG('manageLocalValue, conflict:',0,conflict)
       if conflict.getPropertyId() == property_id:
