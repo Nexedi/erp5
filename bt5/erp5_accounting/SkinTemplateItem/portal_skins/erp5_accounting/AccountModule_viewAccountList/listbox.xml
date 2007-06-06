@@ -366,11 +366,11 @@
                           <string>Currency</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getDebitBalance</string>
+                          <string>debit_balance</string>
                           <string>Debit Balance</string>
                         </tuple>
                         <tuple>
-                          <string>AccountModule_getCreditBalance</string>
+                          <string>credit_balance</string>
                           <string>Credit Balance</string>
                         </tuple>
                         <tuple>
