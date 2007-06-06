@@ -485,12 +485,17 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>base_category_view_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>int_index</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
