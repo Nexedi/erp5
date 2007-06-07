@@ -66,7 +66,7 @@ class Telephone(Coordinate, Base):
     # +[country]([area])[number]/[extension]
     # or in syntax retured by asText
     # +[country](0)[area]-[number]/[extension]
-    standard_parser = re.compile('\+(?P<country>\d{,2})\(0\)(?P<area>\d+)-(?P<number>[^/]+)(\/(?P<ext>\d+))?')
+    standard_parser = re.compile('\+(?P<country>\d{,3})\(0\)(?P<area>\d+)-(?P<number>[^/]+)(\/(?P<ext>\d+))?')
     input_parser = re.compile('(\+(?P<country>\d*))?(\((?P<area>\d*)\))?(?P<number>[^/]*)(\/(?P<ext>\d+))?')
 
     # Declarative properties
