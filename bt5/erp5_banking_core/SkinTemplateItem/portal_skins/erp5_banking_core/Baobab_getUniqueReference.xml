@@ -77,7 +77,7 @@ N_ = context.Base_translateString\n
 \n
 # if it\'s not defined, try to generate it\n
 if reference in (None, \'\') or not str(reference).startswith(application_id):\n
-  date = context.getStopDate()\n
+  date = context.getCreationDate()\n
   if date in (None, \'\'):\n
     message = N_("No date defined")\n
     return message\n
