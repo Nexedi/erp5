@@ -126,10 +126,10 @@ class CacheTool(BaseTool):
     else:
       db_host = lockreq
     if '@' in db_host:
-      db, host = split(db_host,'@',1)
+      db, host = db_host.split('@',1)
       kwargs['db'] = db
       if ':' in host:
-        host, port = split(host,':',1)
+        host, port = host.split(':',1)
         kwargs['port'] = int(port)
       kwargs['host'] = host
     else:
