@@ -69,7 +69,8 @@
 
 rate_list = context.CurrencyExchange_getExchangeRateList(from_currency=from_currency,\n
                  to_currency=to_currency, \n
-                 currency_exchange_type=currency_exchange_type)\n
+                 currency_exchange_type=currency_exchange_type,\n
+                 start_date=start_date)\n
 rate = None\n
 if len(rate_list) > 0:\n
   rate = rate_list[0]\n
@@ -106,7 +107,7 @@ return round(rate * price)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>from_currency=None,to_currency=None, currency_exchange_type=None</string> </value>
+            <value> <string>from_currency=None,to_currency=None, currency_exchange_type=None, start_date</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -134,7 +135,7 @@ return round(rate * price)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -143,6 +144,7 @@ return round(rate * price)\n
                             <string>from_currency</string>
                             <string>to_currency</string>
                             <string>currency_exchange_type</string>
+                            <string>start_date</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>rate_list</string>
