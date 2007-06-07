@@ -1408,6 +1408,7 @@ class ERP5Generator(PortalGenerator):
       'Search ZCatalog'              : ('Manager', 'Member'),
       'Set own password'             : ('Manager', ),
       'Set own properties'           : ('Manager', 'Member'),
+      'Use mailhost services'        : ('Manager', 'Member'),
       'Undo changes'                 : ('Manager', 'Owner'),
       'View'                         : ('Manager', 'Member',
                                         'Owner', 'Anonymous'),
