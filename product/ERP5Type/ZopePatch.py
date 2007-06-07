@@ -50,6 +50,7 @@ from Products.ERP5Type.patches import OFSFolder
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import Connection
 from Products.ERP5Type.patches import copy_reg_patch
+from Products.ERP5Type.patches import PersistencePatch
 
 # for python2.3 compatibility
 import threading
