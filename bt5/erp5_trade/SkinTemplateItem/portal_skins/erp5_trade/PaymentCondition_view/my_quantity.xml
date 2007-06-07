@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="FloatField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.StandardFields</string>
+          <string>FloatField</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -174,7 +177,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>figure</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -206,7 +209,7 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string>align="right"</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>

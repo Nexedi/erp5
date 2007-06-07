@@ -251,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Reference Date</string> </value>
+                    <value> <string>Trade Date</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/trade_date/getCategoryChildLogicalPathItemList</string> </value>
+            <value> <string>here/portal_categories/trade_date/getCategoryChildTranslatedLogicalPathItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

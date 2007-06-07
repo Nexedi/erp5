@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="DateTimeField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.StandardFields</string>
+          <string>DateTimeField</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
