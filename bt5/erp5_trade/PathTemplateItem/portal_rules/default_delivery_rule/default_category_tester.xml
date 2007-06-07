@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.CategoryDivergenceTester</string>
-          <string>CategoryDivergenceTester</string>
-        </tuple>
-        <none/>
+        <global name="CategoryDivergenceTester" module="Products.ERP5Type.Document.CategoryDivergenceTester"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -341,6 +338,18 @@
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Warehouse</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Inventory Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>Inventory State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -406,7 +415,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>10</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -423,6 +432,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -461,7 +474,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>inventory_selection</string> </value>
+                    <value> <string>inventory_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -509,11 +522,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

@@ -38,9 +38,6 @@
    <name>Add CMF Caching Policy Managers</name>
   </permission>
   <permission type='list'>
-   <name>Add CMF Calendar Tools</name>
-  </permission>
-  <permission type='list'>
    <name>Add CMF Core Tools</name>
   </permission>
   <permission type='list'>
@@ -62,10 +59,37 @@
    <name>Add CMFActivity Tools</name>
   </permission>
   <permission type='list'>
+   <name>Add CMFCalendar Tools</name>
+  </permission>
+  <permission type='list'>
    <name>Add CMFCategory Tools</name>
   </permission>
   <permission type='list'>
    <name>Add CMFMailIn Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMFWiki Comment</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ChartObject</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ChartTemplate</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Elements</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Slot Classs</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Slots</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composites</name>
   </permission>
   <permission type='list'>
    <name>Add Configured CMF Sites</name>
@@ -176,6 +200,9 @@
    <name>Add Plugin Registrys</name>
   </permission>
   <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
+  </permission>
+  <permission type='list'>
    <name>Add Python Scripts</name>
   </permission>
   <permission type='list'>
@@ -183,6 +210,9 @@
   </permission>
   <permission type='list'>
    <name>Add ReStructuredText Documents</name>
+  </permission>
+  <permission type='list'>
+   <name>Add RenderableObject</name>
   </permission>
   <permission type='list'>
    <name>Add Session Data Manager</name>
@@ -200,9 +230,6 @@
    <name>Add User Folders</name>
   </permission>
   <permission type='list'>
-   <name>Add Versions</name>
-  </permission>
-  <permission type='list'>
    <name>Add Virtual Host Monsters</name>
   </permission>
   <permission type='list'>
@@ -215,19 +242,19 @@
    <name>Add Z MySQL Database Connections</name>
   </permission>
   <permission type='list'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='list'>
    <name>Add ZCatalogs</name>
   </permission>
   <permission type='list'>
-   <name>Add ZMailIn Clients</name>
-  </permission>
-  <permission type='list'>
-   <name>Add ZMailMessages</name>
+   <name>Add ZGDCharts</name>
   </permission>
   <permission type='list'>
    <name>Add ZODB Mount Points</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Zope Schedulers</name>
   </permission>
   <permission type='list'>
    <name>Add Zope Tutorials</name>
@@ -249,6 +276,12 @@
   </permission>
   <permission type='list'>
    <name>Change Browser Id Manager</name>
+  </permission>
+  <permission type='list'>
+   <name>Change CMFWiki Regulations</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Composites</name>
   </permission>
   <permission type='list'>
    <name>Change DTML Documents</name>
@@ -296,10 +329,7 @@
    <name>Change Versions</name>
   </permission>
   <permission type='list'>
-   <name>Change ZMailIn</name>
-  </permission>
-  <permission type='list'>
-   <name>Change ZMailMessages</name>
+   <name>Change ZGDChart</name>
   </permission>
   <permission type='list'>
    <name>Change bindings</name>
@@ -332,6 +362,9 @@
    <name>Copy or Move</name>
   </permission>
   <permission type='list'>
+   <name>Create CMFWiki Page</name>
+  </permission>
+  <permission type='list'>
    <name>Create Transient Objects</name>
   </permission>
   <permission type='list'>
@@ -347,10 +380,16 @@
    <name>Download ExtFile/ExtImage</name>
   </permission>
   <permission type='list'>
+   <name>Edit CMFWiki Page</name>
+  </permission>
+  <permission type='list'>
    <name>Edit Factories</name>
   </permission>
   <permission type='list'>
    <name>Edit ReStructuredText</name>
+  </permission>
+  <permission type='list'>
+   <name>Edit target</name>
   </permission>
   <permission type='list'>
    <name>FTP access</name>
@@ -431,13 +470,13 @@
    <name>Modify portal content</name>
   </permission>
   <permission type='list'>
+   <name>Move CMFWiki Page</name>
+  </permission>
+  <permission type='list'>
    <name>Open/Close Database Connection</name>
   </permission>
   <permission type='list'>
    <name>Open/Close Database Connections</name>
-  </permission>
-  <permission type='list'>
-   <name>Post mail to ZMailIn</name>
   </permission>
   <permission type='list'>
    <name>Query Vocabulary</name>
@@ -485,6 +524,9 @@
    <name>Use Factories</name>
   </permission>
   <permission type='list'>
+   <name>Use external editor</name>
+  </permission>
+  <permission type='list'>
    <name>Use mailhost services</name>
   </permission>
   <permission type='list'>
@@ -492,9 +534,6 @@
   </permission>
   <permission type='list'>
    <name>View History</name>
-  </permission>
-  <permission type='list'>
-   <name>View ZMailMessage</name>
   </permission>
   <permission type='list'>
    <name>View management screens</name>
@@ -507,6 +546,12 @@
   </permission>
   <permission type='list'>
    <name>WebDAV access</name>
+  </permission>
+  <permission type='list'>
+   <name>ZopeScheduler: Manage scheduling task</name>
+  </permission>
+  <permission type='list'>
+   <name>ZopeScheduler: Schedule tasks</name>
   </permission>
  </permission_list>
  <portal_type>Purchase Supply Module</portal_type>

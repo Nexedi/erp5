@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.States</string>
-          <string>StateDefinition</string>
-        </tuple>
-        <none/>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -34,6 +31,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
               </tuple>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -259,6 +256,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>new_container_id</string>
                             <string>int</string>
                             <string>container</string>
+                            <string>_inplacevar_</string>
                             <string>resource_url</string>
                             <string>line_variation_base_category_dict</string>
                             <string>line_variation_category_list</string>

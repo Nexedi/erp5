@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -348,10 +345,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
@@ -428,7 +421,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>100</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -445,6 +438,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -485,8 +482,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>id</string>
+                          <string>resource_title</string>
+                          <string>resource_title</string>
                         </tuple>
                       </list>
                     </value>
@@ -526,18 +523,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <unicode>searchFolder</unicode> </value>
+            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>

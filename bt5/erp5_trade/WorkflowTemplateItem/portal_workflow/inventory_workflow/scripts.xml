@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Scripts</string>
-          <string>Scripts</string>
-        </tuple>
-        <none/>
+        <global name="Scripts" module="Products.DCWorkflow.Scripts"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -22,6 +19,12 @@
             <key> <string>_mapping</string> </key>
             <value>
               <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>

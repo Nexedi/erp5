@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -271,6 +268,7 @@ else:\n
                             <string>trade_condition</string>
                             <string>categories</string>
                             <string>None</string>
+                            <string>_inplacevar_</string>
                             <string>destination_decision_source_reference</string>
                             <string>filter_dict</string>
                             <string>to_copy</string>
