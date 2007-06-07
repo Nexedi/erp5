@@ -107,7 +107,7 @@ return round(rate * price)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>from_currency=None,to_currency=None, currency_exchange_type=None, start_date</string> </value>
+            <value> <string>from_currency=None,to_currency=None, currency_exchange_type=None, start_date=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -167,6 +167,7 @@ return round(rate * price)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
                 <none/>
