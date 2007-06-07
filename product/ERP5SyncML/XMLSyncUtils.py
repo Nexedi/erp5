@@ -295,6 +295,8 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     This just allow to get the xml of the object
     """
+    if xml_mapping  in ['None', None]:
+      return
     xml_method = None
     xml = ""
     if xml_mapping is not None:
