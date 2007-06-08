@@ -1125,6 +1125,32 @@ class FloatWidget(TextWidget):
         """Render the field as PDF."""
         return self.format_value(field, value)
 
+
+    def render_dict(self, field, value):
+      """
+        This is yet another field rendering. It is designed to allow code to
+        understand field's value data by providing its type and format when
+        applicable.
+
+        It returns a dict with 3 keys:
+          type  : Text representation of value's type.
+          format: Type-dependant-formated formating information.
+                  This only describes the field format settings, not the actual
+                  format of provided value.
+          query : Passthrough of given value.
+      """
+      input_style = field.get_value('input_style')
+      precision = field.get_value('precision')      
+      if precision != 0:
+        for x in xrange(1, precision):
+          input_style += '5'
+      else:
+        input_style = input_style.split('.')[0]
+      return {'query': value,
+              'format': input_style,
+              'type': 'date'}
+
+
 FloatWidgetInstance = FloatWidget()
 from Products.Formulator.StandardFields import FloatField
 FloatField.widget = FloatWidgetInstance
