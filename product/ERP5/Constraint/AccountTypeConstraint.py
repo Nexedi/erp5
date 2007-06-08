@@ -28,7 +28,7 @@
 
 from Products.ERP5Type.Constraint import Constraint
 from Products.ERP5Type.Message import Message
-N_ = lambda msg, **kw: Message('erp5_ui', msg, **kw)
+N_ = lambda msg: msg
 _MARKER = []
 
 class AccountTypeConstraint(Constraint):
@@ -57,7 +57,7 @@ class AccountTypeConstraint(Constraint):
     errors = []
     if getattr(obj, 'getAccountType', _MARKER) is _MARKER:
       errors.append(self._generateError(obj,
-                N_("Object doesn't have account_type category")))
+                N_("Account doesn't have account_type category")))
     else:
       account_type_map = getattr(self, '_account_type_map', ())
       if not account_type_map:
@@ -68,11 +68,13 @@ class AccountTypeConstraint(Constraint):
         if obj.isMemberOf(category):
           if obj.getAccountType() not in account_type_list:
             errors.append(self._generateError(obj,
-                N_("Object is member of ${category}, thus should have"
-                   " account_type in ${account_type_list}",
-                    mapping={'category': category,
-                             'account_type_list':
-                                ', '.join(account_type_list)})))
+                N_("Account is member of ${category}, thus should have"
+                   " account_type in ${account_type_list}"),
+                # XXX we should probably print translated logical path of
+                # categories instead of category path.
+                    mapping=dict(category=category,
+                                 account_type_list=
+                                    ', '.join(account_type_list))))
             if fixit:
               obj.setAccountType(account_type_list[0])
           break
