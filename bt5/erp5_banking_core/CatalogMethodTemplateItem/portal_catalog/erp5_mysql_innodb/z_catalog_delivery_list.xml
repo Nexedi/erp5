@@ -54,6 +54,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getRecoupDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getResourceUid</string> </key>
                                 <value>
                                   <dictionary/>
@@ -90,30 +96,6 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>getStartDateRangeMax</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>getStartDateRangeMin</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>getStopDateRangeMax</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>getStopDateRangeMin</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>isDelivery</string> </key>
                                 <value>
                                   <dictionary/>
@@ -139,10 +121,7 @@
 <string>getSourceSectionUid</string>
 <string>getDestinationSectionUid</string>
 <string>getResourceUid</string>
-<string>getStartDateRangeMin</string>
-<string>getStartDateRangeMax</string>
-<string>getStopDateRangeMin</string>
-<string>getStopDateRangeMax</string>
+<string>getRecoupDate</string>
 <string>getSourcePaymentReference</string>
 <string>getDestinationPaymentReference</string>
 <string>getSourcePaymentInternalBankAccountNumber</string>
@@ -177,10 +156,7 @@ getDestinationUid\r\n
 getSourceSectionUid\r\n
 getDestinationSectionUid\r\n
 getResourceUid\r\n
-getStartDateRangeMin\r\n
-getStartDateRangeMax\r\n
-getStopDateRangeMin\r\n
-getStopDateRangeMax\r\n
+getRecoupDate\r\n
 getSourcePaymentReference\r\n
 getDestinationPaymentReference\r\n
 getSourcePaymentInternalBankAccountNumber\r\n
@@ -243,10 +219,7 @@ VALUES\n
   <dtml-sqlvar expr="getSourceSectionUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getStartDateRangeMin[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getStartDateRangeMax[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getStopDateRangeMin[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getStopDateRangeMax[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getRecoupDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getSourcePaymentReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getDestinationPaymentReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSourcePaymentInternalBankAccountNumber[loop_item]" type="string" optional>,\n
@@ -315,10 +288,7 @@ VALUES\n
   <dtml-sqlvar expr="getSourceSectionUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getStartDateRangeMin[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getStartDateRangeMax[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getStopDateRangeMin[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getStopDateRangeMax[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getRecoupDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getSourcePaymentReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getDestinationPaymentReference[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getSourcePaymentInternalBankAccountNumber[loop_item]" type="string" optional>,\n

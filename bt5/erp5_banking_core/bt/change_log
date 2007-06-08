@@ -1,3 +1,6 @@
+2006-06-08 Aurel
+* put recoup date in delivery table instead of start/stop_range_min/max
+
 2006-12-01 Seb
 * add many more checks with the counter date when we open and close it.
 

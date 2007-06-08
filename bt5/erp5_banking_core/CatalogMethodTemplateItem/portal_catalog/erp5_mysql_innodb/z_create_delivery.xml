@@ -107,10 +107,7 @@
   `source_section_uid` BIGINT UNSIGNED default \'0\',\n
   `destination_section_uid` BIGINT UNSIGNED default \'0\',\n
   `resource_uid` BIGINT UNSIGNED default \'0\',\n
-  `start_date_range_min` datetime default NULL,\n
-  `start_date_range_max` datetime default NULL,\n
-  `stop_date_range_min` datetime default NULL,\n
-  `stop_date_range_max` datetime default NULL,\n
+  `recoup_date` datetime default NULL,\n
   `source_payment_reference` varchar(255) default \'\',\n
   `destination_payment_reference` varchar(255) default \'\',\n
   `source_payment_internal_bank_account_number` varchar(255) default \'\',\n
@@ -168,10 +165,7 @@
   `source_section_uid` BIGINT UNSIGNED default \'0\',\n
   `destination_section_uid` BIGINT UNSIGNED default \'0\',\n
   `resource_uid` BIGINT UNSIGNED default \'0\',\n
-  `start_date_range_min` datetime default NULL,\n
-  `start_date_range_max` datetime default NULL,\n
-  `stop_date_range_min` datetime default NULL,\n
-  `stop_date_range_max` datetime default NULL,\n
+  `recoup_date` datetime default NULL,\n
   `source_payment_reference` varchar(255) default \'\',\n
   `destination_payment_reference` varchar(255) default \'\',\n
   `source_payment_internal_bank_account_number` varchar(255) default \'\',\n
