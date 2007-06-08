@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>planned</string> </value>
+            <value> <string>ordered</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Accept</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
