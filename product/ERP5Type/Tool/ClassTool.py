@@ -157,7 +157,7 @@ if allowClassTool():
                       )
   
       security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-      manage_overview = DTMLFile( 'explainDocumentTool', _dtmldir )
+      manage_overview = DTMLFile( 'explainClassTool', _dtmldir )
   
       security.declareProtected( Permissions.ManagePortal, 'manage_viewPropertySheetList' )
       manage_viewPropertySheetList = DTMLFile( 'viewPropertySheetList', _dtmldir )
