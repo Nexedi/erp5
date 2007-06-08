@@ -546,6 +546,8 @@ class TestERP5BankingMixin:
     site_vault_type = self.vault_type_base_category.newContent(id='site')
     surface_vault_type = site_vault_type.newContent('surface')
     bi_vault_type = surface_vault_type.newContent('banque_interne')
+    co_vault_type = surface_vault_type.newContent('caisse_courante')
+    de_co_vault_type = co_vault_type.newContent('encaisse_des_devises')
     guichet_bi_vault_type = bi_vault_type.newContent('guichet')
     gp_vault_type = surface_vault_type.newContent('gros_paiement')
     guichet_gp_vault_type = gp_vault_type.newContent('guichet')
@@ -629,7 +631,7 @@ class TestERP5BankingMixin:
                 s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
         # Create forreing currency entries in encaisse_des_devises.
         for currency in ['usd', ]:
-          caisse_courante.encaisse_des_devises.newContent(id=currency, portal_type='Category', codification='', vault_type='surface/caisse_courante/%s' % (currency, ))
+          caisse_courante.encaisse_des_devises.newContent(id=currency, portal_type='Category', codification='', vault_type='surface/caisse_courante/encaisse_des_devises/%s' % (currency, ))
 
     # Create other site now but without vault
     if len(site_list) != 0:
