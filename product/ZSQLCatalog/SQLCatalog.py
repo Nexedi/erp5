@@ -205,6 +205,9 @@ class QueryMixin:
           value = value.strftime(format)
         if isinstance(value, basestring):
           value = "STR_TO_DATE('%s','%s')" % (value, format)
+      if type == 'float':
+        # Make sure there is no space in float values
+        value = value.replace(' ','')
     else:
       if hasattr(value, 'ISO'):
         value = "'%s'" % value.ISO()
@@ -222,13 +225,19 @@ class QueryMixin:
     if format is not None and type is not None:
       if type == 'date':
         key = "STR_TO_DATE(DATE_FORMAT(%s,'%s'),'%s')" % (key, format, format)
+      if type == 'float':
+        float_format = format.replace(' ','')
+        if float_format.find('.') >= 0:
+          precision = len(float_format.split('.')[1])
+          key = "TRUNCATE(%s,%s)" % (key, precision)
     return key
 
 class Query(QueryMixin):
   """
   This allow to define constraints on a sql column
 
-  format - %d/%m/%Y
+  format - type date : %d/%m/%Y
+           type float : 1 234.12
   """
   def __init__(self, format=None, operator=None, range=None,
                      search_mode=None, table_alias_list=None, type=None, **kw):

@@ -1785,6 +1785,22 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(isinstance(uid, long))
     self.assertEquals(organisation.uid, uid)
 
+  def test_55_FloatFormat(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Float Format'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    org_a = self._makeOrganisation(title='org_a')
+    org_b = self._makeOrganisation(title='org_b')
+    sql_connection = self.getSQLConnection()
+    # Add a method in order to directly put values we want into
+    # the catalog.
+    catalog_kw = {'uid':{'query':'2 567.54',
+                               'format':'1 234.12',
+                               'type':'float'}}
+    sql_src = self.getCatalogTool()(src__=1,**catalog_kw)
+    self.failUnless('TRUNCATE(catalog.uid,2) = 2567.54' in sql_src)
 
 if __name__ == '__main__':
     framework()
