@@ -604,6 +604,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
           # We duplicate role settings to mimic PAS
           ob.manage_addLocalGroupRoles(group, role_list)
           ob.manage_addLocalRoles(group, role_list)
+      # Make sure that the object is reindexed
+      ob.reindexObjectSecurity()
 
     # XXX compat. alias
     security.declareProtected(Permissions.ModifyPortalContent,
