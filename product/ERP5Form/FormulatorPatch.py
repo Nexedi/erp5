@@ -1148,7 +1148,7 @@ class FloatWidget(TextWidget):
         input_style = input_style.split('.')[0]
       return {'query': value,
               'format': input_style,
-              'type': 'date'}
+              'type': 'float'}
 
 
 FloatWidgetInstance = FloatWidget()
