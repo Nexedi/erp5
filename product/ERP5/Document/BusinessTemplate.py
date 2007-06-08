@@ -1508,14 +1508,16 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
 PortalTypeTemplateWorkflowChainItem = PortalTypeWorkflowChainTemplateItem
 
 class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
-
+  # XXX This class is subclassed for hidden types, propertysheets, base
+  # categories ...
+  name = 'Allowed Content Type'
   xml_tag = 'allowed_content_type_list'
   class_property = 'allowed_content_types'
 
   def build(self, context, **kw):
     types_tool = self.getPortalObject().portal_types
     types_list = list(types_tool.objectIds())
-    for key in self._archive.keys():      
+    for key in self._archive.keys():
       portal_type, allowed_type = key.split(' | ')
       # check properties corresponds to what is defined in site
       if not portal_type in types_list:
@@ -1523,7 +1525,10 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       ob = types_tool._getOb(portal_type)
       prop_value = getattr(ob, self.class_property, ())
       if not allowed_type in prop_value:
-        raise ValueError, "Property %s not found in portal type %s" %(allowed_type, portal_type)
+        raise ValueError, "%s  %s not found in portal type %s" % (
+                             getattr(self, 'name', self.__class__.__name__),
+                             allowed_type, portal_type)
+
       if self._objects.has_key(portal_type):
         allowed_list = self._objects[portal_type]
         allowed_list.append(allowed_type)
@@ -1646,20 +1651,27 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           original_property_list.remove(id)
       setattr(portal_type, self.class_property, list(original_property_list))
 
+
 class PortalTypeHiddenContentTypeTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
 
+  name = 'Hidden Content Type'
   xml_tag = 'hidden_content_type_list'
   class_property = 'hidden_content_type_list'
 
+
 class PortalTypePropertySheetTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
 
+  name = 'Property Sheet'
   xml_tag = 'property_sheet_list'
   class_property = 'property_sheet_list'
 
+
 class PortalTypeBaseCategoryTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
 
+  name = 'Base Category'
   xml_tag = 'base_category_list'
   class_property = 'base_category_list'
+
 
 class CatalogMethodTemplateItem(ObjectTemplateItem):
   """Template Item for catalog methods.
