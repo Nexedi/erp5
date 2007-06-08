@@ -13,6 +13,7 @@ Account Module | trial_balance_report
 Account Module | view
 Account | history
 Account | jump_active_accounting_pref
+Account | jump_to_accounting
 Account | metadata
 Account | print
 Account | transaction_list
