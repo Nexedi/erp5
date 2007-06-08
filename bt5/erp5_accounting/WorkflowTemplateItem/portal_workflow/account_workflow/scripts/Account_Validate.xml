@@ -74,10 +74,16 @@ from Products.ERP5Type.Message import Message\n
 account = sci[\'object\']\n
 N_ = lambda msgid: Message(\'erp5_ui\', msgid)\n
 \n
+# TODO: use constraint for this\n
 if not account.getGap():\n
   raise ValidationFailed(N_("GAP is unset."))\n
 \n
 for err in account.checkConsistency():\n
+  if hasattr(err, \'getTranslatedMessage\'):\n
+    raise ValidationFailed(err.getTranslatedMessage())\n
+  # Old constraints implementation doesn\'t have a translated message,\n
+  # in this case, simply translate the description of the constraint in\n
+  # the property sheet.\n
   raise ValidationFailed(N_(err[4]))\n
 </string> </value>
         </item>
@@ -132,6 +138,7 @@ for err in account.checkConsistency():\n
                             <string>_getattr_</string>
                             <string>_getiter_</string>
                             <string>err</string>
+                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>
