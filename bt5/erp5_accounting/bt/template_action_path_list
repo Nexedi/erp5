@@ -111,7 +111,6 @@ Invoice Transaction Rule | divergence
 Invoice Transaction Rule | history
 Invoice Transaction Rule | metadata
 Invoice Transaction Rule | print_pdf
-Invoice Transaction Rule | update_matrix
 Invoice Transaction Rule | view
 Invoicing Rule | history
 Invoicing Rule | metadata
