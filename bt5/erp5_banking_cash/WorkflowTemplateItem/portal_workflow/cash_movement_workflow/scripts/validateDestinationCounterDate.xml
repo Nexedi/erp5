@@ -68,7 +68,7 @@
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 vaultDestination = transaction.getDestination()\n
 \n
@@ -130,8 +130,9 @@ if not transaction.Baobab_checkCounterDateOpen(site=vaultDestination, date=trans
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>vaultDestination</string>
                             <string>msg</string>
                           </tuple>

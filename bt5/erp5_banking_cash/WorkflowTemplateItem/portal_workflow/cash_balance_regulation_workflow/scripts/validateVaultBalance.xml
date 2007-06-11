@@ -68,7 +68,7 @@
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 caisse = transaction.getSource()\n
 \n
@@ -168,8 +168,9 @@ if incoming_total != outgoing_total:\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>caisse</string>
                             <string>msg</string>
                             <string>resource_one</string>

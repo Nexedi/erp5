@@ -69,7 +69,7 @@
 from Products.ERP5Type.Message import Message\n
 \n
 # Purchase Transaction .\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 # Get inventory\n
 vault = transaction.getSource()\n
 resource =  transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Incoming Classification Survey Line\')\n
@@ -142,8 +142,9 @@ elif resource != 0 :\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>vault</string>
                             <string>resource</string>
                             <string>price</string>

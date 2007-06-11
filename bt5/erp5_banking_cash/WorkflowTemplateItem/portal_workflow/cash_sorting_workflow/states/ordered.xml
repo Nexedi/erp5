@@ -53,7 +53,9 @@
         <item>
             <key> <string>type_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>future_inventory</string>
+              </tuple>
             </value>
         </item>
       </dictionary>

@@ -70,7 +70,7 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 date = transaction.getStartDate()\n
 vault = transaction.getSource()\n
 vaultDestination = transaction.getDestination()\n
@@ -155,14 +155,14 @@ elif resource <> 0 :\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>date</string>
                             <string>vault</string>
                             <string>vaultDestination</string>
                             <string>vliste</string>
                             <string>len</string>
-                            <string>_getitem_</string>
                             <string>msg</string>
                             <string>resource</string>
                             <string>amount</string>

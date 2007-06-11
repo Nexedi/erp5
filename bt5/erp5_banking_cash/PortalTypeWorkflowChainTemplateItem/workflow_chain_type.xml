@@ -100,10 +100,6 @@
   <workflow>money_deposit_rendering_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Money Deposit Transfer</type>
-  <workflow>edit_workflow, money_deposit_transfer_workflow</workflow>
- </chain>
- <chain>
   <type>Mutilated Banknote</type>
   <workflow>edit_workflow, mutilated_banknote_workflow</workflow>
  </chain>

@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string># Call the script wich checks if source and destination\n
 # are well defined\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 transaction.Base_checkBaobabSourceAndDestination()\n
 </string> </value>
         </item>
@@ -112,8 +112,9 @@ transaction.Base_checkBaobabSourceAndDestination()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

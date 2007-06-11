@@ -134,9 +134,6 @@
  <portal_type id="Money Deposit Rendering">
   <item>Cash Delivery Line</item>
  </portal_type>
- <portal_type id="Money Deposit Transfer">
-  <item>Cash Delivery Line</item>
- </portal_type>
  <portal_type id="Mutilated Banknote">
   <item>Outgoing Mutilated Banknote Line</item>
   <item>Exchanged Mutilated Banknote Line</item>

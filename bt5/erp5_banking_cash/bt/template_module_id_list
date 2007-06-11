@@ -1,4 +1,3 @@
-
 account_incident_module
 cash_balance_regulation_module
 cash_exchange_module
@@ -22,7 +21,6 @@ monetary_reception_module
 monetary_survey_module
 money_deposit_module
 money_deposit_rendering_module
-money_deposit_transfer_module
 mutilated_banknote_module
 usual_cash_incident_module
 usual_cash_rendering_module

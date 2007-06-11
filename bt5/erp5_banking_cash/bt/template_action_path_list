@@ -273,16 +273,6 @@ Money Deposit Rendering | history
 Money Deposit Rendering | metadata
 Money Deposit Rendering | print_pdf
 Money Deposit Rendering | view
-Money Deposit Transfer Module | list
-Money Deposit Transfer Module | list_ui
-Money Deposit Transfer Module | print_pdf
-Money Deposit Transfer Module | sort_on
-Money Deposit Transfer Module | view
-Money Deposit Transfer | fastinput
-Money Deposit Transfer | history
-Money Deposit Transfer | metadata
-Money Deposit Transfer | print_pdf
-Money Deposit Transfer | view
 Money Deposit | accouting_view
 Money Deposit | fast_input
 Money Deposit | history

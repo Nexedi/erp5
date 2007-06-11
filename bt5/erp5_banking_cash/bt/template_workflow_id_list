@@ -1,4 +1,3 @@
-
 account_incident_workflow
 cash_balance_regulation_workflow
 cash_exchange_workflow
@@ -22,7 +21,6 @@ monetary_recall_workflow
 monetary_reception_workflow
 monetary_survey_workflow
 money_deposit_rendering_workflow
-money_deposit_transfer_workflow
 money_deposit_workflow
 mutilated_banknote_workflow
 usual_cash_incident_workflow

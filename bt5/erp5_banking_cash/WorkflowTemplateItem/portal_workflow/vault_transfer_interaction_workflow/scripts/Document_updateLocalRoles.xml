@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>obj = state_change.object\n
+            <value> <string>obj = state_change[\'object\']\n
 obj.assignRoleToSecurityGroup()\n
 </string> </value>
         </item>
@@ -110,8 +110,9 @@ obj.assignRoleToSecurityGroup()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>obj</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

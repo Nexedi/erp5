@@ -68,9 +68,9 @@
             <value> <string>from Products.ERP5Type.Message import Message\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
-object = state_change.object\n
+object = state_change[\'object\']\n
 \n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 # use of the constraint\n
 vliste = object.checkConsistency()\n
@@ -141,12 +141,12 @@ if object_price != line_price:\n
                             <string>Message</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>object</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>vliste</string>
                             <string>len</string>
-                            <string>_getitem_</string>
                             <string>dest</string>
                             <string>msg</string>
                             <string>validationFailed</string>

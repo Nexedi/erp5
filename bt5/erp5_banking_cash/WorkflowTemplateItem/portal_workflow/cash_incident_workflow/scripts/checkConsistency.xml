@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># check that we don\'t have both incoming and outgoing line on the document\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# check that we don\'t have both incoming and outgoing line on the document\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
@@ -97,7 +99,16 @@ elif len(in_list) == 0 and len(out_list) == 0:\n
 elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != price):\n
   msg = Message(domain = "ui", message="Price differs between document and resource.")\n
   raise ValidationFailed, (msg,)\n
-</string> </value>
+\n
+if out_price != 0:\n
+  #resource = txn.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Cash Incident Line\')\n
+  resource = txn.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Outgoing Cash Incident Line\')\n
+  if resource <> 0 :\n
+    msg = Message(domain="ui", message="Insufficient Balance.")\n
+    raise ValidationFailed, (msg,)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -155,6 +166,7 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                             <string>in_price</string>
                             <string>out_price</string>
                             <string>len</string>
+                            <string>resource</string>
                           </tuple>
                         </value>
                     </item>

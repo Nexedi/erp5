@@ -68,7 +68,7 @@
             <value> <string>from Products.ERP5Type.Message import Message\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
-object = state_change.object\n
+object = state_change[\'object\']\n
 \n
 # use of the constraint\n
 vliste = object.checkConsistency()\n
@@ -149,11 +149,11 @@ if \'transit\' not in dest.getRelativeUrl():\n
                             <string>Message</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>object</string>
+                            <string>_getattr_</string>
                             <string>vliste</string>
                             <string>len</string>
-                            <string>_getitem_</string>
                             <string>msg</string>
                             <string>dest</string>
                             <string>first_movement</string>

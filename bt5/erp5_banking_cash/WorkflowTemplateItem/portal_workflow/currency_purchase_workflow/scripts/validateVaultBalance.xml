@@ -69,14 +69,14 @@
 
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 \n
 currency = transaction.getResourceTitle()\n
 \n
 var_ressource_title = transaction.getResourceTitle().lower()\n
 var_ressource_title = var_ressource_title.replace(" ", "_")\n
-encaisse_devise = "/encaisse_des_devises/%s/entrante" %(var_ressource_title)\n
+encaisse_devise = "/encaisse_des_devises/%s/sortante" %(var_ressource_title)\n
 \n
 #encaisse_devise = "/encaisse_des_devises/%s/entrante" %(transaction.getResourceTitle().lower())\n
 \n
@@ -172,8 +172,9 @@ if billetage_entre != base_price :\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>currency</string>
                             <string>var_ressource_title</string>
                             <string>encaisse_devise</string>

@@ -70,7 +70,7 @@
 # check that we don\'t have both incoming and outgoing line on the document\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 txn = state_change[\'object\']\n
 in_list = txn.objectValues(portal_type=\'Incoming Usual Cash Incident Line\')\n
 out_list = txn.objectValues(portal_type=\'Outgoing Usual Cash Incident Line\')\n
@@ -163,10 +163,10 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
-                            <string>transaction</string>
                             <string>_getitem_</string>
+                            <string>transaction</string>
                             <string>txn</string>
+                            <string>_getattr_</string>
                             <string>in_list</string>
                             <string>out_list</string>
                             <string>vault</string>
