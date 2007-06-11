@@ -1,5 +1,2 @@
-Invoice Line | destination_region
-Invoice Line | product_line
-Invoice Line | source_region
 Purchase Invoice Transaction | source_region
 Sale Invoice Transaction | destination_region
