@@ -662,9 +662,6 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       first = res[0]
       in_original = None
       for ob in res:
-        if ob.getLanguage() == original_language:
-          # this is in original language
-          in_original = ob
         if ob.getVersion() != first.getVersion():
           # we are out of the latest version - return in_original or first
           if in_original is not None:
@@ -674,6 +671,9 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
         if ob.getLanguage() == user_language:
           # we found it in the user language
           return ob.getObject()
+        if ob.getLanguage() == original_language:
+          # this is in original language
+          in_original = ob
     # this is the only doc in this version
     return self
 
