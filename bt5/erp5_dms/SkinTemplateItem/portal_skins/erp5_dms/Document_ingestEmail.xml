@@ -89,17 +89,17 @@ if sender_email is None:\n
   return msg\n
 \n
 # find sender in ERP5\n
-found_persons = context.portal_catalog(portal_type=\'Person\', reference=sender_email)\n
-if len(found_persons) == 0:\n
+found_email_list = context.portal_catalog(portal_type=\'Email\', url_string=sender_email)\n
+if len(found_email_list) == 0:\n
   msg = \'[DMS] You are not in user database\'\n
   context.log(msg)\n
   return msg\n
-if len(found_persons) > 1:\n
+if len(found_email_list) > 1:\n
   msg = \'[DMS] Your email address has multiple entries\'\n
   context.log(msg)\n
   return msg\n
 \n
-person = found_persons[0]\n
+person = found_email_list[0].getParentValue()\n
 \n
 # get mail properties out of mail body\n
 mailprops = context.Document_getPropertyDictFromMail(theMail[\'body\'])\n
@@ -193,7 +193,7 @@ except Exception, e:\n
                             <string>sender_email</string>
                             <string>None</string>
                             <string>msg</string>
-                            <string>found_persons</string>
+                            <string>found_email_list</string>
                             <string>len</string>
                             <string>person</string>
                             <string>mailprops</string>
