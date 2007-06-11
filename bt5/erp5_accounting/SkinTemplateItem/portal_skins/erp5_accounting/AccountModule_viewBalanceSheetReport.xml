@@ -540,8 +540,7 @@ dQEAAAAA</string> </value>
         </table:table-row>\n
         </table:table-header-rows>\n
 \n
-        <!-- TODO: sort -->\n
-        <tal:block tal:repeat="cat_level_1 python: list(financial_section.equity.contentValues()) + list(financial_section.liability.contentValues())">\n
+        <tal:block tal:repeat="cat_level_1 python: test(financial_section.equity.getIntIndex() &gt; financial_section.liability.getIntIndex(), list(financial_section.liability.contentValues(sort_on=((\'int_index\', \'ascending\'),))) + list(financial_section.equity.contentValues(sort_on=((\'int_index\', \'ascending\'),))), list(financial_section.equity.contentValues(sort_on=((\'int_index\', \'ascending\'),))) + list(financial_section.liability.contentValues(sort_on=((\'int_index\', \'ascending\'),))))">\n
         <!-- }}} -->\n
 \n
             <!-- LEVEL 1 {{{ -->\n
