@@ -208,12 +208,6 @@
  <portal_type id="Money Deposit Rendering Module">
   <item>Money Deposit Rendering</item>
  </portal_type>
- <portal_type id="Money Deposit Transfer">
-  <item>Cash Delivery Line</item>
- </portal_type>
- <portal_type id="Money Deposit Transfer Module">
-  <item>Money Deposit Transfer</item>
- </portal_type>
  <portal_type id="Mutilated Banknote">
   <item>Incoming Mutilated Banknote Line</item>
   <item>Outgoing Mutilated Banknote Line</item>
