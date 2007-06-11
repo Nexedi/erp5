@@ -932,18 +932,10 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     """
     Returns the document coordinates as a standard file name. This
     method is the reverse of getPropertyDictFromFileName.
-
-    NOTE: this method must be overloadable by types base method with fallback
     """
-    if self.getReference():
-      file_name = self.getReference()
-    else:
-      file_name = self.getTitleOrId()
-    if self.getVersion():
-      file_name = file_name + '-%s' % self.getVersion()
-    if self.getLanguage():
-      file_name = file_name + '-%s' % self.getLanguage()
-    return file_name
+    method = self._getTypeBasedMethod('getStandardFileName', 
+        fallback_script_id = 'Document_getStandardFileName')
+    return method()
 
   ### Metadata disovery and ingestion methods
   security.declareProtected(Permissions.ModifyPortalContent, 'discoverMetadata')
