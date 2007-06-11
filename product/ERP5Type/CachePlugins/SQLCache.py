@@ -63,7 +63,7 @@ class SQLCache(BaseCache):
                                          UNIQUE(cache_id, scope))
                       '''
 
-  insert_key_sql = '''INSERT INTO %s (cache_id, value, scope, stored_at, cache_duration, calculation_time) 
+  insert_key_sql = '''REPLACE INTO %s (cache_id, value, scope, stored_at, cache_duration, calculation_time) 
                               VALUES("%s", "%s", "%s", %s, %s, %s)
                     '''
                             
