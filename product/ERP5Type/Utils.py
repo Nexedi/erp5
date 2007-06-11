@@ -1387,7 +1387,7 @@ def setDefaultProperties(property_holder, object=None):
 try:
   import Products.iHotfix
   get_request = Products.iHotfix.get_request
-except:
+except (ImportError, AttributeError):
   import Products.Localizer
   get_request = Products.Localizer.get_request
 
