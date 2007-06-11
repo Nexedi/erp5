@@ -1,8 +1,0 @@
-<base_category_list>
- <portal_type id="Purchase Invoice Transaction">
-  <item>source_region</item>
- </portal_type>
- <portal_type id="Sale Invoice Transaction">
-  <item>destination_region</item>
- </portal_type>
-</base_category_list>
