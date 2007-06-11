@@ -95,13 +95,25 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     TestERP5BankingCheckPaymentMixin.afterSetUp(self)
     self.money_deposit_counter = self.paris.surface.banque_interne
     self.money_deposit_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
-    
+
     self.createCashInventory(source=None, 
                              destination=self.money_deposit_counter_vault, 
                              currency=self.currency_1,
                              line_list=self.line_list)
 
     self.openCounter(site=self.money_deposit_counter_vault,id='counter_2')
+
+    # Define foreign currency variables
+    inventory_dict_line_1 = {'id' : 'inventory_line_1',
+                             'resource': self.usd_billet_20,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/not_defined', 
+                                   'cash_status/not_defined') + self.usd_variation_list,
+                             'variation_list': self.usd_variation_list,
+                             'quantity': self.quantity_usd_20}
+
+    self.foreign_line_list = [inventory_dict_line_1]
+    
 
     # Set some variables : 
     self.money_deposit_module = self.getMoneyDepositModule()
@@ -270,13 +282,35 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                              line_list=self.line_list,
                              extra_id='_sort_vault')
 
-  def stepResetInventoryInSortVault(self, sequence=None, sequence_list=None, **kwd):
+  def stepSetInventoryInVaultForeignCurrency(self, sequence=None, 
+            sequence_list=None, **kwd):
     """
     put some banknotes into the vault used for sorting
+    """
+    destination = self.paris.surface.caisse_courante.encaisse_des_devises.usd
+    self.createCashInventory(source=None, 
+                             destination=destination, 
+                             currency=self.currency_2,
+                             line_list=self.foreign_line_list,
+                             extra_id='_vault_foreign_currency_vault')
+
+  def stepResetInventoryInSortVault(self, sequence=None, sequence_list=None, **kwd):
+    """
+    reset the inventory
     """
     inventory_module = self.getPortal().cash_inventory_module
     to_delete_id_list = [x for x in inventory_module.objectIds() 
                          if x.find('_sort_vault')>=0]
+    inventory_module.manage_delObjects(ids=to_delete_id_list)
+
+  def stepResetInventoryInVaultForeignCurrency(self, sequence=None, 
+          sequence_list=None, **kwd):
+    """
+    reset the inventory
+    """
+    inventory_module = self.getPortal().cash_inventory_module
+    to_delete_id_list = [x for x in inventory_module.objectIds() 
+                         if x.find('_vault_foreign_currency_vault')>=0]
     inventory_module.manage_delObjects(ids=to_delete_id_list)
 
   def test_01_ERP5BankingAvailabeInventory(self, quiet=QUIET, run=RUN_ALL_TEST):
@@ -311,6 +345,10 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'SetInventoryInSortVault Tic ' \
                       'CheckBadStockBeforeClosingDate ' \
                       'ResetInventoryInSortVault Tic ' \
+                      'CheckRightStockBeforeClosingDate ' \
+                      'SetInventoryInVaultForeignCurrency Tic ' \
+                      'CheckBadStockBeforeClosingDate ' \
+                      'ResetInventoryInVaultForeignCurrency Tic ' \
                       'CheckRightStockBeforeClosingDate ' \
                       'CheckReferenceIsIncreasedEveryDay ' \
                       'CheckOpenCounterDateTwiceWithOtherDateFail Tic ' 
