@@ -472,7 +472,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     opts = extra_context.get("options", None)
     if opts is not None:
       format = opts.get('format', request.get('format', None))
-      if format is not None:
+      if format:
         return self._asFormat(ooo, format, request)
 
     # Do not send a RESPONSE if in batch_mode
