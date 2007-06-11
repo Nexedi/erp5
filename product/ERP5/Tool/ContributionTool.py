@@ -278,12 +278,13 @@ class ContributionTool(BaseTool):
     BaseTool._setObject(self, file_name, ob)
     document = BaseTool._getOb(self, file_name)
 
-    # Then edit the document contents (so that upload can happen)
-    document._edit(**kw)
-    if url: document.fromURL(url)
-
-    # Remove the object from ourselves
-    BaseTool._delObject(self, file_name)
+    try:
+      # Then edit the document contents (so that upload can happen)
+      document._edit(**kw)
+      if url: document.fromURL(url)
+    finally:
+      # Remove the object from ourselves
+      BaseTool._delObject(self, file_name)
 
     # Move the document to where it belongs
     if container_path is not None:
