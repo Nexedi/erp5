@@ -1141,7 +1141,7 @@ class FloatWidget(TextWidget):
       """
       input_style = field.get_value('input_style')
       precision = field.get_value('precision')      
-      if precision != 0:
+      if precision not in (None, '') and precision != 0:
         for x in xrange(1, precision):
           input_style += '5'
       else:
