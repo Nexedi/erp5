@@ -96,7 +96,8 @@ argument_names = (\'advanced_search_text\', \'title\', \'reference\', \\\n
                   \'SearchableText_all\', \'SearchableText_phrase\')\n
 \n
 # a quick hack because sometimes we get a list\n
-params = [selection.params.get(name, \'\') for name in argument_names]\n
+params = context.portal_selections.getSelectionParamsFor(\'search_advanced_dialog_selection\')\n
+params = [params.get(name, \'\') for name in argument_names]\n
 params = [(hasattr(par, \'sort\') and \'\'.join(par) or par) for par in params]\n
 search_string = \' \'.join(params)\n
 \n
@@ -140,7 +141,7 @@ return \' \'.join(map(str, res))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain,selection</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -160,14 +161,12 @@ return \' \'.join(map(str, res))\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>brain</string>
-                            <string>selection</string>
                             <string>tags</string>
                             <string>trail</string>
                             <string>maxlines</string>
@@ -175,11 +174,11 @@ return \' \'.join(map(str, res))\n
                             <string>context</string>
                             <string>txt</string>
                             <string>argument_names</string>
+                            <string>params</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>name</string>
-                            <string>params</string>
                             <string>par</string>
                             <string>hasattr</string>
                             <string>search_string</string>
