@@ -80,8 +80,6 @@ then does the following:\n
 - searches\n
 - if requested, filters result so that only the user\'s docs are returned\n
 - if requested, filters result to return only the newest versions\n
-\n
-TODO: use catalog to get only the user\'s docs - this implementation is slow.\n
 """\n
 \n
 # if no args we return empty list\n
@@ -113,10 +111,13 @@ for k,v in args.items():\n
     args[k+\'_relative_url\'] = k + \'/\' + v\n
 \n
 # expand simplified notation of search mode\n
-mode = args.get(\'mode\')\n
-modemap = {\'natural\':0, \'boolean\':\'in_boolean_mode\', \'expanded\':\'with_query_expansion\'}\n
-if mode and modemap.has_key(mode):\n
-  args[\'SearchableText\'] = dict(query=args[\'SearchableText\'], search_mode=modemap[mode])\n
+#mode = args.get(\'mode\')\n
+#modemap = {\'natural\':0, \'boolean\':\'in_boolean_mode\', \'expanded\':\'with_query_expansion\'}\n
+#if mode and modemap.has_key(mode):\n
+#  args[\'SearchableText\'] = dict(query=args[\'SearchableText\'], search_mode=modemap[mode])\n
+\n
+# we always do boolean because we want these options in search dialog\n
+args[\'SearchableText\'] = dict(query=args[\'SearchableText\'], search_mode=\'in_boolean_mode\')\n
 \n
 # a hack because SQLCatalog wants table.key now \n
 # dunno if it is a bug or a feature\n
@@ -124,10 +125,10 @@ if args.has_key(\'SearchableText\'):\n
   args[\'full_text.SearchableText\'] = args[\'SearchableText\']\n
   args.pop(\'SearchableText\')\n
 \n
-cf = kw.get(\'creation_from\')\n
-ct = kw.get(\'creation_to\')\n
-mf = kw.get(\'modification_from\')\n
-mt = kw.get(\'modification_to\')\n
+cf = args.get(\'creation_from\')\n
+ct = args.get(\'creation_to\')\n
+mf = args.get(\'modification_from\')\n
+mt = args.get(\'modification_to\')\n
 \n
 wheres = []\n
 if cf:\n
@@ -144,42 +145,22 @@ if wheres != []:\n
 # now we search\n
 # any language?\n
 if args.get(\'language\') == \'0\': args.pop(\'language\')\n
-res = context.portal_catalog(**args)\n
 \n
 # user wants only his documents\n
 if args.get(\'mine\'): \n
   from AccessControl import getSecurityManager\n
   sm = getSecurityManager()\n
-  u = sm.getUser()\n
-  # now we need to filter by owner\n
-  # some day we will do it in catalog\n
-  res = [r for r in res if u.allowed(r.getObject(), (\'Owner\',))]\n
+  user = sm.getUser()\n
+  args[\'owner\'] = str(user)\n
 \n
 #...and now we check for only the newest versions\n
 # but we need to preserve order\n
 if args.get(\'newest\'):\n
-  idx = {} # for keeping the last version of every reference\n
-  # this way we do reduce the number of docs very fast (without calling catalog)\n
-  newest = [] # for keeping order as it was\n
-  counter = 0\n
-  for r in res:\n
-    ref = r.getReference()\n
-    try:\n
-      ver = int(r.getVersion())\n
-    except ValueError:\n
-      continue\n
-    if idx.has_key(ref):\n
-      if idx[ref][0] >= ver:\n
-        continue\n
-      else:\n
-        del newest[idx[ref][1]]\n
-        counter -= 1\n
-    newest.append(r)\n
-    idx[ref] = (ver, counter)\n
-    counter += 1\n
-  # now that we have only one per reference, we can play with languages and revisions\n
-  res = [doc.getLatestVersionValue() for doc in newest]\n
-\n
+  args[\'group_by\'] = (\'reference\',)\n
+  res = context.portal_catalog(**args)\n
+  res = [doc.getLatestVersionValue() for doc in res]\n
+else:\n
+  res = context.portal_catalog(**args)\n
 \n
 return res\n
 
@@ -246,29 +227,20 @@ return res\n
                             <string>_getiter_</string>
                             <string>k</string>
                             <string>v</string>
-                            <string>mode</string>
-                            <string>modemap</string>
                             <string>cf</string>
                             <string>ct</string>
                             <string>mf</string>
                             <string>mt</string>
                             <string>wheres</string>
-                            <string>_apply_</string>
-                            <string>res</string>
                             <string>AccessControl</string>
                             <string>getSecurityManager</string>
                             <string>sm</string>
-                            <string>u</string>
+                            <string>user</string>
+                            <string>str</string>
+                            <string>_apply_</string>
+                            <string>res</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>r</string>
-                            <string>idx</string>
-                            <string>newest</string>
-                            <string>counter</string>
-                            <string>ref</string>
-                            <string>int</string>
-                            <string>ver</string>
-                            <string>ValueError</string>
                             <string>doc</string>
                           </tuple>
                         </value>
