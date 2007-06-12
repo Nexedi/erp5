@@ -106,7 +106,7 @@ IDEAS:\n
       <script tal:attributes="src js" type="text/javascript"></script>\n
     </tal:block>\n
   </head>\n
-  <body tal:attributes="onload python:\'fixLeftRightHeightAndFocus(%s)\' % int(not is_web_mode)">\n
+  <body>\n
     <form id="main_form"\n
           tal:attributes="enctype form/Form_getEnctype | nothing;\n
                           action url;\n

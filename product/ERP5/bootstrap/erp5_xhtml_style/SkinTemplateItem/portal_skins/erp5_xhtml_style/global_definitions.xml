@@ -74,8 +74,10 @@
     global css_list  css_list | python: [];\n
            css_list_template css_list_template | python: [\'%s/erp5.css\' % (portal_path, )];\n
            dummy     python: css_list.extend(css_list_template);\n
-    global js_list   js_list | python: [];\n
-           dummy     python: js_list.append(\'%s/erp5.js\' % (portal_path, ));\n
+    global js_list   js_list | python: [\'%s/erp5_xhtml_appearance.js\' % portal_path,];\n
+    global js_list   python:[\'%s/MochiKit/MochiKit.js\' % portal_path,\n
+                             \'%s/erp5.js\' % portal_path,\n
+                            ] + js_list;\n
 \n
     global http_parameter_list  python: here.ERP5Site_filterParameterList(request.form);\n
            dummy                python: http_parameter_list.update(local_parameter_list);\n
