@@ -79,8 +79,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                        global css_list_template python:[\'%s/erp5_web.css\' % portal_path,\n
                               \'%s/erp5_web_%scontent.css\' % (portal_path, editable and \'editable_\' or \'\'),\n
                               \'%s/erp5_web_admin_toolbox.css\' % portal_path,\n
-                              \'%s/template_erp5_web.css\' % portal_path,\n
-]">\n
+                              \'%s/template_erp5_web.css\' % portal_path,];\n
+                        global js_list python:[]">\n
   <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
     <tal:block metal:fill-slot="layout"\n
                tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
