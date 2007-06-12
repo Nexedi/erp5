@@ -73,6 +73,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>
@@ -99,6 +100,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>
