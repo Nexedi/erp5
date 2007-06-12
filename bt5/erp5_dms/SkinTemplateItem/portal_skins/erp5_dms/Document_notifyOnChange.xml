@@ -78,13 +78,12 @@
 persons_to_inform = []\n
 \n
 # find which persons have needed roles so they can be informed\n
-person_list = context.getPortalObject().person_module.contentValues()\n
+person_list = context.getPortalObject().portal_catalog(portal_type = \'Person\')\n
 person_list = filter(lambda x: x.getReference() is not None, person_list)\n
 for person in person_list:\n
   local_roles = context.Document_getPersonRoleList(person, context)\n
   # check if person\'s roles in this document\'s context allow him/her to modify it\n
   intersect = [k for k in local_roles if k in roles_to_inform]\n
-  context.debug(intersect )\n
   if len(intersect) > 0:\n
     persons_to_inform.append(person)\n
 \n
