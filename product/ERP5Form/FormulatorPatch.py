@@ -1148,6 +1148,8 @@ class FloatWidget(TextWidget):
           input_style += '5'
       else:
         input_style = input_style.split('.')[0]
+      if type(value) == type(u''):
+        value = value.encode(field.get_form_encoding())
       return {'query': value,
               'format': input_style,
               'type': 'float'}
