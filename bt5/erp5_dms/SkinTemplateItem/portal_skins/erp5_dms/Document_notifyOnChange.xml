@@ -71,29 +71,23 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-  This function sends a notification mail to users who have checked the\n
-  corresponding option in their preference and who have a Role in the\n
-  passed list of Roles in the context of the document.\n
+  This function sends a notification mail to person who is allowed to modify\n
+  current document.\n
 """\n
 \n
-owner_id = \'\'\n
-user_ids = []\n
-roles_to_inform = (\'Owner\', \'Assignor\', \'Author\',)\n
+persons_to_inform = []\n
 \n
-# get list of user_ids from local roles\n
-# XXX: find persons having good enough roles in this object\n
-local_roles = context.showDict()[\'__ac_local_roles__\']\n
-for user_id, groups in local_roles.items():\n
-  if \'Owner\' in groups:\n
-    owner_id = user_id\n
-  # check if this local role is interested to be informed\n
-  intersect = [k for k in groups if k in roles_to_inform]\n
+# find which persons have needed roles so they can be informed\n
+person_list = context.getPortalObject().person_module.contentValues()\n
+person_list = filter(lambda x: x.getReference() is not None, person_list)\n
+for person in person_list:\n
+  local_roles = context.Document_getPersonRoleList(person, context)\n
+  # check if person\'s roles in this document\'s context allow him/her to modify it\n
+  intersect = [k for k in local_roles if k in roles_to_inform]\n
+  context.debug(intersect )\n
   if len(intersect) > 0:\n
-    user_ids.append(user_id)\n
+    persons_to_inform.append(person)\n
 \n
-# find person owner of object\n
-owners = context.portal_catalog(portal_type = \'Person\', \n
-                                reference = owner_id)\n
 # email templates\n
 if event in (\'release\',):\n
   subject_template = \'[DMS] Document owned by you was released.\'\n
@@ -107,7 +101,7 @@ elif event in (\'publish\',):\n
 click here: %(url)s/view to check it."""\n
 \n
 # send email to owner\n
-for person in owners:\n
+for person in persons_to_inform:\n
   email_subject = subject_template %dict(name = context.getTitle())\n
   email_text = email_template % dict(name = context.getTitle(),\n
                                      url = context.absolute_url())\n
@@ -140,7 +134,7 @@ for person in owners:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>event=\'publish\'</string> </value>
+            <value> <string>event=\'publish\', roles_to_inform = (\'Owner\', \'Assignor\',)</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -168,32 +162,29 @@ for person in owners:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>event</string>
-                            <string>owner_id</string>
-                            <string>user_ids</string>
                             <string>roles_to_inform</string>
-                            <string>_getitem_</string>
+                            <string>persons_to_inform</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>local_roles</string>
+                            <string>person_list</string>
+                            <string>filter</string>
                             <string>_getiter_</string>
-                            <string>user_id</string>
-                            <string>groups</string>
+                            <string>person</string>
+                            <string>local_roles</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>k</string>
                             <string>intersect</string>
                             <string>len</string>
-                            <string>owners</string>
                             <string>subject_template</string>
                             <string>email_template</string>
-                            <string>person</string>
                             <string>dict</string>
                             <string>email_subject</string>
                             <string>email_text</string>
@@ -211,6 +202,10 @@ for person in owners:\n
             <value>
               <tuple>
                 <string>publish</string>
+                <tuple>
+                  <string>Owner</string>
+                  <string>Assignor</string>
+                </tuple>
               </tuple>
             </value>
         </item>
