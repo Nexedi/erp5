@@ -7,6 +7,7 @@ Account Module | journal_report
 Account Module | jump_active_accounting_pref
 Account Module | list_ui
 Account Module | print
+Account Module | profit_and_loss_report
 Account Module | search
 Account Module | sort_on
 Account Module | third_parties_report
@@ -48,6 +49,7 @@ Accounting Transaction Module | jump_bank_accounts
 Accounting Transaction Module | list_ui
 Accounting Transaction Module | plan_transactions
 Accounting Transaction Module | print
+Accounting Transaction Module | profit_and_loss_report
 Accounting Transaction Module | search
 Accounting Transaction Module | sort_on
 Accounting Transaction Module | third_parties_report
