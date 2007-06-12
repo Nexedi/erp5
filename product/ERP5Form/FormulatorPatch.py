@@ -780,6 +780,8 @@ class PatchedDateTimeWidget(DateTimeWidget):
       format_dict = self.format_to_sql_format_dict
       input_order = format_dict.get(self.getInputOrder(field),
                                     self.sql_format_default)
+      if type(value) == type(u''):
+        value = value.encode(field.get_form_encoding())
       return {'query': value,
               'format': field.get_value('date_separator').join(input_order),
               'type': 'date'}
