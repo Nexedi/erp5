@@ -68,7 +68,7 @@
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 source = transaction.getBaobabSource()\n
 destination = transaction.getBaobabDestination()\n
@@ -132,8 +132,9 @@ if msg is not None:\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>source</string>
                             <string>destination</string>
                             <string>None</string>

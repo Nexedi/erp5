@@ -68,7 +68,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 # Check getBaobabSource and getBaobabDestination\n
 transaction.Base_checkBaobabSourceAndDestination()\n
@@ -303,8 +303,9 @@ for line in line_list:\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>portal</string>
                             <string>portal_activities</string>
                             <string>line_list</string>

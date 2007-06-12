@@ -119,8 +119,7 @@ elif reference_range_min is not None or reference_range_max is not None:\n
 \n
 check_list = []\n
 bank_account_uid = bank_account.getUid()\n
-resource_value = None\n
-generic_model = None\n
+resource_value = portal.restrictedTraverse(resource)\n
 reference_dict = {}\n
 # First we must parse everyting to make sure there is no error,\n
 # this is safer because we catch Validation in workflow scripts\n
@@ -128,7 +127,7 @@ for check_reference in reference_list:\n
   message_tag = \'check_%s_%s_%s\' % (resource, bank_account_uid, check_reference)\n
   # just raise an error.\n
   if context.portal_activities.countMessageWithTag(message_tag) != 0:\n
-    msg = Message(domain=\'ui\', message="This check number is already being indexed.")\n
+    msg = Message(domain=\'ui\', message="There are operations pending that prevent to validate this document. Please try again later.")\n
     raise ValidationFailed, (msg,)\n
   result = context.portal_catalog(portal_type = \'Check\', reference = check_reference, \n
                                   destination_payment_uid = bank_account.getUid(),\n
@@ -136,11 +135,15 @@ for check_reference in reference_list:\n
   result_len = len(result)\n
   if result_len == 0:\n
     if not context.Base_isAutomaticCheckCreationAllowed():\n
-      msg = Message(domain = "ui", message="Sorry, this reference does not exist")\n
+      msg = Message(domain = "ui", message="Sorry, the $type $reference for the account $account does not exist",\n
+                                   mapping={\'reference\' : reference, \'account\': bank_account.getInternalBankAccountNumber(),\n
+                                            \'type\': resource_value.getTitle()})\n
       raise ValidationFailed, (msg,)\n
 \n
   elif result_len > 1:\n
-    msg = Message(domain=\'ui\', message=\'Duplicate checks for the same check number\')\n
+    msg = Message(domain = "ui", message="Sorry, the $type $reference for the account $account is duplicated",\n
+                                   mapping={\'reference\' : reference, \'account\': bank_account.getInternalAccountNumber(),\n
+                                            \'type\': resource_value.getTitle()})\n
     raise ValidationFailed, (msg,)\n
 \n
   reference_dict[check_reference] = {}\n
@@ -152,12 +155,12 @@ for check_reference in reference_list:\n
   result_len = reference_dict[check_reference][\'result_len\']\n
   result = reference_dict[check_reference][\'result\']\n
   message_tag = reference_dict[check_reference][\'message_tag\']\n
+  generic_model = None\n
   if result_len == 0:\n
     # This happens only if automatic creation is allowed. So create a new check at this point.\n
     # Get a checkbook for this bank account.\n
     checkbook = None\n
-    if resource_value is None:\n
-      resource_value = portal.restrictedTraverse(resource)\n
+    if generic_model is None:\n
       composition_related_list = resource_value.getCompositionRelatedValueList()\n
       if len(composition_related_list) == 0:\n
         msg = Message(domain = "ui", message="Sorry, no checkbook model found")\n
@@ -167,7 +170,7 @@ for check_reference in reference_list:\n
         raise ValidationFailed, (msg,)\n
       generic_model = composition_related_list[0]\n
 \n
-    generic_model = context.portal_catalog(portal_type = \'Checkbook Model\', title = \'Generic\')[0].getObject()\n
+    #generic_model = context.portal_catalog(portal_type = \'Checkbook Model\', title = \'Generic\')[0].getObject()\n
     # XXX it would be better to use a related key for this, but z_related_resource is too specific to\n
     # movement at the moment.\n
     for brain in context.portal_catalog(portal_type = \'Checkbook\',\n
@@ -184,7 +187,7 @@ for check_reference in reference_list:\n
       # This has a performance penalty, but this part of the script will rarely be called (once per bank account).\n
       checkbook_tag = "checkbook_%s_%s" % (resource, bank_account_uid) \n
       if context.portal_activities.countMessageWithTag(checkbook_tag) != 0:\n
-        msg = Message(domain=\'ui\', message="There is already a checkbook being indexed.")\n
+        msg = Message(domain=\'ui\', message="There are operations pending that prevent to validate this document. Please try again later.")\n
         raise ValidationFailed, (msg,)\n
       checkbook = context.checkbook_module.newContent(portal_type = \'Checkbook\',\n
                                                       title = \'Generic\',\n
@@ -277,7 +280,6 @@ return check_list\n
                             <string>check_list</string>
                             <string>bank_account_uid</string>
                             <string>resource_value</string>
-                            <string>generic_model</string>
                             <string>reference_dict</string>
                             <string>check_reference</string>
                             <string>message_tag</string>
@@ -286,6 +288,7 @@ return check_list\n
                             <string>result_len</string>
                             <string>_write_</string>
                             <string>_getitem_</string>
+                            <string>generic_model</string>
                             <string>checkbook</string>
                             <string>composition_related_list</string>
                             <string>brain</string>

@@ -68,7 +68,7 @@
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-object = state_change.object\n
+object = state_change[\'object\']\n
 \n
 # Check that the destination is not empty\n
 destination = object.getDestination()\n
@@ -134,8 +134,9 @@ if len(object.objectValues())==0:\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>object</string>
+                            <string>_getattr_</string>
                             <string>destination</string>
                             <string>None</string>
                             <string>message</string>

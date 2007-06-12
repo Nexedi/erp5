@@ -86,6 +86,7 @@
                         <string>DestinationAssignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>
@@ -119,6 +120,7 @@
                         <string>DestinationAssignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>
