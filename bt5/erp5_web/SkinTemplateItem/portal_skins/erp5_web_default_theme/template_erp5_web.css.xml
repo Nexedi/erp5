@@ -159,7 +159,7 @@ form#main_form div#wrapper_footer {\n
 \n
 /* Standard wrapper */\n
 \n
-form#main_form div.wrapper fieldset.column {\n
+form#main_form div.wrapper div.column fieldset.widget {\n
   background: #fff url(erp5-website-field.png) top repeat-x;\n
   border: 1px solid #ccc;\n
   color: #666;\n
@@ -167,7 +167,7 @@ form#main_form div.wrapper fieldset.column {\n
   margin: 0.5em 0;\n
 }\n
 \n
-form#main_form div.wrapper fieldset.column legend {\n
+form#main_form div.wrapper div.column fieldset.widget legend {\n
   padding: 0.2em .5em;\n
   font-weight: bold;\n
   color: #666;\n
@@ -175,21 +175,21 @@ form#main_form div.wrapper fieldset.column legend {\n
   background: #EEE;\n
 }\n
 \n
-form#main_form div.wrapper fieldset.column div.field label:after {content: ":"}\n
+form#main_form div.wrapper div.column fieldset.widget div.field label:after {content: ":"}\n
 \n
 /* Transparent wrapper - useful to display a logo */\n
-form#main_form div.wrapper fieldset.transparent {\n
+form#main_form div.wrapper div.transparent fieldset.widget {\n
   border: 0;\n
   background: transparent;\n
   margin: 0 0;\n
   padding: 0 0;\n
 }\n
 \n
-form#main_form div.wrapper fieldset.transparent legend {\n
+form#main_form div.wrapper div.transparent fieldset.widget legend {\n
   display: None;\n
 }\n
 \n
-form#main_form div.wrapper fieldset.transparent label {\n
+form#main_form div.wrapper div.transparent fieldset.widget label {\n
   display: None;\n
 }\n
 \n
@@ -197,7 +197,7 @@ form#main_form div.wrapper fieldset.transparent label {\n
 -----------------------------------------------*/\n
 \n
 /* Special layout for logo widget */\n
-form#main_form fieldset.column div.field.logo {\n
+form#main_form div.column fieldset.widget div.field.logo {\n
   padding: 2em 0 0;\n
   border: 0;\n
   background: transparent;\n
@@ -217,14 +217,14 @@ form#main_form div#wrapper_footer div.field {\n
   border-style: solid;\n
 }\n
 \n
-form#main_form div#wrapper_footer fieldset {\n
+form#main_form div#wrapper_footer fieldset.widget {\n
   border-width: 0;\n
   padding: 0;\n
   margin: 0;\n
   width: 100%;\n
 }\n
 \n
-form#main_form div#wrapper_footer fieldset legend {\n
+form#main_form div#wrapper_footer fieldset.widget legend {\n
   display: none;\n
 }\n
 \n

@@ -79,7 +79,8 @@ div.adminToolbox label {display: none}\n
 /* Sub section title */\n
 div.adminToolbox h3 {\n
   margin-left: 0em;\n
-  font-size: inherit;\n
+  /* font-size: inherit; */ /* Does not seem compatible with IE */\n
+  font-size: 8pt;\n
 }\n
 \n
 /* Title */\n
@@ -112,7 +113,9 @@ div.adminToolbox li > a {\n
   padding: .2em;\n
 }\n
 \n
-div.adminToolbox button[type="submit"] {display: none}\n
+div.adminToolbox button[type="submit"] {\n
+  display: none;\n
+}\n
 \n
 \n
 \n
@@ -125,6 +128,7 @@ div.adminToolbox fieldset {               /* Should be the same as "fieldset" ru
   background: none;\n
   border: inherit;\n
   margin: 0;\n
+  border: 0;\n
 }\n
 div.adminToolbox fieldset > div.field {   /* Should be similar to "fieldset > div" rule */\n
   padding: 0;\n

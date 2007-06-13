@@ -120,6 +120,7 @@ ul.tabbernav li.tabberactive a:hover\n
  padding:5px;\n
  border: 1px solid #778;\n
  border-top: 0;\n
+ background-color: white;\n
 }\n
 \n
 /* If desired, hide the heading since a heading is provided by the tab */\n
