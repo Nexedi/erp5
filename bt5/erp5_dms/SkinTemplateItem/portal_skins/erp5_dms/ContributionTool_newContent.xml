@@ -79,6 +79,9 @@ translateString = context.Base_translateString\n
 # clean up kw from file field otherwise \n
 # ZODB raises an exception when committing transaction\n
 kw.pop(\'field_your_file\', None)\n
+# remove Base_callDialogMethod arg, otherwise it is set on context\n
+# and then we can\'t execute any workflow transition\n
+kw.pop(\'Base_callDialogMethod\', None)\n
 \n
 if kw[\'portal_type\'] == \'\':\n
   # we don\'t want to set portal_type to \'\' :)\n
