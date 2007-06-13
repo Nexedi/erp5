@@ -39,13 +39,12 @@ from AccessControl.SecurityManagement import newSecurityManager, \
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
-class TestGis(ERP5TypeTestCase):
+class TestGeographicalAddress(ERP5TypeTestCase):
   """
   ERP5 Geographical Address related tests.
 
   The purpose of this test is to check that the getText function defined
   on a Geographical Address returns the standard text format.
-
   """
 
   run_all_test = 1
@@ -57,7 +56,7 @@ class TestGis(ERP5TypeTestCase):
   city_text = "City1"
 
   def getTitle(self):
-    return "Gis"
+    return "Geographical Address"
 
   def getBusinessTemplateList(self):
     """
@@ -213,5 +212,5 @@ else:
   import unittest
   def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestGis))
+    suite.addTest(unittest.makeSuite(TestGeographicalAddress))
     return suite
