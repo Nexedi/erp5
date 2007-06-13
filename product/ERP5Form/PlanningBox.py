@@ -83,7 +83,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     - return a dict of values to update objects in case no errors have been
       found. Otherwise save in the REQUEST the list of error blocks so that
       they can be displayed in a special way.
-    """ 
+    """
     # init params
     value = None
     form = field.aq_parent
@@ -275,7 +275,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
 
     ##################################################
     # getting object_dict to update object properties once activities are up to
-    # date. Activities values will be updated directly on the 
+    # date. Activities values will be updated directly on the
     object_dict = self.getObjectDict(structure)
 
     ##################################################
@@ -560,7 +560,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         new_stop = temp_stop
 
     # new start & stop values are known
-    # checking weither activity has been cut-off to fit the planning bounds 
+    # checking weither activity has been cut-off to fit the planning bounds
     #if activity.secondary_axis_begin != activity.secondary_axis_start:
     #  new_start = activity.secondary_axis_begin
     #if activity.secondary_axis_end != activity.secondary_axis_stop:
@@ -645,7 +645,7 @@ class PlanningBoxWidget(Widget.Widget):
    'title_line',
    # specific block properties
    'x_start_bloc','x_stop_bloc', 'y_size_block',
-   # name of scripts 
+   # name of scripts
    'stat_method','split_method','color_script',
    'round_script','sec_axis_script',
    # number of delimitations over the secondary axis
@@ -957,7 +957,7 @@ class PlanningBoxWidget(Widget.Widget):
     structure = REQUEST.get('structure')
 
     # getting HTML rendering Page Template
-    planning_html_method = getattr(REQUEST['here'],'planning_content')
+    planning_html_method = getattr(REQUEST['here'], 'planning_content')
     # recovering HTML data by calling Page Template document
     HTML_data = planning_html_method(struct=structure)
     # return HTML data
@@ -1043,8 +1043,8 @@ class BasicStructure:
   def __init__ (self, here='', form='', field='', REQUEST='', list_method='',
               selection=None, params = '', selection_name='', report_root_list='',
               title_line='', portal_types='', sort=None, list_error=None):
-    """ 
-    Init main internal parameters 
+    """
+    Init main internal parameters
     """
     self.here = here
     self.form = form
@@ -1079,6 +1079,7 @@ class BasicStructure:
     """
     default_params ={}
     current_section = None
+    LOG('PlanningBox, build', 0, 'ici')
     #params = self.selection.getParams()
 
 
@@ -1191,7 +1192,7 @@ class BasicStructure:
       selection_report_current = ()
     else:
       selection_report_current = self.selection.getReportList()
-    
+
     # building report_tree_list
     report_tree_list = makeTreeList(here=self.here, form=self.form,
                                     root_dict=None,
@@ -1226,11 +1227,13 @@ class BasicStructure:
     self.report_activity_dict = {}
     indic_line=0
     index_line=0
-    blocks_object={} 
+    blocks_object={}
     select_expression = ''
 
     # now iterating through report_tree_list
+    LOG('PlanningBox, build', 0, 'report_tree_list %s' % len(report_tree_list))
     for object_tree_line in report_tree_list:
+      LOG('PlanningBox, build', 0, 'object_tree_line %s' % str(object_tree_line))
       # prepare query by defining selection report object
       # defining info_dict, holding all information about the current object.
       info_dict = None
@@ -1268,7 +1271,7 @@ class BasicStructure:
 
         # processing all cases
         self.selection.edit(params = kw)
-        
+
         # recovering object list
         if self.list_method not in (None,''):
           # valid list_method has been found
@@ -1289,7 +1292,7 @@ class BasicStructure:
         # XXX filter the object to the right domain.
         # Can be improved in future.
         domain_obj = object_tree_line.getObject()
-        new_object_list = [] 
+        new_object_list = []
         if domain_obj.getPortalType() == 'Domain':
           category_obj = domain_obj.getMembershipCriterionCategory()
           membership_base_category = domain_obj.getMembershipCriterionBaseCategory()
@@ -1560,7 +1563,7 @@ class BasicStructure:
       #axis_dict['bound_begin'] = 0
       #axis_dict['bound_end'] = 1
       return [(Message(domain='erp5_ui', message=message,mapping=None))]
-    
+
     axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
     # now start and stop have the extreme values of the second axis bound.
     # this represents in fact the size of the Planning's secondary axis
@@ -1680,7 +1683,7 @@ class BasicStructure:
 			                               self.title_line, None)
         else:
           title_line_method = getattr(report_group_object.getObject(), \
-                                                       'getTitle', None) 
+                                                       'getTitle', None)
         if title_line_method is not None:
           title = title_line_method()
           name = title_line_method()
@@ -1735,9 +1738,9 @@ class BasicGroup:
   ReportTree mode to handle child groups.
   """
 
-  def __init__ (self, title='', name='',url='', constraints='', depth=0, 
+  def __init__ (self, title='', name='',url='', constraints='', depth=0,
                 position=0, field = None, object = None, is_open=0,
-                is_pure_summary=1, secondary_axis_start=None, 
+                is_pure_summary=1, secondary_axis_start=None,
                 secondary_axis_stop=None, property_dict = {}):
     self.title = title
     self.name = name
@@ -1803,7 +1806,7 @@ class BasicGroup:
       indic=0
       # iterating each activity linked to the current group
       for activity_content in activity_list:
-        # interpreting results and getting begin and end values from 
+        # interpreting results and getting begin and end values from
         # previously recovered method
         block_begin = None
         block_end = None
@@ -1874,7 +1877,7 @@ class BasicGroup:
             info_botright_method = \
                  getattr(activity_content,info_botright,None)
 
-            # if value recovered is not null, then updating 
+            # if value recovered is not null, then updating
             if info_center_method!=None:
                info['info_center']=str(info_center_method())
             if info_topright_method!=None:
@@ -1930,7 +1933,7 @@ class BasicGroup:
           except (AttributeError):
             self.basic_activity_list = []
             self.basic_activity_list.append(activity)
-          # incrementing indic used for differenciating activities in the same 
+          # incrementing indic used for differenciating activities in the same
           # group (used for Activity naming)
           indic += 1
 
@@ -1965,7 +1968,7 @@ class BasicGroup:
         if block_end == None:
           block_end = secondary_axis_info['bound_stop']
           current_color='#E4CCE1'
-        
+
         if  (block_begin > secondary_axis_info['bound_stop'] or \
           block_end < secondary_axis_info['bound_start']):
           # activity will not be displayed, stopping process
@@ -2543,7 +2546,7 @@ class Activity:
       try:
         self.block_list.append(new_block)
       except AttributeError:
-        # in case this is the first add 
+        # in case this is the first add
         # need to initialize the list
         self.block_list = []
         self.block_list.append(new_block)
@@ -2750,10 +2753,10 @@ class Axis:
     self.name = name
     self.size = 0 # value
     # axis group is a single group that contain the axis structure.
-    # defined to be able to use a generic and recursive method to 
+    # defined to be able to use a generic and recursive method to
     self.axis_group = axis_group
     # specify if axis is primary or secondary.
-    # - if primary axis in Planning, zoom selection is applied thanks to 
+    # - if primary axis in Planning, zoom selection is applied thanks to
     # a cut over the basic structure objects (based on their position and
     # their length).
     # - if secondary axis in Planning, then need to apply the second zoom
@@ -2959,7 +2962,7 @@ class AxisGroup:
     for basic_activity_object in basic_activity_list:
 
       # defining Activity from basic_activity_object
-      activity = Activity(name= 'Group_%s_Activity_%s' 
+      activity = Activity(name= 'Group_%s_Activity_%s'
                                %(str(axis_group_number),
                                  str(activity_number)),
                           title=basic_activity_object.title,
@@ -3073,7 +3076,7 @@ class PlanningBox(ZMIField):
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
       if id == 'default' and kw.get('render_format') in ('list', ):
-        return self.widget.render(self, self.generate_field_key() , None , 
+        return self.widget.render(self, self.generate_field_key() , None ,
                                   kw.get('REQUEST'),
                                   render_format=kw.get('render_format'))
       else:
@@ -3107,6 +3110,3 @@ InitializeClass(AxisElement)
 allow_class(AxisElement)
 InitializeClass(Info)
 allow_class(Info)
-
-
-
