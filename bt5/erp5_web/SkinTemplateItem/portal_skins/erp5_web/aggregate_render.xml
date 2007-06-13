@@ -94,13 +94,15 @@ Example of macro use (similar to \'erp5_web_default_template\' use):\n
       <tal:block tal:define="gid     group/gid;\n
                              gtitle  group/gtitle;\n
                              goid    group/goid;">\n
-        <fieldset tal:attributes="class python: gid;\n
-                                  id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
-          <legend tal:content="python: gtitle" class="group_title"/>\n
-          <tal:block tal:repeat="field python: layout_form.get_fields_in_group(goid)">\n
-            <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
-          </tal:block>\n
-        </fieldset>\n
+        <div tal:attributes="class python: gid;\n
+                                   id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
+          <fieldset class="widget">\n
+            <legend tal:content="python: gtitle" class="group_title"/>\n
+            <tal:block tal:repeat="field python: layout_form.get_fields_in_group(goid)">\n
+              <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+            </tal:block>\n
+          </fieldset>\n
+        </div>\n
       </tal:block>\n
     </tal:block>\n
 \n
