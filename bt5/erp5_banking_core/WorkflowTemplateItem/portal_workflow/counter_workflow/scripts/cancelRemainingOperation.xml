@@ -71,7 +71,7 @@ from Products.ERP5Type.Message import Message\n
 # XXX maybe raise other exception as otherwise the transition will passed even if\n
 # check fail\n
 \n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 site = transaction.Baobab_getVaultSite(vault=transaction.getSiteValue())\n
 \n
 # get the current counter date\n
@@ -140,8 +140,9 @@ for operation in operation_list_object:\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>site</string>
                             <string>kwd</string>
                             <string>append</string>
@@ -155,7 +156,6 @@ for operation in operation_list_object:\n
                             <string>current_date</string>
                             <string>len</string>
                             <string>msg</string>
-                            <string>_getitem_</string>
                             <string>site_uid</string>
                             <string>operation_list_object</string>
                             <string>operation</string>

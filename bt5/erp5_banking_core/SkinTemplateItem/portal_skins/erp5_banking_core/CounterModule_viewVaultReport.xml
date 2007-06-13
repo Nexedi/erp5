@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>CounterModule_viewVaultReport</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -64,7 +64,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>bottom</string>
+                <string>left</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -74,19 +74,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>listbox_total_price</string>
-                        <string>listbox_total_quantity</string>
+                        <string>my_vault</string>
+                        <string>my_vault_report_type</string>
+                        <string>my_from_date</string>
+                        <string>my_to_date</string>
                       </list>
                     </value>
                 </item>
@@ -103,11 +103,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CounterModule_viewVaultReport</string> </value>
+            <value> <string>CounterModule_viewReportDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -119,7 +119,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Vault Report</string> </value>
+            <value> <string>Report</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

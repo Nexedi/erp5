@@ -78,7 +78,8 @@ if portal_type is not None:\n
   kwd_source[\'portal_type\'] = portal_type\n
   kwd_destination[\'portal_type\'] = portal_type\n
 # as destination\n
-operation_list = list(context.portal_catalog(**kwd_source)) + list(context.portal_catalog(**kwd_destination))\n
+operation_list = list(context.portal_catalog(**kwd_source)) + \\\n
+                      list(context.portal_catalog(**kwd_destination))\n
 operation_list_object = [x.getObject() for x in operation_list]\n
 \n
 return operation_list_object\n

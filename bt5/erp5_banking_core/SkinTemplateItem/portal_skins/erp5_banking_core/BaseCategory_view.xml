@@ -113,6 +113,7 @@
                         <string>my_acquisition_base_category_list</string>
                         <string>my_acquisition_portal_type_list</string>
                         <string>my_fallback_base_category_list</string>
+                        <string>my_category_type_list</string>
                       </list>
                     </value>
                 </item>
@@ -124,7 +125,6 @@
                         <string>my_acquisition_mask_value</string>
                         <string>my_acquisition_append_value</string>
                         <string>my_acquisition_sync_value</string>
-                        <string>my_category_type_list </string>
                       </list>
                     </value>
                 </item>

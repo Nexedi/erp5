@@ -87,7 +87,7 @@ if len(assignment_list) == 0:\n
   return []\n
 \n
 valid_assignment_list = []\n
-context.log("Baobab_getUserAssignmentList", "assignment_list = %s" %(assignment_list,))\n
+#context.log("Baobab_getUserAssignmentList", "assignment_list = %s" %(assignment_list,))\n
 for a in assignment_list:\n
   if a.getValidationState() == \'open\':\n
     stop  = a.getStopDate()\n

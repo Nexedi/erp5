@@ -160,10 +160,10 @@ vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node=v
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
                                                                  )\n
-context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault_url_list\n
-                                                                , ignore_variation=0,src__=1\n
-                                                               ,**inventory_kw\n
-                                                              ))\n
+#context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault_url_list\n
+#                                                                , ignore_variation=0,src__=1\n
+#                                                               ,**inventory_kw\n
+#                                                              ))\n
 \n
 if summarise:\n
   total_quantity = 0\n
@@ -236,13 +236,14 @@ for resource in resource_dict.keys():\n
   if current_resource_portal_type not in resource_portal_type:\n
     continue\n
   if len(resource)==3: # case of history\n
-    context.log(\'movement uid before error\',resource[2])\n
+    #context.log(\'movement uid before error\',resource[2])\n
     #movement = context.portal_catalog.getObject(resource[2])\n
     movement = portal.restrictedTraverse(resource[2])\n
-    #context.log(\'movement\',movement)\n
+    #context.log(\'CounterModule_getVaultTransactionList\', \'movement = %s\' %movement)\n
     explanation_value = movement\n
     if getattr(movement,\'getExplanationValue\',None) is not None:\n
       explanation_value = movement.getExplanationValue()\n
+    #context.log(\'CounterModule_getVaultTransactionList\', \'explanation_value = %s\' %explanation_value)\n
     tmp_dict[\'explanation_relative_url\'] = explanation_value.getRelativeUrl()\n
     source_reference = explanation_value.getSourceReference() or \'\'\n
     tmp_dict[\'source_reference\'] = source_reference\n
