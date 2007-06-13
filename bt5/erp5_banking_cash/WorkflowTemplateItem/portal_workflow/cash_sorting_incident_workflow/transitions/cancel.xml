@@ -44,7 +44,7 @@
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -66,27 +66,6 @@
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>2</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-                <string>Assignor</string>
-              </tuple>
-            </value>
         </item>
       </dictionary>
     </pickle>

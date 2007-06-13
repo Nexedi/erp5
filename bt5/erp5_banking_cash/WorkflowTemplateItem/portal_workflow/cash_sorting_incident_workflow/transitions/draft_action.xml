@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Draft Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -85,6 +85,7 @@
               <tuple>
                 <string>Manager</string>
                 <string>Assignee</string>
+                <string>DestinationAssignor</string>
               </tuple>
             </value>
         </item>
