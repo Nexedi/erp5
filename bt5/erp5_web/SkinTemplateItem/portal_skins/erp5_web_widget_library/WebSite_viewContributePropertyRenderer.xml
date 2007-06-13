@@ -81,13 +81,7 @@
       </option>\n
     </select>\n
   </div>\n
-</div>    \n
-\n
-\n
-<!-- \n
-# vim: filetype=html syntax=html shiftwidth=2 \n
--->\n
-
+</div>   
 
 ]]></string> </value>
         </item>
@@ -101,11 +95,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>au_macros</string> </value>
+            <value> <string>WebSite_viewContributePropertyRenderer</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>XXX - Integrate in wherever appropriate</string> </value>
+            <value> <string>Contribute Subwidgets</string> </value>
         </item>
       </dictionary>
     </pickle>

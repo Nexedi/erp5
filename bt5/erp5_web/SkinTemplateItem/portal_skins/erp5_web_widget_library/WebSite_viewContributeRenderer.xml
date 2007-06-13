@@ -78,9 +78,12 @@
         </select>\n
         <input type="file" name="contribute_file" size="30" />\n
       </div>\n
+      <!--<a onclick="setMailString();" id="mail_contribute_button" href="mailto:dms@dms.nexedi.com?subject=Contribution&body=">\n
+        <img src="au_icons/kmail.png" align="right" alt="contribute by mail" title="contribute by mail"/>\n
+      </a>-->\n
       <div style="float:left"\n
            tal:define="contribute_prefix string:contribute_">\n
-        <div metal:use-macro="here/au_macros/macros/contribute_properties">\n
+        <div metal:use-macro="here/WebSite_viewContributePropertyRenderer/macros/contribute_properties">\n
           Theme\n
         </div>\n
       </div>\n
@@ -112,7 +115,7 @@
         <a href="" target="_blank" onclick="return setLink(this)" value="" i18n:translate="" i18n:domain="ui">preview</a>\n
       </div>\n
       <tal:block tal:define="contribute_prefix string:link_">\n
-        <div metal:use-macro="here/au_macros/macros/contribute_properties">\n
+        <div metal:use-macro="here/WebSite_viewContributePropertyRenderer/macros/contribute_properties">\n
           Theme\n
         </div>\n
       </tal:block>\n
@@ -146,7 +149,7 @@
                title = \'Online Content:\',\n
               ),\n
               dict(\n
-               portal_type_list = here.getPortalFileDocumentTypeList(),\n
+               portal_type_list = here.getPortalFileDocumentTypeList() + here.getPortalTemplateDocumentTypeList(),\n
                id = \'content\',\n
                title = \'Offline Content:\',\n
               ),\n

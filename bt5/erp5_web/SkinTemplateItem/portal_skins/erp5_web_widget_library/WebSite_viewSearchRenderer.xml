@@ -80,7 +80,7 @@ Description:\n
               <option value="Person" i18n:translate="" i18n:domain="ui">Person</option>\n
               <option value="Organisation" i18n:translate="" i18n:domain="ui">Organisation</option>\n
               <option value="" i18n:translate="" i18n:domain="ui">-- Quick Search --</option>\n
-              <option tal:repeat="ptype here/ERP5Site_getQuickSearchableTypeList"\n
+              <option tal:repeat="ptype here/ERP5Site_getQuickSearchableTypeList | nothing"\n
                       tal:attributes="value ptype"  tal:content="python:ptype"\n
                       i18n:translate="" i18n:domain="ui">Standard Type</option>\n
             </tal:block>\n
