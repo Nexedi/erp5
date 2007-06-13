@@ -102,12 +102,15 @@ if reference in (None, \'\') or not str(reference).startswith(application_id):\n
         return \'\'\n
 \n
   # actual generation\n
-  if reference in (None, \'\'):\n
-    baobab_id_group = (application_id, codification, year)\n
-    reference = context.portal_ids.generateNewLengthId(id_group = baobab_id_group)\n
+  #if reference in (None, \'\'): \n
+  #XXX is it necessary to concatenate to an old reference ?\n
+  # this make reference look strange when using different script to\n
+  # generate reference based on criteria the user can play with\n
+  baobab_id_group = (application_id, codification, year)\n
+  new_id = context.portal_ids.generateNewLengthId(id_group = baobab_id_group)\n
 \n
   # affectation\n
-  reference = "%s-%s-%s-%s" % (application_id, codification, year, reference)\n
+  reference = "%s-%s-%s-%s" % (application_id, codification, year, new_id)\n
   context.setSourceReference(reference)\n
 \n
 # finally, return it\n
@@ -179,6 +182,7 @@ return reference\n
                             <string>site</string>
                             <string>site_value</string>
                             <string>baobab_id_group</string>
+                            <string>new_id</string>
                           </tuple>
                         </value>
                     </item>
