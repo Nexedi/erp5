@@ -41,21 +41,20 @@ def MailInTool_postUTF8MailMessage(self, file=None):
   }
   # Get Message
   msg = email.message_from_string(file)
-  # Bake up original file
+  # Back up original file
   theMail['__original__'] = file
   # Recode headers to UTF-8 if needed
   for key, value in msg.items():
     decoded_value_list = decode_header(value)
     unicode_value = make_header(decoded_value_list)
     new_value = unicode_value.__unicode__().encode('utf-8')
-#           msg.replace_header(key, new_value)
     theMail['headers'][key.lower()] = new_value
-  # Filter mail
+  # Filter mail addresses
   for header in ('resent-to', 'resent-from', 'resent-cc', 'resent-sender', 'to', 'from', 'cc', 'sender', 'reply-to'):
     header_field = theMail['headers'].get(header)
     if header_field:
         theMail['headers'][header] = parseaddr(header_field)[1]
-  # Get attachment
+  # Get attachments
   body_found = 0
   for part in msg.walk():
     content_type = part.get_content_type()
@@ -64,16 +63,23 @@ def MailInTool_postUTF8MailMessage(self, file=None):
     # XXX Check if data is None ?
     if content_type.startswith('multipart'):
       continue
+    # message/rfc822 contains attached email message
+    # next 'part' will be the message itself
+    # so we ignore this one to avoid doubling
     elif content_type == 'message/rfc822':
       continue
     elif content_type == "text/plain":
       charset = part.get_content_charset()
       payload = part.get_payload(decode=True)
-      payload = unicode(payload, charset).encode('utf-8')
+      #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
+      if charset:
+        payload = unicode(payload, charset).encode('utf-8')
       if body_found:
         # Keep the content type
+        # since this is not a body, this must be 
+        # an attached email - we want it whole (with the headers)
         theMail['attachment_list'].append((file_name, 
-                                           content_type, payload))
+                                           content_type, part.as_string()))
       else:
         theMail['body'] = payload
         body_found = 1
@@ -104,7 +110,7 @@ def MailInTool_postUTF8MailMessage(self, file=None):
       log_message = fp.getvalue()
       LOG("GeneratorTool, next", 1000, 
           log_message)
-      return "Message rejected."
+      return "Message rejected. \n %s" % log_message
   
   self.REQUEST.RESPONSE.notFoundError('MailIn method not specified')
 
