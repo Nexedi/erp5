@@ -76,10 +76,8 @@ def MailInTool_postUTF8MailMessage(self, file=None):
         payload = unicode(payload, charset).encode('utf-8')
       if body_found:
         # Keep the content type
-        # since this is not a body, this must be 
-        # an attached email - we want it whole (with the headers)
         theMail['attachment_list'].append((file_name, 
-                                           content_type, part.as_string()))
+                                           content_type, payload))
       else:
         theMail['body'] = payload
         body_found = 1
