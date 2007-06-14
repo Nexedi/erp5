@@ -72,7 +72,10 @@
   Called by portal_contributions.getPropertyDictFromFilename\n
 \n
   Receives file name and a dict of properties found in file name by\n
-  using regular expression defined in preferences.\n
+  using regular expression defined in preferences. \n
+\n
+  Uses provided arguments to generate document\'s reference, language, \n
+  title, source_project and/or source_conference.\n
 \n
   If necessary can do additional things (like mapping\n
   portal type id to portal type name).\n
@@ -80,12 +83,62 @@
   Type-based.\n
 """\n
 \n
-new_dict = {}\n
-for k, v in property_dict.items():\n
-  if v:\n
-    if k == \'language\':\n
-      v = v.lower()\n
-    new_dict[k] = v\n
+# convert language to lowercase\n
+if property_dict.has_key(\'language\'):\n
+  property_dict[\'language\'] = property_dict[\'language\'].lower()\n
+\n
+language = property_dict.get(\'language\', \'en\')\n
+version = property_dict.get(\'version\', \'001\')\n
+local_id = property_dict.get(\'local_id\', \'undefined\')\n
+group_reference_path = property_dict.get(\'group_reference_path\', None)\n
+source_conference_reference = property_dict.get(\'source_conference_reference\', None)\n
+source_project_reference = property_dict.get(\'source_project_reference\', None)\n
+\n
+new_dict = dict(language = language, \n
+                version = version)\n
+\n
+if source_project_reference:\n
+  # generate document\'s reference using project reference\n
+  reference = \'P-%s-%s\' %(source_project_reference, local_id)\n
+  project = context.portal_catalog.getResultValue(reference = source_project_reference,\n
+                                                  portal_type = \'Project\')\n
+  if project:\n
+    new_dict[\'source_project\'] = project.getRelativeUrl()\n
+elif source_conference_reference:\n
+  # generate document\'s reference using conference reference\n
+  reference = \'C-%s-%s\' % (source_conference_reference, local_id)\n
+  conference = context.portal_catalog.getResultValue(reference = source_project_reference,\n
+                                                     portal_type = \'Conference\')\n
+  if conference:\n
+    new_dict[\'source_conference\'] = conference.getRelativeUrl()\n
+elif group_reference_path:\n
+  # generate document\'s reference using conference reference\n
+  reference = \'%s-%s\' % (group_reference_path, local_id)\n
+  group_reference_list = group_reference_path.split(\'-\')\n
+  if group_reference_list:\n
+    group_id = group_reference_list[0]\n
+    category = context.portal_catalog.getResultValue(reference = group_id, \n
+                                                     portal_type = \'Category\')\n
+    if category is not None and category.getBaseCategory().getId()==\'group\':\n
+      for group_id in group_reference_list[1:]:\n
+        category = context.portal_catalog.getResultValue(reference = group_id, \n
+                                                         parent_uid = category.getUid(),\n
+                                                         portal_type = \'Category\')\n
+        if category is None: \n
+          break\n
+  if category is not None:\n
+     new_dict[\'group\'] = \'/\'.join(category.getRelativeUrl().split(\'/\')[1:])\n
+else:\n
+  # no reference could be found\n
+  # XXX: This can break DMS/KM functionality especially revision support!\n
+  reference = None\n
+\n
+if reference:\n
+  new_dict[\'reference\'] = reference\n
+\n
+# Set title to file_name by default\n
+new_dict[\'title\'] = file_name.split(\'.\')[0]\n
+\n
 return new_dict\n
 </string> </value>
         </item>
@@ -137,12 +190,26 @@ return new_dict\n
                           <tuple>
                             <string>file_name</string>
                             <string>property_dict</string>
-                            <string>new_dict</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
-                            <string>k</string>
-                            <string>v</string>
+                            <string>_getitem_</string>
                             <string>_write_</string>
+                            <string>language</string>
+                            <string>version</string>
+                            <string>local_id</string>
+                            <string>None</string>
+                            <string>group_reference_path</string>
+                            <string>source_conference_reference</string>
+                            <string>source_project_reference</string>
+                            <string>dict</string>
+                            <string>new_dict</string>
+                            <string>reference</string>
+                            <string>context</string>
+                            <string>project</string>
+                            <string>conference</string>
+                            <string>group_reference_list</string>
+                            <string>group_id</string>
+                            <string>category</string>
+                            <string>_getiter_</string>
                           </tuple>
                         </value>
                     </item>
