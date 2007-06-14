@@ -71,24 +71,15 @@
             <value> <string>"""\n
   Processes request of ContributionTool_viewContributeFileDialog\n
   does what is necessary and calls portal_contributions.newContent\n
-  redirects to what is returned\n
+  redirects to what is returned.\n
 """\n
 \n
 translateString = context.Base_translateString\n
+portal_type = kw.get(\'portal_type\', None)\n
 \n
-# clean up kw from file field otherwise \n
-# ZODB raises an exception when committing transaction\n
-kw.pop(\'field_your_file\', None)\n
-# remove Base_callDialogMethod arg, otherwise it is set on context\n
-# and then we can\'t execute any workflow transition\n
-kw.pop(\'Base_callDialogMethod\', None)\n
-\n
-if kw[\'portal_type\'] == \'\':\n
-  # we don\'t want to set portal_type to \'\' :)\n
-  kw.pop(\'portal_type\', None)\n
-\n
-# ingest file\n
-doc = context.portal_contributions.newContent(file=file, **kw)\n
+# ingest file (asynchronously)\n
+doc = context.portal_contributions.newContent(file = file,\n
+                                              portal_type = portal_type)\n
 \n
 msg = translateString("${portal_type} created successfully.",\n
                        mapping = {\'portal_type\':doc.getPortalType()})\n
@@ -149,8 +140,7 @@ return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':m
                             <string>context</string>
                             <string>translateString</string>
                             <string>None</string>
-                            <string>_getitem_</string>
-                            <string>_apply_</string>
+                            <string>portal_type</string>
                             <string>doc</string>
                             <string>msg</string>
                           </tuple>
