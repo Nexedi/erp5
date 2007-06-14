@@ -166,7 +166,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -242,20 +244,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>year/month/day</string>
-                          <string>ymd</string>
-                        </tuple>
-                        <tuple>
-                          <string>day/month/year</string>
-                          <string>dmy</string>
-                        </tuple>
-                        <tuple>
-                          <string>month/day/year</string>
-                          <string>mdy</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -280,6 +269,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(here.Base_translateString(display), value) for (display, value) in ((\'\', \'\'), (\'Year / Month / Day\', \'ymd\'), (\'Day / Month / Year\', \'dmy\'), (\'Month / Day / Year\', \'mdy\'))]</string> </value>
         </item>
       </dictionary>
     </pickle>
