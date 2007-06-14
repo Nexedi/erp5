@@ -678,21 +678,21 @@ class PlanningBoxWidget(Widget.Widget):
   # setting header height
   size_header_height = fields.IntegerField('size_header_height',
       title='header height',
-      desciption='height of the planning header',
+      description='height of the planning header',
       default=100,
       required=1)
 
   # setting left border size
   size_border_width_left = fields.IntegerField('size_border_width_left',
       title='Size border width left',
-      desciption='setting left border size',
+      description='setting left border size',
       default=10,
       required=1)
 
   # setting the width of the Planning (excl. Y axis : only the block area)
   size_planning_width = fields.IntegerField('size_planning_width',
       title='Planning width',
-      desciption='size of the planning area, excluding axis size',
+      description='size of the planning area, excluding axis size',
       default=1000,
       required=1)
 
