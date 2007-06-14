@@ -178,6 +178,9 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     # check source reference
     self.assertNotEqual(self.mutilated_banknote.getSourceReference(), '')
     self.assertNotEqual(self.mutilated_banknote.getSourceReference(), None)
+    # headquarter is used in order to know if the document will go to the
+    # headquarter or not.
+    sequence.edit(headquarter=0)
 
 
   def stepTryStopWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
@@ -258,7 +261,11 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       self.assertEqual(cell.getBaobabSourceValue(), None)
-      self.assertEqual(cell.getBaobabDestination(), self.usual_vault.getRelativeUrl())
+      headquarter = sequence.get('headquarter', 0)
+      if headquarter:
+        self.assertEqual(cell.getBaobabDestination(), None)
+      else:
+        self.assertEqual(cell.getBaobabDestination(), self.usual_vault.getRelativeUrl())
       if cell.getId() == 'movement_0_0_0':
         self.assertEqual(cell.getQuantity(), 2.0)
       elif cell.getId() == 'movement_0_1_0':
@@ -417,8 +424,8 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check the initial inventory before any operations
     """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
 
@@ -553,6 +560,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'finish_action', wf_id='mutilated_banknote_workflow')
     self.stepTic()
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "finished")
+    sequence.edit(headquarter=1)
 
   def stepCheckHQFinalInventoryWithNoPayBack(self, sequence=None, sequence_list=None, **kwd):
     """
