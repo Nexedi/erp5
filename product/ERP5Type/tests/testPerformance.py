@@ -84,6 +84,11 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       """
       self.login()
       self.bar_module = self.getBarModule()
+      # Make the collection frequency higher,
+      # because if it is waiting too much time, then the collection
+      # take too much time and the test fails
+      import gc
+      gc.set_threshold(5000, 10, 10)
 
 
     def test_00_viewBarObject(self, quiet=quiet, run=run_all_test):
