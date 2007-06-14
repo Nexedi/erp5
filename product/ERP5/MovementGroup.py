@@ -1105,3 +1105,7 @@ class RequirementMovementGroup(RootMovementGroup):
   def test(self,movement):
     return self.getRequirementList(movement) == self.requirement_list
 
+class QuantityUnitMovementGroup(PropertyMovementGroup):
+  """ Group movements that have the same quantity unit."""
+  _property = 'quantity_unit'
+allow_class(QuantityUnitMovementGroup)
