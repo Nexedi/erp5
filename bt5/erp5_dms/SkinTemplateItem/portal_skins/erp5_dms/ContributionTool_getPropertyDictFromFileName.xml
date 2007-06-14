@@ -90,6 +90,7 @@ if property_dict.has_key(\'language\'):\n
 language = property_dict.get(\'language\', \'en\')\n
 version = property_dict.get(\'version\', \'001\')\n
 local_id = property_dict.get(\'local_id\', \'undefined\')\n
+reference = property_dict.get(\'reference\', None)\n
 group_reference_path = property_dict.get(\'group_reference_path\', None)\n
 source_conference_reference = property_dict.get(\'source_conference_reference\', None)\n
 source_project_reference = property_dict.get(\'source_project_reference\', None)\n
@@ -97,7 +98,11 @@ source_project_reference = property_dict.get(\'source_project_reference\', None)
 new_dict = dict(language = language, \n
                 version = version)\n
 \n
-if source_project_reference:\n
+if reference:\n
+  # we get directly extracted reference in property_dict (from re pattern)\n
+  # this method has highest priority\n
+  pass\n
+elif source_project_reference:\n
   # generate document\'s reference using project reference\n
   reference = \'P-%s-%s\' %(source_project_reference, local_id)\n
   project = context.portal_catalog.getResultValue(reference = source_project_reference,\n
@@ -197,12 +202,12 @@ return new_dict\n
                             <string>version</string>
                             <string>local_id</string>
                             <string>None</string>
+                            <string>reference</string>
                             <string>group_reference_path</string>
                             <string>source_conference_reference</string>
                             <string>source_project_reference</string>
                             <string>dict</string>
                             <string>new_dict</string>
-                            <string>reference</string>
                             <string>context</string>
                             <string>project</string>
                             <string>conference</string>
