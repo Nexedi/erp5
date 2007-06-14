@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>cash_status = [\'to_sort\',\'valid\']\n
+            <value> <string>cash_status = [\'to_sort\']\n
 emission_letter = [\'not_defined\',]\n
 variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n

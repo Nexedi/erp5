@@ -69,7 +69,7 @@
 source = context.getSource()\n
 source_section = context.getSourceSection()\n
 \n
-cash_status = [\'to_sort\',\'valid\']\n
+cash_status = [\'to_sort\']\n
 emission_letter = [\'not_defined\']\n
 variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n

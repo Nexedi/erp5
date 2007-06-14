@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
 a = 1\n
-cash_status = [\'to_sort\',\'valid\']\n
+cash_status = [\'to_sort\']\n
 cash_detail_dict = { \'line_portal_type\'            : \'Incoming Cash Exchange Line\'             # The portal type that the fastinput will create\n
                      , \'operation_currency\'        : \'XOF\'                          # The operation currently\n
                      , \'cash_status_list\'          : cash_status                    # List of possible cashStatus or None if all\n

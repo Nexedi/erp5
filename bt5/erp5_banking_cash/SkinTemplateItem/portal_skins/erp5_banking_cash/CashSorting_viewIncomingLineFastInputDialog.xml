@@ -69,8 +69,8 @@
                     , \'operation_currency\'       :  context.Baobab_getPortalReferenceCurrencyID()\n
                     , \'cash_status_list\'         : [\'to_sort\',]\n
                     , \'emission_letter_list\'     : [\'not_defined\',]\n
-                    , \'variation_list\'           :  context.Baobab_getResourceVintageList(banknote=1)\n
-                    , \'currency_cash_portal_type\': \'Banknote\'\n
+                    , \'variation_list\'           :  context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
+                    , \'currency_cash_portal_type\': None\n
                     , \'read_only\'                : False\n
                     , \'column_base_category\'     : \'variation\'\n
                     }\n
@@ -128,9 +128,9 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>None</string>
                             <string>False</string>
                             <string>cash_detail_dict</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

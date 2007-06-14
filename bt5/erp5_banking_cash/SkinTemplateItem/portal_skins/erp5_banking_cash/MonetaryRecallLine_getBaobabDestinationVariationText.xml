@@ -68,6 +68,7 @@
             <value> <string>var = context.getVariationText() \n
 dest_var = var.replace("cancelled", "retired")\n
 dest_var = dest_var.replace("mutilated", "retired")\n
+dest_var = dest_var.replace("error", "retired")\n
 return dest_var\n
 </string> </value>
         </item>

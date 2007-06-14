@@ -65,7 +65,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(context.getSource(),)\n
+            <value> <string>destination = "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(context.getSource(),)\n
+\n
+# If it was sent to headquarters, the destination\n
+# must be None\n
+parent = context.getParentValue()\n
+for workflow_item in \\\n
+     parent.Base_getWorkflowHistoryItemList(\'mutilated_banknote_workflow\',\n
+     display=0):\n
+  if workflow_item.state == \'planned\':\n
+    destination = None\n
+    break\n
+\n
+return destination\n
 </string> </value>
         </item>
         <item>
@@ -118,6 +130,11 @@
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>destination</string>
+                            <string>parent</string>
+                            <string>_getiter_</string>
+                            <string>workflow_item</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

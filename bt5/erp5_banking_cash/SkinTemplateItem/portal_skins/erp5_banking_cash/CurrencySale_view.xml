@@ -119,6 +119,7 @@
                     <value>
                       <list>
                         <string>my_start_date</string>
+                        <string>rate</string>
                         <string>my_price</string>
                         <string>my_discount_ratio</string>
                         <string>my_quantity</string>
