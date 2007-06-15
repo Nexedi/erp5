@@ -142,7 +142,7 @@ for check_reference in reference_list:\n
 \n
   elif result_len > 1:\n
     msg = Message(domain = "ui", message="Sorry, the $type $reference for the account $account is duplicated",\n
-                                   mapping={\'reference\' : reference, \'account\': bank_account.getInternalAccountNumber(),\n
+                                   mapping={\'reference\' : reference, \'account\': bank_account.getInternalBankAccountNumber(),\n
                                             \'type\': resource_value.getTitle()})\n
     raise ValidationFailed, (msg,)\n
 \n
