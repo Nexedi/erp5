@@ -90,32 +90,26 @@ if contribute_file is not None:\n
 # We want to discover metadata synchronously\n
 kw[\'discover_metadata\'] = 0 \n
 \n
-if 1:\n
-  editable_mode = 1\n
-  file_name = getattr(contribute_file, \'filename\', None)\n
-  # try to ingest file\n
-  try:\n
-    new_content = context.portal_contributions.newContent(**kw)\n
-    merged_content = new_content.discoverMetadata(file_name=file_name)\n
-  except Exception, e:\n
-    # there are errors during ingestion content\n
-    msg = \'There was a problem during ingestion. Please try again later.\'\n
-    msg = context.Base_translateString(msg)\n
-    return context.Base_redirect(\'WebSite_viewAsSCALE\', \n
-                                  keep_items=dict(portal_status_message=msg,\n
-                                                  editable_mode=0))\n
-  # successful ingestion, show appropriate message\n
-  if merged_content is not new_content:\n
-    msg = context.Base_translateString(\'Document successfully updated\')\n
-    target = merged_content\n
-  else:\n
-    msg = context.Base_translateString(\'Document successfully created\')\n
-    target = new_content\n
-else:\n
-  msg = \'There was a problem: ${exception}\'\n
+editable_mode = 1\n
+file_name = getattr(contribute_file, \'filename\', None)\n
+# try to ingest file\n
+try:\n
+  new_content = context.portal_contributions.newContent(**kw)\n
+  merged_content = new_content.discoverMetadata(file_name=file_name)\n
+except Exception, e:\n
+  # there are errors during ingestion content\n
+  msg = \'There was a problem during ingestion: ${exception}. Please try again later.\'\n
   msg = context.Base_translateString(msg, mapping=dict(exception=str(e)))\n
-  target = context\n
-  editable_mode = 0\n
+  return context.Base_redirect(\'WebSite_viewAsSCALE\', \n
+                                keep_items=dict(portal_status_message=msg,\n
+                                                editable_mode=0))\n
+# successful ingestion, show appropriate message\n
+if merged_content is not new_content:\n
+  msg = context.Base_translateString(\'Document successfully updated\')\n
+  target = merged_content\n
+else:\n
+  msg = context.Base_translateString(\'Document successfully created\')\n
+  target = new_content\n
 \n
 return target.Base_redirect(\'view\', \n
                             keep_items=dict(portal_status_message=msg, \n
@@ -181,8 +175,8 @@ return target.Base_redirect(\'view\', \n
                             <string>e</string>
                             <string>msg</string>
                             <string>dict</string>
-                            <string>target</string>
                             <string>str</string>
+                            <string>target</string>
                           </tuple>
                         </value>
                     </item>
