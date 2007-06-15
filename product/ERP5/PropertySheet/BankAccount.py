@@ -68,6 +68,11 @@ class BankAccount:
      'type'        : 'boolean',
      'mode'        : 'w'
     },
+    {'id'          : 'internal_bank_account_number',
+     'description' : 'An internal bank account number',
+     'type'        : 'string',
+     'mode'        : 'w'
+    },
 
   )
 
