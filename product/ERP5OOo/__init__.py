@@ -33,6 +33,7 @@
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
+from AccessControl.SecurityInfo import allow_module
 import sys, Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
@@ -58,4 +59,9 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
-
+                         
+# allow import of various exceptions in restricted environment
+# so we can catch them in ZODB scripts and inform user nicely
+allow_module('Products.ERP5.Document.Document.ConversionError')
+allow_module('xmlrpclib.Fault')
+allow_module('socket.error')
