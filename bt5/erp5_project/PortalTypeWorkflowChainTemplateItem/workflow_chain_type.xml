@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Project</type>
-  <workflow>edit_workflow, order_workflow</workflow>
+  <workflow>edit_workflow, project_workflow</workflow>
  </chain>
  <chain>
   <type>Project Line</type>
