@@ -27,7 +27,8 @@
 
 from Products.ERP5Security.ERP5GroupManager import ConsistencyError
 
-def getSecurityCategoryFromAssignment(self, base_category_list, user_name, object, portal_type, child=0):
+def getSecurityCategoryFromAssignment(self, base_category_list, user_name, object, portal_type,
+                                      child_category_list=[]):
   """
   This script returns a list of dictionaries which represent
   the security groups which a person is member of. It extracts
@@ -72,7 +73,7 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
         category_value_list = assignment.getValueList(base_category)
         if category_value_list:
           for category_value in category_value_list:
-            if child:
+            if base_category in child_category_list:
               if category_value.getPortalType() == 'Category':
                 while category_value.getPortalType() == 'Category':
                   category_dict.setdefault(base_category, []).append('%s*' % category_value.getRelativeUrl())
@@ -89,4 +90,9 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
 def getSecurityCategoryFromAssignmentParent(self, base_category_list,
                                        user_name, object, portal_type):
   return getSecurityCategoryFromAssignment(self, base_category_list,
-                                       user_name, object, portal_type, child=1)
+                                       user_name, object, portal_type, child_category_list=base_category_list)
+
+def getSecurityCategoryFromAssignmentParentGroup(self, base_category_list,
+                                       user_name, object, portal_type):
+  return getSecurityCategoryFromAssignment(self, base_category_list,
+                                       user_name, object, portal_type, child_category_list=('group',))
