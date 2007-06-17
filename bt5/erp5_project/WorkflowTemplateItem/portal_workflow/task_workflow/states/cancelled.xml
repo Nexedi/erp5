@@ -76,6 +76,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Access contents information</string> </key>
+                    <value>
+                      <list>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple/>
@@ -85,6 +95,16 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>View</string> </key>
+                    <value>
+                      <list>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

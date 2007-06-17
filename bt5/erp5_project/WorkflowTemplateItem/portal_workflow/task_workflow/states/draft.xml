@@ -27,6 +27,12 @@
             <value> <string>draft</string> </value>
         </item>
         <item>
+            <key> <string>permission_roles</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Draft</string> </value>
         </item>
@@ -58,6 +64,68 @@
             <key> <string>uid</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Access contents information</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Modify portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>View</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>

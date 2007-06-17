@@ -24,40 +24,64 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Drafts of purchase orders (%(count)s)</string> </value>
+            <value> <string>Planned Tasks (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-purchase_order?simulation_state=draft&portal_type=Purchase+Order&local_roles=%(local_roles)s&reset=1
+task_module?simulation_state=planned&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Planned tasks to review</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft_purchase</string> </value>
+            <value> <string>planned_task</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Guard</string>
+          <string>Guard</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Assignee</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>
@@ -74,18 +98,10 @@ purchase_order?simulation_state=draft&portal_type=Purchase+Order&local_roles=%(l
             <value>
               <dictionary>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Purchase Order</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>draft</string>
+                        <string>planned</string>
                       </tuple>
                     </value>
                 </item>
