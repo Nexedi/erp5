@@ -32,25 +32,25 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>delete</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>auto_plan is a workflow method which can be invoked from a script to set an object in auto_planned state.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>auto_plan</string> </value>
+            <value> <string>delete_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>auto_planned</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -62,7 +62,32 @@
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>2</int> </value>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Guard</string>
+          <string>Guard</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Owner</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
       </dictionary>
     </pickle>

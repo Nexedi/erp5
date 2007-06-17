@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Ordered tasks are tasks which the Assignor ordered but which may still be modified (ex. date) before being confirmed.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

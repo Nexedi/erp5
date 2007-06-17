@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>History of the workflow states, transitions, actors, errors, etc.</string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>

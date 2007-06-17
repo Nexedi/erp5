@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>A draft task which has a probability to be ordered or confirmed some day may be set as \'planned\' by invoking the \'Plan\' action.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Plan</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

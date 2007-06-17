@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Error message, if any, returned during the transition execution.</string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>

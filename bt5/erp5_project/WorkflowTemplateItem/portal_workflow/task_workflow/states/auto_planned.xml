@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Tasks in \'Auto Planned\' state have been generated automatically by an MRP-like process. They are suggestions of tasks in order to meet the current production plan.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

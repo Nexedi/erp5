@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Confirmed tasks are tasks which the Assignor has confirmed and which will never be cancelled or modified.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -38,6 +38,12 @@
         </item>
         <item>
             <key> <string>transitions</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
             <value>
               <tuple/>
             </value>

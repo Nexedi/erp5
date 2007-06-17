@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Cancelled tasks are tasks which have been cancelled by the user but which remain visible. Unlike deteled tasks, cancelled tasks may be tasks which were initially planned or ordered and were later cancelled.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -78,11 +78,11 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
                 <item>
@@ -100,11 +100,11 @@
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>

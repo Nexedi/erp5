@@ -84,7 +84,7 @@
             <value>
               <tuple>
                 <string>Assignee</string>
-                <string>Owner</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>

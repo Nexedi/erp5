@@ -97,14 +97,6 @@ task_report_module?simulation_state=confirmed&portal_type=Task+Report&local_role
             <value>
               <dictionary>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Task Report</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>

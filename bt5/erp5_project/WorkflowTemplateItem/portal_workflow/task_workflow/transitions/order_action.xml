@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The Assignor of a Task may set a task a \'ordered\' by invoking the \'Order\' action. Ordered task still need to be confirmed before Task Report is generated.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Order</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The Assignor of a Task may confirm a task and set it to read-only. Once a task is confirmed, a Task Report is generated to follow the execution of the task throuh an independent workflow: Task Report Workflow.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Confirm</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>All tasks start in draft state. This is the state in which the user should define all task properties before submitting them through a workflow action or deleting them.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -45,6 +45,8 @@
                 <string>cancel_action</string>
                 <string>confirm</string>
                 <string>confirm_action</string>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>order</string>
                 <string>order_action</string>
                 <string>plan</string>

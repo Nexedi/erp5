@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-task_report_module?simulation_state=confirmed&portal_type=Task+Report&local_roles=%(local_roles)s&reset=1
+task_report_module?simulation_state=confirmed&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
@@ -96,14 +96,6 @@ task_report_module?simulation_state=confirmed&portal_type=Task+Report&local_role
             <key> <string>_container</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Task Report</string>
-                      </tuple>
-                    </value>
-                </item>
                 <item>
                     <key> <string>simulation_state</string> </key>
                     <value>

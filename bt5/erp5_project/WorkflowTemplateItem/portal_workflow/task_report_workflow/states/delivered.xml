@@ -72,7 +72,13 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
@@ -90,7 +96,13 @@
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>

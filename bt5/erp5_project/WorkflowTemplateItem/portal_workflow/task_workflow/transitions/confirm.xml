@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>confirm is a workflow method which can be invoked from a script to set an object in confirm state.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Planned tasks are tasks which an Assignor may be considering to request but which have not yet been formally requested.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
