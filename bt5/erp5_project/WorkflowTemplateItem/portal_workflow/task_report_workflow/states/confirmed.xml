@@ -91,6 +91,7 @@
                         <string>Auditor</string>
                         <string>Author</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -122,6 +123,7 @@
                         <string>Auditor</string>
                         <string>Author</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
