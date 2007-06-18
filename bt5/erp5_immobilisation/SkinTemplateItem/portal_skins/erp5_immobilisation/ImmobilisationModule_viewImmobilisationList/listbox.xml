@@ -340,12 +340,12 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>translated_immobilisation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
                           <string>delivery.stop_date</string>
                           <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_immobilisation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
