@@ -32,11 +32,11 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>PackingList_buildInvoice</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>This step should generate the invoice (when it works and if we really want)</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
