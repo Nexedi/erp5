@@ -15,12 +15,14 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_quantity</string> </value>
+            <value> <string>my_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -91,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>float_field</string> </value>
+                    <value> <string>my_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -100,6 +102,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Price</string> </value>
                 </item>
               </dictionary>
             </value>

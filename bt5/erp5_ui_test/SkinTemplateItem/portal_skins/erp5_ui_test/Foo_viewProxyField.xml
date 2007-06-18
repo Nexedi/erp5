@@ -100,6 +100,7 @@
                         <string>listbox_title</string>
                         <string>listbox_id</string>
                         <string>listbox_quantity</string>
+                        <string>float_field</string>
                       </list>
                     </value>
                 </item>
@@ -121,6 +122,7 @@
                       <list>
                         <string>my_frozen</string>
                         <string>my_quantity</string>
+                        <string>my_price</string>
                       </list>
                     </value>
                 </item>
