@@ -524,6 +524,11 @@ class BaobabConduit(ERP5Conduit):
            currency_name not in (None, '')                    and \
            currency_cash.getBasePrice()       == base_price   and \
            currency_cash.getPriceCurrencyId() == currency_name:
+          if currency_portal_type == 'Coin' and kw.get('variation', None) == 'ANC' and \
+             not currency_cash.getFormer():
+            # If we are searching for an 'ANC' variation of a coin, getFormer
+            # must be true for the currency cash to match.
+            continue
           line_currency_cash = currency_cash
           break
       # no currency found
@@ -560,7 +565,8 @@ class BaobabConduit(ERP5Conduit):
           if base_key == 'status_code':
             category = self.status_code_to_cash_status[kw[base_key]]
           elif base_key == 'variation':
-            category = self.variation_translate_dict.get(kw[base_key], kw[base_key])
+            if currency_portal_type == 'Banknote': # Variation is set only for Banknotes.
+              category = self.variation_translate_dict.get(kw[base_key], kw[base_key])
           else:
             category = kw[base_key]
         else:
