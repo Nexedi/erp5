@@ -47,10 +47,6 @@
             <value> <string>immobilisation_validity_errors</string> </value>
         </item>
         <item>
-            <key> <string>optional</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
@@ -60,7 +56,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>1.0</float> </value>
+            <value> <float>3.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
