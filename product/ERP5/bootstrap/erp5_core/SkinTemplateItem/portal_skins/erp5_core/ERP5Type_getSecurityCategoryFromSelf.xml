@@ -68,19 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
 This script returns a list of dictionaries which represent\n
 the security groups which a person is member of. It extracts\n
-the categories from the current user assignment.\n
-It is useful in the following cases:\n
+the categories from the current content and associates\n
+it to a given base_category. It is useful in the\n
+following cases:\n
 \n
-- associate a document (ex. an accounting transaction)\n
-  to the division which the user was assigned to\n
-  at the time it was created\n
-\n
-- calculate security membership of a user\n
+- calculate a security group based current object \n
+  in the context of a base category (ex. source_project).\n
+  This is used for example in ERP5 DMS to calculate\n
+  project security.\n
 \n
 The parameters are\n
 \n
@@ -94,39 +92,14 @@ NOTE: for now, this script requires proxy manager\n
 \n
 category_list = []\n
 \n
-# Get the Person module\n
-person_module = context.portal_url.getPortalObject().getDefaultModule(\'Person\')\n
+if object is None:\n
+  return []\n
 \n
-# It is better to keep getObject(), in this script this\n
-# prevent a very strange bug, sometimes without getObject the\n
-# assignment is not found\n
-person_object_list = [x.getObject() for x in person_module.searchFolder(portal_type=\'Person\', reference=user_name)]\n
-\n
-if len(person_object_list) != 1:\n
-  if len(person_object_list) > 1:\n
-    raise ConsistencyError, "Error: There is more than one Person with reference \'%s\'" % user_name\n
-  else:\n
-    # if a person_object was not found in the module, we do nothing more\n
-    # this happens for example when a manager with no associated person object\n
-    # creates a person_object for a new user\n
-    return []\n
-person_object = person_object_list[0]\n
-\n
-# We look for every valid assignments of this user\n
-for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignment\'}):\n
-  if assignment.getValidationState() == \'open\':\n
-    category_dict = {}\n
-    for base_category in base_category_list:\n
-      category_value_list = assignment.getAcquiredValueList(base_category)\n
-      if category_value_list:\n
-        for category_value in category_value_list:\n
-          category_dict.setdefault(base_category, []).append(\'%s*\' % category_value.getRelativeUrl())\n
-    category_list.append(category_dict)\n
+for base_category in base_category_list:\n
+  category_list.append({base_category: object.getRelativeUrl()})\n
 \n
 return category_list\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -136,6 +109,12 @@ return category_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -173,23 +152,10 @@ return category_list\n
                             <string>object</string>
                             <string>portal_type</string>
                             <string>category_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>person_module</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>None</string>
                             <string>_getiter_</string>
-                            <string>x</string>
-                            <string>person_object_list</string>
-                            <string>len</string>
-                            <string>ConsistencyError</string>
-                            <string>_getitem_</string>
-                            <string>person_object</string>
-                            <string>assignment</string>
-                            <string>category_dict</string>
                             <string>base_category</string>
-                            <string>category_value_list</string>
-                            <string>category_value</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
@@ -206,7 +172,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityChildCategoryFromAssignment</string> </value>
+            <value> <string>ERP5Type_getSecurityCategoryFromSelf</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

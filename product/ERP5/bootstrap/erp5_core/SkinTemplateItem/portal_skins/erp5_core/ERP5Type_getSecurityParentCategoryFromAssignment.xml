@@ -117,7 +117,7 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
   if assignment.getValidationState() == \'open\':\n
     category_dict = {}\n
     for base_category in base_category_list:\n
-      category_value_list = assignment.getValueList(base_category)\n
+      category_value_list = assignment.getAcquiredValueList(base_category)\n
       if category_value_list:\n
         for category_value in category_value_list:\n
           if category_value.getPortalType() == \'Category\':\n

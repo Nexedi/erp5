@@ -101,7 +101,7 @@ if object is None:\n
   return []\n
 \n
 for base_category in base_category_list:\n
-  category_list.append({base_category: object.getCategoryMembershipList(base_category)})\n
+  category_list.append({base_category: object.getAcquiredCategoryMembershipList(base_category)})\n
 \n
 return category_list\n
 </string> </value>

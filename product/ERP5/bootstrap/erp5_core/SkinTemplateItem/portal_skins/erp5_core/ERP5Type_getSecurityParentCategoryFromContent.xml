@@ -103,7 +103,7 @@ if object is None:\n
 # Consider all parents of all categories\n
 for base_category in base_category_list:\n
   member_list = []\n
-  for category in object.getValueList(base_category):\n
+  for category in object.getAcquiredValueList(base_category):\n
     if category.getPortalType() == \'Category\':\n
       while category.getPortalType() == \'Category\':\n
         member_list.append(category.getRelativeUrl())\n

@@ -70,7 +70,7 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
     if assignment.getValidationState() == 'open':
       category_dict = {}
       for base_category in base_category_list:
-        category_value_list = assignment.getValueList(base_category)
+        category_value_list = assignment.getAcquiredValueList(base_category)
         if category_value_list:
           for category_value in category_value_list:
             if base_category in child_category_list:

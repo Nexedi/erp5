@@ -101,7 +101,7 @@ if object is None:\n
   return []\n
 \n
 for base_category in base_category_list:\n
-  membership_list = map(lambda x: \'%s*\' % x, object.getCategoryMembershipList(base_category))\n
+  membership_list = map(lambda x: \'%s*\' % x, object.getAcquiredCategoryMembershipList(base_category))\n
   category_list.append({base_category: membership_list})\n
 \n
 return category_list\n
