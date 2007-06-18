@@ -107,14 +107,15 @@
                       <list>
                         <string>my_title</string>
                         <string>my_stop_date</string>
-                        <string>immobilisation_state</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_translated_immobilisation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
