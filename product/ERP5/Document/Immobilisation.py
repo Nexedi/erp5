@@ -55,6 +55,7 @@ class Immobilisation(XMLObject, Delivery):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
+  isDelivery = 1
   isMovement = 0
 
   # Declarative security
