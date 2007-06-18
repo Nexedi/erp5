@@ -74,6 +74,7 @@ class Immobilisation(XMLObject, Delivery):
                       , PropertySheet.Movement
                       , PropertySheet.Delivery
                       , PropertySheet.Reference
+                      , PropertySheet.Comment
                       , PropertySheet.Amount
                       , PropertySheet.Price
                       , PropertySheet.Amortisation
