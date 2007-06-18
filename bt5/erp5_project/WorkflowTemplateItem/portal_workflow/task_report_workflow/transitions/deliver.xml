@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>PackingList_updateAppliedRule</string> </value>
+            <value> <string>PackingList_buildInvoice</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
