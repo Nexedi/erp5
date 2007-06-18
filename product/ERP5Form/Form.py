@@ -116,11 +116,17 @@ def get_value(self, id, **kw):
 
             # For the 'default' value, we try to get a property value
             # stored in the context, only if the field is prefixed with my_.
-            if id == 'default' and self.id[:3] == 'my_':
+            REQUEST = get_request()
+            if REQUEST is not None:
+              field_id = REQUEST.get('%s_%s_id' % (self.id, id), self.id)
+            else:
+              field_id = self.id
+
+            if id == 'default' and field_id.startswith('my_'):
               try:
                 form = self.aq_parent
                 ob = getattr(form, 'aq_parent', None)
-                key = self.id[3:]
+                key = field_id[3:]
                 if value not in (None, ''):
                   # If a default value is defined on the field, it has precedence
                   value = ob.getProperty(key, d=value)

@@ -123,7 +123,7 @@ class ProxyValidator(Validator.Validator):
   property_names = []
 
   def validate(self, field, key, REQUEST):
-    proxy_field = field.getTemplateField()
+    proxy_field = field.getRecursiveTemplateField()
     try:
       result = proxy_field.validator.validate(field, key, REQUEST)
     except ValidationError, error:
@@ -456,6 +456,9 @@ class ProxyField(ZMIField):
     else:
       proxy_field = self.getTemplateField()
       if proxy_field is not None:
+        REQUEST = get_request()
+        REQUEST.set('%s_%s_id' % (proxy_field.id, id), 
+                    REQUEST.get('%s_%s_id' % (self.id, id), self.id))
         result = proxy_field.get_value(id, **kw)
     return result
 
