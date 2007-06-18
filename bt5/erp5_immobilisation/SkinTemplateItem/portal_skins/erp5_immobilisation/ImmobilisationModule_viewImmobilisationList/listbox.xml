@@ -389,7 +389,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
