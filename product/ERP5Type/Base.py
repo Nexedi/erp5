@@ -1499,12 +1499,13 @@ class Base( CopyContainer,
     self._setDefaultCategoryMembership(id, path, spec=spec, filter=filter,
                                        portal_type=portal_type, base=0)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setDefaultValue' )
+  security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultValue' )
   def setDefaultValue(self, id, target, spec=(), filter=None, portal_type=()):
     self._setDefaultValue(id, target, spec=spec, filter=filter, portal_type=portal_type)
     self.reindexObject()
 
-  security.declareProtected( Permissions.View, '_getDefaultValue' )
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            '_getDefaultValue')
   def _getDefaultValue(self, id, spec=(), filter=None, portal_type=()):
     path = self._getDefaultCategoryMembership(id, spec=spec, filter=filter,
                                       portal_type=portal_type,base=1)
@@ -1516,7 +1517,8 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.View, 'getDefaultValue' )
   getDefaultValue = _getDefaultValue
 
-  security.declareProtected( Permissions.View, '_getValueList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            '_getValueList')
   def _getValueList(self, id, spec=(), filter=None, portal_type=()):
     ref_list = []
     for path in self._getCategoryMembershipList(id, spec=spec, filter=filter,
@@ -1531,10 +1533,12 @@ class Base( CopyContainer,
         LOG("ERP5Type WARNING",0,"category %s has no object value" % path, error=sys.exc_info())
     return ref_list
 
-  security.declareProtected( Permissions.View, 'getValueList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getValueList')
   getValueList = _getValueList
 
-  security.declareProtected( Permissions.View, '_getDefaultAcquiredValue' )
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            '_getDefaultAcquiredValue')
   def _getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
                                evaluate=1):
     path = self._getDefaultAcquiredCategoryMembership(id, spec=spec, filter=filter,
@@ -1545,10 +1549,12 @@ class Base( CopyContainer,
     else:
       return self._getCategoryTool().resolveCategory(path)
 
-  security.declareProtected( Permissions.View, 'getDefaultAcquiredValue' )
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getDefaultAcquiredValue')
   getDefaultAcquiredValue = _getDefaultAcquiredValue
 
-  security.declareProtected( Permissions.View, '_getAcquiredValueList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            '_getAcquiredValueList' )
   def _getAcquiredValueList(self, id, spec=(), filter=None, **kw):
     ref_list = []
     for path in self._getAcquiredCategoryMembershipList(id, base=1,
@@ -1562,7 +1568,8 @@ class Base( CopyContainer,
         LOG("ERP5Type WARNING",0,"category %s has no object value" % path, error=sys.exc_info())
     return ref_list
 
-  security.declareProtected( Permissions.View, 'getAcquiredValueList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getAcquiredValueList')
   getAcquiredValueList = _getAcquiredValueList
 
   security.declareProtected( Permissions.View, '_getDefaultRelatedValue' )
