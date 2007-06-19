@@ -100,13 +100,13 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     ############## REBUILD STRUCTURE #################
     ##################################################
     # build structure
-    structure = PlanningBoxWidgetInstance.render_structure(field=field,
+    widget_instance = PlanningBoxWidgetInstance.render_structure(field=field,
                          key=key, value=value, REQUEST=REQUEST, here=here)
 
     # getting coordinates script generator
     planning_coordinates_method = getattr(here,'planning_coordinates')
     # calling script to generate coordinates
-    planning_coordinates = planning_coordinates_method(structure=structure)
+    planning_coordinates = planning_coordinates_method(structure=widget_instance)
 
     ##################################################
     ########## RECOVERING BLOCK MOVED DICTS ##########
@@ -178,7 +178,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       final_block = {}
       # recovering the block object from block_moved informations
       final_block['block_object'] = self.getBlockObject(block_moved['name'], \
-                                                   structure.planning.content)
+                                                   widget_instance.planning.content)
       # recovering original activity object
       final_block['activity_origin'] = \
            final_block['block_object'].parent_activity
@@ -204,7 +204,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       block_moved['top']  = block_moved['new_Y'] - deltaY
 
       # abstracting axis representation (for generic processing)
-      if structure.planning.calendar_view == 0:
+      if widget_instance.planning.calendar_view == 0:
         block_moved['main_axis_position'] = block_moved['top']
         block_moved['main_axis_length'] = block_moved['height']
         block_moved['secondary_axis_position'] = block_moved['left']
@@ -230,7 +230,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       # now that block coordinates are recovered as well as planning
       # coordinates, recovering destination group over the main axis to know
       # if the block has been moved from a group to another
-      group_destination = self.getDestinationGroup(structure,
+      group_destination = self.getDestinationGroup(widget_instance,
                block_moved,planning_coordinates['main_axis'],
                group_position, group_length)
 
@@ -248,7 +248,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       else:
         # now that all informations about the main axis changes are
         # known, checking modifications over the secondary axis.
-        secondary_axis_positions = self.getDestinationBounds(structure,
+        secondary_axis_positions = self.getDestinationBounds(widget_instance,
                 block_moved, final_block['block_object'],
                 planning_coordinates, axis_length,
                 destination_group = group_destination)
@@ -279,7 +279,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     ##################################################
     # getting object_dict to update object properties once activities are up to
     # date. Activities values will be updated directly on the
-    object_dict = self.getObjectDict(structure)
+    object_dict = self.getObjectDict(widget_instance)
 
     ##################################################
     ############# UPDATING ACTIVITIES ################
@@ -293,8 +293,8 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     errors_list = []
     # getting start & stop property names
     # XXX Isn't field enough ?
-    start_property = structure.basic.field.get_value('x_start_bloc')
-    stop_property = structure.basic.field.get_value('x_stop_bloc')
+    start_property = widget_instance.basic.field.get_value('x_start_bloc')
+    stop_property = widget_instance.basic.field.get_value('x_stop_bloc')
     # getting round_script if exists
     round_script=getattr(here, field.get_value('round_script'), None)
     # now processing activity updates
@@ -432,7 +432,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         return block
 
 
-  def getDestinationGroup(self, structure, block_moved, axis_groups,
+  def getDestinationGroup(self, widget_instance, block_moved, axis_groups,
                                 group_position, group_length):
     """
     recover destination group from block coordinates and main axis coordinates
@@ -453,13 +453,13 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     if good_group_name == '':
       return None
     # group name is known, searching corresponding group object
-    for group in structure.planning.main_axis.axis_group:
+    for group in widget_instance.planning.main_axis.axis_group:
       if group.name == good_group_name:
         return group
     return None
 
 
-  def getDestinationBounds(self, structure, block_moved, block_object,
+  def getDestinationBounds(self, widget_instance, block_moved, block_object,
                                  planning_coordinates, axis_length,
                                  destination_group=None):
     """
@@ -493,20 +493,20 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         # to define any data out of its group bounds.
         pass
 
-    if structure.basic.calendar_mode:
+    if widget_instance.basic.calendar_mode:
       axis_range = destination_group.secondary_axis_range
       new_start = destination_group.secondary_axis_start + \
                   delta_start * axis_range
       new_stop = destination_group.secondary_axis_start + \
                   delta_stop * axis_range
     else:
-      axis_range = structure.basic.secondary_axis_info['bound_stop'] - \
-                   structure.basic.secondary_axis_info['bound_start']
+      axis_range = widget_instance.basic.secondary_axis_info['bound_stop'] - \
+                   widget_instance.basic.secondary_axis_info['bound_start']
 
       # defining new final block bounds
-      new_start = structure.basic.secondary_axis_info['bound_start'] + \
+      new_start = widget_instance.basic.secondary_axis_info['bound_start'] + \
                   delta_start * axis_range
-      new_stop  = structure.basic.secondary_axis_info['bound_start'] + \
+      new_stop  = widget_instance.basic.secondary_axis_info['bound_start'] + \
                   delta_stop * axis_range
 
     return [new_start,new_stop, error]
@@ -562,19 +562,19 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
 
     return [new_start,new_stop]
 
-  def getObjectDict(self, structure):
+  def getObjectDict(self, widget_instance):
     """
     Takes all activities related to a specified object and return
     """
     # init dict
     object_dict = {}
     # get property_names
-    start_property = structure.basic.field.get_value('x_start_bloc')
-    stop_property = structure.basic.field.get_value('x_stop_bloc')
+    start_property = widget_instance.basic.field.get_value('x_start_bloc')
+    stop_property = widget_instance.basic.field.get_value('x_stop_bloc')
     # get full axis length
-    axis_start = structure.basic.secondary_axis_info['bound_start']
-    axis_stop  = structure.basic.secondary_axis_info['bound_stop']
-    for axis_group in structure.planning.main_axis.axis_group:
+    axis_start = widget_instance.basic.secondary_axis_info['bound_start']
+    axis_stop  = widget_instance.basic.secondary_axis_info['bound_stop']
+    for axis_group in widget_instance.planning.main_axis.axis_group:
       for axis_element in axis_group.axis_element_list:
         for activity in axis_element.activity_list:
           # for each activity, saving its properties into a dict
@@ -924,8 +924,10 @@ class PlanningBoxWidget(Widget.Widget):
     # getting CSS script generator
     planning_css_method = getattr(REQUEST['here'], 'planning_css')
     # recover CSS data buy calling DTML document
+    # XXX Bad parameter name, use planning_box_widget_instance instead
     CSS_data = planning_css_method(structure=self)
     # saving structure inside the request for HTML render
+    # XXX Bad parameter name, use planning_box_widget_instance instead
     REQUEST.set('structure', self)
 
     return CSS_data
@@ -940,12 +942,12 @@ class PlanningBoxWidget(Widget.Widget):
     # or list (to generated a PDF output or anything else).
 
     # recover structure
-    structure = REQUEST.get('structure')
+    widget_instance = REQUEST.get('structure')
 
     # getting HTML rendering Page Template
     planning_html_method = getattr(REQUEST['here'], 'planning_content')
     # recovering HTML data by calling Page Template document
-    HTML_data = planning_html_method(struct=structure)
+    HTML_data = planning_html_method(struct=widget_instance)
     # return HTML data
     return HTML_data
 
@@ -1010,12 +1012,15 @@ class PlanningBoxWidget(Widget.Widget):
     # XXX Conflict error
     self.planning = PlanningStructure()
     # call build method to generate final Planning Structure
-    status = self.planning.build(basic_structure = self.basic,field=field,
+    status = self.planning.build(basic_structure=self.basic,
+                                 field=field,
                                  REQUEST=REQUEST)
     if status != 1:
       # in case error during planning structure generation
       raise PlanningBoxError, status
 
+    # XXX widget is used to store data!!
+    # Remove this as soon as possible
     return self
 
 # instanciating class
