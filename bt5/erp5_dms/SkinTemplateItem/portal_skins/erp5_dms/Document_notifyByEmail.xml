@@ -103,7 +103,7 @@ if event in (\'ingestion_success\',):\n
     consistency_result = [x for x in consistency_result if x[1] == \'DocumentCoordinatesConstraint inconsistency\']\n
     isObjectConsistent = len(consistency_result) == 0\n
   if not isObjectConsistent:\n
-    error_msg = \'<br/>\'.join(str(c[3]) for x in consistency_result)\n
+    error_msg = \'<br/>\'.join(str(x[3]) for x in consistency_result)\n
     subject_template =  \'[DMS] Failure ingestion %(name)s\'\n
     email_template = """Your document "%(name)s" was not successfuly ingested.\n
   \n
@@ -121,7 +121,7 @@ if event in (\'ingestion_success\',):\n
 click here: %(url)s/view to proceed with your work."""\n
 elif event in (\'ingestion_failure\',):\n
   # there was an error during ingestion process, inform user to try again\n
-  error_msg = \'Failure during ingestion.\'\n
+  error_msg = kw.get(\'message\', \'Failure during ingestion.\') \n
   subject_template =  \'[DMS] Unsuccessful ingestion\'\n
   email_template = """Your document was not successfuly ingested.\n
   \n
