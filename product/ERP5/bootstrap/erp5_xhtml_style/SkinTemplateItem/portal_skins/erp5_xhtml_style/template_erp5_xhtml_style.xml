@@ -81,14 +81,10 @@ IDEAS:\n
  - Add callbacks to ERP5Form object (selection ?) to gather needed fields -> put them in http_parameter_list.\n
 -->\n
 </tal:block>\n
-\n
 <tal:block metal:define-macro="master">\n
-\n
 <tal:block tal:define="global_definitions_macros here/global_definitions/macros">\n
 <tal:block metal:use-macro="global_definitions_macros/header_definitions"/>\n
-\n
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n
-\n
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n
   <head>\n
     <base tal:attributes="href python: \'%s/\' % (url, )"/>\n
@@ -115,7 +111,7 @@ IDEAS:\n
       <!-- We should probably call the default method instead -->\n
       <input tal:condition="form_action | nothing"\n
              id="hidden_button" type="submit" value="dummy"\n
-             tal:attributes="name python: \'%s:method\' % (form_action, )" />\n
+             tal:attributes="name string:${form_action}:method" />\n
       <tal:block metal:use-macro="global_definitions_macros/http_definitions"/>\n
       <tal:block metal:define-slot="layout">\n
       <div id="bars">\n
@@ -141,7 +137,7 @@ IDEAS:\n
           </tal:block>\n
         </div>\n
         <p class="clear"></p>\n
-        <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>\n
+        <div tal:content="request/portal_status_message | nothing" id="transition_message"/>\n
       </div>\n
       <div id="master">\n
         <tal:block metal:define-slot="main"/>\n
@@ -151,7 +147,8 @@ IDEAS:\n
   </body>\n
 </html>\n
 </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
