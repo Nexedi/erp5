@@ -69,37 +69,65 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This script is part of erp5_web.\n
-  It\'s a sample script sceleton  which can be used to create user (Person object) \n
-  for web interface and sets Person\'s details (address, email, assignment and career). \n
+  This script is a sample script sceleton (part of erp5_web)\n
+  which can be used to create user (Person object) \n
   \n
   Notes:\n
-    - This script is normally executed by anonymous user with Manager proxy roles which \n
+    - the script is normally executed by anonymous user with Manager proxy roles which \n
       you have to turn on after adjusting this script to your needs.\n
-    - this script should be called from respective form which will handle all validation\n
     - you have to decide if assignment should be opened automatically or \n
       verified and opened by administrator first\n
+    - you need to adjust group, function and site to your needs\n
 """\n
+from Products.Formulator.Errors import ValidationError, FormValidationError\n
 \n
+# validate form manually\n
+form = context.WebSite_createWebSiteAccountForm\n
+try:\n
+  form.validate_all_to_request(context.REQUEST)\n
+except (FormValidationError, ValidationError,), validation_errors:\n
+  context.REQUEST.set(\'field_errors\', form.ErrorFields(validation_errors))  \n
+  return form()\n
+\n
+# extract only user details\n
+kw = context.REQUEST.form\n
+filtered_kw = {}\n
+prefix = \'field_your_\'\n
+for key in kw.keys():\n
+  if key.startswith(prefix):\n
+    filtered_kw[key.replace(prefix, \'\')] = kw[key]\n
+    \n
+# adjust to your needs\n
+person_group = \'\'\n
+person_function = \'\'\n
+person_site = \'\'\n
+person_role = \'internal\'\n
+\n
+# create Person account\n
 person_module = context.getPortalObject().person_module\n
 person = person_module.newContent(portal_type = \'Person\', \n
-                                  reference = kw[\'email\'],\n
-                                  default_email_text = kw[\'email\'],\n
-                                  first_name = kw[\'first_name\'], \n
-                                  last_name = kw[\'last_name\'])\n
+                                  **filtered_kw)\n
+\n
 # create default career\n
-career = person.newContent(portal_type=\'Career\', \n
-                           id=\'default_career\', \n
-                           group=kw[\'group\'], \n
-                           function=kw[\'function\'], \n
-                           role=\'internal\')\n
+career = person.newContent(portal_type = \'Career\', \n
+                           id = \'default_career\', \n
+                           group = person_group, \n
+                           function = person_function,\n
+                           role = person_role)\n
 # create assignment\n
-assignment = person.newContent(portal_type=\'Assignment\', \n
-                               group=kw[\'group\'], \n
-                               function=kw[\'function\'], \n
-                               site=kw[\'site\'])\n
+assignment = person.newContent(portal_type = \'Assignment\', \n
+                               group = person_group, \n
+                               function = person_function, \n
+                               site = person_site)\n
+# submit it for review\n
 person.submit()\n
-return person\n
+\n
+translateString = context.Base_translateString\n
+msg = translateString("Your account was successfully created.")\n
+website = context.getWebSiteValue()\n
+return website.Base_redirect(\'view\', \n
+                             keep_items = dict(portal_status_message = msg,\n
+                                               editable_mode = 0))\n
 </string> </value>
         </item>
         <item>
@@ -122,15 +150,12 @@ return person\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Author</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -157,14 +182,33 @@ return person\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>ValidationError</string>
+                            <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>person_module</string>
+                            <string>form</string>
+                            <string>validation_errors</string>
+                            <string>kw</string>
+                            <string>filtered_kw</string>
+                            <string>prefix</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
                             <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>person_group</string>
+                            <string>person_function</string>
+                            <string>person_site</string>
+                            <string>person_role</string>
+                            <string>person_module</string>
+                            <string>_apply_</string>
                             <string>person</string>
                             <string>career</string>
                             <string>assignment</string>
+                            <string>translateString</string>
+                            <string>msg</string>
+                            <string>website</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -181,11 +225,11 @@ return person\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_createUser</string> </value>
+            <value> <string>WebSite_createWebSiteAccount</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create web site user</string> </value>
+            <value> <string>Create Web Site User Account</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
