@@ -63,6 +63,9 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Message import Message
 
+class PlanningBoxError(Exception):
+  pass
+
 class PlanningBoxValidator(Validator.StringBaseValidator):
   """
   Class holding all methods used to validate a modified PlanningBox
@@ -521,9 +524,8 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     value will not be updated (as the block was not on the real activity bound)
     """
     # getting list moved block names
-    block_moved_name_list = map(lambda x: x['block_moved']['name'],
-                                activity_block_moved_list)
-
+    block_moved_name_list = [x['block_moved']['name'] for x in activity_block_moved_list]
+    
     for activity_block in activity_block_list:
       if activity_block.name in block_moved_name_list:
         # the block composing the activity has been moved, not taking care of
@@ -915,6 +917,7 @@ class PlanningBoxWidget(Widget.Widget):
     # build structure
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
+    # XXX Conflict error
     # creates and fill up self.basic, self.planning and self.build_error_list
     self.render_structure(field=field, key=key, value=value,
                           REQUEST=REQUEST, here=here)
@@ -958,8 +961,6 @@ class PlanningBoxWidget(Widget.Widget):
     # XXX testing : uncoment to put selection to null => used for debugging
     #here.portal_selections.setSelectionFor(selection_name, None)
     ####### DATA DEFINITION #######
-    # XXX Conflict error
-    self.build_error_list = None
     # recovering usefull planning properties
     # getting form
     form = field.aq_parent
@@ -1002,8 +1003,7 @@ class PlanningBoxWidget(Widget.Widget):
     # call build method to generate BasicStructure
     status = self.basic.build()
     if status != 1:
-      # XXX Conflict error
-      self.build_error_list = status
+      raise PlanningBoxError, status
       return self
 
     ###### CALL CLASS METHODS TO BUILD PLANNING STRUCTURE ######
@@ -1015,8 +1015,7 @@ class PlanningBoxWidget(Widget.Widget):
                                  REQUEST=REQUEST)
     if status != 1:
       # in case error during planning structure generation
-      # XXX Conflict error
-      self.build_error_list = status
+      raise PlanningBoxError, status
       return self
 
     return self
