@@ -19,7 +19,10 @@ import Globals
 original_get_request = Globals.get_request
 
 def get_request():
-  return current_app.REQUEST
+  if current_app is not None:
+    return current_app.REQUEST
+  else:
+    return None
 
 Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
