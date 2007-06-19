@@ -916,18 +916,16 @@ class PlanningBoxWidget(Widget.Widget):
     # build structure
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
-    # XXX Conflict error
     # creates and fill up self.basic, self.planning and self.build_error_list
-    self.render_structure(field=field, key=key, value=value,
-                          REQUEST=REQUEST, here=here)
+    basic, planning = self.render_structure(field=field, key=key, value=value,
+                                            REQUEST=REQUEST, here=here)
     # getting CSS script generator
     planning_css_method = getattr(REQUEST['here'], 'planning_css')
     # recover CSS data buy calling DTML document
-    # XXX Bad parameter name, use planning_box_widget_instance instead
-    CSS_data = planning_css_method(structure=self)
+    CSS_data = planning_css_method(basic=basic, planning=planning)
     # saving structure inside the request for HTML render
-    # XXX Bad parameter name, use planning_box_widget_instance instead
-    REQUEST.set('structure', self)
+    REQUEST.set('basic', basic)
+    REQUEST.set('planning', planning)
 
     return CSS_data
 
@@ -941,12 +939,13 @@ class PlanningBoxWidget(Widget.Widget):
     # or list (to generated a PDF output or anything else).
 
     # recover structure
-    widget_instance = REQUEST.get('structure')
+    basic = REQUEST.get('basic')
+    planning = REQUEST.get('planning')
 
     # getting HTML rendering Page Template
     planning_html_method = getattr(REQUEST['here'], 'planning_content')
     # recovering HTML data by calling Page Template document
-    HTML_data = planning_html_method(struct=widget_instance)
+    HTML_data = planning_html_method(basic=basic, planning=planning)
     # return HTML data
     return HTML_data
 
@@ -990,8 +989,7 @@ class PlanningBoxWidget(Widget.Widget):
 
     ###### CALL CLASS METHODS TO BUILD BASIC STRUCTURE ######
     # creating BasicStructure instance (and initializing its internal values)
-    # XXX Conflict error
-    self.basic = BasicStructure(here=here,
+    basic = BasicStructure(here=here,
                                 form=form, field=field,
                                 REQUEST=REQUEST, list_method=list_method,
                                 selection=selection, params=params,
@@ -1002,25 +1000,22 @@ class PlanningBoxWidget(Widget.Widget):
                                 sort=sort,
                                 list_error=list_error)
     # call build method to generate BasicStructure
-    status = self.basic.build()
+    status = basic.build()
     if status != 1:
       raise PlanningBoxError, status
 
     ###### CALL CLASS METHODS TO BUILD PLANNING STRUCTURE ######
     # creating PlanningStructure instance and initializing its internal values
-    # XXX Conflict error
-    self.planning = PlanningStructure()
+    planning = PlanningStructure()
     # call build method to generate final Planning Structure
-    status = self.planning.build(basic_structure=self.basic,
-                                 field=field,
-                                 REQUEST=REQUEST)
+    status = planning.build(basic_structure=basic,
+                            field=field,
+                            REQUEST=REQUEST)
     if status != 1:
       # in case error during planning structure generation
       raise PlanningBoxError, status
 
-    # XXX widget is used to store data!!
-    # Remove this as soon as possible
-    return self
+    return basic, planning
 
 # instanciating class
 PlanningBoxWidgetInstance = PlanningBoxWidget()
