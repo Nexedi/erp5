@@ -157,7 +157,8 @@ for base_category in category_order:\n
 if user_list: return user_list\n
 \n
 # Compute the cartesian product and return the codes\n
-return filter(lambda x: x, map(lambda x: \'_\'.join(x), cartesianProduct(list_of_list)))\n
+# return filter(lambda x: x, map(lambda x: \'_\'.join(x), cartesianProduct(list_of_list)))\n
+return [\'_\'.join(x) for x in cartesianProduct(list_of_list) if x]\n
 </string> </value>
         </item>
         <item>
@@ -224,8 +225,9 @@ return filter(lambda x: x, map(lambda x: \'_\'.join(x), cartesianProduct(list_of
                             <string>user_name</string>
                             <string>category_code</string>
                             <string>AttributeError</string>
-                            <string>filter</string>
-                            <string>map</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>

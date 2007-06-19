@@ -122,7 +122,7 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
         for category_value in category_value_list:\n
           if category_value.getPortalType() == \'Category\':\n
             while category_value.getPortalType() == \'Category\':\n
-              category_dict.setdefault(base_category, []).append(\'category_value.getRelativeUrl())\n
+              category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
               category_value = category_value.getParentValue()\n
           else:\n
             category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())\n
@@ -152,9 +152,7 @@ return category_list\n
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple>
-                <string>EOL while scanning single-quoted string (Script (Python), line 53)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -169,12 +167,35 @@ return category_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>base_category_list</string>
+                            <string>user_name</string>
+                            <string>object</string>
+                            <string>portal_type</string>
+                            <string>category_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>person_module</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>person_object_list</string>
+                            <string>len</string>
+                            <string>ConsistencyError</string>
+                            <string>_getitem_</string>
+                            <string>person_object</string>
+                            <string>assignment</string>
+                            <string>category_dict</string>
+                            <string>base_category</string>
+                            <string>category_value_list</string>
+                            <string>category_value</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -185,7 +206,7 @@ return category_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple/>
+              <none/>
             </value>
         </item>
         <item>
