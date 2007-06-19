@@ -933,8 +933,9 @@ class ListBoxRenderer:
       listbox_id = self.getId()
       for search_id, search_value, search_field in search_value_list:
         if search_field is None:
+          search_alias = '_'.join(search_id.split('.'))
           # If the search field could not be found, try to get an "editable" field on current form.
-          editable_field_id = '%s_%s' % (listbox_id, search_id)
+          editable_field_id = '%s_%s' % (listbox_id, search_alias)
           if listbox_form.has_field(editable_field_id):
             search_field = listbox_form.get_field(editable_field_id)
           else:
