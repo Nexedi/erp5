@@ -79,51 +79,7 @@ PlaningBox. The process is based on the strucutre passed in parameter (i.e optio
 Beware this only generates the HTML code, no CSS generation is done in this script\n
 -->\n
 \n
-\n
-<tal:block tal:condition="python:struct.build_error_list != None"\n
-           tal:define="struct options/struct;\n
-                       basic python:struct.basic;\n
-                       address python:basic.here.getUrl()">\n
-  <input type="hidden" name="list_selection_name" value="PLanningView" tal:attributes="value python:basic.field.get_value(\'selection_name\')"/>\n
-\n
-  <table>\n
-  <tr><td><h3><span tal:replace="structure python:struct.basic.field.get_value(\'title\')"/>\n
-  </h3></td>\n
-  <td>\n
-    <select name="report_root_url" onChange="submitAction(this.form,\'/setReportRoot\')"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${address}/setReportRoot\')">\n
-      <tal:block tal:condition="python:basic.selection is None"\n
-                tal:define="global selection_report_path python:basic.report_root_list[0][0]"/>\n
-      <tal:block tal:condition="python:basic.selection is not None"\n
-                tal:define="global selection_report_path python:basic.selection.report_path"/>\n
-      <tal:block tal:repeat="report_root_element python:basic.report_root_list">\n
-        <tal:block tal:condition="python:report_root_element[0]==selection_report_path">\n
-        <b tal:replace="nothing">actual value is selected</b>\n
-        <option selected="selected" value="None"\n
-                tal:attributes="value python:report_root_element[0]"\n
-                tal:content="structure python:report_root_element[1]">_</option>\n
-        </tal:block>\n
-        <tal:block tal:condition="python:report_root_element[0]!=selection_report_path">\n
-        <b tal:replace="nothing">actual value is not selected</b>\n
-        <option value="None"\n
-                tal:attributes="value python:report_root_element[0]"\n
-                tal:content="structure python:report_root_element[1]">_</option>\n
-        </tal:block>\n
-      </tal:block>\n
-    </select>\n
-  </td>\n
-  </tr>\n
-  </table>\n
-\n
-  <tal:block tal:repeat="error_message python:struct.build_error_list"\n
-             tal:content="python:str(error_message)">\n
-  </tal:block>\n
-\n
-</tal:block>\n
-\n
-\n
-<tal:block tal:condition="python:struct.build_error_list == None"\n
-           tal:define="struct options/struct">\n
+<tal:block tal:define="struct options/struct">\n
 <tal:block tal:define="basic python:struct.basic;\n
                        planning python:struct.planning;\n
                        address python:basic.here.getUrl()">\n
@@ -413,8 +369,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 </div>\n
 \n
 <!-- planning content-->\n
-<div class="planning_content"\n
-     tal:condition="python:struct.build_error_list == None">\n
+<div class="planning_content">\n
 \n
   <!-- display main axis lines -->\n
   <tal:block tal:repeat="axis_group python:planning.main_axis.axis_group">\n
@@ -499,7 +454,8 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 <!--/div-->\n
 </div>\n
 </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>

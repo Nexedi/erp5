@@ -99,11 +99,6 @@ script (\'planning_css\') to have CSS compliant code, no HTML generation is\n
 done in this script.\n
 """\n
 \n
-if structure.build_error_list != None:\n
-  # structure contains errors, do not need to do any further processing about\n
-  # CSS generation. Error display will be handled in html rendering.\n
-  return \'\'\n
-\n
 \n
 properties_structure = context.planning_coordinates(structure)\n
 \n
@@ -236,13 +231,13 @@ return "\\n" + "".join(returned_list)\n
                           <tuple>
                             <string>structure</string>
                             <string>_getattr_</string>
-                            <string>None</string>
                             <string>context</string>
                             <string>properties_structure</string>
                             <string>block_string</string>
                             <string>block_object_list</string>
                             <string>_getiter_</string>
                             <string>block_object_string</string>
+                            <string>None</string>
                             <string>block_dict</string>
                             <string>block_sub_list</string>
                             <string>_getitem_</string>
