@@ -1004,7 +1004,6 @@ class PlanningBoxWidget(Widget.Widget):
     status = self.basic.build()
     if status != 1:
       raise PlanningBoxError, status
-      return self
 
     ###### CALL CLASS METHODS TO BUILD PLANNING STRUCTURE ######
     # creating PlanningStructure instance and initializing its internal values
@@ -1016,7 +1015,6 @@ class PlanningBoxWidget(Widget.Widget):
     if status != 1:
       # in case error during planning structure generation
       raise PlanningBoxError, status
-      return self
 
     return self
 
