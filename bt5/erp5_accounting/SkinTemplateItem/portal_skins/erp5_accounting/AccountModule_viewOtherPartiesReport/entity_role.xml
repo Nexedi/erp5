@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_transaction_simulation_state</string> </value>
+            <value> <string>entity_role</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -120,7 +120,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -152,7 +154,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -226,37 +230,12 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>cancelled</string>
-                          <string>cancelled</string>
-                        </tuple>
-                        <tuple>
-                          <string>draft</string>
-                          <string>draft</string>
-                        </tuple>
-                        <tuple>
-                          <string>planned</string>
-                          <string>planned</string>
-                        </tuple>
-                        <tuple>
-                          <string>confirmed</string>
-                          <string>confirmed</string>
-                        </tuple>
-                        <tuple>
-                          <string>stopped</string>
-                          <string>stopped</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivered</string>
-                          <string>delivered</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -264,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Transaction Simulation State</string> </value>
+                    <value> <string>Entity Role</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -280,6 +259,44 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>request/entity_role | nothing</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.portal_categories.role.getCategoryChildLogicalPathItemList(base=0)</string> </value>
         </item>
       </dictionary>
     </pickle>

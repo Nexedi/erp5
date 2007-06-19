@@ -76,15 +76,11 @@
                         <string>transaction_section_category</string>
                         <string>transaction_simulation_state</string>
                         <string>at_date</string>
-                        <string>my_entity_role</string>
-                        <string>my_from_date</string>
                         <string>my_node_category</string>
                         <string>my_omit_balanced_accounts</string>
                         <string>my_omit_empty_accounts</string>
                         <string>my_omit_grouped_references</string>
-                        <string>my_to_date</string>
-                        <string>my_transaction_section_category</string>
-                        <string>my_transaction_simulation_state</string>
+                        <string>entity_role</string>
                       </list>
                     </value>
                 </item>
