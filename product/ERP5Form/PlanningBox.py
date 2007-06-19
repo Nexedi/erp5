@@ -292,9 +292,8 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     update_list = []
     errors_list = []
     # getting start & stop property names
-    # XXX Isn't field enough ?
-    start_property = widget_instance.basic.field.get_value('x_start_bloc')
-    stop_property = widget_instance.basic.field.get_value('x_stop_bloc')
+    start_property = field.get_value('x_start_bloc')
+    stop_property = field.get_value('x_stop_bloc')
     # getting round_script if exists
     round_script=getattr(here, field.get_value('round_script'), None)
     # now processing activity updates
