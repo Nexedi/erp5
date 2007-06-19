@@ -79,9 +79,8 @@ PlaningBox. The process is based on the strucutre passed in parameter (i.e optio
 Beware this only generates the HTML code, no CSS generation is done in this script\n
 -->\n
 \n
-<tal:block tal:define="struct options/struct">\n
-<tal:block tal:define="basic python:struct.basic;\n
-                       planning python:struct.planning;\n
+<tal:block tal:define="basic options/basic;\n
+                       planning options/planning;\n
                        address python:basic.here.getUrl()">\n
 \n
 <!-- hidden fields holding some usefull data-->\n

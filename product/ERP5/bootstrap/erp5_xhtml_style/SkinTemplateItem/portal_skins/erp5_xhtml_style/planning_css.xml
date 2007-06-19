@@ -100,7 +100,7 @@ done in this script.\n
 """\n
 \n
 \n
-properties_structure = context.planning_coordinates(structure)\n
+properties_structure = context.planning_coordinates(basic, planning)\n
 \n
 """\n
 - the properties_structure returned from the planning_coordinates script is somehow\n
@@ -114,7 +114,7 @@ special : it is a dict defined by the areas of data\n
 # This process is only usefull when displaying a planning that failed to\n
 # validate. In such a case the block properties are updated to match their\n
 # last position.\n
-block_string = structure.basic.REQUEST.get(\'previous_block_moved\',\'\')\n
+block_string = basic.REQUEST.get(\'previous_block_moved\',\'\')\n
 if block_string != \'\':\n
   # block_list is not empty, need to recover porperties and update the blocks\n
   # that need to be refreshed\n
@@ -203,7 +203,7 @@ return "\\n" + "".join(returned_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>structure</string> </value>
+            <value> <string>basic=None, planning=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -223,13 +223,14 @@ return "\\n" + "".join(returned_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>structure</string>
+                            <string>basic</string>
+                            <string>planning</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>properties_structure</string>
@@ -264,7 +265,10 @@ return "\\n" + "".join(returned_list)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
