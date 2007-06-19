@@ -102,6 +102,7 @@ This script is also used by the validator script in order to recover the\n
 groups of moved blocks\n
 """\n
 \n
+\n
 # the following values are hard-defined and can be modified if necessary to comply with\n
 # special constraints (big fonts for example)\n
 \n
@@ -121,16 +122,16 @@ margin = 5 \n
 \n
 \n
 \n
-size_planning_width = structure.basic.field.get_value(\'size_planning_width\')\n
-size_x_axis_height = structure.basic.field.get_value(\'size_x_axis_height\')\n
-size_x_axis_space = structure.basic.field.get_value(\'size_x_axis_space\')\n
-size_border_width_left = structure.basic.field.get_value(\'size_border_width_left\')\n
-size_header_height = structure.basic.field.get_value(\'size_header_height\')\n
-size_planning_height = structure.basic.field.get_value(\'size_planning_height\')\n
-size_y_axis_width = structure.basic.field.get_value(\'size_y_axis_width\')\n
-size_y_axis_space = structure.basic.field.get_value(\'size_y_axis_space\')\n
-y_axis_position = structure.basic.field.get_value(\'y_axis_position\')\n
-x_axis_position = structure.basic.field.get_value(\'x_axis_position\')\n
+size_planning_width = widget_instance.basic.field.get_value(\'size_planning_width\')\n
+size_x_axis_height = widget_instance.basic.field.get_value(\'size_x_axis_height\')\n
+size_x_axis_space = widget_instance.basic.field.get_value(\'size_x_axis_space\')\n
+size_border_width_left = widget_instance.basic.field.get_value(\'size_border_width_left\')\n
+size_header_height = widget_instance.basic.field.get_value(\'size_header_height\')\n
+size_planning_height = widget_instance.basic.field.get_value(\'size_planning_height\')\n
+size_y_axis_width = widget_instance.basic.field.get_value(\'size_y_axis_width\')\n
+size_y_axis_space = widget_instance.basic.field.get_value(\'size_y_axis_space\')\n
+y_axis_position = widget_instance.basic.field.get_value(\'y_axis_position\')\n
+x_axis_position = widget_instance.basic.field.get_value(\'x_axis_position\')\n
 \n
 \n
 properties_structure = {\n
@@ -145,21 +146,21 @@ properties_structure = {\n
 \n
 \n
 # getting number of elements to display on the main axis\n
-if structure.planning.main_axis.size != structure.basic.main_axis_info[\'bound_axis_groups\']:\n
+if widget_instance.planning.main_axis.size != widget_instance.basic.main_axis_info[\'bound_axis_groups\']:\n
   # number of groups to display over the main axis is different from the expected\n
   # value : updating planning size to fit exactly the number of groups \n
-  if structure.planning.main_axis == structure.planning.Y:\n
+  if widget_instance.planning.main_axis == widget_instance.planning.Y:\n
     # updating Y axis\n
-    main_axis_step = float(size_planning_height) / float(structure.basic.main_axis_info[\'bound_axis_groups\'])\n
-    size_planning_height = main_axis_step * structure.planning.main_axis.size\n
+    main_axis_step = float(size_planning_height) / float(widget_instance.basic.main_axis_info[\'bound_axis_groups\'])\n
+    size_planning_height = main_axis_step * widget_instance.planning.main_axis.size\n
   else:\n
-    main_axis_step = float(size_planning_width) / float(structure.basic.main_axis_info[\'bound_axis_groups\'])\n
-    size_planning_width = main_axis_step * structure.planning.main_axis.size\n
+    main_axis_step = float(size_planning_width) / float(widget_instance.basic.main_axis_info[\'bound_axis_groups\'])\n
+    size_planning_width = main_axis_step * widget_instance.planning.main_axis.size\n
 else:\n
-  if structure.planning.main_axis == structure.planning.Y:\n
-    main_axis_step = float(size_planning_height) / float(structure.basic.main_axis_info[\'bound_axis_groups\'])\n
+  if widget_instance.planning.main_axis == widget_instance.planning.Y:\n
+    main_axis_step = float(size_planning_height) / float(widget_instance.basic.main_axis_info[\'bound_axis_groups\'])\n
   else:\n
-    main_axis_step = float(size_planning_width) / float(structure.basic.main_axis_info[\'bound_axis_groups\'])\n
+    main_axis_step = float(size_planning_width) / float(widget_instance.basic.main_axis_info[\'bound_axis_groups\'])\n
 \n
 # defining planning area CSS class\n
 planning_dict= {\n
@@ -180,7 +181,7 @@ properties_structure[\'base\'][\'planning_box\']  = planning_dict\n
 \n
 \n
 # recovering axis CSS class informations\n
-for axis in (structure.planning.Y, structure.planning.X):\n
+for axis in (widget_instance.planning.Y, widget_instance.planning.X):\n
   axis_depth = None\n
   axis_dict= {\n
     \'position\': \'absolute\',\n
@@ -198,7 +199,7 @@ for axis in (structure.planning.Y, structure.planning.X):\n
     \'position\': \'absolute\',\n
     \'border-width\': 0,\n
   }\n
-  if axis == structure.planning.X:\n
+  if axis == widget_instance.planning.X:\n
     # current axis is X axis\n
     # positionning it\n
     axis_dict[\'width\'] = size_planning_width\n
@@ -217,7 +218,7 @@ for axis in (structure.planning.Y, structure.planning.X):\n
     axis_next[\'margin-left\'] = axis_dict[\'width\'] + 5\n
     axis_next[\'margin-top\'] = axis_previous[\'margin-top\']\n
 \n
-    if axis == structure.planning.main_axis:\n
+    if axis == widget_instance.planning.main_axis:\n
       # current axis is main axis : need to implement depth widget\n
       axis_depth = {\n
         \'margin-left\': -10,\n
@@ -246,7 +247,7 @@ for axis in (structure.planning.Y, structure.planning.X):\n
     axis_previous[\'margin-top\'] = -20\n
     axis_next[\'margin-left\'] = axis_previous[\'margin-left\']\n
     axis_next[\'margin-top\'] = axis_dict[\'height\'] + 5\n
-    if axis == structure.planning.main_axis:\n
+    if axis == widget_instance.planning.main_axis:\n
       axis_depth = {\n
         \'margin-left\': 0,\n
         \'bottom\': \'100%\',\n
@@ -265,7 +266,7 @@ for axis in (structure.planning.Y, structure.planning.X):\n
 \n
 # now processing groups over the main axis, including their info object\n
 # at the same time generating line to separate each group\n
-for axis_group in structure.planning.main_axis.axis_group:\n
+for axis_group in widget_instance.planning.main_axis.axis_group:\n
   axis_group_dict={\n
     \'position\': \'absolute\',\n
     \'border-style\': \'solid\',\n
@@ -286,7 +287,7 @@ for axis_group in structure.planning.main_axis.axis_group:\n
     \'border-style\': \'solid\',\n
     \'border-width\': 0,\n
   }\n
-  if structure.planning.main_axis == structure.planning.X:\n
+  if widget_instance.planning.main_axis == widget_instance.planning.X:\n
     # current axis is X axis\n
     axis_group_dict[\'width\'] = float(axis_group.axis_element_number) * main_axis_step\n
     axis_group_dict[\'margin-left\'] = float( axis_group.axis_element_start -1) * main_axis_step\n
@@ -453,7 +454,7 @@ for axis_group in structure.planning.main_axis.axis_group:\n
 \n
 \n
 # processing secondary_axis_group\n
-for sec_axis_group in structure.planning.secondary_axis.axis_group:\n
+for sec_axis_group in widget_instance.planning.secondary_axis.axis_group:\n
   sec_axis_group_dict={\n
     \'position\': \'absolute\',\n
     \'border-color\': \'#53676e\',\n
@@ -478,7 +479,7 @@ for sec_axis_group in structure.planning.secondary_axis.axis_group:\n
     sec_axis_line_dict[\'border-style\'] = \'solid\'\n
   sec_axis_line_dict[\'border-right-width\'] = 0\n
   sec_axis_line_dict[\'border-bottom-width\'] = 0\n
-  if structure.planning.main_axis == structure.planning.Y:\n
+  if widget_instance.planning.main_axis == widget_instance.planning.Y:\n
     # current axis is X axis\n
     sec_axis_group_dict[\'width\'] = sec_axis_group.position_secondary.absolute_range * size_planning_width\n
     sec_axis_group_dict[\'margin-left\'] = sec_axis_group.position_secondary.absolute_begin * size_planning_width\n
@@ -578,7 +579,7 @@ properties_structure[\'frame\'][\'planning_content\'] = content_dict\n
 \n
 \n
 # processing blocks in the planning content\n
-for block_object in structure.planning.content:\n
+for block_object in widget_instance.planning.content:\n
   block_dict = {\n
     \'position\': \'absolute\',\n
     \'border-style\': \'solid\',\n
@@ -606,7 +607,7 @@ for block_object in structure.planning.content:\n
   if block_object.parent_activity.property_dict[\'stat\'] == 0:\n
     # the whole following process is aimed to take care of the non-stat blocks\n
 \n
-    if structure.planning.main_axis == structure.planning.Y and block_object.parent_activity.property_dict[\'stat\'] == 0:\n
+    if widget_instance.planning.main_axis == widget_instance.planning.Y and block_object.parent_activity.property_dict[\'stat\'] == 0:\n
       # Y axis is main axis\n
       # adapt Y block size\n
       block_dict[\'height\'] = block_dict[\'height\'] - 10\n
@@ -751,7 +752,7 @@ return properties_structure\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>structure</string> </value>
+            <value> <string>widget_instance</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -777,7 +778,7 @@ return properties_structure\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>structure</string>
+                            <string>widget_instance</string>
                             <string>car_height</string>
                             <string>car_width</string>
                             <string>depth_width</string>
