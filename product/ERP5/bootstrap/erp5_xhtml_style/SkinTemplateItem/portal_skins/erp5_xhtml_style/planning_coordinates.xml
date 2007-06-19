@@ -104,13 +104,20 @@ groups of moved blocks\n
 \n
 # the following values are hard-defined and can be modified if necessary to comply with\n
 # special constraints (big fonts for example)\n
-car_height = 10 # caracter height\n
-car_width = 6 # caracter width\n
-depth_width = 10 # space to insert between each depth\n
-depth_height = 10 # the same over the vertical axis\n
-block_width = 40 # mid block size in wich we try to insert text\n
-margin = 5 # margin between the block and the delimitation (this permits to have\n
-           # blocks a bit smaller that lines or columns)\n
+\n
+# caracter height\n
+car_height = 10 \n
+# caracter width\n
+car_width = 6 \n
+# space to insert between each depth\n
+depth_width = 10 \n
+# the same over the vertical axis\n
+depth_height = 10 \n
+# mid block size in wich we try to insert text\n
+block_width = 40 \n
+# margin between the block and the delimitation (this permits to have\n
+# blocks a bit smaller that lines or columns)\n
+margin = 5 \n
 \n
 \n
 \n
@@ -126,14 +133,15 @@ y_axis_position = structure.basic.field.get_value(\'y_axis_position\')\n
 x_axis_position = structure.basic.field.get_value(\'x_axis_position\')\n
 \n
 \n
-properties_structure = {}\n
-properties_structure[\'base\'] = {}\n
-properties_structure[\'frame\'] = {}\n
-properties_structure[\'main_axis\'] = {}\n
-properties_structure[\'secondary_axis\'] = {}\n
-properties_structure[\'line\'] = {}\n
-properties_structure[\'content\']  = {}\n
-properties_structure[\'info\'] = {}\n
+properties_structure = {\n
+  \'base\': {},\n
+  \'frame\': {},\n
+  \'main_axis\': {},\n
+  \'secondary_axis\': {},\n
+  \'line\': {},\n
+  \'content\': {},\n
+  \'info\': {},\n
+}\n
 \n
 \n
 # getting number of elements to display on the main axis\n
@@ -154,17 +162,18 @@ else:\n
     main_axis_step = float(size_planning_width) / float(structure.basic.main_axis_info[\'bound_axis_groups\'])\n
 \n
 # defining planning area CSS class\n
-planning_dict=None\n
-planning_dict= {}\n
-planning_dict[\'position\'] = \'relative\'\n
-planning_dict[\'border-style\'] = \'solid\'\n
-planning_dict[\'border-color\'] = \'#000000\'\n
-planning_dict[\'border-width\'] = 0\n
-planning_dict[\'background\'] = \'#d5e6de\'\n
-planning_dict[\'width\'] = size_planning_width + size_border_width_left + size_y_axis_width + size_y_axis_space + 20\n
-planning_dict[\'height\'] = size_header_height + size_x_axis_height + size_x_axis_space + size_planning_height + 100\n
-planning_dict[\'margin-top\'] = 0\n
-planning_dict[\'margin-left\'] = 0\n
+planning_dict= {\n
+  \'position\': \'relative\',\n
+  \'border-style\': \'solid\',\n
+  \'border-color\': \'#000000\',\n
+  \'border-width\': 0,\n
+  \'background\': \'#d5e6de\',\n
+  \'width\': size_planning_width + size_border_width_left + size_y_axis_width + size_y_axis_space + 20,\n
+  \'height\': size_header_height + size_x_axis_height + size_x_axis_space + size_planning_height + 100,\n
+  \'margin-top\': 0,\n
+  \'margin-left\': 0,\n
+}\n
+\n
 properties_structure[\'base\'][\'planning_box\']  = planning_dict\n
 \n
 \n
@@ -172,23 +181,23 @@ properties_structure[\'base\'][\'planning_box\']  = planning_dict\n
 \n
 # recovering axis CSS class informations\n
 for axis in (structure.planning.Y, structure.planning.X):\n
-  axis_dict= None\n
-  axis_dict= {}\n
-  axis_previous = None\n
-  axis_previous = {}\n
-  axis_next = None\n
-  axis_next = {}\n
   axis_depth = None\n
-  axis_dict[\'position\']= \'absolute\'\n
-  axis_dict[\'border-style\'] = \'solid\'\n
-  axis_dict[\'border-color\'] = \'#53676e\'\n
-  axis_dict[\'border-width\'] = 0\n
-  axis_dict[\'background\'] = \'#d5e6de\'\n
+  axis_dict= {\n
+    \'position\': \'absolute\',\n
+    \'border-style\': \'solid\',\n
+    \'border-color\': \'#53676e\',\n
+    \'border-width\': 0,\n
+    \'background\': \'#d5e6de\',\n
+  }\n
   # adding cursors position informations\n
-  axis_previous[\'position\'] = \'absolute\'\n
-  axis_previous[\'border-width\'] = 0\n
-  axis_next[\'position\'] = \'absolute\'\n
-  axis_next[\'border-width\'] = 0\n
+  axis_previous = {\n
+    \'position\': \'absolute\',\n
+    \'border-width\': 0,\n
+  }\n
+  axis_next = {\n
+    \'position\': \'absolute\',\n
+    \'border-width\': 0,\n
+  }\n
   if axis == structure.planning.X:\n
     # current axis is X axis\n
     # positionning it\n
@@ -210,11 +219,12 @@ for axis in (structure.planning.Y, structure.planning.X):\n
 \n
     if axis == structure.planning.main_axis:\n
       # current axis is main axis : need to implement depth widget\n
-      axis_depth = {}\n
-      axis_depth[\'margin-left\'] = -10\n
-      axis_depth[\'margin-top\'] = 0\n
-      axis_depth[\'border-width\'] = 0\n
-      axis_depth[\'position\'] = \'absolute\'\n
+      axis_depth = {\n
+        \'margin-left\': -10,\n
+        \'margin-top\': 0,\n
+        \'border-width\': 0,\n
+        \'position\': \'absolute\',\n
+      }\n
       # updating axis previous values\n
       axis_previous[\'margin-left\'] = axis_previous[\'margin-left\'] - 10\n
   else:\n
@@ -237,11 +247,12 @@ for axis in (structure.planning.Y, structure.planning.X):\n
     axis_next[\'margin-left\'] = axis_previous[\'margin-left\']\n
     axis_next[\'margin-top\'] = axis_dict[\'height\'] + 5\n
     if axis == structure.planning.main_axis:\n
-      axis_depth = {}\n
-      axis_depth[\'margin-left\'] = 0\n
-      axis_depth[\'bottom\'] = \'100%\'\n
-      axis_depth[\'border-width\'] = 0\n
-      axis_depth[\'position\'] = \'absolute\'\n
+      axis_depth = {\n
+        \'margin-left\': 0,\n
+        \'bottom\': \'100%\',\n
+        \'border-width\': 0,\n
+        \'position\': \'absolute\',\n
+      }\n
       # updating axis previous values\n
       axis_previous[\'margin-top\'] = axis_previous[\'margin-top\'] - 10\n
   # adding axis_definitions to dictionnary\n
@@ -255,12 +266,11 @@ for axis in (structure.planning.Y, structure.planning.X):\n
 # now processing groups over the main axis, including their info object\n
 # at the same time generating line to separate each group\n
 for axis_group in structure.planning.main_axis.axis_group:\n
-  axis_group_dict=None\n
-  axis_group_dict={}\n
-  axis_group_dict[\'position\']= \'absolute\'\n
-  axis_group_dict[\'border-style\'] = \'solid\'\n
-  #axis_group_dict[\'border-color\'] = \'#53676e\'\n
-  axis_group_dict[\'border-width\'] = 1\n
+  axis_group_dict={\n
+    \'position\': \'absolute\',\n
+    \'border-style\': \'solid\',\n
+    \'border-width\': 1,\n
+  }\n
   #axis_group_dict[\'background\'] = \'#d5e6de\'\n
   if axis_group.property_dict[\'stat\'] == 1 :\n
     axis_group_dict[\'background\'] = \'#ddefe7\'\n
@@ -271,13 +281,11 @@ for axis_group in structure.planning.main_axis.axis_group:\n
   #axis_info_dict[\'border-color\'] = \'#53676e\'\n
   #axis_info_dict[\'border-width\'] = 0\n
   # group line separator definition\n
-  axis_line_dict=None\n
-  axis_line_dict = {}\n
-  axis_line_dict[\'position\']= \'absolute\'\n
-  axis_line_dict[\'border-style\'] = \'solid\'\n
-  #axis_line_dict[\'border-right-width\'] = 0\n
-  #axis_line_dict[\'border-bottom-width\'] = 0\n
-  axis_line_dict[\'border-width\'] = 0\n
+  axis_line_dict = {\n
+    \'position\': \'absolute\',\n
+    \'border-style\': \'solid\',\n
+    \'border-width\': 0,\n
+  }\n
   if structure.planning.main_axis == structure.planning.X:\n
     # current axis is X axis\n
     axis_group_dict[\'width\'] = float(axis_group.axis_element_number) * main_axis_step\n
@@ -300,21 +308,17 @@ for axis_group in structure.planning.main_axis.axis_group:\n
 \n
     # processing depth\n
     for depth in range(axis_group.depth):\n
-      axis_depth_dict = None\n
-      axis_depth_dict = {}\n
-      axis_depth_dict[\'position\'] = \'absolute\'\n
-      axis_depth_dict[\'border_style\'] = \'solid\'\n
-      axis_depth_dict[\'border-color\'] = \'#53676e\'\n
-      #axis_depth_dict[\'border-right-width\']  = 1\n
-      #axis_depth_dict[\'border-left-width\']   = 1\n
-      #axis_depth_dict[\'border-top-width\']    = 1\n
-      #axis_depth_dict[\'border-bottom-width\'] = 0\n
-      axis_depth_dict[\'border-width\'] = 1\n
-      axis_depth_dict[\'background\'] = \'#53676e\'\n
-      axis_depth_dict[\'margin-top\']  = depth * depth_height\n
-      axis_depth_dict[\'margin-left\'] = axis_group_dict[\'margin-left\']\n
-      axis_depth_dict[\'width\'] = axis_group_dict[\'width\']\n
-      axis_depth_dict[\'height\'] = depth_height\n
+      axis_depth_dict = {\n
+        \'position\': \'absolute\',\n
+        \'border_style\': \'solid\',\n
+        \'border-color\': \'#53676e\',\n
+        \'border-width\': 1,\n
+        \'background\': \'#53676e\',\n
+        \'margin-top\': depth * depth_height,\n
+        \'margin-left\': axis_group_dict[\'margin-left\'],\n
+        \'width\': axis_group_dict[\'width\'],\n
+        \'height\': depth_height,\n
+      }\n
 \n
       # adding current depth line info to properties structure\n
       properties_structure[\'info\'][axis_group.name + \'_depth_\' + str(depth)] = axis_depth_dict\n
@@ -339,19 +343,18 @@ for axis_group in structure.planning.main_axis.axis_group:\n
       for axis_element_number in range(axis_group.axis_element_number)[1:]:\n
         # iterating each subgroup except the first one\n
         # for each of them, building a new line over the axis as a delimiter\n
-        axis_element_dict = None\n
-        axis_element_dict = {}\n
-        axis_element_dict[\'position\']= \'absolute\'\n
-        axis_element_dict[\'border-right-width\']  = 0\n
-        axis_element_dict[\'border-bottom-width\'] = 0\n
-        axis_element_dict[\'border-left-width\']   = 1\n
-        axis_element_dict[\'border-top-width\']    = 0\n
-        #axis_element_dict[\'border-style\'] = \'dotted\'\n
-        axis_element_dict[\'border-style\'] = \'dotted\'\n
-        axis_element_dict[\'width\'] = 0\n
-        axis_element_dict[\'height\'] = size_planning_height\n
-        axis_element_dict[\'margin-left\'] = axis_group_dict[\'margin-left\'] + axis_element_number * main_axis_step\n
-        axis_element_dict[\'margin-top\'] = 0\n
+        axis_element_dict = {\n
+          \'position\': \'absolute\',\n
+          \'border-right-width\': 0,\n
+          \'border-bottom-width\': 0,\n
+          \'border-left-width\': 1,\n
+          \'border-top-width\': 0,\n
+          \'border-style\': \'dotted\',\n
+          \'width\': 0,\n
+          \'height\': size_planning_height,\n
+          \'margin-left\': axis_group_dict[\'margin-left\'] + axis_element_number * main_axis_step,\n
+          \'margin-top\': 0,\n
+        }\n
 \n
         # adding current sub line info to properties_structure\n
         properties_structure[\'line\'][axis_group.name + \'_line_\' + str(axis_element_number)] = axis_element_dict\n
@@ -388,21 +391,17 @@ for axis_group in structure.planning.main_axis.axis_group:\n
 \n
     # processing depth\n
     for depth in range(axis_group.depth):\n
-      axis_depth_dict = None\n
-      axis_depth_dict = {}\n
-      axis_depth_dict[\'position\'] = \'absolute\'\n
-      axis_depth_dict[\'border_style\'] = \'solid\'\n
-      axis_depth_dict[\'border-color\'] = \'#53676e\'\n
-      #axis_depth_dict[\'border-right-width\']  = 0\n
-      #axis_depth_dict[\'border-left-width\']   = 1\n
-      #axis_depth_dict[\'border-top-width\']    = 0\n
-      #axis_depth_dict[\'border-bottom-width\'] = 0\n
-      axis_depth_dict[\'border-width\'] = 1\n
-      axis_depth_dict[\'background\'] = \'#53676e\'\n
-      axis_depth_dict[\'margin-top\']  = axis_group_dict[\'margin-top\']\n
-      axis_depth_dict[\'margin-left\'] = depth * depth_width\n
-      axis_depth_dict[\'width\'] = depth_width\n
-      axis_depth_dict[\'height\'] = axis_group_dict[\'height\']\n
+      axis_depth_dict = {\n
+        \'position\': \'absolute\',\n
+        \'border_style\': \'solid\',\n
+        \'border-color\': \'#53676e\',\n
+        \'border-width\': 1,\n
+        \'background\': \'#53676e\',\n
+        \'margin-top\': axis_group_dict[\'margin-top\'],\n
+        \'margin-left\': depth * depth_width,\n
+        \'width\': depth_width,\n
+        \'height\': axis_group_dict[\'height\'],\n
+      }\n
 \n
       # adding current depth line info to properties structure\n
       properties_structure[\'info\'][axis_group.name + \'_depth_\' + str(depth)] = axis_depth_dict\n
@@ -429,18 +428,18 @@ for axis_group in structure.planning.main_axis.axis_group:\n
       for axis_element_number in range(axis_group.axis_element_number)[1:]:\n
         # iterating each subgroup except the first one\n
         # for each of them, building a new line over the axis as a delimiter\n
-        axis_element_dict = None\n
-        axis_element_dict = {}\n
-        axis_element_dict[\'position\']= \'absolute\'\n
-        axis_element_dict[\'border-right-width\'] = 0\n
-        axis_element_dict[\'border-bottom-width\'] = 0\n
-        axis_element_dict[\'border-left-width\'] = 0\n
-        axis_element_dict[\'border-top-width\'] = 1\n
-        axis_element_dict[\'border-style\'] = \'dotted\'\n
-        axis_element_dict[\'width\'] = size_planning_width\n
-        axis_element_dict[\'height\'] = 0\n
-        axis_element_dict[\'margin-left\'] = 0\n
-        axis_element_dict[\'margin-top\'] = axis_group_dict[\'margin-top\'] + axis_element_number * main_axis_step\n
+        axis_element_dict = {\n
+          \'position\': \'absolute\',\n
+          \'border-right-width\': 0,\n
+          \'border-bottom-width\': 0,\n
+          \'border-left-width\': 0,\n
+          \'border-top-width\': 1,\n
+          \'border-style\': \'dotted\',\n
+          \'width\': size_planning_width,\n
+          \'height\': 0,\n
+          \'margin-left\': 0,\n
+          \'margin-top\': axis_group_dict[\'margin-top\'] + axis_element_number * main_axis_step,\n
+        }\n
 \n
         # adding current sub line info to properties_structure\n
         properties_structure[\'line\'][axis_group.name + \'_line_\' + str(axis_element_number)] = axis_element_dict\n
@@ -455,23 +454,24 @@ for axis_group in structure.planning.main_axis.axis_group:\n
 \n
 # processing secondary_axis_group\n
 for sec_axis_group in structure.planning.secondary_axis.axis_group:\n
-  sec_axis_group_dict=None\n
-  sec_axis_group_dict={}\n
-  sec_axis_group_dict[\'position\']= \'absolute\'\n
-  sec_axis_group_dict[\'border-color\'] = \'#53676e\'\n
-  sec_axis_group_dict[\'border-style\'] = \'solid\'\n
-  sec_axis_group_dict[\'border-width\'] = 1\n
-  sec_axis_group_dict[\'background\'] = \'#d5e6de\'\n
+  sec_axis_group_dict={\n
+    \'position\': \'absolute\',\n
+    \'border-color\': \'#53676e\',\n
+    \'border-style\': \'solid\',\n
+    \'border-width\': 1,\n
+    \'background\': \'#d5e6de\',\n
+  }\n
   # info definition\n
-  sec_axis_info_dict= {}\n
-  sec_axis_info_dict[\'position\'] = \'absolute\'\n
+  sec_axis_info_dict= {\n
+    \'position\': \'absolute\',\n
+  }\n
   #sec_axis_info_dict[\'border-style\'] = \'solid\'\n
   #sec_axis_info_dict[\'border-color\'] = \'#53676e\'\n
   #sec_axis_info_dict[\'border-width\'] = 0\n
   # line definition\n
-  sec_axis_line_dict=None\n
-  sec_axis_line_dict = {}\n
-  sec_axis_line_dict[\'position\']= \'absolute\'\n
+  sec_axis_line_dict = {\n
+    \'position\': \'absolute\',\n
+  }\n
   if sec_axis_group.delimiter_type == 0:\n
     sec_axis_line_dict[\'border-style\'] = \'dotted\'\n
   else:\n
@@ -555,15 +555,16 @@ for sec_axis_group in structure.planning.secondary_axis.axis_group:\n
     #properties_structure[\'info\'][sec_axis_group.name + \'_info\'] = sec_axis_info_dict\n
 \n
 \n
-\n
-\n
-\n
 # defining CSS properties for content\n
-content_dict=None\n
-content_dict={}\n
-content_dict[\'position\'] = \'absolute\'\n
-content_dict[\'width\'] = size_planning_width\n
-content_dict[\'height\'] = size_planning_height\n
+content_dict={\n
+  \'position\': \'absolute\',\n
+  \'width\': size_planning_width,\n
+  \'height\': size_planning_height,\n
+  \'background\': \'#ffffff\',\n
+  \'border-style\': \'solid\',\n
+  \'border-color\': \'#53676e\',\n
+  \'border-width\': 1,\n
+}\n
 if y_axis_position:\n
   content_dict[\'margin-left\'] = size_border_width_left\n
 else:\n
@@ -572,22 +573,18 @@ if not x_axis_position:\n
   content_dict[\'margin-top\'] = size_header_height + size_x_axis_height + size_x_axis_space\n
 else:\n
   content_dict[\'margin-top\'] = size_header_height\n
-content_dict[\'background\'] = \'#ffffff\'\n
-content_dict[\'border-style\'] = \'solid\'\n
-content_dict[\'border-color\'] = \'#53676e\'\n
-content_dict[\'border-width\'] = 1\n
 properties_structure[\'frame\'][\'planning_content\'] = content_dict\n
 \n
 \n
 \n
 # processing blocks in the planning content\n
 for block_object in structure.planning.content:\n
-  block_dict = None\n
-  block_dict = {}\n
-  block_dict[\'position\'] = \'absolute\'\n
-  block_dict[\'border-style\'] = \'solid\'\n
-  block_dict[\'border-color\'] = \'#53676e\'\n
-  block_dict[\'border-width\'] = 1\n
+  block_dict = {\n
+    \'position\': \'absolute\',\n
+    \'border-style\': \'solid\',\n
+    \'border-color\': \'#53676e\',\n
+    \'border-width\': 1,\n
+  }\n
   if block_object.error == 1:      # task has error (not validated)\n
     block_dict[\'background\'] = \'#e4c4da\'\n
   elif block_object.warning == 1:  # other bloc in the same task has error\n
@@ -799,18 +796,18 @@ return properties_structure\n
                             <string>y_axis_position</string>
                             <string>x_axis_position</string>
                             <string>properties_structure</string>
-                            <string>_write_</string>
                             <string>_getitem_</string>
                             <string>float</string>
                             <string>main_axis_step</string>
-                            <string>None</string>
                             <string>planning_dict</string>
+                            <string>_write_</string>
                             <string>_getiter_</string>
                             <string>axis</string>
+                            <string>None</string>
+                            <string>axis_depth</string>
                             <string>axis_dict</string>
                             <string>axis_previous</string>
                             <string>axis_next</string>
-                            <string>axis_depth</string>
                             <string>axis_group</string>
                             <string>axis_group_dict</string>
                             <string>axis_info_dict</string>
