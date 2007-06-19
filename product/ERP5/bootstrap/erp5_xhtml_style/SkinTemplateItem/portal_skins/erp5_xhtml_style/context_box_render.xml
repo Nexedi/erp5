@@ -80,8 +80,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 XXX: Folder_filter accesses selection directly\n
 -->\n
 </tal:block>\n
-\n
-\n
 <tal:block metal:define-macro="master">\n
   <span id="jump" metal:define-macro="jump">\n
     <select name="select_jump"\n
@@ -118,7 +116,6 @@ XXX: Folder_filter accesses selection directly\n
   </span>\n
 \n
   <span class="separator"></span>\n
-\n
 \n
   <span id="action" metal:define-macro="action">\n
     <select name="select_action"\n
@@ -275,8 +272,7 @@ XXX: Folder_filter accesses selection directly\n
           <span class="description" i18n:translate="" i18n:domain="ui">Show All</span>\n
         </button>\n
         <button type="submit" name="Folder_filter:method" title="Filter"\n
-                tal:define="selection python: here.portal_selections.getSelectionFor(request[\'selection_name\'])"\n
-                tal:attributes="class python:(selection is not None and selection.isInvertMode()) and \'filter_on\' or \'filter\';"\n
+                tal:attributes="class python: here.portal_selections.getSelectionInvertModeFor(request[\'selection_name\']) and \'filter_on\' or \'filter\';"\n
                 i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Filter</span>\n
@@ -333,8 +329,7 @@ XXX: Folder_filter accesses selection directly\n
         <span class="description" i18n:translate="" i18n:domain="ui">Help</span>\n
       </a>\n
       <a tal:condition="preferred_html_style_developper_mode"\n
-         class="inspect_object" title="Inspect object"\n
-         tal:attributes="href python: \'Base_viewInspectionReport\'"\n
+         class="inspect_object" title="Inspect object" href="Base_viewInspectionReport"\n
          i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Inspect object</span>\n
@@ -347,13 +342,9 @@ XXX: Folder_filter accesses selection directly\n
         <span class="description" i18n:translate="" i18n:domain="ui">Activity Pending</span>\n
       </a>\n
     </span>\n
-\n
   </span>\n
-\n
   <p class="clear"></p>\n
-\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></string> </value>
         </item>
