@@ -557,8 +557,8 @@ class Resource(XMLMatrix, Variated):
       return 1 # a has no destination ans loses
 
     security.declareProtected(Permissions.AccessContentsInformation, 
-                              '_getPriceParameterDict')
-    def _getPriceParameterDict(self, context=None, REQUEST=None, **kw):
+                              'getPriceParameterDict')
+    def getPriceParameterDict(self, context=None, REQUEST=None, **kw):
       """
       Get all pricing parameters from Predicate.
       """
@@ -620,8 +620,8 @@ class Resource(XMLMatrix, Variated):
       return price_parameter_dict
       
     security.declareProtected(Permissions.AccessContentsInformation,
-        '_getPricingVariable')
-    def _getPricingVariable(self, context=None):
+        'getPricingVariable')
+    def getPricingVariable(self, context=None):
       """
       Return the value of the property used to calculate variable pricing
       This basically calls a script like Product_getPricingVariable
@@ -652,7 +652,7 @@ class Resource(XMLMatrix, Variated):
         context = default
         default = None
       
-      price_parameter_dict = self._getPriceParameterDict(
+      price_parameter_dict = self.getPriceParameterDict(
                                      context=context, REQUEST=REQUEST, **kw)
       # Calculate the unit price
       unit_base_price = None
@@ -684,7 +684,7 @@ class Resource(XMLMatrix, Variated):
         for additional_price in price_parameter_dict['additional_price']:
           unit_base_price += additional_price
         # Sum variable additional price
-        variable_value = self._getPricingVariable(context=context)
+        variable_value = self.getPricingVariable(context=context)
         for variable_additional_price in \
             price_parameter_dict['variable_additional_price']:
           unit_base_price += variable_additional_price * variable_value
@@ -727,6 +727,3 @@ class Resource(XMLMatrix, Variated):
       except TypeError:
         return 0
       return 0
-
-
-        
