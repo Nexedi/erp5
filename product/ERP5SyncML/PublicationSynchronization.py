@@ -51,7 +51,7 @@ class PublicationSynchronization(XMLSyncUtils):
       Read the client xml message
       Send the first XML message from the server
     """
-    LOG('PubSyncInit',0,'Starting... publication: %s' % str(publication))
+    #LOG('PubSyncInit',0,'Starting... publication: %s' % str(publication))
     
     #the session id is set at the same value of those of the client
     subscriber.setSessionId(self.getSessionId(xml_client))
@@ -74,7 +74,7 @@ class PublicationSynchronization(XMLSyncUtils):
       #XXX this is in developement, it's just for tests
       if publication.isAuthenticationRequired():
         if not cred:
-          LOG('PubSyncInit',0,'authentication required')
+          #LOG('PubSyncInit',0,'authentication required')
 	        # Prepare the xml message for the Sync initialization package
           cmd_id = 1 # specifies a SyncML message-unique command identifier
           xml_list = []
@@ -166,16 +166,16 @@ class PublicationSynchronization(XMLSyncUtils):
         # Check if the last time synchronization is the same as the client one
         mess='\nsubscriber.getNextAnchor:\t%s\nsubscriber.getLastAnchor:\t%s\
         \nlast_anchor:\t\t\t%s\nnext_anchor:\t\t\t%s' % (subscriber.getNextAnchor(), subscriber.getLastAnchor(), last_anchor, next_anchor)
-        LOG('PubSyncInit',0,mess)
+        #LOG('PubSyncInit',0,mess)
         
         if subscriber.getNextAnchor() != last_anchor:
           if last_anchor == None:
-            LOG('PubSyncInit',0,'anchor null')
+            #LOG('PubSyncInit',0,'anchor null')
             raise ValueError, "Sorry, the anchor was null"
           else:
             message = "bad anchors in PubSyncInit! " + \
                 subscriber.getNextAnchor() + " and " + last_anchor
-            LOG('PubSyncInit',0,message)
+            #LOG('PubSyncInit',0,message)
         else:
 	        subscriber.setNextAnchor(next_anchor)
       # We have to set every object as NOT_SYNCHRONIZED
@@ -216,14 +216,14 @@ class PublicationSynchronization(XMLSyncUtils):
     """
       This is the synchronization method for the server
     """
-    LOG('PubSync',0,'Starting... id: %s' % str(id))
+    #LOG('PubSync',0,'Starting... id: %s' % str(id))
     # Read the request from the client
     xml_client = msg
-    if xml_client is None:
-      xml_client = self.readResponse(from_url='file://tmp/sync_server')
-    LOG('PubSync',0,'Starting... msg: %s' % str(xml_client))
-    result = None
     publication = self.getPublication(id)
+    if xml_client is None:
+      xml_client = self.readResponse(from_url=publication.getPublicationUrl())
+    #LOG('PubSync',0,'Starting... msg: %s' % str(xml_client))
+    result = None
 
     if xml_client is not None:
       if isinstance(xml_client, str) or isinstance(xml_client, unicode):
@@ -231,14 +231,14 @@ class PublicationSynchronization(XMLSyncUtils):
       first_node = xml_client.childNodes[0]
 
       if first_node.nodeName != "SyncML":
-        LOG('PubSync',0,'This is not a SyncML Message')
+        #LOG('PubSync',0,'This is not a SyncML Message')
         raise ValueError, "Sorry, This is not a SyncML Message"
       alert_code = self.getAlertCode(xml_client)
 
       # Get informations from the header
       client_header = first_node.childNodes[1]
       if client_header.nodeName != "SyncHdr":
-        LOG('PubSync',0,'This is not a SyncML Header')
+        #LOG('PubSync',0,'This is not a SyncML Header')
         raise ValueError, "Sorry, This is not a SyncML Header"
       for subnode in client_header.childNodes:
         if subnode.nodeType == subnode.ELEMENT_NODE and \
