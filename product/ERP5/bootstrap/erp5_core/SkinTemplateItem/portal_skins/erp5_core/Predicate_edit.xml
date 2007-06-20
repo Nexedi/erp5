@@ -154,7 +154,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_index=0, selection_name=\'\'</string> </value>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', ignore_layout=0, editable_mode=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -174,7 +174,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -183,6 +183,8 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>form_id</string>
                             <string>selection_index</string>
                             <string>selection_name</string>
+                            <string>ignore_layout</string>
+                            <string>editable_mode</string>
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
@@ -223,6 +225,8 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
               <tuple>
                 <int>0</int>
                 <string></string>
+                <int>0</int>
+                <int>1</int>
               </tuple>
             </value>
         </item>
