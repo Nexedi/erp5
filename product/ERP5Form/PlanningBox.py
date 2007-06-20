@@ -1673,14 +1673,13 @@ class BasicStructure:
         position +=1
         # recovering usefull informations, basic_structure
         if self.title_line not in (None,''):
-	        title_line_method = getattr(report_group_object.getObject(), \
-			                               self.title_line, None)
+	        title_line_method = getattr(report_group_object.getObject(),
+			                                self.title_line, None)
         else:
-          title_line_method = getattr(report_group_object.getObject(), \
-                                                       'getTitle', None)
+          title_line_method = getattr(report_group_object.getObject(),
+                                      'getTitle', None)
         if title_line_method is not None:
-          title = title_line_method()
-          name = title_line_method()
+          title = name = title_line_method()
         depth = report_group_object.getDepth()
         is_open = report_group_object.getIsOpen()
         is_pure_summary = report_group_object.getIsPureSummary()
@@ -1785,15 +1784,16 @@ class BasicGroup:
     info_botright_method = \
                   getattr(self.object.getObject(),info_botright,None)
     # if method recovered is not null, then updating
-    if info_center_method!=None:
+    # XXX Does script have to manage multiple context object ?
+    if info_center_method is not None:
       info['info_center'] = str(info_center_method())
-    if info_topright_method!=None:
+    if info_topright_method is not None:
       info['info_topright'] = str(info_topright_method())
-    if info_topleft_method!=None:
+    if info_topleft_method is not None:
       info['info_topleft'] = str(info_topleft_method())
-    if info_botleft_method!=None:
+    if info_botleft_method is not None:
       info['info_botleft'] = str(info_botleft_method())
-    if info_botright_method!=None:
+    if info_botright_method is not None:
       info['info_botright'] = str(info_botright_method())
 
     if activity_list not in ([],None):
@@ -1804,7 +1804,7 @@ class BasicGroup:
         # previously recovered method
         block_begin = None
         block_end = None
-        if object_property_begin !=None:
+        if object_property_begin  is not None:
           block_begin = \
                  getattr(activity_content.getObject(),object_property_begin)
         else:
@@ -1872,22 +1872,22 @@ class BasicGroup:
                  getattr(activity_content,info_botright,None)
 
             # if value recovered is not null, then updating
-            if info_center_method!=None:
+            if info_center_method is not None:
                info['info_center']=str(info_center_method())
-            if info_topright_method!=None:
+            if info_topright_method is not None:
                info['info_topright']=str(info_topright_method())
-            if info_topleft_method!=None:
+            if info_topleft_method is not None:
                info['info_topleft']=str(info_topleft_method())
-            if info_botleft_method!=None:
+            if info_botleft_method is not None:
                info['info_botleft'] =str(info_botleft_method())
-            if info_botright_method!=None:
+            if info_botright_method is not None:
                info['info_botright']=str(info_botright_method())
 
             title = info['info_center']
             color_script = getattr(activity_content.getObject(),
                                    self.field.get_value('color_script'),None)
             # calling color script if exists to set up activity_color
-            if color_script !=None:
+            if color_script  is not None:
               current_color = color_script(activity_content.getObject())
 
             # testing if some activities have errors
@@ -1937,11 +1937,11 @@ class BasicGroup:
                              self.field.get_value('color_script'),None)
       # calling color script if exists to set up activity_color
       current_color=''
-      if color_script !=None:
+      if color_script  is not None:
         current_color = color_script(self.object.getObject())
 
       # getting begin and end values from previously recovered method
-      if object_property_begin !=None:
+      if object_property_begin  is not None:
         block_begin = \
                     self.object.getObject().getProperty(object_property_begin)
       else:
