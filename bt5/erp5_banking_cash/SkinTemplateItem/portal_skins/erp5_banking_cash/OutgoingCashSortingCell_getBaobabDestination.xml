@@ -77,21 +77,20 @@ cash_status = context.getCashStatus()\n
 emission_letter = context.getEmissionLetter()\n
 \n
 if cash_status == "to_sort" and emission_letter == "not_defined":\n
-  # billet lettre not defined / a trier -> caisse source\n
+  # banknote letter \'not defined\' / a trier -> caisse source\n
   return context.getSource()\n
 elif emission_letter != site_letter:\n
-  # billet externe -> caisse auxiliaire / encaisse externe\n
-  # billet lettre mixed -> caisse auxiliaire / encaisse externe\n
+  # external banknote  -> caisse auxiliaire / encaisse externe\n
+  # banknote letter \'mixed\' -> caisse auxiliaire / encaisse externe\n
   return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
 elif cash_status in ("cancelled", "to_sort"):\n
-  # billet annul\xe9 ou a trier du pays -> caisse auxiliaire / billets et monnaies\n
+  # banknote \'cancelled\' oo \'to_sort\'from same country -> caisse auxiliaire / billets et monnaies\n
   return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
 elif cash_status == "valid":\n
-  # billet valide du pays -> caisse de reserve / billets et monnaies\n
+  # banknote \'valid\' from same country -> caisse de reserve / billets et monnaies\n
   return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
   \n
 \n
-  \n
 # if emission_letter!=\'not_defined\' and not (emission_letter in site_letter):\n
 #   return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
 # elif cash_status == "mixed":\n
