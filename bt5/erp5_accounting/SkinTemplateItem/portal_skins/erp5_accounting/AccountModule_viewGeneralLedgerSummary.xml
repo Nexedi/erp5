@@ -67,7 +67,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -77,7 +77,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
