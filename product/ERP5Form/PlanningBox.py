@@ -92,6 +92,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     context = getContext(field, REQUEST)
 
     # recover usefull properties
+    # XXX Incompatible with multiple planning box in the same form
     block_moved_string = REQUEST.get('block_moved','')
     block_previous_string = REQUEST.get('previous_block_moved','')
 
@@ -381,9 +382,9 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       # - dict with error results
       raise FormValidationError(errors_list, {})
 
-    # the whole process is now finished, just need to return final dict
-    # for updating data
-    return update_dict
+    # the whole process is now finished, 
+    # just need to return editor for updating data
+    return PlanningBoxEditor(field.id, update_dict)
 
   def getBlockPositionFromString(self, block_string):
     """
@@ -611,6 +612,27 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
                          'axis_stop' : activity.secondary_axis_stop
                        })
     return object_dict
+
+class PlanningBoxEditor:
+  """
+  A class holding all values required to update objects
+  """
+  def __init__(self, field_id, update_dict):
+    self.field_id = field_id
+    self.update_dict = update_dict
+
+  def view(self):
+    return self.__dict__
+
+  def __call__(self, REQUEST):
+    # XXX Planning Box does not handle FormValidationError
+    pass
+
+  def edit(self, context):
+    for url, kw in self.update_dict.items():
+      context.restrictedTraverse(url).edit(**kw)
+
+allow_class(PlanningBoxEditor)
 
 class PlanningBoxWidget(Widget.Widget):
   """
@@ -925,6 +947,7 @@ class PlanningBoxWidget(Widget.Widget):
     # recover CSS data buy calling DTML document
     CSS_data = planning_css_method(basic=basic, planning=planning)
     # saving structure inside the request for HTML render
+    # XXX This prevent multiple planning box on the same form
     REQUEST.set('basic', basic)
     REQUEST.set('planning', planning)
 
