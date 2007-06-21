@@ -1090,7 +1090,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     else:
       stripped_html = html
     # find charset and convert to utf-8
-    charset_list = self.charset_parser.findall(html)
+    charset_list = self.charset_parser.findall(str(html))
     if charset_list:
       stripped_html = unicode(stripped_html, charset_list[0]).encode('utf-8')
     return stripped_html

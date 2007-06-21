@@ -165,3 +165,13 @@ class TextDocument(Document, TextContent):
       if base_list:
         return base_list[0]
       return Document.getContentBaseURL(self)
+      
+    def hasBaseData(self):
+      """ 
+        This method is an override of dynamically generated method for Document class.
+        We need to manually override it because for some backwards compatibility 
+        instances of TextDocument as 'Web Page' doesn't use 'base_data' to store raw 
+        data information. Instead they use 'text-content'
+        This makes results and login of abstract Document class inconsistent.
+      """
+      return self.hasTextContent()
