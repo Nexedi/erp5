@@ -31,21 +31,17 @@ from math import log
 from warnings import warn
 
 from AccessControl import ClassSecurityInfo
-from DateTime import DateTime
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Base import Base
 
 from Products.ERP5.Variated import Variated
-#from Products.ERP5.Core.Resource import Resource as CoreResource
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCategory.Renderer import Renderer
 from Products.CMFCore.utils import getToolByName
 
 from zLOG import LOG, WARNING
 
-#class Resource(XMLMatrix, CoreResource, Variated):
 class Resource(XMLMatrix, Variated):
     """
       A Resource
@@ -626,6 +622,9 @@ class Resource(XMLMatrix, Variated):
       Return the value of the property used to calculate variable pricing
       This basically calls a script like Product_getPricingVariable
       """
+      warn('Resource.getPricingVariable is deprecated; Please use' \
+           ' a type-based method for getPrice, and call whatever scripts' \
+           ' you need to invoke from that method.', DeprecationWarning)
       method = None
       if context is not None:
         method = context._getTypeBasedMethod('getPricingVariable')
@@ -652,6 +651,19 @@ class Resource(XMLMatrix, Variated):
         context = default
         default = None
       
+      # First, try to use a type-based method for the calculation.
+      # Note that this is based on self (i.e. a resource) instead of context
+      # (i.e. a movement).
+      method = self._getTypeBasedMethod('getPrice')
+      if method is not None:
+        return method(default=default, context=context, REQUEST=REQUEST, **kw)
+
+      # This below is used only if the type-based method is not
+      # available at all. We should provide the default implementation
+      # in a Business Template as Resource_getPrice, thus this will not
+      # be used in the future. Kept only for backward compatibility in
+      # case where the user still uses an older Business Template.
+
       price_parameter_dict = self.getPriceParameterDict(
                                      context=context, REQUEST=REQUEST, **kw)
       # Calculate the unit price
