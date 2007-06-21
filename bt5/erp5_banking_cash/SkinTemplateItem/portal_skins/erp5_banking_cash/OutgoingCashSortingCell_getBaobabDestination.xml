@@ -65,36 +65,58 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getSource() is None:\n
+            <value> <string encoding="cdata"><![CDATA[
+
+if context.getSource() is None:\n
   return None\n
 \n
 site_letter = context.getSourceValue().getCodification()[0].lower()\n
 site = context.Baobab_getVaultSite(context.getSource()).getRelativeUrl()\n
 cash_status = context.getCashStatus()\n
-\n
+# possible cash status : cancelled, to_sort, valid\n
 emission_letter = context.getEmissionLetter()\n
-if emission_letter!=\'not_defined\' and not (emission_letter in site_letter):\n
+\n
+if cash_status == "to_sort" and emission_letter == "not_defined":\n
+  # billet lettre not defined / a trier -> caisse source\n
+  return context.getSource()\n
+elif emission_letter != site_letter:\n
+  # billet externe -> caisse auxiliaire / encaisse externe\n
+  # billet lettre mixed -> caisse auxiliaire / encaisse externe\n
   return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-elif cash_status == "mixed":\n
-  return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-elif emission_letter==\'not_defined\':\n
-  # remaining banknote which are not sorted yet, or cancelled one\n
-  if not \'ventilation\' in context.getSource():\n
-    return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
-  else:\n
-    if context.getCashStatus() in ("to_sort",):\n
-      return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-    else:\n
-      # take classification into account here\n
-      source_list = context.getSource().split(\'/\')\n
-      return \'%s/caveau/auxiliaire/%s\' %(site,\'/\'.join(source_list[-2:]))\n
-elif (context.getCashStatus() == \'to_sort\' or context.getCashStatus() == \'cancelled\') and emission_letter in site_letter:\n
+elif cash_status in ("cancelled", "to_sort"):\n
+  # billet annul\xe9 ou a trier du pays -> caisse auxiliaire / billets et monnaies\n
   return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
-elif emission_letter in site_letter:\n
+elif cash_status == "valid":\n
+  # billet valide du pays -> caisse de reserve / billets et monnaies\n
   return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
-else:\n
-  return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-</string> </value>
+  \n
+\n
+  \n
+# if emission_letter!=\'not_defined\' and not (emission_letter in site_letter):\n
+#   return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
+# elif cash_status == "mixed":\n
+#   return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
+# elif emission_letter==\'not_defined\':\n
+#   # remaining banknote which are not sorted yet, or cancelled one\n
+#   if not \'ventilation\' in context.getSource():\n
+#     return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
+#   else:\n
+#     if context.getCashStatus() in ("to_sort",):\n
+#       return context.getSource()\n
+#       #return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
+#     else:\n
+#       # take classification into account here\n
+#       source_list = context.getSource().split(\'/\')\n
+#       return \'%s/caveau/auxiliaire/%s\' %(site,\'/\'.join(source_list[-2:]))\n
+# elif (context.getCashStatus() in (\'to_sort\', \'cancelled\')) and emission_letter in site_letter:\n
+#   return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
+# elif emission_letter in site_letter:\n
+#   return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
+# else:\n
+#   return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -152,7 +174,6 @@ else:\n
                             <string>site</string>
                             <string>cash_status</string>
                             <string>emission_letter</string>
-                            <string>source_list</string>
                           </tuple>
                         </value>
                     </item>
