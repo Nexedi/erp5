@@ -33,6 +33,7 @@ import ExtensionClass
 
 from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
+from Products.CMFCore import CMFCorePermissions
 
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.CopySupport import CopyContainer
@@ -931,6 +932,22 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     object = self._getOb(id)
     object.manage_beforeDelete(object, self)
     self._delOb(id)
+
+  security.declareProtected( CMFCorePermissions.ManagePortal, 'callMethodOnObjectList' )
+  def callMethodOnObjectList(self, object_path_list, method_id, *args, **kw):
+    """
+    Very usefull if we want to activate the call of a method
+    on many objects at a time. Like this we could prevent creating
+    too much acitivities at a time, and we may have only the path
+
+    """
+    portal = self.getPortalObject()
+    for object_path in object_path_list:
+      current_object = portal.unrestrictedTraverse(object_path)
+      method = getattr(current_object, method_id, None)
+      if method is None:
+        raise ValueError, "The method %s was not found" % method_id
+      method(*args, **kw)
 
 # Overwrite Zope setTitle()
 Folder.setTitle = Base.setTitle

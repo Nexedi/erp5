@@ -23,6 +23,8 @@ from Products.ERP5Type import _dtmldir
 from RoleInformation import RoleInformation
 from Permissions import ManagePortal
 
+from zLOG import LOG
+
 #from interfaces.portal_roles import RoleProvider as IRoleProvider
 
 
@@ -257,18 +259,21 @@ class RoleProviderBase:
       """Update the local roles in existing objects.
       """
       portal_catalog = self.portal_catalog
-      i = 0
-      for brain in portal_catalog(portal_type = self.id):
-        obj = brain.getObject()
-        user_id = None
-        owner_tuple = obj.getOwnerTuple()
-        if owner_tuple is not None:
-          user_id = owner_tuple[1]
-        obj.updateLocalRolesOnSecurityGroups(user_name = user_id)
-        i += 1
+
+      object_list = portal_catalog(portal_type = self.id, limit=None)
+      # We need to use activities in order to make sure it will
+      # work for an important number of objects
+      object_list_len = len(object_list)
+      portal_activities = self.portal_activities
+      object_path_list = [x.path for x in object_list]
+      for i in xrange(0, object_list_len, 100):
+        current_path_list = object_path_list[i:i+100]
+        portal_activities.activate(activity='SQLQueue')\
+              .callMethodOnObjectList(current_path_list, 
+                     'updateLocalRolesOnSecurityGroups')
 
       if REQUEST is not None:
-        return self.manage_editRolesForm(REQUEST, manage_tabs_message='%d objects updated' % (i,))
-
+        return self.manage_editRolesForm(REQUEST, 
+                 manage_tabs_message='%d objects updated' % (object_list_len,))
 
 InitializeClass(RoleProviderBase)
