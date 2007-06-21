@@ -656,7 +656,7 @@ class Resource(XMLMatrix, Variated):
       # (i.e. a movement).
       method = self._getTypeBasedMethod('getPrice')
       if method is not None:
-        return method(default=default, context=context, REQUEST=REQUEST, **kw)
+        return method(default=default, movement=context, REQUEST=REQUEST, **kw)
 
       # This below is used only if the type-based method is not
       # available at all. We should provide the default implementation
