@@ -453,7 +453,6 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 <!--/div-->\n
 </div>\n
 </tal:block>\n
-</tal:block>\n
 
 
 ]]></string> </value>

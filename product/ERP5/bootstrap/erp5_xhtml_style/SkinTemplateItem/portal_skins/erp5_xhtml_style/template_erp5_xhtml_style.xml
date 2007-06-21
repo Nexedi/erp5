@@ -96,8 +96,33 @@ IDEAS:\n
       <link tal:attributes="href css" type="text/css" rel="stylesheet"/>\n
     </tal:block>\n
 \n
-    <tal:block metal:use-macro="global_definitions_macros/planning_box_definitions"/>\n
+    <tal:block tal:replace="nothing">\n
+      <!-- Render each field\'s css and javascript. -->\n
+    </tal:block>\n
+    <tal:block tal:condition="python: form is not None">\n
+      <tal:block tal:repeat="group python: form.Form_getGroupTitleAndId()">\n
+        <tal:block tal:define="gid group/gid;">\n
+          <tal:block tal:condition="python: gid.find(\'hidden\') < 0">\n
+            <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
 \n
+              <tal:block tal:define="css python: field.render_css(REQUEST=request)">\n
+                <tal:block tal:condition="python: css is not None">\n
+                  <style tal:content="css"\n
+                         tal:attributes="type python:\'text/css\'">\n
+                  </style>\n
+                </tal:block>\n
+              </tal:block>\n
+\n
+              <tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" />\n
+\n
+            </tal:block>\n
+          </tal:block>\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+\n
+\n
+    <!-- May need to remove duplicates -->\n
     <tal:block tal:repeat="js js_list">\n
       <script tal:attributes="src js" type="text/javascript"></script>\n
     </tal:block>\n
