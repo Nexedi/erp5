@@ -455,6 +455,13 @@ Widget.render_hidden = Widget_render_hidden
 # default render_pdf for a Widget
 Widget.render_pdf = Widget.render_view
 
+def Widget_render_css(self, field, REQUEST):
+  """
+  Default render css for widget
+  """
+  pass
+Widget.render_css = Widget_render_css
+
 from Products.Formulator.Validator import LinesValidator
 
 def LinesValidator_validate(self, field, key, REQUEST):
@@ -1241,6 +1248,22 @@ def Field_render_pdf(self, value=None, REQUEST=None, key=None, **kw):
   """
   return self.widget.render_pdf(self, value)
 Field.render_pdf = Field_render_pdf
+
+def Field_render_css(self, REQUEST=None):
+  """
+  Generate css content which will be added in the html header.
+
+  XXX key parameter may be needed.
+  """
+  return self.widget.render_css(self, REQUEST)
+Field.render_css = Field_render_css
+
+def Field_get_javascript_list(self, REQUEST=None):
+  """
+  Returns list of javascript needed by the field
+  """
+  return []
+Field.get_javascript_list = Field_get_javascript_list
 
 
 from Products.Formulator.TALESField import TALESWidget

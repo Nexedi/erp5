@@ -101,7 +101,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     ##################################################
     # build structure
     basic, planning = PlanningBoxWidgetInstance.render_structure(field=field,
-                          key=key, value=value, REQUEST= REQUEST,
+                          REQUEST= REQUEST,
                           context=context)
 
     # getting coordinates script generator
@@ -928,7 +928,7 @@ class PlanningBoxWidget(Widget.Widget):
       default=2,
       required=0)
 
-  def render_css(self, field, key, value, REQUEST):
+  def render_css(self, field, REQUEST):
     """
     first method called for rendering by PageTemplate form_view
     create the whole object based structure, and then call a special
@@ -940,8 +940,8 @@ class PlanningBoxWidget(Widget.Widget):
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
     # creates and fill up self.basic, self.planning and self.build_error_list
-    basic, planning = self.render_structure(field=field, key=key, value=value,
-                                            REQUEST=REQUEST, context=context)
+    basic, planning = self.render_structure(field=field, REQUEST=REQUEST, 
+                                            context=context)
     # getting CSS script generator
     planning_css_method = getattr(context, 'planning_css')
     # recover CSS data buy calling DTML document
@@ -974,7 +974,7 @@ class PlanningBoxWidget(Widget.Widget):
     # return HTML data
     return HTML_data
 
-  def render_structure(self, field, key, value, REQUEST, context):
+  def render_structure(self, field, REQUEST, context):
     """
     This method is the begining of the rendering procedure. it calls all
     methods needed to generate BasicStructure with ERP5 objects, and then
@@ -3136,8 +3136,21 @@ class PlanningBox(ZMIField):
     else:
       return ZMIField.get_value(self, id, **kw)
 
-  def render_css(self, value=None, REQUEST=None):
-    return self.widget.render_css(self, '', value, REQUEST)
+  def render_css(self, REQUEST=None):
+    return self.widget.render_css(self, REQUEST)
+
+  def get_javascript_list(self, REQUEST=None):
+    """
+    Returns list of javascript needed by the field
+    """
+    if self.get_value('js_enabled'):
+      context = getContext(self, REQUEST)
+      # XXX Instead of harcoding library name
+      # it should be better to call a python script, as
+      # it is done on type base method.
+      return ['%s/wz_dragdrop.js' % context.portal_url.getPortalPath()]
+    else:
+      return []
 
 # XXX Copy paste from listbox
 def getContext(field, REQUEST):

@@ -116,6 +116,16 @@ class ProxyWidget(Widget.Widget):
       result = proxy_field.widget.render_view(field, value)
     return result
 
+  def render_css(self, field, REQUEST):
+    """
+    Render proxy field
+    """
+    result = ''
+    proxy_field = field.getRecursiveTemplateField()
+    if proxy_field is not None:
+      result = proxy_field.widget.render_css(field, REQUEST)
+    return result
+
 class ProxyValidator(Validator.Validator):
   """
     Validation of entered value through proxy field
@@ -486,5 +496,16 @@ class ProxyField(ZMIField):
     if proxy_field is not None:
       result = proxy_field._get_user_input_value(key, REQUEST)
     else:
-      result = ZMIField._get_user_input_value(key, REQUEST)
+      result = ZMIField._get_user_input_value(self, key, REQUEST)
+    return result
+
+  def get_javascript_list(self, REQUEST=None):
+    """
+    Returns list of javascript needed by the field
+    """
+    proxy_field = self.getTemplateField()
+    if proxy_field is not None:
+      result = proxy_field.get_javascript_list(REQUEST)
+    else:
+      result = ZMIField.get_javascript_list(self, REQUEST)
     return result
