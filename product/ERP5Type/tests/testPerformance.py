@@ -42,6 +42,7 @@ from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.Cache import clearCache
 from DateTime import DateTime
 from time import time
+import gc
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
@@ -84,12 +85,6 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       """
       self.login()
       self.bar_module = self.getBarModule()
-      # Make the collection frequency higher,
-      # because if it is waiting too much time, then the collection
-      # take too much time and the test fails
-      import gc
-      gc.set_threshold(5000, 10, 10)
-
 
     def test_00_viewBarObject(self, quiet=quiet, run=run_all_test):
       """
@@ -137,6 +132,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       view_result = {}
       tic_result = {}
       add_result = {}
+      gc.collect()
       # add object in bar module
       for i in xrange(10):
           before_add = time()
@@ -149,6 +145,13 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           before_tic = time()
           self.tic()
           after_tic = time()
+
+          # Explicit collect of the garbage collector,
+          # So no garbage collection will happen while reindexing,
+          # like this we prevent random garbage collection wich 
+          # was making the test failing randomly
+          gc.collect()
+
           before_form = time()
           for x in xrange(100):
             self.bar_module.BarModule_viewBarList()
