@@ -120,13 +120,6 @@ def editListBox(listbox_field, listbox):\n
       v.update(gv)\n
       context.restrictedTraverse(url).edit(**v)\n
 \n
-def editPlanningBox(planning_box):\n
-  """ Function called to edit a planning box\n
-  """\n
-  if planning_box is not None:\n
-    for url, v in planning_box.items():\n
-      context.restrictedTraverse(url).edit(**v)\n
-\n
 def editMatrixBox(matrixbox_field, matrixbox):\n
   """ Function called to edit a Matrix box\n
   """\n
@@ -236,8 +229,6 @@ try:\n
       editListBox(field, request.get(field.id))\n
     elif(field.meta_type == \'MatrixBox\'):\n
       editMatrixBox(field, request.get(field.id))\n
-    elif(field.meta_type == \'PlanningBox\'):\n
-      editPlanningBox(request.get(field.id))\n
 \n
   # Maybe we should build a list of objects we need\n
   # Update basic attributes\n
@@ -340,7 +331,6 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>value</string>
                             <string>callable</string>
                             <string>editListBox</string>
-                            <string>editPlanningBox</string>
                             <string>editMatrixBox</string>
                             <string>MARKER</string>
                             <string>kw</string>
