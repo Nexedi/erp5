@@ -81,7 +81,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 \n
 <tal:block tal:define="basic options/basic;\n
                        planning options/planning;\n
-                       address python:basic.here.getUrl()">\n
+                       address python:basic.context.getUrl()">\n
 \n
 <!-- hidden fields holding some usefull data-->\n
 <input type="hidden" name="list_selection_name" value="PLanningView" tal:attributes="value python:basic.field.get_value(\'selection_name\')"/>\n
@@ -321,7 +321,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 \n
     <!-- inserting depth widget -->\n
     <div tal:condition= "python:axis==planning.X"\n
-         tal:define="url python:\'%s/%s\' % (basic.here.absolute_url(),basic.form.id);\n
+         tal:define="url python:\'%s/%s\' % (basic.context.absolute_url(),basic.form.id);\n
                      selection_name python:basic.field.get_value(\'selection_name\')"\n
          tal:attributes="id python:axis.name + \'_depth\'">\n
       <a tal:repeat="unfold_level python:range(0,4)"\n
@@ -332,7 +332,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
     </div>\n
 \n
     <div tal:condition= "python:axis==planning.Y"\n
-         tal:define="url python:\'%s/%s\' % (basic.here.absolute_url(),basic.form.id);\n
+         tal:define="url python:\'%s/%s\' % (basic.context.absolute_url(),basic.form.id);\n
                      selection_name python:basic.field.get_value(\'selection_name\')"\n
          tal:attributes="id python:axis.name + \'_depth\'">\n
       <a tal:repeat="unfold_level python:range(0,4)"\n
@@ -409,7 +409,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
               <a tal:condition="python:block.info[area].info == \'__\'"\n
                 tal:attributes="href python:block.info[area].link;\n
                                 class python:\'planning_box_\' + info_area">\n
-                <img tal:attributes="src python:basic.here.getUrl() + \'/images/question.png\'"\n
+                <img tal:attributes="src python:basic.context.getUrl() + \'/images/question.png\'"\n
                     height="15" width="15">\n
               </a>\n
             </tal:block>\n
@@ -448,7 +448,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 <div id="left" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>\n
 \n
 <!-- declaring DTML properties -->\n
-<tal:block tal:replace="structure python:here.planning_dhtml(planning=planning)"/>\n
+<tal:block tal:replace="structure python:context.planning_dhtml(planning=planning)"/>\n
 \n
 <!--/div-->\n
 </div>\n

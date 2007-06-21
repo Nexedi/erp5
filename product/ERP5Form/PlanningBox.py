@@ -89,8 +89,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     """
     # init params
     value = None
-    form = field.aq_parent
-    here = getattr(form, 'aq_parent', REQUEST)
+    context = getContext(field, REQUEST)
 
     # recover usefull properties
     block_moved_string = REQUEST.get('block_moved','')
@@ -101,10 +100,11 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     ##################################################
     # build structure
     basic, planning = PlanningBoxWidgetInstance.render_structure(field=field,
-                          key=key, value=value, REQUEST= REQUEST, here=here)
+                          key=key, value=value, REQUEST= REQUEST,
+                          context=context)
 
     # getting coordinates script generator
-    planning_coordinates_method = getattr(here,'planning_coordinates')
+    planning_coordinates_method = getattr(context, 'planning_coordinates')
     # calling script to generate coordinates
     planning_coordinates = planning_coordinates_method(basic=basic,
                                                        planning=planning)
@@ -296,7 +296,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     start_property = field.get_value('x_start_bloc')
     stop_property = field.get_value('x_stop_bloc')
     # getting round_script if exists
-    round_script=getattr(here, field.get_value('round_script'), None)
+    round_script=getattr(context, field.get_value('round_script'), None)
     # now processing activity updates
     for activity_name in activity_dict.keys():
       # recovering list of moved blocks in the current activity
@@ -913,15 +913,15 @@ class PlanningBoxWidget(Widget.Widget):
     external PageTemplate (or DTML depending) to render the CSS code
     relative to the structure that need to be rendered
     """
-    here = REQUEST['here']
+    context = getContext(field, REQUEST)
     # build structure
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
     # creates and fill up self.basic, self.planning and self.build_error_list
     basic, planning = self.render_structure(field=field, key=key, value=value,
-                                            REQUEST=REQUEST, here=here)
+                                            REQUEST=REQUEST, context=context)
     # getting CSS script generator
-    planning_css_method = getattr(REQUEST['here'], 'planning_css')
+    planning_css_method = getattr(context, 'planning_css')
     # recover CSS data buy calling DTML document
     CSS_data = planning_css_method(basic=basic, planning=planning)
     # saving structure inside the request for HTML render
@@ -944,13 +944,14 @@ class PlanningBoxWidget(Widget.Widget):
     planning = REQUEST.get('planning')
 
     # getting HTML rendering Page Template
-    planning_html_method = getattr(REQUEST['here'], 'planning_content')
+    planning_html_method = getattr(getContext(field, REQUEST), 
+                                   'planning_content')
     # recovering HTML data by calling Page Template document
     HTML_data = planning_html_method(basic=basic, planning=planning)
     # return HTML data
     return HTML_data
 
-  def render_structure(self, field, key, value, REQUEST, here):
+  def render_structure(self, field, key, value, REQUEST, context):
     """
     This method is the begining of the rendering procedure. it calls all
     methods needed to generate BasicStructure with ERP5 objects, and then
@@ -979,7 +980,7 @@ class PlanningBoxWidget(Widget.Widget):
     list_error = REQUEST.get('list_block_error')
     if list_error is None:
       list_error = []
-    selection = here.portal_selections.getSelectionFor(
+    selection = context.portal_selections.getSelectionFor(
                       selection_name, REQUEST)
     # params contained in the selection object is a dictionnary.
     # must exist as an empty dictionnary if selection is empty.
@@ -990,16 +991,16 @@ class PlanningBoxWidget(Widget.Widget):
 
     ###### CALL CLASS METHODS TO BUILD BASIC STRUCTURE ######
     # creating BasicStructure instance (and initializing its internal values)
-    basic = BasicStructure(here=here,
-                                form=form, field=field,
-                                REQUEST=REQUEST, list_method=list_method,
-                                selection=selection, params=params,
-                                selection_name=selection_name,
-                                title_line=title_line,
-                                report_root_list=report_root_list,
-                                portal_types=portal_types,
-                                sort=sort,
-                                list_error=list_error)
+    basic = BasicStructure(context=context,
+                           form=form, field=field,
+                           REQUEST=REQUEST, list_method=list_method,
+                           selection=selection, params=params,
+                           selection_name=selection_name,
+                           title_line=title_line,
+                           report_root_list=report_root_list,
+                           portal_types=portal_types,
+                           sort=sort,
+                           list_error=list_error)
     # call build method to generate BasicStructure
     status = basic.build()
     if status != 1:
@@ -1030,14 +1031,14 @@ class BasicStructure:
   No zoom is applied on this structure
   """
 
-  def __init__ (self, here='', form='', field='', REQUEST='', list_method='',
+  def __init__ (self, context='', form='', field='', REQUEST='', list_method='',
                 selection=None, params = '', selection_name='',
                 report_root_list='', title_line='', portal_types='',
                 sort=None, list_error=None):
     """
     Init main internal parameters
     """
-    self.here = here
+    self.context = context
     self.form = form
     self.field = field
     self.REQUEST = REQUEST
@@ -1084,7 +1085,7 @@ class BasicStructure:
       self.selection.edit(default_sort_on=self.sort)
       self.selection.edit(sort_on=self.sort)
 
-    self.here.portal_selections.setSelectionFor(
+    self.context.portal_selections.setSelectionFor(
                                         self.selection_name,
                                         self.selection,
                                         REQUEST=self.REQUEST)
@@ -1117,7 +1118,7 @@ class BasicStructure:
     if hasattr(self.list_method, 'method_name'):
       if self.list_method.method_name == 'ObjectValues':
         # list_method is available
-        self.list_method = self.here.objectValues
+        self.list_method = self.context.objectValues
         kw = copy(self.params)
       else:
         # building a complex query so we should not pass too many variables
@@ -1137,7 +1138,7 @@ class BasicStructure:
             kw[cname] = self.params[cname]
         # try to get the method through acquisition
         try:
-          self.list_method = getattr(self.here, self.list_method.method_name)
+          self.list_method = getattr(self.context, self.list_method.method_name)
         except (AttributeError, KeyError):
           pass
     elif self.list_method in (None,''):
@@ -1148,7 +1149,7 @@ class BasicStructure:
     ############## DEFINING STAT METHOD ##############
     ##################################################
     stat_method = self.field.get_value('stat_method')
-    stat_method = getattr(self.here,stat_method, None)
+    stat_method = getattr(self.context, stat_method, None)
     if stat_method is None:
       show_stat = 0
     else:
@@ -1188,7 +1189,7 @@ class BasicStructure:
       selection_report_current = self.selection.getReportList()
 
     # building report_tree_list
-    report_tree_list = makeTreeList(here=self.here, form=self.form,
+    report_tree_list = makeTreeList(here=self.context, form=self.form,
                                     root_dict=None,
                                     report_path=self.selection_report_path,
                                     base_category=None, depth=0,
@@ -1245,7 +1246,7 @@ class BasicStructure:
         # getting list of statistic blocks
         stat_list = stat_method(selection=self.selection,
                                 list_method=self.list_method,
-                                selection_context=self.here,
+                                selection_context=self.context,
                                 report_tree_list=report_tree_list,
                                 object_tree_line=object_tree_line,
                                 REQUEST=self.REQUEST, field=self.field)
@@ -1272,7 +1273,7 @@ class BasicStructure:
           self.selection.edit(exception_uid_list= \
              object_tree_line.getExceptionUidList())
           object_list = self.selection(method = self.list_method,
-                        context=self.here, REQUEST=self.REQUEST)
+                        context=self.context, REQUEST=self.REQUEST)
         else:
           # no list_method found
           # XXX seems to be buggy :
@@ -1412,7 +1413,7 @@ class BasicStructure:
     ##################################################
     if self.list_method is not None and self.render_format != 'list':
      self.selection.edit(params = self.params)
-     self.here.portal_selections.setSelectionFor(self.selection_name,
+     self.context.portal_selections.setSelectionFor(self.selection_name,
                                                  self.selection,
                                                  REQUEST = self.REQUEST)
 
@@ -2137,7 +2138,7 @@ class PlanningStructure:
       axis_start = self.secondary_axis.start
 
     # XXX Isn't field enough ?
-    axis_script=getattr(basic_structure.here,
+    axis_script=getattr(basic_structure.context,
                         basic_structure.field.get_value('sec_axis_script'),None)
     if axis_script is None:
       # ERROR
@@ -3114,6 +3115,22 @@ class PlanningBox(ZMIField):
 
   def render_css(self, value=None, REQUEST=None):
     return self.widget.render_css(self, '', value, REQUEST)
+
+# XXX Copy paste from listbox
+def getContext(field, REQUEST):
+  """
+  Return the context of rendering this PlanningBox.
+  """
+  value = REQUEST.get('here')
+  if value is None:
+    value = getForm(field).aq_parent
+  return value
+
+# XXX Copy paste from listbox
+def getForm(field):
+  """Return the form which contains the PlanningBox.
+  """
+  return field.aq_parent
 
 # Allow classes in ZMI
 for klass in (PlanningBoxWidget, BasicStructure, BasicGroup,
