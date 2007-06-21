@@ -172,6 +172,6 @@ class TextDocument(Document, TextContent):
         We need to manually override it because for some backwards compatibility 
         instances of TextDocument as 'Web Page' doesn't use 'base_data' to store raw 
         data information. Instead they use 'text-content'
-        This makes results and login of abstract Document class inconsistent.
+        This makes results and logic of abstract Document class inconsistent.
       """
       return self.hasTextContent()
