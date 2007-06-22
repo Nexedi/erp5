@@ -1,3 +1,6 @@
+2007-06-22 yo
+* Remove keyword keys, because there is no way to disable them later.
+
 2007-04-05 Aurel
 * fix index for category table
 
