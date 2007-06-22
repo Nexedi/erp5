@@ -513,7 +513,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # create the line
     self.addCashLineToDelivery(self.cash_sorting, 'valid_outgoing_line_4', 'Outgoing Cash Sorting Line', self.billet_100,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/mixed') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/mixed', 'cash_status/valid') + self.variation_list,
             self.quantity_100)
     # execute tic
     self.stepTic()
@@ -533,7 +533,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.valid_outgoing_line.objectValues()), 2)
     for variation in self.variation_list:
       # get the delivery  cell
-      cell = self.valid_outgoing_line.getCell('emission_letter/not_defined', variation, 'cash_status/mixed')
+      cell = self.valid_outgoing_line.getCell('emission_letter/mixed', variation, 'cash_status/valid')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Outgoing Cash Sorting Cell')
       if cell.getId() == 'movement_0_0_0':
