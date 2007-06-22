@@ -29,19 +29,10 @@
 
 import os
 import sys
-
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
-from Products.PageTemplates.GlobalTranslationService import \
-                                      setGlobalTranslationService
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 HTTP_OK = 200
@@ -76,17 +67,18 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
   def afterSetUp(self):
     self.login()
     self.portal = self.getPortal()
+    self.web_page_module = self.portal.web_page_module
     self.portal_id = self.portal.getId()
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
 
-  def test_01_ERP5Web_recatalog(self, quiet=quiet, run=run_all_test):
+  def test_01_WebSite_recatalog(self, quiet=quiet, run=run_all_test):
     """
       Test that a recataloging works for Web Site documents
     """
     if not run: return
 
     # Create new Web Site document
-    portal = portal = self.getPortal()
+    portal = self.getPortal()
     web_site_module = self.portal.getDefaultModule(self.web_site_portal_type)
     web_site = web_site_module.newContent(portal_type=self.web_site_portal_type)
     self.assertTrue(web_site is not None)
@@ -97,12 +89,18 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     except:
       self.fail('Cataloging of the Web Site failed.')
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestERP5Web))
-        return suite
+
+  def test_SimpleWebPage(self):
+    """Simple Case of creating a web page.
+    """
+    page = self.web_page_module.newContent(portal_type='Web Page')
+    page.edit(text_content='<b>OK</b>')
+    self.assertEquals('text/html', page.getTextFormat())
+    self.assertEquals('<b>OK</b>', page.getTextContent())
+
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestERP5Web))
+  return suite
 
