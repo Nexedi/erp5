@@ -333,6 +333,8 @@ class Query(QueryMixin):
         where_expression.append("%s >= %s and %s <= %s" % (key, query_min, key, query_max))
       elif range_value == 'ngt' :
         where_expression.append("%s <= %s" % (key, query_max))
+      elif range_value == 'nlt' :
+        where_expression.append("%s > %s" % (key, query_max))
     elif isSimpleType(value) or isinstance(value, DateTime) \
         or isinstance(value, (list, tuple)):
       # Convert into lists any value which contain a ;
