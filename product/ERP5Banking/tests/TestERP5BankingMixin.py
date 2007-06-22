@@ -416,6 +416,7 @@ class TestERP5BankingMixin:
     self.emission_letter_p = self.emission_letter_base_category.newContent(id='p', portal_type='Category')
     self.emission_letter_s = self.emission_letter_base_category.newContent(id='s', portal_type='Category')
     self.emission_letter_b = self.emission_letter_base_category.newContent(id='b', portal_type='Category')
+    self.emission_letter_mixed = self.emission_letter_base_category.newContent(id='mixed', portal_type='Category')
     self.emission_letter_not_defined = self.emission_letter_base_category.newContent(id='not_defined', portal_type='Category')
 
     self.variation_base_category = getattr(self.category_tool, 'variation')
