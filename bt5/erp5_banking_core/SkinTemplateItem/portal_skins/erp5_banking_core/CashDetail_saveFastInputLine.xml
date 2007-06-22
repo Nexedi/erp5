@@ -196,7 +196,7 @@ for resource_id in per_resource_dict.keys():\n
         variation_not_defined = 1\n
         break\n
     # for the letter, if coin, must always be not_defined\n
-    if letter != \'emission_letter/not_defined\' and letter.replace(\'emission_letter/\',\'\') not in resource_object.getEmissionLetterList():\n
+    if letter != \'emission_letter/not_defined\' and letter.replace(\'emission_letter/\',\'\') not in resource_object.getEmissionLetterList()+[\'mixed\']:\n
       old_letter = letter\n
       letter = \'emission_letter/not_defined\'\n
       # replace key in per_resource_dict\n
