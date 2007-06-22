@@ -141,7 +141,7 @@ return \' \'.join(map(str, res))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>brain,selection</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -161,12 +161,14 @@ return \' \'.join(map(str, res))\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>brain</string>
+                            <string>selection</string>
                             <string>tags</string>
                             <string>trail</string>
                             <string>maxlines</string>
