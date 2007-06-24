@@ -2195,16 +2195,16 @@ class PlanningStructure:
     # group position and size informations are saved in position_secondary
     # using relative coordinates
     for delimiter in delimiter_list:
-      # XXX What is delimiter ? API needed
       axis_group = AxisGroup(name='Group_sec_' + str(axis_group_number),
-                             title=delimiter[1], delimiter_type=delimiter[3])
-      axis_group.tooltip = delimiter[2]
+                             title=delimiter['title'], 
+			     delimiter_type=delimiter['delimiter_type'])
+      axis_group.tooltip = delimiter['tooltip']
       axis_group.position_secondary.relative_begin = \
-                             int(delimiter[0]) - int(axis_start)
+                             int(delimiter['relative_position']) - int(axis_start)
       # set defaut stop bound and size
       axis_group.position_secondary.relative_end  = int(axis_stop)
       axis_group.position_secondary.relative_range = \
-                             int(axis_stop) - int(delimiter[0])
+                             int(axis_stop) - int(delimiter['relative_position'])
       # do not need to update previous delimiter informations for first
       # delimiter
       if delimiter != delimiter_list[0]:
