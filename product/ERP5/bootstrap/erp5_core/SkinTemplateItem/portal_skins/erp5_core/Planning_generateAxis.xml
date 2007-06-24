@@ -98,16 +98,16 @@ if isinstance(axis_start,DateTime):\n
       good_type = date_type\n
       break\n
 \n
-\n
   delimiter = 0\n
   delimiter_list = []\n
-  delimiter_list.append([int(axis_start),\'\',axis_start.Day() + \' \' + str(DateTime(axis_start)), 0])\n
-\n
+  delimiter_list.append({ \'relative_position\' : int(axis_start), \n
+                                   \'title\': \'\', \n
+                                   \'tooltip\' : str(axis_start), \n
+                                   \'delimiter_type\' : delimiter})\n
 \n
   #### Hour ###\n
   if good_type[0] == \'hour\':\n
     pass\n
-\n
 \n
   ## 6 Hours ##\n
   if good_type[0] == \'6hours\':\n
@@ -135,12 +135,12 @@ if isinstance(axis_start,DateTime):\n
         delimiter = 1\n
       else:\n
         delimiter = 0\n
-      delimiter_list.append([int(current_date),\n
-                              \'%s. %s %s:00\' % (current_date.Day()[:1],\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': \'%s. %s %s:00\' % (current_date.Day()[:1],\n
                                                 str(current_date.day()),\n
                                                 str(current_date.hour())),\n
-                              current_date.Day() + \' \' + str(current_date),\n
-                              delimiter])\n
+                                       \'tooltip\' : current_date.Day() + \' \' + str(current_date),\n
+                                       \'delimiter_type\' : delimiter})\n
       if current_date.hour() == 18:\n
         #need to use the next day\n
         current_date = DateTime((current_date + 1).Date())\n
@@ -164,16 +164,13 @@ if isinstance(axis_start,DateTime):\n
         delimiter = 1\n
       else:\n
         delimiter = 0\n
-      delimiter_list.append([int(current_date),\n
-                              \'%s/%s\' % (str(current_date.month()),\n
-                                            str(current_date.day())),\n
-                              current_date.Day() + \' \' + str(current_date),\n
-                              delimiter\n
-])\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': \'%s/%s\' % (str(current_date.month()),\n
+                                                                  str(current_date.day())),\n
+                                       \'tooltip\' : current_date.Day() + \' \' + str(current_date),\n
+                                       \'delimiter_type\' : delimiter})\n
       # go to next date\n
       current_date = current_date + 1\n
-\n
-\n
 \n
 \n
   ##### 3 DAYs ####\n
@@ -188,16 +185,13 @@ if isinstance(axis_start,DateTime):\n
         delimiter = 1\n
       else:\n
         delimiter = 0\n
-      delimiter_list.append([int(current_date),\n
-                              \'%s/%s\' % (str(current_date.month()),\n
-                                            str(current_date.day())),\n
-                              current_date.Day() + \' \' + str(current_date),\n
-                              delimiter\n
-])\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': \'%s/%s\' % (str(current_date.month()),\n
+                                                                  str(current_date.day())),\n
+                                       \'tooltip\' : current_date.Day() + \' \' + str(current_date),\n
+                                       \'delimiter_type\' : delimiter})\n
       # go to next date\n
       current_date = current_date + 3\n
-\n
-\n
 \n
   #### WEEK ####\n
   if good_type[0] == \'week\':\n
@@ -208,11 +202,10 @@ if isinstance(axis_start,DateTime):\n
       current_date = current_date + 1\n
     # getting list of weeks\n
     while current_date < axis_stop:\n
-      delimiter_list.append([int(current_date),\n
-                              str(current_date.month()) + \'/\' + str(current_date.day()),\n
-                              current_date.Day() + \' \' + str(current_date),\n
-                              delimiter\n
-])\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': str(current_date.month()) + \'/\' + str(current_date.day()),\n
+                                       \'tooltip\' : current_date.Day() + \' \' + str(current_date),\n
+                                       \'delimiter_type\' : delimiter})\n
       current_date = current_date + 7\n
 \n
 \n
@@ -235,11 +228,10 @@ if isinstance(axis_start,DateTime):\n
         delimiter = 1\n
       else:\n
         delimiter = 0\n
-      delimiter_list.append([int(current_date),\n
-                            str(current_date.month()) + \'/\' + str(current_date.day()),\n
-                            current_date.Day() + \' \' + str(current_date),\n
-                            delimiter\n
-])\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': str(current_date.month()) + \'/\' + str(current_date.day()),\n
+                                       \'tooltip\' : current_date.Day() + \' \' + str(current_date),\n
+                                       \'delimiter_type\' : delimiter})\n
       if current_date.month() == 12 and current_date.day() == 15:\n
         # need to go to the next year\n
         current_date = DateTime(str(current_date.year() + 1) + \'/1/1\' )\n
@@ -267,11 +259,11 @@ if isinstance(axis_start,DateTime):\n
         delimiter = 1\n
       else:\n
         delimiter = 0\n
-      delimiter_list.append([int(current_date),\n
-                            str(current_date.year()) + \'/\' + str(current_date.month()),\n
-                            current_date.Day() + \' \' + str(current_date),\n
-                            delimiter\n
-])\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': str(current_date.year()) + \'/\' + str(current_date.month()),\n
+                                       \'tooltip\' : current_date.Day() + \' \' + str(current_date),\n
+                                       \'delimiter_type\' : delimiter})\n
+\n
       if current_date.month() == 12:\n
         # need to go to the next year\n
         current_date = DateTime(str(current_date.year() + 1) + \'/1/1\' )\n
@@ -297,11 +289,11 @@ if isinstance(axis_start,DateTime):\n
         delimiter = 1\n
       else:\n
         delimiter = 0\n
-      delimiter_list.append([int(current_date),\n
-                              str(current_date.year()) + \'/\' + str(current_date.month()),\n
-                              current_date.Day() + \' \' + str(current_date),\n
-                              delimiter\n
-])\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': str(current_date.year()) + \'/\' + str(current_date.month()),\n
+                                       \'tooltip\' : current_date.Day() + \' \' + str(current_date),\n
+                                       \'delimiter_type\' : delimiter})\n
+\n
       if current_date.month() > 9:\n
         # need to go to the next year\n
         current_date = DateTime(str(current_date.year() + 1) + \'/1/1\' )\n
@@ -323,11 +315,11 @@ if isinstance(axis_start,DateTime):\n
         delimiter = 1\n
       else:\n
         delimiter = 0\n
-      delimiter_list.append([int(current_date),\n
-                              str(current_date.year()) + \'/\' + str(current_date.month()),\n
-                              current_date.Day() + \' \' + str(current_date),\n
-                              delimiter\n
-])\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': str(current_date.year()) + \'/\' + str(current_date.month()),\n
+                                       \'tooltip\' : current_date.Day() + \' \' + str(current_date),\n
+                                       \'delimiter_type\' : delimiter})\n
+\n
       if current_date.month() > 6:\n
         # need to go to the next year\n
         current_date = DateTime(str(current_date.year() + 1) + \'/1/1\' )\n
@@ -346,11 +338,11 @@ if isinstance(axis_start,DateTime):\n
         delimiter = 1\n
       else:\n
         delimiter = 0\n
-      delimiter_list.append([int(current_date),\n
-                              str(current_date.year()),\n
-                              current_date.Day() + \' \' + str(current_date),\n
-                              delimiter\n
-])\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': str(current_date.year()),\n
+                                       \'tooltip\' : current_date.Day() + \' \' + str(current_date),\n
+                                       \'delimiter_type\' : delimiter})\n
+\n
       current_date = DateTime(str(current_date.year() + 1) + \'/1/1\')\n
 \n
   return delimiter_list\n
@@ -368,9 +360,11 @@ else:\n
     good_step = step\n
     step = step * 10\n
 \n
-\n
   # now adding  first value\n
-  delimiter_list.append([axis_start,\'\',str(axis_start),0])\n
+  delimiter_list.append({ \'relative_position\' : int(axis_start), \n
+                                   \'title\': \'\', \n
+                                   \'tooltip\' : str(axis_start), \n
+                                   \'delimiter_type\' : 0})\n
 \n
   # now going to first good step\n
   modul = axis_start % good_step\n
@@ -387,7 +381,10 @@ else:\n
 \n
   # iterating and adding each value\n
   while current_step < axis_stop:\n
-    delimiter_list.append([current_step,str(current_step),str(current_step),0])\n
+    delimiter_list.append({ \'relative_position\' : current_step, \n
+                                   \'title\': str(current_step), \n
+                                   \'tooltip\' : str(current_step), \n
+                                   \'delimiter_type\' : 0})\n
     current_step += good_step\n
 \n
   return delimiter_list\n
