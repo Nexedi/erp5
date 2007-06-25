@@ -71,52 +71,57 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-This is used in listbox with search results - shows parts of the searchable text\n
-of a document which contain searched words, highlighting the words.\n
-Calls external method cutFound to get appropriately sliced result.\n
+  This script is used in listbox allowing when switching \'table\' --> \'search\' mode.\n
+  It will try to generate parts of the document\'s text \n
+  containing searched words as well highlighting the searched \n
+  words in the text itself.\n
 """\n
 \n
-# tags to surround words which were searched for\n
-tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\')\n
+# convert object to text (if possible)\n
+document_text = \'\'\n
+if hasattr(context, \'asText\'):\n
+  document_text = context.asText()\n
 \n
-# how many words to include before and after the highlighted word\n
-trail = 5\n
-\n
-# maximum lines to show\n
-maxlines = 5\n
-\n
-# try to convert object to text\n
-try:\n
-  txt = context.asText()\n
-except:\n
-  txt = \'\'\n
-\n
-argument_names = (\'advanced_search_text\', \'title\', \'reference\', \\\n
-                  \'SearchableText\', \'SearchableText_any\', \\\n
-                  \'SearchableText_all\', \'SearchableText_phrase\')\n
-\n
-# a quick hack because sometimes we get a list\n
-params = context.portal_selections.getSelectionParamsFor(\'search_advanced_dialog_selection\')\n
+# get search words from listbox selection\n
+argument_names = (\'advanced_search_text\', \n
+                  \'title\',\n
+                  \'reference\',\n
+                  \'SearchableText\', \n
+                  \'SearchableText_any\',\n
+                  \'SearchableText_all\', \n
+                  \'SearchableText_phrase\',)\n
+params = context.portal_selections.getSelectionParamsFor(\'web_search_result_selection\')\n
 params = [params.get(name, \'\') for name in argument_names]\n
 params = [(hasattr(par, \'sort\') and \'\'.join(par) or par) for par in params]\n
 search_string = \' \'.join(params)\n
 \n
 if not search_string:\n
-  # if the searched text is empty (e.g. because the listbox uses its own method)\n
-  # we return something\n
-  return txt[:300]\n
+  # if the searched text is empty \n
+  # (e.g. because the listbox uses its own method)\n
+  return document_text[:300]\n
 \n
 search_argument_list = context.parseSearchString(search_string)\n
 search_words = search_argument_list.get(\'SearchableText\')\n
 \n
-if search_words is None or search_words == \'\':\n
-  # if the searched text is empty (e.g. because we used only parameters without pure searchable text)\n
-  # we return something\n
-  if not hasattr(txt, \'__len__\'): txt = str(txt)\n
-  return txt[min(len(txt) - 300, 200) : 500] # a somewhat arbitrary choice to trim searchable attrs\n
+if search_words in (\'\', None,):\n
+  # the searched words are empty (e.g. because we used only parameters \n
+  # without pure searchable text)\n
+  result = \'\'\n
+  if document_text not in (\'\', None):\n
+    if not isinstance(document_text, str): \n
+      document_text = str(document_text)\n
+    # try to get somewhat arbitrary choice of searchable attrs\n
+    result = document_text[min(len(document_text) - 300, 200) : 1500]\n
+  return result\n
 \n
-res = context.cutFound(context, txt, search_words, tags, trail, maxlines)\n
-return \' \'.join(map(str, res))\n
+# get fragments of text containing searched words\n
+found_text_fragments = context.cutFound(context, \n
+                                        document_text, \n
+                                        search_words, \n
+                                        tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\'), \n
+                                        trail = 5, \n
+                                        maxlines = 5)\n
+return \' \'.join(map(str, found_text_fragments))\n
 
 
 ]]></string> </value>
@@ -141,7 +146,7 @@ return \' \'.join(map(str, res))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain,selection</string> </value>
+            <value> <string>brain, selection</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -169,12 +174,10 @@ return \' \'.join(map(str, res))\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
-                            <string>tags</string>
-                            <string>trail</string>
-                            <string>maxlines</string>
-                            <string>_getattr_</string>
+                            <string>document_text</string>
+                            <string>hasattr</string>
                             <string>context</string>
-                            <string>txt</string>
+                            <string>_getattr_</string>
                             <string>argument_names</string>
                             <string>params</string>
                             <string>append</string>
@@ -182,16 +185,17 @@ return \' \'.join(map(str, res))\n
                             <string>_getiter_</string>
                             <string>name</string>
                             <string>par</string>
-                            <string>hasattr</string>
                             <string>search_string</string>
                             <string>_getitem_</string>
                             <string>search_argument_list</string>
                             <string>search_words</string>
                             <string>None</string>
+                            <string>result</string>
+                            <string>isinstance</string>
                             <string>str</string>
                             <string>min</string>
                             <string>len</string>
-                            <string>res</string>
+                            <string>found_text_fragments</string>
                             <string>map</string>
                           </tuple>
                         </value>
