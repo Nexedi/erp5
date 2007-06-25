@@ -70,6 +70,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <tr>
         <td align="left" valign="top">
         <div class="form-label">
+        Source URI
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+          <input type="text" name="source_uri" size="40" value="<dtml-var getSourceURI>" />
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
         Query
         </label></div>
         </td>

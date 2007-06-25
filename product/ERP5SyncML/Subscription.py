@@ -42,9 +42,10 @@ from zLOG import LOG
 import md5
 
 try:
-    from base64 import b64encode, b64decode
+    from base64 import b64encode, b64decode, b16encode, b16decode
 except ImportError:
-    from base64 import encodestring as b64encode, decodestring as b64decode
+    from base64 import encodestring as b64encode, decodestring as b64decode, \
+        encodestring as b16encode, decodestring as b16decode
 
 #class Conflict(SyncCode, Implicit):
 class Conflict(SyncCode, Base):
@@ -250,13 +251,16 @@ class Signature(Folder,SyncCode):
   isPortalContent = 0 # Make sure RAD generated accessors at the class level
   
   # Constructor
-  def __init__(self,gid=None, id=None, status=None, xml_string=None,object=None):
-    self.setGid(gid)
+  def __init__(self, id=None, rid=None, status=None, xml_string=None, 
+      object=None):
     if object is not None:
       self.setPath(object.getPhysicalPath())
+      self.setObjectId(object.getId())
     else:
       self.setPath(None)
     self.setId(id)
+    self.setGid(id)
+    self.setRid(rid)
     self.status = status
     self.setXML(xml_string)
     self.partial_xml = None
@@ -280,7 +284,7 @@ class Signature(Folder,SyncCode):
       if temp_xml is not None:
         # This happens when we have sent the xml
         # and we just get the confirmation
-        self.setXML(self.getTempXML())
+        self.setXML(temp_xml)
       self.setTempXML(None)
       self.setPartialXML(None)
       self.setSubscriberXupdate(None)
@@ -367,7 +371,7 @@ class Signature(Folder,SyncCode):
 
   def getXML(self):
     """
-      set the XML corresponding to the object
+      get the XML corresponding to the object
     """
     xml =  getattr(self,'xml',None)
     if xml == '':
@@ -437,18 +441,22 @@ class Signature(Folder,SyncCode):
     """
       set the rid
     """
+    if rid is type(u'a'): 
+      rid = rid.encode('utf-8')
     self.rid = rid
 
   def getRid(self):
     """
       get the rid
     """
-    return self.rid
+    return getattr(self, 'rid', None)
 
   def setId(self, id):
     """
       set the id
     """
+    if id is type(u'a'): 
+      id = id.encode('utf-8')
     self.id = id
 
   def getId(self):
@@ -459,15 +467,31 @@ class Signature(Folder,SyncCode):
 
   def setGid(self, gid):
     """
-      set the id
+      set the gid
     """
+    if gid is type(u'a'): 
+      gid = gid.encode('utf-8')
     self.gid = gid
 
   def getGid(self):
     """
-      get the id
+      get the gid
     """
     return self.gid
+
+  def setObjectId(self, id):
+    """
+      set the id of the object associated to this signature
+    """
+    if id is type(u'a'): 
+      id = id.encode('utf-8')
+    self.object_id = id
+
+  def getObjectId(self):
+    """
+      get the id of the object associated to this signature
+    """
+    return getattr(self, 'object_id', None)
 
   def setPartialXML(self, xml):
     """
@@ -545,7 +569,7 @@ class Signature(Folder,SyncCode):
     """
     Returns the object corresponding to this signature
     """
-    return self.getParentValue().getObjectFromGid(self.getGid())
+    return self.getParentValue().getObjectIdGid(self.getObjectId())
 
   def checkSynchronizationNeeded(self, object):
     """
@@ -643,8 +667,9 @@ class Subscription(Folder, SyncCode):
 
   # Constructor
   def __init__(self, id, title, publication_url, subscription_url, 
-      destination_path, query, xml_mapping, conduit, gpg_key, id_generator, 
-      gid_generator, media_type, login, password):
+      destination_path, source_uri, target_uri, query, xml_mapping, 
+      conduit, gpg_key, id_generator, gid_generator, media_type, login, 
+      password):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
@@ -654,6 +679,8 @@ class Subscription(Folder, SyncCode):
     self.publication_url = (publication_url)
     self.subscription_url = str(subscription_url)
     self.destination_path = str(destination_path)
+    self.setSourceURI(source_uri)
+    self.setTargetURI(target_uri)
     self.setQuery(query)
     self.setXMLMapping(xml_mapping)
     self.anchor = None
@@ -685,15 +712,31 @@ class Subscription(Folder, SyncCode):
     setter for title
     """
     self.title = value
+  
+  def setSourceURI(self, value):
+    """
+    setter for source_uri
+    """
+    self.source_uri = value
 
-  # Accessors
-  def getRemoteId(self, id, path=None):
+  def getSourceURI(self):
     """
-      Returns the remote id from a know local id
-      Returns None if...
-      path allows to implement recursive sync
+    getter for the source_uri (the local path of the subscription)
     """
-    pass
+    return getattr(self, 'source_uri', None)
+
+  def setTargetURI(self, value):
+    """
+    setter for target_uri
+    """
+    self.target_uri = value
+
+  def getTargetURI(self):
+    """
+    getter for the target_uri (the distant Publication we want to synchronize 
+    with)
+    """
+    return getattr(self, 'target_uri', None)
 
   def getSynchronizationType(self, default=None):
     """
@@ -749,7 +792,7 @@ class Subscription(Folder, SyncCode):
     self.last_message_id = message_id
     return True
 
-  def initLastMessageId(self, last_message_id=None):
+  def initLastMessageId(self, last_message_id=0):
     """
     set the last message id to 0
     """
@@ -767,24 +810,17 @@ class Subscription(Folder, SyncCode):
     """
     self.last_sent_message = xml
 
-  def getLocalId(self, rid, path=None):
+  def getDomainType(self):
     """
-      Returns the local id from a know remote id
-      Returns None if...
+      return the ID
     """
-    pass
+    return self.domain_type
 
   def getId(self):
     """
       return the ID
     """
     return self.id
-
-  def getDomainType(self):
-    """
-      return the ID
-    """
-    return self.domain_type
 
   def setId(self, id):
     """
@@ -934,13 +970,13 @@ class Subscription(Folder, SyncCode):
     """
       return the format of authentication
     """
-    return getattr(self, 'authentication_format', '')
+    return getattr(self, 'authentication_format', 'b64')
 
   def getAuthenticationType(self):
     """
       return the type of authentication
     """
-    return getattr(self, 'authentication_type', '')
+    return getattr(self, 'authentication_type', 'syncml:auth-basic')
 
   def setAuthenticationFormat(self, authentication_format):
     """
@@ -969,7 +1005,7 @@ class Subscription(Folder, SyncCode):
       # It might be a script python
       generator = getattr(object,gid_gen)
       o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
-    #LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
+    o_gid = b16encode(o_gid)
     return o_gid
 
   def getObjectFromGid(self, gid):
@@ -977,16 +1013,13 @@ class Subscription(Folder, SyncCode):
     This tries to get the object with the given gid
     This uses the query if it exist
     """
-    signature = self.getSignature(gid)
+    signature = self.getSignatureFromGid(gid)
     # First look if we do already have the mapping between
     # the id and the gid
     object_list = self.getObjectList()
     destination = self.getDestination()
-    # LOG('getObjectFromGid', 0, 'self: %s' % self)    
-    # LOG('getObjectFromGid',0,'gid: %s' % repr(gid))
-    # LOG('getObjectFromGid oject_list',0,object_list)
-    if signature is not None and signature.getId() is not None:
-      o_id = signature.getId()
+    if signature is not None and signature.getObjectId() is not None:
+      o_id = signature.getObjectId()
       o = None
       try:
         o = destination._getOb(o_id)
@@ -998,7 +1031,18 @@ class Subscription(Folder, SyncCode):
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
         return o
-    # LOG('getObjectFromGid',0,'returning None')
+    LOG('getObjectFromGid',0,'returning None')
+    return None
+
+  def getObjectFromId(self, id):
+    """
+    return the object corresponding to the id
+    """
+    object_list = self.getObjectList()
+    #XXX very slow with lot of objects
+    for object in object_list:
+      if object.getId() == id:
+        return object
     return None
 
 #  def setOneWaySyncFromServer(self,value):
@@ -1195,27 +1239,82 @@ class Subscription(Folder, SyncCode):
     """
       add a Signature to the subscription
     """
-    if signature.getGid() in self.objectIds():
-      self._delObject(signature.getGid())
-    self._setObject(signature.getGid(), aq_base(signature) )
+    if signature.getGid() in self.getGidList():
+      self.delSignature(signature.getGid())
+    self._setObject(signature.getGid(), aq_base(signature))
 
   def delSignature(self, gid):
     """
-      add a Signature to the subscription
+      del a Signature of the subscription
     """
     #del self.signatures[gid]
     self._delObject(gid)
 
-  def getSignature(self, gid):
+  def getSignatureFromObjectId(self, id):
     """
-      add a Signature to the subscription
+    return the signature corresponding to the gid
     """
     o = None
-    if gid in self.objectIds():
-      o = self._getOb(gid)
-    #if o is not None:
-    #  return o.__of__(self)
+    # XXX very slow
+    for signature in self.getSignatureList():
+      if id == signature.getObjectId():
+        o = signature
+        break
     return o
+
+  def getSignatureFromGid(self, gid):
+    """
+    return the signature corresponding to the gid
+    """
+    o = None
+    # XXX very slow
+    for signature in self.getSignatureList():
+      if gid == signature.getGid():
+        o = signature
+        break
+    return o
+
+  def getSignatureFromRid(self, rid):
+    """
+    return the signature corresponding to the rid
+    """
+    o = None
+    # XXX very slow
+    for signature in self.getSignatureList():
+      if rid == signature.getRid():
+        o = signature
+        break
+    return o
+
+  def getObjectIdList(self):
+    """
+    Returns the list of gids from signature
+    """
+    object_id_list = []
+    for signature in self.getSignatureList():
+      if signature.getObjectId() is not None:
+        object_id_list.append(signature.getObjectId())
+    return object_id_list
+
+  def getGidList(self):
+    """
+    Returns the list of gids from signature
+    """
+    gid_list = []
+    for signature in self.getSignatureList():
+      if signature.getGid() is not None:
+        gid_list.append(signature.getGid())
+    return gid_list
+
+  def getRidList(self):
+    """
+    Returns the list of rids from signature
+    """
+    rid_list = []
+    for signature in self.getSignatureList():
+      if signature.getRid() is not None:
+        rid_list.append(signature.getRid())
+    return rid_list
 
   def getSignatureList(self):
     """
@@ -1237,12 +1336,6 @@ class Subscription(Folder, SyncCode):
     while len(self.objectIds())>0:
       for id in self.objectIds():
         self._delObject(id)
-
-  def getGidList(self):
-    """
-    Returns the list of ids from signature
-    """
-    return self.objectIds()
 
   def getConflictList(self):
     """
@@ -1279,20 +1372,6 @@ class Subscription(Folder, SyncCode):
         if o != object_path:
           new_list.append(o)
       self.setRemainingObjectPathList(new_list)
-
-#  def getCurrentObject(self):
-#    """
-#    When we send some partial data, then we should
-#    always synchronize the same object until it is finished
-#    """
-#    getattr(self,'current_object',None)
-#
-#  def setCurrentObject(self,object):
-#    """
-#    When we send some partial data, then we should
-#    always synchronize the same object until it is finished
-#    """
-#    setattr(self,'current_object',object)
 
   def startSynchronization(self):
     """

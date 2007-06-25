@@ -110,7 +110,7 @@ class PublicationSynchronization(XMLSyncUtils):
           if authentication_format == publication.getAuthenticationFormat():
             if authentication_type == publication.getAuthenticationType():
               decoded = subscriber.decode(authentication_format, data)
-              if decoded not in ('', None) and decoded.__contains__(':'):
+              if decoded not in ('', None) and ':' in decoded:
                 (login, password) = decoded.split(':')
                 uf = self.getPortalObject().acl_users
                 for plugin_name, plugin in uf._getOb('plugins').listPlugins(
@@ -124,6 +124,8 @@ class PublicationSynchronization(XMLSyncUtils):
                     newSecurityManager(None, user)
                     subscriber.setUser(login)
                     break
+                  else:
+                    auth_code=self.UNAUTHORIZED
           #in all others cases, the auth_code is set to UNAUTHORIZED  
 
 
@@ -147,6 +149,13 @@ class PublicationSynchronization(XMLSyncUtils):
             xml(self.SyncMLAlert(cmd_id, sync_type, 
               subscriber.getSubscriptionUrl(), publication.getPublicationUrl(),
               subscriber.getLastAnchor(), subscriber.getNextAnchor()))
+            cmd_id += 1
+          else:
+	          # chal message
+            xml(self.SyncMLChal(cmd_id, "SyncHdr", 
+              publication.getPublicationUrl(), subscriber.getSubscriptionUrl(), 
+              publication.getAuthenticationFormat(), 
+              publication.getAuthenticationType(), self.AUTH_REQUIRED))
             cmd_id += 1
           xml(' </SyncBody>\n')
           xml('</SyncML>\n')

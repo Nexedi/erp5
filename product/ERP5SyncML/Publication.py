@@ -152,7 +152,7 @@ class Publication(Subscription):
   constructors =   (addPublication,)
 
   # Constructor
-  def __init__(self, id, title, publication_url, destination_path, 
+  def __init__(self, id, title, publication_url, destination_path, source_uri, 
       query, xml_mapping, conduit, gpg_key, id_generator, gid_generator, 
       media_type, auth_required=False, authentication_format='', 
       authentication_type=''):
@@ -162,6 +162,7 @@ class Publication(Subscription):
     self.id = id
     self.publication_url = publication_url
     self.destination_path = destination_path
+    self.setSourceURI(source_uri)
     self.setQuery(query)
     self.xml_mapping = xml_mapping
     #self.list_subscribers = PersistentMapping()

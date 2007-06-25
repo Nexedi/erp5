@@ -49,7 +49,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     # syncml header
     xml(self.SyncMLHeader(subscription.incrementSessionId(), 
       subscription.incrementMessageId(), subscription.getPublicationUrl(), 
-      subscription.getSubscriptionUrl()))
+      subscription.getSubscriptionUrl(), source_name=subscription.getLogin()))
 
     # syncml body
     xml(' <SyncBody>\n')
@@ -59,16 +59,15 @@ class SubscriptionSynchronization(XMLSyncUtils):
 
     # alert message
     xml(self.SyncMLAlert(cmd_id, subscription.getSynchronizationType(),
-                            subscription.getPublicationUrl(),
-                            subscription.getDestinationPath(),
+                            subscription.getTargetURI(),
+                            subscription.getSourceURI(),
                             subscription.getLastAnchor(), 
                             subscription.getNextAnchor()))
     cmd_id += 1
-
-    xml('  <Put>\n')
-    xml('   <CmdID>%s</CmdID>\n' % cmd_id)
-    cmd_id += 1
-    xml('  </Put>\n')
+    syncml_put = self.SyncMLPut(cmd_id, subscription)
+    if syncml_put not in ('', None):
+      xml(syncml_put)
+      cmd_id += 1
     xml(' </SyncBody>\n')
     xml('</SyncML>\n')
     xml_a = ''.join(xml_list)
@@ -79,20 +78,17 @@ class SubscriptionSynchronization(XMLSyncUtils):
 
     return {'has_response':1,'xml':xml_a}
 
-  def SubSync(self, id, msg=None, RESPONSE=None):
+  def SubSync(self, subscription, msg=None, RESPONSE=None):
     """
       This is the synchronization method for the client
     """
-    #LOG('SubSync',0,'starting... id: %s' % str(id))
-    #LOG('SubSync',0,'starting... msg: %s' % str(msg))
     response = None #check if subsync replies to this messages
-    subscription = self.getSubscription(id)
 
     if msg==None and (subscription.getSubscriptionUrl()).find('file')>=0:
-      msg = self.readResponse(sync_id=id, 
+      msg = self.readResponse(sync_id=subscription.getSourceURI(), 
           from_url=subscription.getSubscriptionUrl())
     if msg==None:
-      response = self.SubSyncInit(self.getSubscription(id))
+      response = self.SubSyncInit(subscription)
     else:
       xml_client = msg
       if isinstance(xml_client, str) or isinstance(xml_client, unicode):
@@ -105,21 +101,24 @@ class SubscriptionSynchronization(XMLSyncUtils):
           if status_code == self.AUTH_REQUIRED:
             if self.checkChal(xml_client):
               authentication_format, authentication_type = self.getChal(xml_client)
-              subscription.setAuthenticationFormat(authentication_format)
-              subscription.setAuthenticationType(authentication_type)
+              #LOG('auth_required :',0, 'format:%s, type:%s' % (authentication_format, authentication_type))
+              if authentication_format is not None and \
+                  authentication_type is not None:
+                subscription.setAuthenticationFormat(authentication_format)
+                subscription.setAuthenticationType(authentication_type)
             else:
               raise ValueError, "Sorry, the server chalenge for an \
                   authentication, but the authentication format is not find"
 
             #LOG('readResponse', 0, 'Authentication required')
-            response = self.SubSyncCred(id, xml_client)
+            response = self.SubSyncCred(subscription, xml_client)
           elif status_code == self.UNAUTHORIZED:
-            #LOG('readResponse', 0, 'Bad authentication')
+            LOG('readResponse', 0, 'Bad authentication')
             return {'has_response':0,'xml':xml_client}
           else:
-            response = self.SubSyncModif(self.getSubscription(id), xml_client)
+            response = self.SubSyncModif(subscription, xml_client)
         else: 
-            response = self.SubSyncModif(self.getSubscription(id), xml_client)
+            response = self.SubSyncModif(subscription, xml_client)
 
 
     if RESPONSE is not None:
@@ -127,43 +126,43 @@ class SubscriptionSynchronization(XMLSyncUtils):
     else:
       return response
 
-  def SubSyncCred (self, id, msg=None, RESPONSE=None):
+  def SubSyncCred (self, subscription, msg=None, RESPONSE=None):
     """
       This method send crendentials
     """
-    
-    #LOG('SubSyncCred',0,'starting... id: %s' % str(id))
-    #LOG('SubSyncCred',0,'starting... msg: %s' % str(msg))
-    
     cmd_id = 1 # specifies a SyncML message-unique command identifier
-    subscription = self.getSubscription(id)
     xml_list = []
     xml = xml_list.append
     xml('<SyncML>\n')
     # syncml header
     data = "%s:%s" % (subscription.getLogin(), subscription.getPassword())
     data=subscription.encode(subscription.getAuthenticationFormat(), data)
-    xml(self.SyncMLHeader(subscription.getSessionId(),
-      subscription.incrementMessageId(), subscription.getPublicationUrl(),
-      subscription.getSubscriptionUrl(), dataCred=data, 
+    xml(self.SyncMLHeader(
+      subscription.incrementSessionId(),
+      subscription.incrementMessageId(), 
+      subscription.getPublicationUrl(),
+      subscription.getSubscriptionUrl(), 
+      source_name=subscription.getLogin(), 
+      dataCred=data, 
       authentication_format=subscription.getAuthenticationFormat(), 
       authentication_type=subscription.getAuthenticationType()))
 
     # syncml body
     xml(' <SyncBody>\n')
 
+    # We have to set every object as NOT_SYNCHRONIZED
+    subscription.startSynchronization()
+
     # alert message
     xml(self.SyncMLAlert(cmd_id, subscription.getSynchronizationType(),
-                            subscription.getPublicationUrl(),
-                            subscription.getDestinationPath(),
+                            subscription.getTargetURI(),
+                            subscription.getSourceURI(),
                             subscription.getLastAnchor(),
                             subscription.getNextAnchor()))
     cmd_id += 1
-
-    xml('  <Put>\n')
-    xml('   <CmdID>%s</CmdID>\n' % cmd_id)
+    xml(self.SyncMLPut(cmd_id, subscription))
     cmd_id += 1
-    xml('  </Put>\n')
+    xml('  <Final/>\n')
     xml(' </SyncBody>\n')
     xml('</SyncML>\n')
     xml_a = ''.join(xml_list)

@@ -139,7 +139,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     xml = self.convertToXml(xml)
     if xml is None:
       return {'conflict_list':conflict_list, 'object':sub_object}
-    #LOG('addNode',0,'xml_reconstitued: %s' % str(xml))
     # In the case where this new node is a object to add
     if xml.nodeName in self.XUPDATE_INSERT_OR_ADD and \
         self.getSubObjectDepth(xml)==0:
@@ -153,7 +152,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if object_id is None:
         object_id = self.getAttribute(xml,'id')
       docid = self.getObjectDocid(xml)
-      #LOG('addNode',0,'object_id: %s' % object_id)
       if object_id is not None:
         if sub_object is None:
           try:
@@ -181,7 +179,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD \
          and self.getSubObjectDepth(xml)>=1:
       sub_object_id = self.getSubObjectId(xml)
-      #LOG('addNode',0,'getSubObjectModification number: %s' % sub_object_id)
       if previous_xml is not None and sub_object_id is not None:
         #LOG('addNode',0,'previous xml is not none and also sub_object_id')
         # Find the previous xml corresponding to this subobject
@@ -242,7 +239,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           sub_object = object._getOb(sub_object_id)
           sub_xml = self.getSubObjectXupdate(xml)
           conflict_list += self.deleteNode(xml=sub_xml,object=sub_object,
-                                           force=force, simulate=simulate, **kw)
+                                       force=force, simulate=simulate, **kw)
         except (KeyError, AttributeError, TypeError):
           #LOG('ERP5Conduit',0,'deleteNode, Unable to delete SubObject: %s' % str(sub_object_id))
           pass
@@ -385,7 +382,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                            #subscriber_value=data)] # not needed any more
           # We will now apply the argument with the method edit
           if args != {} and (isConflict==0 or force) and (not simulate):
-            #LOG('updateNode',0,'object._edit, args: %s' % str(args))
             #object._edit(**args)
             self.editDocument(object=object,**args)
             # It is sometimes required to do something after an edit
@@ -394,12 +390,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
         if keyword == 'object':
           # This is the case where we have to call addNode
-          #LOG('updateNode',0,'we will add sub-object')
           conflict_list += self.addNode(xml=xml, object=object, force=force, 
               simulate=simulate, **kw)['conflict_list']
         elif keyword == self.history_tag and not simulate:
           # This is the case where we have to call addNode
-          #LOG('updateNode',0,'we will add history')
           conflict_list += self.addNode(xml=subnode,object=object,force=force,
               simulate=simulate,**kw)['conflict_list']
         elif keyword in (self.local_role_tag,self.local_permission_tag) and not simulate:
@@ -433,8 +427,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               sub_xml = self.getSubObjectXupdate(xml)
               #LOG('updateNode',0,'sub_xml: %s' % str(sub_xml))
               # Then do the udpate
-              conflict_list += self.updateNode(xml=sub_xml, object=sub_object, force=force, 
-                              previous_xml=sub_previous_xml, simulate=simulate, **kw)
+              conflict_list += self.updateNode(xml=sub_xml, object=sub_object, 
+                  force=force, previous_xml=sub_previous_xml, 
+                  simulate=simulate, **kw)
         elif previous_xml is None and xml is not None and sub_object_id is not None:
           sub_object = None
           try:
@@ -470,7 +465,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This lookd inside the args dictionnary and then
     convert any unicode string to string
     """
-    #LOG('ERP5Conduit.getFormatedArgs',0,'args: %s' % str(args))
     new_args = {}
     for keyword in args.keys():
       data = args[keyword]
@@ -646,7 +640,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     xml = self.convertToXml(xml)
     for subnode in self.getElementNodeList(xml):
       if subnode.nodeName==self.xml_object_tag:
-        LOG('getSub0bjectXml: object_id:',0,object_id)
         if object_id == self.getAttribute(subnode,'id'):
           return subnode
     return None
@@ -700,7 +693,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if xml is None:
       return
     if type(xml) in (type('a'),type(u'a')):
-      #LOG('Conduit.convertToXml xml',0,repr(xml))
       if type(xml) is type(u'a'):
         xml = xml.encode('utf-8')
       xml = Parse(xml)
@@ -981,7 +973,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                          force=force, simulate=simulate, **kw)['conflict_list']
       elif subnode.nodeName in self.XUPDATE_DEL:
         conflict_list += conduit.deleteNode(xml=sub_xupdate, object=object, \
-                                         force=force, simulate=simulate, **kw)
+                                      force=force, simulate=simulate, **kw)
       elif subnode.nodeName in self.XUPDATE_UPDATE:
         conflict_list += conduit.updateNode(xml=sub_xupdate, object=object, \
                                          force=force, simulate=simulate, **kw)
@@ -1065,27 +1057,19 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This is really usefull if you want to write your own Conduit.
     """
     conflict_list = []
-    #LOG('addNode, workflow_history isHistoryAdd:',0,self.isHistoryAdd(xml))
     # We want to add a workflow action
     wf_tool = getToolByName(object,'portal_workflow')
     wf_id = self.getAttribute(xml,'id')
     if wf_id is None: # History added by xupdate
       wf_id = self.getHistoryIdFromSelect(xml)
-      #LOG('addNode, workflow_history id:',0,wf_id)
-      #LOG('addNode, workflow_history xml:',0,xml.toxml())#toxml isn't in 4Suite
-      #LOG('addNode, workflow_history xml.getElmentNodeList:',0,self.getElementNodeList(xml))
       xml = self.getElementNodeList(xml)[0]
-    #LOG('addNode, workflow_history id:',0,wf_id)
-    #LOG('addNode, workflow_history xml:',0,xml)
     #for action in self.getWorkflowActionFromXml(xml):
     status = self.getStatusFromXml(xml)
     #LOG('addNode, status:',0,status)
     add_action = self.isWorkflowActionAddable(object=object,
                                            status=status,wf_tool=wf_tool,
                                            wf_id=wf_id,xml=xml)
-    #LOG('addNode, workflow_history add_action:',0,add_action)
     if add_action and not simulate:
-      #LOG('addNode, setting status:',0,'ok')
       wf_tool.setStatusOf(wf_id,object,status)
 
     # Specific CPS, try to remove duplicate lines in portal_repository._histories
@@ -1191,4 +1175,3 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     xml_string = buf.getvalue()
     buf.close() 
     return xml_string
-

@@ -161,7 +161,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_addPublication')
   def manage_addPublication(self, title, publication_url, destination_path,
-            query, xml_mapping, conduit, gpg_key, 
+            source_uri, query, xml_mapping, conduit, gpg_key, 
             synchronization_id_generator=None, gid_generator=None, 
             media_type=None, auth_required=0, authentication_format='', 
             authentication_type='', RESPONSE=None):
@@ -174,7 +174,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     folder = self.getObjectContainer()
     new_id = self.getPublicationIdFromTitle(title)
     pub = Publication(new_id, title, publication_url, destination_path,
-                      query, xml_mapping, conduit, gpg_key, 
+                      source_uri, query, xml_mapping, conduit, gpg_key, 
                       synchronization_id_generator, gid_generator, media_type, 
                       auth_required, authentication_format, authentication_type)
     folder._setObject( new_id, pub )
@@ -187,7 +187,8 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_addSubscription')
   def manage_addSubscription(self, title, publication_url, subscription_url,
-                       destination_path, query, xml_mapping, conduit, gpg_key, 
+                       destination_path, source_uri, target_uri, query, 
+                       xml_mapping, conduit, gpg_key, 
                        synchronization_id_generator=None, gid_generator=None, 
                        media_type=None, login=None, password=None, 
                        RESPONSE=None):
@@ -201,7 +202,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     folder = self.getObjectContainer()
     new_id = self.getSubscriptionIdFromTitle(title)
     sub = Subscription(new_id, title, publication_url, subscription_url,
-                       destination_path, query, xml_mapping, conduit, gpg_key,
+                       destination_path, source_uri, target_uri, query, 
+                       xml_mapping, conduit, gpg_key,
                        synchronization_id_generator, gid_generator, media_type, 
                        login, password)
     folder._setObject( new_id, sub )
@@ -214,7 +216,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_editPublication')
   def manage_editPublication(self, title, publication_url, destination_path,
-                       query, xml_mapping, conduit, gpg_key, 
+                       source_uri, query, xml_mapping, conduit, gpg_key, 
                        synchronization_id_generator, gid_generator, 
                        media_type=None, auth_required=0, 
                        authentication_format='', authentication_type='', 
@@ -226,6 +228,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     pub.setTitle(title)
     pub.setPublicationUrl(publication_url)
     pub.setDestinationPath(destination_path)
+    pub.setSourceURI(source_uri)
     pub.setQuery(query)
     pub.setConduit(conduit)
     pub.setXMLMapping(xml_mapping)
@@ -243,9 +246,9 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_editSubscription')
   def manage_editSubscription(self, title, publication_url, subscription_url,
-      destination_path, query, xml_mapping, conduit, gpg_key, 
-      synchronization_id_generator, gid_generator, media_type=None,login='', 
-      password='', RESPONSE=None):
+      destination_path, source_uri, target_uri, query, xml_mapping, conduit, 
+      gpg_key, synchronization_id_generator, gid_generator, media_type=None, 
+      login='', password='', RESPONSE=None):
     """
       modify a subscription
     """
@@ -253,6 +256,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     sub.setTitle(title)
     sub.setPublicationUrl(publication_url)
     sub.setDestinationPath(destination_path)
+    sub.setSourceURI(source_uri)
+    sub.setTargetURI(target_uri)
     sub.setQuery(query)
     sub.setConduit(conduit)
     sub.setXMLMapping(xml_mapping)
@@ -319,7 +324,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     """
       reset a subscription
     """
-    self.SubSync(title)
+    self.SubSync(self.getSubscription(title))
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
@@ -371,7 +376,7 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   def getSubscription(self, title):
     """
-      Returns the subscription with this id
+      Returns the subscription with this title
     """
     for s in self.getSubscriptionList():
       if s.getTitle() == title:
@@ -489,7 +494,7 @@ class SynchronizationTool( SubscriptionSynchronization,
           subscriber_list = [domain]
         #LOG('getSynchronizationState, subscriber_list:',0,subscriber_list)
         for subscriber in subscriber_list:
-          signature = subscriber.getSignature(o_id)
+          signature = subscriber.getSignatureFromObjectId(o_id)
           if signature is not None:
             state = signature.getStatus()
             #LOG('getSynchronizationState:',0,'sub.dest :%s, state: %s' % \
@@ -514,7 +519,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     subscriber = conflict.getSubscriber()
     # get the signature:
     #LOG('p_sync.applyPublisherValue, subscriber: ',0,subscriber)
-    signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
+    signature = subscriber.getSignatureFromObjectId(object.getId()) # XXX may be change for rid
     copy_path = conflict.getCopyPath()
     #LOG('p_sync.applyPublisherValue, copy_path: ',0,copy_path)
     signature.delConflict(conflict)
@@ -690,7 +695,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     subscriber = conflict.getSubscriber()
     # get the signature:
     #LOG('p_sync.setRemoteObject, subscriber: ',0,subscriber)
-    signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
+    signature = subscriber.getSignatureFromObjectId(object.getId()) # XXX may be change for rid
     # Import the conduit and get it
     conduit_name = subscriber.getConduit()
     conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), 
@@ -885,12 +890,22 @@ class SynchronizationTool( SubscriptionSynchronization,
     opener = urllib2.build_opener(proxy_handler, proxy_auth_handler, 
         auth_handler, urllib2.HTTPHandler)
     urllib2.install_opener(opener)
-    to_encode = {'text':xml,'sync_id':sync_id}
-    encoded = urllib.urlencode(to_encode)
+    to_encode = {}
+    head = '<?xml version="1.0" encoding="UTF-8"?>'
+    to_encode['text'] = head + xml
+    to_encode['sync_id'] = sync_id
+    headers = {'Content-type': 'application/vnd.syncml+xml'}
+    
+    #XXX bad hack for synchronization with erp5
     if to_url.find('readResponse')<0:
       to_url = to_url + '/portal_synchronizations/readResponse'
-    request = urllib2.Request(url=to_url,data=encoded)
-    #result = urllib2.urlopen(request).read()
+    encoded = urllib.urlencode(to_encode)
+    data=encoded
+    request = urllib2.Request(url=to_url, data=data)
+
+#XXX only to synchronize with other server than erp5 (must be improved):
+#      data=head+xml
+#      request = urllib2.Request(to_url, data, headers)
     try:
       result = urllib2.urlopen(request).read()
     except socket.error, msg:
@@ -898,10 +913,12 @@ class SynchronizationTool( SubscriptionSynchronization,
           sync_id=sync_id, xml=xml, domain=domain)
       LOG('sendHttpResponse, socket ERROR:',0,msg)
       return
+    except urllib2.URLError, msg:
+      LOG("sendHttpResponse, can't open url %s :" % to_url, 0, msg)
+      return
 
-    
+
     #LOG('sendHttpResponse, before result, domain:',0,domain)
-    #LOG('sendHttpResponse, result:',0,result)
     if domain is not None:
       if domain.domain_type == self.SUB:
         gpg_key = domain.getGPGKey()
@@ -929,7 +946,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     if len(message_list) == 0:
       for subscription in self.getSubscriptionList():
         #LOG('sync, subcription:',0,subscription)
-        self.activate(activity='RAMQueue').SubSync(subscription.getTitle())
+        self.activate(activity='RAMQueue').SubSync(subscription)
 
   security.declarePublic('readResponse')
   def readResponse(self, text=None, sync_id=None, to_url=None, from_url=None):
@@ -937,9 +954,6 @@ class SynchronizationTool( SubscriptionSynchronization,
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    #LOG('readResponse, ',0,'starting')
-    #LOG('readResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
-    #LOG('readResponse, sync_id: ',0,sync_id)
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = uf.getUserById('syncml').__of__(uf)
@@ -994,9 +1008,9 @@ class SynchronizationTool( SubscriptionSynchronization,
       for subscription in self.getSubscriptionList():
         if subscription.getSubscriptionUrl()==url and \
             subscription.getTitle()==sync_id:
-              result = self.activate(activity='RAMQueue').SubSync(sync_id, 
-                  text)
-              #result = self.SubSync(sync_id,xml)
+              result = self.activate(activity='RAMQueue').SubSync(\
+                  self.getSubscription(sync_id), text)
+              #result = self.SubSync(self.getSubscription(sync_id),xml)
 
     # we use from only if we have a file 
     elif isinstance(from_url, str):
@@ -1040,25 +1054,5 @@ class SynchronizationTool( SubscriptionSynchronization,
         globals(), locals(), [''])
     conduit_object = getattr(conduit_module, conduit)()
     return conduit_object.addNode(**kw)
-
-#  security.declarePrivate('notify_sync')
-#  def notify_sync(self, event_type, object, infos):
-#    """Notification from the event service.
-#
-#    # XXX very specific to cps
-#
-#    Called when an object is added/deleted/modified.
-#    Update the date of sync
-#    """
-#    from Products.CPSCore.utils import _isinstance
-#    from Products.CPSCore.ProxyBase import ProxyBase
-#
-#    if event_type in ('sys_modify_object',
-#                      'modify_object'):
-#      if not(_isinstance(object, ProxyBase)):
-#        repotool = getToolByName(self, 'portal_repository')
-#        if repotool.isObjectInRepository(object):
-#          object_id = object.getId()
-
 
 InitializeClass( SynchronizationTool )

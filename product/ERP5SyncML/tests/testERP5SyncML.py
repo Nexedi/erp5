@@ -43,9 +43,10 @@ from Products.ERP5SyncML.SyncCode import SyncCode
 from zLOG import LOG
 
 try:
-    from base64 import b64encode, b64decode
+    from base64 import b64encode, b64decode, b16encode, b16decode
 except ImportError:
-    from base64 import encodestring as b64encode, decodestring as b64decode
+    from base64 import encodestring as b64encode, decodestring as b64decode, \
+        encodestring as b16encode, decodestring as b16decode
 
 
 class TestERP5SyncMLMixin:
@@ -195,10 +196,10 @@ class TestERP5SyncMLMixin:
     file.write('')
     file.close()
     nb_message = 1
-    result = portal_sync.SubSync(subscription.getTitle())
+    result = portal_sync.SubSync(subscription)
     while result['has_response']==1:
       portal_sync.PubSync(publication.getTitle())
-      result = portal_sync.SubSync(subscription.getTitle())
+      result = portal_sync.SubSync(subscription)
       nb_message += 1 + result['has_response']
     return nb_message
 
@@ -226,16 +227,16 @@ class TestERP5SyncMLMixin:
     file.write('')
     file.close()
     nb_message = 1
-    result = portal_sync.SubSync(subscription.getTitle())
+    result = portal_sync.SubSync(subscription)
     while result['has_response']==1:
       # We do thing three times, so that we will test
       # if we manage well duplicate messages
       portal_sync.PubSync(publication.getTitle())
       portal_sync.PubSync(publication.getTitle())
       portal_sync.PubSync(publication.getTitle())
-      result = portal_sync.SubSync(subscription.getTitle())
-      result = portal_sync.SubSync(subscription.getTitle())
-      result = portal_sync.SubSync(subscription.getTitle())
+      result = portal_sync.SubSync(subscription)
+      result = portal_sync.SubSync(subscription)
+      result = portal_sync.SubSync(subscription)
       nb_message += 1 + result['has_response']
     return nb_message
 
@@ -337,9 +338,15 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       LOG('Testing... ',0,'test_02_AddPublication')
     portal_id = self.getPortalName()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addPublication(self.pub_id,self.publication_url, 
-        '/%s/person_server' % portal_id,'objectValues', self.xml_mapping, 
-        'ERP5Conduit','')
+    portal_sync.manage_addPublication(title=self.pub_id,
+        publication_url=self.publication_url, 
+        destination_path='/%s/person_server' % portal_id, 
+        source_uri='Person', 
+        query='objectValues', 
+        xml_mapping=self.xml_mapping, 
+        conduit='ERP5Conduit',
+        gpg_key='',
+        gid_generator='getId')
     pub = portal_sync.getPublication(self.pub_id)
     self.failUnless(pub is not None)
 
@@ -350,9 +357,17 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       LOG('Testing... ',0,'test_03_AddSubscription1')
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id1, self.publication_url, 
-        self.subscription_url1,'/%s/person_client1' % portal_id,'objectValues', 
-        self.xml_mapping,'ERP5Conduit','')
+    portal_sync.manage_addSubscription(title=self.sub_id1, 
+        publication_url=self.publication_url,
+        subscription_url=self.subscription_url1, 
+        destination_path='/%s/person_client1' % portal_id,
+        source_uri='Person', 
+        target_uri='Person', 
+        query='objectValues', 
+        xml_mapping=self.xml_mapping, 
+        conduit='ERP5Conduit', 
+        gpg_key='',
+        gid_generator='getId')
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
 
@@ -363,9 +378,17 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       LOG('Testing... ',0,'test_04_AddSubscription2')
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id2,self.publication_url, 
-        self.subscription_url2,'/%s/person_client2' % portal_id,'objectValues', 
-        self.xml_mapping,'ERP5Conduit','')
+    portal_sync.manage_addSubscription(title=self.sub_id2, 
+        publication_url=self.publication_url,
+        subscription_url=self.subscription_url2, 
+        destination_path='/%s/person_client2' % portal_id,
+        source_uri='Person', 
+        target_uri='Person', 
+        query='objectValues', 
+        xml_mapping=self.xml_mapping, 
+        conduit='ERP5Conduit', 
+        gpg_key='',
+        gid_generator='getId')
     sub = portal_sync.getSubscription(self.sub_id2)
     self.failUnless(sub is not None)
 
@@ -530,7 +553,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     # By default we can just give the id
     portal_sync = self.getSynchronizationTool()
     publication = portal_sync.getPublication(self.pub_id)
-    object = publication.getObjectFromGid(self.id1)
+    object = publication.getObjectFromId(self.id1)
     self.failUnless(object is not None)
     self.failUnless(object.getId()==self.id1)
 
@@ -994,10 +1017,11 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     publication = portal_sync.getPublication(self.pub_id)
     self.failUnless(len(publication.getObjectList())==nb_person)
     gid = self.first_name1 +  ' ' + self.last_name1 # ie the title 'Sebastien Robin'
+    gid = b16encode(gid)
     person_c1 = subscription1.getObjectFromGid(gid)
     id_c1 = person_c1.getId()
     self.failUnless(id_c1 in ('1','2')) # id given by the default generateNewId
-    person_s = publication.getObjectFromGid(gid)
+    person_s = publication.getSubscriber(self.subscription_url1).getObjectFromGid(gid)
     id_s = person_s.getId()
     self.failUnless(id_s==self.id1)
     # This will test updating object
@@ -1014,7 +1038,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.checkSynchronizationStateIsSynchronized()
     self.failUnless(len(subscription1.getObjectList())==(nb_person-1))
     self.failUnless(len(publication.getObjectList())==(nb_person-1))
-    person_s = publication.getObjectFromGid(gid)
+    person_s = publication.getSubscriber(self.subscription_url1).getObjectFromGid(gid)
     person_c1 = subscription1.getObjectFromGid(gid)
     self.failUnless(person_s.getDescription()==self.description3)
     self.failUnless(person_c1.getDescription()==self.description3)
@@ -1299,9 +1323,17 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       LOG('Testing... ',0,'test_32_AddOneWaySubscription')
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id1, self.publication_url, 
-        self.subscription_url1, '/%s/person_client1' % portal_id, 
-        'objectValues', '', 'ERP5Conduit', '')
+    portal_sync.manage_addSubscription(title=self.sub_id1, 
+        publication_url=self.publication_url,
+        subscription_url=self.subscription_url1, 
+        destination_path='/%s/person_client1' % portal_id,
+        source_uri='Person', 
+        target_uri='Person', 
+        query='objectValues', 
+        xml_mapping='', 
+        conduit='ERP5Conduit', 
+        gpg_key='',
+        gid_generator='getId')
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
 

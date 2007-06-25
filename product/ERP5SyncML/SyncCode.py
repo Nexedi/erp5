@@ -41,6 +41,8 @@ class SyncCode(Persistent):
 
   # SyncML Status Codes
   SUCCESS = 200
+  ITEM_ADDED = 201
+
   CHUNK_OK = 214
   CONFLICT = 409 # A conflict is detected
   CONFLICT_MERGE = 207 # We have merged the two versions, sending
