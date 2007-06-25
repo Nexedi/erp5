@@ -2151,8 +2151,7 @@ class PlanningStructure:
     build secondary axis structure
     """
     # defining min and max delimiter number
-    # XXX Isn't field enough ?
-    delimiter_min_number = basic_structure.field.get_value('delimiter')
+    delimiter_min_number = field.get_value('delimiter')
     if basic_structure.calendar_mode:
       axis_start = 1
       axis_stop = basic_structure.calendar_range + 1
@@ -2160,27 +2159,30 @@ class PlanningStructure:
       axis_stop = self.secondary_axis.stop
       axis_start = self.secondary_axis.start
 
-    # XXX Isn't field enough ?
     axis_script=getattr(basic_structure.context,
-                        basic_structure.field.get_value('sec_axis_script'),None)
+                        field.get_value('sec_axis_script'),None)
     if axis_script is None:
       # ERROR
       # XXX Shouldn't planning box failed in this case, because of bad config ?
       message = 'unable to find secondary axis generation script : "%s" does \
-             not exist' % basic_structure.field.get_value('sec_axis_script')
+             not exist' % field.get_value('sec_axis_script')
       return [(Message(domain='erp5_ui', message=message, mapping=None))]
 
     # calling script to get list of delimiters to implement
     # just need to pass start, stop, and the minimum number of delimiter
     # wanted. a structure is returned : list of delimiters, each delimiter
-    # defined by a list [ relative position, title, tooltip , delimiter_type]
+    # defined by a dictionary
     try:
-      delimiter_list = axis_script(axis_start, axis_stop, delimiter_min_number)
+      delimiter_list = axis_script(axis_start=axis_start,
+                                 axis_stop=axis_stop,
+                                 delimiter_min_number=delimiter_min_number,
+                                 form_id = basic_structure.form.id,
+                                 selection_name = basic_structure.selection_name)
     except (ArithmeticError, LookupError, AttributeError, TypeError):
       # XXX Seems that too many error are catched
       # XXX Shouldn't planning box failed in this case, because of bad config ?
       message =  'error raised in secondary axis generation script : please \
-             check "%s"'% basic_structure.field.get_value('sec_axis_script')
+            check "%s"'% field.get_value('sec_axis_script')
       return [(Message(domain='erp5_ui', message=message,mapping=None))]
 
     axis_stop = int(axis_stop)
@@ -2195,9 +2197,12 @@ class PlanningStructure:
     # group position and size informations are saved in position_secondary
     # using relative coordinates
     for delimiter in delimiter_list:
+      link = None
+      if delimiter.has_key('link'): link = delimiter['link'] 
       axis_group = AxisGroup(name='Group_sec_' + str(axis_group_number),
                              title=delimiter['title'], 
-			     delimiter_type=delimiter['delimiter_type'])
+			     delimiter_type=delimiter['delimiter_type'],
+			     link=link)
       axis_group.tooltip = delimiter['tooltip']
       axis_group.position_secondary.relative_begin = \
                              int(delimiter['relative_position']) - int(axis_start)
@@ -2816,12 +2821,13 @@ class AxisGroup:
                 delimiter_type=0, is_open=0, is_pure_summary=1,depth=0,
                 url=None, axis_element_already_insered= 0,
                 secondary_axis_start=None, secondary_axis_stop=None,
-                secondary_axis_range=None,
+                secondary_axis_range=None, link=None,
                 property_dict={}):
     self.name = name
     self.title = title
-    # link to fold or unfold report in report-tree mode
-    self.link = None
+    # link to fold or unfold report in report-tree mode and also 
+    # special link on header columns
+    self.link = link
     self.info_title = Info(info=self.title, link=self.link, title=self.title)
     # tooltip used when cursor pass over the group
     self.tooltip = ''
