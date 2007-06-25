@@ -32,6 +32,7 @@ from Products.ERP5SyncML.Subscription import Signature
 from DateTime import DateTime
 from StringIO import StringIO
 from xml.dom.ext import PrettyPrint
+from ERP5Diff import ERP5Diff
 import random
 from zLOG import LOG
 try:
@@ -378,27 +379,23 @@ class XMLSyncUtilsMixin(SyncCode):
     xml_a = ''.join(xml_list)
     return xml_a
 
-  def getXupdateObject(self, object=None, xml_mapping=None, old_xml=None):
+  def getXupdateObject(self, object_xml=None, old_xml=None):
     """
     Generate the xupdate with the new object and the old xml
-    We have to use xmldiff as a command line tool, because all
-    over the xmldiff code, there's some print to the standard
-    output, so this is unusable
     """
-    filename = str(random.randrange(1,2147483600))
-    old_filename = filename + '.old'
-    new_filename = filename + '.new'
-    file1 = open('/tmp/%s' % new_filename,'w')
-    file1.write(self.getXMLObject(object=object,xml_mapping=xml_mapping))
-    file1.close()
-    file2 = open('/tmp/%s'% old_filename,'w')
-    file2.write(old_xml)
-    file2.close()
-    xupdate = commands.getoutput('erp5diff /tmp/%s /tmp/%s' % 
-        (old_filename,new_filename))
+    erp5diff = ERP5Diff()
+    erp5diff.compare(old_xml, object_xml)
+    xupdate_doc = erp5diff._result
+    #minidom is buggy, add namespace declaration, and version
+    attr_ns = xupdate_doc.createAttribute('xmlns:xupdate')
+    attr_ns.value = 'http://www.xmldb.org/xupdate'
+    attr_version = xupdate_doc.createAttribute('version')
+    attr_version.value='1.0'
+    xupdate_doc.documentElement.setAttributeNode(attr_ns)
+    xupdate_doc.documentElement.setAttributeNode(attr_version)
+    xupdate = xupdate_doc.toxml()
+    #omit xml declaration
     xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
-    commands.getstatusoutput('rm -f /tmp/%s' % old_filename)
-    commands.getstatusoutput('rm -f /tmp/%s' % new_filename)
     return xupdate
 
   def getXMLObject(self, object=None, xml_mapping=None):
@@ -858,8 +855,7 @@ class XMLSyncUtilsMixin(SyncCode):
           if not signature.checkMD5(xml_object):
             set_synchronized = 0
             # This object has changed on this side, we have to generate some xmldiff
-            xml_string = self.getXupdateObject(object=object,
-                                              xml_mapping=domain.xml_mapping,
+            xml_string = self.getXupdateObject(object_xml =                           domain.getXMLFromObject(object),
                                               old_xml=signature.getXML())
             if xml_string.count('\n') > self.MAX_LINES:
               if xml_string.find('--') >= 0: # This make comment fails, so we need to replace
