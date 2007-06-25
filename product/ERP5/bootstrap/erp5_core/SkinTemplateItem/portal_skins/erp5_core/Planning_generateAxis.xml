@@ -412,7 +412,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>axis_start, axis_stop, delimiter_min_number</string> </value>
+            <value> <string>axis_start, axis_stop, delimiter_min_number, form_id=None, selection_name=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -432,7 +432,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -441,6 +441,8 @@ else:\n
                             <string>axis_start</string>
                             <string>axis_stop</string>
                             <string>delimiter_min_number</string>
+                            <string>form_id</string>
+                            <string>selection_name</string>
                             <string>isinstance</string>
                             <string>DateTime</string>
                             <string>type_list</string>
@@ -472,7 +474,10 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
