@@ -71,28 +71,30 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-This scripts parses a long string and does the following:\n
-- processes arguments for searching by any category\n
-- selects search mode\n
-- adds creation and modification date clauses\n
-- searches\n
-- if requested, filters result so that only the user\'s docs are returned\n
-- if requested, filters result to return only the newest versions\n
+  This scripts parses a long string and does the following:\n
+    - processes arguments for searching by any category\n
+    - selects search mode\n
+    - adds creation and modification date clauses\n
+    - searches\n
+    - if requested, filters result so that only the user\'s docs are returned\n
+    - if requested, filters result to return only the newest versions\n
+\n
+  At the end the script generates one big complex query to retrieve objects.\n
 """\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
 \n
-if not sstr: return None\n
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
 \n
-args = context.parseSearchString(sstr)\n
-query_list = []\n
+if not search_string: \n
+  return None\n
+\n
+# extract search arguments\n
+args = context.parseSearchString(search_string)\n
 \n
 # process searching by category\n
-cats = []\n
 bases = context.portal_categories.getBaseCategoryList()\n
 for k,v in args.items():\n
   if k in bases:\n
-    args[k + \'_relative_url\'] = k + \'/\' + v\n
+    args[\'%s_relative_url\' %k] = \'%s/%s\' %(k, v)\n
 \n
 # expand simplified notation of search mode\n
 mode = args.get(\'mode\')\n
@@ -100,7 +102,8 @@ modemap = { \'natural\' : 0,\n
             \'boolean\' : \'in_boolean_mode\',\n
             \'expanded\': \'with_query_expansion\'}\n
 if mode and modemap.has_key(mode):\n
-  args[\'SearchableText\'] = dict(query=args[\'SearchableText\'], search_mode=modemap[mode])\n
+  args[\'SearchableText\'] = dict(query = args[\'SearchableText\'], \n
+                                search_mode = modemap[mode])\n
 \n
 # a hack because SQLCatalog wants table.key now \n
 # dunno if it is a bug or a feature\n
@@ -108,31 +111,30 @@ if args.has_key(\'SearchableText\'):\n
   args[\'full_text.SearchableText\'] = args[\'SearchableText\']\n
   args.pop(\'SearchableText\')\n
 \n
-cf = kw.get(\'creation_from\')\n
-ct = kw.get(\'creation_to\')\n
-mf = kw.get(\'modification_from\')\n
-mt = kw.get(\'modification_to\')\n
+creation_from = kw.get(\'creation_from\')\n
+creation_to = kw.get(\'creation_to\')\n
+modification_from = kw.get(\'modification_from\')\n
+modification_to = kw.get(\'modification_to\')\n
 \n
 wheres = []\n
-if cf:\n
-  wheres.append(\'creation_date >"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
-if ct:\n
-  wheres.append(\'creation_date <"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
-if mf:\n
-  wheres.append(\'modification_date >"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
-if mt:\n
-  wheres.append(\'modification_date <"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
+if creation_from:\n
+  wheres.append(\'creation_date >"\' + creation_from.strftime(\'%Y-%m-%d\') + \'"\')\n
+if creation_to:\n
+  wheres.append(\'creation_date <"\' + creation_from.strftime(\'%Y-%m-%d\') + \'"\')\n
+if modification_from:\n
+  wheres.append(\'modification_date >"\' + creation_from.strftime(\'%Y-%m-%d\') + \'"\')\n
+if modification_to:\n
+  wheres.append(\'modification_date <"\' + creation_from.strftime(\'%Y-%m-%d\') + \'"\')\n
 if wheres != []:\n
   args[\'where_expression\'] = \' AND \'.join(wheres)\n
 \n
 # We search in any language by default\n
-if args.get(\'language\') == \'0\': args.pop(\'language\')\n
+if args.get(\'language\') == \'0\': \n
+  args.pop(\'language\')\n
 \n
 # User wants only his documents\n
 if args.get(\'mine\'): \n
-  sm = getSecurityManager()\n
-  u = sm.getUser()\n
-  args[\'owner\'] = u\n
+  args[\'owner\'] = context.portal_membership.getAuthenticatedMember()\n
 \n
 query_list = []\n
 for k, v in args.items():\n
@@ -142,7 +144,8 @@ if args.get(\'newest\'):\n
   return ComplexQuery(*query_list, **dict(operator = \'AND\',\n
                                           order_by = \'reference\')) \n
 \n
-return ComplexQuery(*query_list, **dict(operator = \'AND\')) \n
+return ComplexQuery(*query_list, \n
+                    **dict(operator = \'AND\')) \n
 \n
 ####################################\n
 # NOT SUPPORTED YET VERY WELL\n
@@ -195,7 +198,7 @@ if args.get(\'newest\'):\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sstr, **kw</string> </value>
+            <value> <string>search_string, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -221,7 +224,7 @@ if args.get(\'newest\'):\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>sstr</string>
+                            <string>search_string</string>
                             <string>kw</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
                             <string>Query</string>
@@ -230,8 +233,6 @@ if args.get(\'newest\'):\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>args</string>
-                            <string>query_list</string>
-                            <string>cats</string>
                             <string>bases</string>
                             <string>_getiter_</string>
                             <string>k</string>
@@ -241,14 +242,12 @@ if args.get(\'newest\'):\n
                             <string>modemap</string>
                             <string>dict</string>
                             <string>_getitem_</string>
-                            <string>cf</string>
-                            <string>ct</string>
-                            <string>mf</string>
-                            <string>mt</string>
+                            <string>creation_from</string>
+                            <string>creation_to</string>
+                            <string>modification_from</string>
+                            <string>modification_to</string>
                             <string>wheres</string>
-                            <string>getSecurityManager</string>
-                            <string>sm</string>
-                            <string>u</string>
+                            <string>query_list</string>
                             <string>_apply_</string>
                             <string>idx</string>
                             <string>newest</string>
