@@ -644,27 +644,30 @@ class TestERP5BankingMixin:
       if 'siege' not in site_list:
         self.siege = self.testsite.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
 
-
-  def openCounterDate(self, date=None, site=None,id='counter_date_1',open=1):
-    """
-    open a couter date fort the given date
-    by default use the current date
-    """
+  def _openDate(self, date=None, site=None, id=None, open=True, container=None, portal_type=None):
     if date is None:
       date = DateTime().Date()
     if site is None:
       site = self.testsite
-    # create a counter date
-    counter_date_module = self.getCounterDateModule()
-
-    counter_date = counter_date_module.newContent(id=id, portal_type="Counter Date",
-                                                            site_value = site,
-                                                            start_date = date)
-    # open the counter date
+    date_object = container.newContent(id=id, portal_type=portal_type,
+                                       site_value = site, start_date = date)
     if open:
-      counter_date.open()
-    setattr(self,id,counter_date)
+      date_object.open()
+    setattr(self, id, date_object)
 
+  def openAccountingDate(self, date=None, site=None, id='accounting_date_1', open=True):
+    """
+    open an accounting date for the given date
+    by default use the current date
+    """
+    self._openDate(date=date, site=site, id=id, open=open, container=self.getAccountingDateModule(), portal_type='Accounting Date')
+
+  def openCounterDate(self, date=None, site=None, id='counter_date_1', open=True):
+    """
+    open a couter date for the given date
+    by default use the current date
+    """
+    self._openDate(date=date, site=site, id=id, open=open, container=self.getCounterDateModule(), portal_type='Counter Date')
 
   def openCounter(self, site=None, id='counter_1'):
     """
