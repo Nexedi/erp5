@@ -913,9 +913,11 @@ class SynchronizationTool( SubscriptionSynchronization,
       self.activate(activity='RAMQueue').sendHttpResponse(to_url=to_url, 
           sync_id=sync_id, xml=xml, domain=domain)
       LOG('sendHttpResponse, socket ERROR:',0,msg)
+      LOG('sendHttpResponse, url,data',0,(url, data))
       return
     except urllib2.URLError, msg:
       LOG("sendHttpResponse, can't open url %s :" % to_url, 0, msg)
+      LOG('sendHttpResponse, to_url,data',0,(to_url, data))
       return
 
 
@@ -999,7 +1001,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       for publication in self.getPublicationList():
         if publication.getPublicationUrl()==url and \
         publication.getTitle()==sync_id:
-          result = self.PubSync(sync_id,xml)
+          result = self.PubSync(publication,xml)
           # Then encrypt the message
           xml = result['xml']
           #must be commented because this method is alredy called
