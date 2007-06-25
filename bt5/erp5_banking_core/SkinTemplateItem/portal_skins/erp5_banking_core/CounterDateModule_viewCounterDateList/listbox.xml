@@ -481,7 +481,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>accounting_date_list_selection</string> </value>
+                    <value> <string>counter_date_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># return 1 if the counter date is open/closing for the given date and the given site\n
+            <value> <string># Raise ValidationFailed if the counter date not opened for the given date and the given site\n
+\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
 \n
 if date is None:\n
   # get current date\n
@@ -89,9 +92,8 @@ if site is None:\n
 site = context.Baobab_getVaultSite(site)\n
 \n
 if context.portal_catalog.countResults(portal_type=\'Counter Date\', start_date=str(date), site_id=site.getId(), simulation_state="open")[0][0] == 0:\n
-  return 0\n
-else:\n
-  return 1\n
+  msg = Message(domain = "ui", message="Transaction not in the good counter date")\n
+  raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -150,6 +152,10 @@ else:\n
                           <tuple>
                             <string>site</string>
                             <string>date</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>None</string>
                             <string>DateTime</string>
                             <string>_getattr_</string>
@@ -158,6 +164,7 @@ else:\n
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>str</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>
