@@ -632,8 +632,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     subscriber = conflict.getSubscriber()
     publisher_object_path = conflict.getObjectPath()
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
-    publisher_xml = self.getXMLObject(object=publisher_object, 
-        xml_mapping = subscriber.getXMLMapping())
+    publisher_xml = subscriber.getXMLFromObject(publisher_object)
     directory = publisher_object.aq_inner.aq_parent
     object_id = self._getCopyId(publisher_object)    
     # Import the conduit and get it
