@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Accounting Date</type>
+  <workflow>edit_workflow, accounting_date_workflow</workflow>
+ </chain>
+ <chain>
   <type>Bank Account</type>
   <workflow>bank_account_workflow, -validation_workflow</workflow>
  </chain>
@@ -9,7 +13,7 @@
  </chain>
  <chain>
   <type>Checkbook</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>checkbook_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Checkbook Model</type>
