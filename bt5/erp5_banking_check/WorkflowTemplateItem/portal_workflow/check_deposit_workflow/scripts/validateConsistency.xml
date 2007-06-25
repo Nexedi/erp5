@@ -72,6 +72,11 @@ from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
 \n
+site = transaction.getSite()\n
+date = transaction.getStartDate()\n
+transaction.Baobab_checkCounterDateOpen(site=site, date=date)\n
+transaction.Baobab_checkAccountingDateOpen(site=site, date=date)\n
+\n
 # Check the amount.\n
 price = transaction.getSourceTotalAssetPrice()\n
 if price is None or price <= 0:\n
@@ -111,7 +116,7 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
     raise ValidationFailed, (msg,)\n
 \n
   # Test if the account balance is sufficient.\n
-  error = context.BankAccount_checkBalance(source_bank_account.getRelativeUrl(), check_operation_line.getTotalQuantity())\n
+  error = context.BankAccount_checkBalance(source_bank_account.getRelativeUrl(), check_operation_line.getPrice())\n
   if error[\'error_code\'] == 1:\n
     msg = Message(domain=\'ui\', message="Source bank account is not sufficient.")\n
     raise ValidationFailed, (msg,)\n
@@ -195,6 +200,8 @@ if transaction.getSimulationState() == "draft":\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
+                            <string>site</string>
+                            <string>date</string>
                             <string>price</string>
                             <string>None</string>
                             <string>msg</string>
