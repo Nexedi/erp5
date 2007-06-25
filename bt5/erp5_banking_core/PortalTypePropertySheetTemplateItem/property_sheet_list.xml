@@ -1,9 +1,13 @@
 <property_sheet_list>
+ <portal_type id="Accounting Date">
+  <item>Task</item>
+  <item>Reference</item>
+ </portal_type>
  <portal_type id="Banking Operation Line">
+  <item>Arrow</item>
   <item>Task</item>
   <item>Amount</item>
   <item>Price</item>
-  <item>Arrow</item>
  </portal_type>
  <portal_type id="Cash Delivery Cell">
   <item>CashDeliveryLine</item>
@@ -15,8 +19,8 @@
   <item>BaobabCategory</item>
  </portal_type>
  <portal_type id="Check">
-  <item>Task</item>
   <item>Arrow</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Check Model">
   <item>CheckModel</item>
@@ -25,9 +29,9 @@
   <item>Amount</item>
  </portal_type>
  <portal_type id="Checkbook">
+  <item>Arrow</item>
   <item>VariationRange</item>
   <item>Task</item>
-  <item>Arrow</item>
   <item>Checkbook</item>
  </portal_type>
  <portal_type id="Checkbook Model">

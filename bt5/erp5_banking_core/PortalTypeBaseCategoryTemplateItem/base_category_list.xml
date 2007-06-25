@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Accounting Date">
+  <item>site</item>
+ </portal_type>
  <portal_type id="Banking Operation Line">
   <item>aggregate_resource</item>
  </portal_type>

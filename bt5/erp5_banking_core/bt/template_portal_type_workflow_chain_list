@@ -1,8 +1,11 @@
+Accounting Date | accounting_date_workflow
+Accounting Date | edit_workflow
 Bank Account | -validation_workflow
 Bank Account | bank_account_workflow
 Check | check_workflow
 Check | edit_workflow
 Checkbook Model | edit_workflow
+Checkbook | checkbook_workflow
 Checkbook | edit_workflow
 Counter Date | counter_date_workflow
 Counter Date | edit_workflow
