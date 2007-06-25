@@ -282,6 +282,12 @@ class TestERP5BankingMixin:
     """
     return getattr(self.getPortal(), 'check_module', None)
 
+  def getAccountingDateModule(self):
+    """
+      Return the Accounting Date Module
+    """
+    return getattr(self.getPortal(), 'accounting_date_module', None)
+
   def getCounterDateModule(self):
     """
     Return the Counter Date Module
