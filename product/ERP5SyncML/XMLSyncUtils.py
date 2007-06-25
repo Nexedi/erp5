@@ -952,7 +952,7 @@ class XMLSyncUtilsMixin(SyncCode):
         #in this case, the object was created on another subscriber than erp5
         # and we should save it's remote id
         signature.setRid(rid)
-      LOG('gid == rid ?', 0, 'gid=%s, rid=%s' % (gid, rid))
+      #LOG('gid == rid ?', 0, 'gid=%s, rid=%s' % (gid, rid))
       object = subscriber.getObjectFromGid(gid)
       if signature == None:
         #LOG('applyActionList, signature is None',0,signature)
@@ -995,7 +995,7 @@ class XMLSyncUtilsMixin(SyncCode):
               conflict_list += add_data['conflict_list']
             # Retrieve directly the object from addNode
             object = add_data['object']
-            LOG('XMLSyncUtils, in ADD add_data',0,add_data)
+            #LOG('XMLSyncUtils, in ADD add_data',0,add_data)
             if object is not None:
               signature.setPath(object.getPhysicalPath())
               signature.setObjectId(object.getId())
