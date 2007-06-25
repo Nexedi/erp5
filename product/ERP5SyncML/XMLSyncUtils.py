@@ -398,25 +398,6 @@ class XMLSyncUtilsMixin(SyncCode):
     xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
     return xupdate
 
-  def getXMLObject(self, object=None, xml_mapping=None):
-    """
-    This just allow to get the xml of the object
-    """
-    if xml_mapping in ['None', None]:
-      return ''
-    xml_method = None
-    xml = ""
-    if xml_mapping is not None:
-      if hasattr(object,xml_mapping):
-        xml_method = getattr(object,xml_mapping)
-      #elif hasattr(object,'manage_FTPget'):
-      #  xml_method = getattr(object,'manage_FTPget')
-      if xml_method is not None:
-        xml = xml_method()
-      else:
-        raise ValueError, "Sorry the script or method was not found"
-    return xml
-
   def getSessionId(self, xml):
     """
     We will retrieve the session id of the message
@@ -808,8 +789,7 @@ class XMLSyncUtilsMixin(SyncCode):
             signature.getStatus() != self.PARTIAL) or \
             self.getAlertCode(remote_xml) == self.SLOW_SYNC:
           #LOG('PubSyncModif',0,'Current object.getPath: %s' % object.getPath())
-          xml_object = self.getXMLObject(object=object, 
-              xml_mapping=domain.xml_mapping)
+          xml_object = domain.getXMLFromObject(object)
           xml_string = xml_object
           if isinstance(xml_string, unicode):
             xml_string = xml_object.encode('utf-8')
@@ -843,8 +823,7 @@ class XMLSyncUtilsMixin(SyncCode):
           subscriber.addSignature(signature)
         elif signature.getStatus()==self.NOT_SYNCHRONIZED \
             or signature.getStatus()==self.PUB_CONFLICT_MERGE: # We don't have synchronized this object yet
-          xml_object = self.getXMLObject(object=object, 
-              xml_mapping=domain.xml_mapping)
+          xml_object = domain.getXMLFromObject(object)
           #LOG('getSyncMLData',0,'checkMD5: %s' % str(signature.checkMD5(xml_object)))
           #LOG('getSyncMLData',0,'getStatus: %s' % str(signature.getStatus()))
           if signature.getStatus()==self.PUB_CONFLICT_MERGE:
@@ -874,8 +853,7 @@ class XMLSyncUtilsMixin(SyncCode):
               xml_string = '<!--' + short_string + '-->'
             signature.setStatus(status)
             if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
-              xml_string = self.getXMLObject(object=object, 
-                  xml_mapping=domain.xml_mapping)
+              xml_string = domain.getXMLFromObject(object)
             gid = signature.getRid()#in fisrt, we try with rid if there is one
             if gid == None:
               gid = signature.getGid()
@@ -892,8 +870,7 @@ class XMLSyncUtilsMixin(SyncCode):
             conduit.updateNode(xml=subscriber_xupdate, object=object, 
                 previous_xml=old_xml, force=(domain.getDomainType==self.SUB), 
                 simulate=0)
-            xml_object = self.getXMLObject(object=object, 
-                xml_mapping=domain.xml_mapping)
+            xml_object = domain.getXMLFromObject(object)
             signature.setTempXML(xml_object)
           if set_synchronized: # We have to do that after this previous update
             # We should not have this case when we are in CONFLICT_MERGE
@@ -930,8 +907,7 @@ class XMLSyncUtilsMixin(SyncCode):
           xml_string = '<!--' + xml_string + '-->'
           signature.setStatus(status)
           if(subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']):
-            xml_string = self.getXMLObject(object=object, 
-                xml_mapping=domain.xml_mapping)
+            xml_string = domain.getXMLFromObject(object)
           #LOG('xml_string =', 0, xml_string)
           if signature.getAction()=='Replace':
             gid = signature.getRid()#in fisrt, we try with rid if there is one
