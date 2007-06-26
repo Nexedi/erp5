@@ -37,6 +37,10 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>(lorsque l\'entit\xc3\xa9 tient un inventaire permanent en comptabilit\xc3\xa9 g\xc3\xa9n\xc3\xa9rale, le compte 38 peut \xc3\xaatre utilis\xc3\xa9 pour comptabiliser les stocks en voie d\'acheminement, mis en d\xc3\xa9p\xc3\xb4t ou donn\xc3\xa9s en consignation)</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>38</string> </value>
         </item>
@@ -46,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>(lorsque l\'entit\xc3\xa9 tient un inventaire permanent en comptabilit\xc3\xa9 g\xc3\xa9n\xc3\xa9rale, le compte 38 peut \xc3\xaatre utilis\xc3\xa9 pour comptabiliser les stocks en voie d\'acheminement, mis en d\xc3\xa9p\xc3\xb4t ou donn\xc3\xa9s en consignation)</string> </value>
+            <value> <string>Stocks en voie d\'acheminement, mis en d\xc3\xa9p\xc3\xb4t ou en consignation</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
