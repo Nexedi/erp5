@@ -198,7 +198,7 @@ class TestERP5SyncMLMixin:
     nb_message = 1
     result = portal_sync.SubSync(subscription)
     while result['has_response']==1:
-      portal_sync.PubSync(publication.getTitle())
+      portal_sync.PubSync(publication)
       result = portal_sync.SubSync(subscription)
       nb_message += 1 + result['has_response']
     return nb_message
@@ -231,9 +231,9 @@ class TestERP5SyncMLMixin:
     while result['has_response']==1:
       # We do thing three times, so that we will test
       # if we manage well duplicate messages
-      portal_sync.PubSync(publication.getTitle())
-      portal_sync.PubSync(publication.getTitle())
-      portal_sync.PubSync(publication.getTitle())
+      portal_sync.PubSync(publication)
+      portal_sync.PubSync(publication)
+      portal_sync.PubSync(publication)
       result = portal_sync.SubSync(subscription)
       result = portal_sync.SubSync(subscription)
       result = portal_sync.SubSync(subscription)
