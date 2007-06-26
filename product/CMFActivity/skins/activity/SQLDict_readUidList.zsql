@@ -11,7 +11,8 @@ class_file:
 method_id
 path
 to_date
-order_validation_text</params>
+order_validation_text
+group_method_id</params>
 SELECT uid FROM
     message
 WHERE
@@ -21,3 +22,4 @@ WHERE
 <dtml-if path> AND path = <dtml-sqlvar path type="string"> </dtml-if>
 <dtml-if to_date> AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>
 <dtml-if order_validation_text> AND order_validation_text = <dtml-sqlvar order_validation_text type="string"> </dtml-if>
+<dtml-if group_method_id> AND group_method_id = <dtml-sqlvar group_method_id type="string"> </dtml-if>

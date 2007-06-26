@@ -1794,6 +1794,80 @@ class TestCMFActivity(ERP5TypeTestCase):
     abortTransactionSynchronously()
     getattr(organisation, 'uid')
 
+
+  def test_80_CallWithGroupIdParamater(self, quiet=0, run=run_all_test):
+    """
+    Test that group_id parameter is used to separate execution of the same method
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest Activity with group_id parameter'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+
+    portal = self.getPortal()    
+    organisation =  portal.organisation._getOb(self.company_id)
+    # Defined a group method
+    def setFoobar(self, object_list, number=1):
+      for obj in object_list:
+        if getattr(obj,'foobar', None) is not None:
+          obj.foobar = obj.foobar + number
+        else:
+          obj.foobar = number
+      object_list[:] = []
+    from Products.ERP5Type.Document.Folder import Folder
+    Folder.setFoobar = setFoobar    
+
+    def getFoobar(self):
+      return (getattr(self,'foobar',0))
+    Organisation.getFoobar = getFoobar
+
+    organisation.foobar = 0
+    self.assertEquals(0,organisation.getFoobar())
+
+    # Test group_method_id is working without group_id
+    for x in xrange(5):
+      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar").reindexObject(number=1)
+      get_transaction().commit()      
+
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),5)
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    self.assertEquals(1, organisation.getFoobar())
+
+
+    # Test group_method_id is working with one group_id defined
+    for x in xrange(5):
+      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
+      get_transaction().commit()      
+
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),5)
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    self.assertEquals(2, organisation.getFoobar())
+
+    # Test group_method_id is working with many group_id defined
+    for x in xrange(5):
+      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
+      get_transaction().commit()      
+      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="2").reindexObject(number=3)
+      get_transaction().commit()
+      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
+      get_transaction().commit()
+      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="3").reindexObject(number=5)
+      get_transaction().commit()
+
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),20)
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    self.assertEquals(11, organisation.getFoobar())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list), 0)
+    
+
 if __name__ == '__main__':
     framework()
 else:

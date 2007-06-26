@@ -42,7 +42,7 @@ try:
 except ImportError:
   pass
 
-from zLOG import LOG, TRACE, WARNING, ERROR
+from zLOG import LOG, TRACE, WARNING, ERROR, INFO
 
 MAX_PRIORITY = 5
 MAX_GROUPED_OBJECTS = 500
@@ -70,7 +70,8 @@ class SQLDict(RAMDict):
                                           broadcast = m.activity_kw.get('broadcast', 0),
                                           message = self.dumpMessage(m),
                                           date = m.activity_kw.get('at_date', DateTime()),
-                                          group_method_id = m.activity_kw.get('group_method_id', ''),
+                                          group_method_id = '\0'.join([m.activity_kw.get('group_method_id', ''),
+                                                                      m.activity_kw.get('group_id', '')]),
                                           tag = m.activity_kw.get('tag', ''),
                                           order_validation_text = self.getOrderValidationText(m))
                                           # Also store uid of activity
@@ -89,7 +90,8 @@ class SQLDict(RAMDict):
       dumped_message_list = [self.dumpMessage(message) for message in registered_message_list]
       datetime = DateTime()
       date_list = [message.activity_kw.get('at_date', datetime) for message in registered_message_list]
-      group_method_id_list = [message.activity_kw.get('group_method_id', '') for message in registered_message_list]
+      group_method_id_list = ['\0'.join([message.activity_kw.get('group_method_id', ''), message.activity_kw.get('group_id', '')])
+                              for message in registered_message_list]
       tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
       order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]
       uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity', id_count=len(registered_message_list))
@@ -172,10 +174,12 @@ class SQLDict(RAMDict):
       line = result[0]
       path = line.path
       method_id = line.method_id
+      group_method_id = line.group_method_id
       order_validation_text = line.order_validation_text
       uid_list = activity_tool.SQLDict_readUidList(path=path, method_id=method_id,
                                                    processing_node=None, to_date=now_date,
-                                                   order_validation_text=order_validation_text)
+                                                   order_validation_text=order_validation_text,
+                                                   group_method_id=group_method_id)
       uid_list = [x.uid for x in uid_list]
       uid_list_list = [uid_list]
       priority_list = [line.priority]
@@ -196,15 +200,14 @@ class SQLDict(RAMDict):
         if not self.validateMessage(activity_tool, m, uid_list, line.priority, processing_node):
           return 0
 
-        group_method_id = m.activity_kw.get('group_method_id')
-        if group_method_id is not None:
+        if group_method_id not in (None, '', '\0'):
           # Count the number of objects to prevent too many objects.
           if m.hasExpandMethod():
             count = len(m.getObjectList(activity_tool))
           else:
             count = 1
-
-          group_method = activity_tool.getPortalObject().restrictedTraverse(group_method_id)
+          
+          group_method = activity_tool.getPortalObject().restrictedTraverse(group_method_id.split('\0')[0])
 
           if count < MAX_GROUPED_OBJECTS:
             # Retrieve objects which have the same group method.
@@ -255,12 +258,15 @@ class SQLDict(RAMDict):
           # Release locks before starting a potentially long calculation
           get_transaction().commit()
 
-        # Try to invoke
+        # Remove group_id parameter from group_method_id
         if group_method_id is not None:
-          LOG('SQLDict', TRACE,
+          group_method_id = group_method_id.split('\0')[0]
+        # Try to invoke
+        if group_method_id not in (None, ""):
+          LOG('SQLDict', INFO,
               'invoking a group method %s with %d objects '\
               ' (%d objects in expanded form)' % (
-              group_method_id, len(message_list), count))
+            group_method_id, len(message_list), count))
           activity_tool.invokeGroup(group_method_id, message_list)
         else:
           activity_tool.invoke(message_list[0])
@@ -304,7 +310,7 @@ class SQLDict(RAMDict):
               error=sys.exc_info())
           raise
         return 0
-
+      
       try:
         for i in xrange(len(message_list)):
           m = message_list[i]
@@ -501,7 +507,8 @@ class SQLDict(RAMDict):
             broadcast_list = [1] * (node_count - 1)
             message_list = [self.dumpMessage(message)] * (node_count - 1)
             date_list = [message.activity_kw.get('at_date', now_date)] * (node_count - 1)
-            group_method_id_list = [message.activity_kw.get('group_method_id', '')] * (node_count - 1)
+            group_method_id_list = ['\0'.join([message.activity_kw.get('group_method_id', ''),
+                                              message.activity_kw.get('group_id', '')])] * (node_count - 1)
             tag_list = [message.activity_kw.get('tag', '')] * (node_count - 1)
             order_validation_text_list = [message.order_validation_text] * (node_count - 1)
             activity_tool.SQLDict_writeMessageList(uid_list=uid_list,

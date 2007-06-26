@@ -122,6 +122,11 @@ class ActiveObject(ExtensionClass.Base):
         if k not in kw:
           kw[k] = v
 
+    if kw.get('group_id', '') is None:
+      raise ValueError, "Cannot defined a group_id with value None"
+    elif kw.get('group_method_id') is None and kw.get('group_id') is not None:
+      raise ValueError, "Cannot defined a group_id without group_method_id"
+    
     activity_tool = getToolByName(self, 'portal_activities', None)
     if activity_tool is None: return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
