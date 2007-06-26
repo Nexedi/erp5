@@ -25,24 +25,20 @@
 #
 ##############################################################################
 
-import xmlrpclib, base64, re, zipfile, cStringIO, socket
+import xmlrpclib, base64, re, zipfile, cStringIO
 from warnings import warn
-from DateTime import DateTime
 from xmlrpclib import Fault
 from xmlrpclib import Transport
 from xmlrpclib import SafeTransport
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionCacheMixin, ConversionError
 from Products.ERP5.Document.File import _unpackData
-from zLOG import LOG, INFO, ERROR
+from zLOG import LOG, ERROR
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -182,8 +178,8 @@ class OOoDocument(File, ConversionCacheMixin):
     address = preference_tool.getPreferredOoodocServerAddress()
     port = preference_tool.getPreferredOoodocServerPortNumber()
     if address in ('', None) or port in ('', None) :
-      raise ConversionError('''[DMS] Can not proceed with conversion:
-                               conversion server host and port is not defined in preferences''')
+      raise ConversionError('[DMS] Can not proceed with conversion:'
+            ' conversion server host and port is not defined in preferences')
     return address, port
 
   def _mkProxy(self):
@@ -228,8 +224,9 @@ class OOoDocument(File, ConversionCacheMixin):
         else:
           # This is very temporary code - XXX needs to be changed
           # so that the system can retry
-          raise ConversionError("[DMS] Can not get list of allowed acceptable formats for conversion: %s (%s)"
-                                       %(response_code, response_message))
+          raise ConversionError("[DMS] Can not get list of allowed acceptable"
+                                " formats for conversion: %s (%s)" % (
+                                      response_code, response_message))
 
       except Fault, f:
         allowed = server_proxy.getAllowedTargets(content_type)
@@ -248,21 +245,24 @@ class OOoDocument(File, ConversionCacheMixin):
 
     return cached_getTargetFormatItemList(self.getBaseContentType())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTargetFormatTitleList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTargetFormatTitleList')
   def getTargetFormatTitleList(self):
     """
       Returns a list of acceptable formats for conversion
     """
     return map(lambda x: x[0], self.getTargetFormatItemList())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTargetFormatList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTargetFormatList')
   def getTargetFormatList(self):
     """
       Returns a list of acceptable formats for conversion
     """
     return map(lambda x: x[1], self.getTargetFormatItemList())
 
-  security.declareProtected(Permissions.ModifyPortalContent,'isTargetFormatAllowed')
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'isTargetFormatAllowed')
   def isTargetFormatAllowed(self, format):
     """
       Checks if the current document can be converted
@@ -292,7 +292,7 @@ class OOoDocument(File, ConversionCacheMixin):
     
     generate_result = server_proxy.run_generate(self.getId(),
                                        enc(_unpackData(self.getBaseData())),
-                                       None, 
+                                       None,
                                        format)
     try:
       response_code, response_dict, response_message = generate_result
@@ -307,10 +307,10 @@ class OOoDocument(File, ConversionCacheMixin):
   # Conversion API
   security.declareProtected(Permissions.View, 'convert')
   def convert(self, format, display=None, **kw):
-    """
-      Implementation of thGet file in a given format.
-      Runs makeFile to make sure we have the requested version cached,
-      then returns from cache.
+    """Convert the document to the given format.
+
+    If a conversion is already stored for this format, it is returned
+    directly, otherwise the conversion is stored for the next time.
     """
     # Make sure we can support html and pdf by default
     is_html = 0
@@ -319,13 +319,16 @@ class OOoDocument(File, ConversionCacheMixin):
       if not self.hasBaseData(): self.convertToBaseFormat()
       return self.getBaseContentType(), self.getBaseData()
     if format == 'pdf':
-      format_list = [x for x in self.getTargetFormatList() if x.endswith('pdf')]
+      format_list = [x for x in self.getTargetFormatList()
+                                          if x.endswith('pdf')]
       format = format_list[0]
     elif format in STANDARD_IMAGE_FORMAT_LIST:
-      format_list = [x for x in self.getTargetFormatList() if x.endswith(format)]
+      format_list = [x for x in self.getTargetFormatList()
+                                          if x.endswith(format)]
       format = format_list[0]
     elif format == 'html':
-      format_list = [x for x in self.getTargetFormatList() if x.startswith('html') or x.endswith('html')]
+      format_list = [x for x in self.getTargetFormatList()
+                              if x.startswith('html') or x.endswith('html')]
       format = format_list[0]
       is_html = 1
     elif format in ('txt', 'text', 'text-content'):
@@ -390,14 +393,16 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     return self._convert(format='text-content')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'populateContent')
   def populateContent(self, zip_file=None):
     """
     Extract content from the ODF zip file and populate the document.
     Optional parameter zip_file prevents from converting content twice.
     """
     if zip_file is None:
-      format_list = [x for x in self.getTargetFormatList() if x.startswith('html')]
+      format_list = [x for x in self.getTargetFormatList()
+                                                if x.startswith('html')]
       format = format_list[0]
       mime, data = self._convert(format)
       archive_file = cStringIO.StringIO()
@@ -428,7 +433,8 @@ class OOoDocument(File, ConversionCacheMixin):
       on the object. Update metadata information.
     """
     server_proxy = self._mkProxy()
-    response_code, response_dict, response_message = server_proxy.run_convert(self.getSourceReference() or self.getId(),
+    response_code, response_dict, response_message = server_proxy.run_convert(
+                                      self.getSourceReference() or self.getId(),
                                       enc(_unpackData(self.getData())))
     if response_code == 200:
       # sucessfully converted document
@@ -438,12 +444,17 @@ class OOoDocument(File, ConversionCacheMixin):
       if metadata.get('MIMEType', None) is not None:
         self._setBaseContentType(metadata['MIMEType'])
     else:
-      # log and raise errors with converting server.Explicitly raise the exception!
-      LOG('[DMS]', ERROR, 'Error converting document to base format %s:%s' %(response_code, response_message))
-      raise ConversionError("[DMS] Error converting document to base format %s:%s:"  
+      # log and raise errors with converting server.
+      LOG('ERP5OOo', ERROR,
+          '[DMS] Error converting document to base format %s:%s'
+                    % (response_code, response_message))
+      # Explicitly raise the exception!
+      raise ConversionError(
+                "[DMS] Error converting document to base format %s:%s:" 
                                        %(response_code, response_message))
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getContentInformation')
   def getContentInformation(self):
     """
       Returns the metadata extracted by the conversion
@@ -451,7 +462,8 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     return self._base_metadata
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'updateBaseMetadata')
   def updateBaseMetadata(self, *arg, **kw):
     """
       Updates metadata information in the converted OOo document
@@ -459,13 +471,18 @@ class OOoDocument(File, ConversionCacheMixin):
       through the invocation of the conversion server.
     """
     server_proxy = self._mkProxy()
-    response_code, response_dict, response_message = server_proxy.run_setmetadata(self.getId(),
-                                                          enc(_unpackData(self.getBaseData())),
-                                                          kw)
+    response_code, response_dict, response_message = \
+          server_proxy.run_setmetadata(self.getId(),
+                                       enc(_unpackData(self.getBaseData())),
+                                       kw)
     if response_code == 200:
       # successful meta data extraction
       self._setBaseData(dec(response_dict['data']))
     else:
-      # log and raise errors with converting server.Explicitly raise the exception!
-      LOG('[DMS]', ERROR, "Error getting document's metadata %s:%s" %(response_code, response_message))
-      raise ConversionError("[DMS] Error getting document's metadata %s:%s" %(response_code, response_message))
+      # log and raise errors with converting server.
+      LOG('ERP5OOo', ERROR, "[DMS] Error getting document's metadata %s:%s"
+                        % (response_code, response_message))
+      # Explicitly raise the exception!
+      raise ConversionError("[DMS] Error getting document's metadata %s:%s"
+                        % (response_code, response_message))
+
