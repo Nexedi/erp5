@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>ListField</string>
+          <string>MultiListField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_role</string> </value>
+            <value> <string>my_role_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,10 +76,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -104,7 +100,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -151,10 +147,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -181,7 +173,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -201,7 +193,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -228,10 +222,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -243,11 +233,11 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -258,8 +248,12 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>
@@ -281,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/role/getCategoryChildCompactLogicalPathItemList</string> </value>
+            <value> <string>here/portal_categories/role/getCategoryChildTranslatedLogicalPathItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
