@@ -126,7 +126,7 @@ class PreferenceMethod(Method) :
     def _getPreference(user_name="") :
       found = 0
       MARKER = []
-      for pref in instance._getSortedPreferenceList() :
+      for pref in instance._getSortedPreferenceList(*args, **kw):
         attr = getattr(pref, self._preference_name, MARKER)
         if attr is not MARKER :
           found = 1
@@ -184,7 +184,7 @@ class PreferenceTool(BaseTool):
     self.getActivePreference()._edit(**{pref_name:value})
 
   security.declarePrivate('_getSortedPreferenceList')
-  def _getSortedPreferenceList(self) :
+  def _getSortedPreferenceList(self, *args, **kw) :
     """ return the most appropriate preferences objects,
         sorted so that the first in the list should be applied first
     """
@@ -194,7 +194,7 @@ class PreferenceTool(BaseTool):
     #                  or better solution
     user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
     user_is_manager = 'Manager' in user.getRolesInContext(self)
-    for pref in self.searchFolder(portal_type='Preference') :
+    for pref in self.searchFolder(portal_type='Preference', *args, **kw) :
       pref = pref.getObject()
       if pref is not None and pref.getProperty('preference_state',
                                 'broken') in ('enabled', 'global'):
