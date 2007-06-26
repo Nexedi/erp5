@@ -84,7 +84,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>old_revision</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -96,9 +98,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>old_revision</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
