@@ -522,6 +522,7 @@ class TestERP5BankingMixin:
     self.controleur_caveau = self.banking.newContent(id='controleur_caveau', portal_type='Category', codification='CCA')
     self.comptable = self.banking.newContent(id='comptable', portal_type='Category', codification='FXF')
     self.commis_comptable = self.banking.newContent(id='commis_comptable', portal_type='Category', codification='CBM')
+    self.commis_caisse = self.banking.newContent(id='commis_caisse', portal_type='Category', codification='CCM')
     self.chef_section_comptable = self.banking.newContent(id='chef_section_comptable', portal_type='Category', codification='CSB')
     self.chef_comptable = self.banking.newContent(id='chef_comptable', portal_type='Category', codification='CCB')
     self.chef_de_tri = self.banking.newContent(id='chef_de_tri', portal_type='Category', codification='CTR')
