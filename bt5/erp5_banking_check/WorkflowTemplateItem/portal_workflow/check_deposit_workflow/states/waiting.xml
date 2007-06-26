@@ -45,10 +45,8 @@
               <tuple>
                 <string>accept</string>
                 <string>accept_action</string>
-                <string>cancel</string>
-                <string>cancel_action</string>
+                <string>refuse_action</string>
                 <string>reject</string>
-                <string>reject_action</string>
               </tuple>
             </value>
         </item>

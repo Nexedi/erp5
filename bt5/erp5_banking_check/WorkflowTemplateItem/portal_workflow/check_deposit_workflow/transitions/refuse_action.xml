@@ -27,15 +27,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Accept</string> </value>
+            <value> <string>Reject</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=accept_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?field_my_workflow_action=refuse_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>accept</string> </value>
+            <value> <string>reject</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>accept_action</string> </value>
+            <value> <string>refuse_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Accept Action</string> </value>
+            <value> <string>Refuse Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

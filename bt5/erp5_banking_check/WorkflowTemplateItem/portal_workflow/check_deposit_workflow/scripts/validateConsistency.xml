@@ -101,27 +101,32 @@ if transaction.getTotalPrice(portal_type = \'Check Operation Line\') != transact
 for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
   check_number = check_operation_line.getAggregateFreeText()\n
   if not check_number:\n
-    msg = Message(domain=\'ui\', message=\'Check is not defined.\')\n
+    msg = Message(domain=\'ui\', message=\'Check is not defined on line $line.\'\n
+                  , mapping={"line" : line.getId()})\n
     raise ValidationFailed, (msg,)\n
 \n
   check_type = check_operation_line.getAggregateResource()\n
   if check_type is None:\n
-    msg = Message(domain=\'ui\', message=\'Check type is not defined.\')\n
+    msg = Message(domain=\'ui\', message=\'Check type is not defined on line $line.\'\n
+                  , mapping={"line" : line.getId()})\n
     raise ValidationFailed, (msg,)\n
 \n
   \n
   source_bank_account = check_operation_line.getSourcePaymentValue()\n
   if source_bank_account is None:\n
-    msg = Message(domain=\'ui\', message=\'Source bank account not defined.\')\n
+    msg = Message(domain=\'ui\', message=\'Bank account not defined on line $line.\'\n
+                  , mapping={"line" : line.getId()})\n
     raise ValidationFailed, (msg,)\n
 \n
   # Test if the account balance is sufficient.\n
   error = context.BankAccount_checkBalance(source_bank_account.getRelativeUrl(), check_operation_line.getPrice())\n
   if error[\'error_code\'] == 1:\n
-    msg = Message(domain=\'ui\', message="Source bank account is not sufficient.")\n
+    msg = Message(domain=\'ui\', message="Bank account $account is not sufficient on line $line.",\n
+                  mapping={"account": source_bank_account.getInternalBankAccountNumber, "line" : line.getId()})\n
     raise ValidationFailed, (msg,)\n
   elif error[\'error_code\'] == 2:\n
-    msg = Message(domain=\'ui\', message="source bank account is not valid.")\n
+    msg = Message(domain=\'ui\', message="Bank account $account is not valid on $line.",\n
+                  mapping={"account": source_bank_account.getInternalBankAccountNumber, "line" : line.getId()})\n
     raise ValidationFailed, (msg,)\n
   elif error[\'error_code\'] != 0:\n
     msg = Message(domain=\'ui\', message="Unknown error code.")\n
@@ -209,6 +214,7 @@ if transaction.getSimulationState() == "draft":\n
                             <string>_getiter_</string>
                             <string>check_operation_line</string>
                             <string>check_number</string>
+                            <string>line</string>
                             <string>check_type</string>
                             <string>source_bank_account</string>
                             <string>context</string>
