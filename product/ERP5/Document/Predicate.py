@@ -162,7 +162,7 @@ class Predicate(XMLObject, Folder):
       for test_method_id in test_method_id_list :
         if (test_method_id is not None) and result:
           method = getattr(context,test_method_id)
-          result = result and method()
+          result = result and method(self)
 #        LOG('predicate test', 0,
 #            '%s after method %s ' % (result, test_method_id))
     return result

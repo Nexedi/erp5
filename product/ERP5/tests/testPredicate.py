@@ -130,13 +130,13 @@ class TestPredicates(ERP5TypeTestCase):
   def stepCreatePredicateTrueScript(self, sequence=None, **kw) :
     """Creates a script that always return true"""
     createZODBPythonScript(self.getPortal().portal_skins.erp5_base,
-                           'Predicate_true', '', """return 1""")
+                           'Predicate_true', 'predicate', """return 1""")
     sequence.edit(test_method_id = 'Predicate_true')
   
   def stepCreatePredicateFalseScript(self, sequence=None, **kw) :
     """Creates a script that always return false"""
     createZODBPythonScript(self.getPortal().portal_skins.erp5_base,
-                           'Predicate_false', '', """return 0""")
+                           'Predicate_false', 'predicate', """return 0""")
     sequence.edit(test_method_id = 'Predicate_false')
     
   def stepCreateTestMethodIdPredicate(self, sequence=None, **kw) :
@@ -330,11 +330,11 @@ class TestPredicates(ERP5TypeTestCase):
   def test_TestMethodId(self):
     doc = self.createDocument(region='europe/western_europe/france',)
     calls = []
-    def true_method():
+    def true_method(predicate):
       calls.append(True)
       return True
     doc.true_method = true_method
-    def false_method():
+    def false_method(predicate):
       calls.append(False)
       return False
     doc.false_method = false_method
