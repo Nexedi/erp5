@@ -147,8 +147,17 @@ class TextDocument(Document, TextContent):
       src_mimetype = self.getTextFormat(DEFAULT_TEXT_FORMAT)
       if not src_mimetype.startswith('text/'):
         src_mimetype = 'text/%s' % src_mimetype
-      return mime_type, getToolByName(self, 'portal_transforms').convertTo(mime_type,
-                           self.getTextContent(), object=self, mimetype=src_mimetype)
+      # check if document has set text_content and convert if necessary
+      text_content = self.getTextContent()
+      if text_content is not None:
+        portal_transforms = getToolByName(self, 'portal_transforms')
+        return mime_type, portal_transforms.convertTo(mime_type,
+                                                      text_content, 
+                                                      object = self, 
+                                                      mimetype = src_mimetype)
+      else:
+        # text_content is not set, return empty string instead of None
+        return mime_type, ''
 
     def __call__(self):
       _setCacheHeaders(self, {})
