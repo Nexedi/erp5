@@ -199,7 +199,7 @@ class OOoBuilder:
     name = "Picture/%s.%s" % (count, format)
     self.replace(name, image)
     is_legacy = ('oasis.opendocument' not in self.getMimeType())
-    return "%s%s" % (is_legacy and '# ' or '', name,)
+    return "%s%s" % (is_legacy and '#' or '', name,)
 
   security.declarePublic('render')
   def render(self, name='', extension='sxw'):
