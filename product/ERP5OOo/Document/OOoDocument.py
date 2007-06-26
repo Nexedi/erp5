@@ -29,6 +29,8 @@ import xmlrpclib, base64, re, zipfile, cStringIO, socket
 from warnings import warn
 from DateTime import DateTime
 from xmlrpclib import Fault
+from xmlrpclib import Transport
+from xmlrpclib import SafeTransport
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders
@@ -47,6 +49,29 @@ dec=base64.decodestring
 
 _MARKER = []
 STANDARD_IMAGE_FORMAT_LIST = ('png', 'jpg', 'gif', )
+
+
+class TimeoutTransport(SafeTransport):
+  """A xmlrpc transport with configurable timeout.
+  """
+  def __init__(self, timeout=None, scheme='http'):
+    self._timeout = timeout
+    self._scheme = scheme
+
+  def send_content(self, connection, request_body):
+    connection.putheader("Content-Type", "text/xml")
+    connection.putheader("Content-Length", str(len(request_body)))
+    connection.endheaders()
+    if self._timeout:
+      connection._conn.sock.settimeout(self._timeout)
+    if request_body:
+      connection.send(request_body)
+
+  def make_connection(self, h):
+    if self._scheme == 'http':
+      return Transport.make_connection(self, h)
+    return SafeTransport.make_connection(self, h)
+
 
 class OOoDocument(File, ConversionCacheMixin):
   """
@@ -165,8 +190,10 @@ class OOoDocument(File, ConversionCacheMixin):
     """
       Create an XML-RPC proxy to access the conversion server.
     """
-    server_proxy = xmlrpclib.ServerProxy('http://%s:%d' % self._getServerCoordinate(),
-                                         allow_none=True)
+    server_proxy = xmlrpclib.ServerProxy(
+             'http://%s:%d' % self._getServerCoordinate(),
+             allow_none=True,
+             transport=TimeoutTransport(timeout=360, scheme='http'))
     return server_proxy
 
   security.declareProtected(Permissions.AccessContentsInformation,
