@@ -207,8 +207,6 @@ class SQLDict(RAMDict):
           else:
             count = 1
           
-          group_method = activity_tool.getPortalObject().restrictedTraverse(group_method_id.split('\0')[0])
-
           if count < MAX_GROUPED_OBJECTS:
             # Retrieve objects which have the same group method.
             result = readMessage(processing_node=processing_node,
