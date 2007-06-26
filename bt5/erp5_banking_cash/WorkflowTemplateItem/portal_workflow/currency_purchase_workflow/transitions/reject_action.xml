@@ -16,12 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -31,11 +25,11 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?field_my_workflow_action=draft_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?field_my_workflow_action=reject_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>reject</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -49,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft_action</string> </value>
+            <value> <string>reject_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>

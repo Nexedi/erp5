@@ -74,9 +74,7 @@ caisse = transaction.getSource()\n
 \n
 \n
 # check again that we are in the good accounting date\n
-if not transaction.Baobab_checkCounterDateOpen(site=caisse, date=transaction.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=caisse, date=transaction.getStartDate())\n
 \n
 \n
 resource_one = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Incoming Cash Balance Regulation Line\')\n
@@ -130,12 +128,6 @@ if incoming_total != outgoing_total:\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
@@ -172,12 +164,12 @@ if incoming_total != outgoing_total:\n
                             <string>transaction</string>
                             <string>_getattr_</string>
                             <string>caisse</string>
-                            <string>msg</string>
                             <string>resource_one</string>
                             <string>resource_two</string>
                             <string>amount</string>
                             <string>incoming_total</string>
                             <string>outgoing_total</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

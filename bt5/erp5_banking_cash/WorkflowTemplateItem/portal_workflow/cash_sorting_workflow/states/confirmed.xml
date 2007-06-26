@@ -45,8 +45,8 @@
               <tuple>
                 <string>deliver</string>
                 <string>deliver_action</string>
-                <string>draft</string>
-                <string>draft_action</string>
+                <string>reject</string>
+                <string>reject_action</string>
               </tuple>
             </value>
         </item>

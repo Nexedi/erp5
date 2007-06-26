@@ -118,6 +118,7 @@
                     <value>
                       <list>
                         <string>my_start_date</string>
+                        <string>my_stop_date</string>
                         <string>my_description</string>
                       </list>
                     </value>

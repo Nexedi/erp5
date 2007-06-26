@@ -72,9 +72,7 @@ from Products.ERP5Type.Message import Message\n
 \n
 ob = state_change[\'object\']\n
 \n
-if not ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=ob.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
+ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=ob.getStartDate())\n
 \n
 if ob.getDestinationTotalAssetPrice() == 0:\n
   msg = Message(domain = "ui", message="Exchanged amount must be defined on document.")\n

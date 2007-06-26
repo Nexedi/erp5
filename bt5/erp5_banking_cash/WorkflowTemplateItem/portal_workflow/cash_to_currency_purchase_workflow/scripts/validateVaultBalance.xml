@@ -90,10 +90,7 @@ incoming_destination = counter_site + encaisse_devise\n
 outgoing_source = counter_site + encaisse_billets_et_monnaies\n
 \n
 # check again that we are in the good accounting date\n
-if not transaction.Baobab_checkCounterDateOpen(site=outgoing_source, date=transaction.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
-\n
+transaction.Baobab_checkCounterDateOpen(site=outgoing_source, date=transaction.getStartDate())\n
 base_price = transaction.getSourceTotalAssetPrice()\n
 # Check the amount.\n
 \n
@@ -194,9 +191,9 @@ elif resource_two!= 0 :\n
                             <string>counter_site</string>
                             <string>incoming_destination</string>
                             <string>outgoing_source</string>
-                            <string>msg</string>
                             <string>base_price</string>
                             <string>None</string>
+                            <string>msg</string>
                             <string>fix_montant</string>
                             <string>pourcentage</string>
                             <string>resource_two</string>

@@ -99,9 +99,7 @@ if destination is None:\n
 \n
 \n
 # check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=destination, date=transaction.getStartDate()):\n
-  msg = Message(domain = "ui", message="Counter Date is not opened")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=destination, date=transaction.getStartDate())\n
 \n
 site = transaction.getDestinationValue()\n
 \n

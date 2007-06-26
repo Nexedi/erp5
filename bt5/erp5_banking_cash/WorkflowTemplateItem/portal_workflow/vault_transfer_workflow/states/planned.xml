@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Assigned To Vault Controler</string> </value>
+            <value> <string>Sent To Vault Manager</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

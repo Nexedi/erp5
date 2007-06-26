@@ -349,7 +349,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>Simulation_state</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -394,7 +394,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>Simulation_state</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>

@@ -81,9 +81,7 @@ var_source_transport =txn.getSourceTransport()\n
 var_source = transaction.getSource()\n
 \n
 # check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=var_source, date=date):\n
-  msg = Message(domain = "ui", message="Counter Date is not opened")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=var_source, date=date)\n
 \n
 if var_type in (None, \'\'):\n
    msg = Message(domain = "ui", message="Incident Type must be defined.")\n
@@ -174,8 +172,8 @@ elif (in_price != 0 and in_price != price) or (out_price != 0 and out_price != p
                             <string>var_type</string>
                             <string>var_source_transport</string>
                             <string>var_source</string>
-                            <string>msg</string>
                             <string>None</string>
+                            <string>msg</string>
                             <string>price</string>
                             <string>in_price</string>
                             <string>out_price</string>

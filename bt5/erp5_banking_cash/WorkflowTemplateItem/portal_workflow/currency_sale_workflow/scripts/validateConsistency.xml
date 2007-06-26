@@ -102,9 +102,7 @@ date = transaction.getStartDate()\n
 current_date = DateTime().Date()\n
 document_date = DateTime(date).Date()\n
 if not document_date > current_date:\n
-  if not  transaction.Baobab_checkCounterDateOpen(site=site, date=date):\n
-    msg = Message(domain=\'ui\', message = \'Cannot validate document because of closed counter date\')\n
-    raise ValidationFailed, (msg,) \n
+  transaction.Baobab_checkCounterDateOpen(site=site, date=date)\n
 \n
 \n
 # Check the amount.\n

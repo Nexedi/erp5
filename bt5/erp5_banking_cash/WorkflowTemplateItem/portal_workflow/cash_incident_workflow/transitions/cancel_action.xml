@@ -16,12 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -85,6 +79,7 @@
               <tuple>
                 <string>Manager</string>
                 <string>Assignor</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>

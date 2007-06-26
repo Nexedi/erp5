@@ -79,9 +79,7 @@ date = transaction.getStartDate()\n
 transaction.Baobab_checkSameUserVault(vault)\n
 \n
 # check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=vault, date=date):\n
-  msg = Message(domain = "ui", message="Counter Date is not opened")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
 # check counter is opened\n
 site = transaction.getSourceValue()\n
@@ -158,9 +156,9 @@ elif resource <> 0 :\n
                             <string>_getattr_</string>
                             <string>vault</string>
                             <string>date</string>
-                            <string>msg</string>
                             <string>site</string>
                             <string>context</string>
+                            <string>msg</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>

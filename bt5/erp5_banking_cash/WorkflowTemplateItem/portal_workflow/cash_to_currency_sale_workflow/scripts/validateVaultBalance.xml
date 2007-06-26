@@ -88,9 +88,7 @@ transaction.Baobab_checkSameUserVault(counter_site)\n
 outgoing_source = counter_site + encaisse_devise\n
 \n
 # check again that we are in the good accounting date\n
-if not transaction.Baobab_checkCounterDateOpen(site=outgoing_source, date=transaction.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=outgoing_source, date=transaction.getStartDate())\n
 \n
 # use of the constraint : Test cash status line\n
 #vliste = transaction.checkConsistency()\n
@@ -187,12 +185,12 @@ elif resource_one != 0 :\n
                             <string>encaisse_billets_et_monnaies</string>
                             <string>counter_site</string>
                             <string>outgoing_source</string>
-                            <string>msg</string>
                             <string>resource_one</string>
                             <string>billetage_entre</string>
                             <string>billetage_sorti</string>
                             <string>base_price</string>
                             <string>quantity</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

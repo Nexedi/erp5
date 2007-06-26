@@ -70,9 +70,16 @@ from Products.ERP5Type.Message import Message\n
 \n
 # Purchase Transaction .\n
 transaction = state_change[\'object\']\n
+date = transaction.getStartDate()\n
+\n
+\n
+\n
 # Get inventory\n
 vault = transaction.getSource()\n
 resource =  transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Incoming Classification Survey Line\')\n
+\n
+# check we are in an opened accounting day\n
+transaction.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
 # Get price and total_price.\n
 price = transaction.getSourceTotalAssetPrice()\n
@@ -145,6 +152,7 @@ elif resource != 0 :\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
+                            <string>date</string>
                             <string>vault</string>
                             <string>resource</string>
                             <string>price</string>

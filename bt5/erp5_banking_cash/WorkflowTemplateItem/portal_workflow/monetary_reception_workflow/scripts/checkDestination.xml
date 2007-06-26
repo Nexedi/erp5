@@ -88,9 +88,7 @@ if \'encaisse_des_billets_retires_de_la_circulation\' in dest.getRelativeUrl():\
   raise ValidationFailed, (msg,)\n
 \n
 # check again that we are in the good accounting date\n
-if not object.Baobab_checkCounterDateOpen(site=dest, date=object.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
+object.Baobab_checkCounterDateOpen(site=dest, date=object.getStartDate())\n
 \n
 \n
 # check between letter and destination site codification\n

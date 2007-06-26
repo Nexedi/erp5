@@ -78,9 +78,7 @@ out_list = txn.objectValues(portal_type=\'Outgoing Cash Incident Line\')\n
 # check that we are in the good accounting date\n
 vault = txn.getSource()\n
 \n
-if not txn.Baobab_checkCounterDateOpen(site=vault, date=txn.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
+txn.Baobab_checkCounterDateOpen(site=vault, date=txn.getStartDate())\n
 \n
 \n
 \n
@@ -161,11 +159,11 @@ if out_price != 0:\n
                             <string>in_list</string>
                             <string>out_list</string>
                             <string>vault</string>
-                            <string>msg</string>
                             <string>price</string>
                             <string>in_price</string>
                             <string>out_price</string>
                             <string>len</string>
+                            <string>msg</string>
                             <string>resource</string>
                           </tuple>
                         </value>

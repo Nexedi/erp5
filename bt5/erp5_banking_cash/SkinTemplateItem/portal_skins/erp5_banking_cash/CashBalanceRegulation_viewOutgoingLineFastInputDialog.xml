@@ -79,7 +79,7 @@ if vcurrency is None :\n
 \n
 \n
 if currency != \'XOF\':\n
-  cashStatus = [\'not_defined\',]\n
+  cashStatus = [\'valid\',]\n
   emissionLetter = [\'not_defined\',]\n
   variation = [\'not_defined\',]\n
 else:\n

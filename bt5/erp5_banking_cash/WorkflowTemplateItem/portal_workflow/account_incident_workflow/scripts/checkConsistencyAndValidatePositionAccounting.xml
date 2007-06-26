@@ -91,9 +91,7 @@ source = baobab_source\n
 source_object = context.portal_categories.getCategoryValue(source)\n
 \n
 # check again that we are in the good accounting date\n
-if not transaction.Baobab_checkCounterDateOpen(site=source_object, date=date):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=source_object, date=date)\n
 \n
 \n
 vault = "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(transaction.getSource(),)\n
@@ -227,11 +225,11 @@ if debit:\n
                             <string>site</string>
                             <string>site_value</string>
                             <string>source_object</string>
-                            <string>msg</string>
                             <string>vault</string>
                             <string>price</string>
                             <string>in_price</string>
                             <string>out_price</string>
+                            <string>msg</string>
                             <string>resource</string>
                             <string>bank_account</string>
                             <string>exchange_rate_list</string>

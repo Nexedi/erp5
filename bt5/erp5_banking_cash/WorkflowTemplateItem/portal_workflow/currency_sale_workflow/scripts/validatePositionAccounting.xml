@@ -80,9 +80,7 @@ if source is None:\n
   raise ValidationFailed, (msg,)\n
 \n
 # check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
-  msg = Message(domain = "ui", message="Counter Date is not opened")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
 \n
 if not transaction.Baobab_checkCounterOpened(site):\n
   msg = Message(domain = "ui", message="Counter is not opened")\n

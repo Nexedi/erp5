@@ -81,9 +81,7 @@ if len(vliste) != 0:\n
   raise ValidationFailed, (vliste[0].getTranslatedMessage(),)\n
 \n
 # check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=vault, date=date):\n
-  msg = Message(domain = "ui", message="Counter Date is not opened")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
 if \'reserve\' in vault and \'salle_tri\' in vaultDestination:\n
   msg = Message(domain="ui", message="Cannot transfer ressource to ${destination} from ${source}.",\n

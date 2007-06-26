@@ -67,11 +67,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -82,6 +79,7 @@
               <tuple>
                 <string>Assignee</string>
                 <string>DestinationAssignor</string>
+                <string>DestinationAssignee</string>
                 <string>Manager</string>
               </tuple>
             </value>

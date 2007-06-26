@@ -273,18 +273,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Delivery_getVaultItemList(current_url=here.getSource(), vault_type=(\'site/caveau/auxiliaire\',\'site/caveau/reserve\',))</string> </value>
+            <value> <string>python: here.Base_sortItemList(here.Delivery_getVaultItemList(current_url=here.getSource(), vault_type=(\'site/caveau/auxiliaire\',\'site/caveau/reserve\',))+here.Delivery_getVaultItemList(vault_type=(\'site/caveau/auxiliaire/encaisse_des_externes\',),leaf_node=0,strict_membership=1)[1:], keep_first=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -95,9 +95,7 @@ baobab_destination = destination\n
 \n
 \n
 # check again that we are in the good accounting date\n
-if not transaction.Baobab_checkCounterDateOpen(site=baobab_destination, date=transaction.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=baobab_destination, date=transaction.getStartDate())\n
 \n
 \n
 billetage_entre = transaction.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
@@ -129,12 +127,6 @@ if billetage_entre != base_price :\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -187,10 +179,10 @@ if billetage_entre != base_price :\n
                             <string>site</string>
                             <string>site_value</string>
                             <string>baobab_destination</string>
-                            <string>msg</string>
                             <string>billetage_entre</string>
                             <string>base_price</string>
                             <string>price</string>
+                            <string>msg</string>
                             <string>quantity</string>
                           </tuple>
                         </value>

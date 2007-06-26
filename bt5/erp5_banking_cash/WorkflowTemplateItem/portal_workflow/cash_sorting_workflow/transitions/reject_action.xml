@@ -21,15 +21,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assign To Vault Controler</string> </value>
+            <value> <string>Reject</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=confirm_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?field_my_workflow_action=reject_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>confirm</string> </value>
+            <value> <string>reject</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirm_action</string> </value>
+            <value> <string>reject_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Assign To Vault Controler Action</string> </value>
+            <value> <string>Reject</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -67,11 +67,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -80,8 +77,9 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>DestinationAssignor</string>
                 <string>Manager</string>
+                <string>DestinationAssignor</string>
+                <string>DestinationAssignee</string>
               </tuple>
             </value>
         </item>
