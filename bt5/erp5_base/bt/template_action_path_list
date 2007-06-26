@@ -80,6 +80,7 @@ Organisation | details
 Organisation | document_view
 Organisation | financial_view
 Organisation | history
+Organisation | jump_to_persons
 Organisation | metadata
 Organisation | person_list
 Organisation | print
