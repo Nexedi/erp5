@@ -624,7 +624,7 @@ class TestIngestion(ERP5TypeTestCase):
     # short_title from content
     self.assertEquals(context.getShortTitle(), 'short')
     # title from metadata inside the document
-    self.assertEquals(context.getTitle(), 'title')
+    self.assertEquals(context.getTitle(), 'TEST-en-002')
     # contributors from user
     self.assertEquals(context.getContributor(), 'person_module/john')
 
