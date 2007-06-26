@@ -136,7 +136,7 @@ class TestPredicates(ERP5TypeTestCase):
   def stepCreatePredicateFalseScript(self, sequence=None, **kw) :
     """Creates a script that always return false"""
     createZODBPythonScript(self.getPortal().portal_skins.erp5_base,
-                           'Predicate_false', 'predicate', """return 0""")
+                           'Predicate_false', '', """return 0""")
     sequence.edit(test_method_id = 'Predicate_false')
     
   def stepCreateTestMethodIdPredicate(self, sequence=None, **kw) :
