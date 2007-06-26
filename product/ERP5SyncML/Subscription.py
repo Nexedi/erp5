@@ -1016,6 +1016,7 @@ class Subscription(Folder, SyncCode):
     signature = self.getSignatureFromGid(gid)
     # First look if we do already have the mapping between
     # the id and the gid
+    #XXX Slow !!!
     object_list = self.getObjectList()
     destination = self.getDestination()
     if signature is not None and signature.getObjectId() is not None:
@@ -1040,10 +1041,12 @@ class Subscription(Folder, SyncCode):
     """
     object_list = self.getObjectList()
     #XXX very slow with lot of objects
+    o = None
     for object in object_list:
       if object.getId() == id:
-        return object
-    return None
+        o = object
+        break
+    return o
 
 #  def setOneWaySyncFromServer(self,value):
 #    """

@@ -38,6 +38,7 @@ from Products.PluggableAuthService.interfaces.plugins import\
     IAuthenticationPlugin
 from AccessControl.SecurityManagement import newSecurityManager
 import commands
+from DateTime import DateTime
 from zLOG import LOG
 
 class PublicationSynchronization(XMLSyncUtils):
@@ -225,10 +226,9 @@ class PublicationSynchronization(XMLSyncUtils):
     """
       This is the synchronization method for the server
     """
-    #LOG('PubSync',0,'Starting... id: %s' % str(id))
+    LOG('PubSync',0,'Starting... publication: %s' % str(publication))
     # Read the request from the client
     xml_client = msg
-    publication
     if xml_client is None:
       xml_client = self.readResponse(from_url=publication.getPublicationUrl())
     #LOG('PubSync',0,'Starting... msg: %s' % str(xml_client))
@@ -249,13 +249,7 @@ class PublicationSynchronization(XMLSyncUtils):
       if client_header.nodeName != "SyncHdr":
         #LOG('PubSync',0,'This is not a SyncML Header')
         raise ValueError, "Sorry, This is not a SyncML Header"
-      for subnode in client_header.childNodes:
-        if subnode.nodeType == subnode.ELEMENT_NODE and \
-            subnode.nodeName == "Source":
-          for subnode2 in subnode.childNodes:
-            if subnode2.nodeType == subnode2.ELEMENT_NODE and \
-                subnode2.nodeName == "LocURI":
-              subscription_url = str(subnode2.childNodes[0].data)
+      subscription_url = self.getSourceURI(client_header)
       # Get the subscriber or create it if not already in the list
       subscriber = publication.getSubscriber(subscription_url)
       if subscriber == None:
@@ -265,8 +259,6 @@ class PublicationSynchronization(XMLSyncUtils):
         # first synchronization
         result = self.PubSyncInit(publication,xml_client,subscriber=subscriber,
             sync_type=self.SLOW_SYNC)
-
-
       elif self.checkAlert(xml_client) and \
           alert_code in (self.TWO_WAY,self.SLOW_SYNC):
         result = self.PubSyncInit(publication=publication, 

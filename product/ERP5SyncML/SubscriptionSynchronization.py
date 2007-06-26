@@ -31,6 +31,7 @@ from Subscription import Subscription,Signature
 from XMLSyncUtils import XMLSyncUtils, Parse
 import commands
 from Conduit.ERP5Conduit import ERP5Conduit
+from DateTime import DateTime
 from zLOG import LOG
 
 class SubscriptionSynchronization(XMLSyncUtils):
@@ -93,12 +94,13 @@ class SubscriptionSynchronization(XMLSyncUtils):
       xml_client = msg
       if isinstance(xml_client, str) or isinstance(xml_client, unicode):
         xml_client = Parse(xml_client)
-        next_status = self.getNextSyncBodyStatus(xml_client, None)
-        #LOG('readResponse, next status :',0,next_status)
-        if next_status is not None:
-          status_code = self.getStatusCode(next_status)
-          #LOG('readResponse status code :',0,status_code)
-          if status_code == self.AUTH_REQUIRED:
+        status_list = self.getSyncBodyStatusList(xml_client)
+        if status_list not in (None, []):
+          status_code_syncHdr = status_list[0]['code']
+          if status_code_syncHdr.isdigit():
+            status_code_syncHdr = int(status_code_syncHdr)
+          #LOG('readResponse status code :',0,status_code_syncHdr)
+          if status_code_syncHdr == self.AUTH_REQUIRED:
             if self.checkChal(xml_client):
               authentication_format, authentication_type = self.getChal(xml_client)
               #LOG('auth_required :',0, 'format:%s, type:%s' % (authentication_format, authentication_type))
@@ -112,14 +114,13 @@ class SubscriptionSynchronization(XMLSyncUtils):
 
             #LOG('readResponse', 0, 'Authentication required')
             response = self.SubSyncCred(subscription, xml_client)
-          elif status_code == self.UNAUTHORIZED:
+          elif status_code_syncHdr == self.UNAUTHORIZED:
             LOG('readResponse', 0, 'Bad authentication')
             return {'has_response':0,'xml':xml_client}
           else:
             response = self.SubSyncModif(subscription, xml_client)
         else: 
             response = self.SubSyncModif(subscription, xml_client)
-
 
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')

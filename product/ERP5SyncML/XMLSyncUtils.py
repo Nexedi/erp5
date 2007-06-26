@@ -453,6 +453,15 @@ class XMLSyncUtilsMixin(SyncCode):
     next_anchor = next_anchor.encode('utf-8')
     return next_anchor
 
+  def getSourceURI(self, xml):
+    """
+    return the source URI of the syncml header
+    """
+    subscription_url = xml.xpath('string(//SyncHdr/Source/LocURI)')
+    if isinstance(subscription_url, unicode):
+      subscription_url = subscription_url.encode('utf-8')
+    return subscription_url
+  
   def getStatusTarget(self, xml):
     """
       Return the value of the alert code inside the xml_stream
@@ -590,34 +599,7 @@ class XMLSyncUtilsMixin(SyncCode):
       tmp_dict['source']  = status.xpath('string(./SourceRef)').encode('utf-8')
       tmp_dict['target']  = status.xpath('string(./TargetRef)').encode('utf-8')
       status_list.append(tmp_dict)
-
     return status_list
-
-  def getNextSyncBodyStatus(self, xml_stream, last_status):
-    """
-    It goes throw actions in the Sync section of the SyncML file,
-    then it returns the next action (could be "add", "replace",
-    "delete").
-    """
-    first_node = xml_stream.childNodes[0]
-    client_body = first_node.childNodes[3]
-    if client_body.nodeName != "SyncBody":
-      #LOG('getNextSyncBodyStatus',0,"This is not a SyncML Body")
-      raise ValueError, "Sorry, This is not a SyncML Body"
-    next_status = None
-    found = None
-    for subnode in client_body.childNodes:
-      if subnode.nodeType == subnode.ELEMENT_NODE and \
-          subnode.nodeName == "Status":
-        # if we didn't use this method before
-        if last_status == None:
-          next_status = subnode
-          return next_status
-        elif subnode == last_status and found is None:
-          found = 1
-        elif found is not None:
-          return subnode
-    return next_status
 
   def getDataText(self, action):
     """
@@ -642,24 +624,9 @@ class XMLSyncUtilsMixin(SyncCode):
     """
       Return the node starting with <object....> of the action
     """
-    for subnode in action.childNodes:
-      if subnode.nodeType == subnode.ELEMENT_NODE and \
-          subnode.nodeName == 'Item':
-        for subnode2 in subnode.childNodes:
-          if subnode2.nodeType == subnode2.ELEMENT_NODE and \
-              subnode2.nodeName == 'Data':
-            for subnode3 in subnode2.childNodes:
-              #if subnode3.nodeType == subnode3.ELEMENT_NODE and subnode3.nodeName == 'object':
-              if subnode3.nodeType == subnode3.COMMENT_NODE:
-                # No need to remove comment, it is already done by FromXml
-                #if subnode3.data.find('<!--')>=0:
-                #  data = subnode3.data
-                #  data = data[data.find('<!--')+4:data.rfind('-->')]
-                xml = subnode3.data
-		if isinstance(xml, unicode):
-                  xml = xml.encode('utf-8')
-                return xml
-
+    comment_list = action.xpath('.//Item/Data[comment()]')
+    if comment_list != []:
+      return comment_list[0].childNodes[0].data.encode('utf-8')
     return None
 
   def getActionId(self, action, action_name):
@@ -1193,14 +1160,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     simulate = 0 # used by applyActionList, should be 0 for client
     if domain.domain_type == self.PUB:
       simulate = 1
-      for subnode in xml_header.childNodes:
-        if subnode.nodeType == subnode.ELEMENT_NODE and \
-                              subnode.nodeName == "Source":
-          for subnode2 in subnode.childNodes:
-            if subnode2.nodeType == subnode2.ELEMENT_NODE and \
-                                  subnode2.nodeName == 'LocURI':
-              subscription_url = str(subnode2.childNodes[0].data)
-              subscriber = domain.getSubscriber(subscription_url)
+      subscription_url = self.getSourceURI(xml_header) 
+      subscriber = domain.getSubscriber(subscription_url)
 
     # We have to check if this message was not already, this can be dangerous
     # to update two times the same object

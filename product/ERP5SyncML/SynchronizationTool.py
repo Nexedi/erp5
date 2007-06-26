@@ -57,6 +57,7 @@ import os
 import string
 import commands
 import random
+from DateTime import DateTime
 from zLOG import LOG
 
 
@@ -821,7 +822,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     #LOG('sendResponse, to_url: ',0,to_url)
     #LOG('sendResponse, from_url: ',0,from_url)
     #LOG('sendResponse, sync_id: ',0,sync_id)
-    #LOG('sendResponse, xml: \n',0,xml)
+    LOG('sendResponse, xml: \n',0,xml)
     if isinstance(xml, unicode):
       xml = xml.encode('utf-8')
     if domain is not None:
@@ -891,6 +892,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     opener = urllib2.build_opener(proxy_handler, proxy_auth_handler, 
         auth_handler, urllib2.HTTPHandler)
     urllib2.install_opener(opener)
+    socket.setdefaulttimeout(3660)
     to_encode = {}
     head = '<?xml version="1.0" encoding="UTF-8"?>'
     to_encode['text'] = head + xml
@@ -905,8 +907,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     request = urllib2.Request(url=to_url, data=data)
 
 #XXX only to synchronize with other server than erp5 (must be improved):
-#      data=head+xml
-#      request = urllib2.Request(to_url, data, headers)
+#    data=head+xml
+#    request = urllib2.Request(to_url, data, headers)
     try:
       result = urllib2.urlopen(request).read()
     except socket.error, msg:
@@ -957,6 +959,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
+    LOG('readResponse, text :', 0, text)
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = uf.getUserById('syncml').__of__(uf)
