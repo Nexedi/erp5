@@ -74,7 +74,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key>                 <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -85,6 +85,8 @@
                       <list>
                         <string>my_vault</string>
                         <string>my_vault_report_type</string>
+                        <string>my_from_date</string>
+                        <string>my_to_date</string>
                       </list>
                     </value>
                 </item>

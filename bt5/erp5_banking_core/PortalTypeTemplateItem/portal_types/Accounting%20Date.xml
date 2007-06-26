@@ -84,7 +84,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Counter Date defines a given day common to all counter operations</string> </value>
+            <value> <string>Accouting Date defines a day on which accounting operations can happen.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>CounterDate_init</string> </value>
+            <value> <string>AccountingDate_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>

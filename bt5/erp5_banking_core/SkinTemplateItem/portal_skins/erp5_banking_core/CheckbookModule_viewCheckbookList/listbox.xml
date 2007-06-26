@@ -360,6 +360,10 @@
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

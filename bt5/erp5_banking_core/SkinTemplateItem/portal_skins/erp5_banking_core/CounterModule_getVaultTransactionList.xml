@@ -65,11 +65,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script returns a list of resources that we can find in a particular stock point.\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script returns a list of resources that we can find in a particular stock point.\n
 # - vault : the stock we are intested in\n
 # - at_date : give the stock for a particular date\n
 # - from_date : usefull with at date in order to know the sum of input and output\n
 #               between two dates\n
+# - excluded_variation_list : Allow to do report with some types of ressources, like\n
+#                             [\'cash_status/valid\', \'cash_status/new_not_emitted\']\n
+#\n
 \n
 from Products.ERP5Type.Document import newTempBase\n
 \n
@@ -95,6 +100,7 @@ vault_inventory_dict = {}\n
 portal = context.getPortalObject()\n
 \n
 \n
+\n
 vault_url_list = vault\n
 if same_type(vault, \'a\'):\n
   vault_url_list = [vault]\n
@@ -102,7 +108,24 @@ if same_type(vault, \'a\'):\n
 for vault_url in vault_url_list:\n
   vault_dict[vault_url] = 1\n
   vault_inventory_dict[vault_url] = {}\n
-\n
+ \n
+def cartesianProduct(list_of_list):\n
+  """\n
+    Be carefull : one mathematical property of cartesian product is that\n
+    when you do a cartesian products of a set and an empty set, the result\n
+    is an empty set.\n
+  """\n
+  if len(list_of_list) == 0:\n
+    return [[]]\n
+  result = []\n
+  append = result.append\n
+  head = list_of_list[0]\n
+  tail = list_of_list[1:]\n
+  product = cartesianProduct(tail)\n
+  for v in head:\n
+    for p in product:\n
+      append([v] + p)\n
+  return result\n
 \n
 total_inventory_list = []\n
 inventory_kw = {}\n
@@ -126,12 +149,27 @@ if kw.has_key("explanation_uid"):\n
 kw_has_cash_status = kw.has_key("cash_status")\n
 kw_has_emission_letter = kw.has_key("emission_letter")\n
 if kw_has_cash_status or kw_has_emission_letter:\n
-  variation_text_list = [\'%\']\n
+  cash_status_list = [None]\n
+  emission_letter_list = [None]\n
   if kw_has_cash_status:\n
-    variation_text_list.append("cash_status/%s%%" % kw[\'cash_status\'])\n
+    cash_status_parameter = kw[\'cash_status\']\n
+    if same_type(cash_status_parameter, \'a\'):\n
+      cash_status_parameter = [cash_status_parameter]\n
+    cash_status_list = ["cash_status/%s%%" % x for x in cash_status_parameter]\n
   if kw_has_emission_letter:\n
-    variation_text_list.append("emission_letter/%s%%" % kw[\'emission_letter\'])\n
-  inventory_kw[\'variation_text\'] = \'\'.join(variation_text_list)\n
+    emission_letter_parameter = kw[\'emission_letter\']\n
+    if same_type(emission_letter_parameter, \'a\'):\n
+      emission_letter_parameter = [emission_letter_parameter]\n
+    emission_letter_list = ["emission_letter/%s%%" % x for x in emission_letter_parameter]\n
+  full_variation_list_of_list = [cash_status_list, emission_letter_list]\n
+  inventory_kw[\'variation_text\'] = []\n
+  for variation_list in cartesianProduct(full_variation_list_of_list):\n
+    variation_text_list = [\'%\']\n
+    for variation in variation_list:\n
+      if variation is not None:\n
+        variation_text_list.append(variation)\n
+    variation_text = \'\'.join(variation_text_list)\n
+    inventory_kw[\'variation_text\'].append(variation_text)\n
 \n
 if at_date is not None:\n
   # XXX this make sure we look at the end of the day\n
@@ -184,10 +222,19 @@ for vault_inventory in vault_inventory_list:\n
     continue\n
   #context.log(\'vault_inventory total_quantity\',vault_inventory.total_quantity)\n
   #context.log(\'vault_inventory total_price\',vault_inventory.total_price)\n
-  resource = (vault_inventory.resource_relative_url, vault_inventory.variation_text or \'\')\n
+  variation_text = vault_inventory.variation_text or \'\'\n
+  must_continue = 0\n
+  if excluded_variation_list is not None:\n
+    for excluded_variation in excluded_variation_list:\n
+      if variation_text.find(excluded_variation)>=0:\n
+        must_continue = 1\n
+        break\n
+  if must_continue:\n
+    continue\n
+  resource = (vault_inventory.resource_relative_url, variation_text)\n
   if vault_report_type==\'history\':\n
     #resource = (vault_inventory.resource_relative_url, vault_inventory.variation_text or \'\',vault_inventory.stock_uid)\n
-    resource = (vault_inventory.resource_relative_url, vault_inventory.variation_text or \'\',vault_inventory.path)\n
+    resource = (vault_inventory.resource_relative_url, variation_text, vault_inventory.path)\n
   if not vault_inventory_dict[node_relative_url].has_key(resource):\n
     total_quantity = vault_inventory.total_quantity\n
     if total_quantity is None:\n
@@ -275,6 +322,7 @@ for resource in resource_dict.keys():\n
         total_price = round(total_price / banknote_quantity_divisor,0)\n
     tmp_dict.update({\'total_quantity\' : total_quantity,\n
         \'total_price\' : total_price,})\n
+    tmp_dict.update({\'vault\' : vault})\n
     if vault_report_type==\'history\':\n
       tmp_dict.update({\'date\':resource_in_vault[\'date\']})\n
     general_total_price += resource_in_vault[\'total_price\']\n
@@ -291,7 +339,9 @@ return total_inventory_list\n
 \n
 \n
 return repr([x for x in total_inventory_list])\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -313,7 +363,15 @@ return repr([x for x in total_inventory_list])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, banknote_quantity_divisor=None, summarise=False, **kw</string> </value>
+            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, banknote_quantity_divisor=None, summarise=False, excluded_variation_list=None,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -333,7 +391,7 @@ return repr([x for x in total_inventory_list])\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -348,6 +406,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>only_positive</string>
                             <string>banknote_quantity_divisor</string>
                             <string>summarise</string>
+                            <string>excluded_variation_list</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
@@ -366,13 +425,25 @@ return repr([x for x in total_inventory_list])\n
                             <string>_getiter_</string>
                             <string>vault_url</string>
                             <string>_write_</string>
+                            <string>cartesianProduct</string>
                             <string>total_inventory_list</string>
                             <string>inventory_kw</string>
                             <string>_getitem_</string>
                             <string>len</string>
                             <string>kw_has_cash_status</string>
                             <string>kw_has_emission_letter</string>
+                            <string>cash_status_list</string>
+                            <string>emission_letter_list</string>
+                            <string>cash_status_parameter</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>emission_letter_parameter</string>
+                            <string>full_variation_list_of_list</string>
+                            <string>variation_list</string>
                             <string>variation_text_list</string>
+                            <string>variation</string>
+                            <string>variation_text</string>
                             <string>column_list</string>
                             <string>_apply_</string>
                             <string>vault_inventory_list</string>
@@ -382,11 +453,11 @@ return repr([x for x in total_inventory_list])\n
                             <string>_inplacevar_</string>
                             <string>abs</string>
                             <string>node_relative_url</string>
+                            <string>must_continue</string>
+                            <string>excluded_variation</string>
                             <string>resource</string>
                             <string>i</string>
-                            <string>variation_text</string>
                             <string>tmp_dict</string>
-                            <string>variation</string>
                             <string>resource_value</string>
                             <string>current_resource_portal_type</string>
                             <string>movement</string>
@@ -399,9 +470,6 @@ return repr([x for x in total_inventory_list])\n
                             <string>round</string>
                             <string>sort_base_price</string>
                             <string>repr</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
@@ -426,6 +494,7 @@ return repr([x for x in total_inventory_list])\n
                 <int>0</int>
                 <none/>
                 <int>0</int>
+                <none/>
               </tuple>
             </value>
         </item>

@@ -16,12 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -51,6 +45,7 @@
                 <string>deliver_action</string>
                 <string>stop</string>
                 <string>stop_action</string>
+                <string>unconfirm</string>
               </tuple>
             </value>
         </item>
