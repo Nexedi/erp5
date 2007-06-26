@@ -67,11 +67,17 @@
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
 \n
+# no coin if classification\n
+if \'ventilation\' in context.getSource(""):\n
+  coin = 0\n
+else:\n
+  coin = 1\n
+\n
 cash_detail_dict = {\'line_portal_type\'           : \'Incoming Cash Sorting Incident Line\'\n
                     , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
                     , \'cash_status_list\'         : None\n
                     , \'emission_letter_list\'     : None\n
-                    , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
+                    , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=coin)\n
                     , \'currency_cash_portal_type\': None\n
                     , \'read_only\'                : False\n
                     , \'column_base_category\'     : \'variation\'\n
@@ -132,6 +138,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>coin</string>
                             <string>None</string>
                             <string>False</string>
                             <string>cash_detail_dict</string>
