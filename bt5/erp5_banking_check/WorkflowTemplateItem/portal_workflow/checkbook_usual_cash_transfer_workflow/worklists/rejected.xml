@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <global name="WorklistDefinition" module="Products.DCWorkflow.Worklists"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -17,23 +17,23 @@
         </item>
         <item>
             <key> <string>actbox_category</string> </key>
-            <value> <string>workflow</string> </value>
+            <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Rejected Checkbook Usual Cash Transfer (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=order_to_deliver_action</string> </value>
-        </item>
-        <item>
-            <key> <string>after_script_name</string> </key>
-            <value> <string>deliver</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+Base_viewWorklist?simulation_state=rejected&portal_type=Checkbook Usual Cash Transfer&reset=1
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Rejected Checkbook Usual Cash Transfer</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,23 +43,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>order_to_deliver_action</string> </value>
+            <value> <string>rejected</string> </value>
         </item>
         <item>
-            <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>script_name</string> </key>
-            <value> <string>validateCheckbookVaultTransferConsistency</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Validate Action</string> </value>
-        </item>
-        <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -74,17 +64,11 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>expr</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>DestinationAssignor</string>
                 <string>Manager</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -94,15 +78,34 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: here.getSource() is not None and \'caveau\'  in here.getSource()</string> </value>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Checkbook Usual Cash Transfer</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>rejected</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
         </item>
       </dictionary>
     </pickle>

@@ -115,7 +115,7 @@ elif reference_range_min is not None or reference_range_max is not None:\n
 \n
   for ref in range(reference_range_min,reference_range_max+1):\n
     # We will look for each reference and add the right number\n
-    reference_list.append(ref)\n
+    reference_list.append("%07i" % ref)\n
 \n
 check_list = []\n
 bank_account_uid = bank_account.getUid()\n
@@ -136,7 +136,7 @@ for check_reference in reference_list:\n
   if result_len == 0:\n
     if not context.Base_isAutomaticCheckCreationAllowed():\n
       msg = Message(domain = "ui", message="Sorry, the $type $reference for the account $account does not exist",\n
-                                   mapping={\'reference\' : reference, \'account\': bank_account.getInternalBankAccountNumber(),\n
+                                   mapping={\'reference\' : check_reference, \'account\': bank_account.getInternalBankAccountNumber(),\n
                                             \'type\': resource_value.getTitle()})\n
       raise ValidationFailed, (msg,)\n
 \n

@@ -65,37 +65,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX: This script is only kept in case it must be added back as a "Before" script on "_action" transition.\n
-#      But it is not used any longer at the moment.\n
+            <value> <string>delivery = state_change[\'object\']\n
 \n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-transaction = state_change[\'object\']\n
-\n
-\n
-date = transaction.getStartDate()\n
-source = transaction.getBaobabSource(None)\n
-if source is None:\n
-  msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
-  raise ValidationFailed, (msg,)\n
-\n
-if sum([len(x.getAggregateList()) for x in transaction.objectValues(portal_type=[\'Checkbook Delivery Line\'])]) == 0:\n
-  msg = Message(domain=\'ui\', message=\'No checkbook selected for delivery.\')\n
-  raise ValidationFailed, (msg,)  \n
-\n
-at_date = transaction.getStartDate()\n
-transaction.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = source)\n
-\n
-# check we are in an opened accounting day\n
-transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
-\n
-#site = transaction.getBaobabSourceValue()\n
-\n
-#if \'guichet\' in site.getVaultType():\n
-#  if not context.Baobab_checkCounterOpened(site):\n
-#    msg = Message(domain = "ui", message="Counter is not opened")\n
-#    raise ValidationFailed, (msg,)\n
+# Make sure to delete what was already created\n
+for line in delivery.objectValues(portal_type=\'Checkbook Reception Line\'):\n
+  for aggregate in line.getAggregateValueList():\n
+    if aggregate.portal_type == \'Checkbook\':\n
+      for check in aggregate.objectValues():\n
+        delivery.portal_workflow.doActionFor(check, \'delete_action\')\n
+    delivery.portal_workflow.doActionFor(aggregate, \'delete_action\')\n
 </string> </value>
         </item>
         <item>
@@ -140,24 +118,13 @@ transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
                             <string>_getitem_</string>
-                            <string>transaction</string>
-                            <string>_getattr_</string>
-                            <string>date</string>
-                            <string>None</string>
-                            <string>source</string>
-                            <string>msg</string>
-                            <string>sum</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>delivery</string>
                             <string>_getiter_</string>
-                            <string>x</string>
-                            <string>len</string>
-                            <string>at_date</string>
+                            <string>_getattr_</string>
+                            <string>line</string>
+                            <string>aggregate</string>
+                            <string>check</string>
                           </tuple>
                         </value>
                     </item>
@@ -174,7 +141,7 @@ transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkConsistency</string> </value>
+            <value> <string>cancelCheckbookReception</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

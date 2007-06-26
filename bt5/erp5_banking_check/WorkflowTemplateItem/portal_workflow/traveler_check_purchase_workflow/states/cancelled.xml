@@ -31,10 +31,16 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Canceled</string> </value>
+            <value> <string>Cancelled</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
             <value>
               <tuple/>
             </value>

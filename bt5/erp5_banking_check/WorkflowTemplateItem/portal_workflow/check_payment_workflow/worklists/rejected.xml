@@ -16,12 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
         </item>
@@ -33,7 +27,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=planned&portal_type=Check Payment&simulation_assigned=1&reset=1
+Base_viewWorklist?simulation_state=rejected&portal_type=Check Payment&reset=1
 
 ]]></string> </value>
         </item>
@@ -104,18 +98,10 @@ Base_viewWorklist?simulation_state=planned&portal_type=Check Payment&simulation_
                     </value>
                 </item>
                 <item>
-                    <key> <string>simulation_assigned</string> </key>
-                    <value>
-                      <tuple>
-                        <string>1</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>draft</string>
+                        <string>rejected</string>
                       </tuple>
                     </value>
                 </item>

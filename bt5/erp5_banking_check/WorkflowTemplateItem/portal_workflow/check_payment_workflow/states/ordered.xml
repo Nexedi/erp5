@@ -16,12 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>Documents in this state need the agreement of the Account manager because of potentially negative balance</string> </value>
         </item>
@@ -47,6 +41,8 @@
                 <string>cancel</string>
                 <string>cancel_action</string>
                 <string>confirm</string>
+                <string>reject</string>
+                <string>reject_action</string>
               </tuple>
             </value>
         </item>

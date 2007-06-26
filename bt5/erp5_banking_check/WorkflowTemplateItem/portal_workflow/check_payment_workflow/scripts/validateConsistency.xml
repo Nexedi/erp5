@@ -102,9 +102,7 @@ current_date = DateTime().Date()\n
 document_date = DateTime(date).Date()\n
 # transaction.log("check_payment_workflow/scripts/validateConsistency", "date = %s, current_date = %s, document_date = %s, site = %s" %(date, current_date, document_date, site))\n
 if not document_date > current_date:\n
-  if not  transaction.Baobab_checkCounterDateOpen(site=site, date=date):\n
-    msg = Message(domain=\'ui\', message = \'Cannot validate document because of closed counter date\')\n
-    raise ValidationFailed, (msg,) \n
+  transaction.Baobab_checkCounterDateOpen(site=site, date=date)\n
 \n
 \n
 # Check the amount.\n
@@ -153,12 +151,6 @@ context.updateBankingOperation(state_change)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

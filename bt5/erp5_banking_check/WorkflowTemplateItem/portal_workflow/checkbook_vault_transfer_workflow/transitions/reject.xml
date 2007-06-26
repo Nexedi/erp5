@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>rejected</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -67,11 +67,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

@@ -76,9 +76,7 @@ if source is None:\n
   raise ValidationFailed, (msg,)\n
 \n
 # check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
-  msg = Message(domain = "ui", message="Counter Date is not opened")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
 \n
 site = transaction.getSourceValue()\n
 \n
@@ -130,12 +128,6 @@ elif error[\'error_code\'] != 0:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

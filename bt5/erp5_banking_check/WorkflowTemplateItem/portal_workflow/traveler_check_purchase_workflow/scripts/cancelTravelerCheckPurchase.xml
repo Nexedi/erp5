@@ -65,77 +65,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
+            <value> <string># Make sure to put back checks in the confirm state\n
 transaction = state_change[\'object\']\n
 \n
-date = transaction.getStartDate()\n
-source = transaction.getSource(None)\n
-if source is None:\n
-  msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
-  raise ValidationFailed, (msg,)\n
+line_list = transaction.getMovementList()\n
 \n
-# check we don\'t change of user\n
-transaction.Baobab_checkSameUserVault(source)\n
-\n
-# check we are in an opened accounting day\n
-transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
-\n
-site = transaction.getSourceValue()\n
-\n
-if \'guichet\' in site.getVaultType():\n
-  if not context.Baobab_checkCounterOpened(site):\n
-    msg = Message(domain = "ui", message="Counter is not opened")\n
-    raise ValidationFailed, (msg,)\n
-\n
-# First we have to look if we have some checks with some prices,\n
-# if so, this means that we are saling such kinds of check, thus\n
-# we must change the position of the customer account\n
-movement_list = transaction.getMovementList()\n
-total_credit = 0\n
-for movement in movement_list:\n
-  aggregate_value_list = movement.getAggregateValueList()\n
-  for item in aggregate_value_list:\n
-    if item.getPortalType()==\'Check\':\n
-      if item.getSimulationState()!=\'confirmed\':\n
-        msg = Message(domain = "ui", message="Sorry, one traveler check was not sale yet")\n
-        raise ValidationFailed, (msg,)\n
-      if item.getPrice() is not None:\n
-        # then we must calculate the exchange value at the\n
-        # time where the item was first delivered\n
-        category_list = movement.getCategoryList()\n
-        base_price = transaction.CurrencyExchange_getExchangeRateList(\n
-                                    from_currency=item.getPriceCurrency(),\n
-                                    to_currency=\'currency_module/%s\' % context.Baobab_getPortalReferenceCurrencyID(),\n
-                                    currency_exchange_type=\'transfer\',\n
-                                    start_date=item.getStartDate())[0]\n
-        if base_price is None:\n
-          msg = Message(domain = "ui", message="Sorry, no valid price was found for this currency")\n
-          raise ValidationFailed, (msg,)\n
-        total_credit += base_price*item.getPrice()\n
-      else:\n
-        msg = Message(domain = "ui", message="Sorry, the price was not defined on some traveler checks")\n
-        raise ValidationFailed, (msg,)\n
-\n
-if total_credit>0:\n
-  total_credit = round(total_credit,0)\n
-  # Source and destination will be updated automaticaly based on the category of bank account\n
-  # The default account chosen should act as some kind of *temp* account or *parent* account\n
-  movement = transaction.get(\'movement\',None)\n
-  if movement is None:\n
-    movement = transaction.newContent(portal_type=\'Banking Operation Line\',\n
-                           id=\'movement\',\n
-                           source=\'account_module/bank_account\', # Set default source\n
-                           destination=\'account_module/bank_account\', # Set default destination\n
-                           )\n
-  movement.setSourceCredit(total_credit)\n
-  transaction.setSourceTotalAssetPrice(total_credit)\n
-
-
-]]></string> </value>
+for line in line_list:\n
+  aggregate_list = line.getAggregateValueList()\n
+  for aggregate in aggregate_list:\n
+    if aggregate.getPortalType()==\'Check\':\n
+      # Make sure it is not possible to take this\n
+      # check again\n
+      aggregate.unarchive()\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -179,29 +121,14 @@ if total_credit>0:\n
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>date</string>
-                            <string>None</string>
-                            <string>source</string>
-                            <string>msg</string>
-                            <string>site</string>
-                            <string>context</string>
-                            <string>movement_list</string>
-                            <string>total_credit</string>
+                            <string>line_list</string>
                             <string>_getiter_</string>
-                            <string>movement</string>
-                            <string>aggregate_value_list</string>
-                            <string>item</string>
-                            <string>category_list</string>
-                            <string>base_price</string>
-                            <string>_inplacevar_</string>
-                            <string>round</string>
+                            <string>line</string>
+                            <string>aggregate_list</string>
+                            <string>aggregate</string>
                           </tuple>
                         </value>
                     </item>
@@ -218,7 +145,7 @@ if total_credit>0:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validatePositionAccounting</string> </value>
+            <value> <string>cancelTravelerCheckPurchase</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

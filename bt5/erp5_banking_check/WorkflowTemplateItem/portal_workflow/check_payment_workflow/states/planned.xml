@@ -16,12 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>Documents in this state have been confirmed to emanate from the right agent (signature) and contain consistent information</string> </value>
         </item>
@@ -49,6 +43,8 @@
                 <string>confirm_action</string>
                 <string>order</string>
                 <string>order_action</string>
+                <string>reject</string>
+                <string>reject_action</string>
               </tuple>
             </value>
         </item>

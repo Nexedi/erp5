@@ -85,6 +85,9 @@ total_debit = 0\n
 for movement in movement_list:\n
   aggregate_value_list = movement.getAggregateValueList()\n
   for item in aggregate_value_list:\n
+    if item.getSimulationState()!=\'draft\':\n
+      msg = Message(domain = "ui", message="Sorry, one traveler check was already saled")\n
+      raise ValidationFailed, (msg,)\n
     if item.getPortalType()==\'Check\':\n
       if item.getPrice() is not None:\n
         # then we must calculate the exchange value\n
@@ -157,9 +160,7 @@ if source is None:\n
   raise ValidationFailed, (msg,)\n
 \n
 # check we are in an opened accounting day\n
-if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
-  msg = Message(domain = "ui", message="Counter Date is not opened")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
 \n
 site = transaction.getSourceValue()\n
 \n
@@ -231,6 +232,7 @@ if \'guichet\' in site.getVaultType():\n
                             <string>category_list</string>
                             <string>context</string>
                             <string>base_price</string>
+                            <string>_inplacevar_</string>
                             <string>round</string>
                             <string>line</string>
                             <string>bank_account</string>

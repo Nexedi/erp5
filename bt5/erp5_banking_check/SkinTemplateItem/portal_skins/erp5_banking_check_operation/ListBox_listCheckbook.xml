@@ -74,6 +74,7 @@ item_portal_type_list = ["Checkbook","Check"]\n
 node = context.getBaobabSource()\n
 #item_portal_type_list = request.get(\'item_portal_type_list\', ["Checkbook","Check"])\n
 #node = request.get(\'node\', request.get(\'vault\', context.getBaobabSource()))\n
+destination_payment = request.get(\'destination_payment\', None)\n
 reference_date = DateTime()\n
 item_list = []\n
 listbox = []\n
@@ -83,24 +84,70 @@ getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
 current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
                            at_date=reference_date, node=node,\n
                            where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
+\n
+context_portal_type = context.getPortalType()\n
+simulation_state = None\n
+model_filter_dict = {}\n
+disable_node = 0\n
+if context_portal_type == \'Traveler Check Purchase\':\n
+  model_filter_dict[\'fixed_price\']=1\n
+  item_portal_type_list = (\'Check\',)\n
+  destination_payment = context.getDestinationPayment()\n
+  disable_node = 1\n
+elif context_portal_type == \'Traveler Check Sale\':\n
+  model_filter_dict[\'fixed_price\']=1\n
+  item_portal_type_list = (\'Check\',)\n
+elif context_portal_type == \'Checkbook Movement\':\n
+  # Nothing special here\n
+  pass\n
+elif context_portal_type == \'Checkbook Usual Cash Transfer\':\n
+  model_filter_dict[\'fixed_price\']=1\n
+  item_portal_type_list = (\'Check\',)\n
+\n
+\n
+\n
+context.log(\'current_tracking_list\',current_tracking_list)\n
+context.log(\'context_portal_type\',context_portal_type)\n
+context.log(\'item_portal_type_list\',item_portal_type_list)\n
 for item in current_tracking_list:\n
-  item_portal_type = item.getPortalType()\n
-  if item_portal_type in item_portal_type_list:\n
-    item_dict = {}\n
-    if item_portal_type==\'Check\':\n
-      if item.getSimulationState() not in invalid_check_state_list:\n
+  exclude=0\n
+  if model_filter_dict is not None:\n
+    resource = item.getResourceValue()\n
+    for property,value in model_filter_dict.items():\n
+      if resource.getProperty(property)!=value:\n
+        exclude=1\n
+  if destination_payment is not None:\n
+    if destination_payment!=item.getDestinationPayment():\n
+      exclude=1\n
+  context.log(\'exclude\',exclude)\n
+  if not exclude:\n
+    item_portal_type = item.getPortalType()\n
+    context.log(\'item_portal_type\',item_portal_type)\n
+    if item_portal_type  in item_portal_type_list:\n
+      if item_portal_type==\'Check\' and item.getSimulationState() not in (\'draft\',\'confirmed\'):\n
         continue\n
-      item_dict[\'reference_range_max\'] = item.getReference()\n
-      item_dict[\'reference_range_min\'] = item.getReference()\n
-    else:\n
-      item_dict[\'reference_range_min\'] = item.getReferenceRangeMin()\n
-      item_dict[\'reference_range_max\'] = item.getReferenceRangeMax()\n
-    item_dict[\'resource_title\'] = item.getResourceTitle()\n
-    item_dict[\'destination_trade\'] = item.getDestinationTradeTitle()\n
-    item_dict[\'check_amount_title\'] = item.getCheckAmountTitle()\n
-    item_dict[\'selection\'] = 0\n
-    item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
-    listbox.append(item_dict)\n
+      context.log(\'simulation_state\',simulation_state)\n
+      if simulation_state is not None:\n
+        context.log(\'item\',item.getRelativeUrl())\n
+        context.log(\'item.getSimulationState\',item.getSimulationState())\n
+        context.log(\'item.getReferenceRangeMin\',item.getReference())\n
+        if item.getSimulationState()!=simulation_state:\n
+          continue\n
+      item_dict = {}\n
+      if item_portal_type==\'Check\':\n
+        item_dict[\'reference_range_max\'] = item.getReference()\n
+        item_dict[\'reference_range_min\'] = item.getReference()\n
+      else:\n
+        item_dict[\'reference_range_min\'] = item.getReferenceRangeMin()\n
+        item_dict[\'reference_range_max\'] = item.getReferenceRangeMax()\n
+      item_dict[\'resource_title\'] = item.getResourceTitle()\n
+      item_dict[\'destination_trade\'] = item.getDestinationTradeTitle()\n
+      item_dict[\'check_amount_title\'] = item.getCheckAmountTitle()\n
+      item_dict[\'selection\'] = 0\n
+      item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
+\n
+      listbox.append(item_dict)\n
+\n
 \n
 context.Base_updateDialogForm(listbox=listbox)\n
 return context.ListBox_initializeFastInput()\n
@@ -160,6 +207,8 @@ return context.ListBox_initializeFastInput()\n
                             <string>request</string>
                             <string>item_portal_type_list</string>
                             <string>node</string>
+                            <string>None</string>
+                            <string>destination_payment</string>
                             <string>reference_date</string>
                             <string>item_list</string>
                             <string>listbox</string>
@@ -170,10 +219,18 @@ return context.ListBox_initializeFastInput()\n
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>current_tracking_list</string>
+                            <string>context_portal_type</string>
+                            <string>simulation_state</string>
+                            <string>model_filter_dict</string>
+                            <string>disable_node</string>
+                            <string>_write_</string>
                             <string>item</string>
+                            <string>exclude</string>
+                            <string>resource</string>
+                            <string>property</string>
+                            <string>value</string>
                             <string>item_portal_type</string>
                             <string>item_dict</string>
-                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>

@@ -91,9 +91,7 @@ source = baobab_source\n
 source_object = context.portal_categories.getCategoryValue(source)\n
 \n
 # check again that we are in the good accounting date\n
-if not transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate()):\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
+transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate())\n
 \n
 resource = transaction.CashDelivery_checkCounterInventory(source = source, portal_type=\'Cash Delivery Line\', same_source=1)\n
 #transaction.log("call to CashDelivery_getCounterInventory return", resource)\n
@@ -124,12 +122,6 @@ elif resource == 1:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
