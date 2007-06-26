@@ -1031,7 +1031,7 @@ class Subscription(Folder, SyncCode):
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
         return o
-    LOG('getObjectFromGid',0,'returning None')
+    #LOG('getObjectFromGid',0,'returning None')
     return None
 
   def getObjectFromId(self, id):
