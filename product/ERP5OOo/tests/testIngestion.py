@@ -871,7 +871,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     self.failUnless(hasattr(self.portal, 'portal_mailin'))
     f = open(makeFilePath('email_from.txt'))
-    res = self.portal.portal_mailin.postMailMessage(f.read())
+    res = self.portal.portal_mailin.postUTF8MailMessage(f.read())
     # we check if the mailin returned anything - it should return a message saying that the recipient does not exist
     # the exact wording may differ
     # the way mailin works is that if mail was accepted it returns None
