@@ -221,14 +221,14 @@ class PublicationSynchronization(XMLSyncUtils):
     return {'has_response':1,'xml':xml_a}
 
 
-  def PubSync(self, id, msg=None, RESPONSE=None, subscriber=None):
+  def PubSync(self, publication, msg=None, RESPONSE=None, subscriber=None):
     """
       This is the synchronization method for the server
     """
     #LOG('PubSync',0,'Starting... id: %s' % str(id))
     # Read the request from the client
     xml_client = msg
-    publication = self.getPublication(id)
+    publication
     if xml_client is None:
       xml_client = self.readResponse(from_url=publication.getPublicationUrl())
     #LOG('PubSync',0,'Starting... msg: %s' % str(xml_client))
