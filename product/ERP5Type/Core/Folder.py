@@ -577,9 +577,18 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
     if self.isIndexable:
       if activate_kw is None:
         activate_kw = {}
+
+      group_id_list  = []
+      if kw.get("group_id", "") not in ('', None):
+        group_id_list.append(kw.get("group_id", ""))
+      if kw.get("sql_catalog_id", "") not in ('', None):
+        group_id_list.append(kw.get("sql_catalog_id", ""))
+      group_id = ' '.join(group_id_list)
+
       self.activate(group_method_id='portal_catalog/catalogObjectList',
                     expand_method_id='getIndexableChildValueList',
                     alternate_method_id='alternateReindexObject',
+                    group_id=group_id,
                     **activate_kw).recursiveImmediateReindexObject(**kw)
 
   security.declareProtected( Permissions.AccessContentsInformation,
