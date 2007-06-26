@@ -130,8 +130,8 @@ except Exception, e:\n
                                  \'ingestion_failure\', \n
                                  context, \n
                                  original_email = theMail)\n
-  context.log(\'[DMS] Failure (%s) email ingestion for %s <%s> (%s)\' \n
-                                                 %(e, person.getTitle(), sender_email, file_name))\n
+  context.log(\'[DMS] Failure (%s) email ingestion for %s <%s>\' \n
+                                                 %(e, person.getTitle(), sender_email))\n
   raise Exception, e\n
 
 
