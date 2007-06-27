@@ -361,30 +361,6 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.usual_cash_rendering.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
 
-  def stepTryConfirmUsualCashRenderingWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Try to confirm the usual_cash_rendering with a bad usual_cash_rendering line and
-    check the try of confirm the usual_cash_rendering with the invalid line has failed
-    """
-    # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
-    self.usual_cash_rendering.setSourceTotalAssetPrice('172400.0')
-    # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.usual_cash_rendering, 'confirm_action', wf_id='usual_cash_rendering_workflow')
-    # execute tic
-    self.stepTic()
-    # get state of the usual_cash_rendering
-    state = self.usual_cash_rendering.getSimulationState()
-    # check the state is draft
-    self.assertEqual(state, 'draft')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.usual_cash_rendering, name='history', wf_id='usual_cash_rendering_workflow')
-    # check its len is 2
-    self.assertEqual(len(workflow_history), 2)
-    # check we get an "Insufficient balance" message in the workflow history because of the invalid line
-    msg = workflow_history[-1]['error_message']
-    self.assertTrue('Insufficient balance' in "%s" %(msg,))
-
-
   def stepTryPlanUsualCashRenderingWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Try to plan the usual_cash_rendering with a bad usual_cash_rendering line and
