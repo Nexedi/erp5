@@ -36,6 +36,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
+from DateTime import DateTime
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -697,7 +698,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # fix amount (10000 * 5.0 + 200 * 12.0)
     self.monetary_destruction.setSourceTotalAssetPrice('170000.0')
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.monetary_destruction, 'confirm_action', wf_id='monetary_destruction_workflow')
+    self.workflow_tool.doActionFor(self.monetary_destruction, 'confirm_action', wf_id='monetary_destruction_workflow', stop_date=DateTime())
     # execute tic
     self.stepTic()
     # get state
