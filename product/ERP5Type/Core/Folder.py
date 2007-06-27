@@ -276,7 +276,7 @@ class FolderMixIn(ExtensionClass.Base):
     if delete_parent_uid:
       del kw['parent_uid']
 
-    kw2 = {}
+    #kw2 = {}
     # Remove useless matter before calling the
     # catalog. In particular, consider empty
     # strings as None values
@@ -286,7 +286,7 @@ class FolderMixIn(ExtensionClass.Base):
     # The method to call to search the folder
     # content has to be called z_search_folder
     method = self.portal_catalog.countResults
-    return method(**kw2)
+    return method(**kw)
 
   # Count objects in the folder
   security.declarePrivate('_count')
