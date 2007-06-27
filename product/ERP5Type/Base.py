@@ -27,6 +27,7 @@
 ##############################################################################
 
 from struct import unpack
+from copy import copy
 import warnings
 
 from Globals import InitializeClass, DTMLFile
@@ -465,8 +466,8 @@ class Base( CopyContainer,
     return Base.inheritedAttribute('manage_historyCompare')(
           self, rev1, rev2, REQUEST,
           historyComparisonResults=OFS.History.html_diff(
-              pformat(rev1.showDict()),
-              pformat(rev2.showDict())))
+              pformat(rev1.__dict__),
+              pformat(rev2.__dict__)))
 
   def _aq_dynamic(self, id):
     ptype = self.portal_type
@@ -1411,7 +1412,7 @@ class Base( CopyContainer,
       Returns the dictionnary of the object
       Only for debugging
     """
-    return self.__dict__
+    return copy(self.__dict__)
 
   security.declareProtected( Permissions.ManagePortal, 'showPermissions' )
   def showPermissions(self, all=1):
