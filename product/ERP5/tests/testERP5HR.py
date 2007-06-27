@@ -50,6 +50,9 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 class TestHR(ERP5TypeTestCase):
   """
     ERP5 Human Ressources related tests. 
+
+  XXX actually this test suite tests person and organisation subcontent,
+  properties and acquisition, but not really HR.
   """
 
   # pseudo constants
@@ -803,6 +806,7 @@ class TestHR(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  # Dates
   def test_05_DatesOnPerson(self, quiet=QUIET, run=RUN_ALL_TEST):
     """Tests dates on Person objects.
     """
@@ -831,6 +835,38 @@ class TestHR(ERP5TypeTestCase):
       self.assertEquals(getattr(now, slot)(),
                         getattr(org.getCreationDate(), slot)(),
                         'Wrong creation date %s' % org.getCreationDate())
+
+
+  def test_TelephoneAsText(self):
+    # Test asText method
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    tel = pers.newContent(portal_type='Telephone')
+    tel.setTelephoneCountry(33)
+    tel.setTelephoneNumber(123456789)
+    self.assertEquals('+33(0)-123456789', tel.asText())
+
+## TODO: Telephone must be a subclass of Url
+##
+##  def test_TelephoneUrl(self):
+##    # http://www.rfc-editor.org/rfc/rfc3966.txt
+##    pers = self.getPersonModule().newContent(portal_type='Person')
+##    tel = pers.newContent(portal_type='Telephone')
+##    tel.setTelephoneCountry(33)
+##    tel.setTelephoneNumber(123456789)
+##    self.assertEquals('tel:+33-123456789', tel.asURL())
+##
+
+  def test_EmptyTelephoneAsText(self):
+    # asText method returns an empty string for empty telephones
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    self.assertEquals('', pers.newContent(portal_type='Telephone').asText())
+
+
+  def test_EmptyFaxAsText(self):
+    # asText method returns an empty string for empty faxes
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    self.assertEquals('', pers.newContent(portal_type='Fax').asText())
+
 
 if __name__ == '__main__':
   framework()
