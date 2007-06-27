@@ -701,7 +701,7 @@ fieldset.bottom .field .input {\n
   border: 1px solid #F00;\n
 }\n
 \n
-.content .field .invisible label {\n
+.content .invisible label {\n
   display: None;\n
 }\n
 \n
@@ -1121,7 +1121,8 @@ fieldset.bottom .field .input {\n
 \n
 .document div.page div {\n
   color: black;\n
-}
+}\n
+
 
 ]]></string> </value>
         </item>
