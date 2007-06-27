@@ -153,6 +153,11 @@ if not selection_params.get(\'no_mirror_section_uid_cache\', 0):\n
   if payment_uid:\n
     params[\'payment_uid\'] = payment_uid\n
 \n
+# Detailed Beginning Balance, from Account Statement \n
+detailed_from_date_summary = selection_params.get(\'detailed_from_date_summary\', None)\n
+if detailed_from_date_summary is not None:\n
+  params[\'detailed_from_date_summary\'] = detailed_from_date_summary\n
+\n
 simulation_state = selection_params.get(\'simulation_state\',\n
              preference.getPreferredAccountingTransactionSimulationStateList())\n
 if simulation_state:\n
@@ -234,6 +239,7 @@ return dict(params)\n
                             <string>precision</string>
                             <string>mirror_section_uid</string>
                             <string>payment_uid</string>
+                            <string>detailed_from_date_summary</string>
                             <string>simulation_state</string>
                             <string>portal_type</string>
                             <string>parent_portal_type</string>

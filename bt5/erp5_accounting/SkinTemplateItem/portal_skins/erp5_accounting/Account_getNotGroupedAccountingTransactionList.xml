@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import Object\n
+from Products.ERP5Type.Document import newTempBase\n
+from Products.ERP5Type.Message import Message\n
+portal = context.getPortalObject()\n
+getObject = portal.portal_catalog.getObject\n
+params = portal.ERP5Accounting_getParams(selection_name)\n
+N_ = lambda msg: Message(\'erp5_ui\', msg)\n
+\n
+mirror_section_relative_url = None\n
+if kw.get(\'mirror_section_uid\'):\n
+  mirror_section_relative_url =\\\n
+        getObject(kw[\'mirror_section_uid\']).getRelativeUrl()\n
+\n
+payment_uid = kw.get(\'payment_uid\', None)\n
+\n
+portal_type_filter = 0\n
+if \'parent_portal_type\' in params:\n
+  portal_type_filter = 1\n
+  portal_type_list = params[\'parent_portal_type\']\n
+\n
+total_debit = 0\n
+total_credit = 0\n
+\n
+line_list = []\n
+for brain in portal.Base_zGetNotGroupedMovementList(\n
+                                at_date=from_date,\n
+                                simulation_state=params[\'simulation_state\'],\n
+                                # XXX this adds a need for account\n
+                                # ie. impossible to produce this report only\n
+                                # for a mirror section and any nodes\n
+                                node_uid=kw[\'node_uid\'],\n
+                                # XXX must be a list in current Z SQL Method\n
+                                section_uid=params[\'section_uid\']):\n
+    \n
+    # manually filter out not interesting lines\n
+    # XXX this is because Base_zGetNotGroupedMovementList is really\n
+    # minimalistic\n
+    if mirror_section_relative_url and \\\n
+        brain.mirror_section_relative_url != mirror_section_relative_url:\n
+      continue\n
+\n
+    mvt = brain.getObject()\n
+    transaction = mvt.getParentValue()\n
+    \n
+    if portal_type_filter and \\\n
+          transaction.getPortalType() not in portal_type_list:\n
+      continue\n
+    \n
+    if transaction.AccountingTransaction_isSourceView():\n
+      if payment_uid and transaction.getSourcePaymentUid() == payment_uid:\n
+        continue\n
+      specific_reference = transaction.getSourceReference()\n
+      mirror_section_title = transaction.getDestinationSectionTitle()\n
+    else:\n
+      if payment_uid and transaction.getDestinationPaymentUid() == payment_uid:\n
+        continue\n
+      specific_reference = transaction.getDestinationReference()\n
+      mirror_section_title = transaction.getSourceSectionTitle()\n
+    \n
+\n
+    debit = max(-brain.total_price, 0)\n
+    total_debit += debit\n
+    credit = max(brain.total_price, 0)\n
+    total_credit += credit\n
+\n
+    line_list.append(\n
+          Object(uid=\'new_000\',\n
+                 total_price=brain.total_price,\n
+                 date=brain.date,\n
+                 Movement_getSpecificReference=specific_reference,\n
+                 Movement_getMirrorSectionTitle=mirror_section_title,\n
+                 debit=debit,\n
+                 credit=credit,\n
+                 Movement_getExplanationTitle=\n
+                            mvt.getTitle() or transaction.getTitle()))\n
+\n
+context.REQUEST.set(\n
+  \'Account_statNotGroupedAccountingTransactionList.total_debit\', total_debit)\n
+context.REQUEST.set(\n
+  \'Account_statNotGroupedAccountingTransactionList.total_credit\', total_credit)\n
+return line_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>6</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>sort_on</string>
+                            <string>node_category</string>
+                            <string>node_category_strict_membership</string>
+                            <string>from_date</string>
+                            <string>selection_name</string>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>getObject</string>
+                            <string>params</string>
+                            <string>N_</string>
+                            <string>None</string>
+                            <string>mirror_section_relative_url</string>
+                            <string>_getitem_</string>
+                            <string>payment_uid</string>
+                            <string>portal_type_filter</string>
+                            <string>portal_type_list</string>
+                            <string>total_debit</string>
+                            <string>total_credit</string>
+                            <string>line_list</string>
+                            <string>_getiter_</string>
+                            <string>brain</string>
+                            <string>mvt</string>
+                            <string>transaction</string>
+                            <string>specific_reference</string>
+                            <string>mirror_section_title</string>
+                            <string>max</string>
+                            <string>debit</string>
+                            <string>credit</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <list/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Account_getNotGroupedAccountingTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

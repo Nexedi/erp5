@@ -76,8 +76,10 @@ Account is the combination of :\n
 """\n
 \n
 from Products.ERP5Form.Report import ReportSection\n
+from Products.ERP5Type.Message import Message\n
 request = context.REQUEST\n
 traverse = context.getPortalObject().restrictedTraverse\n
+N_ = lambda msg: Message(\'ui\', msg)\n
 \n
 # for preference info fields on Account_viewAccountingTransactionList\n
 request.set(\'is_accounting_report\', True)\n
@@ -92,6 +94,7 @@ mirror_section = request.get(\'mirror_section\', None)\n
 payment = request.get(\'payment\', None)\n
 simulation_state = request[\'simulation_state\']\n
 from_date = request.get(\'from_date\', None)\n
+detailed_from_date_summary = request.get(\'detailed_from_date_summary\', 0)\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
 parent_portal_type = request.get(\'portal_type\')\n
 period_start_date = context\\\n
@@ -109,7 +112,9 @@ params = dict(at_date=at_date,\n
               period_start_date=period_start_date,\n
               section_uid=section_uid,\n
               node_uid=traverse(node).getUid(),\n
-              simulation_state=simulation_state, )\n
+              simulation_state=simulation_state,\n
+              detailed_from_date_summary=detailed_from_date_summary)\n
+\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
 if payment:\n
@@ -130,7 +135,30 @@ selection_columns = [\n
     (\'credit\', \'Credit\'),\n
     (\'running_total_price\', \'Net\'),]\n
 \n
-return [ ReportSection(\n
+report_section_list = []\n
+if from_date and detailed_from_date_summary:\n
+  report_section_list.append(\n
+    ReportSection(form_id=\'\', level=4,\n
+                  title=N_(\'Not Grouped Lines in Beginning Balance\')))\n
+\n
+  report_section_list.append(\n
+    ReportSection(\n
+            path=node,\n
+            form_id=\'Account_viewNotGroupedAccountingTransactionList\',\n
+            selection_name=\'account_preference_selection\',\n
+            selection_params=params,\n
+            selection_columns=selection_columns,\n
+            listbox_display_mode=\'FlatListMode\',\n
+            selection_sort_order=[\n
+                        (\'stock.date\', \'ascending\'),\n
+                        (\'stock.uid\', \'ascending\')],))\n
+\n
+  report_section_list.append(\n
+    ReportSection(form_id=None, level=4,\n
+                  title=N_(\'Lines in the Period\')))\n
+\n
+report_section_list.append(\n
+    ReportSection(\n
             path=node,\n
             form_id=\'Account_viewAccountingTransactionList\',\n
             selection_name=\'account_preference_selection\',\n
@@ -139,9 +167,9 @@ return [ ReportSection(\n
             listbox_display_mode=\'FlatListMode\',\n
             selection_sort_order=[\n
                         (\'stock.date\', \'ascending\'),\n
-                        (\'stock.uid\', \'ascending\')],) ]\n
+                        (\'stock.uid\', \'ascending\')],))\n
 \n
-# vim: syntax=python\n
+return report_section_list\n
 </string> </value>
         </item>
         <item>
@@ -186,10 +214,13 @@ return [ ReportSection(\n
                           <tuple>
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
                             <string>traverse</string>
+                            <string>N_</string>
                             <string>True</string>
                             <string>_getitem_</string>
                             <string>at_date</string>
@@ -200,6 +231,7 @@ return [ ReportSection(\n
                             <string>payment</string>
                             <string>simulation_state</string>
                             <string>from_date</string>
+                            <string>detailed_from_date_summary</string>
                             <string>omit_grouping_reference</string>
                             <string>parent_portal_type</string>
                             <string>period_start_date</string>
@@ -209,6 +241,7 @@ return [ ReportSection(\n
                             <string>params</string>
                             <string>_write_</string>
                             <string>selection_columns</string>
+                            <string>report_section_list</string>
                           </tuple>
                         </value>
                     </item>
