@@ -157,7 +157,32 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
+  def stepDoInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create inventory for outgoing line
+    """
+    inventory_dict_line_1 = {'id' : 'inventory_line_1',
+                             'resource': self.piece_200,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+                             'quantity': self.quantity_200}
+    self.line_list = line_list = [inventory_dict_line_1,]
+    self.createCashInventory(source=None, destination=self.counter, currency=self.currency_1,
+                             line_list=line_list)
 
+  def stepCheckInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check we have 5 banknotes of 10000 in usual_cash
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we have 12 coin of 200 in usual_cash
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+
+  
   def stepCreateCashIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a cash transfer document and check it
@@ -431,13 +456,14 @@ class TestERP5BankingCashIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     # Try deliver with no stock and outgoing line
     sequence_string = 'DeleteCashIncident Tic CheckObjects Tic CheckInitialInventory ' \
-                    + 'CreateCashIncident ' \
-                    + 'CreateOutgoingLine ' \
-                    + 'Tic ' \
-                    + 'Tic SetOutgoingSourceTotalAssetPrice ' \
-                    + 'ConfirmCashIncident ' \
-                    + 'Tic ' \
-                    + 'DeliverCashIncident ' 
+                      + 'DoInventory Tic CheckInventory ' \
+                      + 'CreateCashIncident ' \
+                      + 'CreateOutgoingLine ' \
+                      + 'Tic ' \
+                      + 'Tic SetOutgoingSourceTotalAssetPrice ' \
+                      + 'ConfirmCashIncident ' \
+                      + 'Tic ' \
+                      + 'DeliverCashIncident ' 
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
