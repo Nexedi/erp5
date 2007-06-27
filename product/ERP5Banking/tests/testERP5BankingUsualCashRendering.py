@@ -427,26 +427,6 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.usual_cash_rendering.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
 
 
-  def stepConfirmUsualCashRendering(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Confirm the usual_cash_rendering and check it
-    """
-    # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.usual_cash_rendering.setSourceTotalAssetPrice('52400.0')
-    # do the Workflow action
-    self.workflow_tool.doActionFor(self.usual_cash_rendering, 'confirm_action', wf_id='usual_cash_rendering_workflow')
-    # execute tic
-    self.stepTic()
-    # get state
-    state = self.usual_cash_rendering.getSimulationState()
-    # check state is confirmed
-    self.assertEqual(state, 'confirmed')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.usual_cash_rendering, name='history', wf_id='usual_cash_rendering_workflow')
-    # check len of workflow history is 8
-    self.assertEqual(len(workflow_history), 8)
-
-
   def stepPlanUsualCashRendering(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the usual_cash_rendering and check it
@@ -630,7 +610,6 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'OrderUsualCashRendering ' \
-                    + 'ConfirmUsualCashRendering ' \
                     + 'ResetSourceInventory Tic ' \
                     + 'DeliverUsualCashRenderingFails Tic ' \
                     + 'DeleteResetInventory Tic ' \
