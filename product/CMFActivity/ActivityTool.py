@@ -704,6 +704,8 @@ class ActivityTool (Folder, UniqueObject):
                   activity_kw = m.activity_kw.copy()
                   if 'group_method_id' in activity_kw:
                     del activity_kw['group_method_id']
+                  if 'group_id' in activity_kw:
+                    del activity_kw['group_id']                    
                   active_obj = subobj.activate(**activity_kw)
                   getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
                 else:
