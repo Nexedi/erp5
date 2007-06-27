@@ -568,7 +568,6 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'OrderMoneyDepositRendering ' \
                     + 'Tic CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
-                    + 'ConfirmMoneyDepositRendering ' \
                     + 'ResetInventory Tic ' \
                     + 'DeliverFails Tic ' \
                     + 'DeleteResetInventory Tic ' \
