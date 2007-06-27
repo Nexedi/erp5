@@ -890,8 +890,8 @@ class XMLSyncUtilsMixin(SyncCode):
             syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object, 
                 gid=gid, xml_string=xml_string, 
                 more_data=more_data, media_type=subscriber.getMediaType())
-        else:
-          break
+      else:
+        break
     return (syncml_data,xml_confirmation,cmd_id)
 
   def applyActionList(self, domain=None, subscriber=None,destination_path=None,
