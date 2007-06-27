@@ -148,7 +148,9 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                                     reference='CHKNB1',
                                     resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
-
+    self.openCounterDate(site=self.testsite.paris)
+    self.openAccountingDate(site=self.testsite.paris)
+    
 
   def stepLogout(self, sequence=None, sequence_list=None, **kwd):
     self.logout()
@@ -274,8 +276,8 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Cancel the check deposit
     """
-    self.workflow_tool.doActionFor(self.check_deposit, 'cancel_action', wf_id='check_deposit_workflow')
-    self.assertEqual(self.check_deposit.getSimulationState(), 'cancelled')
+    self.workflow_tool.doActionFor(self.check_deposit, 'reject_action', wf_id='check_deposit_workflow')
+    self.assertEqual(self.check_deposit.getSimulationState(), 'draft')
 
   def stepCheckBankAccountInventoryAfterCheckDepositDelivered(self, sequence=None, sequence_list=None, **kw):
     """
