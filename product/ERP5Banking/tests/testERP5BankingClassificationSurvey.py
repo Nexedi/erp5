@@ -118,6 +118,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+    self.openCounterDate(site=self.testsite.paris)
 
 
 
