@@ -356,33 +356,6 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     # chect the total price
     self.assertEqual(self.money_deposit_rendering.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
-
-  def stepTryConfirmMoneyDepositRenderingWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Try to confirm the money deposit rendering with a bad money deposit rendering line and
-    check the try of confirm the money deposit rendering with the invalid line has failed
-    """
-    # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
-    self.money_deposit_rendering.setSourceTotalAssetPrice('172400.0')
-    # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.money_deposit_rendering, 'confirm_action', wf_id='money_deposit_rendering_workflow')
-    # execute tic
-    self.stepTic()
-    # get state of the money deposit rendering
-    state = self.money_deposit_rendering.getSimulationState()
-    # check the state is draft
-    self.assertEqual(state, 'draft')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.money_deposit_rendering, name='history', wf_id='money_deposit_rendering_workflow')
-    # check its len is 2
-    self.assertEqual(len(workflow_history), 4)
-    # check we get an "Insufficient balance" message in the workflow history because of the invalid line
-    msg = workflow_history[-1]['error_message']
-    self.assertTrue('Insufficient balance' in "%s" %(msg,))
-
-
-
-
   def stepTryOrderMoneyDepositRenderingWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Try to confirm the money deposit rendering with a bad money deposit rendering line and
@@ -423,26 +396,6 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     self.assertEqual(self.money_deposit_rendering.getTotalQuantity(), 5.0 + 12.0)
     # check the total price
     self.assertEqual(self.money_deposit_rendering.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
-
-
-  def stepConfirmMoneyDepositRendering(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Confirm the money deposit rendering and check it
-    """
-    # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.money_deposit_rendering.setSourceTotalAssetPrice('52400.0')
-    # do the Workflow action
-    self.workflow_tool.doActionFor(self.money_deposit_rendering, 'confirm_action', wf_id='money_deposit_rendering_workflow')
-    # execute tic
-    self.stepTic()
-    # get state
-    state = self.money_deposit_rendering.getSimulationState()
-    # check state is confirmed
-    self.assertEqual(state, 'confirmed')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.money_deposit_rendering, name='history', wf_id='money_deposit_rendering_workflow')
-    # check len of workflow history is 6
-    self.assertEqual(len(workflow_history), 6)
 
   def stepOrderMoneyDepositRendering(self, sequence=None, sequence_list=None, **kwd):
     """
