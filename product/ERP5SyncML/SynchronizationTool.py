@@ -52,6 +52,7 @@ from AccessControl.User import UnrestrictedUser
 from Acquisition import aq_base
 import urllib
 import urllib2
+import httplib
 import socket
 import os
 import string
@@ -60,6 +61,17 @@ import random
 from DateTime import DateTime
 from zLOG import LOG
 
+class TimeoutHTTPConnection(httplib.HTTPConnection):
+  """
+  Custom Classes to set timeOut on handle sockets
+  """
+  def connect(self):
+    httplib.HTTPConnection.connect(self)
+    self.sock.settimeout(3600)
+
+class TimeoutHTTPHandler(urllib2.HTTPHandler):
+  def http_open(self, req):
+    return self.do_open(TimeoutHTTPConnection, req)
 
 
 class SynchronizationTool( SubscriptionSynchronization, 
@@ -889,10 +901,9 @@ class SynchronizationTool( SubscriptionSynchronization,
     pass_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
     auth_handler = urllib2.HTTPBasicAuthHandler(pass_mgr)
     proxy_auth_handler = urllib2.ProxyBasicAuthHandler(pass_mgr)
-    opener = urllib2.build_opener(proxy_handler, proxy_auth_handler, 
-        auth_handler, urllib2.HTTPHandler)
+    opener = urllib2.build_opener(proxy_handler, proxy_auth_handler,
+        auth_handler, TimeoutHTTPHandler)
     urllib2.install_opener(opener)
-    socket.setdefaulttimeout(3660)
     to_encode = {}
     head = '<?xml version="1.0" encoding="UTF-8"?>'
     to_encode['text'] = head + xml
