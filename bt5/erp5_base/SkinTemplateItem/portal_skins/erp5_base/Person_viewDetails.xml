@@ -89,7 +89,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
                         <string>my_first_name</string>
                         <string>my_last_name</string>
