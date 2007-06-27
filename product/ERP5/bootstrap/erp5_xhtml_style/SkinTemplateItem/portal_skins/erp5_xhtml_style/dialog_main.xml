@@ -96,15 +96,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <tal:block metal:define-slot="bottom" />\n
         </div>\n
         <input i18n:attributes="value" i18n:domain="ui" value="Cancel Action"\n
-               tabindex="100" id="dialog_cancel_button" name="Base_cancel:method" type="submit" />\n
+               id="dialog_cancel_button" name="Base_cancel:method" type="submit" />\n
         <input i18n:attributes="value" i18n:domain="ui" value="Update"\n
                tal:condition="python: form.update_action!=\'\'"\n
-               tabindex="101" id="dialog_update_button"\n
+               id="dialog_update_button"\n
                name="Base_showUpdateDialog:method" type="submit" />\n
         <input tal:attributes="value python: here.Base_getFormViewDialogActionButtonTitle(form);\n
                                name string:${form_action}:method"\n
                i18n:attributes="value" i18n:domain="ui" accesskey="V"\n
-               tabindex="102" id="dialog_submit_button" type="submit" />\n
+               id="dialog_submit_button" type="submit" />\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
