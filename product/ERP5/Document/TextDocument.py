@@ -27,14 +27,13 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Document import Document
 from Products.ERP5Type.WebDAVSupport import TextContent
-
+from Products.CMFDefault.utils import isHTMLSafe
 import re
 
 DEFAULT_TEXT_FORMAT = 'text/html'
@@ -108,7 +107,15 @@ class TextDocument(Document, TextContent):
         kw.setdefault('text_format', format)
         kw.setdefault('text_content', text_content)
         del kw['file']
-      Document._edit(self, **kw)
+      # check if it's safe to save HTML content
+      # By default FCKEditor used to edit Web Pages wouldn't allow inserting
+      # HTML tags (will replace them accordingly) so this is the last possible 
+      # step where we can check if any other scripts wouldn't try to set manually
+      # bad HTML content.
+      if isHTMLSafe(kw['text_content']):
+        Document._edit(self, **kw)
+      else:
+        raise ValueError, "HTML contains illegal tags."
 
     security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
     edit = WorkflowMethod( _edit )
