@@ -190,7 +190,7 @@ class ReportSection:
   
   param_dict = {}
 
-  def __init__(self, path='', form_id='view',
+  def __init__(self, path='', form_id='',
                      title=None, translated_title=None, level=1,
                      selection_name=None, selection_params=None,
                      listbox_display_mode=None, selection_columns=None,
