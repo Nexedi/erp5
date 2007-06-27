@@ -1249,9 +1249,9 @@ class BasicStructure:
     select_expression = ''
 
     # now iterating through report_tree_list
-#     LOG('PlanningBox, build', 0, 'report_tree_list %s' % len(report_tree_list))
+    # LOG('PlanningBox, build', 0, 'report_tree_list %s' % len(report_tree_list))
     for object_tree_line in report_tree_list:
-#       LOG('PlanningBox, build', 0, 'object_tree_line %s' % str(object_tree_line))
+      # LOG('PlanningBox, build', 0, 'object_tree_line %s' % str(object_tree_line))
       # prepare query by defining selection report object
       # defining info_dict, holding all information about the current object.
       info_dict = None
@@ -1754,7 +1754,6 @@ class BasicGroup:
   *BasicGroup instance itself can hold other BasicGroups in case of
   ReportTree mode to handle child groups.
   """
-
   def __init__ (self, title='', name='',url='', constraints='', depth=0,
                 position=0, field = None, object = None, is_open=0,
                 is_pure_summary=1, secondary_axis_start=None,
@@ -1929,7 +1928,14 @@ class BasicGroup:
             stat_context.absolute_url = \
                          lambda x: activity_content.getObject().absolute_url()
             object = stat_context.getObject()
-            url = object.getUrl()
+            # Defining bloc url
+            if getattr(object, 'isMovement', 0) and \
+                              getattr(object, 'getExplanationValue', 0):
+              explanation = object.getExplanationValue()
+            else:
+                explanation = object
+            if explanation is not None:
+              url =  '%s/view' % (explanation.getUrl())
 
             # XXX should define height of block here
             height = None
@@ -1943,8 +1949,7 @@ class BasicGroup:
                                    color=current_color, info_dict=info,
                                    error=error,
                                    property_dict=self.property_dict)
-
-
+         
           # adding new activity to personal group activity list
           try:
             self.basic_activity_list.append(activity)
@@ -2022,7 +2027,14 @@ class BasicGroup:
           height = None
 
           # get object url, not group url
-          url = self.object.getObject().getUrl()
+          object = self.object.getObject()
+          if getattr(object, 'isMovement', 0) and \
+                            getattr(object, 'getExplanationValue', 0):
+            explanation = object.getExplanationValue()
+          else:
+              explanation = object
+          if explanation is not None:
+            url =  '%s/view' % (explanation.getUrl())
 
           # creating new activity instance
           activity=BasicActivity(title=info['info_center'], name=name,
@@ -2042,9 +2054,10 @@ class BasicGroup:
             self.basic_activity_list.append(activity)
 
 class BasicActivity:
-  """ Represents an activity, a task, in the group it belongs to. Beware
-      nothing about multitask rendering. """
-
+  """ 
+    Represents an activity, a task, in the group it belongs to. Beware
+    nothing about multitask rendering. 
+  """
   def __init__ (self, title='', name='',object = None, url='',
                 absolute_begin=None, absolute_end=None, absolute_start=None,
                 absolute_stop=None, height=None, constraints='', color=None,
