@@ -128,9 +128,9 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
       mirror_section_title = transaction.getSourceSectionTitle()\n
     \n
 \n
-    debit = max(-brain.total_price, 0)\n
+    debit = max(brain.total_price, 0)\n
     total_debit += debit\n
-    credit = max(brain.total_price, 0)\n
+    credit = max(-brain.total_price, 0)\n
     total_credit += credit\n
 \n
     line_list.append(\n
