@@ -1,18 +1,1 @@
 Immobilisation Template gives the ability to make accountable immobilisations and amortisations in ERP5.
-
-INSTALL : 
-After installing this BT, you should achieve some tasks :
-1) On any delivery movement portal type which is not in erp5_trade, which can aggregate items and which isAccountable :
-  a) run PortalType_ImmobilisationMovement_addAmortisationMethodActions directly on the portal type
-  b) attach workflow immobilisation_movement_interaction_workflow
-
-2) On any corresponding root delivery portal type :
-  a) run PortalType_ImmobilisationDelivery_addImmobilisationActions  directly on the portal type
-  b) attach workflows immobilisation_movement_interaction_workflow and immobilisation_workflow
-
-3) On any item :
-  a) run PortalType_Item_addImmobilisationActions directly on the portal type
-
-
-TODO : 
-- Handle currency changes in expand
