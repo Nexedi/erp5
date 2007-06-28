@@ -69,6 +69,7 @@
 
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.DateUtils import getIntervalBetweenDates\n
 \n
 transaction = state_change[\'object\']\n
 \n
@@ -102,31 +103,41 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
   check_number = check_operation_line.getAggregateFreeText()\n
   if not check_number:\n
     msg = Message(domain=\'ui\', message=\'Check is not defined on line $line.\'\n
-                  , mapping={"line" : line.getId()})\n
+                  , mapping={"line" : check_operation_line.getId()})\n
     raise ValidationFailed, (msg,)\n
 \n
   check_type = check_operation_line.getAggregateResource()\n
   if check_type is None:\n
     msg = Message(domain=\'ui\', message=\'Check type is not defined on line $line.\'\n
-                  , mapping={"line" : line.getId()})\n
+                  , mapping={"line" : check_operation_line.getId()})\n
     raise ValidationFailed, (msg,)\n
 \n
   \n
   source_bank_account = check_operation_line.getSourcePaymentValue()\n
   if source_bank_account is None:\n
     msg = Message(domain=\'ui\', message=\'Bank account not defined on line $line.\'\n
-                  , mapping={"line" : line.getId()})\n
+                  , mapping={"line" : check_operation_line.getId()})\n
     raise ValidationFailed, (msg,)\n
 \n
+  # Test check is valid based on date\n
+  if \'compte\' in check_operation_line.getAggregateResourceTitle():\n
+    interval = getIntervalBetweenDates(check_operation_line.getStartDate(), check_operation_line.getStopDate())\n
+    if interval[\'year\'] >= 3:\n
+      if interval[\'month\'] > 0 or interval["day"] > 0:\n
+        msg = Message(domain=\'ui\', message="Check $s is more than 3 years old.",\n
+                      mapping={"check" : check_operation_line.getAggregateFreeText()})\n
+        raise ValidationFailed, (msg,)\n
+      \n
+  \n
   # Test if the account balance is sufficient.\n
   error = context.BankAccount_checkBalance(source_bank_account.getRelativeUrl(), check_operation_line.getPrice())\n
   if error[\'error_code\'] == 1:\n
     msg = Message(domain=\'ui\', message="Bank account $account is not sufficient on line $line.",\n
-                  mapping={"account": source_bank_account.getInternalBankAccountNumber, "line" : line.getId()})\n
+                  mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})\n
     raise ValidationFailed, (msg,)\n
   elif error[\'error_code\'] == 2:\n
     msg = Message(domain=\'ui\', message="Bank account $account is not valid on $line.",\n
-                  mapping={"account": source_bank_account.getInternalBankAccountNumber, "line" : line.getId()})\n
+                  mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})\n
     raise ValidationFailed, (msg,)\n
   elif error[\'error_code\'] != 0:\n
     msg = Message(domain=\'ui\', message="Unknown error code.")\n
@@ -202,6 +213,8 @@ if transaction.getSimulationState() == "draft":\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
+                            <string>Products.ERP5Type.DateUtils</string>
+                            <string>getIntervalBetweenDates</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
@@ -214,9 +227,9 @@ if transaction.getSimulationState() == "draft":\n
                             <string>_getiter_</string>
                             <string>check_operation_line</string>
                             <string>check_number</string>
-                            <string>line</string>
                             <string>check_type</string>
                             <string>source_bank_account</string>
+                            <string>interval</string>
                             <string>context</string>
                             <string>error</string>
                             <string>check</string>
