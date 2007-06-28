@@ -1,4 +1,1 @@
 This Business Template supports creating various accounting transactions and generating reports.
-
-INSTALL:
-to use erp5_accounting, you have to use a localized version to have a chart of account in the gap category (or create it manually) then you must specify in a user preference which Organisation and group is your current company and which  accounting plan you want to use.
