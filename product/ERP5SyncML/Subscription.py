@@ -569,7 +569,7 @@ class Signature(Folder,SyncCode):
     """
     Returns the object corresponding to this signature
     """
-    return self.getParentValue().getObjectIdGid(self.getObjectId())
+    return self.getParentValue().getObjectFromGid(self.getObjectId())
 
   def checkSynchronizationNeeded(self, object):
     """
