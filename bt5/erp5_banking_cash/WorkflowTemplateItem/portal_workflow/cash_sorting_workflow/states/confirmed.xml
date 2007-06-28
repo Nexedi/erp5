@@ -37,7 +37,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Waiting for validation</string> </value>
+            <value> <string>Assigned To Vault Manager</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -76,8 +76,8 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>DestinationAssignee</string>
                         <string>DestinationAssignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
@@ -104,8 +104,8 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>DestinationAssignee</string>
                         <string>DestinationAssignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>

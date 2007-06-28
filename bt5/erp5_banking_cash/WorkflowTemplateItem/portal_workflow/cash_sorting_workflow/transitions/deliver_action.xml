@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Deliver</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Deliver</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -84,7 +84,7 @@
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignee</string>
+                <string>DestinationAssignor</string>
               </tuple>
             </value>
         </item>
