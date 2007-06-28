@@ -31,33 +31,13 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>financial_section/equity</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>codification</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
@@ -68,13 +48,7 @@
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
