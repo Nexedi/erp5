@@ -838,7 +838,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     #LOG('sendResponse, to_url: ',0,to_url)
     #LOG('sendResponse, from_url: ',0,from_url)
     #LOG('sendResponse, sync_id: ',0,sync_id)
-    LOG('sendResponse, xml: \n',0,xml)
+    #LOG('sendResponse, xml: \n',0,xml)
     if isinstance(xml, unicode):
       xml = xml.encode('utf-8')
     if domain is not None:
