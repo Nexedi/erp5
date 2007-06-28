@@ -74,6 +74,7 @@ class TimeoutHTTPHandler(urllib2.HTTPHandler):
     return self.do_open(TimeoutHTTPConnection, req)
 
 
+
 class SynchronizationTool( SubscriptionSynchronization, 
     PublicationSynchronization, UniqueObject, Folder):
   """
@@ -173,11 +174,11 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_addPublication')
-  def manage_addPublication(self, title, publication_url, destination_path,
-            source_uri, query, xml_mapping, conduit, gpg_key, 
+  def manage_addPublication(self, title, publication_url, 
+            destination_path, source_uri, query, xml_mapping, conduit, gpg_key, 
             synchronization_id_generator=None, gid_generator=None, 
             media_type=None, auth_required=0, authentication_format='', 
-            authentication_type='', RESPONSE=None):
+            authentication_type='', RESPONSE=None, activity_enabeled = False):
     """ 
       create a new publication
     """
@@ -186,10 +187,11 @@ class SynchronizationTool( SubscriptionSynchronization,
     #  self._setObject(publications.id, publications)
     folder = self.getObjectContainer()
     new_id = self.getPublicationIdFromTitle(title)
-    pub = Publication(new_id, title, publication_url, destination_path,
-                      source_uri, query, xml_mapping, conduit, gpg_key, 
-                      synchronization_id_generator, gid_generator, media_type, 
-                      auth_required, authentication_format, authentication_type)
+    pub = Publication(new_id, title, publication_url, 
+                      destination_path, source_uri, query, xml_mapping, 
+                      conduit, gpg_key, synchronization_id_generator, 
+                      gid_generator, media_type, auth_required, 
+                      authentication_format, authentication_type, activity_enabeled)
     folder._setObject( new_id, pub )
     #if len(self.list_publications) == 0:
     #  self.list_publications = PersistentMapping()
@@ -228,17 +230,18 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_editPublication')
-  def manage_editPublication(self, title, publication_url, destination_path,
-                       source_uri, query, xml_mapping, conduit, gpg_key, 
-                       synchronization_id_generator, gid_generator, 
-                       media_type=None, auth_required=0, 
-                       authentication_format='', authentication_type='', 
-                       RESPONSE=None):
+  def manage_editPublication(self, title, publication_url, 
+                            destination_path, source_uri, query, xml_mapping, 
+                            conduit, gpg_key, synchronization_id_generator, 
+                            gid_generator,  media_type=None, auth_required=0, 
+                            authentication_format='', authentication_type='', 
+                            RESPONSE=None, activity_enabeled=False):
     """
       modify a publication
     """
     pub = self.getPublication(title)
     pub.setTitle(title)
+    pub.setActivityEnabeled(activity_enabeled)
     pub.setPublicationUrl(publication_url)
     pub.setDestinationPath(destination_path)
     pub.setSourceURI(source_uri)
@@ -970,7 +973,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    LOG('readResponse, text :', 0, text)
+    #LOG('readResponse, text :', 0, text)
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = uf.getUserById('syncml').__of__(uf)

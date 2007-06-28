@@ -1017,13 +1017,13 @@ class Subscription(Folder, SyncCode):
     # First look if we do already have the mapping between
     # the id and the gid
     #XXX Slow !!!
-    object_list = self.getObjectList()
+    object_list = self.getObjectList(gid=gid)
     destination = self.getDestination()
-    if signature is not None and signature.getObjectId() is not None:
+    if signature is not None and signature.getPath() is not None:
       o_id = signature.getObjectId()
       o = None
       try:
-        o = destination._getOb(o_id)
+        o = destination.getPortalObject().restrictedTraverse(signature.getPath())
       except (AttributeError, KeyError, TypeError):
         pass
       if o is not None and o in object_list:
@@ -1039,7 +1039,7 @@ class Subscription(Folder, SyncCode):
     """
     return the object corresponding to the id
     """
-    object_list = self.getObjectList()
+    object_list = self.getObjectList(id=id)
     #XXX very slow with lot of objects
     o = None
     for object in object_list:
@@ -1057,7 +1057,7 @@ class Subscription(Folder, SyncCode):
 #
 
 
-  def getObjectList(self):
+  def getObjectList(self, **kw):
     """
     This returns the list of sub-object corresponding
     to the query
@@ -1065,13 +1065,11 @@ class Subscription(Folder, SyncCode):
     destination = self.getDestination()
     query = self.getQuery()
     query_list = []
-    if query is None:
-      return query_list
-    if isinstance(query, str):
+    if query is not None and isinstance(query, str):
       query_method = getattr(destination,query,None)
       if query_method is not None:
-        query_list = query_method()
-    elif callable(query): # XXX - used to be if callable(query)
+        query_list = query_method(**kw)
+    elif callable(query): # used in the test
       query_list = query(destination)
     return [x for x in query_list
               if not getattr(x,'_conflict_resolution',False)]

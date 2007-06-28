@@ -1072,6 +1072,7 @@ class XMLSyncUtilsMixin(SyncCode):
       if conflict_list != [] and signature is not None:
         # We had a conflict
         signature.setStatus(self.CONFLICT)
+
     return (xml_confirmation,has_next_action,cmd_id)
 
   def applyStatusList(self, subscriber=None,remote_xml=None):

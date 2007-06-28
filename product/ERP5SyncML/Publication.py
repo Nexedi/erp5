@@ -152,14 +152,15 @@ class Publication(Subscription):
   constructors =   (addPublication,)
 
   # Constructor
-  def __init__(self, id, title, publication_url, destination_path, source_uri, 
-      query, xml_mapping, conduit, gpg_key, id_generator, gid_generator, 
-      media_type, auth_required=False, authentication_format='', 
-      authentication_type=''):
+  def __init__(self, id, title, publication_url, destination_path,
+      source_uri, query, xml_mapping, conduit, gpg_key, id_generator, 
+      gid_generator, media_type, auth_required, authentication_format, 
+      authentication_type, activity_enabeled):
     """
       constructor
     """
     self.id = id
+    self.setActivityEnabeled(activity_enabeled)
     self.publication_url = publication_url
     self.destination_path = destination_path
     self.setSourceURI(source_uri)
@@ -177,6 +178,18 @@ class Publication(Subscription):
     self.auth_required = auth_required 
     self.authentication_format = authentication_format
     self.authentication_type = authentication_type
+
+  def getActivityEnabeled(self):
+    """
+    return true if we are using activity, false otherwise
+    """
+    return getattr(self, 'activity_enabeled', None)
+
+  def setActivityEnabeled(self, activity_enabeled):
+    """
+    set if we are using activity or not
+    """
+    self.activity_enabeled = activity_enabeled
 
   def getPublicationUrl(self):
     """
