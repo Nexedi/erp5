@@ -324,7 +324,7 @@
 <!-- Check all -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>checkAll:method</td>\n
+\t<td>listbox_checkAll:method</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -364,7 +364,7 @@
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>checkAll:method</td>\n
+\t<td>listbox_checkAll:method</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -385,7 +385,7 @@
 <!-- Uncheck all -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>uncheckAll:method</td>\n
+\t<td>listbox_uncheckAll:method</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -425,7 +425,7 @@
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>uncheckAll:method</td>\n
+\t<td>listbox_uncheckAll:method</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -449,7 +449,7 @@ and search parameters are remembered -->\n
 <tr>\n
 \t<td>type</td>\n
 \t<td>title</td>\n
-\t<td>Title</td>\n
+\t<td>%Title%</td>\n
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
@@ -515,7 +515,7 @@ and search parameters are remembered -->\n
 <tr>\n
 \t<td>verifyValue</td>\n
 \t<td>title</td>\n
-\t<td>Title</td>\n
+\t<td>%Title%</td>\n
 </tr>\n
 \n
 </tbody></table>\n
