@@ -239,7 +239,7 @@
                 </item>
                 <item>
                     <key> <string>height</string> </key>
-                    <value> <int>4</int> </value>
+                    <value> <int>6</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -263,7 +263,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Comment</string> </value>
+                    <value> <string>Comments</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
