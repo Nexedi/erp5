@@ -1269,13 +1269,7 @@ class Subscription(Folder, SyncCode):
     """
     return the signature corresponding to the gid
     """
-    o = None
-    # XXX very slow
-    for signature in self.getSignatureList():
-      if gid == signature.getGid():
-        o = signature
-        break
-    return o
+    return getattr(self, gid, None)
 
   def getSignatureFromRid(self, rid):
     """
