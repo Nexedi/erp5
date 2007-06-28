@@ -93,7 +93,7 @@ total_credit = 0\n
 \n
 line_list = []\n
 for brain in portal.Base_zGetNotGroupedMovementList(\n
-                                at_date=from_date,\n
+                                at_date=from_date - 1, # this is not to_date\n
                                 simulation_state=params[\'simulation_state\'],\n
                                 # XXX this adds a need for account\n
                                 # ie. impossible to produce this report only\n
