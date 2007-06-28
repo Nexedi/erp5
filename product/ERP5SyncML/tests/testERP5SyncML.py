@@ -347,7 +347,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         conduit='ERP5Conduit',
         gpg_key='',
         gid_generator='getId',
-        activity_enabeled=False)
+        activity_enabled=False)
     pub = portal_sync.getPublication(self.pub_id)
     self.failUnless(pub is not None)
 
