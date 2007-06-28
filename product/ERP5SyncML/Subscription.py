@@ -1240,7 +1240,7 @@ class Subscription(Folder, SyncCode):
     """
       add a Signature to the subscription
     """
-    if signature.getGid() in self.getGidList():
+    if self.getSignatureFromGid(signature.getGid()) != None:
       self.delSignature(signature.getGid())
     self._setObject(signature.getGid(), aq_base(signature))
 
