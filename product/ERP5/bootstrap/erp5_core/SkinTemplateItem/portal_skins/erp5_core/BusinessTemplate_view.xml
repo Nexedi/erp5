@@ -116,6 +116,7 @@
                         <string>my_translated_building_state_title</string>
                         <string>my_translated_installation_state_title</string>
                         <string>my_description</string>
+                        <string>my_comment</string>
                         <string>my_maintainer_list</string>
                       </list>
                     </value>

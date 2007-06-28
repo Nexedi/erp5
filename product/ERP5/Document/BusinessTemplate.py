@@ -3748,6 +3748,7 @@ class BusinessTemplate(XMLObject):
                       , PropertySheet.CategoryCore
                       , PropertySheet.Version
                       , PropertySheet.BusinessTemplate
+                      , PropertySheet.Comment
                       )
 
     # Factory Type Information

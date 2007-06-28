@@ -1,5 +1,1 @@
 ERP5 Core is the basic template for ERP5.
-
-NOTE: You must not include the portal type Business Template or the workflows for Business Template due to bootstrap problems. Look at ERP5Site.py in the Product ERP5 for more details.
-
-NOTE 2: Everything which is not required for installing more business templates should not be put in erp5_core.
