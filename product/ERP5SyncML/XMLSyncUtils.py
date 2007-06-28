@@ -1001,7 +1001,7 @@ class XMLSyncUtilsMixin(SyncCode):
                 remote_xml=action)
             cmd_id +=1
         elif action.nodeName == 'Replace':
-          #↓LOG('SyncModif',0,'object: %s will be updated...' % str(object))
+          #LOG('SyncModif',0,'object: %s will be updated...' % str(object))
           if object is not None:
             #LOG('SyncModif',0,'object: %s will be updated...' % object.id)
             signature = subscriber.getSignatureFromGid(gid)
