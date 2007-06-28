@@ -46,6 +46,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
+    Use Activity
+    </label></div>
+    </td>
+    <td align="left" valign="top">
+      <input type="checkbox" name="activity_enabled" value="1">
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
     Publication Url
     </label></div>
     </td>

@@ -368,7 +368,8 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         xml_mapping=self.xml_mapping, 
         conduit='ERP5Conduit', 
         gpg_key='',
-        gid_generator='getId')
+        gid_generator='getId',
+        activity_enabled=False)
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
 
@@ -389,7 +390,8 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         xml_mapping=self.xml_mapping, 
         conduit='ERP5Conduit', 
         gpg_key='',
-        gid_generator='getId')
+        gid_generator='getId',
+        activity_enabled=False)
     sub = portal_sync.getSubscription(self.sub_id2)
     self.failUnless(sub is not None)
 
@@ -1334,7 +1336,8 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         xml_mapping='', 
         conduit='ERP5Conduit', 
         gpg_key='',
-        gid_generator='getId')
+        gid_generator='getId',
+        activity_enabled=False)
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
 

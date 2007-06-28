@@ -179,18 +179,6 @@ class Publication(Subscription):
     self.authentication_format = authentication_format
     self.authentication_type = authentication_type
 
-  def getActivityEnabled(self):
-    """
-    return true if we are using activity, false otherwise
-    """
-    return getattr(self, 'activity_enabled', None)
-
-  def setActivityEnabled(self, activity_enabled):
-    """
-    set if we are using activity or not
-    """
-    self.activity_enabled = activity_enabled
-
   def getPublicationUrl(self):
     """
       return the publication url

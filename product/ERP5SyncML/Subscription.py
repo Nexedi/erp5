@@ -669,13 +669,14 @@ class Subscription(Folder, SyncCode):
   def __init__(self, id, title, publication_url, subscription_url, 
       destination_path, source_uri, target_uri, query, xml_mapping, 
       conduit, gpg_key, id_generator, gid_generator, media_type, login, 
-      password):
+      password, activity_enabled):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
       process
     """
     self.id = id
+    self.setActivityEnabled(activity_enabled)
     self.publication_url = (publication_url)
     self.subscription_url = str(subscription_url)
     self.destination_path = str(destination_path)
@@ -700,6 +701,18 @@ class Subscription(Folder, SyncCode):
     self.title = title
     
     #self.signatures = PersitentMapping()
+
+  def getActivityEnabled(self):
+    """
+    return true if we are using activity, false otherwise
+    """
+    return getattr(self, 'activity_enabled', None)
+
+  def setActivityEnabled(self, activity_enabled):
+    """
+    set if we are using activity or not
+    """
+    self.activity_enabled = activity_enabled
 
   def getTitle(self):
     """

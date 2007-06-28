@@ -206,7 +206,7 @@ class SynchronizationTool( SubscriptionSynchronization,
                        xml_mapping, conduit, gpg_key, 
                        synchronization_id_generator=None, gid_generator=None, 
                        media_type=None, login=None, password=None, 
-                       RESPONSE=None):
+                       RESPONSE=None, activity_enabled=False):
     """
       XXX should be renamed as addSubscription
       create a new subscription
@@ -220,7 +220,7 @@ class SynchronizationTool( SubscriptionSynchronization,
                        destination_path, source_uri, target_uri, query, 
                        xml_mapping, conduit, gpg_key,
                        synchronization_id_generator, gid_generator, media_type, 
-                       login, password)
+                       login, password, activity_enabled)
     folder._setObject( new_id, sub )
     #if len(self.list_subscriptions) == 0:
     #  self.list_subscriptions = PersistentMapping()
@@ -264,12 +264,13 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_editSubscription(self, title, publication_url, subscription_url,
       destination_path, source_uri, target_uri, query, xml_mapping, conduit, 
       gpg_key, synchronization_id_generator, gid_generator, media_type=None, 
-      login='', password='', RESPONSE=None):
+      login='', password='', RESPONSE=None, activity_enabled=False):
     """
       modify a subscription
     """
     sub = self.getSubscription(title)
     sub.setTitle(title)
+    sub.setActivityEnabled(activity_enabled)
     sub.setPublicationUrl(publication_url)
     sub.setDestinationPath(destination_path)
     sub.setSourceURI(source_uri)
