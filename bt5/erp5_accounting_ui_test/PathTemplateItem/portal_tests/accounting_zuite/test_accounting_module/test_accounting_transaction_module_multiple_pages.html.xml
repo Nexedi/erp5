@@ -319,7 +319,7 @@ Test Accounting module listbox multi pages\n
 <tr>\n
   <td>type</td>\n
   <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>\n
-  <td>Client</td>\n
+  <td>%Client%</td>\n
 </tr>\n
 \n
 <tr>\n

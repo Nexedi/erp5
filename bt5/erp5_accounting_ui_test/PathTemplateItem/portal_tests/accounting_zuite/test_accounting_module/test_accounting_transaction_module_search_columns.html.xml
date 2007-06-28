@@ -133,7 +133,7 @@ as title is a search key -->\n
 <tr>\n
   <td>type</td>\n
   <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>\n
-  <td>Client</td>\n
+  <td>%Client%</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
