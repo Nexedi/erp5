@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5OOo.OOoTemplate</string>
+          <string>OOoTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAAIALGO1TbMBk1mQgEAAFEHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
+EED3PYXR3lbbVTFxAi30BOkBJvLYEeiHZhSS21cO5NM2lKZYOw1I741GGmmx2ltT7TCS9q4TT82j
+qNAp32s3duJj/V6/iNXyYWHB6QGJ29OgyuscncNOpOhaD6SpdWCRWlatD+h6r5JFx+3X+e1kWj5U
+F/CgDdZ5YjxUFxn2Gmo+BOwEhGC0As55yp3rm6OruVY0FCJCT1tEFhfIkIypA/C2E1LIu5y3KW/e
+DXpM8ZgLPUti4EQbiGXwoBQazKGPUqUYp53mYhZ3FREMxgNjIXjwIYV8E1IhfPRjRCp30lPqxeDs
+vSkG1xZGJPmq2UKgoo472d+fDUpu6p4m6UZdC/6Ww51yxj3LqVdvwrOf/9fMv3OJDwZpdqxFhtke
+nvU22Y0DbUjyadgEN84Nn7ewyJz/xXNpF/LHt7j8BFBLAQIUABQAAAAIALGO1TbMBk1mQgEAAFEH
+AAAVAAAAAAAAAAAAAAAAAAAAAABNRVRBLUlORi9tYW5pZmVzdC54bWxQSwUGAAAAAAEAAQBDAAAA
+dQEAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<office:document-content xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\'\n
+                         xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\'\n
+                         xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\'\n
+                         xmlns:ooo=\'http://openoffice.org/2004/office\'\n
+                         xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\'\n
+                         xmlns:dc=\'http://purl.org/dc/elements/1.1/\'\n
+                         xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\'\n
+                         xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\'\n
+                         xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\'\n
+                         xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\'\n
+                         xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\'\n
+                         xmlns:xforms=\'http://www.w3.org/2002/xforms\'\n
+                         xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\'\n
+                         xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\'\n
+                         xmlns:ooow=\'http://openoffice.org/2004/writer\'\n
+                         xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\'\n
+                         xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\'\n
+                         xmlns:dom=\'http://www.w3.org/2001/xml-events\'\n
+                         xmlns:xlink=\'http://www.w3.org/1999/xlink\'\n
+                         xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\'\n
+                         xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\'\n
+                         xmlns:oooc=\'http://openoffice.org/2004/calc\'\n
+                         xmlns:math=\'http://www.w3.org/1998/Math/MathML\'\n
+                         xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+                         xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
+                         xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
+                         tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+                         office:version=\'1.0\'>\n
+  <office:scripts/>\n
+  <office:font-face-decls>\n
+    <style:font-face svg:font-family=\'Arial\' style:font-family-generic=\'swiss\' style:name=\'Arial\' style:font-pitch=\'variable\'/>\n
+    <style:font-face svg:font-family="\'DejaVu Sans\'" style:font-family-generic=\'system\' style:name=\'DejaVu Sans\' style:font-pitch=\'variable\'/>\n
+    <style:font-face svg:font-family=\'Lucidasans\' style:font-family-generic=\'system\' style:name=\'Lucidasans\' style:font-pitch=\'variable\'/>\n
+  </office:font-face-decls>\n
+  <office:automatic-styles>\n
+    <style:style style:family=\'table-column\' style:name=\'co1\'>\n
+      <style:table-column-properties fo:break-before=\'auto\' style:column-width=\'6.59cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'co2\'>\n
+      <style:table-column-properties fo:break-before=\'auto\' style:column-width=\'4.727cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'co3\'>\n
+      <style:table-column-properties fo:break-before=\'auto\' style:column-width=\'5.117cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'co4\'>\n
+      <style:table-column-properties fo:break-before=\'auto\' style:column-width=\'2.267cm\'/>\n
+    </style:style>\n
+\n
+    <!-- XXX how to calculate row heights ?\n
+    can it be done by OOo ?\n
+    XXX this must be a macro !\n
+    {{{\n
+    -->\n
+    <style:style style:family=\'table-row\' style:name=\'ro1\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'2.575cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro2\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.894cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro3\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.877cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro4\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'false\' style:row-height=\'0.644cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro5\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'false\' style:row-height=\'0.951cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro6\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.503cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro7\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.538cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro8\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.453cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'ro9\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.496cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table\' style:name=\'ta1\' style:master-page-name=\'Default\'>\n
+      <style:table-properties style:writing-mode=\'lr-tb\' table:display=\'true\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce1\'>\n
+      <style:table-cell-properties fo:wrap-option=\'wrap\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce2\'>\n
+      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border=\'none\'/>\n
+      <style:paragraph-properties fo:text-align=\'center\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'report-content-heading2\' style:family=\'table-cell\' style:name=\'ce3\'>\n
+      <style:text-properties fo:font-size=\'12pt\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'report-stat2\' style:family=\'table-cell\' style:name=\'ce4\'>\n
+      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'none\' fo:border-right=\'none\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce5\'>\n
+      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border=\'none\'/>\n
+      <style:paragraph-properties fo:text-align=\'center\' fo:margin-left=\'0cm\'/>\n
+      <style:text-properties fo:font-size=\'20pt\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'ce6\'>\n
+      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border=\'none\'/>\n
+      <style:paragraph-properties fo:text-align=\'center\' fo:margin-left=\'0cm\'/>\n
+    </style:style>\n
+  </office:automatic-styles> <!-- }}} -->\n
+  <office:body>\n
+    <office:spreadsheet>\n
+\n
+        <table:table table:style-name=\'ta1\' \n
+               table:print=\'false\'\n
+               table:name=\'Sheet1\'\n
+               i18n:attributes=\'table:name\'\n
+               i18n:domain=\'ui\'\n
+               tal:attributes=\'table:name python:form.getProperty("title")\'>\n
+\n
+        <tal:block metal:define-macro="master">\n
+          <!-- header -->\n
+          <!-- body -->\n
+          <!-- footer -->\n
+\n
+          <!-- XXX no, easier: -->\n
+         <tal:block metal:define-macro="form_layout"\n
+            tal:define="dummy python: request.set(\'here\', here);\n
+                        listbox python:form.get_fields_in_group(\'bottom\')[0];">\n
+            <tal:block tal:condition="python: listbox.meta_type == \'ListBox\'">\n
+              <tal:block metal:use-macro="here/listbox_ods_macro/macros/listbox"/>\n
+            </tal:block>\n
+          </tal:block>\n
+        </tal:block>\n
+      </table:table>\n
+    </office:spreadsheet>\n
+  </office:body>\n
+</office:document-content> <!-- vim: filetype=xml tw=1000 foldmethod=marker\n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>form_list</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>Base_getODSStyleSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
