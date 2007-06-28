@@ -596,30 +596,11 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_sorting.getTotalPrice(), (10000 * 5.0 + 100 * 10.0 + 200 * 12.0 + 5000 * 24.0) * 2.0)
 
 
-  def stepOrderCashSorting(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Order the cash sorting and check it
-    """
-    # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24 + 100 * 10)
-    self.cash_sorting.setSourceTotalAssetPrice('173400.0')
-    # do the Workflow action
-    self.workflow_tool.doActionFor(self.cash_sorting, 'order_action', wf_id='cash_sorting_workflow')
-    # execute tic
-    self.stepTic()
-    # get state
-    state = self.cash_sorting.getSimulationState()
-    # check state is confirmed
-    self.assertEqual(state, 'ordered')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting, name='history', wf_id='cash_sorting_workflow')
-    # check len of workflow history is 4
-    self.assertEqual(len(workflow_history), 3)
-
-
   def stepConfirmCashSorting(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the cash sorting and check it
     """
+    self.cash_sorting.setSourceTotalAssetPrice('173400.0')
     # do the Workflow action
     self.workflow_tool.doActionFor(self.cash_sorting, 'confirm_action', wf_id='cash_sorting_workflow')
     # execute tic
@@ -628,10 +609,6 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     state = self.cash_sorting.getSimulationState()
     # check state is confirmed
     self.assertEqual(state, 'confirmed')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting, name='history', wf_id='cash_sorting_workflow')
-    # check len of workflow history is 6
-    self.assertEqual(len(workflow_history), 5)
 
 
   def stepCheckSourceDebitPlanned(self, sequence=None, sequence_list=None, **kwd):
@@ -687,10 +664,6 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     state = self.cash_sorting.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting, name='history', wf_id='cash_sorting_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 7)
 
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
@@ -752,7 +725,6 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidOutgoingLineForMixed ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckSource CheckDestination ' \
-                    + 'OrderCashSorting Tic '\
                     + 'ConfirmCashSorting Tic ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'DeliverCashSorting Tic ' \
