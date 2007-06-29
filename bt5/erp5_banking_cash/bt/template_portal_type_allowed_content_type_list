@@ -34,7 +34,7 @@ Destruction Survey | Cash Delivery Line
 Exchanged Mutilated Banknote Line | Cash Delivery Cell
 Foreign Cash Reception Module | Foreign Cash Reception
 Foreign Cash Reception | Cash Delivery Line
-Incident Module | Account Incident
+Incident Module | Incident
 Incident | Banking Operation Line
 Incident | Incoming Incident Line
 Incident | Outgoing Incident Line

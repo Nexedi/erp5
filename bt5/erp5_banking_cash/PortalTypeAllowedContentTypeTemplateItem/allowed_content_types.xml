@@ -97,7 +97,7 @@
   <item>Banking Operation Line</item>
  </portal_type>
  <portal_type id="Incident Module">
-  <item>Account Incident</item>
+  <item>Incident</item>
  </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
   <item>Cash Delivery Cell</item>
