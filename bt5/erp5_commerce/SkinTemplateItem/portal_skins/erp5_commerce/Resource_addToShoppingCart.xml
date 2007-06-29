@@ -70,7 +70,11 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-quantity = int(context.REQUEST.get(\'field_your_buy_quantity\', 0))\n
+"""\n
+  Add resource to shopping cart.\n
+"""\n
+\n
+quantity = int(field_your_buy_quantity) #(context.REQUEST.get(\'field_your_buy_quantity\', 0))\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
 \n
@@ -117,7 +121,7 @@ context.Base_redirect(\'view\', \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>resource=None</string> </value>
+            <value> <string>resource=None, field_your_buy_quantity = 0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -137,17 +141,18 @@ context.Base_redirect(\'view\', \\\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>resource</string>
+                            <string>field_your_buy_quantity</string>
                             <string>int</string>
+                            <string>quantity</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>quantity</string>
                             <string>shopping_cart</string>
                             <string>shopping_cart_items</string>
                             <string>None</string>
@@ -172,6 +177,7 @@ context.Base_redirect(\'view\', \\\n
             <value>
               <tuple>
                 <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>

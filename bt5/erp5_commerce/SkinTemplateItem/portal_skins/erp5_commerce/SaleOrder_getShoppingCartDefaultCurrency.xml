@@ -68,9 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" Return default currency used in shopping_cart.\n
-    Please update accordingly relative path. \n
-    XXX: there must be an way to do this better?\n
+            <value> <string>""" \n
+  Return default currency used in shopping_cart.\n
+  Please update accordingly relative path. \n
+  XXX: there must be an way to do this better?\n
 """\n
 return context.restrictedTraverse(\'currency_module/1\')\n
 </string> </value>

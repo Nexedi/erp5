@@ -48,10 +48,11 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<!--\n
 <p class="headlinkred">\n
   <span tal:replace="python: here.Base_translateString(\'SHOPPING CART\')"/>\n
 </p>\n
-\n
+-->\n
 <table>\n
   <tal:block tal:define="shopping_cart_items here/SaleOrder_getShoppingCartItemList;\n
                        empty_cart python: here.SaleOrder_isShoppingCartEmpty();\n

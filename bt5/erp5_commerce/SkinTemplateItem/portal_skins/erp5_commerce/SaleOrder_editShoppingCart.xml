@@ -206,6 +206,11 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+"""\n
+  Update shopping cart by chnage items quantity and setting preferred \n
+  shipping.\n
+"""\n
+\n
 from Products.ERP5Type.Document import newTempOrderLine\n
 \n
 request = context.REQUEST\n
@@ -216,20 +221,21 @@ shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping
 shopping_cart_products_items = filter(lambda x: x.getId()!=\'shipping_method\', shopping_cart_items)\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 \n
-## when we have one item in shoppping cart we get \n
-## quantity as a string rather as a list\n
-if isinstance(quantity, str):\n
-  quantity = [quantity]\n
-\n
-counter = 0\n
-for order_line in shopping_cart_products_items:\n
-  new_quantity = int(quantity[counter])\n
-  if new_quantity>=1:\n
-    order_line.setQuantity(new_quantity)\n
-  else:\n
-    ## remove it from shopping cart\n
-    shopping_cart.manage_delObjects(order_line.getId())\n
-  counter += 1\n
+# handle change in quantity for shopping items\n
+if quantity is not None:\n
+  ## when we have one item in shoppping cart we get \n
+  ## quantity as a string rather as a list\n
+  if isinstance(quantity, str):\n
+    quantity = [quantity]\n
+  counter = 0\n
+  for order_line in shopping_cart_products_items:\n
+    new_quantity = int(quantity[counter])\n
+    if new_quantity>=1:\n
+      order_line.setQuantity(new_quantity)\n
+    else:\n
+      ## remove it from shopping cart\n
+      shopping_cart.manage_delObjects(order_line.getId())\n
+    counter += 1\n
 \n
 ## handle shipping\n
 if shipping_method is not None:\n
@@ -312,6 +318,7 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                             <string>filter</string>
                             <string>shopping_cart_products_items</string>
                             <string>shopping_cart</string>
+                            <string>None</string>
                             <string>isinstance</string>
                             <string>str</string>
                             <string>counter</string>
@@ -320,7 +327,6 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                             <string>int</string>
                             <string>_getitem_</string>
                             <string>new_quantity</string>
-                            <string>None</string>
                             <string>shipping</string>
                             <string>getattr</string>
                             <string>dict</string>

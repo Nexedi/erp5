@@ -68,7 +68,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" Calculate total price of temporary RAM based Sale Order. """\n
+            <value> <string>""" \n
+  Calculate total price of temporary RAM based Sale Order.\n
+\n
+  Price is based on three main components:\n
+    - shopping cart items\n
+    - applicable taxes (based on Person\'s location and shop\'s location)\n
+    - shipping costs (same as applicable taxes including type of shopping cart item\n
+      for example online materials doesn\'t require shipping)\n
+  \n
+  Script can optionally include currency.\n
+"""\n
+\n
 total = 0.0\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping)\n
 for order_line in shopping_cart_items:\n

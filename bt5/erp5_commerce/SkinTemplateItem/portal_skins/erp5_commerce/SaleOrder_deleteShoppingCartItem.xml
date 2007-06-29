@@ -204,7 +204,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>translateString = context.Base_translateString\n
+            <value> <string>"""\n
+  Delete a shopping cart item.\n
+"""\n
+\n
+translateString = context.Base_translateString\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 \n
 if field_my_order_line_id is not None:\n

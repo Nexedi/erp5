@@ -204,16 +204,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" This script is called by external payment system.\n
-Here you can check if payment was successfull or not."""\n
+            <value> <string>""" \n
+  This script is called by external payment system.\n
+  Here you can check if payment was successfull or not.\n
+"""\n
 \n
+# XXX: implement external payment check\n
 \n
-## TODO: implement payment check for CyberMut\n
+# XXX: finalize order\n
 \n
-\n
-## finalize order\n
-\n
-## redirect\n
+# XXX: redirect\n
 </string> </value>
         </item>
         <item>

@@ -210,9 +210,10 @@ translateString = context.Base_translateString\n
 \n
 if isAnon:\n
   ## create first an account for user\n
-  context.Base_redirect(\'WebSite_joinForm\', \\\n
-                      keep_items={\'portal_status_message\': translateString("You need to create an account. If you already have please login.", mapping = dict())})\n
-  return\n
+  msg = translateString("You need to create an account to continue If you already have please login.")\n
+  context.Base_redirect(\'WebSite_createWebSiteAccountForm\', \\\n
+                      keep_items={\'editable_mode\': 1,\n
+                                  \'portal_status_message\': msg})\n
 else:\n
   ## redirect to final confirmation form\n
   context.Base_redirect(\'SaleOrder_viewAsWebConfirm\')\n
@@ -272,7 +273,7 @@ else:\n
                             <string>request</string>
                             <string>isAnon</string>
                             <string>translateString</string>
-                            <string>dict</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

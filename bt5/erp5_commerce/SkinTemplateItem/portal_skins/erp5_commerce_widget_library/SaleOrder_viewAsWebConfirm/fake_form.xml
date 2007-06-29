@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.InputButtonField</string>
-          <string>InputButtonField</string>
+          <string>Products.Formulator.StandardFields</string>
+          <string>LabelField</string>
         </tuple>
         <none/>
       </tuple>
@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>submit</string> </value>
+            <value> <string>fake_form</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -26,10 +32,6 @@
             <key> <string>overrides</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -56,10 +58,6 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -74,10 +72,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -106,10 +100,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -121,20 +111,21 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Create</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<form name="" method="post">\n
+</form>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>This is a dirty hack to allow online payment form below.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -153,12 +144,8 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
-                    <value> <string>WebSite_createUserAccount:method</string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Submit</string> </value>
+                    <value> <string>fake_form</string> </value>
                 </item>
               </dictionary>
             </value>

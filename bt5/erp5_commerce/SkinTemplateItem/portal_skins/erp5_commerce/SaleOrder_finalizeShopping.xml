@@ -204,7 +204,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
+            <value> <string>"""\n
+  Do whatever is necessary to finalize an order.\n
+  This script is called after customer completes shopping.\n
+"""\n
+request = context.REQUEST\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 translateString = context.Base_translateString\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping=True)\n
@@ -212,14 +216,15 @@ customer = context.SaleOrder_getShoppingCartCustomer()\n
 \n
 if isAnon:\n
   ## create first an account for user\n
-  context.Base_redirect(\'WebSite_newCustomerAccountForm\', \\\n
-                      keep_items={\'portal_status_message\': translateString("You need to create an account.", mapping = dict())})\n
+  msg = translateString("You need to create an account to continue If you already have please login.")\n
+  context.Base_redirect(\'WebSite_createWebSiteAccountForm\', \\\n
+                        keep_items={\'portal_status_message\': msg,\n
+                                    \'editable_mode\': 1})\n
   return\n
 \n
 ## XXX: Implement check if payment is sucessfull\n
-\n
-order_module = context.getPortalObject().sale_order_module\n
-sale_order = order_module.newContent(portal_type=\'Sale Order\')\n
+sale_order_module = context.getPortalObject().sale_order_module\n
+sale_order = sale_order_module.newContent(portal_type=\'Sale Order\')\n
 sale_order.setDestination(customer.getRelativeUrl())\n
 \n
 ## set order default currency\n
@@ -296,8 +301,8 @@ context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
                             <string>True</string>
                             <string>shopping_cart_items</string>
                             <string>customer</string>
-                            <string>dict</string>
-                            <string>order_module</string>
+                            <string>msg</string>
+                            <string>sale_order_module</string>
                             <string>sale_order</string>
                             <string>_getiter_</string>
                             <string>order_line</string>

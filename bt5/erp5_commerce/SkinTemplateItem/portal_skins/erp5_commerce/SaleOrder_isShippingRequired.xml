@@ -204,8 +204,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\' XXX: implement this check based on shopping cart content\n
-for example if we sell online products there\'s no shipping. \'\'\'\n
+            <value> <string>\'\'\'\n
+  XXX: implement this check based on shopping cart content\n
+  for example if we sell online products there\'s no shipping. \n
+\'\'\'\n
 \n
 return 1\n
 </string> </value>

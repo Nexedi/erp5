@@ -204,12 +204,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\' This script will find applicable taxes for customer based on his/hers location for example.\n
+            <value> <string>"""\n
+  This script will find applicable taxes for customer based on his/hers location.\n
+  For example.\n
     - B2B in EU in same country, tax \n
     - B2B in EU in different country, no tax \n
     - B2B and B2P from EU to outside EU, no tax \n
     - B2P in EU, tax\n
-\'\'\'\n
+"""\n
+\n
 #customer = context.SaleOrder_getShoppingCartCustomer()\n
 return {context.Base_translateString(\'VAT\'): 20.0,}\n
 </string> </value>

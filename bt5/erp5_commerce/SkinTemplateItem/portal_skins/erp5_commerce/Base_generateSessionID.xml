@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from random import choice\n
+            <value> <string>"""\n
+  Generate random id which is generally used as a session ID.\n
+"""\n
+from random import choice\n
 import string\n
 return  \'\'.join([choice(string.letters) for i in range(max_long)])\n
 </string> </value>

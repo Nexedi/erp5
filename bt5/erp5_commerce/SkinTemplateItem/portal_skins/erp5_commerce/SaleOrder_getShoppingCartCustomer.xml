@@ -84,8 +84,8 @@ def getFoundUserRelativeUrl(user_id):\n
     user_object = user_list[0].getObject()\n
     return user_object.getRelativeUrl()\n
 \n
-user_relative_url = CachingMethod(getFoundUserRelativeUrl, script.id)(user_id)\n
-#user_relative_url = getFoundUserRelativeUrl(user_id)\n
+#user_relative_url = CachingMethod(getFoundUserRelativeUrl, script.id)(user_id)\n
+user_relative_url = getFoundUserRelativeUrl(user_id)\n
 \n
 if user_relative_url is not None:\n
   return context.getPortalObject().restrictedTraverse(user_relative_url)\n
@@ -149,7 +149,6 @@ if user_relative_url is not None:\n
                             <string>user_id</string>
                             <string>None</string>
                             <string>getFoundUserRelativeUrl</string>
-                            <string>script</string>
                             <string>user_relative_url</string>
                           </tuple>
                         </value>

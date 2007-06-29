@@ -68,7 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" Add resource to current (or to be created shopping cart). """\n
+            <value> <string>""" \n
+  Add resource to current (or to be created shopping cart). \n
+"""\n
 from DateTime import DateTime\n
 \n
 request = context.REQUEST\n

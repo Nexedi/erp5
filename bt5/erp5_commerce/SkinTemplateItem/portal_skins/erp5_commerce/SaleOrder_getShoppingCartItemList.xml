@@ -68,7 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>shopping_cart_order_lines = context.SaleOrder_getShoppingCart().contentValues()\n
+            <value> <string>"""\n
+  Return list of shopping cart items.\n
+"""\n
+shopping_cart_order_lines = context.SaleOrder_getShoppingCart().contentValues()\n
 if include_shipping:\n
   return shopping_cart_order_lines\n
 else:\n

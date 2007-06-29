@@ -204,7 +204,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\' This will return all Products that have set product_line=\'shipping\'. \'\'\'\n
+            <value> <string>"""\n
+ This will return all Products that have set product_line=\'shipping\'.\n
+ Such products are used for shipping purposes i.e. they can not be sold.\n
+"""\n
+\n
 result = [r.getObject() for r in context.portal_catalog(portal_type=\'Product\')]\n
 return [o for o in result if o.getProductLine() in (\'shipping\',)]\n
 </string> </value>
