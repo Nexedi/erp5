@@ -4,4 +4,5 @@ check_amount
 check_type
 composition
 emission_letter
+incident_type
 vault_type
