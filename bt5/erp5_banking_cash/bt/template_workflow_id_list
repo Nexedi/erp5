@@ -1,10 +1,6 @@
-account_incident_workflow
 cash_balance_regulation_workflow
 cash_exchange_workflow
-cash_incident_currency_interaction_workflow
-cash_incident_workflow
 cash_movement_workflow
-cash_sorting_incident_workflow
 cash_sorting_workflow
 cash_to_currency_purchase_workflow
 cash_to_currency_sale_workflow
@@ -14,6 +10,7 @@ currency_purchase_workflow
 currency_sale_workflow
 destruction_survey_workflow
 foreign_cash_reception_workflow
+incident_workflow
 internal_money_deposit_workflow
 monetary_destruction_workflow
 monetary_issue_workflow
@@ -23,7 +20,6 @@ monetary_survey_workflow
 money_deposit_rendering_workflow
 money_deposit_workflow
 mutilated_banknote_workflow
-usual_cash_incident_workflow
 usual_cash_rendering_workflow
 usual_cash_transfer_workflow
 vault_transfer_interaction_workflow

@@ -1,16 +1,10 @@
-Account Incident | Incoming Account Incident Line
-Account Incident | Outgoing Account Incident Line
 Cash Balance Regulation | Incoming Cash Balance Regulation Line
 Cash Balance Regulation | Outgoing Cash Balance Regulation Line
 Cash Container Item | Container Line
 Cash Container | Container Line
 Cash Exchange | Incoming Cash Exchange Line
 Cash Exchange | Outgoing Cash Exchange Line
-Cash Incident | Incoming Cash Incident Line
-Cash Incident | Outgoing Cash Incident Line
 Cash Movement | Cash Delivery Line
-Cash Sorting Incident | Incoming Cash Sorting Incident Line
-Cash Sorting Incident | Outgoing Cash Sorting Incident Line
 Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line
 Cash To Currency Purchase | Incoming Cash To Currency Purchase Line
@@ -29,16 +23,16 @@ Currency Sale | Banking Operation Line
 Currency Sale | Cash Delivery Line
 Destruction Survey | Cash Delivery Line
 Foreign Cash Reception | Cash Delivery Line
-Incoming Account Incident Line | Cash Delivery Cell
+Incident | Banking Operation Line
+Incident | Incoming Account Incident Line
+Incident | Outgoing Account Incident Line
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
 Incoming Cash Exchange Line | Cash Delivery Cell
-Incoming Cash Incident Line | Cash Delivery Cell
-Incoming Cash Sorting Incident Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
 Incoming Cash To Currency Purchase Line | Cash Delivery Cell
 Incoming Cash To Currency Sale Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
-Incoming Usual Cash Incident Line | Cash Delivery Cell
+Incoming Incident Line | Cash Delivery Cell
 Internal Money Deposit | Banking Operation Line
 Internal Money Deposit | Cash Delivery Line
 Monetary Destruction | Cash Delivery Line
@@ -58,18 +52,13 @@ Money Deposit | Cash Delivery Line
 Mutilated Banknote | Exchanged Mutilated Banknote Line
 Mutilated Banknote | Incoming Mutilated Banknote Line
 Mutilated Banknote | Outgoing Mutilated Banknote Line
-Outgoing Account Incident Line | Cash Delivery Cell
 Outgoing Cash Balance Regulation Line | Cash Delivery Cell
 Outgoing Cash Exchange Line | Cash Delivery Cell
-Outgoing Cash Incident Line | Cash Delivery Cell
-Outgoing Cash Sorting Incident Line | Cash Delivery Cell
 Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell
 Outgoing Cash To Currency Purchase Line | Cash Delivery Cell
 Outgoing Cash To Currency Sale Line | Cash Delivery Cell
 Outgoing Classification Survey Line | Outgoing Classification Survey Cell
-Outgoing Usual Cash Incident Line | Cash Delivery Cell
-Usual Cash Incident | Incoming Usual Cash Incident Line
-Usual Cash Incident | Outgoing Usual Cash Incident Line
+Outgoing Incident Line | Cash Delivery Cell
 Usual Cash Rendering | Cash Delivery Line
 Usual Cash Transfer | Cash Delivery Line
 Vault Transfer Line | Vault Transfer Cell

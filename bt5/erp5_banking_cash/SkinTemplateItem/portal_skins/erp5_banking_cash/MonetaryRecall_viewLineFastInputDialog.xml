@@ -72,14 +72,14 @@ request = context.REQUEST\n
 \n
 currency = context.Baobab_getPortalReferenceCurrencyID()\n
 \n
-source = context.getSource()\n
-if \'auxiliaire/encaisse_des_billets_et_monnaies\' not in source:\n
-  message = N_("Please select a good source.")\n
-  redirect_url = \'%s/%s?portal_status_message=%s\' % ( context.absolute_url()\n
-                              , \'view\'\n
-                              , message\n
-                              )\n
-  request[ \'RESPONSE\' ].redirect( redirect_url )\n
+#source = context.getSource()\n
+#if \'auxiliaire/encaisse_des_billets_et_monnaies\' not in source:\n
+#  message = N_("Please select a good source.")\n
+#  redirect_url = \'%s/%s?portal_status_message=%s\' % ( context.absolute_url()\n
+#                              , \'view\'\n
+#                              , message\n
+#                              )\n
+ # request[ \'RESPONSE\' ].redirect( redirect_url )\n
  \n
 cash_status = [\'cancelled\',\'mutilated\',\'error\']\n
 emission_letter = context.Baobab_getUserEmissionLetterList() \n
@@ -155,10 +155,6 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                             <string>N_</string>
                             <string>request</string>
                             <string>currency</string>
-                            <string>source</string>
-                            <string>message</string>
-                            <string>redirect_url</string>
-                            <string>_getitem_</string>
                             <string>cash_status</string>
                             <string>emission_letter</string>
                             <string>variation</string>

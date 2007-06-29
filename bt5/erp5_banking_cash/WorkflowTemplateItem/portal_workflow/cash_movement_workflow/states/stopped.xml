@@ -39,6 +39,8 @@
               <tuple>
                 <string>deliver</string>
                 <string>deliver_action</string>
+                <string>unstop</string>
+                <string>unstop_action</string>
               </tuple>
             </value>
         </item>

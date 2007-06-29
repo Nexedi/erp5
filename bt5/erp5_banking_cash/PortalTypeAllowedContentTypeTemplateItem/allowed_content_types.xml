@@ -1,12 +1,4 @@
 <allowed_content_type_list>
- <portal_type id="Account Incident">
-  <item>Outgoing Account Incident Line</item>
-  <item>Incoming Account Incident Line</item>
-  <item>Banking Operation Line</item>
- </portal_type>
- <portal_type id="Account Incident Module">
-  <item>Account Incident</item>
- </portal_type>
  <portal_type id="Cash Balance Regulation">
   <item>Outgoing Cash Balance Regulation Line</item>
   <item>Incoming Cash Balance Regulation Line</item>
@@ -27,13 +19,6 @@
  <portal_type id="Cash Exchange Module">
   <item>Cash Exchange</item>
  </portal_type>
- <portal_type id="Cash Incident">
-  <item>Incoming Cash Incident Line</item>
-  <item>Outgoing Cash Incident Line</item>
- </portal_type>
- <portal_type id="Cash Incident Module">
-  <item>Cash Incident</item>
- </portal_type>
  <portal_type id="Cash Movement">
   <item>Cash Delivery Line</item>
  </portal_type>
@@ -43,13 +28,6 @@
  <portal_type id="Cash Sorting">
   <item>Incoming Cash Sorting Line</item>
   <item>Outgoing Cash Sorting Line</item>
- </portal_type>
- <portal_type id="Cash Sorting Incident">
-  <item>Outgoing Cash Sorting Incident Line</item>
-  <item>Incoming Cash Sorting Incident Line</item>
- </portal_type>
- <portal_type id="Cash Sorting Incident Module">
-  <item>Cash Sorting Incident</item>
  </portal_type>
  <portal_type id="Cash Sorting Module">
   <item>Cash Sorting</item>
@@ -113,19 +91,18 @@
  <portal_type id="Foreign Cash Reception Module">
   <item>Foreign Cash Reception</item>
  </portal_type>
- <portal_type id="Incoming Account Incident Line">
-  <item>Cash Delivery Cell</item>
+ <portal_type id="Incident">
+  <item>Outgoing Incident Line</item>
+  <item>Incoming Incident Line</item>
+  <item>Banking Operation Line</item>
+ </portal_type>
+ <portal_type id="Incident Module">
+  <item>Account Incident</item>
  </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash Exchange Line">
-  <item>Cash Delivery Cell</item>
- </portal_type>
- <portal_type id="Incoming Cash Incident Line">
-  <item>Cash Delivery Cell</item>
- </portal_type>
- <portal_type id="Incoming Cash Sorting Incident Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
@@ -141,10 +118,10 @@
  <portal_type id="Incoming Classification Survey Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
- <portal_type id="Incoming Mutilated Banknote Line">
+ <portal_type id="Incoming Incident Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
- <portal_type id="Incoming Usual Cash Incident Line">
+ <portal_type id="Incoming Mutilated Banknote Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
@@ -216,19 +193,10 @@
  <portal_type id="Mutilated Banknote Module">
   <item>Mutilated Banknote</item>
  </portal_type>
- <portal_type id="Outgoing Account Incident Line">
-  <item>Cash Delivery Cell</item>
- </portal_type>
  <portal_type id="Outgoing Cash Balance Regulation Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Cash Exchange Line">
-  <item>Cash Delivery Cell</item>
- </portal_type>
- <portal_type id="Outgoing Cash Incident Line">
-  <item>Cash Delivery Cell</item>
- </portal_type>
- <portal_type id="Outgoing Cash Sorting Incident Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">
@@ -243,18 +211,14 @@
  <portal_type id="Outgoing Classification Survey Line">
   <item>Outgoing Classification Survey Cell</item>
  </portal_type>
+ <portal_type id="Outgoing Incident Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
  <portal_type id="Outgoing Mutilated Banknote Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Outgoing Usual Cash Incident Line">
   <item>Cash Delivery Cell</item>
- </portal_type>
- <portal_type id="Usual Cash Incident">
-  <item>Outgoing Usual Cash Incident Line</item>
-  <item>Incoming Usual Cash Incident Line</item>
- </portal_type>
- <portal_type id="Usual Cash Incident Module">
-  <item>Usual Cash Incident</item>
  </portal_type>
  <portal_type id="Usual Cash Rendering">
   <item>Cash Delivery Line</item>

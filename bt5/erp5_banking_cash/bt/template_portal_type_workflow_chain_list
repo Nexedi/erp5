@@ -1,16 +1,9 @@
-Account Incident | account_incident_workflow
-Account Incident | edit_workflow
 Cash Balance Regulation | cash_balance_regulation_workflow
 Cash Balance Regulation | edit_workflow
 Cash Exchange | cash_exchange_workflow
 Cash Exchange | edit_workflow
-Cash Incident | cash_incident_currency_interaction_workflow
-Cash Incident | cash_incident_workflow
-Cash Incident | edit_workflow
 Cash Movement | cash_movement_workflow
 Cash Movement | edit_workflow
-Cash Sorting Incident | cash_sorting_incident_workflow
-Cash Sorting Incident | edit_workflow
 Cash Sorting | cash_sorting_workflow
 Cash Sorting | edit_workflow
 Cash To Currency Purchase | cash_to_currency_purchase_workflow
@@ -34,6 +27,8 @@ Destruction Survey | destruction_survey_workflow
 Destruction Survey | edit_workflow
 Foreign Cash Reception | edit_workflow
 Foreign Cash Reception | foreign_cash_reception_workflow
+Incident | edit_workflow
+Incident | incident_workflow
 Internal Money Deposit | edit_workflow
 Internal Money Deposit | internal_money_deposit_workflow
 Monetary Destruction | edit_workflow
@@ -52,8 +47,6 @@ Money Deposit | edit_workflow
 Money Deposit | money_deposit_workflow
 Mutilated Banknote | edit_workflow
 Mutilated Banknote | mutilated_banknote_workflow
-Usual Cash Incident | edit_workflow
-Usual Cash Incident | usual_cash_incident_workflow
 Usual Cash Rendering | edit_workflow
 Usual Cash Rendering | usual_cash_rendering_workflow
 Usual Cash Transfer | edit_workflow

@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+transaction = state_change[\'object\']\n
+\n
+if transaction.getResourceValue() is None:\n
+  raise ValidationFailed, Message(domain="ui", message="No resource defined.")\n
+\n
+in_price = transaction.getTotalPrice(portal_type=[\'Incoming Incident Line\',\n
+                                                  \'Cash Delivery Cell\'],fast=0)\n
+out_price = transaction.getTotalPrice(portal_type=[\'Outgoing Incident Line\',\n
+                                                   \'Cash Delivery Cell\'],fast=0)\n
+\n
+price = transaction.ERP5Banking_getExchangeValue()\n
+if price is None:\n
+  price = transaction.getSourceTotalAssetPrice()\n
+\n
+# Check user input\n
+if in_price == 0 and out_price == 0:\n
+  msg = Message(domain = "ui", message="No cash detail input.")\n
+  raise ValidationFailed, (msg,)\n
+elif 0 not in (in_price, out_price):\n
+  msg = Message(domain = "ui", message="You can\'t have excess and deficit on the same document.")\n
+  raise ValidationFailed, (msg,)\n
+elif price not in (in_price, out_price):\n
+  msg = Message(domain = "ui", message="Price differs between document and cash detail.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Check that we are in the good accounting date\n
+transaction.Baobab_checkCounterDateOpen(site=transaction.getSite(),\n
+                                        date=transaction.getStartDate())\n
+\n
+# Check balance in vault if excess\n
+if out_price > 0:\n
+  transaction.checkVaultBalance(state_change)\n
+\n
+if transaction.getIncidentType == "account_incident":\n
+  bank_account = transaction.getSourcePaymentValue()\n
+  if transaction.BankAccount_isMessagePending(bank_account):\n
+    msg = Message(domain=\'ui\', message="There are operations pending for this account that prevent form calculating its position. Please try again later.")\n
+    raise ValidationFailed, (msg,)\n
+\n
+  if bank_account is None:\n
+    msg = Message(domain=\'ui\', message="No bank account defined.")\n
+    raise ValidationFailed, (msg,)\n
+  if out_price > 0:\n
+    error = transaction.BankAccount_checkAvailableBalance(bank_account.getRelativeUrl(), out_price)\n
+    if error[\'error_code\'] == 1:\n
+      msg = Message(domain=\'ui\', message="Bank account is not sufficient.")\n
+      raise ValidationFailed, (msg,)\n
+    elif error[\'error_code\'] == 2:\n
+      msg = Message(domain=\'ui\', message="Bank account is not valid.")\n
+      raise ValidationFailed, (msg,)\n
+    elif error[\'error_code\'] != 0:\n
+      msg = Message(domain=\'ui\', message="Unknown error code.")\n
+      raise ValidationFailed, (msg,)\n
+\n
+  bank_account.serialize()    \n
+  # Create the banking operation line\n
+  context.createBankingOperationLine(state_change)\n
+  banking_line = transaction[\'movement\']\n
+  if in_price > 0:\n
+    banking_line.setSourceCredit(in_price)\n
+  else:\n
+    banking_line.setSourceDebit(out_price)\n
+  # Index the banking operation line so it impacts account position\n
+  transaction.BankingOperationLine_index(banking_line)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getitem_</string>
+                            <string>transaction</string>
+                            <string>_getattr_</string>
+                            <string>None</string>
+                            <string>in_price</string>
+                            <string>out_price</string>
+                            <string>price</string>
+                            <string>msg</string>
+                            <string>bank_account</string>
+                            <string>error</string>
+                            <string>context</string>
+                            <string>banking_line</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>checkConsistency</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

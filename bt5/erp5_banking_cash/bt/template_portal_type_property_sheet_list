@@ -1,5 +1,3 @@
-Account Incident | Amount
-Account Incident | Price
 Cash Balance Regulation | Amount
 Cash Balance Regulation | Price
 Cash Balance Regulation | Resource
@@ -8,12 +6,7 @@ Cash Exchange | Amount
 Cash Exchange | Price
 Cash Exchange | Resource
 Cash Exchange | Simulation
-Cash Incident | Amount
-Cash Incident | Price
 Cash Movement | Price
-Cash Sorting Incident | AccountingEvent
-Cash Sorting Incident | Amount
-Cash Sorting Incident | Price
 Cash Sorting | Price
 Cash To Currency Purchase | Amount
 Cash To Currency Purchase | Discount
@@ -41,17 +34,15 @@ Currency Sale | Resource
 Destruction Survey | Amount
 Destruction Survey | Task
 Exchanged Mutilated Banknote Line | CashDeliveryLine
-Incoming Account Incident Line | CashDeliveryLine
+Incident | Price
 Incoming Cash Balance Regulation Line | CashDeliveryLine
 Incoming Cash Exchange Line | CashDeliveryLine
-Incoming Cash Incident Line | CashDeliveryLine
-Incoming Cash Sorting Incident Line | CashDeliveryLine
 Incoming Cash Sorting Line | CashDeliveryLine
 Incoming Cash To Currency Purchase Line | CashDeliveryLine
 Incoming Cash To Currency Sale Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
+Incoming Incident Line | CashDeliveryLine
 Incoming Mutilated Banknote Line | CashDeliveryLine
-Incoming Usual Cash Incident Line | CashDeliveryLine
 Internal Money Deposit | Arrow
 Internal Money Deposit | InternalMoney
 Internal Money Deposit | Price
@@ -79,21 +70,16 @@ Money Deposit | Price
 Money Deposit | Task
 Mutilated Banknote | Amount
 Mutilated Banknote | Price
-Outgoing Account Incident Line | CashDeliveryLine
 Outgoing Cash Balance Regulation Line | CashDeliveryLine
 Outgoing Cash Exchange Line | CashDeliveryLine
-Outgoing Cash Incident Line | CashDeliveryLine
 Outgoing Cash Sorting Cell | CashDeliveryLine
-Outgoing Cash Sorting Incident Line | CashDeliveryLine
 Outgoing Cash Sorting Line | CashDeliveryLine
 Outgoing Cash To Currency Purchase Line | CashDeliveryLine
 Outgoing Cash To Currency Sale Line | CashDeliveryLine
 Outgoing Classification Survey Cell | CashDeliveryLine
 Outgoing Classification Survey Line | CashDeliveryLine
+Outgoing Incident Line | CashDeliveryLine
 Outgoing Mutilated Banknote Line | CashDeliveryLine
-Outgoing Usual Cash Incident Line | CashDeliveryLine
-Usual Cash Incident | Amount
-Usual Cash Incident | Price
 Usual Cash Rendering | Amount
 Usual Cash Rendering | Price
 Usual Cash Transfer | Amount

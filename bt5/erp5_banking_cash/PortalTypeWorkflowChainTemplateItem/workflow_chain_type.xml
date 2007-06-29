@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Account Incident</type>
-  <workflow>edit_workflow, account_incident_workflow</workflow>
- </chain>
- <chain>
   <type>Cash Balance Regulation</type>
   <workflow>cash_balance_regulation_workflow, edit_workflow</workflow>
  </chain>
@@ -12,20 +8,12 @@
   <workflow>cash_exchange_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Cash Incident</type>
-  <workflow>cash_incident_currency_interaction_workflow, edit_workflow, cash_incident_workflow</workflow>
- </chain>
- <chain>
   <type>Cash Movement</type>
   <workflow>edit_workflow, cash_movement_workflow</workflow>
  </chain>
  <chain>
   <type>Cash Sorting</type>
   <workflow>cash_sorting_workflow, edit_workflow</workflow>
- </chain>
- <chain>
-  <type>Cash Sorting Incident</type>
-  <workflow>cash_sorting_incident_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Cash To Currency Purchase</type>
@@ -68,6 +56,10 @@
   <workflow>foreign_cash_reception_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Incident</type>
+  <workflow>edit_workflow, incident_workflow</workflow>
+ </chain>
+ <chain>
   <type>Internal Money Deposit</type>
   <workflow>internal_money_deposit_workflow, edit_workflow</workflow>
  </chain>
@@ -102,10 +94,6 @@
  <chain>
   <type>Mutilated Banknote</type>
   <workflow>edit_workflow, mutilated_banknote_workflow</workflow>
- </chain>
- <chain>
-  <type>Usual Cash Incident</type>
-  <workflow>edit_workflow, usual_cash_incident_workflow</workflow>
  </chain>
  <chain>
   <type>Usual Cash Rendering</type>

@@ -1,8 +1,4 @@
 <property_sheet_list>
- <portal_type id="Account Incident">
-  <item>Price</item>
-  <item>Amount</item>
- </portal_type>
  <portal_type id="Cash Balance Regulation">
   <item>Price</item>
   <item>Resource</item>
@@ -15,20 +11,11 @@
   <item>Amount</item>
   <item>Resource</item>
  </portal_type>
- <portal_type id="Cash Incident">
-  <item>Amount</item>
-  <item>Price</item>
- </portal_type>
  <portal_type id="Cash Movement">
   <item>Price</item>
  </portal_type>
  <portal_type id="Cash Sorting">
   <item>Price</item>
- </portal_type>
- <portal_type id="Cash Sorting Incident">
-  <item>Price</item>
-  <item>Amount</item>
-  <item>AccountingEvent</item>
  </portal_type>
  <portal_type id="Cash To Currency Purchase">
   <item>Price</item>
@@ -55,10 +42,10 @@
   <item>Price</item>
  </portal_type>
  <portal_type id="Currency Purchase">
-  <item>Resource</item>
   <item>Reference</item>
   <item>Price</item>
   <item>Discount</item>
+  <item>Resource</item>
   <item>ItemAggregation</item>
  </portal_type>
  <portal_type id="Currency Sale">
@@ -74,19 +61,13 @@
  <portal_type id="Exchanged Mutilated Banknote Line">
   <item>CashDeliveryLine</item>
  </portal_type>
- <portal_type id="Incoming Account Incident Line">
-  <item>CashDeliveryLine</item>
+ <portal_type id="Incident">
+  <item>Price</item>
  </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Incoming Cash Exchange Line">
-  <item>CashDeliveryLine</item>
- </portal_type>
- <portal_type id="Incoming Cash Incident Line">
-  <item>CashDeliveryLine</item>
- </portal_type>
- <portal_type id="Incoming Cash Sorting Incident Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
@@ -101,16 +82,16 @@
  <portal_type id="Incoming Classification Survey Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Incoming Incident Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Incoming Mutilated Banknote Line">
   <item>CashDeliveryLine</item>
  </portal_type>
- <portal_type id="Incoming Usual Cash Incident Line">
-  <item>CashDeliveryLine</item>
- </portal_type>
  <portal_type id="Internal Money Deposit">
+  <item>Task</item>
   <item>InternalMoney</item>
   <item>Arrow</item>
-  <item>Task</item>
   <item>Price</item>
  </portal_type>
  <portal_type id="Monetary Destruction">
@@ -158,22 +139,13 @@
   <item>Amount</item>
   <item>Price</item>
  </portal_type>
- <portal_type id="Outgoing Account Incident Line">
-  <item>CashDeliveryLine</item>
- </portal_type>
  <portal_type id="Outgoing Cash Balance Regulation Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Outgoing Cash Exchange Line">
   <item>CashDeliveryLine</item>
  </portal_type>
- <portal_type id="Outgoing Cash Incident Line">
-  <item>CashDeliveryLine</item>
- </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
-  <item>CashDeliveryLine</item>
- </portal_type>
- <portal_type id="Outgoing Cash Sorting Incident Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">
@@ -191,15 +163,11 @@
  <portal_type id="Outgoing Classification Survey Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Outgoing Incident Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Outgoing Mutilated Banknote Line">
   <item>CashDeliveryLine</item>
- </portal_type>
- <portal_type id="Outgoing Usual Cash Incident Line">
-  <item>CashDeliveryLine</item>
- </portal_type>
- <portal_type id="Usual Cash Incident">
-  <item>Amount</item>
-  <item>Price</item>
  </portal_type>
  <portal_type id="Usual Cash Rendering">
   <item>Price</item>

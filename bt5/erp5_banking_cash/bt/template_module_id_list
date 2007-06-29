@@ -1,9 +1,6 @@
-account_incident_module
 cash_balance_regulation_module
 cash_exchange_module
-cash_incident_module
 cash_movement_module
-cash_sorting_incident_module
 cash_sorting_module
 cash_to_currency_purchase_module
 cash_to_currency_sale_module
@@ -13,6 +10,7 @@ currency_purchase_module
 currency_sale_module
 destruction_survey_module
 foreign_cash_reception_module
+incident_module
 internal_money_deposit_module
 monetary_destruction_module
 monetary_issue_module
@@ -22,7 +20,6 @@ monetary_survey_module
 money_deposit_module
 money_deposit_rendering_module
 mutilated_banknote_module
-usual_cash_incident_module
 usual_cash_rendering_module
 usual_cash_transfer_module
 vault_transfer_module

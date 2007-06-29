@@ -43,6 +43,10 @@
                 <string>confirm_action</string>
                 <string>delete</string>
                 <string>delete_action</string>
+                <string>order</string>
+                <string>order_action</string>
+                <string>plan</string>
+                <string>plan_action</string>
               </tuple>
             </value>
         </item>

@@ -1,20 +1,9 @@
 <base_category_list>
- <portal_type id="Account Incident">
-  <item>source_decision</item>
- </portal_type>
  <portal_type id="Bank Account">
   <item>site</item>
  </portal_type>
  <portal_type id="Cash Container Item">
   <item>aggregate</item>
- </portal_type>
- <portal_type id="Cash Incident">
-  <item>source_decision</item>
-  <item>responsible</item>
- </portal_type>
- <portal_type id="Cash Sorting Incident">
-  <item>responsible</item>
-  <item>source_decision</item>
  </portal_type>
  <portal_type id="Cash To Currency Purchase">
   <item>currency_exchange_type</item>
@@ -43,6 +32,11 @@
  <portal_type id="Foreign Cash Reception">
   <item>currency_exchange_type</item>
  </portal_type>
+ <portal_type id="Incident">
+  <item>currency_exchange_type</item>
+  <item>site</item>
+  <item>incident_type</item>
+ </portal_type>
  <portal_type id="Internal Money Deposit">
   <item>external_software</item>
  </portal_type>
@@ -62,8 +56,5 @@
  </portal_type>
  <portal_type id="Outgoing Classification Survey Cell">
   <item>variation</item>
- </portal_type>
- <portal_type id="Usual Cash Incident">
-  <item>incident_type</item>
  </portal_type>
 </base_category_list>

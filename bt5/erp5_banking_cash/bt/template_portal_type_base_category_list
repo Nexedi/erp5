@@ -1,10 +1,5 @@
-Account Incident | source_decision
 Bank Account | site
 Cash Container Item | aggregate
-Cash Incident | responsible
-Cash Incident | source_decision
-Cash Sorting Incident | responsible
-Cash Sorting Incident | source_decision
 Cash To Currency Purchase | currency_exchange_type
 Cash To Currency Sale | currency_exchange_type
 Container Cell | cash_status
@@ -18,6 +13,9 @@ Currency Purchase | source_trade
 Currency Sale | currency_exchange_type
 Currency Sale | source_trade
 Foreign Cash Reception | currency_exchange_type
+Incident | currency_exchange_type
+Incident | incident_type
+Incident | site
 Internal Money Deposit | external_software
 Monetary Recall Cell | variation
 Money Deposit | external_software
@@ -26,4 +24,3 @@ Mutilated Banknote | source_decision
 Mutilated Banknote | source_trade
 Outgoing Cash Sorting Cell | variation
 Outgoing Classification Survey Cell | variation
-Usual Cash Incident | incident_type
