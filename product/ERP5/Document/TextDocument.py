@@ -112,7 +112,7 @@ class TextDocument(Document, TextContent):
       # HTML tags (will replace them accordingly) so this is the last possible 
       # step where we can check if any other scripts wouldn't try to set manually
       # bad HTML content.
-      if isHTMLSafe(kw['text_content']):
+      if isHTMLSafe(kw.get('text_content', '')):
         Document._edit(self, **kw)
       else:
         raise ValueError, "HTML contains illegal tags."
