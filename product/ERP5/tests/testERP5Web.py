@@ -46,6 +46,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
   quiet = 1
   manager_username = 'zope'
   manager_password = 'zope'
+  website_id = 'test'
 
   web_site_portal_type = 'Web Site'
 
@@ -70,6 +71,8 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.web_page_module = self.portal.web_page_module
     self.portal_id = self.portal.getId()
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
+    self.getPortal().web_site_module.newContent(portal_type = 'Web Site', 
+                                                id = self.website_id)
 
   def test_01_WebSite_recatalog(self, quiet=quiet, run=run_all_test):
     """
@@ -80,7 +83,8 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Create new Web Site document
     portal = self.getPortal()
     web_site_module = self.portal.getDefaultModule(self.web_site_portal_type)
-    web_site = web_site_module.newContent(portal_type=self.web_site_portal_type)
+    web_site = web_site_module[self.website_id]
+
     self.assertTrue(web_site is not None)
     # Recatalog the Web Site document
     portal_catalog = self.getCatalogTool()
@@ -90,14 +94,45 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.fail('Cataloging of the Web Site failed.')
 
 
-  def test_SimpleWebPage(self):
-    """Simple Case of creating a web page.
+  def test_02_EditSimpleWebPage(self):
+    """
+      Simple Case of creating a web page.
     """
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<b>OK</b>')
     self.assertEquals('text/html', page.getTextFormat())
     self.assertEquals('<b>OK</b>', page.getTextContent())
+    
+  def test_03_createWebSiteUser(self):
+    """
+      Create Web site User.
+    """
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    kw = dict(reference = 'web',
+              first_name = 'TestFN',
+              last_name = 'TestLN',
+              default_email_text = 'test@test.com',
+              password = 'abc',
+              password_confirm = 'abc',)
+    for key, item in kw.items():
+      request.set('field_your_%s' %key, item)
+    website = portal.web_site_module[self.website_id]
+    website.WebSite_createWebSiteAccount()
+    
+    # find person object by reference
+    person = website.ERP5Site_getAuthenticatedMemberPersonValue(kw['reference'])
+    self.assertEquals(person.getReference(), kw['reference'])
+    self.assertEquals(person.getFirstName(), kw['first_name'])
+    self.assertEquals(person.getLastName(), kw['last_name'])
+    self.assertEquals(person.getDefaultEmailText(), kw['default_email_text'])
+    self.assertEquals(person.getValidationState(), 'validated')
 
+    # check if user account is 'loggable' 
+    uf = portal.acl_users
+    user = uf.getUserById( kw['reference'])
+    self.assertEquals(str(user),  kw['reference'])
+    self.assertEquals(1, user.has_role(('Member', 'Authenticated',)))
 
 def test_suite():
   suite = unittest.TestSuite()
