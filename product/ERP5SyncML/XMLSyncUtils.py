@@ -690,7 +690,7 @@ class XMLSyncUtilsMixin(SyncCode):
     actual xupdate on the signature.
     """
     local_gid_list = []
-    syncml_data = ''
+    syncml_data = kw.get('syncml_data','')
     result = {'finished':0}
     if isinstance(remote_xml, str) or isinstance(remote_xml, unicode):
       remote_xml = Parse(remote_xml)
@@ -1343,8 +1343,9 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     subscriber = self.unrestrictedTraverse(kw['subscriber_relative_url'])
     conduit = subscriber.getConduit()
     result = self.getSyncMLData(domain = domain, subscriber = subscriber,
-                           conduit = conduit, max = 100, **kw)
+                                conduit = conduit, max = 100, **kw)
     syncml_data = result['syncml_data']
+    kw['syncml_data'] = syncml_data
     finished = result['finished']
     if not finished:
       self.activate().SyncModifActivity(**kw)
