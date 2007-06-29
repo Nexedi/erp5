@@ -105,7 +105,7 @@
                         <string>your_default_address_region</string>
                         <string>your_reference</string>
                         <string>your_password</string>
-                        <string>password_confirm</string>
+                        <string>your_password_confirm</string>
                         <string>submit</string>
                       </list>
                     </value>
