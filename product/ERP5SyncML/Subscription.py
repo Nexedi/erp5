@@ -756,9 +756,9 @@ class Subscription(Folder, SyncCode):
     """
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     # XXX for debugging only, to be removed
-    dict_sign = {}
-    for o in self.objectValues():
-      dict_sign[o.getId()] = o.getStatus()
+    #dict_sign = {}
+    #for o in self.objectValues():
+      #dict_sign[o.getId()] = o.getStatus()
     # LOG('getSignature',0,'signatures_status: %s' % str(dict_sign))
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     code = self.SLOW_SYNC
