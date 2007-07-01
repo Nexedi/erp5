@@ -226,7 +226,7 @@ class PublicationSynchronization(XMLSyncUtils):
     """
       This is the synchronization method for the server
     """
-    LOG('PubSync',0,'Starting... publication: %s' % str(publication))
+    #LOG('PubSync',0,'Starting... publication: %s' % str(publication))
     # Read the request from the client
     xml_client = msg
     if xml_client is None:

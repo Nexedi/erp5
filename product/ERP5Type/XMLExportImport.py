@@ -70,7 +70,7 @@ def Base_asXML(object, ident=0):
   xml = ''
   if ident==0:
     xml += '<erp5>'
-  LOG('asXML',0,'Working on: %s' % str(self.getPhysicalPath()))
+  #LOG('asXML',0,'Working on: %s' % str(self.getPhysicalPath()))
   ident_string = '' # This is used in order to have the ident incremented
                     # for every sub-object
   for i in range(0,ident):
