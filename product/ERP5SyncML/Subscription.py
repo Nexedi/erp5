@@ -1376,9 +1376,9 @@ class Subscription(Folder, SyncCode):
     remaining_object_list = self.getRemainingObjectPathList()
     if remaining_object_list is not None:
       new_list = []
-      for o in remaining_object_list:
-        if o != object_path:
-          new_list.append(o)
+      new_list.extend(remaining_object_list)
+      while object_path in new_list:
+        new_list.remove(object_path)
       self.setRemainingObjectPathList(new_list)
 
   def startSynchronization(self):
