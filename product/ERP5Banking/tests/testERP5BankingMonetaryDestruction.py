@@ -782,11 +782,12 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'ValidateFails ' \
                     + 'DeleteResetInventory Tic ' \
                     + 'ValidateMonetaryDestruction ' \
-                    + 'CheckSourceDebit '
+                    + 'CheckSourceDebit ' \
+                    + 'Tic DelMonetaryDestruction Tic'
     sequence_list.addSequenceString(sequence_string)
     
     # define the sequence
-    another_sequence_string = 'Tic DelMonetaryDestruction Tic CheckObjects Tic CheckInitialInventoryForExterne CheckSourceForExterne ' \
+    another_sequence_string = 'Tic CheckObjects Tic CheckInitialInventoryForExterne CheckSourceForExterne ' \
                     + 'CreateMonetaryDestructionForExterne ' \
                     + 'CreateValidLineForExterne1 CheckSubTotal ' \
                     + 'CreateValidLineForExterne2 CheckTotal ' \
