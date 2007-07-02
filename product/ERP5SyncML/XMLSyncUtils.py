@@ -681,7 +681,7 @@ class XMLSyncUtilsMixin(SyncCode):
 
   def getSyncMLData(self, domain=None, remote_xml=None, cmd_id=0,
                     subscriber=None, xml_confirmation=None, conduit=None,
-                    max=1000, **kw):
+                    max=None, **kw):
     """
     This generate the syncml data message. This returns a string
     with all modification made locally (ie replace, add ,delete...)
@@ -691,7 +691,7 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     local_gid_list = []
     syncml_data = kw.get('syncml_data','')
-    result = {'finished':0}
+    result = {'finished':1}
     if isinstance(remote_xml, str) or isinstance(remote_xml, unicode):
       remote_xml = Parse(remote_xml)
     if subscriber.getRemainingObjectPathList() is None:
@@ -721,14 +721,17 @@ class XMLSyncUtilsMixin(SyncCode):
     local_gid_list = []
     loop = 0
     for object_path in subscriber.getRemainingObjectPathList():
+      if max is not None and loop >= max:
+        result['finished'] = 0
+        break
       object = self.unrestrictedTraverse(object_path)
       status = self.SENT
       object_gid = domain.getGidFromObject(object)
       if object_gid in ('', None):
-        continue;
+        continue
       local_gid_list += [object_gid]
       force = 0
-      if syncml_data.count('\n') < self.MAX_LINES and loop < max and not \
+      if syncml_data.count('\n') < self.MAX_LINES and not \
           object.id.startswith('.'):
         # If not we have to cut
         #LOG('getSyncMLData',0,'xml_mapping: %s' % str(domain.xml_mapping))
@@ -839,7 +842,6 @@ class XMLSyncUtilsMixin(SyncCode):
             signature.setTempXML(xml_object)
           if set_synchronized: # We have to do that after this previous update
             # We should not have this case when we are in CONFLICT_MERGE
-
             signature.setStatus(self.SYNCHRONIZED)
         elif signature.getStatus()==self.PUB_CONFLICT_CLIENT_WIN:
           # We have decided to apply the update
@@ -889,9 +891,9 @@ class XMLSyncUtilsMixin(SyncCode):
                 gid=gid, xml_string=xml_string, 
                 more_data=more_data, media_type=subscriber.getMediaType())
       else:
+        result['finished'] = 1
         break
       loop += 1
-    result['finished'] = 1
     result['syncml_data'] = syncml_data
     result['xml_confirmation'] = xml_confirmation
     result['cmd_id'] = cmd_id
