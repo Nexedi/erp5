@@ -140,8 +140,8 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
                                             vault=None,
                                             bank_account=self.bank_account_2,
-                                            min=50,
-                                            max=100,
+                                            min='0000050',
+                                            max='0000100',
                                             )
 
     self.check_1 = self.createCheck(id='check_1',

@@ -150,30 +150,30 @@ class TestERP5BankingCheckPaymentMixin:
                                             )
 
     self.check_1 = self.createCheck(id='check_1',
-                                    reference='50',
+                                    reference='0000050',
                                     resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_2 = self.createCheck(id='check_2',
-                                    reference='51',
+                                    reference='0000051',
                                     resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_3 = self.createCheck(id='check_3',
-                                    reference='52',
+                                    reference='0000052',
                                     resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_4 = self.createCheck(id='check_4',
-                                    reference='53',
+                                    reference='0000053',
                                     resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_5 = self.createCheck(id='check_5',
-                                    reference='54',
+                                    reference='0000054',
                                     resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
     self.check_5 = self.createCheck(id='check_6',
-                                    reference='56',
+                                    reference='0000056',
                                     resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
-    self.non_existant_check_reference = '55'
+    self.non_existant_check_reference = '0000055'
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """

@@ -181,8 +181,8 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                                  resource_value=self.checkbook_model_1,
                                  check_amount_value=self.checkbook_model_1.variant_1,
                                  destination_payment_value=self.bank_account_1,
-                                 reference_range_min=50,
-                                 reference_range_max=99,
+                                 reference_range_min='0000050',
+                                 reference_range_max='0000099',
                                  )
 
   def stepCreateCheckAndCheckbookLineList3(self, sequence=None, sequence_list=None, **kwd):
@@ -194,8 +194,8 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                                  resource_value=self.checkbook_model_1,
                                  check_amount_value=self.checkbook_model_1.variant_1,
                                  destination_payment_value=self.bank_account_1,
-                                 reference_range_min=150,
-                                 reference_range_max=199,
+                                 reference_range_min='0000150',
+                                 reference_range_max='0000199',
                                  )
 
   def stepCreateCheckAndCheckbookLineList4(self, sequence=None, sequence_list=None, **kwd):
@@ -210,8 +210,8 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                                  resource_value=self.checkbook_model_1,
                                  check_amount_value=self.checkbook_model_1.variant_1,
                                  destination_payment_value=self.bank_account_1,
-                                 reference_range_min=101,
-                                 reference_range_max=150,
+                                 reference_range_min='0000101',
+                                 reference_range_max='0000150',
                                  )
 
   def stepCreateCheckAndCheckbookLineList(self, sequence=None, sequence_list=None, **kwd):
@@ -226,15 +226,15 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                                  resource_value=self.checkbook_model_1,
                                  check_amount_value=self.checkbook_model_1.variant_1,
                                  destination_payment_value=self.bank_account_1,
-                                 reference_range_min=1,
-                                 reference_range_max=50
+                                 reference_range_min='0000001',
+                                 reference_range_max='0000050'
                                  )
     self.line_2 = self.checkbook_reception.newContent(quantity=1,
                                  resource_value=self.check_model_1,
                                  check_amount_value=None,
                                  destination_payment_value=self.bank_account_2,
-                                 reference_range_min=51,
-                                 reference_range_max=51
+                                 reference_range_min='0000051',
+                                 reference_range_max='0000051'
                                  )
 
   def stepCheckItemsCreated(self, sequence=None, sequence_list=None, **kwd):

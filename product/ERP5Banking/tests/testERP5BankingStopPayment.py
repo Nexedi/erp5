@@ -128,7 +128,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
                      resource_value=self.currency_1,
                      description='test',
                      start_date=self.date,
-                     reference_range_min=51,
+                     reference_range_min='0000051',
                      aggregate_resource_value=self.check_model_1,
                      source_total_asset_price=20000)
     # set source reference

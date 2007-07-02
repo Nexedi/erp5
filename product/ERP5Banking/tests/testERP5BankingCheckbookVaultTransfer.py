@@ -63,15 +63,15 @@ class TestERP5BankingCheckbookVaultTransferMixin:
                                  resource_value=self.checkbook_model_1,
                                  check_amount_value=self.checkbook_model_1.variant_1,
                                  destination_payment_value=self.bank_account_1,
-                                 reference_range_min=1,
-                                 reference_range_max=50,
+                                 reference_range_min='0000001',
+                                 reference_range_max='0000050',
                                  )
     self.line_2 = self.checkbook_reception.newContent(quantity=1,
                                  resource_value=self.check_model_1,
                                  check_amount_value=None,
                                  destination_payment_value=self.bank_account_2,
-                                 reference_range_min=51,
-                                 reference_range_max=51,
+                                 reference_range_min='0000051',
+                                 reference_range_max='0000051',
                                  )
     self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action', 
                                    wf_id='checkbook_reception_workflow')
@@ -280,15 +280,15 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     self.line_1 = self.checkbook_vault_transfer.newContent(quantity=1,
                                  resource_value=self.checkbook_model_1,
                                  check_amount_value=self.checkbook_model_1.variant_1,
-                                 reference_range_min=1,
-                                 reference_range_max=50,
+                                 reference_range_min='0000001',
+                                 reference_range_max='0000050',
                                  aggregate_value=self.checkbook_1
                                  )
     self.line_2 = self.checkbook_vault_transfer.newContent(quantity=1,
                                  resource_value=self.check_model_1,
                                  check_amount_value=None,
-                                 reference_range_min=51,
-                                 reference_range_max=51,
+                                 reference_range_min='0000051',
+                                 reference_range_max='0000051',
                                  aggregate_value=self.check_1
                                  )
 
