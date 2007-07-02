@@ -103,15 +103,15 @@ transaction.Baobab_checkCounterDateOpen(site=transaction.getSite(),\n
 if out_price > 0:\n
   transaction.checkVaultBalance(state_change)\n
 \n
-if transaction.getIncidentType == "account_incident":\n
-  bank_account = transaction.getSourcePaymentValue()\n
+if transaction.getIncidentType() == "account_incident":\n
+  bank_account = transaction.getDestinationPaymentValue()\n
+  if bank_account is None:\n
+    msg = Message(domain=\'ui\', message="No bank account defined.")\n
+    raise ValidationFailed, (msg,)\n
   if transaction.BankAccount_isMessagePending(bank_account):\n
     msg = Message(domain=\'ui\', message="There are operations pending for this account that prevent form calculating its position. Please try again later.")\n
     raise ValidationFailed, (msg,)\n
 \n
-  if bank_account is None:\n
-    msg = Message(domain=\'ui\', message="No bank account defined.")\n
-    raise ValidationFailed, (msg,)\n
   if out_price > 0:\n
     error = transaction.BankAccount_checkAvailableBalance(bank_account.getRelativeUrl(), out_price)\n
     if error[\'error_code\'] == 1:\n
