@@ -346,6 +346,7 @@ class SimulationTool(BaseTool):
     def _generateSQLKeywordDict(self, table='stock',
         # dates
         from_date=None, to_date=None, at_date=None,
+        omit_mirror_date=1,
         # instances
         resource=None, node=None, payment=None,
         section=None, mirror_section=None, item=None,
@@ -386,7 +387,10 @@ class SimulationTool(BaseTool):
         # keywords for related keys
         **kw):
       """
-      generates keywords and calls buildSQLQuery
+      Generates keywords and calls buildSQLQuery
+
+      - omit_mirror_date: normally, date's parameters are only based on date
+        column. If 0, it also used the mirror_date column.
       """
       new_kw = {}
       new_kw.update(kw)
@@ -396,24 +400,35 @@ class SimulationTool(BaseTool):
       sql_kw['input'] = input
       sql_kw['output'] = output
 
-      date_dict = {'query':[], 'operator':'and'}
-      if from_date :
-        date_dict['query'].append(from_date)
-        date_dict['range'] = 'min'
-        if to_date :
+      query_list = []
+
+      if omit_mirror_date:
+        date_dict = {'query':[], 'operator':'and'}
+        if from_date :
+          date_dict['query'].append(from_date)
+          date_dict['range'] = 'min'
+          if to_date :
+            date_dict['query'].append(to_date)
+            date_dict['range'] = 'minmax'
+          elif at_date :
+            date_dict['query'].append(at_date)
+            date_dict['range'] = 'minngt'
+        elif to_date :
           date_dict['query'].append(to_date)
-          date_dict['range'] = 'minmax'
+          date_dict['range'] = 'max'
         elif at_date :
           date_dict['query'].append(at_date)
-          date_dict['range'] = 'minngt'
-      elif to_date :
-        date_dict['query'].append(to_date)
-        date_dict['range'] = 'max'
-      elif at_date :
-        date_dict['query'].append(at_date)
-        date_dict['range'] = 'ngt'
-      if len(date_dict) :
-        new_kw[table + '.date'] = date_dict
+          date_dict['range'] = 'ngt'
+        if len(date_dict) :
+          new_kw[table + '.date'] = date_dict
+      else:
+        date_query_list = []
+        query_list.append(ComplexQuery(
+          Query(range='ngt', 
+                **{'%s.date' % table: [to_date]}),
+          Query(range='nlt', 
+                **{'%s.mirror_date' % table: [from_date]}),
+          operator='AND'))
 
       # Some columns exists on multiple tables, we have to clear ambiguities
       if resource_uid is not None :
@@ -521,7 +536,8 @@ class SimulationTool(BaseTool):
       #if len(variation_category_uid_list) :
       #  new_kw['variationCategory'] = variation_category_uid_list
       
-      simulation_query =  self._getSimulationStateQuery(simulation_state=simulation_state, 
+      simulation_query =  self._getSimulationStateQuery(
+                                simulation_state=simulation_state, 
                                 omit_transit=omit_transit,
                                 input_simulation_state=input_simulation_state,
                                 output_simulation_state=output_simulation_state,
@@ -555,8 +571,10 @@ class SimulationTool(BaseTool):
         else:
           simulation_query = reserved_query
       if simulation_query is not None:
-        new_kw['query'] = simulation_query
+        query_list.append(simulation_query)
 
+      if query_list:
+        new_kw['query'] = ComplexQuery(*query_list)
 
 
       # It is necessary to use here another SQL query (or at least a subquery)
