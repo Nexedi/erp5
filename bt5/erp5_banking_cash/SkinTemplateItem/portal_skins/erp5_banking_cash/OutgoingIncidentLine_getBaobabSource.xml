@@ -71,10 +71,12 @@ if source_trade is None:\n
   document = context.getParentValue()\n
   default_currency = "currency_module/%s" %context.Baobab_getPortalReferenceCurrencyID()\n
   currency = document.getResource()\n
+  if currency is None:\n
+    return None\n
   if currency == default_currency:\n
     vault = \'/encaisse_des_billets_et_monnaies/sortante\'\n
   else:\n
-    vault_title = (document.getResourceTitle().lower()).replace(\' \', \'_\')\n
+    vault_title = (document.getResourceTitle(\'\').lower()).replace(\' \', \'_\')\n
     vault = \'/encaisse_des_devises/%s/sortante\' %(vault_title,)\n
   # add it to user defined counter\n
   user_id = document.Base_getLastUserIdByTransition(workflow_id=\'incident_workflow\', transition_id=\'deliver_action\')\n
