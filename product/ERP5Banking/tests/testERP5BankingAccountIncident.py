@@ -89,11 +89,11 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     return "ERP5BankingAccountIncident"
 
-  def getAccountIncidentModule(self):
+  def getIncidentModule(self):
     """
     Return the Cash Transer Module
     """
-    return getattr(self.getPortal(), 'account_incident_module', None)
+    return getattr(self.getPortal(), 'incident_module', None)
 
 
   def afterSetUp(self):
@@ -103,7 +103,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # Set some variables : 
     self.initDefaultVariable()
     # the cahs transfer module
-    self.account_incident_module = self.getAccountIncidentModule()
+    self.account_incident_module = self.getIncidentModule()
     
     self.createManagerAndLogin()
 
@@ -144,12 +144,13 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
                              'quantity': self.quantity_usd_50}
     
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
-    self.vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
-    self.createCashInventory(source=None, destination=self.vault, currency=self.currency_1,
-                             line_list=line_list)
+    self.vault = self.paris.surface.banque_interne
+    self.final_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
+    #     self.createCashInventory(source=None, destination=self.vault, currency=self.currency_1,
+    #                              line_list=line_list)
     self.foreign_vault = self.paris.surface.caisse_courante.encaisse_des_devises.usd
-    self.createCashInventory(source=None, destination=self.foreign_vault, currency=self.currency_2,
-                             line_list=[inventory_dict_line_3, inventory_dict_line_4])
+    #     self.createCashInventory(source=None, destination=self.foreign_vault, currency=self.currency_2,
+    #                              line_list=[inventory_dict_line_3, inventory_dict_line_4])
 
     # create a person and a bank account
     self.person_1 = self.createPerson(id='person_1',
@@ -178,6 +179,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
 
     # open counter date
     self.openCounterDate(site=self.paris)
+    self.openCounter(site=self.vault)
 
   def stepCleanupObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -193,9 +195,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     on are really here.
     """
     self.checkResourceCreated()
-    # check that AccountIncident Module was created
-    self.assertEqual(self.account_incident_module.getPortalType(), 'Account Incident Module')
-    # check cash transfer module is empty
+    self.assertEqual(self.account_incident_module.getPortalType(), 'Incident Module')
     self.assertEqual(len(self.account_incident_module.objectValues()), 0)
 
 
@@ -204,13 +204,18 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     Check the initial inventory before any operations
     """
     self.simulation_tool = self.getSimulationTool()
-    # check we have 5 banknotes of 10000 in usual_cash
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    # check we have 12 coin of 200 in usual_cash
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+#     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+#     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+#     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+#     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.final_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.final_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.final_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.final_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)    
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
 
@@ -222,11 +227,12 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # Cash transfer has usual_cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.account_incident = self.account_incident_module.newContent(
                                           id='account_incident_1', 
-                                          portal_type='Account Incident', 
+                                          portal_type='Incident', 
                                           source_total_asset_price=source_total_asset_price,
                                           description='test',
                                           destination_payment_value=self.bank_account_1,
-                                          resource_value=resource_value)
+                                          resource_value=resource_value,
+                                          incident_type="account_incident")
     # execute tic
     self.stepTic()
     # set source reference
@@ -236,10 +242,10 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # get the cash transfer document
     self.account_incident = getattr(self.account_incident_module, 'account_incident_1')
     # check its portal type
-    self.assertEqual(self.account_incident.getPortalType(), 'Account Incident')
+    self.assertEqual(self.account_incident.getPortalType(), 'Incident')
     self.assertEqual(self.account_incident.getDestinationPaymentTitle(), 'Bank Account 1')
     # check that its destination is counter
-    self.assertEqual(self.account_incident.getSource(), 'site/testsite/paris')
+    #self.assertEqual(self.account_incident.getSource(), 'site/testsite/paris')
     self.assertEqual(self.account_incident.getDestination(), None)
     # check source reference
     self.assertNotEqual(self.account_incident.getSourceReference(), '')
@@ -261,44 +267,29 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Create the cash transfer line 1 with banknotes of 10000 and check it has been well created
     """
-    # create the cash transfer line
-    self.addCashLineToDelivery(self.account_incident, 'valid_line_1', 'Incoming Account Incident Line', self.billet_10000,
+    self.addCashLineToDelivery(self.account_incident, 'valid_line_1', 'Incoming Incident Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
-    # execute tic
     self.stepTic()
-    # check there is only one line created
+
     self.assertEqual(len(self.account_incident.objectValues(
-                         portal_type='Incoming Account Incident Line')), 1)
-    # get the cash transfer line
+                         portal_type='Incoming Incident Line')), 1)
     self.valid_line_1 = getattr(self.account_incident, 'valid_line_1')
-    # check its portal type
-    self.assertEqual(self.valid_line_1.getPortalType(), 'Incoming Account Incident Line')
-    # check the resource is banknotes of 10000
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Incoming Incident Line')
     self.assertEqual(self.valid_line_1.getResourceValue(), self.billet_10000)
-    # chek the value of the banknote
     self.assertEqual(self.valid_line_1.getPrice(), 10000.0)
-    # check the unit of banknote
     self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
-    # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_line_1.objectValues()), 2)
-    # now check for each variation (years 1992 and 2003)
+
     for variation in self.variation_list:
-      # get the delivery cell
       cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/valid')
-      # chek portal types
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-      # check the source vault is usual_cash
       self.assertEqual(cell.getBaobabSourceValue(), None)
-      # check the destination vault is counter
-      self.assertEqual(cell.getBaobabDestination(), self.vault.getRelativeUrl())
-      # check the banknote of the cell is banknote of 10000
+      self.assertEqual(cell.getBaobabDestination(), None)
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       if cell.getId() == 'movement_0_0_0':
-        # check the quantity of banknote for year 1992 is 2
         self.assertEqual(cell.getQuantity(), 2.0)
       elif cell.getId() == 'movement_0_1_0':
-        # check the quantity of banknote for year 2003 is 3
         self.assertEqual(cell.getQuantity(), 3.0)
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
@@ -307,43 +298,29 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Create the cash transfer line 1 with banknotes of 100 and check it has been well created
     """
-    # create the cash transfer line
     self.addCashLineToDelivery(self.account_incident,
                                'valid_line_1',
-                               'Incoming Account Incident Line',
+                               'Incoming Incident Line',
                                self.usd_billet_100,
                                ('emission_letter', 'cash_status', 'variation'),
                                ('emission_letter/not_defined', 'cash_status/not_defined') + self.usd_variation_list,
                                self.quantity_usd_100,
                                variation_list = self.usd_variation_list)
-    # execute tic
     self.stepTic()
-    # check there is only one line created
+
     self.assertEqual(len(self.account_incident.objectValues(
-                         portal_type='Incoming Account Incident Line')), 1)
-    # get the cash transfer line
+                         portal_type='Incoming Incident Line')), 1)
     self.valid_line_1 = getattr(self.account_incident, 'valid_line_1')
-    # check its portal type
-    self.assertEqual(self.valid_line_1.getPortalType(), 'Incoming Account Incident Line')
-    # check the resource is banknotes of 10000
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Incoming Incident Line')
     self.assertEqual(self.valid_line_1.getResourceValue(), self.usd_billet_100)
-    # chek the value of the banknote
-    #banknote_quantity = sum(self.quantity_usd_100.values())
     self.assertEqual(self.valid_line_1.getPrice(), 100)
-    # check the unit of banknote
     self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
-    # check we have one delivery cell:
     self.assertEqual(len(self.valid_line_1.objectValues()), 1)
-    # get the delivery cell
     banknote_quantity = sum(self.quantity_usd_100.values())
     cell = self.valid_line_1.movement_0_0_0
-    # chek portal types
     self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-    # check the source vault is usual_cash
     self.assertEqual(cell.getBaobabSourceValue(), None)
-    # check the destination vault is counter
-    self.assertEqual(cell.getBaobabDestination(), self.foreign_vault.getRelativeUrl())
-    # check the banknote of the cell is banknote of 100
+    self.assertEqual(cell.getBaobabDestination(), None)
     self.assertEqual(cell.getResourceValue(), self.usd_billet_100)
     self.assertEqual(cell.getQuantity(), banknote_quantity)
 
@@ -351,9 +328,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check the amount after the creation of cash transfer line 1
     """
-    # Check quantity of banknotes (2 for 1992 and 3 for 2003)
     self.assertEqual(self.account_incident.getTotalQuantity(), 5.0)
-    # Check the total price
     self.assertEqual(self.account_incident.getTotalPrice(), 10000 * 5.0)
 
   def stepCheckForeignSubTotal(self, sequence=None, sequence_list=None, **kwd):
@@ -361,53 +336,63 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     Check the amount after the creation of cash transfer line 1
     """
     banknote_quantity = sum(self.quantity_usd_100.values())
-    # Check quantity of banknotes
     self.assertEqual(self.account_incident.getTotalQuantity(), banknote_quantity)
-    # Check the total price
     self.assertEqual(self.account_incident.getTotalPrice(), 100 * banknote_quantity)
 
   def stepCreateOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
     """
     Create the cash transfer line 2 wiht coins of 200 and check it has been well created
     """
-    # create the line
-    self.addCashLineToDelivery(self.account_incident, 'valid_line_2', 'Outgoing Account Incident Line', self.piece_200,
+    self.addCashLineToDelivery(self.account_incident, 'valid_line_2', 'Outgoing Incident Line', self.piece_200,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
-    # execute tic
     self.stepTic()
-    # check the number of lines (line1 + line2)
+
     self.assertEqual(len(self.account_incident.objectValues(
-                         portal_type='Outgoing Account Incident Line')), 1)
-    # get the second cash transfer line
+                         portal_type='Outgoing Incident Line')), 1)
     self.valid_line_2 = getattr(self.account_incident, 'valid_line_2')
-    # check portal types
-    self.assertEqual(self.valid_line_2.getPortalType(), 'Outgoing Account Incident Line')
-    # check the resource is coin of 200
+    self.assertEqual(self.valid_line_2.getPortalType(), 'Outgoing Incident Line')
     self.assertEqual(self.valid_line_2.getResourceValue(), self.piece_200)
-    # check the value of coin
     self.assertEqual(self.valid_line_2.getPrice(), 200.0)
-    # check the unit of coin
     self.assertEqual(self.valid_line_2.getQuantityUnit(), 'unit')
-    # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.valid_line_2.objectValues()), 2)
     for variation in self.variation_list:
-      # get the delivery  cell
       cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/valid')
-      # check the portal type
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-      # check the source vault is usual_cash
-      self.assertEqual(cell.getBaobabSource(), self.vault.getRelativeUrl())
-      # check the destination vault is counter
+      self.assertEqual(cell.getBaobabSource(), None)
       self.assertEqual(cell.getBaobabDestinationValue(), None)
       if cell.getId() == 'movement_0_0_0':
-        # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 5.0)
       elif cell.getId() == 'movement_0_1_0':
-        # check the quantity for coin for year 2003 is 7
         self.assertEqual(cell.getQuantity(), 7.0)
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
+
+  def stepTryDeliverAccountIncidentWithBadPrice(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try to plan the cash transfer with a bad cash transfer line and
+    check the try of plan the cash transfer with the invalid line has failed
+    """
+    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='deliver_action', workflow_id='incident_workflow', error_message="Price differs between document and cash detail.")
+
+  def stepTryDeliverAccountIncidentWithNoResource(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Check that planing with no resource defined fails.
+    """
+    original_resource_path = self.account_incident.getResource()
+    self.account_incident.setResource('')
+    self.assertEqual(self.account_incident.getResourceValue(), None)
+    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='deliver_action', workflow_id='incident_workflow', error_message="No resource defined.")
+    self.account_incident.setResource(original_resource_path)
+
+
+  def stepTryDeliverAccountIncidentWithTwoDifferentLines(self, sequence=None, sequence_list=None, **kwd):
+    """
+    """
+    # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
+    self.account_incident.setSourceTotalAssetPrice('172400.0')
+    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='deliver_action', workflow_id='incident_workflow', error_message="You can't have excess and deficit on the same document.")
+
 
 
   def stepTryConfirmAccountIncidentWithTwoDifferentLines(self, sequence=None, sequence_list=None, **kwd):
@@ -415,8 +400,24 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
     self.account_incident.setSourceTotalAssetPrice('172400.0')
-    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="You can't have excess and deficit on the document.")
+    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='incident_workflow', error_message="You can't have excess and deficit on the same document.")
 
+  def stepTryConfirmAccountIncidentWithBadPrice(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try to plan the cash transfer with a bad cash transfer line and
+    check the try of plan the cash transfer with the invalid line has failed
+    """
+    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='incident_workflow', error_message="Price differs between document and cash detail.")
+
+  def stepTryConfirmAccountIncidentWithNoResource(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Check that planing with no resource defined fails.
+    """
+    original_resource_path = self.account_incident.getResource()
+    self.account_incident.setResource('')
+    self.assertEqual(self.account_incident.getResourceValue(), None)
+    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='incident_workflow', error_message="No resource defined.")
+    self.account_incident.setResource(original_resource_path)
 
   def stepDelOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -424,46 +425,40 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.account_incident.deleteContent('valid_line_2')
 
-
-  def stepTryConfirmAccountIncidentWithBadPrice(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Try to confirm the cash transfer with a bad cash transfer line and
-    check the try of confirm the cash transfer with the invalid line has failed
-    """
-    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="Price differs between document and resource.")
-
-  def stepTryConfirmAccountIncidentWithNoResource(self, sequence=None, sequence_list=None, **kwd):
-    """
-      Check that confirming with no resource defined fails.
-    """
-    original_resource_path = self.account_incident.getResource()
-    self.account_incident.setResource('')
-    self.assertEqual(self.account_incident.getResourceValue(), None)
-    self.assertWorkflowTransitionFails(object=self.account_incident, transition_id='confirm_action', workflow_id='account_incident_workflow', error_message="No resource defined.")
-    self.account_incident.setResource(original_resource_path)
-
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the total after the creation of the two cash transfer lines
     """
     # Check number of lines (line1 + line2)
     self.assertEqual(len(self.account_incident.objectValues(
-                         portal_type='Incoming Account Incident Line')), 1)
+                         portal_type='Incoming Incident Line')), 1)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
     self.assertEqual(self.account_incident.getTotalQuantity(), 5.0)
     # check the total price
     self.assertEqual(self.account_incident.getTotalPrice(), 10000 * 5.0)
 
+  def stepPlanAccountIncident(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Plan the cash transfer and check it
+    """
+    self.workflow_tool.doActionFor(self.account_incident, 'plan_action', wf_id='incident_workflow')
+    self.assertEqual(self.account_incident.getSimulationState(), 'planned')
+
+  
+  def stepOrderAccountIncident(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Order the cash transfer and check it
+    """
+    self.account_incident.setSource(self.vault.getRelativeUrl())
+    self.workflow_tool.doActionFor(self.account_incident, 'order_action', wf_id='incident_workflow')
+    self.assertEqual(self.account_incident.getSimulationState(), 'ordered')
 
   def stepConfirmAccountIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the cash transfer and check it
     """
-    # fix amount (10000 * 5.0 + 200 * 12.0)
     self.account_incident.setSourceTotalAssetPrice('50000.0')
-    # do the Workflow action
-    self.workflow_tool.doActionFor(self.account_incident, 'confirm_action', wf_id='account_incident_workflow')
-    # check state is confirmed
+    self.workflow_tool.doActionFor(self.account_incident, 'confirm_action', wf_id='incident_workflow')
     self.assertEqual(self.account_incident.getSimulationState(), 'confirmed')
 
   def stepConfirmForeignAccountIncident(self, sequence=None, sequence_list=None, **kwd):
@@ -471,7 +466,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     Confirm the cash transfer and check it
     """
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.account_incident, 'confirm_action', wf_id='account_incident_workflow')
+    self.workflow_tool.doActionFor(self.account_incident, 'confirm_action', wf_id='incident_workflow')
     # check state is confirmed
     self.assertEqual(self.account_incident.getSimulationState(), 'confirmed')
 
@@ -480,23 +475,23 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     Deliver the cash transfer with a good user
     and check that the archive of a cash tranfer have achieved
     """
-    # do the workflow transition "archive_action"
-    self.workflow_tool.doActionFor(self.account_incident, 'deliver_action', wf_id='account_incident_workflow')
-    # check that state is archiveed
+    self.account_incident.setSourceTotalAssetPrice('50000.0')
+    self.workflow_tool.doActionFor(self.account_incident, 'deliver_action', wf_id='incident_workflow')
     self.assertEqual(self.account_incident.getSimulationState(), 'delivered')
-    
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the final, nothing should have changed
     """
     self.simulation_tool = self.getSimulationTool()
-    # check we have 5 banknotes of 10000 in usual_cash
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 10.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 10.0)
-    # check we have 12 coin of 200 in usual_cash
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.final_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.final_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.final_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.final_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     # check the inventory of the bank account
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 150000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 150000)
@@ -546,13 +541,14 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateAccountIncident ' \
+                    + 'PlanAccountIncident Tic ' \
+                    + 'OrderAccountIncident Tic ' \
                     + 'CreateIncomingLine CheckSubTotal ' \
                     + 'CreateOutgoingLine Tic ' \
-                    + 'TryConfirmAccountIncidentWithTwoDifferentLines DelOutgoingLine Tic ' \
-                    + 'TryConfirmAccountIncidentWithBadPrice ' \
-                    + 'TryConfirmAccountIncidentWithNoResource ' \
+                    + 'TryDeliverAccountIncidentWithTwoDifferentLines DelOutgoingLine Tic ' \
+                    + 'TryDeliverAccountIncidentWithBadPrice ' \
+                    + 'TryDeliverAccountIncidentWithNoResource ' \
                     + 'Tic CheckTotal ' \
-                    + 'ConfirmAccountIncident Tic ' \
                     + 'DeliverAccountIncident Tic ' \
                     + 'CheckFinalInventory ' \
                       'CleanupObjects'
@@ -564,7 +560,7 @@ class TestERP5BankingAccountIncident(TestERP5BankingMixin, ERP5TypeTestCase):
                         'CheckFinalForeignCurrencyInventory ' \
                         'CleanupObjects'
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.addSequenceString(sequence_string_2)
+    #sequence_list.addSequenceString(sequence_string_2)
     # play the sequence
     sequence_list.play(self)
 
