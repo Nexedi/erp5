@@ -101,7 +101,7 @@ transaction.Baobab_checkCounterDateOpen(site=transaction.getSite(),\n
 \n
 # Check balance in vault if excess\n
 if out_price > 0:\n
-  transaction.checkVaultBalance(state_change)\n
+  transaction.validateVaultBalance(state_change)\n
 \n
 if transaction.getIncidentType() == "account_incident":\n
   bank_account = transaction.getDestinationPaymentValue()\n
