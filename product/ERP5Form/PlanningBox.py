@@ -378,7 +378,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       REQUEST.set('error_info_dict',error_info_dict)
       # now raise error => automatically called
       # parameters are :
-      # -list of errors
+      # - list of errors
       # - dict with error results
       raise FormValidationError(errors_list, {})
 
@@ -1112,7 +1112,6 @@ class BasicStructure:
                                         self.selection_name,
                                         self.selection,
                                         REQUEST=self.REQUEST)
-
     # building list of portal_types
     self.filtered_portal_types = [x[0] for x in self.portal_types]
     if len(self.filtered_portal_types) == 0:
@@ -1304,7 +1303,7 @@ class BasicStructure:
           #  self.selection_name, context=self.here, REQUEST=self.REQUEST)
           message = 'No list method found, please check planningBox properties'
           return [(Message(domain='erp5_ui', message=message,mapping=None))]
-
+        
         # recovering exeption_uid_list
         exception_uid_list = object_tree_line.getExceptionUidList()
         # XXX filter the object to the right domain.
@@ -1315,12 +1314,11 @@ class BasicStructure:
           category_obj = domain_obj.getMembershipCriterionCategory()
           membership_base_category = domain_obj.getMembershipCriterionBaseCategory()
           if (category_obj is not None) and (membership_base_category is not None):
-            category_value = (membership_base_category + '/' +category_obj.getRelativeUrl())
+            category_value = (membership_base_category + '/' + category_obj.getRelativeUrl())
             for selected_object in object_list:
               if category_value in selected_object.getCategoriesList():
                  new_object_list.append(selected_object)
             object_list = new_object_list
-
 
         if exception_uid_list not in ([],None) :
           # Filter folders if parent tree :
@@ -1929,7 +1927,17 @@ class BasicGroup:
             stat_context.absolute_url = \
                          lambda x: activity_content.getObject().absolute_url()
             object = stat_context.getObject()
-            url = object.getUrl()
+            
+            # check if the activity_content has some special method for URL
+            # This approach is also used by ListBox, but in Planning Box
+            # the parameters are not important for now. In future, can be define
+            # special sublinks using this implementation.
+            if getattr(activity_content, 'getListItemUrl', None):
+              url = activity_content.getListItemUrl(cname_id='', 
+                  selection_index='',
+                  selection_name=self.field.get_value('selection_name'))
+            else:
+              url = object.getUrl()
 
             # XXX should define height of block here
             height = None
