@@ -45,7 +45,7 @@ if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
   
 
-class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingIncident(TestERP5BankingMixin, ERP5TypeTestCase):
   """
     This class is a unit test to check the module of Incident
   """
@@ -59,9 +59,9 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     """
       Return the title of the test
     """
-    return "ERP5BankingCashSortingIncident"
+    return "ERP5BankingIncident"
 
-  def getCashSortingIncidentModule(self):
+  def getIncidentModule(self):
     """
     Return the Cash Transer Module
     """
@@ -73,7 +73,7 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
       Method called before the launch of the test to initialize some data
     """
     self.initDefaultVariable()
-    self.cash_sorting_incident_module = self.getCashSortingIncidentModule()
+    self.incident_module = self.getIncidentModule()
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory(site_list=['paris'])
     # create resources
@@ -95,23 +95,23 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.openCounterDate(site=self.paris)
     self.openCounter(site=self.vault)
 
-  def stepDeleteCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
+  def stepDeleteIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Set the debit required
     """
-    self.cash_sorting_incident_module.manage_delObjects(['cash_sorting_incident_1',])
+    self.incident_module.manage_delObjects(['incident_1',])
 
   def stepDelOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
     """
     Delete the invalid cash transfer line previously create
     """
-    self.cash_sorting_incident.deleteContent('valid_line_2')
+    self.incident.deleteContent('valid_line_2')
 
   def stepDelIncomingLine(self, sequence=None, sequence_list=None, **kwd):
     """
     Delete the invalid cash transfer line previously create
     """
-    self.cash_sorting_incident.deleteContent('valid_line_1')
+    self.incident.deleteContent('valid_line_1')
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -120,8 +120,8 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     on are really here.
     """
     self.checkResourceCreated()
-    self.assertEqual(self.cash_sorting_incident_module.getPortalType(), 'Incident Module')
-    self.assertEqual(len(self.cash_sorting_incident_module.objectValues()), 0)
+    self.assertEqual(self.incident_module.getPortalType(), 'Incident Module')
+    self.assertEqual(len(self.incident_module.objectValues()), 0)
 
   def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -138,39 +138,39 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.outgoing_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
-  def stepCreateCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a cash transfer document and check it
     """
-    self.cash_sorting_incident = self.cash_sorting_incident_module.newContent(
-                                        id='cash_sorting_incident_1', 
+    self.incident = self.incident_module.newContent(
+                                        id='incident_1', 
                                         portal_type='Incident', 
                                         description='test',
-                                        incident_type = "cash_sorting_incident",
+                                        incident_type = "cash sorting incident",
                                         resource_value=self.currency_1,
                                         source_total_asset_price=52400.0,)
     self.stepTic()
     # Check it
-    self.assertEqual(len(self.cash_sorting_incident_module.objectValues()), 1)
-    self.setDocumentSourceReference(self.cash_sorting_incident)
-    self.assertNotEqual(self.cash_sorting_incident.getSourceReference(), '')
-    self.assertNotEqual(self.cash_sorting_incident.getSourceReference(), None)
-    self.cash_sorting_incident = getattr(self.cash_sorting_incident_module, 'cash_sorting_incident_1')
-    self.assertEqual(self.cash_sorting_incident.getPortalType(), 'Incident')
-    self.assertEqual(self.cash_sorting_incident.getSource(), None)
-    self.assertEqual(self.cash_sorting_incident.getDestination(), None)
+    self.assertEqual(len(self.incident_module.objectValues()), 1)
+    self.setDocumentSourceReference(self.incident)
+    self.assertNotEqual(self.incident.getSourceReference(), '')
+    self.assertNotEqual(self.incident.getSourceReference(), None)
+    self.incident = getattr(self.incident_module, 'incident_1')
+    self.assertEqual(self.incident.getPortalType(), 'Incident')
+    self.assertEqual(self.incident.getSource(), None)
+    self.assertEqual(self.incident.getDestination(), None)
 
   def stepCreateIncomingLine(self, sequence=None, sequence_list=None, **kwd):
     """
     Create the cash transfer line 1 with banknotes of 10000 and check it has been well created
     """
-    self.addCashLineToDelivery(self.cash_sorting_incident, 'valid_line_1', 'Incoming Incident Line', self.billet_10000,
+    self.addCashLineToDelivery(self.incident, 'valid_line_1', 'Incoming Incident Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     self.stepTic()
 
-    self.assertEqual(len(self.cash_sorting_incident.objectValues()), 1)
-    self.valid_line_1 = getattr(self.cash_sorting_incident, 'valid_line_1')
+    self.assertEqual(len(self.incident.objectValues()), 1)
+    self.valid_line_1 = getattr(self.incident, 'valid_line_1')
     self.assertEqual(self.valid_line_1.getPortalType(), 'Incoming Incident Line')
     self.assertEqual(self.valid_line_1.getResourceValue(), self.billet_10000)
     self.assertEqual(self.valid_line_1.getPrice(), 10000.0)
@@ -194,22 +194,22 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     Check the amount after the creation of cash transfer line 1
     """
-    self.assertEqual(len(self.cash_sorting_incident.objectValues()), 1)
-    self.assertEqual(self.cash_sorting_incident.getTotalQuantity(), 5.0)
-    self.assertEqual(self.cash_sorting_incident.getTotalPrice(), 10000 * 5.0)
+    self.assertEqual(len(self.incident.objectValues()), 1)
+    self.assertEqual(self.incident.getTotalQuantity(), 5.0)
+    self.assertEqual(self.incident.getTotalPrice(), 10000 * 5.0)
 
 
   def stepCreateOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
     """
     Create the cash transfer line 2 wiht coins of 200 and check it has been well created
     """
-    self.addCashLineToDelivery(self.cash_sorting_incident, 'valid_line_2', 'Outgoing Incident Line', self.piece_200,
+    self.addCashLineToDelivery(self.incident, 'valid_line_2', 'Outgoing Incident Line', self.piece_200,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
     self.stepTic()
 
-    self.assertEqual(len(self.cash_sorting_incident.objectValues()), 2)
-    self.valid_line_2 = getattr(self.cash_sorting_incident, 'valid_line_2')
+    self.assertEqual(len(self.incident.objectValues()), 2)
+    self.valid_line_2 = getattr(self.incident, 'valid_line_2')
     self.assertEqual(self.valid_line_2.getPortalType(), 'Outgoing Incident Line')
     self.assertEqual(self.valid_line_2.getResourceValue(), self.piece_200)
     self.assertEqual(self.valid_line_2.getPrice(), 200.0)
@@ -228,90 +228,90 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
         self.fail('Wrong cell created : %s' % cell.getId())
 
 
-  def stepTryDeliverCashSortingIncidentWithTwoDifferentLines(self, sequence=None, sequence_list=None, **kwd):
+  def stepTryDeliverIncidentWithTwoDifferentLines(self, sequence=None, sequence_list=None, **kwd):
     """
     """
-    self.cash_sorting_incident.setSourceTotalAssetPrice('172400.0')
-    self.assertWorkflowTransitionFails(object=self.cash_sorting_incident, transition_id='deliver_action',
+    self.incident.setSourceTotalAssetPrice('172400.0')
+    self.assertWorkflowTransitionFails(object=self.incident, transition_id='deliver_action',
                                        workflow_id='incident_workflow', error_message="You can't have excess and deficit on the same document.")
     self.stepTic()
-    self.assertEqual(self.cash_sorting_incident.getSimulationState(), 'ordered')
+    self.assertEqual(self.incident.getSimulationState(), 'ordered')
 
-  def stepTryDeliverCashSortingIncidentWithBadPrice(self, sequence=None, sequence_list=None, **kwd):
+  def stepTryDeliverIncidentWithBadPrice(self, sequence=None, sequence_list=None, **kwd):
     """
     Try to confirm the cash transfer with a bad cash transfer line and
     check the try of confirm the cash transfer with the invalid line has failed
     """
-    self.assertWorkflowTransitionFails(object=self.cash_sorting_incident, transition_id='deliver_action',
+    self.assertWorkflowTransitionFails(object=self.incident, transition_id='deliver_action',
                                         workflow_id='incident_workflow',
                                         error_message="Price differs between document and cash detail.")
     self.stepTic()
-    self.assertEqual(self.cash_sorting_incident.getSimulationState(), 'ordered')
+    self.assertEqual(self.incident.getSimulationState(), 'ordered')
 
 
   def stepCheckTotalIncoming(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the total after the creation of the two cash transfer lines
     """
-    self.assertEqual(len(self.cash_sorting_incident.objectValues()), 1)
-    self.assertEqual(self.cash_sorting_incident.getTotalQuantity(), 5.0)
-    self.assertEqual(self.cash_sorting_incident.getTotalPrice(), 10000 * 5.0)
+    self.assertEqual(len(self.incident.objectValues()), 1)
+    self.assertEqual(self.incident.getTotalQuantity(), 5.0)
+    self.assertEqual(self.incident.getTotalPrice(), 10000 * 5.0)
 
   def stepCheckTotalOutgoing(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the total after the creation of the two cash transfer lines
     """
-    self.assertEqual(len(self.cash_sorting_incident.objectValues()), 1)
-    self.assertEqual(self.cash_sorting_incident.getTotalQuantity(), 12.0)
-    self.assertEqual(self.cash_sorting_incident.getTotalPrice(), 200 * 12.0)
+    self.assertEqual(len(self.incident.objectValues()), 1)
+    self.assertEqual(self.incident.getTotalQuantity(), 12.0)
+    self.assertEqual(self.incident.getTotalPrice(), 200 * 12.0)
 
   def stepSetIncomingTotalAssetPrice(self, sequence=None, sequence_list=None, **kwd):
-    self.cash_sorting_incident.setSourceTotalAssetPrice('50000.0')
+    self.incident.setSourceTotalAssetPrice('50000.0')
 
   def stepSetOutgoingTotalAssetPrice(self, sequence=None, sequence_list=None, **kwd):
-    self.cash_sorting_incident.setSourceTotalAssetPrice('2400.0')
+    self.incident.setSourceTotalAssetPrice('2400.0')
 
-  def stepPlanCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
+  def stepPlanIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the cash transfer and check it
     """
-    self.workflow_tool.doActionFor(self.cash_sorting_incident, 'plan_action', wf_id='incident_workflow')
+    self.workflow_tool.doActionFor(self.incident, 'plan_action', wf_id='incident_workflow')
     self.stepTic()
 
-    state = self.cash_sorting_incident.getSimulationState()
+    state = self.incident.getSimulationState()
     self.assertEqual(state, 'planned')
 
-  def stepOrderCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
+  def stepOrderIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Order the cash transfer and check it
     """
-    self.cash_sorting_incident.setSource(self.vault.getRelativeUrl())
-    self.workflow_tool.doActionFor(self.cash_sorting_incident, 'order_action', wf_id='incident_workflow')
-    self.assertEqual(self.cash_sorting_incident.getSimulationState(), 'ordered')
+    self.incident.setSource(self.vault.getRelativeUrl())
+    self.workflow_tool.doActionFor(self.incident, 'order_action', wf_id='incident_workflow')
+    self.assertEqual(self.incident.getSimulationState(), 'ordered')
 
-  def stepConfirmCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
+  def stepConfirmIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Archive the cash transfer with a good user
     and check that the archive of a cash tranfer have achieved
     """
-    self.workflow_tool.doActionFor(self.cash_sorting_incident, 'confirm_action', wf_id='incident_workflow')
+    self.workflow_tool.doActionFor(self.incident, 'confirm_action', wf_id='incident_workflow')
     self.stepTic()
 
-    state = self.cash_sorting_incident.getSimulationState()
+    state = self.incident.getSimulationState()
     self.assertEqual(state, 'confirmed')
 
-  def stepDeliverCashSortingIncident(self, sequence=None, sequence_list=None, **kwd):
+  def stepDeliverIncident(self, sequence=None, sequence_list=None, **kwd):
     """
     Archive the cash transfer with a good user
     and check that the archive of a cash tranfer have achieved
     """
-    self.cash_sorting_incident.deliver()
+    self.incident.deliver()
     self.stepTic()
 
-    state = self.cash_sorting_incident.getSimulationState()
+    state = self.incident.getSimulationState()
     self.assertEqual(state, 'delivered')
     # Check we don't have more line than required
-    self.assertEqual(len(self.cash_sorting_incident.objectIds()), 1)
+    self.assertEqual(len(self.incident.objectIds()), 1)
     
   def stepCheckFinalIncomingInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -375,11 +375,11 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
                                                              resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
-  def stepDeliverCashSortingIncidentFails(self, sequence=None, sequence_list=None, **kwd):
+  def stepDeliverIncidentFails(self, sequence=None, sequence_list=None, **kwd):
     """
     Try if we get Insufficient balance
     """
-    message = self.assertWorkflowTransitionFails(self.cash_sorting_incident,
+    message = self.assertWorkflowTransitionFails(self.incident,
                                                  'incident_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
@@ -387,7 +387,7 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
   ##  Tests
   ##################################
 
-  def test_01_ERP5BankingCashSortingIncident(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_01_ERP5BankingIncident(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
     Define the sequence of step that will be play
     """
@@ -395,33 +395,33 @@ class TestERP5BankingCashSortingIncident(TestERP5BankingMixin, ERP5TypeTestCase)
     sequence_list = SequenceList()
     # define the sequence with incoming line
     sequence_string_1 = 'Tic CheckObjects Tic CheckInitialInventory ' \
-                        + 'CreateCashSortingIncident ' \
-                        + 'PlanCashSortingIncident Tic ' \
-                        + 'OrderCashSortingIncident Tic ' \
+                        + 'CreateIncident ' \
+                        + 'PlanIncident Tic ' \
+                        + 'OrderIncident Tic ' \
                         + 'CreateIncomingLine CheckSubTotal ' \
                         + 'CreateOutgoingLine ' \
-                        + 'TryDeliverCashSortingIncidentWithTwoDifferentLines DelOutgoingLine Tic ' \
-                        + 'TryDeliverCashSortingIncidentWithBadPrice ' \
+                        + 'TryDeliverIncidentWithTwoDifferentLines DelOutgoingLine Tic ' \
+                        + 'TryDeliverIncidentWithBadPrice ' \
                         + 'Tic CheckTotalIncoming ' \
                         + 'SetIncomingTotalAssetPrice ' \
-                        + 'DeliverCashSortingIncident ' \
+                        + 'DeliverIncident ' \
                         + 'Tic ' \
                         + 'CheckFinalIncomingInventory '
     sequence_list.addSequenceString(sequence_string_1)
     # define the sequence with outgoing line
-    sequence_string_2 = 'Tic DeleteCashSortingIncident Tic CheckInitialInventory ' \
-                        + 'CreateCashSortingIncident ' \
-                        + 'PlanCashSortingIncident Tic ' \
-                        + 'OrderCashSortingIncident Tic ' \
+    sequence_string_2 = 'Tic DeleteIncident Tic CheckInitialInventory ' \
+                        + 'CreateIncident ' \
+                        + 'PlanIncident Tic ' \
+                        + 'OrderIncident Tic ' \
                         + 'CreateIncomingLine CheckSubTotal ' \
                         + 'CreateOutgoingLine ' \
-                        + 'TryDeliverCashSortingIncidentWithTwoDifferentLines DelIncomingLine Tic ' \
-                        + 'TryDeliverCashSortingIncidentWithBadPrice ' \
+                        + 'TryDeliverIncidentWithTwoDifferentLines DelIncomingLine Tic ' \
+                        + 'TryDeliverIncidentWithBadPrice ' \
                         + 'Tic CheckTotalOutgoing ' \
                         + 'SetOutgoingTotalAssetPrice ' \
-                        + 'DeliverCashSortingIncidentFails Tic ' \
+                        + 'DeliverIncidentFails Tic ' \
                         + 'CreateOutgoingInventory Tic CheckOutgoingInventory ' \
-                        + 'DeliverCashSortingIncident ' \
+                        + 'DeliverIncident ' \
                         + 'Tic ' \
                         + 'CheckFinalOutgoingInventory '
     sequence_list.addSequenceString(sequence_string_2)
@@ -435,5 +435,5 @@ else:
   import unittest
   def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestERP5BankingCashSortingIncident))
+    suite.addTest(unittest.makeSuite(TestERP5BankingIncident))
     return suite
