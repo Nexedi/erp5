@@ -1029,18 +1029,20 @@ class Subscription(Folder, SyncCode):
     signature = self.getSignatureFromGid(gid)
     # First look if we do already have the mapping between
     # the id and the gid
-    #XXX Slow !!!
-    object_list = self.getObjectList(gid=gid)
     destination = self.getDestination()
     if signature is not None and signature.getPath() is not None:
-      o_id = signature.getObjectId()
       o = None
       try:
         o = destination.getPortalObject().restrictedTraverse(signature.getPath())
       except (AttributeError, KeyError, TypeError):
         pass
+      o_id = signature.getObjectId()
+      #try with id param too, because gid is not catalogged
+      object_list = self.getObjectList(gid = gid, id = o_id)
       if o is not None and o in object_list:
         return o
+    #XXX Slow !!!
+    object_list = self.getObjectList(gid = gid)
     for o in object_list:
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
