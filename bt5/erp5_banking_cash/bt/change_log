@@ -1,5 +1,5 @@
 2006-07-03 aurel
-* remove incident module as it is not enougth specific
+* remove incident module as it is not enougth generic
 
 2006-06-29 aurel
 * merge the 4 incident module into one
