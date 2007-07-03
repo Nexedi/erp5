@@ -78,6 +78,7 @@
   with same reference, version, language. Pretty messages\n
   are provided to the user.\n
 """\n
+\n
 translateString =  context.Base_translateString\n
 form_data = context.REQUEST.form\n
 \n
@@ -100,34 +101,37 @@ else:\n
 \n
 # prepare query params\n
 kw = {\'portal_type\' : portal_type}\n
-if form_data.get(\'clone_reference\'): kw[\'reference\'] = form_data[\'clone_reference\']\n
-if form_data.get(\'clone_version\'): kw[\'version\'] = form_data[\'clone_version\']\n
-if form_data.get(\'clone_language\'): kw[\'language\'] = form_data[\'clone_language\']\n
+if form_data.get(\'clone_reference\'): \n
+  kw[\'reference\'] = form_data[\'clone_reference\']\n
+if form_data.get(\'clone_version\'): \n
+  kw[\'version\'] = form_data[\'clone_version\']\n
+if form_data.get(\'clone_language\'): \n
+  kw[\'language\'] = form_data[\'clone_language\']\n
 \n
 # Count documents of same reference and prepare kw\n
 count = int(context.portal_catalog.countResults(**kw)[0][0])\n
 kw[\'reference\'] = kw.get(\'reference\', \'undefined\')\n
 kw[\'language\'] = kw.get(\'language\', \'any\')\n
 kw[\'version\'] = kw.get(\'version\', \'undefined\')\n
+\n
 # if count results not 0, warn user\n
 if count:\n
-  return context.Base_redirect(form_id, editable_mode=editable_mode,\n
-        keep_items={\'portal_status_message\': translateString("Sorry, a ${portal_type} with reference \'${reference}\' and version \'${version} [${language}]\' already exists. Please select another reference or version.", mapping = kw)})\n
+  msg = translateString("Sorry, a ${portal_type} with reference \'${reference}\' and version \'${version} [${language}]\' already exists. Please select another reference or version.", mapping = kw)\n
+  return context.Base_redirect(form_id, \n
+                               editable_mode=editable_mode,\n
+                               keep_items={\'portal_status_message\': msg})\n
 \n
 # Standard cloning method\n
 if clone:\n
   # We copy contents in place if possible\n
   directory = getattr(context, \'original_container\', None) or context.getParentValue()\n
-\n
   # Copy and paste the object\n
   original_id = getattr(context, \'original_id\', None) or context.getId()\n
-                    # This is required for objects acquired in Web Section\n
+  # This is required for objects acquired in Web Section\n
   clipboard = directory.manage_copyObjects(ids=[original_id])\n
   paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
   new_object = directory[paste_result[0][\'new_id\']]\n
   message_kind = \'clone\'\n
-\n
-# Create a new object here (this is a copy and paste of the previous WebSite_clone script)\n
 else:\n
   # Guess the new document module\n
   portal = context.getPortalObject()\n
@@ -139,16 +143,17 @@ else:\n
 # Set properties to the new object\n
 edit_kw = {}\n
 property_id_list = new_object.propertyIds()\n
-from Products.ERP5Type.Log import log\n
-log(\'propertyIds\', property_id_list)\n
 for (key, val) in form_data.items():\n
   if key in ACCEPTABLE_FORM_ID_LIST and key[len(\'clone_\'):] in property_id_list:\n
     edit_kw[key[len(\'clone_\'):]] = val\n
 new_object.edit(**edit_kw)\n
 \n
-if not editable_mode: form_id = \'view\'\n
-return new_object.Base_redirect(form_id, editable_mode=1,\n
-        keep_items={\'portal_status_message\': translateString("Created %s ${portal_type} with reference \'${reference}\' and version \'${version} [${language}]\'." % message_kind, mapping = kw)})\n
+if not editable_mode: \n
+  form_id = \'view\'\n
+msg = translateString("Created %s ${portal_type} with reference \'${reference}\' and version \'${version} [${language}]\'." % message_kind, mapping = kw)\n
+return new_object.Base_redirect(form_id, \n
+                                editable_mode=1,\n
+                                keep_items={\'portal_status_message\': msg})\n
 </string> </value>
         </item>
         <item>
@@ -214,6 +219,7 @@ return new_object.Base_redirect(form_id, editable_mode=1,\n
                             <string>int</string>
                             <string>_apply_</string>
                             <string>count</string>
+                            <string>msg</string>
                             <string>getattr</string>
                             <string>None</string>
                             <string>directory</string>
@@ -226,8 +232,6 @@ return new_object.Base_redirect(form_id, editable_mode=1,\n
                             <string>module</string>
                             <string>edit_kw</string>
                             <string>property_id_list</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
                             <string>_getiter_</string>
                             <string>key</string>
                             <string>val</string>
