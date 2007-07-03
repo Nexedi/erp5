@@ -65,29 +65,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-currency = context.getResourceId()\n
-if currency is None :\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                              , \'view\'\n
-                              , \'portal_status_message=Please+select+a+currency.\'\n
-                              )\n
-  return request.RESPONSE.redirect( redirect_url )\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
 \n
-cash_detail_dict = {\'line_portal_type\'           : \'Outgoing Incident Line\'\n
-                    , \'operation_currency\'       : currency\n
-                    , \'cash_status_list\'         : [\'valid\',\'new_emitted\', \'not_defined\']\n
-                    , \'emission_letter_list\'     : None\n
-                    , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
-                    , \'currency_cash_portal_type\': None\n
-                    , \'read_only\'                : False\n
-                    , \'column_base_category\'     : \'variation\'\n
-                    }\n
+transaction = state_change[\'object\']\n
 \n
-return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
-                                                          , cash_detail_dict = cash_detail_dict\n
-                                                          , destination = context.getObject().absolute_url()\n
-                                                          )\n
+obj=transaction\n
+line=transaction[\'movement\']\n
+if line.getPortalType() != "Banking Operation Line":\n
+  msg = Message(domain = "ui", message="Document is misconfigure, report it to administrator.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# send request to interface\n
+d = context.STAR_initXMLTag()\n
+context.STAR_generateOutgoingXMLHeader(obj, d)\n
+context.STAR_generateMT202Block4(obj, line, d, source=1)\n
+context.STAR_generateXMLMessage(obj, d)\n
 </string> </value>
         </item>
         <item>
@@ -103,14 +96,8 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,20 +117,25 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getitem_</string>
+                            <string>transaction</string>
+                            <string>obj</string>
+                            <string>line</string>
                             <string>_getattr_</string>
+                            <string>msg</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>currency</string>
-                            <string>None</string>
-                            <string>redirect_url</string>
-                            <string>False</string>
-                            <string>cash_detail_dict</string>
+                            <string>d</string>
                           </tuple>
                         </value>
                     </item>
@@ -160,11 +152,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Incident_viewOutgoingLineFastInputDialog</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>sendRequestToInterface</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

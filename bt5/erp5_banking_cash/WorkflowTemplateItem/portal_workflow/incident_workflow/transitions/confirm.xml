@@ -51,7 +51,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>checkBankAccountForInterface</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
