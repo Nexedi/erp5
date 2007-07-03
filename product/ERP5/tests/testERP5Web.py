@@ -264,6 +264,54 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       default_document = websection.getDefaultDocumentValue()
       self.assertEquals(language, default_document.getLanguage())
 
+  def test_05_WebPageVersioning(self, quiet=quiet, run=run_all_test):
+    """
+      Simple Case of showing the proper most recent public Web Page based on 
+      (language, version
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\ntest_05_WebPageVersioning'
+      ZopeTestCase._print(message)
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    website = self.setupWebSite()
+    websection = self.setupWebSection()
+    page_reference = 'default-webpage-versionning'
+    webpage_list  = self.setupWebSitePages(prefix = page_reference)
+   
+    # set default web page for section
+    found_by_reference = portal.portal_catalog(name = page_reference,
+                                               language = 'en',
+                                               portal_type = 'Web Page')
+    en_01 =  found_by_reference[0].getObject()
+    # set it as default web page for section
+    websection.edit(categories_list = ['aggregate/%s' %en_01.getRelativeUrl(),])
+    self.assertEqual([en_01.getReference(),],
+                      websection.getAggregateReferenceList())
+    
+    # create manually a copy of 'en_01' with higher version and check that
+    # older version is archived and new one is show as default web page for section
+    en_02 = self.web_page_module.newContent(portal_type = 'Web Page', 
+                                            reference = page_reference,
+                                            version = 0.2,
+                                            language = 'en')
+    en_02.publish()
+    en_02.reindexObject()
+    get_transaction().commit()
+    self.tic()
+
+    # is old archived?
+    self.assertEquals('archived', en_01.getValidationState())
+
+    # is new public and default web page for section?
+    portal.Localizer.manage_changeDefaultLang(language = 'en')
+    default_document = websection.getDefaultDocumentValue()
+    self.assertEquals(en_02, default_document)
+    self.assertEquals('en', default_document.getLanguage())
+    self.assertEquals('0.2', default_document.getVersion())
+    self.assertEquals('published', default_document.getValidationState())
 
 def test_suite():
   suite = unittest.TestSuite()
