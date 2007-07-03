@@ -1,13 +1,12 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2007-06-22 16:06+CET\n"
-"PO-Revision-Date: 2007-06-22 16:06+CET\n"
-"Last-Translator:  <>\n"
+"PO-Revision-Date: 2007-07-03 09:57+0100\n"
+"Last-Translator: Łukasz Nowak <lukasz.nowa@ventis.com.pl>\n"
 "Language-Team: pl <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
 
 msgid "$, ¥, €, £..."
 msgstr ""
@@ -40,7 +39,7 @@ msgid "&nbsp;"
 msgstr ""
 
 msgid "(deleted)"
-msgstr ""
+msgstr "(usunięte)"
 
 msgid "(re)Calculation of the Pay Sheet Transaction"
 msgstr ""
@@ -52,10 +51,10 @@ msgid "- ${number} item(s) selected"
 msgstr "- ${number} pozycji zaznaczonych"
 
 msgid "-- Developper Mode --"
-msgstr ""
+msgstr "-- Tryb Developera --"
 
 msgid "-- Workflows --"
-msgstr ""
+msgstr "-- Workflowy --"
 
 msgid "----------"
 msgstr ""
@@ -208,19 +207,19 @@ msgid "Accounting"
 msgstr "Księgowanie"
 
 msgid "Accounting Line Created"
-msgstr ""
+msgstr "Stworzone Linię Transakcji Księgowej"
 
 msgid "Accounting Lines"
-msgstr "Linie transakcji księgowej"
+msgstr "Linie Transakcji Księgowej"
 
 msgid "Accounting Operation Date"
-msgstr "Data transakcji księgowej"
+msgstr "Data Transakcji Księgowej"
 
 msgid "Accounting Period"
 msgstr ""
 
 msgid "Accounting Period Delimiter"
-msgstr "Znak dziesiętny"
+msgstr "Znak Dziesiętny"
 
 msgid "Accounting Period Module"
 msgstr ""
@@ -229,7 +228,7 @@ msgid "Accounting Periods"
 msgstr ""
 
 msgid "Accounting Plan"
-msgstr "Plan kont"
+msgstr "Plan Kont"
 
 msgid "Accounting Preference"
 msgstr "Ustawienie rachunkowości"
@@ -238,7 +237,7 @@ msgid "Accounting Preferences"
 msgstr "Ustawienia rachunkowości"
 
 msgid "Accounting Rule Cell"
-msgstr ""
+msgstr "Komórka Reguły Księgowości"
 
 msgid "Accounting Transaction"
 msgstr "Transakcja księgowa"
@@ -250,22 +249,22 @@ msgid "Accounting Transaction Lines"
 msgstr "Linie transakcji księgowej"
 
 msgid "Accounting Transaction Module"
-msgstr ""
+msgstr "Moduł Transakcji Księgowych"
 
 msgid "Accounting Transaction Reference"
-msgstr ""
+msgstr "Referencja Transakcji Księgowej"
 
 msgid "Accounting Transaction can only be deleted in draft or cancelled states."
 msgstr "Transakcje księgowe mogą być skosowane jedynie gdy ich status jest: \"wprowadzone\" bądź \"anulowne\""
 
 msgid "Accounting Transactions"
-msgstr ""
+msgstr "Transakcje Księgowe"
 
 msgid "Accounting View"
 msgstr "Księgowanie"
 
 msgid "Accounting Workflow"
-msgstr ""
+msgstr "Workflow Księgowości"
 
 msgid "Accounts"
 msgstr "Konta"
@@ -298,13 +297,13 @@ msgid "Action"
 msgstr "Akcja"
 
 msgid "Action impossible : Account ${account_title} is ${state}"
-msgstr ""
+msgstr "Akcja niemożliwa : Konta ${account_title} jest w stanie ${state}"
 
 msgid "Action impossible : Account Vat 22% is Draft"
 msgstr ""
 
 msgid "Action impossible : Date is not in an openned Accounting Period"
-msgstr ""
+msgstr "Akcja niemożliwa: Data nie jest w otwartym Okresie Księgowania"
 
 msgid "Action impossible : Destination Section is not defined"
 msgstr ""
@@ -358,10 +357,10 @@ msgid "Add ${portal_type}"
 msgstr "Dodaj ${portal_type}"
 
 msgid "Add Task Related to This Project"
-msgstr ""
+msgstr "Dodaj Zadanie do Tego Projektu"
 
 msgid "Added Files"
-msgstr ""
+msgstr "Dodane Pliki"
 
 msgid "Added files"
 msgstr "Dodane pliki"
@@ -403,7 +402,7 @@ msgid "Amount"
 msgstr "Ilość"
 
 msgid "Answered"
-msgstr ""
+msgstr "Odpowiedziane"
 
 msgid "Appartment number"
 msgstr "Numer lokalu"
@@ -421,7 +420,7 @@ msgid "Assign"
 msgstr "Przypisz"
 
 msgid "Assigned persons"
-msgstr ""
+msgstr "Przypisane osoby"
 
 msgid "Assignee"
 msgstr ""
@@ -454,7 +453,7 @@ msgid "BIC (Bank Identifier Code)"
 msgstr "BIC (Kod Identyfikatora Banku)"
 
 msgid "BT Title"
-msgstr ""
+msgstr "Tytuł BT"
 
 msgid "Balance"
 msgstr "Bilans"
@@ -499,7 +498,7 @@ msgid "Balance of the Period (2005/12/31 to 2006/12/31)"
 msgstr ""
 
 msgid "Bank"
-msgstr ""
+msgstr "Bank"
 
 msgid "Bank Account"
 msgstr "Rachunek bankowy"
@@ -577,7 +576,7 @@ msgid "Bug"
 msgstr "Błąd"
 
 msgid "Bug Module"
-msgstr ""
+msgstr "Moduł Bugów"
 
 msgid "Bugs"
 msgstr "Błędy"
@@ -631,7 +630,7 @@ msgid "Business Templates Imported Successfully"
 msgstr "Business Template'y zaimportowane z powodzeniem"
 
 msgid "Business+Template+Downloaded+Successfully"
-msgstr ""
+msgstr "Business+Template+Ściągnięty+Poprawnie"
 
 msgid "Business+Templates+Imported+Successfully"
 msgstr "Business+Template'y+zaimportowane+z+powodzeniem"
@@ -664,10 +663,10 @@ msgid "Cancel"
 msgstr "Anuluj"
 
 msgid "Cancel Accounting Period"
-msgstr ""
+msgstr "Anuluj Okres Księgowania"
 
 msgid "Cancel Action"
-msgstr ""
+msgstr "Wycofaj Akcję"
 
 msgid "Cancel Assignment"
 msgstr "Anuluj przypisanie"
@@ -766,7 +765,7 @@ msgid "Change Password"
 msgstr "Zmień hasło"
 
 msgid "ChangeLog"
-msgstr ""
+msgstr "DziennikZm"
 
 msgid "Changelog"
 msgstr "Rejestr zmian"
@@ -793,7 +792,7 @@ msgid "City"
 msgstr "Miasto"
 
 msgid "City name."
-msgstr ""
+msgstr "Nazwa miasta."
 
 msgid "Class"
 msgstr "Klasa"
@@ -820,7 +819,7 @@ msgid "Close Accounting Period"
 msgstr ""
 
 msgid "Close Assignment"
-msgstr ""
+msgstr "Zamknij Przypisanie"
 
 msgid "Close Transaction"
 msgstr "Zamknij transakcję"
@@ -829,7 +828,7 @@ msgid "Closed"
 msgstr "Zamknięto"
 
 msgid "Closed Account"
-msgstr ""
+msgstr "Zamknięte Konto"
 
 msgid "Closed Date"
 msgstr ""
@@ -928,7 +927,7 @@ msgid "Container Count"
 msgstr "Ilość kontenerów"
 
 msgid "Container Fast Input"
-msgstr ""
+msgstr "Szybkie Wypełnanie Kontenera"
 
 msgid "Container Line"
 msgstr "Linia kontenera"
@@ -955,7 +954,7 @@ msgid "Contents"
 msgstr "Zawartość"
 
 msgid "Contextual Help"
-msgstr ""
+msgstr "Pomoc Kontekstowa"
 
 msgid "Contextual help"
 msgstr "Pomoc kontekstowa"
@@ -1072,7 +1071,7 @@ msgid "Currency Module"
 msgstr "Moduł walut"
 
 msgid "Currency Symbol"
-msgstr ""
+msgstr "Symbol Waluty"
 
 msgid "Currency is not Defined."
 msgstr "Waluta nie jest zdefiniowana."
@@ -1087,7 +1086,7 @@ msgid "Customer"
 msgstr "Klient"
 
 msgid "Customer Account"
-msgstr ""
+msgstr "Konto Klienta"
 
 msgid "Customer Transaction Reference"
 msgstr ""
@@ -1108,16 +1107,16 @@ msgid "Date Order"
 msgstr "Data zamówienia"
 
 msgid "Date of birth."
-msgstr ""
+msgstr "Data urodzenia."
 
 msgid "Date when the bank account was closed"
-msgstr ""
+msgstr "Data, kiedy konto bankowe zostało zamknięte"
 
 msgid "Date when the bank account was open"
-msgstr ""
+msgstr "Data, kiedy konto bankowe zostało otwarte"
 
 msgid "Day / Month / Year"
-msgstr ""
+msgstr "Dzień / Miesiąc / Rok"
 
 msgid "Days Of Month"
 msgstr "Dni miesiąca"
@@ -1525,7 +1524,7 @@ msgid "Favorite"
 msgstr "Ulubiony"
 
 msgid "Fax"
-msgstr ""
+msgstr "Faks"
 
 msgid "Features (Free Form)"
 msgstr ""
@@ -1537,10 +1536,10 @@ msgid "Files And Images"
 msgstr "Pliki i obrazki"
 
 msgid "Files commited successfully"
-msgstr ""
+msgstr "Pliki zatwierdzone poprawnie"
 
 msgid "Files to be commited"
-msgstr ""
+msgstr "Pliki do zatwierdzenia"
 
 msgid "Filter"
 msgstr "Filtr"
@@ -1567,7 +1566,7 @@ msgid "First Name"
 msgstr "Imię"
 
 msgid "First name."
-msgstr ""
+msgstr "Imię."
 
 msgid "Fiscal Report"
 msgstr "Formularz podatkowy"
@@ -1627,7 +1626,7 @@ msgid "Full Text Keys"
 msgstr "Klucze pełnotekstowe"
 
 msgid "Full, long name of the currency"
-msgstr ""
+msgstr "Pełna, długa nazwa waluty"
 
 msgid "Function"
 msgstr "Funkcja"
@@ -1738,7 +1737,7 @@ msgid "History"
 msgstr "Historia"
 
 msgid "Hostname of the oood server."
-msgstr ""
+msgstr "Nazwa hosta serwera oood."
 
 msgid "Hourly Or Daily Rate"
 msgstr "Częstotliwość dzienna lub godzinna"
@@ -1762,7 +1761,7 @@ msgid "ID"
 msgstr "ID"
 
 msgid "ID of the currency. Be aware that changing this ID will reindex all related objects."
-msgstr ""
+msgstr "ID waluty. Miej na uwadze fakt, że zmiana ID spowoduje reindeksację wszystkich obiektów."
 
 msgid "ISO code of the currency or something similar"
 msgstr ""
@@ -1786,10 +1785,10 @@ msgid "Import CSV file"
 msgstr "Zaimportuj plik CSV"
 
 msgid "Import Csv File"
-msgstr ""
+msgstr "Importuj plik Csv."
 
 msgid "Import Persons from OpenOffice Calc"
-msgstr ""
+msgstr "Importuj Osoby z OpenOffice Calc"
 
 msgid "Importing CSV file."
 msgstr "Importowanie pliku CSV."
@@ -1966,10 +1965,10 @@ msgid "Jump Relation"
 msgstr "Skocz do relacji"
 
 msgid "Jump to Accounting Preference"
-msgstr ""
+msgstr "Skocz do Ustawień Księgowości"
 
 msgid "Jump to Active Preference"
-msgstr ""
+msgstr "Skocz do Aktywnych Ustawień"
 
 msgid "Jump to Bank Accounts"
 msgstr "Skocz do rachunków bankowych"
@@ -1999,7 +1998,7 @@ msgid "Last Name"
 msgstr "Nazwisko"
 
 msgid "Last name."
-msgstr ""
+msgstr "Nazwisko."
 
 msgid "Layout"
 msgstr "Wygląd"
@@ -2146,16 +2145,16 @@ msgid "Modification Date"
 msgstr "Czas modyfikacji"
 
 msgid "Modified"
-msgstr ""
+msgstr "Zmodyfikowane"
 
 msgid "Modified Files"
-msgstr ""
+msgstr "Zmodyfikowane Pliki"
 
 msgid "Modified files"
 msgstr "Zmodyfikowane pliki"
 
 msgid "Module ID"
-msgstr ""
+msgstr "ID Modułu"
 
 msgid "Module Portal Type"
 msgstr ""
@@ -2170,7 +2169,7 @@ msgid "Month"
 msgstr "Miesiąc"
 
 msgid "Month / Day / Year"
-msgstr ""
+msgstr "Miesiąc / Dzień / Rok"
 
 msgid "Months"
 msgstr "Miesiące"
@@ -2233,7 +2232,7 @@ msgid "No ${portal_type} Related."
 msgstr "Brak powiązania z ${portal_type}"
 
 msgid "No Query Related"
-msgstr ""
+msgstr "Brak Powiązanych Zapytań"
 
 msgid "No Sale Packing List Related"
 msgstr "Brak powiązanej listy paczek sprzedaży"
@@ -2260,7 +2259,7 @@ msgid "Number"
 msgstr "Numer"
 
 msgid "Number of childs."
-msgstr ""
+msgstr "Ilość dzieci."
 
 msgid "OOo Document"
 msgstr "Dokument OOo"
@@ -2302,10 +2301,10 @@ msgid "Open"
 msgstr "Otwórz"
 
 msgid "Open Account"
-msgstr ""
+msgstr "Otwórz Konto"
 
 msgid "Open Accounting Period"
-msgstr ""
+msgstr "Otwórz Okres Księgowania"
 
 msgid "Open Assignment"
 msgstr "Otwórz przypisanie"
@@ -2320,7 +2319,7 @@ msgid "Opening Date"
 msgstr "Data otwarcia"
 
 msgid "Openned Account"
-msgstr ""
+msgstr "Otwarte Konto"
 
 msgid "Operation"
 msgstr "Operacja"
@@ -2332,7 +2331,7 @@ msgid "Operations"
 msgstr "Operacje"
 
 msgid "Optional Resource"
-msgstr ""
+msgstr "Zasób Opcjonalny"
 
 msgid "Order"
 msgstr "Zamówienie"
@@ -2347,7 +2346,7 @@ msgid "Order Tool"
 msgstr ""
 
 msgid "Order Type"
-msgstr ""
+msgstr "Typ Zamówienia"
 
 msgid "Order updated."
 msgstr "Zamówienie zaktualizowane."
@@ -2512,7 +2511,7 @@ msgid "Person"
 msgstr "Osoba"
 
 msgid "Person Assignment View"
-msgstr ""
+msgstr "Widok Przypisań Osoby"
 
 msgid "Person Career"
 msgstr "Kariera osoby"
@@ -2557,7 +2556,7 @@ msgid "Plans of sale orders"
 msgstr "Plany sprzedaży"
 
 msgid "Please Set a ChangeLog Message"
-msgstr ""
+msgstr "Proszę ustawić wiadomość w Rejestrze Zmian"
 
 msgid "Please select one (or more) object."
 msgstr "Wybierz jeden lub kilka obiektów"
@@ -2575,7 +2574,7 @@ msgid "Polish"
 msgstr "Polski"
 
 msgid "Port of the oood server."
-msgstr ""
+msgstr "Port serwera oood."
 
 msgid "Portal Skins Folder"
 msgstr ""
@@ -2752,7 +2751,7 @@ msgid "Project"
 msgstr "Projekt"
 
 msgid "Project Cell"
-msgstr ""
+msgstr "Komórka Projektu"
 
 msgid "Project Line"
 msgstr "Linia projektu"
@@ -2776,7 +2775,7 @@ msgid "Project Reports"
 msgstr "Raporty projektu"
 
 msgid "Project Workflow"
-msgstr ""
+msgstr "Workflow Projektu"
 
 msgid "Projects"
 msgstr "Projekty"
@@ -2818,7 +2817,7 @@ msgid "Purchase Order"
 msgstr "Zakup"
 
 msgid "Purchase Order Cell"
-msgstr ""
+msgstr "Komórka Zamówienia Zakupu"
 
 msgid "Purchase Order Line"
 msgstr "Linia zakupu"
@@ -2908,7 +2907,7 @@ msgid "Query Module"
 msgstr "Moduł Zapytań"
 
 msgid "Question"
-msgstr ""
+msgstr "Pytanie"
 
 msgid "REQUIRED FOR POLISH TAX REPORT"
 msgstr "DANE DO ZEZNAŃ PODATKOWYCH"
@@ -2932,7 +2931,7 @@ msgid "Realm Server"
 msgstr ""
 
 msgid "Rebuild Business Template"
-msgstr ""
+msgstr "Przebuduj Business Template"
 
 msgid "Receive Enquiry"
 msgstr ""
@@ -2941,7 +2940,7 @@ msgid "Received Date"
 msgstr "Otrzymano dnia"
 
 msgid "Received date"
-msgstr ""
+msgstr "Data otrzymania"
 
 msgid "Reconfigure Portal"
 msgstr "Przekonfiguruj portal"
@@ -3004,7 +3003,7 @@ msgid "Relative URL"
 msgstr "URL względny"
 
 msgid "Remember my name"
-msgstr ""
+msgstr "Zapamiętaj moją nazwę"
 
 msgid "Remember my name."
 msgstr "Zapamiętaj mój login."
@@ -3013,7 +3012,7 @@ msgid "Reminder"
 msgstr ""
 
 msgid "Removed Files"
-msgstr ""
+msgstr "Usunięte Pliki"
 
 msgid "Removed files"
 msgstr "Usunięte pliki"
@@ -3037,7 +3036,7 @@ msgid "Report Select:"
 msgstr "Wybierz raport:"
 
 msgid "Report Tree"
-msgstr ""
+msgstr "Drzewo Raportowania"
 
 msgid "Reporter"
 msgstr ""
@@ -3148,7 +3147,7 @@ msgid "Sale Invoice Transaction"
 msgstr "Transakcja faktury sprzedaży"
 
 msgid "Sale Invoice Transaction Line"
-msgstr "Linia transakcji faktury sprzedaży\r\n"
+msgstr "Linia transakcji faktury sprzedaży"
 
 msgid "Sale Invoice Transaction Lines"
 msgstr "Linie transakcji faktury sprzedaży"
@@ -3169,13 +3168,13 @@ msgid "Sale Order"
 msgstr "Sprzedaż"
 
 msgid "Sale Order Cell"
-msgstr ""
+msgstr "Komórka Zamówienia Sprzedaży"
 
 msgid "Sale Order Line"
 msgstr "Linia sprzedaży"
 
 msgid "Sale Order Line(s)"
-msgstr ""
+msgstr "Linie Zamówienia Sprzedaży"
 
 msgid "Sale Order Lines"
 msgstr "Linie sprzedaży"
@@ -3364,7 +3363,7 @@ msgid "Site Properties"
 msgstr ""
 
 msgid "Skill"
-msgstr ""
+msgstr "Zdolność"
 
 msgid "Skills"
 msgstr "Umiejętności"
@@ -3409,7 +3408,7 @@ msgid "Sorry your selection has changed"
 msgstr "Przykro mi, Twój wybór się zmienił"
 
 msgid "Sorry+You+Can+Not+Delete+${count}+Item."
-msgstr ""
+msgstr "Przykro+mi,+nie+możesz+usunąć+${count}+elementów."
 
 msgid "Sorry, 1 Item Is In Use."
 msgstr "Przykro mi, 1 element w użyciu."
@@ -4580,3 +4579,4 @@ msgstr ""
 
 msgid "view"
 msgstr "widok"
+
