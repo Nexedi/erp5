@@ -567,6 +567,8 @@ class BaobabConduit(ERP5Conduit):
           elif base_key == 'variation':
             if currency_portal_type == 'Banknote': # Variation is set only for Banknotes.
               category = self.variation_translate_dict.get(kw[base_key], kw[base_key])
+            else:
+              category = 'not_defined'
           else:
             category = kw[base_key]
         else:
@@ -1023,9 +1025,9 @@ class BaobabConduit(ERP5Conduit):
     resource_value = document.getPortalObject().restrictedTraverse(resource_url)
     document.setResourceValue(resource_value)
 
-  def newObject(self, object=None, xml=None, simulate=0, reset_local_roles=0):
+  def newObject(self, object=None, xml=None, simulate=0, reset_local_roles=0, reset_workflow=0):
     """
     define it here in order to make sure to not delete security
     """
     ERP5Conduit.newObject(self, object=object, xml=xml, simulate=simulate,
-                          reset_local_roles=reset_local_roles)
+                          reset_local_roles=reset_local_roles, reset_workflow=reset_workflow)
