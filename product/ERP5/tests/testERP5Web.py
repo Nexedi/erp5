@@ -28,27 +28,23 @@
 ##############################################################################
 
 import os
-import sys
 import unittest
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
-HTTP_REDIRECT = 302
+LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 
 class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Test for erp5_web business template.
   """
   run_all_test = 1
-  quiet = 1
+  quiet = 0
   manager_username = 'zope'
   manager_password = 'zope'
   website_id = 'test'
 
-  web_site_portal_type = 'Web Site'
 
   def getTitle(self):
     return "ERP5Web"
@@ -63,26 +59,110 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     Return the list of required business templates.
     """
-    return ('erp5_base', 'erp5_web')
+    return ('erp5_base', 'erp5_web', 
+            'erp5_dms', 'erp5_dms_mysql_innodb_catalog',)
 
   def afterSetUp(self):
     self.login()
-    self.portal = self.getPortal()
+    portal = self.getPortal()
     self.web_page_module = self.portal.web_page_module
+    self.web_site_module = self.portal.web_site_module
     self.portal_id = self.portal.getId()
-    self.auth = '%s:%s' % (self.manager_username, self.manager_password)
-    self.getPortal().web_site_module.newContent(portal_type = 'Web Site', 
-                                                id = self.website_id)
 
-  def test_01_WebSite_recatalog(self, quiet=quiet, run=run_all_test):
+  def setupWebSite(self, **kw):
+    """
+      Setup Web Site
+    """
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    
+    # add supported languages for Localizer
+    localizer = portal.Localizer
+    for language in LANGUAGE_LIST:
+      localizer.manage_addLanguage(language = language)
+      
+    # create website
+    if hasattr(self.web_site_module, self.website_id):
+      self.web_site_module.manage_delObjects(self.website_id)
+    website = self.getPortal().web_site_module.newContent(portal_type = 'Web Site', 
+                                                          id = self.website_id,
+                                                          **kw)
+    get_transaction().commit()
+    self.tic()
+    return website
+    
+  def setupWebSection(self, **kw):
+    """
+      Setup Web Section
+    """
+    web_site_module = self.portal.getDefaultModule('Web Site')
+    website = web_site_module[self.website_id]
+    websection = website.newContent(portal_type = 'Web Section', **kw)
+    self.websection = websection
+    kw = dict(criterion_property_list = 'portal_type',
+              membership_criterion_base_category_list = '',
+              membership_criterion_category_list = '',)
+    websection.edit(**kw)
+    websection.setCriterion(property = 'portal_type',
+                            identity = ['Web Page'],
+                            max = '', 
+                            min = '')
+                            
+    get_transaction().commit()
+    self.tic()
+    return websection
+   
+
+  def setupWebSitePages(self,
+                        prefix,
+                        suffix = None, 
+                        version = '0.1', 
+                        language_list = LANGUAGE_LIST):
+    """
+      Setup some Web Pages.
+    """
+    webpage_list = []
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    web_site_module = self.portal.getDefaultModule('Web Site')
+    website = web_site_module[self.website_id]
+    
+    # create sample web pages
+    for language in language_list:
+      if suffix is not None:
+        reference = '%s-%s' %(prefix, language)
+      else:
+        reference = prefix
+      webpage = self.web_page_module.newContent(portal_type = 'Web Page', 
+                                                reference = reference,
+                                                version = version,
+                                                language = language)
+      webpage.publish()
+      webpage.reindexObject()
+      self.assertEquals(language, webpage.getLanguage())
+      self.assertEquals(reference, webpage.getReference())
+      self.assertEquals(version, webpage.getVersion())
+      self.assertEquals('published', webpage.getValidationState())
+      webpage_list.append(webpage)
+    
+    get_transaction().commit()
+    self.tic()
+    return webpage_list
+    
+
+  def test_01_WebSiteRecatalog(self, quiet=quiet, run=run_all_test):
     """
       Test that a recataloging works for Web Site documents
     """
-    if not run: return
-
-    # Create new Web Site document
+    if not run:
+      return
+    if not quiet:
+      message = '\ntest_01_WebSiteRecatalog'
+      ZopeTestCase._print(message)
+    
+    self.setupWebSite()
     portal = self.getPortal()
-    web_site_module = self.portal.getDefaultModule(self.web_site_portal_type)
+    web_site_module = self.portal.getDefaultModule('Web Site')
     web_site = web_site_module[self.website_id]
 
     self.assertTrue(web_site is not None)
@@ -94,19 +174,30 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.fail('Cataloging of the Web Site failed.')
 
 
-  def test_02_EditSimpleWebPage(self):
+  def test_02_EditSimpleWebPage(self, quiet=quiet, run=run_all_test):
     """
       Simple Case of creating a web page.
     """
+    if not run:
+      return
+    if not quiet:
+      message = '\ntest_02_EditSimpleWebPage'
+      ZopeTestCase._print(message)
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<b>OK</b>')
     self.assertEquals('text/html', page.getTextFormat())
     self.assertEquals('<b>OK</b>', page.getTextContent())
     
-  def test_03_createWebSiteUser(self):
+  def test_03_CreateWebSiteUser(self, quiet=quiet, run=run_all_test):
     """
       Create Web site User.
     """
+    if not run:
+      return
+    if not quiet:
+      message = '\ntest_03_CreateWebSiteUser'
+      ZopeTestCase._print(message)
+    self.setupWebSite()
     portal = self.getPortal()
     request = self.app.REQUEST
     kw = dict(reference = 'web',
@@ -133,6 +224,46 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     user = uf.getUserById( kw['reference'])
     self.assertEquals(str(user),  kw['reference'])
     self.assertEquals(1, user.has_role(('Member', 'Authenticated',)))
+    
+  def test_04_WebPageTranslation(self, quiet=quiet, run=run_all_test):
+    """
+      Simple Case of showing the proper Web Page based on 
+      current user selected language in browser.
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\ntest_04_WebPageTranslation'
+      ZopeTestCase._print(message)
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    website = self.setupWebSite()
+    websection = self.setupWebSection()
+    page_reference = 'default-webpage'
+    webpage_list  = self.setupWebSitePages(prefix = page_reference)
+   
+    # set default web page for section
+    found_by_reference = portal.portal_catalog(name = page_reference,
+                                               portal_type = 'Web Page')
+    found =  found_by_reference[0].getObject()
+    websection.edit(categories_list = ['aggregate/%s' %found.getRelativeUrl(),])
+    self.assertEqual([found.getReference(),],
+                      websection.getAggregateReferenceList())
+    # even though we create many pages we should get only one
+    # this is the most recent one since all share the same reference
+    self.assertEquals(1, len(websection.WebSection_getDocumentValueList()))
+     
+    # use already created few pages in different languages with same reference
+    # and check that we always get the right one based on selected 
+    # by us language
+    for language in LANGUAGE_LIST:
+      # set default language in Localizer only to check that we get
+      # the corresponding web page for language. 
+      # XXX: Extend API so we can select language from REQUEST
+      portal.Localizer.manage_changeDefaultLang(language = language)
+      default_document = websection.getDefaultDocumentValue()
+      self.assertEquals(language, default_document.getLanguage())
+
 
 def test_suite():
   suite = unittest.TestSuite()
