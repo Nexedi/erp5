@@ -1326,7 +1326,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                       xml_list = xml_list,
                       has_status_list = has_status_list,
                       has_response = has_response )
-      return {'has_response':1}
+      return {'has_response':1, 'xml':''}
     else:
       result = self.getSyncMLData(domain=domain,
                              remote_xml=remote_xml,
