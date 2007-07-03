@@ -61,9 +61,6 @@
  <portal_type id="Exchanged Mutilated Banknote Line">
   <item>CashDeliveryLine</item>
  </portal_type>
- <portal_type id="Incident">
-  <item>Price</item>
- </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
   <item>CashDeliveryLine</item>
  </portal_type>
@@ -82,16 +79,13 @@
  <portal_type id="Incoming Classification Survey Line">
   <item>CashDeliveryLine</item>
  </portal_type>
- <portal_type id="Incoming Incident Line">
-  <item>CashDeliveryLine</item>
- </portal_type>
  <portal_type id="Incoming Mutilated Banknote Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
-  <item>Task</item>
   <item>InternalMoney</item>
   <item>Arrow</item>
+  <item>Task</item>
   <item>Price</item>
  </portal_type>
  <portal_type id="Monetary Destruction">
@@ -161,9 +155,6 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Outgoing Classification Survey Line">
-  <item>CashDeliveryLine</item>
- </portal_type>
- <portal_type id="Outgoing Incident Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Outgoing Mutilated Banknote Line">

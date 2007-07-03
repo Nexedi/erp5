@@ -17,8 +17,8 @@
   <item>emission_letter</item>
  </portal_type>
  <portal_type id="Container Line">
-  <item>variation</item>
   <item>emission_letter</item>
+  <item>variation</item>
   <item>cash_status</item>
  </portal_type>
  <portal_type id="Currency Purchase">
@@ -31,11 +31,6 @@
  </portal_type>
  <portal_type id="Foreign Cash Reception">
   <item>currency_exchange_type</item>
- </portal_type>
- <portal_type id="Incident">
-  <item>currency_exchange_type</item>
-  <item>site</item>
-  <item>incident_type</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
   <item>external_software</item>

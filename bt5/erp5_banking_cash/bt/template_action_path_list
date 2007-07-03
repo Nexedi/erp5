@@ -136,18 +136,6 @@ Foreign Cash Reception | history
 Foreign Cash Reception | metadata
 Foreign Cash Reception | print_pdf
 Foreign Cash Reception | view
-Incident Module | list_ui
-Incident Module | print_pdf
-Incident Module | sort_on
-Incident Module | view
-Incident | history
-Incident | in_input
-Incident | in_view
-Incident | metadata
-Incident | out_input
-Incident | out_view
-Incident | print_pdf
-Incident | view
 Incoming Cash Balance Regulation Line | metadata
 Incoming Cash Balance Regulation Line | view
 Incoming Cash Exchange Line | history
@@ -164,8 +152,6 @@ Incoming Cash To Currency Sale Line | print
 Incoming Cash To Currency Sale Line | view
 Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
-Incoming Incident Line | metadata
-Incoming Incident Line | view
 Incoming Mutilated Banknote Line | metadata
 Incoming Mutilated Banknote Line | print
 Incoming Mutilated Banknote Line | view
@@ -285,8 +271,6 @@ Outgoing Classification Survey Cell | metadata
 Outgoing Classification Survey Cell | view
 Outgoing Classification Survey Line | metadata
 Outgoing Classification Survey Line | view
-Outgoing Incident Line | metadata
-Outgoing Incident Line | view
 Outgoing Mutilated Banknote Line | metadata
 Outgoing Mutilated Banknote Line | print
 Outgoing Mutilated Banknote Line | view

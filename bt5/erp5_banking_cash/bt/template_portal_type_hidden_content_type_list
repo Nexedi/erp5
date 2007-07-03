@@ -23,16 +23,12 @@ Currency Sale | Banking Operation Line
 Currency Sale | Cash Delivery Line
 Destruction Survey | Cash Delivery Line
 Foreign Cash Reception | Cash Delivery Line
-Incident | Banking Operation Line
-Incident | Incoming Account Incident Line
-Incident | Outgoing Account Incident Line
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
 Incoming Cash Exchange Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
 Incoming Cash To Currency Purchase Line | Cash Delivery Cell
 Incoming Cash To Currency Sale Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
-Incoming Incident Line | Cash Delivery Cell
 Internal Money Deposit | Banking Operation Line
 Internal Money Deposit | Cash Delivery Line
 Monetary Destruction | Cash Delivery Line
@@ -58,7 +54,6 @@ Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell
 Outgoing Cash To Currency Purchase Line | Cash Delivery Cell
 Outgoing Cash To Currency Sale Line | Cash Delivery Cell
 Outgoing Classification Survey Line | Outgoing Classification Survey Cell
-Outgoing Incident Line | Cash Delivery Cell
 Usual Cash Rendering | Cash Delivery Line
 Usual Cash Transfer | Cash Delivery Line
 Vault Transfer Line | Vault Transfer Cell

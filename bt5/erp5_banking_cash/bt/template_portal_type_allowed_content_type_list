@@ -34,10 +34,6 @@ Destruction Survey | Cash Delivery Line
 Exchanged Mutilated Banknote Line | Cash Delivery Cell
 Foreign Cash Reception Module | Foreign Cash Reception
 Foreign Cash Reception | Cash Delivery Line
-Incident Module | Incident
-Incident | Banking Operation Line
-Incident | Incoming Incident Line
-Incident | Outgoing Incident Line
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
 Incoming Cash Exchange Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
@@ -45,7 +41,6 @@ Incoming Cash To Currency Purchase Line | Cash Delivery Cell
 Incoming Cash To Currency Purchase Line | Delivery Cell
 Incoming Cash To Currency Sale Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
-Incoming Incident Line | Cash Delivery Cell
 Incoming Mutilated Banknote Line | Cash Delivery Cell
 Internal Money Deposit Module | Internal Money Deposit
 Internal Money Deposit | Banking Operation Line
@@ -80,7 +75,6 @@ Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell
 Outgoing Cash To Currency Purchase Line | Cash Delivery Cell
 Outgoing Cash To Currency Sale Line | Cash Delivery Cell
 Outgoing Classification Survey Line | Outgoing Classification Survey Cell
-Outgoing Incident Line | Cash Delivery Cell
 Outgoing Mutilated Banknote Line | Cash Delivery Cell
 Outgoing Usual Cash Incident Line | Cash Delivery Cell
 Usual Cash Rendering Module | Usual Cash Rendering

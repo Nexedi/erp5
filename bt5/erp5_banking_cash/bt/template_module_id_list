@@ -10,7 +10,6 @@ currency_purchase_module
 currency_sale_module
 destruction_survey_module
 foreign_cash_reception_module
-incident_module
 internal_money_deposit_module
 monetary_destruction_module
 monetary_issue_module

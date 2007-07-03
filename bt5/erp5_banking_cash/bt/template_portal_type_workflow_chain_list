@@ -27,8 +27,6 @@ Destruction Survey | destruction_survey_workflow
 Destruction Survey | edit_workflow
 Foreign Cash Reception | edit_workflow
 Foreign Cash Reception | foreign_cash_reception_workflow
-Incident | edit_workflow
-Incident | incident_workflow
 Internal Money Deposit | edit_workflow
 Internal Money Deposit | internal_money_deposit_workflow
 Monetary Destruction | edit_workflow

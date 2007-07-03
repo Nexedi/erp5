@@ -1,3 +1,4 @@
+
 cash_balance_regulation_workflow
 cash_exchange_workflow
 cash_movement_workflow
@@ -10,7 +11,6 @@ currency_purchase_workflow
 currency_sale_workflow
 destruction_survey_workflow
 foreign_cash_reception_workflow
-incident_workflow
 internal_money_deposit_workflow
 monetary_destruction_workflow
 monetary_issue_workflow

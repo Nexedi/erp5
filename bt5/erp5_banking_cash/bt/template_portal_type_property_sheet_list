@@ -34,14 +34,12 @@ Currency Sale | Resource
 Destruction Survey | Amount
 Destruction Survey | Task
 Exchanged Mutilated Banknote Line | CashDeliveryLine
-Incident | Price
 Incoming Cash Balance Regulation Line | CashDeliveryLine
 Incoming Cash Exchange Line | CashDeliveryLine
 Incoming Cash Sorting Line | CashDeliveryLine
 Incoming Cash To Currency Purchase Line | CashDeliveryLine
 Incoming Cash To Currency Sale Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
-Incoming Incident Line | CashDeliveryLine
 Incoming Mutilated Banknote Line | CashDeliveryLine
 Internal Money Deposit | Arrow
 Internal Money Deposit | InternalMoney
@@ -78,7 +76,6 @@ Outgoing Cash To Currency Purchase Line | CashDeliveryLine
 Outgoing Cash To Currency Sale Line | CashDeliveryLine
 Outgoing Classification Survey Cell | CashDeliveryLine
 Outgoing Classification Survey Line | CashDeliveryLine
-Outgoing Incident Line | CashDeliveryLine
 Outgoing Mutilated Banknote Line | CashDeliveryLine
 Usual Cash Rendering | Amount
 Usual Cash Rendering | Price

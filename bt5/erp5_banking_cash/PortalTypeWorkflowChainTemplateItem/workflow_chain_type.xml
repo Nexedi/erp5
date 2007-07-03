@@ -56,10 +56,6 @@
   <workflow>foreign_cash_reception_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Incident</type>
-  <workflow>edit_workflow, incident_workflow</workflow>
- </chain>
- <chain>
   <type>Internal Money Deposit</type>
   <workflow>internal_money_deposit_workflow, edit_workflow</workflow>
  </chain>

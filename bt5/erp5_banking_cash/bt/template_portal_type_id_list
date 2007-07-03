@@ -27,15 +27,12 @@ Destruction Survey Module
 Exchanged Mutilated Banknote Line
 Foreign Cash Reception
 Foreign Cash Reception Module
-Incident
-Incident Module
 Incoming Cash Balance Regulation Line
 Incoming Cash Exchange Line
 Incoming Cash Sorting Line
 Incoming Cash To Currency Purchase Line
 Incoming Cash To Currency Sale Line
 Incoming Classification Survey Line
-Incoming Incident Line
 Incoming Mutilated Banknote Line
 Internal Money Deposit
 Internal Money Deposit Module
@@ -67,7 +64,6 @@ Outgoing Cash To Currency Purchase Line
 Outgoing Cash To Currency Sale Line
 Outgoing Classification Survey Cell
 Outgoing Classification Survey Line
-Outgoing Incident Line
 Outgoing Mutilated Banknote Line
 Usual Cash Rendering
 Usual Cash Rendering Module

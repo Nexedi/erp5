@@ -54,11 +54,6 @@
  <portal_type id="Foreign Cash Reception">
   <item>Cash Delivery Line</item>
  </portal_type>
- <portal_type id="Incident">
-  <item>Incoming Account Incident Line</item>
-  <item>Banking Operation Line</item>
-  <item>Outgoing Account Incident Line</item>
- </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
@@ -75,9 +70,6 @@
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Classification Survey Line">
-  <item>Cash Delivery Cell</item>
- </portal_type>
- <portal_type id="Incoming Incident Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
@@ -140,9 +132,6 @@
  </portal_type>
  <portal_type id="Outgoing Classification Survey Line">
   <item>Outgoing Classification Survey Cell</item>
- </portal_type>
- <portal_type id="Outgoing Incident Line">
-  <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Usual Cash Rendering">
   <item>Cash Delivery Line</item>
