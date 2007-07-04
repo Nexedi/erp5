@@ -421,7 +421,51 @@ class TestAlarm(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertEquals(active_process, alarm.getLastActiveProcess())
- 
+
+  def test_15_FailedAlarmsDoNotBlockFutureAlarms(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Failed Alarms Do Not Block Future Alarms'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    sense_method_id = 'Alarm_testSenseMethod'
+    skin_folder_id = 'custom'
+    skin_folder = self.getPortal().portal_skins[skin_folder_id]
+    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(id=sense_method_id)
+    # Make the sense method fail
+    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 'raise Exception')
+    del skin_folder
+    alarm = self.newAlarm()
+    now = DateTime()
+    alarm.setActiveSenseMethodId(sense_method_id)
+    self.assertEquals(alarm.isActive(), 0)
+    alarm.activeSense()
+    get_transaction().commit()
+    try:
+      self.tic()
+    except RuntimeError:
+      pass
+    else:
+      raise Exception, 'Tic did not raise though activity was supposed to fail'
+    # Check that the alarm is not considered active, although there is a remaining activity.
+    self.assertEquals(alarm.hasActivity(), 1)
+    self.assertEquals(alarm.isActive(), 0)
+    self.assertEquals(alarm.getLastActiveProcess(), None)
+    # Make the sense method succeed and leave a trace
+    self.getPortal().portal_skins[skin_folder_id][sense_method_id].ZPythonScript_edit('*args,**kw', 'context.newActiveProcess()')
+    alarm.activeSense()
+    get_transaction().commit()
+    # Note: this call to tic will not fail, because the same method on the same
+    # object is activated again in SQLDict. When the new message will be
+    # -successfully- processed, the previous -failed- message will get removed
+    # in the cleanup. This behaviour is logical if we consider that manually
+    # executing the failed message to get the error will lead to no error.
+    # But it can also be considered illogical if failed messages are supposed
+    # to be preserved for future analysis.
+    self.tic()
+    # Chen that the second alarm execution did happen
+    self.assertNotEquals(alarm.getLastActiveProcess(), None)
+
 if __name__ == '__main__':
     framework()
 else:

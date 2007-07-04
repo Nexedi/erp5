@@ -264,7 +264,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     active or not. It is activated when it is doing some calculation with
     activeSense or solve.
     """
-    return self.hasActivity()
+    return self.hasActivity(only_valid=1)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'activeSense')
   def activeSense(self):

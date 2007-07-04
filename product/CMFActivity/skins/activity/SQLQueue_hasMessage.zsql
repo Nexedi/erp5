@@ -8,12 +8,13 @@ class_name:
 class_file:
 </dtml-comment>
 <params>path
-method_id</params>
+method_id
+only_valid</params>
 SELECT count(path) as message_count FROM
   message_queue
-<dtml-if "path or method_id"> 
 WHERE
-<dtml-if path>  path = <dtml-sqlvar path type="string"></dtml-if>
+1 = 1
+<dtml-if path>AND path = <dtml-sqlvar path type="string"></dtml-if>
 <dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
-</dtml-if>
-  
+<dtml-if only_valid>AND processing_node > -2</dtml-if>
+
