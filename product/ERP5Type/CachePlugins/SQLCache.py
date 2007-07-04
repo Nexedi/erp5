@@ -42,6 +42,12 @@ except ImportError:
     
 try:
   import MySQLdb
+  from MySQLdb.constants import CR
+  from _mysql_exceptions import OperationalError
+  hosed_connection = (
+      CR.SERVER_GONE_ERROR,
+      CR.SERVER_LOST
+      )
 except ImportError:
   LOG('SQLCache', 0, 'unable to import MySQLdb')
 
@@ -132,7 +138,7 @@ class SQLCache(BaseCache):
       ## no such table create it
       self.execSQLQuery(self.create_table_sql %self._db_cache_table_name) 
   
-  def getCacheStorage(self):
+  def getCacheStorage(self, force_reconnect=False):
     """ 
     Return current DB connection or create a new one for this thread.
     See http://sourceforge.net/docman/display_doc.php?docid=32071&group_id=22307
@@ -142,7 +148,7 @@ class SQLCache(BaseCache):
     thread_id = get_ident()
     
     dbConn = connection_pool.get(thread_id, None)
-    if dbConn is None:
+    if force_reconnect or dbConn is None:
       ## we don't have dbConn for this thread
       dbConn = MySQLdb.connect(host=self._db_server, \
                                user=self._db_user,\
@@ -250,12 +256,25 @@ class SQLCache(BaseCache):
     my_query = self.delete_all_keys_for_scope_sql  %(self._db_cache_table_name, scope)
     self.execSQLQuery(my_query)
 
+  def _execSQLQuery(self, sql_query, connection):
+    """
+      Execute sql query using given connection.
+    """
+    cursor = connection.cursor()
+    cursor.execute(sql_query)
+    return cursor
+
   def execSQLQuery(self, sql_query):
     """ 
     Try to execute sql query.
     Return cursor object because some queris can return result
     """
     dbConn = self.getCacheStorage()
-    cursor = dbConn.cursor()
-    cursor.execute(sql_query)
+    try:
+      cursor = self._execSQLQuery(sql_query, dbConn)
+    except OperationalError, m:
+      if m[0] not in hosed_connection:
+        raise
+      dbConn = self.getCacheStorage(force_reconnect=True)
+      cursor = self._execSQLQuery(sql_query, dbConn)
     return cursor
