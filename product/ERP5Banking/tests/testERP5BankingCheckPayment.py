@@ -216,7 +216,7 @@ class TestERP5BankingCheckPaymentMixin:
                                    destination_payment_value = self.bank_account_1,
                                    # aggregate_value = self.check_1,
                                    resource_value = self.currency_1,
-                                   aggregate_free_text = "50",
+                                   aggregate_free_text = "0000050",
                                    description = "test",
                                    # source_value = self.bi_counter,
                                    start_date = DateTime().Date(),
@@ -244,27 +244,27 @@ class TestERP5BankingCheckPaymentMixin:
 
   def stepValidateAnotherCheckPaymentWorks(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure we can validate another check payment """
-    self.createAnotherCheckPayment(sequence=sequence,will_fail=0,number="51")
+    self.createAnotherCheckPayment(sequence=sequence,will_fail=0,number="0000051")
 
   def stepPayAnotherCheckPaymentFails(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure we can validate another check payment """
     self.createAnotherCheckPayment(sequence=sequence, 
-                  check_pay_will_fail=1, number="56")
+                  check_pay_will_fail=1, number="0000056")
 
   def stepValidateAnotherCheckPaymentWorksAgain(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure we can validate another check payment """
     self.createAnotherCheckPayment(sequence=sequence,
-                                   will_fail=0, number="54")
+                                   will_fail=0, number="0000054")
 
   def stepValidateAnotherCheckPaymentFails(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure that we can not validate another check payment """
     self.createAnotherCheckPayment(sequence=sequence, will_fail=1,
-                                   pending_account=1, number="52")
+                                   pending_account=1, number="0000052")
 
   def stepValidateAnotherCheckPaymentFailsAgain(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure that we can not validate another check payment """
     self.createAnotherCheckPayment(sequence=sequence, will_fail=1,
-               insuffisient_balance=1, number="53")
+               insuffisient_balance=1, number="0000053")
 
   def createAnotherCheckPayment(self, will_fail=0, check_pay_will_fail=0, sequence=None, 
                                 number=None, pending_account=0,
