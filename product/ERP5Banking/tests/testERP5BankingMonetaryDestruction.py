@@ -174,6 +174,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.login('super_user')
     # open counter date and counter
     self.openCounterDate(site=self.paris)
+    self.openCounterDate(site=self.madrid,id='counter_date_2')
 
 	
 
