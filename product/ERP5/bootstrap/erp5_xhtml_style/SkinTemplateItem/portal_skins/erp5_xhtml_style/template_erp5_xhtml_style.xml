@@ -100,23 +100,18 @@ IDEAS:\n
       <!-- Render each field\'s css and javascript. -->\n
     </tal:block>\n
     <tal:block tal:condition="python: form is not None">\n
-      <tal:block tal:repeat="group python: form.Form_getGroupTitleAndId()">\n
-        <tal:block tal:define="gid group/gid;">\n
-          <tal:block tal:condition="python: gid.find(\'hidden\') < 0">\n
-            <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
+      <tal:block tal:repeat="group python: [x for x in form.get_groups(include_empty=0) if x != \'hidden\']">\n
+        <tal:block tal:repeat="field python: form.get_fields_in_group(group)">\n
 \n
-              <tal:block tal:define="css python: field.render_css(REQUEST=request)">\n
-                <tal:block tal:condition="python: css is not None">\n
-                  <style tal:content="css"\n
-                         tal:attributes="type python:\'text/css\'">\n
-                  </style>\n
-                </tal:block>\n
-              </tal:block>\n
-\n
-              <tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" />\n
-\n
-            </tal:block>\n
+          <tal:block tal:define="css python: field.render_css(REQUEST=request)">\n
+            <style tal:condition="python: css is not None" \n
+                   tal:content="css"\n
+                   tal:attributes="type python:\'text/css\'">\n
+            </style>\n
           </tal:block>\n
+\n
+          <tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" />\n
+\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
