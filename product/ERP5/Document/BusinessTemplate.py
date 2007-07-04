@@ -536,6 +536,9 @@ class ObjectTemplateItem(BaseTemplateItem):
 
   def _importFile(self, file_name, file):
     # import xml file
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     obj = self
     connection = None
     while connection is None:
