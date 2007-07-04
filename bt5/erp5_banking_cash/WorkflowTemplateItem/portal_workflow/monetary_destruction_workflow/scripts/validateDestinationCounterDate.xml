@@ -72,10 +72,10 @@ from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
 \n
-vaultDestination = transaction.getDestination()\n
+source_section = transaction.getSourceSection()\n
 \n
 # check again that we are in the good accounting date in site destination\n
-transaction.Baobab_checkCounterDateOpen(site=vaultDestination, date=transaction.getStopDate())\n
+transaction.Baobab_checkCounterDateOpen(site=source_section, date=transaction.getStopDate())\n
 \n
 # Check source counter stock & date again.\n
 context.validateVaultBalance(state_change=state_change)\n
@@ -138,7 +138,7 @@ context.validateVaultBalance(state_change=state_change)\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>vaultDestination</string>
+                            <string>source_section</string>
                             <string>context</string>
                           </tuple>
                         </value>

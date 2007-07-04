@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_price</string> </value>
+            <value> <string>your_exchange_rate</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -84,6 +84,14 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -157,9 +165,7 @@
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -186,7 +192,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>figure</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -230,7 +236,7 @@
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -238,7 +244,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Exchange Rate</string> </value>
+                    <value> <string>Rate</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -261,23 +267,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.CurrencyExchange_getExchangeRateList()[0]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getResourceValue().getQuantityPrecision()</string> </value>
+            <value> <string>python: (here.getSourceTotalAssetPrice() is not None and here.ERP5Banking_getExchangeValue()/here.getSourceTotalAssetPrice()) or 0</string> </value>
         </item>
       </dictionary>
     </pickle>

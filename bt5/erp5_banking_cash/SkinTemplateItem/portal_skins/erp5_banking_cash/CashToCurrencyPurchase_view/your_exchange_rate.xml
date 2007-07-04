@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_price</string> </value>
+            <value> <string>your_exchange_rate</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -261,7 +261,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.CurrencyExchange_getExchangeRateList(from_currency=here.getResource(), to_currency=\'currency_module/%s\' % (here.Baobab_getPortalReferenceCurrencyID()), currency_exchange_type=\'sale\', start_date=here.getStartDate())[0]</string> </value>
+            <value> <string>python: here.CurrencyExchange_getExchangeRateList()[0]</string> </value>
         </item>
       </dictionary>
     </pickle>

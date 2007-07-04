@@ -10,8 +10,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_total_price</string> </value>
+            <value> <string>your_exchange_rate</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -81,14 +87,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -155,13 +153,13 @@
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -228,7 +226,7 @@
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
-                    <value> <string>-1234.5</string> </value>
+                    <value> <string>-1 234.5</string> </value>
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
@@ -240,7 +238,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Total Excess</string> </value>
+                    <value> <string>Exchange Rate</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -263,7 +261,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTotalPrice(portal_type=[\'Incoming Incident Line\',\'Cash Delivery Cell\'],fast=0)</string> </value>
+            <value> <string>python: here.CurrencyExchange_getExchangeRateList(from_currency=here.getResource(), to_currency=\'currency_module/%s\' % (here.Baobab_getPortalReferenceCurrencyID()), currency_exchange_type=\'purchase\', start_date=here.getStartDate())[0]</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -279,7 +277,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string:-1 234.5 | preferences/getPreferredMoneyQuantityStyle</string> </value>
+            <value> <string>python: here.getResourceValue().getQuantityPrecision()</string> </value>
         </item>
       </dictionary>
     </pickle>

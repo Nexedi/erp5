@@ -84,6 +84,12 @@ if (\'encaisse_des_externes\' not in vault and \'encaisse_des_billets_retires_de
    msg = Message(domain="ui", message="Invalid source.")\n
    raise ValidationFailed, (msg,)\n
 \n
+if \'encaisse_des_externes\' in vault:\n
+   destination = transaction.getDestination()\n
+   if destination is None:\n
+     msg = Message(domain="ui", message="Invalid destination.")\n
+     raise ValidationFailed, (msg,)\n
+\n
 \n
 \n
 \n
@@ -157,6 +163,8 @@ elif resource <> 0 :\n
                             <string>context</string>
                             <string>source_object</string>
                             <string>msg</string>
+                            <string>destination</string>
+                            <string>None</string>
                             <string>amount</string>
                             <string>total_price</string>
                           </tuple>
