@@ -98,7 +98,7 @@ if _v < MySQLdb_version_required:
 	(MySQLdb_version_required, _v)
 
 from MySQLdb.converters import conversions
-from MySQLdb.constants import FIELD_TYPE, CR, CLIENT
+from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from zLOG import LOG, ERROR, INFO
@@ -111,6 +111,10 @@ from thread import get_ident, allocate_lock
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
     CR.SERVER_LOST
+    )
+
+query_syntax_error = (
+    ER.BAD_FIELD_ERROR,
     )
 
 key_types = {
@@ -378,7 +382,7 @@ class DB(TM):
         try:
             self.db.query(query)
         except OperationalError, m:
-            if m[0] == 1054: # Query syntax error
+            if m[0] in query_syntax_error:
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if ((not force_reconnect) and \
                 (self._mysql_lock or self._transactions)) or \
