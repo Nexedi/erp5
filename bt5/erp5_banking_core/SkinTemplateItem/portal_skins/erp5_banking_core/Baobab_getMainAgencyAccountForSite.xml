@@ -145,7 +145,7 @@ return context.Baobab_getAccountForSite(main_site)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baboab_getMainAgencyAccountForSite</string> </value>
+            <value> <string>Baobab_getMainAgencyAccountForSite</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
