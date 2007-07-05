@@ -383,6 +383,8 @@ class DeferredDB(TM):
       try:
         self.db.query(query)
       except OperationalError, m:
+        if m[0] == 1054: # Query syntax error: display query.
+          raise OperationalError(m[0], '%s: %s' % (m[1], query))
         if ((not force_reconnect) and \
             (self._mysql_lock or self._transactions)) or \
            m[0] not in hosed_connection:
