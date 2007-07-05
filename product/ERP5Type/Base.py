@@ -1085,7 +1085,8 @@ class Base( CopyContainer,
 
   # Object attributes update method
   security.declarePrivate( '_edit' )
-  def _edit(self, REQUEST=None, force_update=0, reindex_object=0, keep_existing=0, **kw):
+  def _edit(self, REQUEST=None, force_update=0, reindex_object=0, 
+            keep_existing=0, activate_kw=None, **kw):
     """
       Generic edit Method for all ERP5 object
       The purpose of this method is to update attributed, eventually do
@@ -1147,7 +1148,7 @@ class Base( CopyContainer,
     if reindex_object:
       # We do not want to reindex the object if nothing is changed
       if (self._v_modified_property_dict != {}):
-        self.reindexObject()
+        self.reindexObject(activate_kw=activate_kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
   def setId(self, id, reindex = 1):
