@@ -67,8 +67,8 @@
             <key> <string>_body</string> </key>
             <value> <string>code = site.getCodification()\n
 \n
-if not \'00\' in code:\n
-  main_code = "%1s00" %code[0]\n
+if code[-1] != "0":\n
+  main_code = "%s0" %code[:-1]\n
   main_site = context.Baobab_getSiteFromCodification(main_code)\n
 else:\n
   main_site = site\n
