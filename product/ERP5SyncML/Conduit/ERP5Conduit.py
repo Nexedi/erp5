@@ -244,11 +244,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           #LOG('ERP5Conduit',0,'deleteNode, Unable to delete SubObject: %s' % str(sub_object_id))
           pass
     if object_id is not None: # We do have an object_id
-      try:
-        object._delObject(object_id)
-      except (AttributeError, KeyError):
-        #LOG('ERP5Conduit',0,'deleteNode, Unable to delete: %s' % str(object_id))
-        pass
+      self.deleteObject(object, object_id)
     # In the case where we have to delete an user role
     # If we are still there, this means the delete is for this node
     elif xml.nodeName in self.XUPDATE_DEL:
@@ -265,6 +261,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         permission = self.getAttribute(xml,'id')
         object.manage_setLocalPermissions(permission)
     return conflict_list
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'deleteObject')
+  def deleteObject(self, object, object_id):
+    try:
+      object._delObject(object_id)
+    except (AttributeError, KeyError):
+      #LOG('ERP5Conduit',0,'deleteObject, Unable to delete: %s' % str(object_id))
+      pass
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
   def updateNode(self, xml=None, object=None, previous_xml=None, force=0,
@@ -788,12 +792,16 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     self.editDocument(object=object,**args)
     if hasattr(object,'manage_afterEdit'):
       object.manage_afterEdit()
-
+    self.afterNewObject(object = object)
 
     # Then we may create subobject
     for subnode in self.getElementNodeList(xml):
       if subnode.nodeName in (self.xml_object_tag,): #,self.history_tag):
         self.addNode(object=object,xml=subnode)
+
+  security.declareProtected(Permissions.AccessContentsInformation,'afterNewObject')
+  def afterNewObject(self, object):
+    pass
 
   security.declareProtected(Permissions.AccessContentsInformation,'getStatusFromXml')
   def getStatusFromXml(self, xml):
