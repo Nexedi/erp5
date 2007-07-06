@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.ERP5Type</string>
-          <string>ERP5TypeInformation</string>
-        </tuple>
-        <none/>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -41,6 +38,10 @@
             <value>
               <list/>
             </value>
+        </item>
+        <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>allowed_content_types</string> </key>
@@ -80,6 +81,12 @@
             <value> <int>1</int> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
               <tuple/>
@@ -91,6 +98,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string>CurrencyExchangeLine_init</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
