@@ -91,6 +91,7 @@ if site_uid is not None:\n
                    (simulation_state == \'finished\' and \'siege\' in here.getSource(\'\'))\n
                  )\n
                )\n
+            or (portal_type == \'Monetary Destruction\' and simulation_state == \'ordered\')\n
            ):\n
       append(document)\n
 \n

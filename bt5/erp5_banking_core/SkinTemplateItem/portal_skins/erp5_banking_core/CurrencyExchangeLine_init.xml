@@ -65,41 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# Raise ValidationFailed if the accounting date is not opened for the given date and the given site\n
+            <value> <string>from DateTime import DateTime\n
 \n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-if date is None:\n
-  # get current date\n
-  from DateTime import DateTime\n
-  date = DateTime()\n
-\n
-# Make sure we have a date with no hours\n
-date = date.Date()\n
-\n
-if site is None:\n
-  # get site from user assignment\n
-  site_list = context.Baobab_getUserAssignedSiteList()\n
-  if len(site_list) == 0:\n
-    context.log(\'Baobab_checkAccountingDateOpen\', \'No site found for the user\')\n
-    return 0\n
-  else:\n
-    site = site_list[0]\n
-\n
-# get only the office, not need of vault\n
-#context.log(\'Baobab_checkAccountingDateOpen\', \'get site for vault %s\' %(site))\n
-site = context.Baobab_getVaultSite(site)\n
-\n
-if context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_date={\'query\':\'<=%s\' % (date, ), \'type\': \'date\', \'format\': \'%Y/%m/%d\'}, site_id=site.getId(), simulation_state="opened", limit=1)[0][0] == 0:\n
-  raise Exception, context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_date={\'query\':\'<=%s\' % (date, ), \'type\': \'date\', \'format\': \'%Y/%m/%d\'}, site_id=site.getId(), simulation_state="opened", limit=1, src__=1)\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
-  raise ValidationFailed, (msg,)\n
-
-
-]]></string> </value>
+current_date_string = DateTime().strftime(\'%Y-%m-%d\')\n
+start_date = DateTime(\'%s 00:00\' % current_date_string)\n
+stop_date = DateTime(\'%s 23:59\' % current_date_string)\n
+context.setStartDate(start_date)\n
+context.setStopDate(stop_date)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -121,15 +94,7 @@ if context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_da
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site=None, date=None</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,27 +114,19 @@ if context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_da
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>site</string>
-                            <string>date</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>None</string>
+                            <string>kw</string>
                             <string>DateTime</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>site_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>Exception</string>
-                            <string>msg</string>
+                            <string>current_date_string</string>
+                            <string>start_date</string>
+                            <string>stop_date</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -181,15 +138,12 @@ if context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_da
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_checkAccountingDateOpen</string> </value>
+            <value> <string>CurrencyExchangeLine_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
