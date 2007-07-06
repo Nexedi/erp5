@@ -341,7 +341,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     """
       reset a subscription
     """
-    self.SubSync(self.getSubscription(title))
+    self.SubSync(self.getSubscription(title).getPath())
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
@@ -512,6 +512,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         #LOG('getSynchronizationState, subscriber_list:',0,subscriber_list)
         for subscriber in subscriber_list:
           signature = subscriber.getSignatureFromObjectId(o_id)
+          #XXX check if signature could be not None ...
           if signature is not None:
             state = signature.getStatus()
             #LOG('getSynchronizationState:',0,'sub.dest :%s, state: %s' % \
@@ -861,16 +862,20 @@ class SynchronizationTool( SubscriptionSynchronization,
     if send:
       if isinstance(to_url, str):
         if to_url.find('http://')==0:
-          # XXX Make sure this is not a problem
-          if domain.domain_type == self.PUB:
-            return None
-          # we will send an http response
           domain = aq_base(domain)
+          #LOG('domain.domain_type',0,domain.domain_type)
+          #LOG("getattr(domain, 'getActivityEnabled', None)",0,getattr(domain, 'getActivityEnabled', None))
+          #LOG("domain.getActivityEnabled()",0,domain.getActivityEnabled())
+          if domain.domain_type == self.PUB and not domain.getActivityEnabled():
+            # not use activity
+            # XXX Make sure this is not a problem
+            return None
+          #use activities to send send an http response
           #LOG('sendResponse, will start sendHttpResponse, xml',0,'')
           self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
-                                           xml=xml, domain=domain)
-          return None
+                                           xml=xml, 
+                                           domain_path=domain.getPath())
         elif to_url.find('file://')==0:
           filename = to_url[len('file:/'):]
           stream = file(filename,'w')
@@ -886,13 +891,15 @@ class SynchronizationTool( SubscriptionSynchronization,
     return xml
 
   security.declarePrivate('sendHttpResponse')
-  def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, domain=None ):
+  def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, 
+      domain_path=None ):
+    domain = self.unrestrictedTraverse(domain_path)
     #LOG('sendHttpResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
     #LOG('sendHttpResponse, starting with domain:',0,domain)
     #LOG('sendHttpResponse, xml:',0,xml)
     if domain is not None:
-      if domain.domain_type == self.PUB:
-        return xml
+      if domain.domain_type == self.PUB and not domain.getActivityEnabled():
+            return xml
     # Retrieve the proxy from os variables
     proxy_url = ''
     if os.environ.has_key('http_proxy'):
@@ -928,7 +935,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       result = urllib2.urlopen(request).read()
     except socket.error, msg:
       self.activate(activity='RAMQueue').sendHttpResponse(to_url=to_url, 
-          sync_id=sync_id, xml=xml, domain=domain)
+          sync_id=sync_id, xml=xml, domain_path=domain.getPath())
       LOG('sendHttpResponse, socket ERROR:',0,msg)
       LOG('sendHttpResponse, url,data',0,(url, data))
       return
@@ -940,17 +947,18 @@ class SynchronizationTool( SubscriptionSynchronization,
 
     #LOG('sendHttpResponse, before result, domain:',0,domain)
     if domain is not None:
-      if domain.domain_type == self.SUB:
-        gpg_key = domain.getGPGKey()
-        if result not in (None,''):
-          #if gpg_key not in ('',None):
-          #  result = self.sendResponse(domain=domain,xml=result,send=0)
-          #uf = self.acl_users
-          #user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
-          #user = uf.getUserById('syncml').__of__(uf)
-          #newSecurityManager(None, user)
-          #self.activate(activity='RAMQueue').readResponse(sync_id=sync_id,text=result)
-          self.readResponse(sync_id=sync_id,text=result)
+      if domain.domain_type == self.SUB and not domain.getActivityEnabled():
+            #if we don't use activity :
+            gpg_key = domain.getGPGKey()
+            if result not in (None,''):
+              #if gpg_key not in ('',None):
+              #  result = self.sendResponse(domain=domain,xml=result,send=0)
+              #uf = self.acl_users
+              #user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+              #user = uf.getUserById('syncml').__of__(uf)
+              #newSecurityManager(None, user)
+              #self.activate(activity='RAMQueue').readResponse(sync_id=sync_id,text=result)
+              self.readResponse(sync_id=sync_id,text=result)
 
   security.declarePublic('sync')
   def sync(self):
@@ -965,8 +973,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     #LOG('sync, message_list:',0,message_list)
     if len(message_list) == 0:
       for subscription in self.getSubscriptionList():
-        #LOG('sync, subcription:',0,subscription)
-        self.activate(activity='RAMQueue').SubSync(subscription)
+        #LOG('sync, type(subcription):',0,type(subscription))
+        self.activate(activity='RAMQueue').SubSync(subscription.getPath())
 
   security.declarePublic('readResponse')
   def readResponse(self, text=None, sync_id=None, to_url=None, from_url=None):
@@ -1013,24 +1021,33 @@ class SynchronizationTool( SubscriptionSynchronization,
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
+      #LOG('type(text) : ',0,type(text))
       xml = Parse(text)
       #XXX this function is not very optimized and should be improved
       url = self.getTarget(xml)
       for publication in self.getPublicationList():
         if publication.getPublicationUrl()==url and \
         publication.getTitle()==sync_id:
-          result = self.PubSync(publication,xml)
-          # Then encrypt the message
-          xml = result['xml']
-          #must be commented because this method is alredy called
-          #xml = self.sendResponse(xml=xml,domain=publication,send=0)
-          return xml
+          if publication.getActivityEnabled():
+            #use activities to send SyncML data.
+            self.activate(activity='RAMQueue').PubSync(publication.getPath(),
+                                                       text)
+            return ' '
+          else:
+            result = self.PubSync(publication.getPath(),xml)
+            # Then encrypt the message
+            xml = result['xml']
+            #must be commented because this method is alredy called
+            #xml = self.sendResponse(xml=xml,domain=publication,send=0)
+            return xml
       
       for subscription in self.getSubscriptionList():
         if subscription.getSubscriptionUrl()==url and \
             subscription.getTitle()==sync_id:
-              result = self.activate(activity='RAMQueue').SubSync(\
-                  self.getSubscription(sync_id), text)
+              subscription_path = self.getSubscription(sync_id).getPath()
+              self.activate(activity='RAMQueue').SubSync(subscription_path, 
+                                                         text)
+              return ' '
               #result = self.SubSync(self.getSubscription(sync_id),xml)
 
     # we use from only if we have a file 

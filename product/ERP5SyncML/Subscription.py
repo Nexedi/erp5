@@ -1039,10 +1039,12 @@ class Subscription(Folder, SyncCode):
       o_id = signature.getObjectId()
       #try with id param too, because gid is not catalogged
       object_list = self.getObjectList(gid = b16decode(gid), id = o_id)
+      #LOG('getObjectFromGid :',0,'object_list=%s, gid=%s, o_id=%s' % (object_list, gid, o_id))
       if o is not None and o in object_list:
         return o
-    #XXX Slow !!!
+    #LOG('entering in the slow loop of getObjectFromGid !!!',0,'')
     object_list = self.getObjectList(gid = b16decode(gid))
+    #LOG('getObjectFromGid :', 0, 'object_list slow loop=%s, gid=%s' % (object_list, gid))
     for o in object_list:
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
@@ -1055,7 +1057,6 @@ class Subscription(Folder, SyncCode):
     return the object corresponding to the id
     """
     object_list = self.getObjectList(id=id)
-    #XXX very slow with lot of objects
     o = None
     for object in object_list:
       if object.getId() == id:

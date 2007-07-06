@@ -29,7 +29,6 @@
 import smtplib
 from Products.ERP5SyncML.SyncCode import SyncCode
 from Products.ERP5SyncML.Subscription import Signature
-from DateTime import DateTime
 from StringIO import StringIO
 from xml.dom.ext import PrettyPrint
 from ERP5Diff import ERP5Diff
@@ -689,6 +688,7 @@ class XMLSyncUtilsMixin(SyncCode):
     if object is not None, this usually means we want to set the
     actual xupdate on the signature.
     """
+    #LOG('getSyncMLData starting...',0,'')
     local_gid_list = []
     syncml_data = kw.get('syncml_data','')
     result = {'finished':1}
@@ -702,6 +702,7 @@ class XMLSyncUtilsMixin(SyncCode):
       #object_gid = domain.getGidFromObject(object)
       local_gid_list = map(lambda x: domain.getGidFromObject(x),object_list)
       # Objects to remove
+      #LOG('remove object to remove ...',0,'')
       for object_gid in subscriber.getGidList():
         if not (object_gid in local_gid_list):
           # This is an object to remove
@@ -721,6 +722,7 @@ class XMLSyncUtilsMixin(SyncCode):
     local_gid_list = []
     loop = 0
     for object_path in subscriber.getRemainingObjectPathList():
+      #LOG('getRemainingObject :',0,[[subscriber.getRemainingObjectPathList()[i][3] for i in range(5)],[subscriber.getRemainingObjectPathList()[-i][3] for i in range(5)]])
       if max is not None and loop >= max:
         result['finished'] = 0
         break
@@ -777,6 +779,9 @@ class XMLSyncUtilsMixin(SyncCode):
             status = self.PARTIAL
             signature.setAction('Add')
             xml_string = '<!--' + short_string + '-->'
+          else:#if there is no partial data, 
+               #we could remove the object from the remain list
+            subscriber.removeRemainingObjectPath(object_path)
           gid = signature.getRid()#in fisrt, we try with rid if there is one
           if gid == None:
             gid = signature.getGid()
@@ -964,7 +969,6 @@ class XMLSyncUtilsMixin(SyncCode):
         if action.nodeName == 'Add':
           # Then store the xml of this new subobject
           if object is None:
-            object_id = domain.generateNewIdWithGenerator(object=destination,gid=gid)
             #if object_id is not None:
             add_data = conduit.addNode(xml=data_subnode, 
                 object=destination, object_id=object_id)
@@ -979,7 +983,6 @@ class XMLSyncUtilsMixin(SyncCode):
           else:
             #Object was retrieve but need to be updated without recreated
             #usefull when an object is only deleted by workflow.
-            object_id = domain.generateNewIdWithGenerator(object=destination,gid=gid)
             add_data = conduit.addNode(xml=data_subnode,
                                        object=destination,
                                        object_id=object_id,
@@ -1309,13 +1312,13 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     # Now we should send confirmations
     cmd_id_before_getsyncmldata = cmd_id
     cmd_id = cmd_id+1
-    if getattr(domain, 'getActivityEnabled', None) and domain.getActivityEnabled():
+    if domain.getActivityEnabled():
       #use activities to get SyncML data.
       if not (isinstance(remote_xml, str) or isinstance(remote_xml, unicode)):
         string_io = StringIO()
         PrettyPrint(remote_xml,stream=string_io)
         remote_xml = string_io.getvalue()
-      self.activate().SyncModifActivity(
+      self.activate(activity='RAMQueue').SyncModifActivity(
                       domain_relative_url = domain.getRelativeUrl(),
                       remote_xml = remote_xml,
                       subscriber_relative_url = subscriber.getRelativeUrl(),
@@ -1332,25 +1335,30 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                              remote_xml=remote_xml,
                              subscriber=subscriber,
                              cmd_id=cmd_id,xml_confirmation=xml_confirmation,
-                             conduit=conduit)
+                             conduit=conduit,
+                             max=self.MAX_OBJECTS)
       syncml_data = result['syncml_data']
       xml_confirmation = result['xml_confirmation']
       cmd_id = result['cmd_id']
       return self.sendSyncModif(syncml_data, cmd_id_before_getsyncmldata,
                                 subscriber, domain, xml_confirmation,
-                                remote_xml, xml_list, has_status_list, has_response)
+                                remote_xml, xml_list, has_status_list, 
+                                has_response)
 
   def SyncModifActivity(self, **kw):
     domain = self.unrestrictedTraverse(kw['domain_relative_url'])
     subscriber = self.unrestrictedTraverse(kw['subscriber_relative_url'])
     conduit = subscriber.getConduit()
     result = self.getSyncMLData(domain = domain, subscriber = subscriber,
-                                conduit = conduit, max = 100, **kw)
+                                conduit = conduit, max = self.MAX_OBJECTS, **kw)
     syncml_data = result['syncml_data']
+    cmd_id = result['cmd_id']
     kw['syncml_data'] = syncml_data
+    kw['cmd_id'] = cmd_id
     finished = result['finished']
+    #LOG('finished =',0,finished)
     if not finished:
-      self.activate().SyncModifActivity(**kw)
+      self.activate(activity='RAMQueue').SyncModifActivity(**kw)
     else:
       xml_confirmation = result['xml_confirmation']
       cmd_id = result['cmd_id']

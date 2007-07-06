@@ -79,12 +79,12 @@ class SubscriptionSynchronization(XMLSyncUtils):
 
     return {'has_response':1,'xml':xml_a}
 
-  def SubSync(self, subscription, msg=None, RESPONSE=None):
+  def SubSync(self, subscription_path, msg=None, RESPONSE=None):
     """
       This is the synchronization method for the client
     """
     response = None #check if subsync replies to this messages
-
+    subscription = self.unrestrictedTraverse(subscription_path)
     if msg==None and (subscription.getSubscriptionUrl()).find('file')>=0:
       msg = self.readResponse(sync_id=subscription.getSourceURI(), 
           from_url=subscription.getSubscriptionUrl())

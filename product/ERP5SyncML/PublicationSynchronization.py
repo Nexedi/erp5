@@ -222,12 +222,13 @@ class PublicationSynchronization(XMLSyncUtils):
     return {'has_response':1,'xml':xml_a}
 
 
-  def PubSync(self, publication, msg=None, RESPONSE=None, subscriber=None):
+  def PubSync(self, publication_path, msg=None, RESPONSE=None, subscriber=None):
     """
       This is the synchronization method for the server
     """
-    #LOG('PubSync',0,'Starting... publication: %s' % str(publication))
+    #LOG('PubSync',0,'Starting... publication: %s' % str(publication_path))
     # Read the request from the client
+    publication = self.unrestrictedTraverse(publication_path)
     xml_client = msg
     if xml_client is None:
       xml_client = self.readResponse(from_url=publication.getPublicationUrl())
