@@ -2978,7 +2978,7 @@ class TempBase(Base):
     """
       Returns the title of this document
     """
-    return getattr(self, 'title', None)
+    return getattr(aq_base(self), 'title', None)
 
   security.declarePublic('setProperty')
 
