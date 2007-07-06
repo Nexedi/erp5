@@ -101,26 +101,24 @@ class FolderMixIn(ExtensionClass.Base):
       if not getattr(container, 'isTempObject', lambda: 0)():
         factory_name = 'newTemp%s' %(portal_type.replace(' ', ''))
         m = getattr(Document, factory_name)
-        return m(container, new_id)
+        new_instance = m(container, new_id)
+    else:
+      myType = pt.getTypeInfo(container)
+      if myType is not None and not myType.allowType( portal_type ) and \
+         'portal_trash' not in container.getPhysicalPath():
+        raise ValueError('Disallowed subobject type: %s' % portal_type)
+      pt.constructContent( type_name=portal_type,
+                           container=container,
+                           id=new_id,
+                           created_by_builder=created_by_builder,
+                           activate_kw=activate_kw,
+                           is_indexable=is_indexable
+                           ) # **kw) removed due to CMF bug
+      # TODO :the **kw makes it impossible to create content not based on
+      # ERP5TypeInformation, because factory method often do not support
+      # keywords arguments.
+      new_instance = container[new_id]
 
-    myType = pt.getTypeInfo(container)
-    if myType is not None:
-      if not myType.allowType( portal_type ):
-        if not 'portal_trash' in container.getPhysicalPath():
-          raise ValueError('Disallowed subobject type: %s' % portal_type)
-
-    pt.constructContent( type_name=portal_type,
-                         container=container,
-                         id=new_id,
-                         created_by_builder=created_by_builder,
-                         activate_kw=activate_kw,
-                         is_indexable=is_indexable
-                         ) # **kw) removed due to CMF bug
-    # TODO :the **kw makes it impossible to create content not based on
-    # ERP5TypeInformation, because factory method often do not support
-    # keywords arguments.
-
-    new_instance = container[new_id]
     if kw != {} : new_instance._edit(force_update=1, **kw)
     if immediate_reindex: new_instance.immediateReindexObject()
     return new_instance
