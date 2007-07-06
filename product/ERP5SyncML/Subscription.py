@@ -1038,11 +1038,11 @@ class Subscription(Folder, SyncCode):
         pass
       o_id = signature.getObjectId()
       #try with id param too, because gid is not catalogged
-      object_list = self.getObjectList(gid = gid, id = o_id)
+      object_list = self.getObjectList(gid = b16decode(gid), id = o_id)
       if o is not None and o in object_list:
         return o
     #XXX Slow !!!
-    object_list = self.getObjectList(gid = gid)
+    object_list = self.getObjectList(gid = b16decode(gid))
     for o in object_list:
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
