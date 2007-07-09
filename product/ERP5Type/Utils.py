@@ -355,13 +355,13 @@ class TempDocumentConstructor(DocumentConstructor):
 
       # Replace some attributes.
       for name in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
-                   'activate', 'setUid', 'setTitle', 'getTitle'):
+                   'activate', 'setUid', 'setTitle', 'getTitle', 'getUid'):
         setattr(TempDocument, name, getattr(klass, '_temp_%s' % name))
 
       # Make some methods public.
       for method_id in ('reindexObject', 'recursiveReindexObject',
                         'activate', 'setUid', 'setTitle', 'getTitle',
-                        'edit', 'setProperty'):
+                        'edit', 'setProperty', 'getUid'):
         setattr(TempDocument, '%s__roles__' % method_id, None)
 
       self.klass = TempDocument

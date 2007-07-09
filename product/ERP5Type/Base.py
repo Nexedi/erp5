@@ -2463,6 +2463,14 @@ class Base( CopyContainer,
   def _temp_setUid(self, value):
     self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
 
+  def _temp_getUid(self):
+    try:
+      return getattr(aq_base(self), 'uid')
+    except AttributeError:
+      value = self.getId()
+      self.setUid(value)
+      return value
+
   def _temp_setTitle(self, value):
     """
     Required so that getProperty('title') will work on tempBase objects
