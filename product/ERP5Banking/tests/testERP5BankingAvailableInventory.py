@@ -70,6 +70,8 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
   - it must not be possible to open two counter dates by the same time
     even if there is different dates
   - make sure the reference defined on counter dates is increased every day
+  - make sure it is impossible to close a counter date if some resources
+    are still remaining inside some particular vaults
 
   Also, we must make sure it is not possible to deliver two check
   payments by the same time (due to tag on counter)
