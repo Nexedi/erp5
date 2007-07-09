@@ -94,14 +94,13 @@ class FolderMixIn(ExtensionClass.Base):
       # And made the code more difficult to update
       portal_type = container.allowedContentTypes()[0].id
 
-    if temp_object:
+    # we get an object from factory only for first temp container object
+    # otherwise we get an id so we can use the classic way
+    if temp_object and not getattr(container, 'isTempObject', lambda: 0)():
       from Products.ERP5Type import Document
-      # we get an object from factory only for first temp container object
-      # otherwise we get an id so we can use the classic way
-      if not getattr(container, 'isTempObject', lambda: 0)():
-        factory_name = 'newTemp%s' %(portal_type.replace(' ', ''))
-        m = getattr(Document, factory_name)
-        new_instance = m(container, new_id)
+      factory_name = 'newTemp%s' %(portal_type.replace(' ', ''))
+      m = getattr(Document, factory_name)
+      new_instance = m(container, new_id)
     else:
       myType = pt.getTypeInfo(container)
       if myType is not None and not myType.allowType( portal_type ) and \
