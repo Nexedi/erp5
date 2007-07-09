@@ -1,3 +1,4 @@
+
 Cash Balance Regulation | Incoming Cash Balance Regulation Line
 Cash Balance Regulation | Outgoing Cash Balance Regulation Line
 Cash Container Item | Container Line
@@ -17,8 +18,6 @@ Container Line | Container Cell
 Counter Rendering | Amount
 Counter Rendering | Cash Delivery Line
 Counter Rendering | Price
-Currency Purchase | Banking Operation Line
-Currency Purchase | Cash Delivery Line
 Currency Sale | Banking Operation Line
 Currency Sale | Cash Delivery Line
 Destruction Survey | Cash Delivery Line

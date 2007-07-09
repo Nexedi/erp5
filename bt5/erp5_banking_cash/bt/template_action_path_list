@@ -1,3 +1,4 @@
+
 Cash Balance Regulation Module | list
 Cash Balance Regulation Module | list_ui
 Cash Balance Regulation Module | sort_on
@@ -97,15 +98,6 @@ Counter Rendering | history
 Counter Rendering | metadata
 Counter Rendering | print_pdf
 Counter Rendering | view
-Currency Purchase Module | list_ui
-Currency Purchase Module | sort_on
-Currency Purchase Module | view
-Currency Purchase | FastInput
-Currency Purchase | History
-Currency Purchase | accounting_view
-Currency Purchase | metadata
-Currency Purchase | print
-Currency Purchase | view
 Currency Sale Module | list_ui
 Currency Sale Module | sort_on
 Currency Sale Module | view

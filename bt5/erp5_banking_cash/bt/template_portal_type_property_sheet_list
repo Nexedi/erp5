@@ -1,3 +1,4 @@
+
 Cash Balance Regulation | Amount
 Cash Balance Regulation | Price
 Cash Balance Regulation | Resource
@@ -22,11 +23,6 @@ Container Cell | CashContainer
 Container Line | CashContainer
 Counter Rendering | Amount
 Counter Rendering | Price
-Currency Purchase | Discount
-Currency Purchase | ItemAggregation
-Currency Purchase | Price
-Currency Purchase | Reference
-Currency Purchase | Resource
 Currency Sale | Discount
 Currency Sale | Price
 Currency Sale | Reference

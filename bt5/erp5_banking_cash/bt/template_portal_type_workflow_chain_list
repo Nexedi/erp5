@@ -1,3 +1,4 @@
+
 Cash Balance Regulation | cash_balance_regulation_workflow
 Cash Balance Regulation | edit_workflow
 Cash Exchange | cash_exchange_workflow
@@ -19,8 +20,6 @@ Container Line | packing_list_interaction_workflow
 Container Line | trade_matrix_workflow
 Counter Rendering | counter_rendering_workflow
 Counter Rendering | edit_workflow
-Currency Purchase | currency_purchase_workflow
-Currency Purchase | edit_workflow
 Currency Sale | currency_sale_workflow
 Currency Sale | edit_workflow
 Destruction Survey | destruction_survey_workflow

@@ -40,10 +40,6 @@
   <item>Price</item>
   <item>Cash Delivery Line</item>
  </portal_type>
- <portal_type id="Currency Purchase">
-  <item>Cash Delivery Line</item>
-  <item>Banking Operation Line</item>
- </portal_type>
  <portal_type id="Currency Sale">
   <item>Banking Operation Line</item>
   <item>Cash Delivery Line</item>

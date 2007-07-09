@@ -40,10 +40,6 @@
   <workflow>counter_rendering_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Currency Purchase</type>
-  <workflow>currency_purchase_workflow, edit_workflow</workflow>
- </chain>
- <chain>
   <type>Currency Sale</type>
   <workflow>currency_sale_workflow, edit_workflow</workflow>
  </chain>
@@ -101,6 +97,6 @@
  </chain>
  <chain>
   <type>Vault Transfer</type>
-  <workflow>vault_transfer_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, vault_transfer_workflow</workflow>
  </chain>
 </workflow_chain>

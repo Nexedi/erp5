@@ -12,18 +12,14 @@
   <item>currency_exchange_type</item>
  </portal_type>
  <portal_type id="Container Cell">
-  <item>variation</item>
   <item>cash_status</item>
   <item>emission_letter</item>
+  <item>variation</item>
  </portal_type>
  <portal_type id="Container Line">
   <item>emission_letter</item>
-  <item>variation</item>
   <item>cash_status</item>
- </portal_type>
- <portal_type id="Currency Purchase">
-  <item>source_trade</item>
-  <item>currency_exchange_type</item>
+  <item>variation</item>
  </portal_type>
  <portal_type id="Currency Sale">
   <item>source_trade</item>
@@ -43,8 +39,8 @@
   <item>external_software</item>
  </portal_type>
  <portal_type id="Mutilated Banknote">
-  <item>source_trade</item>
   <item>source_decision</item>
+  <item>source_trade</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>variation</item>

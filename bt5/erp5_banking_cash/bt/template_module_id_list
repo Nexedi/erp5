@@ -6,7 +6,6 @@ cash_to_currency_purchase_module
 cash_to_currency_sale_module
 classification_survey_module
 counter_rendering_module
-currency_purchase_module
 currency_sale_module
 destruction_survey_module
 foreign_cash_reception_module

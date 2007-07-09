@@ -40,15 +40,15 @@
   <item>Cash To Currency Purchase</item>
  </portal_type>
  <portal_type id="Cash To Currency Sale">
-  <item>Incoming Cash To Currency Sale Line</item>
   <item>Outgoing Cash To Currency Sale Line</item>
+  <item>Incoming Cash To Currency Sale Line</item>
  </portal_type>
  <portal_type id="Cash To Currency Sale Module">
   <item>Cash To Currency Sale</item>
  </portal_type>
  <portal_type id="Classification Survey">
-  <item>Incoming Classification Survey Line</item>
   <item>Outgoing Classification Survey Line</item>
+  <item>Incoming Classification Survey Line</item>
  </portal_type>
  <portal_type id="Classification Survey Module">
   <item>Classification Survey</item>
@@ -61,13 +61,6 @@
  </portal_type>
  <portal_type id="Counter Rendering Module">
   <item>Counter Rendering</item>
- </portal_type>
- <portal_type id="Currency Purchase">
-  <item>Banking Operation Line</item>
-  <item>Cash Delivery Line</item>
- </portal_type>
- <portal_type id="Currency Purchase Module">
-  <item>Currency Purchase</item>
  </portal_type>
  <portal_type id="Currency Sale">
   <item>Banking Operation Line</item>
@@ -114,8 +107,8 @@
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
-  <item>Banking Operation Line</item>
   <item>Cash Delivery Line</item>
+  <item>Banking Operation Line</item>
  </portal_type>
  <portal_type id="Internal Money Deposit Module">
   <item>Internal Money Deposit</item>
@@ -175,9 +168,9 @@
   <item>Money Deposit Rendering</item>
  </portal_type>
  <portal_type id="Mutilated Banknote">
-  <item>Incoming Mutilated Banknote Line</item>
   <item>Outgoing Mutilated Banknote Line</item>
   <item>Exchanged Mutilated Banknote Line</item>
+  <item>Incoming Mutilated Banknote Line</item>
  </portal_type>
  <portal_type id="Mutilated Banknote Module">
   <item>Mutilated Banknote</item>
