@@ -1312,13 +1312,14 @@ class BasicStructure:
         new_object_list = []
         if domain_obj.getPortalType() == 'Domain':
           category_obj = domain_obj.getMembershipCriterionCategory()
-          membership_base_category = domain_obj.getMembershipCriterionBaseCategory()
-          if (category_obj is not None) and (membership_base_category is not None):
-            category_value = (membership_base_category + '/' + category_obj.getRelativeUrl())
-            for selected_object in object_list:
-              if category_value in selected_object.getCategoriesList():
-                 new_object_list.append(selected_object)
-            object_list = new_object_list
+          base_category_list = domain_obj.getMembershipCriterionBaseCategoryList()
+          for bc in base_category_list:
+            if (category_obj is not None) and (bc is not None):
+              category_value = category_obj.getRelativeUrl()
+              for s_obj in object_list:
+                if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_value:
+                  new_object_list.append(s_obj)
+          object_list = new_object_list
 
         if exception_uid_list not in ([],None) :
           # Filter folders if parent tree :
