@@ -335,6 +335,7 @@ class BaobabConduit(ERP5Conduit):
                                               id=organisation_id
                                               )[0].getObject()
         subobject._setCareerSubordinationValue(organisation)
+
       else: # This is an organisation object
         site_value = organisation_module_object.Baobab_getSiteFromCodification(
                                                        object_id[:3])
@@ -465,8 +466,6 @@ class BaobabConduit(ERP5Conduit):
                                    , id          = object_id
                                    )
 
-    if subobject.getPortalType() == 'Person':
-      subobject.updateLocalRolesOnSecurityGroups()
     return subobject
 
 
@@ -695,6 +694,8 @@ class BaobabConduit(ERP5Conduit):
     if object.getPortalType() == 'Bank Account':
       object.portal_workflow.doActionFor(object, 'validate_action', 
                                          wf_id='bank_account_workflow')
+    if object.getPortalType() == 'Person':
+      object.updateLocalRolesOnSecurityGroups()
 
 
   """
