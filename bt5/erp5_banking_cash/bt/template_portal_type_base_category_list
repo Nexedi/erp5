@@ -1,4 +1,3 @@
-
 Bank Account | site
 Cash Container Item | aggregate
 Cash To Currency Purchase | currency_exchange_type
@@ -9,8 +8,6 @@ Container Cell | variation
 Container Line | cash_status
 Container Line | emission_letter
 Container Line | variation
-Currency Sale | currency_exchange_type
-Currency Sale | source_trade
 Foreign Cash Reception | currency_exchange_type
 Internal Money Deposit | external_software
 Monetary Recall Cell | variation

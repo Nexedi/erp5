@@ -41,12 +41,6 @@
   <item>Amount</item>
   <item>Price</item>
  </portal_type>
- <portal_type id="Currency Sale">
-  <item>Price</item>
-  <item>Discount</item>
-  <item>Resource</item>
-  <item>Reference</item>
- </portal_type>
  <portal_type id="Destruction Survey">
   <item>Task</item>
   <item>Amount</item>

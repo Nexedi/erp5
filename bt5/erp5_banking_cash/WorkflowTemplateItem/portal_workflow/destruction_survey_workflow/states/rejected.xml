@@ -16,12 +16,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>cancelled</string> </value>
+            <value> <string>rejected</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,10 +37,23 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cancelled</string> </value>
+            <value> <string>Rejected</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>cancel</string>
+                <string>cancel_action</string>
+                <string>confirm</string>
+                <string>confirm_action</string>
+                <string>delete</string>
+                <string>delete_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
             <value>
               <tuple/>
             </value>
@@ -45,17 +64,14 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -64,8 +80,8 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>DestinationAssignee</string>
                         <string>Manager</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>
@@ -73,6 +89,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -81,6 +98,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -91,8 +109,8 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>DestinationAssignee</string>
                         <string>Manager</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>

@@ -1,4 +1,3 @@
-
 Cash Balance Regulation | Amount
 Cash Balance Regulation | Price
 Cash Balance Regulation | Resource
@@ -23,10 +22,6 @@ Container Cell | CashContainer
 Container Line | CashContainer
 Counter Rendering | Amount
 Counter Rendering | Price
-Currency Sale | Discount
-Currency Sale | Price
-Currency Sale | Reference
-Currency Sale | Resource
 Destruction Survey | Amount
 Destruction Survey | Task
 Exchanged Mutilated Banknote Line | CashDeliveryLine

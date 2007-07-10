@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Currency Sale To Send (%(count)s)</string> </value>
+            <value> <string>Rejected Monetary Destruction (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=draft&portal_type=Currency Sale&reset=1
+Base_viewWorklist?simulation_state=rejected&portal_type=Monetary Destruction&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Currency Sale To Send</string> </value>
+            <value> <string>Rejected Monetary Destruction</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ Base_viewWorklist?simulation_state=draft&portal_type=Currency Sale&reset=1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>planned</string> </value>
+            <value> <string>rejected</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -57,11 +57,8 @@ Base_viewWorklist?simulation_state=draft&portal_type=Currency Sale&reset=1
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -81,24 +78,21 @@ Base_viewWorklist?simulation_state=draft&portal_type=Currency Sale&reset=1
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Currency Sale</string>
+                        <string>Monetary Destruction</string>
                       </tuple>
                     </value>
                 </item>
@@ -106,7 +100,7 @@ Base_viewWorklist?simulation_state=draft&portal_type=Currency Sale&reset=1
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>planned</string>
+                        <string>rejected</string>
                       </tuple>
                     </value>
                 </item>

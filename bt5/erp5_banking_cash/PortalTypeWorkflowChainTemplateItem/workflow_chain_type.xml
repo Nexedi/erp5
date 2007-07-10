@@ -40,12 +40,8 @@
   <workflow>counter_rendering_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Currency Sale</type>
-  <workflow>currency_sale_workflow, edit_workflow</workflow>
- </chain>
- <chain>
   <type>Destruction Survey</type>
-  <workflow>edit_workflow, destruction_survey_workflow</workflow>
+  <workflow>destruction_survey_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Foreign Cash Reception</type>
@@ -61,7 +57,7 @@
  </chain>
  <chain>
   <type>Monetary Issue</type>
-  <workflow>monetary_issue_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, monetary_issue_workflow</workflow>
  </chain>
  <chain>
   <type>Monetary Recall</type>

@@ -6,7 +6,6 @@ cash_to_currency_purchase_workflow
 cash_to_currency_sale_workflow
 classification_survey_workflow
 counter_rendering_workflow
-currency_sale_workflow
 destruction_survey_workflow
 foreign_cash_reception_workflow
 internal_money_deposit_workflow

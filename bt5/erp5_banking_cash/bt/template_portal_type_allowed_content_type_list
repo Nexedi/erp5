@@ -1,4 +1,3 @@
-
 Cash Balance Regulation Module | Cash Balance Regulation
 Cash Balance Regulation | Incoming Cash Balance Regulation Line
 Cash Balance Regulation | Outgoing Cash Balance Regulation Line
@@ -24,9 +23,6 @@ Classification Survey | Outgoing Classification Survey Line
 Container Line | Container Cell
 Counter Rendering Module | Counter Rendering
 Counter Rendering | Cash Delivery Line
-Currency Sale Module | Currency Sale
-Currency Sale | Banking Operation Line
-Currency Sale | Cash Delivery Line
 Destruction Survey Module | Destruction Survey
 Destruction Survey | Cash Delivery Line
 Exchanged Mutilated Banknote Line | Cash Delivery Cell

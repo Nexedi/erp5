@@ -21,10 +21,6 @@
   <item>cash_status</item>
   <item>variation</item>
  </portal_type>
- <portal_type id="Currency Sale">
-  <item>source_trade</item>
-  <item>currency_exchange_type</item>
- </portal_type>
  <portal_type id="Foreign Cash Reception">
   <item>currency_exchange_type</item>
  </portal_type>
