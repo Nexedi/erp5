@@ -319,11 +319,12 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       # manipulations are different
       is_standard_filetype = True
 
-      if not hasattr(picture,'data') or callable(picture.content_type):
+      if getattr(picture, 'data', None) is not None \
+              or callable(picture.content_type):
         is_standard_filetype = False
 
       if is_standard_filetype:
-        picture_data = picture.data
+        picture_data = str(picture.getData())
       else:
         picture_data = picture.Base_download()
 
