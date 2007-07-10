@@ -171,7 +171,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <tr>
         <td align="left" valign="top">
         <div class="form-label">
-        Format authentication
+        Authentication Format
         </label></div>
         </td>
         <td align="left" valign="top">
@@ -181,7 +181,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <tr>
         <td align="left" valign="top">
         <div class="form-label">
-        Type authentication
+        Authentication Type
         </label></div>
         </td>
         <td align="left" valign="top">

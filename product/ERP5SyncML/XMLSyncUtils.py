@@ -699,7 +699,6 @@ class XMLSyncUtilsMixin(SyncCode):
       object_path_list = map(lambda x: x.getPhysicalPath(),object_list)
       subscriber.setRemainingObjectPathList(object_path_list)
 
-      #object_gid = domain.getGidFromObject(object)
       local_gid_list = map(lambda x: domain.getGidFromObject(x),object_list)
       # Objects to remove
       #LOG('remove object to remove ...',0,'')
@@ -779,9 +778,6 @@ class XMLSyncUtilsMixin(SyncCode):
             status = self.PARTIAL
             signature.setAction('Add')
             xml_string = '<!--' + short_string + '-->'
-          else:#if there is no partial data, 
-               #we could remove the object from the remain list
-            subscriber.removeRemainingObjectPath(object_path)
           gid = signature.getRid()#in fisrt, we try with rid if there is one
           if gid == None:
             gid = signature.getGid()
@@ -895,6 +891,8 @@ class XMLSyncUtilsMixin(SyncCode):
             syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object, 
                 gid=gid, xml_string=xml_string, 
                 more_data=more_data, media_type=subscriber.getMediaType())
+        if not more_data:
+          subscriber.removeRemainingObjectPath(object_path)
       else:
         result['finished'] = 1
         break
