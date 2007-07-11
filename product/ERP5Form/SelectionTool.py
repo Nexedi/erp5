@@ -51,7 +51,7 @@ import hmac
 import random
 import re
 import string
-from zLOG import LOG
+from zLOG import LOG, WARNING, INFO
 from Acquisition import Implicit, aq_base
 from Products.ERP5Type.Message import Message
 import warnings
@@ -1393,7 +1393,8 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
 
     select_domain_dict is a dictionary of  associative list of (id, domain)
   """
-  if type(report_path) is type('a'): report_path = report_path.split('/')
+  if isinstance(report_path, str):
+    report_path = report_path.split('/')
 
   portal_categories = getattr(form, 'portal_categories', None)
   portal_domains = getattr(form, 'portal_domains', None)
@@ -1409,32 +1410,39 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
     if not root_dict.has_key(base_category):
       root = None
       if portal_categories is not None:
-        if base_category in portal_categories.objectIds():
+        if portal_categories._getOb(base_category, None) is not None:
           if base_category == 'parent':
             # parent has a special treatment
             root = root_dict[base_category] = root_dict[None] = here
             report_path = report_path[1:]
           else:
-            root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
+            root = root_dict[base_category] = root_dict[None] = \
+                                               portal_categories[base_category]
             report_path = report_path[1:]
       if root is None and portal_domains is not None:
-        if base_category in portal_domains.objectIds():
-          root = root_dict[base_category] = root_dict[None] = portal_domains[base_category]
+        if portal_domains._getOb(base_category, None) is not None:
+          root = root_dict[base_category] = root_dict[None] = \
+                                               portal_domains[base_category]
           report_path = report_path[1:]
       if root is None:
         try:
-          root = root_dict[None] = portal_object.unrestrictedTraverse(report_path)
+          root = root_dict[None] = \
+              portal_object.unrestrictedTraverse(report_path)
         except KeyError:
+          LOG('SelectionTool', INFO, "Not found %s" % str(report_path))
           root = None
         report_path = ()
     else:
       root = root_dict[None] = root_dict[base_category]
       report_path = report_path[1:]
-    is_empty_level = (root.objectCount() == 0) and (len(report_path) != 0)
-    if is_empty_level: base_category = report_path[0]
+    is_empty_level = (root is not None) and \
+        (root.objectCount() == 0) and (len(report_path) != 0)
+    if is_empty_level: 
+      base_category = report_path[0]
 
   tree_list = []
-  if root is None: return tree_list
+  if root is None: 
+    return tree_list
 
   if base_category == 'parent':
     # Use searchFolder as default
