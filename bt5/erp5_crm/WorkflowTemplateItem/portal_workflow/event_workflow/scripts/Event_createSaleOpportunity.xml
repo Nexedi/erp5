@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string># this script allow to create a new object from this current one\n
 \n
-object = state_change.object\n
+object = state_change[\'object\']\n
 object.Event_createSaleOpportunity()\n
 </string> </value>
         </item>

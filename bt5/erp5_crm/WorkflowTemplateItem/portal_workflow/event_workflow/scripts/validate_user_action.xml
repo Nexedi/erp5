@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>#This Works, but only as manager\n
 \n
-transition = state_change.transition.id[len(\'user_\'):]\n
+transition = state_change[\'transition\'].id[len(\'user_\'):]\n
 \n
 method = getattr(context, transition)\n
 method()\n

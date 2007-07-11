@@ -68,14 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>string_subject = \'Re: %s\' % state_change.object.getTitle()\n
+            <value> <string>string_subject = \'Re: %s\' % state_change[\'object\'].getTitle()\n
 message = state_change.kwargs[\'comment\']\n
 \n
 PersonModule_viewPersonList = context.getClientValueList(portal_type="Person") # should become getDestinationSectionList()\n
 email_list = map(lambda x:x.getDefaultEmailText(), PersonModule_viewPersonList)\n
 \n
 # XXX FIXME mfrom value is not good at all\n
-state_change.object.MailHost.send(message, mto=email_list, mfrom="info@nexedi.com",\n
+state_change[\'object\'].MailHost.send(message, mto=email_list, mfrom="info@nexedi.com",\n
                                   subject=string_subject)\n
 </string> </value>
         </item>

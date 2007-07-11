@@ -73,7 +73,7 @@ if state_change.getPortal().acl_users.meta_type == \'Pluggable Auth Service\':\n
   return\n
 \n
 # Get the assignment object and its parent\n
-assignment_object = state_change.object\n
+assignment_object = state_change[\'object\']\n
 person_object     = assignment_object.getParentValue()\n
 \n
 # Call the script if available\n

@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
-object = state_change.object\n
+object = state_change[\'object\']\n
 error_msg = \'Please correct the following errors:\'\n
 \n
 consistency = object.checkConsistency()\n

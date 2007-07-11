@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-object = state_change.object\n
+object = state_change[\'object\']\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 result_list = object.DeliveryPatch_validateContent()\n

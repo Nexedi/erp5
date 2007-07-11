@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>decision = state_change.object\n
+            <value> <string>decision = state_change[\'object\']\n
 \n
 # Create a new sub decision\n
 new_decision = decision.newContent(portal_type=\'Publication Decision\')\n

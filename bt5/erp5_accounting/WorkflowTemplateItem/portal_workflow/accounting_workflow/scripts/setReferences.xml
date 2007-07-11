@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Purchase Invoice Transaction or Sale Invoice Transaction.\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 \n
 # Get sections.\n
 source_section = transaction.getSourceSection()\n

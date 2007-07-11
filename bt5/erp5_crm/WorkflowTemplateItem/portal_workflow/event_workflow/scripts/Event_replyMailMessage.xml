@@ -73,10 +73,10 @@ for  letter in state_change.kwargs[\'reply_subject\']:\n
   string_subject += letter\n
 message = state_change.kwargs[\'reply_body\']\n
 \n
-state_change.object.MailHost.send(message, mto=state_change.object.getSender(), mfrom="info@nexedi.com",\n
+state_change[\'object\'].MailHost.send(message, mto=state_change[\'object\'].getSender(), mfrom="info@nexedi.com",\n
           subject=string_subject)\n
 \n
-#state_change.object.MailHost.send(message, mto="seb@nexedi.com", mfrom="info@nexedi.com",\n
+#state_change[\'object\'].MailHost.send(message, mto="seb@nexedi.com", mfrom="info@nexedi.com",\n
 #          subject=string_subject)\n
 </string> </value>
         </item>

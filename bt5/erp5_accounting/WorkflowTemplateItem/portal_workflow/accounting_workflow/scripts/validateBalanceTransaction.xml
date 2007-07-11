@@ -73,7 +73,7 @@
 error_message = \'\'\n
 \n
 # Balance Transaction.\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
 module = transaction.getParentValue()\n
 \n
 # Get sections and a currency.\n

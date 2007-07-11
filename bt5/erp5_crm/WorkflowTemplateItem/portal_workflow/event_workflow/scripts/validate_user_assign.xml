@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transition = state_change.transition.id[len(\'user_\'):]\n
+            <value> <string>transition = state_change[\'transition\'].id[len(\'user_\'):]\n
 \n
 def TestTitle(object):\n
   """\n
@@ -80,7 +80,7 @@ def TestTitle(object):\n
       return 1\n
   return 0\n
 \n
-object = state_change.object\n
+object = state_change[\'object\']\n
 \n
 if TestTitle(object):\n
   method = getattr(context, transition)\n

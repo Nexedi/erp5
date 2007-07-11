@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list_content = state_change.object\n
+            <value> <string>packing_list_content = state_change[\'object\']\n
 \n
 packing_list_content.getExplanationValue().activate().edit()\n
 </string> </value>

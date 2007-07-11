@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list_content = state_change.object\n
+            <value> <string>packing_list_content = state_change[\'object\']\n
 \n
 # Clean simulation\n
 simulation_movement_list = packing_list_content.getDeliveryRelatedValueList(\n

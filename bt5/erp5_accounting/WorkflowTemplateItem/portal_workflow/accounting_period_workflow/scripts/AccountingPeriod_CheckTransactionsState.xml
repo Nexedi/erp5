@@ -72,7 +72,7 @@
 
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
-closing_period = state_change.object\n
+closing_period = state_change[\'object\']\n
 portal = closing_period.getPortalObject()\n
 N_ = portal.Base_translateString\n
 accounting_module = portal.accounting_module\n

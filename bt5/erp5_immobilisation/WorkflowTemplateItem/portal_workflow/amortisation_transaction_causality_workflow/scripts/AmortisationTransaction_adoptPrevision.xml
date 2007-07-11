@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transaction = state_change.object\n
+            <value> <string>transaction = state_change[\'object\']\n
 \n
 # Set relative simulation movements profit_quantity to 0\n
 movement_list = transaction.getMovementList()\n

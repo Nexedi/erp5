@@ -71,7 +71,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: state_change.object.getPortalType()</string> </value>
+            <value> <string>python: state_change[\'object\'].getPortalType()</string> </value>
         </item>
       </dictionary>
     </pickle>

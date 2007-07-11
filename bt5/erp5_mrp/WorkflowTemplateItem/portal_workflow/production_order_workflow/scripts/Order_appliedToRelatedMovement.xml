@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change.object\n
+            <value> <string>order = state_change[\'object\']\n
 \n
 expand_tag = order.getPath() + \'_expand\'\n
 activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
