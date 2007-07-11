@@ -1198,24 +1198,19 @@ class BasicStructure:
     # each report line is a tuple of the form :
     #(selection_id, is_summary, depth, object_list, object_list_size, is_open)
 
-    try:
-      default_selection_report_path = self.report_root_list[0][0].split('/')[0]
-    except (IndexError):
-      message = 'report path is empty or not valid, please check selection\
-                 report path in Planning properties'
-      return [(Message(domain='erp5_ui', message=message,mapping=None))]
-    if (default_selection_report_path in portal_categories.objectIds()) or \
-      (portal_domains is not None and default_selection_report_path in \
-       portal_domains.objectIds()):
-      pass
-    else:
-      default_selection_root_path = self.report_root_list[0][0]
-    self.selection_report_path = self.selection.getReportPath(default = \
-     (default_selection_report_path,))
+    default_selection_report_path = self.report_root_list[0][0].split('/', 1)[0]
+    if (portal_categories is None or \
+        portal_categories._getOb(default_selection_report_path, None) is None) \
+       and (portal_domains is None or \
+          portal_domains._getOb(default_selection_report_path, None) is None):
+      default_selection_report_path = self.report_root_list[0][0]
 
-    if self.selection_report_path in (None,()):
-      message = 'report path is empty or not valid'
-      return [(Message(domain='erp5_ui', message=message,mapping=None))]
+    self.selection_report_path = self.selection.getReportPath(
+                                  default=default_selection_report_path)
+
+    if self.selection_report_path in (None, ()):
+      raise PlanningBoxError, 'report path is empty or not valid on %s' % \
+        self.field.absolute_url()
 
     # testing report_depth value
     if report_depth is not None:
@@ -1237,6 +1232,10 @@ class BasicStructure:
                                     is_report_opened=is_report_opened,
                                     sort_on=self.selection.sort_on,
                                     form_id=self.form.id)
+    if report_tree_list == []:
+      raise PlanningBoxError, "Report tree list is empty on %s" % \
+        self.field.absolute_url()
+
 
     ##################################################
     ########### BUILDING REPORT_GROUPS ###############
@@ -1311,11 +1310,8 @@ class BasicStructure:
                         context=self.context, REQUEST=self.REQUEST)
         else:
           # no list_method found
-          # XXX seems to be buggy :
-          #object_list = self.here.portal_selections.getSelectionValueList(
-          #  self.selection_name, context=self.here, REQUEST=self.REQUEST)
-          message = 'No list method found, please check planningBox properties'
-          return [(Message(domain='erp5_ui', message=message,mapping=None))]
+          raise PlanningBoxError, "No list method found on %s" % \
+              self.field.absolute_url()
         
         # recovering exeption_uid_list
         exception_uid_list = object_tree_line.getExceptionUidList()
@@ -1416,12 +1412,11 @@ class BasicStructure:
       self.report_groups=self.report_groups[self.main_axis_info['bound_start']:
                                             self.main_axis_info['bound_stop']]
     else:
-      # ERROR : self.report_groups = []
       # no group is available so the Y and X axis will be empty...
-      message= 'selection method returned empty list of objects : please check\
-                your list_method and report_root'
-      return [(Message(domain='erp5_ui', message=message,mapping=None))]
-
+      raise PlanningBoxError, \
+          'selection method returned empty list of objects : please check' \
+          'list_method and report_root of %s' % \
+          self.field.absolute_url()
 
     ##################################################
     ############ GETTING SEC AXIS BOUNDS #############
