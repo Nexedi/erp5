@@ -37,8 +37,14 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from DateTime import DateTime
+import urllib
+import socket
 
 from zLOG import LOG, INFO
+
+import re
+# minimal IP:Port regexp
+NODE_RE = re.compile('^\d+\.\d+\.\d+\.\d+:\d+$')
 
 try:
   from Products.TimerService import getTimerService
@@ -68,21 +74,15 @@ class AlarmTool(BaseTool):
   security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainAlarmTool', _dtmldir )
 
-  security.declareProtected( Permissions.ManagePortal , 'manageAlarmList' )
-  manageAlarmList = DTMLFile( 'manageAlarmList', _dtmldir )
-
-  security.declareProtected( Permissions.ManagePortal , 'manageAlarmAdvanced' )
-  manageAlarmAdvanced = DTMLFile( 'manageAlarmAdvanced', _dtmldir )
+  security.declareProtected( Permissions.ManagePortal , 'manageAlarmNode' )
+  manageAlarmNode = DTMLFile( 'manageAlarmNode', _dtmldir )
 
 
   manage_options = ( ( { 'label'   : 'Overview'
                        , 'action'   : 'manage_overview'
                        }
-                     , { 'label'   : 'All Alarms'
-                       , 'action'   : 'manageAlarmList'
-                       }
-                     , { 'label'   : 'Advanced'
-                       , 'action'   : 'manageAlarmAdvanced'
+                     , { 'label'   : 'Alarm Node'
+                       , 'action'   : 'manageAlarmNode'
                        }
                      ,
                      )
@@ -91,6 +91,7 @@ class AlarmTool(BaseTool):
 
   _properties = ( {'id': 'interval', 'type': 'int', 'mode': 'w', }, )
   interval = 60 # Default interval for alarms is 60 seconds
+  alarmNode = ''
 
   # API to manage alarms
   # Aim of this API:
@@ -192,12 +193,56 @@ class AlarmTool(BaseTool):
       This method is called by TimerService in the interval given
       in zope.conf. The Default is every 5 seconds.
     """
-    global last_tic
-    last_tic_lock.acquire(1)
-    try:
-      if tick.timeTime() - last_tic >= self.interval:
-        self.tic()
-        last_tic = tick.timeTime()
-    finally:
-      last_tic_lock.release()
+    # only start when we are the alarmNode or if it's empty
+    if (self.alarmNode == self.getCurrentNode()) \
+      or not self.alarmNode:
+      global last_tic
+      last_tic_lock.acquire(1)
+      try:
+        if tick.timeTime() - last_tic >= self.interval:
+          self.tic()
+          last_tic = tick.timeTime()
+      finally:
+        last_tic_lock.release()
+
+  def getCurrentNode(self):
+      """ Return current node in form ip:port """
+      port = ''
+      from asyncore import socket_map
+      for k, v in socket_map.items():
+          if hasattr(v, 'port'):
+              # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
+              type = str(getattr(v, '__class__', 'unknown'))
+              if type == 'ZServer.HTTPServer.zhttp_server':
+                  port = v.port
+                  break
+      ip = socket.gethostbyname(socket.gethostname())
+      currentNode = '%s:%s' %(ip, port)
+      return currentNode
+      
+  security.declarePublic('getAlarmNode')
+  def getAlarmNode(self):
+      """ Return the alarmNode """
+      return self.alarmNode
+
+  def _isValidNodeName(self, node_name) :
+    """Check we have been provided a good node name"""
+    return isinstance(node_name, str) and NODE_RE.match(node_name)
+      
+  security.declarePublic('manage_setAlarmNode')
+  def manage_setAlarmNode(self, alarmNode, REQUEST=None):
+      """ set the alarm node """   
+      if not alarmNode or self._isValidNodeName(alarmNode):
+        self.alarmNode = alarmNode
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(
+                REQUEST.URL1 +
+                '/manageAlarmNode?manage_tabs_message=' +
+                urllib.quote("Distributing Node successfully changed."))
+      else :
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(
+                REQUEST.URL1 +
+                '/manageAlarmNode?manage_tabs_message=' +
+                urllib.quote("Malformed Distributing Node."))
 

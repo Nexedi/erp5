@@ -1,0 +1,117 @@
+<dtml-comment>
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+                    Sebastien Robin <seb@nexedi.com>
+
+WARNING: This program as such is intended to be used by professional
+programmers who take the whole responsability of assessing all potential
+consequences resulting from its eventual inadequacies and bugs
+
+This program as such is not intended to be used by end users. End
+users who are looking for a ready-to-use solution with commercial
+garantees and support are strongly adviced to contract a Free Software
+Service Company
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+</dtml-comment>
+
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<p class="form-help">
+  This tab defines the node wich starts Alarms.
+  To provide high performance, alarms should start a script wich only start
+  some activities. Like this, the activity tool will be in charge to distribute
+  the work on many nodes.
+
+  The format to adress a node in this configuration is therfore
+  <code>IP-Address</code>:<code>Port-Number</code>.
+</p>
+
+<p class="form-help">
+  The interval of distribution and activation of the activities is per default 5 seconds. This can be
+  changed by altering the value of <i>interval</i> in the section <i>time-server</i> in the
+  Zope Configuration File <i>zope.conf</i>.
+</p>
+
+<p class="form-help">
+    The <i>Alarm node</i> is responsible for the start of Alarms. The default value is empty
+    which means that every existing node will try to do launch of alarms, which is fine when there
+    is only one ZServer running.
+    To change the Alarm Node, edit the value and click &quot;Change&quot;.
+</p>
+
+<form action="&dtml-URL1;">
+
+<table cellspacing="0" cellpadding="2" border="0" width="100%">
+  <tr class="list-header">
+    <td align="left" valign="top" colspan=2>
+      <div class="form-label">Alarm Node</div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="form-label">IP:Port</div>
+    </td>
+    <td align="left">
+      <div class="form-item">
+        <input type="text" name="alarmNode" value="&dtml-getAlarmNode;" size="19" />
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="left">
+      <div class="form-element">
+        <input type="submit" class="form-element" name="manage_setAlarmNode:method" value=" Change ">
+     </div>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" colspan=2>
+      <p class="form-help">
+        Subscribe/Unsubscribe from Timer Service
+      </p>
+    </td>
+  </tr>
+  <tr class="list-header">
+    <td align="left" valign="top" colspan=2>
+      <div class="form-label">
+        Status:
+        <dtml-if isSubscribed>
+          Subscribed
+        <dtml-else>
+          Not Subscribed
+       </dtml-if>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td align="left">
+      <div class="form-element">
+        <dtml-if isSubscribed>
+          <input type="submit" class="form-element" name="unsubscribe:method" value=" Unsubscribe ">
+        <dtml-else>
+          <input type="submit" class="form-element" name="subscribe:method" value=" Subscribe ">
+        </dtml-if>
+     </div>
+    </td>
+  </tr>
+</table>
+</form>
+<dtml-var manage_page_footer>
