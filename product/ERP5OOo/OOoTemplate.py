@@ -319,7 +319,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       # manipulations are different
       is_standard_filetype = True
 
-      if getattr(picture, 'data', None) is not None \
+      if getattr(picture, 'data', None) is None \
               or callable(picture.content_type):
         is_standard_filetype = False
 
