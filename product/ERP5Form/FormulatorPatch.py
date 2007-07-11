@@ -462,6 +462,13 @@ def Widget_render_css(self, field, REQUEST):
   pass
 Widget.render_css = Widget_render_css
 
+def Widget_get_javascript_list(self, field, REQUEST):
+  """
+  Return JS needed by the widget
+  """
+  return []
+Widget.get_javascript_list = Widget_get_javascript_list
+
 from Products.Formulator.Validator import LinesValidator
 
 def LinesValidator_validate(self, field, key, REQUEST):
@@ -1262,7 +1269,7 @@ def Field_get_javascript_list(self, REQUEST=None):
   """
   Returns list of javascript needed by the field
   """
-  return []
+  return self.widget.get_javascript_list(self, REQUEST)
 Field.get_javascript_list = Field_get_javascript_list
 
 

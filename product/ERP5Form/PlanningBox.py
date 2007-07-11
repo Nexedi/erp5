@@ -928,6 +928,19 @@ class PlanningBoxWidget(Widget.Widget):
       default=2,
       required=0)
 
+  def get_javascript_list(self, field, REQUEST=None):
+    """
+    Returns list of javascript needed by the widget
+    """
+    if field.get_value('js_enabled'):
+      context = getContext(field, REQUEST)
+      # XXX Instead of harcoding library name
+      # it should be better to call a python script, as
+      # it is done on type base method.
+      return ['%s/wz_dragdrop.js' % context.portal_url.getPortalPath()]
+    else:
+      return []
+
   def render_css(self, field, REQUEST):
     """
     first method called for rendering by PageTemplate form_view
@@ -3153,19 +3166,6 @@ class PlanningBox(ZMIField):
 
   def render_css(self, REQUEST=None):
     return self.widget.render_css(self, REQUEST)
-
-  def get_javascript_list(self, REQUEST=None):
-    """
-    Returns list of javascript needed by the field
-    """
-    if self.get_value('js_enabled'):
-      context = getContext(self, REQUEST)
-      # XXX Instead of harcoding library name
-      # it should be better to call a python script, as
-      # it is done on type base method.
-      return ['%s/wz_dragdrop.js' % context.portal_url.getPortalPath()]
-    else:
-      return []
 
 # XXX Copy paste from listbox
 def getContext(field, REQUEST):
