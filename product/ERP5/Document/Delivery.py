@@ -330,7 +330,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           self.converge()
 
     def splitAndDeferMovementList(self, start_date=None, stop_date=None,
-        movement_uid_list=[], delivery_builder=None):
+        movement_uid_list=[], delivery_solver=None,
+        target_solver='CopyToTarget', delivery_builder=None):
       """
       this method will unlink and delete movements in movement_uid_list and
       rebuild a new Packing List with them.
@@ -365,8 +366,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       build_tag = '%s_splitAndDefer_build' % self.getRelativeUrl()
       # call solver and expand on deferrd movements
       for movement in movement_list:
-        movement.activate(tag=solver_tag).solveMovement(
-            None, 'CopyToTarget')
+        movement.activate(tag=solver_tag).Movement_solveMovement(
+            delivery_solver, target_solver)
       tag_list.append(solver_tag)
       for s_m in deferred_simulation_movement_list:
         s_m.activate(after_tag=tag_list[:], tag=expand_tag).expand()
