@@ -38,21 +38,58 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
     Subscription's elements :</br>
         
-        id : the id of the subscription</br>
-        publication_url : the server's adrress mail</br>
-        subscription_url : the client's address mail</br>
-        destination_path : the path where are yours objects</br>
-        query : the type of objects you want to synchronize</br>
-        xml_mapping : the page template used on each object before an export</br></br>
+        <b>Title :</b> the title used to identify the Subscription</br>
+        <b>Use Activity :</b> activate or not the use of activity.</br> 
+        <b>Publication Url :</b> the server's adrress mail</br>
+        <b>Subscription Url :</b> the client's address mail</br>
+        <b>Destination Path :</b> the path where are yours objects</br>
+        <b>Source URI :</b> source URI of synchronization (in case of 
+        synchronization between two erp5 sites, it's should be the same 
+        as the <b>Title</b>)</br>
+        <b>Target URI :</b> target URI of synchronization (in case of 
+        synchronization between two erp5 sites, it's should be the same 
+        as the <b>Title</b>)</br>
+        <b>Query :</b> the type of objects you want to synchronize</br>
+        <b>XML Mapping :</b> the page template used on each object before 
+        an export</br>
+        <b>Conduit :</b> the conduit used to synchronize</br>
+        <b>GPG key name :</b>a name of gpg key to use</br>
+        <b>Id Generator :</b> This set the method name wich allows to 
+        generate a new id</br>
+        <b>Gid Generator :</b> This set the method name wich allows to 
+        find a gid from any object</br>
+        <b>Media Type :</b> the type of media exchanged between publication 
+        and subscription.</br>
+        <b>Login :</b> the login used to authenticate on the server (could be
+        empty if there is no authentication on the server)</br>
+        <b>Password :</b> the password corresponding to the login</br>
+        </br>
 
     Publication's elements :</br>
         
-        id : the id of the subscription</br>
-        publication_url : the server's adrress mail</br>
-        destination_path : the path where are yours objects</br>
-        query : the type of objects you want to synchronize</br>
-        xml_mapping : the page template used on each object before an export</br>
-
+        <b>Title :</b> the title used to identify the Subscription</br>
+        <b>Use Activity :</b> activate or not the use of activity.</br> 
+        <b>Publication Url :</b> the server's adrress mail</br>
+        <b>Destination Path :</b> the path where are yours objects</br>
+        <b>Source URI :</b> source URI of synchronization (in case of 
+        synchronization between two erp5 sites, it's should be the same 
+        as the <b>Title</b>)</br>
+        <b>Query :</b> the type of objects you want to synchronize</br>
+        <b>XML Mapping :</b> the page template used on each object before 
+        an export</br>
+        <b>Conduit :</b> the conduit used to synchronize</br>
+        <b>GPG key name :</b>a name of gpg key to use</br>
+        <b>Id Generator :</b> This set the method name wich allows to 
+        generate a new id</br>
+        <b>Gid Generator :</b> This set the method name wich allows to 
+        find a gid from any object</br>
+        <b>Media Type :</b> the type of media exchanged between publication 
+        and subscription.</br>
+        <b>Authentication Required :</b> ask authentication to the clients</br>
+        <b>Authentication Format :</b>the format used to encode the 
+        login and password</br>
+        <b>Autentication Type :</b> the type of the authentication</br>
+        </br>
 </p>
 
 <dtml-var manage_page_footer>

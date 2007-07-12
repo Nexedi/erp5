@@ -689,6 +689,8 @@ class XMLSyncUtilsMixin(SyncCode):
     actual xupdate on the signature.
     """
     #LOG('getSyncMLData starting...',0,'')
+    if isinstance(conduit, str):
+      conduit = self.getConduitByName(conduit)
     local_gid_list = []
     syncml_data = kw.get('syncml_data','')
     result = {'finished':1}
@@ -1034,7 +1036,7 @@ class XMLSyncUtilsMixin(SyncCode):
                 remote_xml=action)
             cmd_id +=1
             if simulate:
-              # This means we are on the publiher side and we want to store
+              # This means we are on the publisher side and we want to store
               # the xupdate from the subscriber and we also want to generate
               # the current xupdate from the last synchronization
               string_io = StringIO()
@@ -1316,7 +1318,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
         string_io = StringIO()
         PrettyPrint(remote_xml,stream=string_io)
         remote_xml = string_io.getvalue()
-      self.activate(activity='RAMQueue').SyncModifActivity(
+      self.activate(activity='SQLQueue').SyncModifActivity(
                       domain_relative_url = domain.getRelativeUrl(),
                       remote_xml = remote_xml,
                       subscriber_relative_url = subscriber.getRelativeUrl(),
@@ -1356,7 +1358,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     finished = result['finished']
     #LOG('finished =',0,finished)
     if not finished:
-      self.activate(activity='RAMQueue').SyncModifActivity(**kw)
+      self.activate(activity='SQLQueue').SyncModifActivity(**kw)
     else:
       xml_confirmation = result['xml_confirmation']
       cmd_id = result['cmd_id']
