@@ -329,6 +329,80 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         else:
           self.converge()
 
+    def splitAndDeferMovementList(self, start_date=None, stop_date=None,
+        movement_uid_list=[], delivery_builder=None):
+      """
+      this method will unlink and delete movements in movement_uid_list and
+      rebuild a new Packing List with them.
+      1/ change date in simulation, call TargetSolver and expand
+      2/ detach simulation movements from to-be-deleted movements
+      3/ delete movements
+        XXX make sure that all detached movements are deleted at the same
+        time, else the interaction workflow would reattach them to a delivery
+        rule.
+      4/ call builder
+      """
+      tag_list = []
+      movement_list = [x for x in self.getMovementList() if x.getUid() in
+          movement_uid_list]
+      if not movement_list: return
+
+      deferred_simulation_movement_list = []
+      # defer simulation movements
+      if start_date != None or stop_date != None:
+        for movement in movement_list:
+          start_date = start_date or movement.getStartDate()
+          stop_date = stop_date or movement.getStopDate()
+          for s_m in movement.getDeliveryRelatedValueList():
+            if s_m.getStartDate() != start_date or \
+                s_m.getStopDate() != stop_date:
+              s_m.edit(start_date=start_date, stop_date=stop_date)
+              deferred_simulation_movement_list.append(s_m)
+
+      solver_tag = '%s_splitAndDefer_solver' % self.getRelativeUrl()
+      expand_tag = '%s_splitAndDefer_expand' % self.getRelativeUrl()
+      detach_tag = '%s_splitAndDefer_detach' % self.getRelativeUrl()
+      build_tag = '%s_splitAndDefer_build' % self.getRelativeUrl()
+      # call solver and expand on deferrd movements
+      for movement in movement_list:
+        movement.activate(tag=solver_tag).solveMovement(
+            None, 'CopyToTarget')
+      tag_list.append(solver_tag)
+      for s_m in deferred_simulation_movement_list:
+        s_m.activate(after_tag=tag_list[:], tag=expand_tag).expand()
+      tag_list.append(expand_tag)
+
+      detached_movement_url_list = []
+      deleted_movement_uid_list = []
+      #detach simulation movements
+      for movement in movement_list:
+        movement_url = movement.getRelativeUrl()
+        movement_uid = getattr(movement,'uid',None)
+        if movement_uid: deleted_movement_uid_list.append(movement_uid)
+        for s_m in movement.getDeliveryRelatedValueList():
+          delivery_list = \
+              [x for x in s_m.getDeliveryList() if x != movement_url]
+          s_m.activate(after_tag=tag_list[:], tag=detach_tag).setDeliveryList(
+              delivery_list)
+          detached_movement_url_list.append(s_m.getRelativeUrl())
+      tag_list.append(detach_tag)
+
+      #delete delivery movements
+      # deleteContent uses the uid as a activity tag
+      self.activate(after_tag=tag_list[:]).deleteContent([movement.getId() for
+          movement in movement_list])
+      tag_list.extend(deleted_movement_uid_list)
+
+      # update causality state on self, after deletion
+      self.activate(after_tag=tag_list[:],
+          activity='SQLQueue').updateCausalityState()
+
+      # call builder on detached movements
+      builder = getattr(self.portal_deliveries, delivery_builder)
+      builder.activate(after_tag=tag_list[:], tag=build_tag).build(
+          movement_relative_url_list=detached_movement_url_list)
+
+
     #######################################################
     # Defer indexing process
     def reindexObject(self, *k, **kw):
