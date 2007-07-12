@@ -199,20 +199,12 @@ class BaobabConduit(ERP5Conduit):
     from Products.Baobab.Conduit import inventory_code_to_path
     from Products.Baobab.Conduit import vault_code_to_path
     from Products.Baobab.Conduit import variation_translate_dict
+    from Products.Baobab.Conduit import status_code_to_cash_status
   except ImportError:
     inventory_code_to_path = {}
     vault_code_to_path = {}
-    variation_translate_dict = {}
-
-  status_code_to_cash_status = {'TVA' : 'valid',
-                                'NEE' : 'new_emitted',
-                                'NEU' : 'new_not_emitted',
-                                'RTC' : 'retired',
-                                'ATR' : 'to_sort',
-                                'MUT' : 'mutilated',
-                                'EAV' : 'to_ventilate',
-                                'ANN' : 'cancelled',
-                                'MIX' : 'mixed'}
+    ariation_translate_dict = {}
+    status_code_to_cash_status = {}
 
   """
     Methods below are tools to use the property_map.
