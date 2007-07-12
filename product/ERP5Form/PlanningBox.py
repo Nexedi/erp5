@@ -1941,12 +1941,13 @@ class BasicGroup:
             # This approach is also used by ListBox, but in Planning Box
             # the parameters are not important for now. In future, can be define
             # special sublinks using this implementation.
-            if getattr(activity_content, 'getListItemUrl', None):
-              url = activity_content.getListItemUrl(cname_id='', 
-                  selection_index='',
-                  selection_name=self.field.get_value('selection_name'))
-            else:
-              url = object.getUrl()
+            #if getattr(activity_content, 'getListItemUrl', None):
+            #  url = activity_content.getListItemUrl(cname_id='', 
+            #      selection_index='',
+            #      selection_name=self.field.get_value('selection_name'))
+            #else:
+            #  url = object.getUrl()
+            url = object.getUrl()
 
             # XXX should define height of block here
             height = None
