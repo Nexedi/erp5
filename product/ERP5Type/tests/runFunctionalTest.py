@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python2.4
 import os
 import re
 import signal
@@ -12,8 +11,18 @@ import pysvn
 host = 'localhost'
 port = 8080
 portal_name = 'erp5_portal'
-instance_home = '/var/lib/zope/unit_test'
-profile_dir = '%s/profile' % instance_home
+
+tests_framework_home = os.path.dirname(os.path.abspath(__file__))
+# handle 'system global' instance
+if tests_framework_home.startswith('/usr/lib'):
+  real_instance_home = '/var/lib/erp5'
+else:
+  real_instance_home = os.path.sep.join(
+    tests_framework_home.split(os.path.sep)[:-3])
+
+instance_home = os.path.join(real_instance_home, 'unit_test')
+profile_dir = os.path.join(instance_home, 'profile')
+bt5_dir_list = ','.join([os.path.join(instance_home, 'Products/ERP5/bootstrap'), os.path.join(instance_home, 'bt5')])
 
 def main():
   setPreference()
@@ -29,7 +38,6 @@ def main():
       cur_status = getStatus()
       if status != cur_status:
         break
-    print cur_status
   finally:
       if xvfb_pid:
         os.kill(xvfb_pid, signal.SIGTERM)
@@ -48,8 +56,10 @@ def runXvfb():
   pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb', ':123')
   display = os.environ['DISPLAY']
   if display:
-    (displayname, protocolname, hexkey) = Popen(['xauth', 'list', display], stdout=PIPE).communicate()[0].split()
-    Popen(['xauth', 'add', 'localhost/unix:123', protocolname, hexkey])
+    auth = Popen(['xauth', 'list', display], stdout=PIPE).communicate()[0]
+    if auth:
+      (displayname, protocolname, hexkey) = auth.split()
+      Popen(['xauth', 'add', 'localhost/unix:123', protocolname, hexkey])
   print 'Xvfb : %d' % pid
   return pid
 
@@ -82,7 +92,7 @@ def getStatus():
   return status
 
 def setPreference():
-  urllib2.urlopen('http://%s:%d/%s/BTZuite_setPreference?__ac_name=ERP5TypeTestCase&__ac_password=' % (host, port, portal_name))
+  urllib2.urlopen('http://%s:%d/%s/BTZuite_setPreference?__ac_name=ERP5TypeTestCase&__ac_password=&working_copy_list=%s' % (host, port, portal_name, bt5_dir_list))
 
 def unsubscribeFromTimerService():
   urllib2.urlopen('http://%s:%d/%s/portal_activities/?unsubscribe:method=&__ac_name=ERP5TypeTestCase&__ac_password=' % (host, port, portal_name))
@@ -120,7 +130,8 @@ Following tests failed:
   file_content = error_re.sub('<span style="color: red">FAIL</span>', file_content)
   status = (not failures)
   sendMail(subject = subject, body = summary, status = status,
-           attachments = [file_content])
+           attachments = [file_content], from_mail = 'kazuhiko@nexedi.com',
+           to_mail = ['erp5-report@erp5.org'])
 
 if __name__ == "__main__":
   startZope()
