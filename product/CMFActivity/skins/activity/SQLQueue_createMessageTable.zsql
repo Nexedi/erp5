@@ -19,7 +19,7 @@ CREATE TABLE `message_queue` (
   `priority` INT DEFAULT 0,
   `broadcast` INT DEFAULT 0,
   `tag` VARCHAR(255),
-  `message` BLOB,
+  `message` LONGBLOB,
   PRIMARY KEY  (`uid`),
   KEY `date` (`date`),
   KEY `path` (`path`),
