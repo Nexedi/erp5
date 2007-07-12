@@ -283,7 +283,10 @@ class Rule(XMLObject, Predicate):
             deletable_movement_list)
 
   def _getCompensatedMovementList(self, applied_rule,
-                                  matching_property_list=['resource'], **kw):
+                                  matching_property_list=[
+                                  'resource',
+                                  'variation_category_list',
+                                  'variation_property_dict'], **kw):
     """
     Compute the difference between prevision and existing movements
 
