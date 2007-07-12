@@ -226,7 +226,8 @@ class DomainTool(BaseTool):
     # XXX FIXME method should not be public 
     # (some users are not able to see resource's price)
     security.declarePublic('generateMultivaluedMappedValue')
-    def generateMultivaluedMappedValue(self, context, test=1, predicate_list=None, **kw):
+    def generateMultivaluedMappedValue(self, context, test=1,
+        predicate_list=None, explanation_only=0, **kw):
       """
       We will generate a mapped value with the list of all predicates 
       found. 
@@ -250,6 +251,7 @@ class DomainTool(BaseTool):
                                            'new_mapped_value')
         mapped_value_property_dict = {}
         processed_dict = {}
+        explanation_dict = {}
         # Look for each property the first predicate with unique criterion
         # categories which defines the property
         for predicate in predicate_list:
@@ -258,6 +260,8 @@ class DomainTool(BaseTool):
 
           for mapped_value_property in predicate.getMappedValuePropertyList():
             prop_list = processed_dict.setdefault(predicate_category_list, [])
+            full_prop_dict = explanation_dict.setdefault(
+                predicate_category_list, {})
             if mapped_value_property in prop_list:
               # we already have one value for this (categories, property)
               continue
@@ -265,10 +269,13 @@ class DomainTool(BaseTool):
             value = predicate.getProperty(mapped_value_property)
             if value is not None:
               prop_list.append(mapped_value_property)
+              full_prop_dict[mapped_value_property] = value
               mv_prop_list = \
                   mapped_value_property_dict.setdefault(
                   mapped_value_property, [])
               mv_prop_list.append(value)
+        if explanation_only:
+          return explanation_dict
         # Update mapped value
         mapped_value = mapped_value.asContext(**mapped_value_property_dict)
       return mapped_value
