@@ -22,7 +22,7 @@ CREATE TABLE `message` (
   `tag` VARCHAR(255) NOT NULL,
   `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `order_validation_text` VARCHAR(255) NOT NULL,
-  `message` BLOB NOT NULL,
+  `message` LONGBLOB NOT NULL,
   PRIMARY KEY (`uid`),
   KEY (`path`),
   KEY (`method_id`),
