@@ -88,7 +88,7 @@ __version__='$Revision: 1.20 $'[11:-2]
 
 import _mysql
 import MySQLdb
-from _mysql_exceptions import OperationalError, NotSupportedError
+from _mysql_exceptions import OperationalError, NotSupportedError, ProgrammingError
 MySQLdb_version_required = (0,9,2)
 
 _v = getattr(_mysql, 'version_info', (0,0,0))
@@ -386,11 +386,15 @@ class DB(TM):
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if ((not force_reconnect) and \
                 (self._mysql_lock or self._transactions)) or \
-               m[0] not in hosed_connection:
+              m[0] not in hosed_connection:
+                LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
                 raise
             # Hm. maybe the db is hosed.  Let's restart it.
             self._forceReconnection()
             self.db.query(query)
+        except ProgrammingError:
+          LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
+          raise
         return self.db.store_result()
 
     def query(self,query_string, max_rows=1000):
