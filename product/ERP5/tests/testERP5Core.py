@@ -205,7 +205,51 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_error_log(self):
     self.failUnless('error_log' in self.portal.objectIds())
+  
+  def test_03_getDefaultModule(self, quiet=quiet, run=run_all_test):
+    """
+    test getDefaultModule method
+    """
+    if not run: 
+      return
+    portal_id = self.getPortal().getId()
+    object_portal_type = ' '.join([part.capitalize() for part \
+                                    in portal_id.split('_')])
+    module_portal_type='%s Module' % object_portal_type
+    portal_skins_folder='erp5_unittest'
+    object_title=object_portal_type
+    module_id="%s_module" % portal_id
+    module_title='%ss' % object_portal_type
     
+    # Create module for testing
+    self.failIf(self.portal._getOb(module_id, None) is not None)
+    self.assertEqual(self.portal.portal_skins._getOb(portal_skins_folder, None),
+                     None)
+    self.assertEqual(self.portal.portal_types.getTypeInfo(module_portal_type),
+                     None)
+    self.assertEqual(self.portal.portal_types.getTypeInfo(object_portal_type),
+                     None)
+    self.portal.ERP5Site_createModule(module_portal_type=module_portal_type,
+                                      portal_skins_folder=portal_skins_folder,
+                                      object_portal_type=object_portal_type,
+                                      object_title=object_title,
+                                      module_id=module_id,
+                                      module_title=module_title)
+
+    # Test
+    self.assertEquals(
+        module_id,
+        self.portal.getDefaultModule(object_portal_type).getId())
+    self.assertEquals(
+        module_portal_type,
+        self.portal.getDefaultModule(object_portal_type).getPortalType())
+    self.assertEquals(
+        module_id,
+        self.portal.getDefaultModule(module_portal_type).getId())
+    self.assertEquals(
+        module_portal_type,
+        self.portal.getDefaultModule(module_portal_type).getPortalType())
+
 if __name__ == '__main__':
     framework()
 else:
