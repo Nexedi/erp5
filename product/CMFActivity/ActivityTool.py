@@ -937,8 +937,8 @@ class ActivityTool (Folder, UniqueObject):
       global is_initialized
       if not is_initialized: self.initialize()
       message_list = []
+      method_id = "_validate_%s" % validator_id
       for activity in activity_list:
-        method_id = "_validate_%s" % validator_id
         method = getattr(activity, method_id, None)
         if method is not None:
           result = method(aq_inner(self), message, validation_value)
