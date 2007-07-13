@@ -84,10 +84,6 @@ Domain | list
 Domain | metadata
 Domain | print_pdf
 Domain | view
-Favorite | history
-Favorite | metadata
-Favorite | view
-Folder | edit
 Folder | foldercontents
 Folder | localroles
 Folder | syndication

@@ -16,10 +16,6 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Favorite</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Mapped Value</type>
   <workflow>edit_workflow</workflow>
  </chain>
