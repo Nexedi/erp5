@@ -54,7 +54,7 @@ def stopZope():
 
 def runXvfb():
   pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb', ':123')
-  display = os.environ['DISPLAY']
+  display = os.environ.get('DISPLAY')
   if display:
     auth = Popen(['xauth', 'list', display], stdout=PIPE).communicate()[0]
     if auth:
