@@ -35,6 +35,8 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from zLOG import LOG
 from DateTime import DateTime
 
+_MARKER = []
+
 class DomainTool(BaseTool):
     """
         A tool to define reusable ranges and subranges through
@@ -291,13 +293,18 @@ class DomainTool(BaseTool):
       object_list.extend(parent.getDomainGeneratorList(**kw))
       return object_list
 
-    def getDomainByPath(self, path):
+
+    def getDomainByPath(self, path, default=_MARKER):
       """
       Return the domain object for a given path
       """
       path = path.split('/')
       base_domain_id = path[0]
-      domain = self[base_domain_id]
+      if default is _MARKER:
+        domain = self[base_domain_id]
+      else:
+        domain = self.get(base_domain_id, _MARKER)
+        if domain is _MARKER: return default
       for depth, subdomain in enumerate(path[1:]):
         domain_list = self.getChildDomainValueList(domain, depth=depth)
         for d in domain_list:
@@ -305,6 +312,7 @@ class DomainTool(BaseTool):
             domain = d
             break
         else:
+          if domain is _MARKER: return default
           raise KeyError, subdomain
       return domain
   
