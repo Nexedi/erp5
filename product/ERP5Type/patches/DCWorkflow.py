@@ -115,6 +115,8 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       return None  # Optimization
     workflow_tool = getToolByName(self, 'portal_workflow')
     workflow = getattr(workflow_tool, self.id)
+    portal_url = getToolByName(self, 'portal_url')
+    portal_url = portal_url()
     _getPortalTypeListForWorkflow = CachingMethod(workflow.getPortalTypeListForWorkflow,
                                                   id=('_getPortalTypeListForWorkflow', self.id), 
                                                   cache_factory = 'erp5_ui_long')
@@ -181,7 +183,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
               else:
                 fmt_data._push({'local_roles': ''})
               res.append((id, {'name': qdef.actbox_name % fmt_data,
-                              'url': qdef.actbox_url % fmt_data,
+                              'url': '%s/%s' % (portal_url, qdef.actbox_url % fmt_data),
                               'worklist_id': id,
                               'workflow_title': self.title,
                               'workflow_id': self.id,
