@@ -56,6 +56,8 @@ import os
 from zLOG import LOG, PROBLEM
 import warnings
 
+REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
+
 # Dummy Functions for update / upgrade
 def dummyFilter(object,REQUEST=None):
   return 1
@@ -575,6 +577,20 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
       BUG here : when creating a new base category
     """
     if self.isIndexable:
+      if activate_kw is None and self.objectCount() > REINDEX_SPLIT_COUNT:
+        # If the number of objects to reindex is too high
+        # we should try to split reindexing in order to be more efficient
+        # NOTE: this heuristic will fail for example with orders which
+        # contain > REINDEX_SPLIT_COUNT order lines.
+        # It will be less efficient in this case. We also do not
+        # use this heuristic whenever activate_kw is defined
+        self._reindexObject(**kw)
+        for c in self.objectValues():
+          if getattr(aq_base(c),
+                    'recursiveReindexObject', None) is not None:
+            c.recursiveReindexObject(**kw)
+        return
+
       if activate_kw is None:
         activate_kw = {}
 
