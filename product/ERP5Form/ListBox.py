@@ -1108,7 +1108,7 @@ class ListBoxRenderer:
           if root is not None :
             root_dict[base_domain] = ('portal_categories', domain)
           elif domain_tool is not None:
-            root = domain_tool.getDomainByPath(domain)
+            root = domain_tool.getDomainByPath(domain, None)
             if root is not None:
               root_dict[base_domain] = ('portal_domains', domain)
         if root is None:
