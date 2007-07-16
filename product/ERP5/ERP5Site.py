@@ -938,7 +938,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     if portal_object._getOb(expected_module_id, None) is not None:
       module_id = expected_module_id
     expected_module_id += '_module'
-    if module is None and portal_object._getOb(expected_module_id, None) \
+    if module_id is None and portal_object._getOb(expected_module_id, None) \
         is not None:
       module_id = expected_module_id
     # then look for module where the type is allowed
