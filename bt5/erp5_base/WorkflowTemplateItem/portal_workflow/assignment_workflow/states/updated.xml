@@ -20,11 +20,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Assignments in updated state are being updated before being reopened.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>open</string> </value>
+            <value> <string>updated</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Open</string> </value>
+            <value> <string>Updated</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -42,10 +42,8 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>close</string>
-                <string>close_action</string>
-                <string>update</string>
-                <string>update_action</string>
+                <string>open</string>
+                <string>open_action</string>
               </tuple>
             </value>
         </item>
@@ -75,30 +73,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Access contents information</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Assignor</string>
-                        <string>Auditor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>View</string> </key>
-                    <value>
                       <tuple>
                         <string>Assignor</string>
-                        <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
