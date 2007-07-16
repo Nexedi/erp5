@@ -97,9 +97,18 @@ class OrderRule(DeliveryRule):
           existing_movement_list.append(movement)
           immutable_movement_list.append(movement)
        
+      # this dict simulates getOrderRelatedValue, but it will not work if an
+      # order was generated from multiple applied rules
+      order_movement_dict = {}
+      for s_m in applied_rule.objectValues():
+        order_movement = s_m.getOrderValue()
+        if order_movement is not None:
+          order_movement_dict[order_movement.getPath()] = s_m
       # Create or modify movements
       for movement in order_movement_list:
-        related_order = movement.getOrderRelatedValue()
+        related_order = order_movement_dict.get(movement.getPath(), None)
+        if related_order is None:
+          related_order = movement.getOrderRelatedValue()
         property_dict = self._getExpandablePropertyDict(applied_rule, movement)      
         if related_order is None:
           if movement.getParentUid() == movement.getExplanationUid():
