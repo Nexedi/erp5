@@ -135,7 +135,8 @@ class TextDocument(Document, TextContent):
         # The default is to use ERP5 Forms to render the page
         return self.view()
       mime, data = self.convert(format=format) 
-      RESPONSE.setHeader('Content-Length', len(data))
+      RESPONSE.setHeader('Content-Length', len(str(data))) # XXX - Not efficient 
+                                                           # if datastream instance
       RESPONSE.setHeader('Content-Type', mime)
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
       return data
@@ -181,7 +182,7 @@ class TextDocument(Document, TextContent):
       if base_list:
         return base_list[0]
       return Document.getContentBaseURL(self)
-      
+
     def hasBaseData(self):
       """ 
         This method is an override of dynamically generated method for Document class.
