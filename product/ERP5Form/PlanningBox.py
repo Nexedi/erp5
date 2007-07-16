@@ -1835,16 +1835,23 @@ class BasicGroup:
         # previously recovered method
         block_begin = None
         block_end = None
-        if object_property_begin  is not None:
-          block_begin = \
-                 getattr(activity_content.getObject(),object_property_begin)
-        else:
-          block_begin = None
 
-        if object_property_end is not None:
-          block_end = getattr(activity_content.getObject(),object_property_end)
-        else:
-          block_end = None
+        obj = activity_content.getObject()
+        _marker = []
+
+        try:
+          block_begin = obj.getProperty(object_property_begin, _marker)
+          if block_begin is _marker:
+            raise AttributeError, object_property_begin
+        except AttributeError:
+          block_begin = getattr(obj, object_property_begin, None)
+
+        try:
+          block_end = obj.getProperty(object_property_end, _marker)
+          if block_end is _marker:
+            raise AttributeError, object_property_end
+        except AttributeError:
+          block_end = getattr(obj, object_property_end, None)
 
         # handling case where activity bound is not defined
         if block_begin is None:
