@@ -928,37 +928,39 @@ class ERP5Site(FolderMixIn, CMFSite):
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER):
     """
-      Return default module id where a object with portal_type can
-      be created.
+    Return default module id where a object with portal_type can
+    be created.
     """
-    # first try to find by naming convention
-    module_name = portal_type.lower().replace(' ','_')
     portal_object = self
-    if hasattr(portal_object, module_name):
-      return module_name
-    module_name += '_module'
-    if hasattr(portal_object, module_name):
-      return module_name
+    module_id = None
+    # first try to find by naming convention
+    expected_module_id = portal_type.lower().replace(' ','_')
+    if portal_object._getOb(expected_module_id, None) is not None:
+      module_id = expected_module_id
+    expected_module_id += '_module'
+    if portal_object._getOb(expected_module_id, None) is not None:
+      module_id = expected_module_id
     # then look for module where the type is allowed
-    module_name = None
-    modlist = [m for m in self.objectIds() if m.endswith('module')]
-    for mod in modlist:
-      module = self.restrictedTraverse(mod, None)
-      if module is None: # we can't access this one
-        continue
-      if portal_type in self.portal_types[module.getPortalType()].allowed_content_types:
-       module_name = mod
-       break
-    if module_name is not None:
-      return module_name
-    if default is not MARKER:
-      return default
-    # now we fail
-    LOG('ERP5Site, getDefaultModuleId', 0,
-        'Unable to find default module for portal_type: %s' % \
-         portal_type)
-    raise ValueError, 'Unable to find module for portal_type: %s' % \
-           portal_type
+    for expected_module_id in portal_object.objectIds(spec=('ERP5 Folder',)):
+      module = portal_object._getOb(expected_module_id, None)
+      if module is not None:
+        if portal_type in self.portal_types[module.getPortalType()].\
+                                  allowed_content_types:
+          module_id = expected_module_id
+          break
+
+    if module_id is None:
+      if default is not MARKER:
+        return default
+      else:
+        # now we fail
+        LOG('ERP5Site, getDefaultModuleId', 0,
+            'Unable to find default module for portal_type: %s' % \
+             portal_type)
+        raise ValueError, 'Unable to find module for portal_type: %s' % \
+               portal_type
+
+    return module_id
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModule')
