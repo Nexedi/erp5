@@ -937,19 +937,19 @@ class ERP5Site(FolderMixIn, CMFSite):
     expected_module_id = portal_type.lower().replace(' ','_')
     if portal_object._getOb(expected_module_id, None) is not None:
       module_id = expected_module_id
-    expected_module_id += '_module'
-    if module_id is None and portal_object._getOb(expected_module_id, None) \
-        is not None:
-      module_id = expected_module_id
-    # then look for module where the type is allowed
-    if module_id is None:
-      for expected_module_id in portal_object.objectIds(spec=('ERP5 Folder',)):
-        module = portal_object._getOb(expected_module_id, None)
-        if module is not None:
-          if portal_type in self.portal_types[module.getPortalType()].\
-                                    allowed_content_types:
-            module_id = expected_module_id
-            break
+    else:
+      expected_module_id += '_module'
+      if portal_object._getOb(expected_module_id, None) is not None:
+        module_id = expected_module_id
+      # then look for module where the type is allowed
+      else:
+        for expected_module_id in portal_object.objectIds(spec=('ERP5 Folder',)):
+          module = portal_object._getOb(expected_module_id, None)
+          if module is not None:
+            if portal_type in self.portal_types[module.getPortalType()].\
+                                      allowed_content_types:
+              module_id = expected_module_id
+              break
 
     if module_id is None:
       if default is not MARKER:
