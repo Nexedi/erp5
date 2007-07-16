@@ -153,10 +153,10 @@ class BaobabConduit(ERP5Conduit):
         'erp5_property': 'bank_account_number'
       , 'conditions'   : {'erp5_portal_type':'Bank Account'}
       }],
-    'rib': [{
-        'erp5_property': 'bank_account_key'
-      , 'conditions'   : {'erp5_portal_type':'Bank Account'}
-      }],
+    #'rib': [{
+    #    'erp5_property': 'bank_account_key'
+    #  , 'conditions'   : {'erp5_portal_type':'Bank Account'}
+    #  }],
     'numero_interne': [{
         'erp5_property': 'internal_bank_account_number'
       , 'conditions'   : {'erp5_portal_type':'Bank Account'}
@@ -333,7 +333,7 @@ class BaobabConduit(ERP5Conduit):
                                                        object_id[:3])
         subobject = organisation_module_object.newContent( portal_type = 'Organisation'
                                                  , id          = object_id
-                                                 , site  = site_value.getRelativeUrl()
+                                                 , site  = site_value.getRelativeUrl().replace('site/','')
                                                  )
         subobject.setRole('client')
 
@@ -341,25 +341,29 @@ class BaobabConduit(ERP5Conduit):
     elif portal_type.startswith('Compte'):
       owner = findObjectFromSpecialPortalType(portal_type)
       if owner == None: return None
-      subobject = owner.newContent( portal_type = 'Bank Account'
-                                  , id          = object_id
-                                  )
+      subobject = getattr(owner, object_id, None)
+      if subobject is None:
+        subobject = owner.newContent( portal_type = 'Bank Account'
+                                    , id          = object_id
+                                    )
       # set the bank account owner as agent with no-limit privileges (only for persons)
       if owner.getPortalType() == 'Person':
-        new_agent = subobject.newContent( portal_type = 'Agent'
-                                        , id          = 'owner'
-                                        )
+        new_agent = getattr(subobject, 'owner', None)
+        if new_agent is None:
+          new_agent = subobject.newContent( portal_type = 'Agent'
+                                          , id          = 'owner'
+                                          )
         new_agent.setAgent(owner.getRelativeUrl())
-        privileges = ( 'circularization'
-                     , 'cash_out'
-                     , 'withdrawal_and_payment'
-                     , 'account_document_view'
-                     , 'signature'
-                     , 'treasury'
-                     )
-        for privilege in privileges:
-          new_priv = new_agent.newContent(portal_type = 'Agent Privilege')
-          new_priv.setAgentPrivilege(privilege)
+        #privileges = ( 'circularization'
+        #             , 'cash_out'
+        #             , 'withdrawal_and_payment'
+        #             , 'account_document_view'
+        #             , 'signature'
+        #             , 'treasury'
+        #             )
+        #for privilege in privileges:
+        #  new_priv = new_agent.newContent(portal_type = 'Agent Privilege')
+        #  new_priv.setAgentPrivilege(privilege)
 
     ### handle agent objects
     elif portal_type.startswith('Mandataire'):
@@ -472,6 +476,7 @@ class BaobabConduit(ERP5Conduit):
     if object == None: return
 
     ### Cash Inventory objects needs two properties to generate the vault path
+    LOG('BaobabConduit.editDocument, object', 0, object)
     if object.getPortalType() == 'Cash Inventory Group':
       vault_path = self.getVaultPathFromCodification( object         = object
                                                     , agency_code    = kw['agency_code']
@@ -683,7 +688,7 @@ class BaobabConduit(ERP5Conduit):
           #     )
 
 
-    if object.getPortalType() == 'Bank Account':
+    if object.getPortalType() == 'Bank Account' and object.getValidationState()!='valid':
       object.portal_workflow.doActionFor(object, 'validate_action', 
                                          wf_id='bank_account_workflow')
     if object.getPortalType() == 'Person':
@@ -769,6 +774,11 @@ class BaobabConduit(ERP5Conduit):
   def editCompteDevise(self, document, value):
     # Convert compte_devise to price_currency
     document.setPriceCurrency('currency_module/' + value)
+
+  def editCompteRib(self, document, value):
+    # Convert compte_devise to price_currency
+    value = '%02i' % int(value)
+    document.setBankAccountKey(value)
 
   def editCompteOverdraftFacility(self, document, value):
     new_value = False
