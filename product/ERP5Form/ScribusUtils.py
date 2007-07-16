@@ -211,7 +211,9 @@ class ManageModule:
       del default_groups[0:]
       for page_iterator in range(global_properties['page']):
         page_number = 'page_%s' % str(page_iterator)
-        default_groups.append(page_number)
+        
+	
+	default_groups.append(page_number)
     # default_groups list completed, need to update the form_groups
     # renaming form default group with list's first item
     form_view_id_object.rename_group('Default',
@@ -563,7 +565,6 @@ class ManageFiles:
 
   def getPDFFile(self, file_descriptor):
     """ Get file content """
-
     return file_descriptor.open()
 
   security.declarePublic('setBackgroundPictures')
@@ -571,9 +572,9 @@ class ManageFiles:
                             pdf_file,
                             object_names,
                             skin_folder,
-	                    desired_height,
-	                    desired_width,
-	                    resolution
+                            desired_height,
+                            desired_width,
+                            resolution
                             ):
     """
     extract background pictures from pdf file and convert them
@@ -609,6 +610,7 @@ class ManageFiles:
     # going to the begining of the input file
     pdf_file.seek(0)
     # saving content
+    # saving content
     temp_pdf.write(pdf_file.read())
     temp_pdf.close()
 
@@ -619,10 +621,10 @@ class ManageFiles:
     # launching second soft to convert from PPM to JPEG
     ScribusUtilstempsJPG = NamedTemporaryFile(mode="w+b")
     ScribusUtilstempsJPGName = NamedTemporaryFile().name
-    
+
     original_result= commands.getstatusoutput('identify %s' % (ScribusUtilstempsPDFName))
     result = commands.getstatusoutput('convert -density %s -resize %sx%s %s %s' % (resolution,desired_width,desired_height,ScribusUtilstempsPPMName + '*', 'jpg:' + ScribusUtilstempsJPGName))
-    
+
     number = ScribusUtilstempsJPGName.find('tmp')
     directory_tmp= ScribusUtilstempsJPGName[:(number+4)]
 
@@ -649,22 +651,22 @@ class ManageFiles:
     final_image = getattr(skin_folder, object_names['page'] + '0')
     size_x = desired_height
     size_y = desired_width
-    
+
     return (size_x, size_y,real_size_x,real_size_y)
 
   security.declarePublic('getPageattributes')
   def getPageattributes (self,
-                    global_properties,
-	            pdf_file
-                    ):
+                         global_properties,
+                         pdf_file
+                        ):
     import commands
     from tempfile import NamedTemporaryFile
     # opening new file on HDD to save PDF content
     ScribusUtilsOriginalTempPDF= NamedTemporaryFile(mode= "w+b")
     ScribusUtilsOriginaltempsPDFName= NamedTemporaryFile().name
-    
+
     # going to the begining of the input file
-    
+
     # saving content
     temp_pdf = open(ScribusUtilsOriginaltempsPDFName,'w')
     # going to the begining of the input file
@@ -679,7 +681,7 @@ class ManageFiles:
     ScribusUtilsOriginaltempsPPMName = NamedTemporaryFile().name
     original_result = commands.getstatusoutput('pdftoppm -r %s %s %s' % (72, ScribusUtilsOriginaltempsPDFName, ScribusUtilsOriginaltempsPPMName))
     original_result= commands.getstatusoutput('identify %s' % (ScribusUtilsOriginaltempsPPMName + '*'))
-	 	  
+
     pg_nbr = len(original_result[1].split('\n'))
     real_size_x = {}
     real_size_y = {}
@@ -694,7 +696,7 @@ class ManageFiles:
       width_groups.append(actual_page_width)
       height_groups.append(actual_page_height)
     return (width_groups,height_groups)
-    
+
   security.declarePublic('setPropertySheetAndDocument')
   def setPropertySheetAndDocument(self,
                        global_properties,
@@ -787,14 +789,14 @@ class ManageCSS:
 
   security.declarePublic('setPageProperties')
   def setPageProperties(self
-          ,properties_css_dict,
-          page_iterator
+          ,properties_css_dict
+          ,page_iterator
           ,page_id
-          ,page_height,
-	  page_width,
-	  original_page_width,
-	  original_page_height,
-	  width_groups,height_groups):
+          ,page_height
+          ,page_width,
+          ,original_page_width
+          ,original_page_height
+          ,width_groups,height_groups):
     """
     recover all CSS data relative to the current page and save these
     information in the output dict
@@ -852,35 +854,34 @@ class ManageCSS:
             ,properties_css_dict
             ,field
             ,page_width
-            ,page_height,
-            page_iterator
+            ,page_height
+            ,page_iterator
             ,page_gap
             ,keep_page,
-	  original_page_width,
-	  original_page_height,properties_page,actual_width,actual_height):
+            ,original_page_width
+            ,original_page_height
+            ,properties_page,actual_width,actual_height):
     """
     recover all CSS data relative to the current page_object (field)
     and save these informations in the output dict
     """
     (field_name, properties_field) = field
     print "   => %s : %s" % (field_name,properties_field['rendering'])
-    	    
+
     # updating field properties if necessary
     if keep_page == 1:
       # document format is 1.3.* and define object position from the top-left
       # corner of the first page, whereas the field position is expected to
       # be found from the current's page top left corner.
       # that's why Y position must be updated
-      
+
       scaling_factor1= (page_width)/(properties_page['actual_width'])		
       scaling_factor2= (page_height)/(properties_page['actual_height'])
-      
+
       properties_field['position_y'] = \
          str(float(properties_field['position_y']) - \
          (actual_height + page_gap)* page_iterator)
-      
 
-			 
     # Processing object for CSS data
     # declaring dict containing all css data
     # _stand for general display
@@ -906,16 +907,16 @@ class ManageCSS:
     # rendering on Mozilla and Konqueror)
     # do not match for TextArea (as it is a multiline object)
     if properties_field['type'] != 'TextAreaField':
-      if float(properties_field['size_y']) > 8.0:	    
+      if float(properties_field['size_y']) > 8.0:
         properties_css_object_stand['font-size'] = \
           str((scaling_factor2 *float(properties_field['size_y']))-5.5 ) + 'px'
         properties_css_object_error['font-size'] = \
           str((scaling_factor2 *float(properties_field['size_y']))-5.5) + 'px'
       else:
-	properties_css_object_stand['font-size'] = \
+        properties_css_object_stand['font-size'] = \
           str((scaling_factor2 *float(properties_field['size_y']))-3.5 ) + 'px'
         properties_css_object_error['font-size'] = \
-          str((scaling_factor2 *float(properties_field['size_y']))-3.5) + 'px'    
+          str((scaling_factor2 *float(properties_field['size_y']))-3.5) + 'px'
     else:
       properties_css_object_stand['font-size'] = \
         str(12) + 'px'
@@ -939,9 +940,9 @@ class ManageCSS:
       properties_css_object_error['background'] = 'rgb(128,128,255)'
     elif properties_field['type'] != 'TextAreaField':
       properties_css_object_stand['background'] = '#F5F5DC'
-      properties_css_object_error['background'] = 'rgb(255,64,64)'      
+      properties_css_object_error['background'] = 'rgb(255,64,64)' # Previously #B9D9D4 - should become a parameter
     else:
-      properties_css_object_stand['background'] = '#F5F5DC'
+      properties_css_object_stand['background'] = '#F5F5DC' # Previously #B9D9D4 - should become a parameter
       properties_css_object_error['background'] = 'rgb(255,64,64)'
 
     # add completed properties (in our case only the class rendering the text
@@ -1124,13 +1125,10 @@ class ManageCSS:
         print "    class=%s" % class_name
         for prop_id in properties_css_dict['standard'][class_name].keys():
           print "      prop:%s=%s" % (prop_id,properties_css_dict['standard'][class_name][prop_id])
-	
-      
+
+
     return properties_css_dict
 
-  
- 
-  
   security.declarePublic('setFinalProperties')
   def setFinalProperties(self
                         ,properties_css_dict
@@ -1146,11 +1144,7 @@ class ManageCSS:
     properties_css_page['margin-top'] = "%spx" % str( page_height)
     properties_css_dict['head']['page_end'] = properties_css_page
     return properties_css_dict
-  
-  
-  
-  
-    
+
   security.declarePublic('generateOutputContent')
   def generateOutputContent(self
                      ,properties_css_dict
@@ -1199,10 +1193,7 @@ class ManageCSS:
       form_css_content += output_string + "\n"
     # return final String
     return form_css_content
-    
-    
-    
-    
+
   security.declarePublic('createOutputFile')
   def createOutputFile(self
                       ,form_css_content
@@ -1213,19 +1204,15 @@ class ManageCSS:
     the form_css_content
     """
     factory.addDTMLDocument(form_css_id,"css",form_css_content)
-  
-  
-  
-  
+
+
 class ScribusParser:
   """
   Parses a Scribus file (pda) with PDF-elements inside
   """
-  
   #declare security
   security = ClassSecurityInfo()
-  
-  
+
   security.declarePublic('getObjectTooltipProperty')
   def getObjectTooltipProperty(self, check_key, default_value, object_name, object_dict):
     """
@@ -1253,8 +1240,6 @@ class ScribusParser:
       + ": using " + str(default_value))
       return default_value
 
-
-      
   security.declarePublic('getXmlObjectPropertiesDict')
   def getXmlObjectsPropertiesDict(self, xml_string):
     """
@@ -1262,11 +1247,11 @@ class ScribusParser:
     a full dict of 'PAGE', containing a dict of 'PAGEOBJECT',
     containing a dict of all the relative attributes
     """
-    
+
     # Create DOM tree from the xml string
     print " > create DOM tree"
     dom_tree = minidom.parseString(xml_string)
-    
+
     # creating the root from the input file
     dom_root = dom_tree.documentElement
 
@@ -1286,39 +1271,38 @@ class ScribusParser:
       print " Bad Scribus document format : no 'Version' property "
       return (None,keep_page,0)
     else:  
-	    
+
       version = dom_root.attributes["Version"].value
       if version[:3] == "1.2" :
         # Scribus document format is 1.2
         print " found Scribus document format 1.2"
-        
+
         #making a listing of all the PAGE objects
         print " > making listing of all PAGE objects"
         page_list = dom_root.getElementsByTagName("PAGE")
-        
+
         returned_page_dict = {}
-    
+
         #for each PAGE object, searching for PAGEOBJECT
         for page in page_list:
 
-      
           # getting page number
           # parsing method from the previous ScribusUtils
           page_number = -1
           if 'NUM' in page.attributes.keys():
             page_number = str(page.attributes['NUM'].value)
-        
+
           print "  > PAGE NUM=" + str(page_number)
-      
+
           # making a listing of all PAGEOBJECT in a specified PAGE
           page_object_list = page.getElementsByTagName("PAGEOBJECT")
-      
+
           # initialising global output dictionary containing pages of elements
           returned_page_object_list = []
-      
+
           # for each PAGEOBJECT, building dict with atributes
           for page_object in page_object_list:
-          
+
             # initialising 
             returned_page_object = {}
             field_name = ''
@@ -1334,13 +1318,13 @@ class ScribusParser:
               if node_name == 'ANNAME':
                 if node_value != '':
                   field_name = node_value.replace(' ','_')
-          
+
             if field_name != '' :
               #if 'PAGEOBJECT' has a valid name, then adding it to the global
               #dictionary containing all the 'PAGEOBJECT' of the 'PAGE'
               returned_page_object_list.append(returned_page_object)
               print "    > PAGEOBJECT = " + str(field_name)
-            
+
           #after having scanned all 'PAGEOBJECT' from a 'PAGE', adding the
           #relative informations to the list of 'PAGE' before going to the next one
           #in case the page is not empty
@@ -1413,7 +1397,6 @@ class ScribusParser:
         return (returned_page_dict,keep_page,page_gap)
 
 
-   
   security.declarePublic('getPropertiesConversionDict')
   def getPropertiesConversionDict(self, text_page_dict):
     """
@@ -1422,7 +1405,7 @@ class ScribusParser:
     'PAGEOBJECT' attributes updated with standard attributes
     and special informations contained in the
     'ANTOOLTIP' attribute.
-    
+
     usefull attributes are
     - position & size
     - type & inputformat (for erp5 and html)
@@ -1431,26 +1414,25 @@ class ScribusParser:
     - title information
     - other properties (read_only, multiline, etc.)
     - etc.
-    
+
     for each PAGE, all PAGEOBJECT are sorted according to their creation order
     'nb'
     """
 
     print "\n  => ScribusParser.getPropertiesConversion"
     returned_page_dict = {}
-    
+
     # declaring ScribusParser object to run other functions
     sp = ScribusParser()
-  
-    
+
     for page_number in text_page_dict.keys():
       # iterating through 'PAGE' object of the document
       # id = page_number
       # content = page_content
       page_content = text_page_dict[page_number]
-      
+
       print " => PAGE = %s" % str(page_number)
-      
+
       # declaring special lists used to generate nb for all objects
       # this 'nb' property is usefull to define the object creation order
       # all objects are sorted (has nb / has no nb) and all objects without
@@ -1517,9 +1499,7 @@ class ScribusParser:
             tooltipfield_properties_dict[tooltipfield_id] = \
                         tooltipfield_value
         # end of 'ANTOOLTIP' parsing
-        
-        
-        
+
         # getting usefull attributes from scribus 'PAGEOBJECT
         #and 'ANTOOLTIP'
         #
@@ -1536,7 +1516,6 @@ class ScribusParser:
                                           '0',
                                           object_name,
                                           object_content)
-					  
         object_properties['size_x'] = \
              sp.getObjectTooltipProperty('WIDTH',
                                          '100',
@@ -1547,9 +1526,7 @@ class ScribusParser:
                                            '17',
                                           object_name,
                                           object_content)
-				  
-       
-        
+
         # converting values to integer-compliant to prevent errors
         # when using them for that converting from 'str' -> 'float'
         # -> 'int' -> 'str'
@@ -1563,8 +1540,7 @@ class ScribusParser:
               str(int(float(object_properties['size_x'])))
         object_properties['size_y'] = \
               str(int(float(object_properties['size_y'])))
-	
-       
+
         # getting object title
         # object title can only be user-specified in the 'tooltip' dict
         object_properties['title'] = \
@@ -1572,8 +1548,7 @@ class ScribusParser:
                                           object_name,
                                           object_name,
                                           tooltipfield_properties_dict)
-          
-        
+
         # getting object order position for erp5 form
         temp_order = \
             sp.getObjectTooltipProperty('order',
@@ -1581,7 +1556,6 @@ class ScribusParser:
                                         object_name,
                                         tooltipfield_properties_dict)
 
-        
         if temp_order not in  ['left','right']:
           # temp_order invalid
           # trying to get it from its position in original Scribus file
@@ -1591,9 +1565,6 @@ class ScribusParser:
             temp_order = 'left'
         object_properties['order'] =  temp_order
 
-        
-        
-        
         # getting special ANFLAG sub-properties
         temp_ANFLAG = long(sp.getObjectTooltipProperty('ANFLAG',
                                                        0,
@@ -1646,7 +1617,6 @@ class ScribusParser:
         if temp_ANFLAG == long(def_readOnly):
           # 'read only" field
           anflag_properties['readOnly'] = 1
-        
 
         # getting maximum number of caracters the field can hold
         # note : only used for textfields ('StringField', 'IntegerField',
@@ -1665,8 +1635,7 @@ class ScribusParser:
                                             object_name,
                                             object_content)
         print "      => MaxInput = %s" % object_properties['maximum_input']
-        
-        
+
         # getting object type :
         # first checking for user-specified type in 'tooltip' properties
         if tooltipfield_properties_dict.has_key('type'):
@@ -1741,8 +1710,6 @@ class ScribusParser:
           object_properties['data_type'] = 'date'
           object_properties['default_data'] = '1970/01/01'
 
-        
-          
         # getting 'required' property
         # checking for user data in tooltipfield. if nothing found then
         # taking hard-written value in anflag properties
@@ -1751,8 +1718,7 @@ class ScribusParser:
                                         anflag_properties['required'],
                                         object_name,
                                         tooltipfield_properties_dict)
-        
-          
+
         # getting type properties for special types
         object_properties['rendering'] = 'single'
         # Stringfields handle properties
@@ -1785,7 +1751,7 @@ class ScribusParser:
                                             'ymd',
                                             object_name,
                                             tooltipfield_properties_dict)
-          
+
           # checking if field has date_only property
           object_properties['date_only'] = \
                 sp.getObjectTooltipProperty('date_only',
@@ -1809,7 +1775,7 @@ class ScribusParser:
                                             '  ',
                                             object_name,
                                             tooltipfield_properties_dict)
-            
+
         # object is relationstringfield and needs some information
         if str(object_properties['type']) == 'RelationStringField':
           # has been tested successfully
@@ -1834,9 +1800,7 @@ class ScribusParser:
                                             '0',
                                             object_name,
                                             tooltipfield_properties_dict)
-          
-        
-          
+
         # getting creation order from 'tooltip' properties
         # used to create ERP5 objects in a special order
         if tooltipfield_properties_dict.has_key('nb') and \
@@ -1876,12 +1840,11 @@ class ScribusParser:
           LOG("WARNING : " + str(object_name),0,"no 'nb' defined : finding a free slot")
           print "      => no 'nb' property specified : post-processing will try to define one"
           nb_property_nonbkey_list.append(object_name)
-          
+
         # adding current object with its relative properties to the dict
         # before going to the next page_object
         returned_object_dict[object_name] = object_properties
-        
-        
+
       # final processing before returning full page with modified
       # page_object_properties : setting 'nb' property to all objects
       # without user-specified 'nb' property
@@ -1893,7 +1856,7 @@ class ScribusParser:
         # to give them a 'nb' property
         nb_property_nbkey_list.append((object_position,object_name))
         print "    => 'nb' found for %s : %s" % (object_name,object_position)
-      
+
       # now all page_object are referenced in the list, we just need to sort
       # the elements in the good order. for that a new list of objects is needed
       returned_object_list = []
@@ -1905,21 +1868,14 @@ class ScribusParser:
         returned_object_dict[nb_value]['nb'] = nb_ind + 1
         # add the object at the end of the new list
         returned_object_list.append((nb_value,returned_object_dict[nb_value]))
-        
-      
+
       # adding returned list of object to the page dict
       # before going to the next page
       returned_page_dict[page_number] = returned_object_list
-      
-      
-    
+
     # returning final dict containing all the modified data
     print "  => end ScribusParser.getPropertiesConversion"
     return (returned_page_dict)
-
-
-
-
 
   security.declarePublic('initFieldDict')
   def initFieldDict(self):
