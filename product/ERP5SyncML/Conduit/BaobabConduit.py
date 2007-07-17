@@ -691,7 +691,7 @@ class BaobabConduit(ERP5Conduit):
     if object.getPortalType() == 'Bank Account' and object.getValidationState()!='valid':
       object.portal_workflow.doActionFor(object, 'validate_action', 
                                          wf_id='bank_account_workflow')
-    if object.getPortalType() == 'Person':
+    if object.getPortalType() in ('Person','Organisation'):
       object.updateLocalRolesOnSecurityGroups()
 
 
