@@ -93,7 +93,7 @@ print "#### Indexing categories ####"\n
 folder_tag = \'module\'\n
 folder_after_tag = (\'person_stage_1\', \'group_person_stage_1\')\n
 object_tag = \'category\'\n
-object_after_tag = (\'module\', \'person_stage_1\', \'group_person_stage_1\')\n
+object_after_tag = folder_after_tag\n
 \n
 context.portal_categories.activate(\n
                   tag=folder_tag,\n
@@ -108,9 +108,9 @@ context.portal_categories.activate(\n
 print "#### Indexing alarms ####"\n
 print "#### Indexing preferences ####"\n
 folder_tag = \'module\'\n
-folder_after_tag = (\'person_stage_1\', \'group_person_stage_1\')\n
+folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\')\n
 object_tag = \'document\'\n
-object_after_tag = (\'module\', \'category\', \'person_stage_1\', \'group_person_stage_1\')\n
+object_after_tag = folder_after_tag\n
 object_priority = 2\n
 for folder in [context.portal_alarms, context.portal_preferences]:\n
   folder.activate(\n
@@ -128,9 +128,9 @@ for folder in [context.portal_alarms, context.portal_preferences]:\n
 # (ie. related quantity)\n
 print "#### Indexing simulation ####"\n
 folder_tag = \'module\'\n
-folder_after_tag = (\'person_stage_1\', \'group_person_stage_1\')\n
+folder_after_tag = (\'category\', \'document\', \'person_stage_1\', \'group_person_stage_1\')\n
 object_tag = \'simulation\'\n
-object_after_tag = (\'module\', \'category\', \'person_stage_1\', \'document\', \'group_person_stage_1\')\n
+object_after_tag = folder_after_tag\n
 object_priority = 3\n
 context.portal_simulation.activate(\n
                   tag=folder_tag,\n
@@ -156,9 +156,9 @@ print "#### Indexing delivery builders ####"\n
 print "#### Indexing order builders ####"\n
 \n
 folder_tag = \'module\'\n
-folder_after_tag = (\'person_stage_1\', \'group_person_stage_1\')\n
+folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\')\n
 object_tag = \'document\'\n
-object_after_tag = (\'module\', \'category\', \'person_stage_1\', \'group_person_stage_1\')\n
+object_after_tag = folder_after_tag\n
 object_priority = 2\n
 for folder in [context.portal_templates, context.portal_trash,\n
                context.portal_domains, context.portal_rules,\n
