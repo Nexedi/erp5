@@ -68,11 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX need to implement this part in the catalog\n
-# portal type causality of root applied rule\n
-# XXX kw[\'orderType\'] = \'Sale Order\'\n
-\n
-def test(movement):\n
+            <value> <string>def test(movement):\n
   root_applied_rule = movement.getRootAppliedRule()\n
   root_rule = root_applied_rule.getSpecialiseValue()\n
   root_movement = movement.getRootSimulationMovement()\n
@@ -83,15 +79,20 @@ def test(movement):\n
     parent_rule.getPortalType() == "Transformation Rule" and\\\n
     root_movement.getSimulationState() == "confirmed"\n
   )\n
+search_kw = {\n
+  \'resource_portal_type\': \'Simulation Movement\',\n
+}\n
 \n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+if explanation_uid is not None:\n
+  search_kw[\'explanation_uid\'] = explanation_uid\n
+search_kw.update(context.portal_catalog.buildSQLQuery(**search_kw))\n
 \n
 if src__==0:\n
-  movement_list = [x.getObject() for x in context.ProductionOrder_zSelectMovement(**kw)]\n
+  movement_list = [x.getObject() for x in context.ProductionOrder_zSelectMovement(**search_kw)]\n
   movement_list = [x for x in movement_list if test(x)]\n
   return movement_list\n
 else:\n
-  return context.ProductionOrder_zSelectMovement(src__=1, **kw)\n
+  return context.ProductionOrder_zSelectMovement(src__=1, **search_kw)\n
 </string> </value>
         </item>
         <item>
@@ -108,7 +109,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>src__=0, **kw</string> </value>
+            <value> <string>explanation_uid=None, src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -128,15 +129,19 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>explanation_uid</string>
                             <string>src__</string>
                             <string>kw</string>
                             <string>test</string>
+                            <string>search_kw</string>
+                            <string>None</string>
+                            <string>_write_</string>
                             <string>_getattr_</string>
                             <string>_apply_</string>
                             <string>context</string>
@@ -157,6 +162,7 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <int>0</int>
               </tuple>
             </value>
