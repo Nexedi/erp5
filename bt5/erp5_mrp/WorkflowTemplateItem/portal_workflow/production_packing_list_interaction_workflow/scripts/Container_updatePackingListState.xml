@@ -116,8 +116,9 @@ packing_list_content.getExplanationValue().activate().edit()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list_content</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

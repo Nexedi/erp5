@@ -115,8 +115,9 @@ order.activate(tag=tag).updateAppliedRule(tag=tag,rule_id = \'default_production
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>order</string>
+                            <string>_getattr_</string>
                             <string>tag</string>
                           </tuple>
                         </value>

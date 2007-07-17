@@ -115,9 +115,10 @@ delivery_line.updateCellRange(base_id)\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>delivery_line</string>
                             <string>base_id</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

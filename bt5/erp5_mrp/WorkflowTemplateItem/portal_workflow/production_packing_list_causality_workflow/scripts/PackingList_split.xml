@@ -145,9 +145,9 @@ delivery_builder.activate().build(applied_rule_uid=applied_rule_uid)\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
-                            <string>packing_list</string>
                             <string>_getitem_</string>
+                            <string>packing_list</string>
+                            <string>_getattr_</string>
                             <string>stop_date</string>
                             <string>start_date</string>
                             <string>None</string>

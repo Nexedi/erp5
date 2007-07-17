@@ -114,8 +114,9 @@ packing_list.updateAppliedRule("default_production_packing_list_rule")\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

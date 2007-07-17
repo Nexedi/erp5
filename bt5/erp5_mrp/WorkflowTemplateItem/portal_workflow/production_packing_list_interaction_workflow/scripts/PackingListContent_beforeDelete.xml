@@ -133,8 +133,9 @@ for simulation_movement in simulation_movement_list:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list_content</string>
+                            <string>_getattr_</string>
                             <string>simulation_movement_list</string>
                             <string>_getiter_</string>
                             <string>simulation_movement</string>

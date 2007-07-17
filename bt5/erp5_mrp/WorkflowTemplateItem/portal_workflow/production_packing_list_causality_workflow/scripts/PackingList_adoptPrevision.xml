@@ -131,8 +131,9 @@ packing_list.edit()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list</string>
+                            <string>_getattr_</string>
                             <string>packing_list_portal_type</string>
                             <string>delivery_builder</string>
                             <string>packing_list_relative_url</string>

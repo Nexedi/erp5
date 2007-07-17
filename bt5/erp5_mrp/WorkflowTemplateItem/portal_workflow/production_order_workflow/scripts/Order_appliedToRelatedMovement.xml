@@ -116,8 +116,9 @@ order.applyToOrderRelatedMovement(method_id=\'expand\',activate_kw=activate_kw)\
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>order</string>
+                            <string>_getattr_</string>
                             <string>expand_tag</string>
                             <string>activate_kw</string>
                           </tuple>
