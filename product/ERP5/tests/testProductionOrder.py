@@ -89,6 +89,14 @@ class TestProductionOrderMixin(TestOrderMixin):
                                                portal_type='Category',
                                                id=category_id)
 
+  def stepClearActivities(self, sequence=None, sequence_list=None, 
+                          **kw):
+    """
+    Clear activity tables
+    """
+    activity_tool = self.getPortal().portal_activities
+    activity_tool.manageClearActivities(keep=0)
+
   def stepCreateProductionOrganisation1(self, sequence=None, sequence_list=None, 
                                         **kw):
     """
@@ -861,6 +869,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test when order is 
     sequence_string = '\
+                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateProductionSC \
                       CreateVariatedResource \
@@ -886,6 +895,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test when order is 
     sequence_string = '\
+                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateSupplyOrganisation1 \
                       CreateSourcingSC \
@@ -910,6 +920,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Test when order is 
     sequence_string = '\
+                      ClearActivities \
                       CreateProductionOrganisation1 \
                       CreateProductionOrganisation2 \
                       CreateSupplyOrganisation1 \
@@ -926,6 +937,93 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
                       OrderOrder \
                       Tic \
                       CheckTwoPhasesSimulation \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_04_testProductionSimulationBuild(self, quiet=0, run=run_all_test):
+    """
+    Test delivery building.
+    XXX Test method still required
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test when order is 
+    sequence_string = '\
+                      ClearActivities \
+                      CreateProductionOrganisation1 \
+                      CreateProductionSC \
+                      CreateVariatedResource \
+                      CreateComponent1 \
+                      CreateTransformation \
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateOrderLine \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      ConfirmOrder \
+                      Tic \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_05_testSourcingSimulationBuild(self, quiet=0, 
+                                          run=run_all_test):
+    """
+    Test delivery building.
+    XXX Test method still required
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test when order is 
+    sequence_string = '\
+                      ClearActivities \
+                      CreateProductionOrganisation1 \
+                      CreateSupplyOrganisation1 \
+                      CreateSourcingSC \
+                      CreateVariatedResource \
+                      CreateComponent1 \
+                      CreateTransformation \
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateOrderLine \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      ConfirmOrder \
+                      Tic \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_06_testIndustrialPhase(self, quiet=0, run=run_all_test):
+    """
+    Test delivery building.
+    XXX Test method still required
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test when order is 
+    sequence_string = '\
+                      ClearActivities \
+                      CreateProductionOrganisation1 \
+                      CreateProductionOrganisation2 \
+                      CreateSupplyOrganisation1 \
+                      CreateSupplyOrganisation2 \
+                      CreateTwoPhasesSC \
+                      CreateVariatedResource \
+                      CreateComponent1 \
+                      CreateComponent2 \
+                      CreateTransformation \
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateOrderLine \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      ConfirmOrder \
+                      Tic \
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -956,7 +1054,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     self.assertEquals(pasted_supply_node.getRelativeUrl(),
                       pasted_supply_link.getDestination())
 
-  def test_04_testCopyPaste(self, quiet=0, run=run_all_test):
+  def test_50_testCopyPaste(self, quiet=0, run=run_all_test):
     """
     Check that relation are changed when doing a copy/paste,
     on supply chain
@@ -964,6 +1062,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     sequence_string = '\
+            ClearActivities \
             CreateProductionOrganisation1 \
             CreateProductionSC \
             CopyPasteSupplyChain \
@@ -1012,7 +1111,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     self.assertEquals(supply_node.getRelativeUrl(),
                       supply_link.getDestination())
 
-  def test_05_testCutPasteInAnotherContainer(self, quiet=0, run=run_all_test):
+  def test_51_testCutPasteInAnotherContainer(self, quiet=0, run=run_all_test):
     """
     Check that relations are changed when doing a copy/paste,
     on a supply chain.
@@ -1041,6 +1140,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     sequence_string = '\
+            ClearActivities \
             CreateProductionOrganisation1 \
             CreateProductionSC \
             CreateEmptySC \
