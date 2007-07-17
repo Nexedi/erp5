@@ -168,10 +168,7 @@ class Renderer(Filter):
         item = [self.current_category, None]
       item_list.append(item)
     if self.display_none_category:
-      if self.is_right_display:
-        item = ['', '']
-      else:
-        item = ['', '']
+      item = ['', '']
       item_list.append(item)
 
     for value in value_list:
