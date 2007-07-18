@@ -490,7 +490,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>resource_current_inventory</string> </value>
+                    <value> <string>resource_inventory_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
