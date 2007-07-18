@@ -1,3 +1,6 @@
+2007-07-02 Yusei
+* Fixed a invalid xhtml template.
+
 2007-06-12 JPS
 * Added MochiKit by default to handle onload events
 
