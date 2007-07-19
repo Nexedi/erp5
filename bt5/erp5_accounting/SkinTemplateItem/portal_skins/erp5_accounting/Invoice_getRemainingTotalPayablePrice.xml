@@ -88,6 +88,9 @@ specific account.\n
 The `simulation_state` parameter is a list that can be used to take into account\n
 only transactions in those states. By default it will use all but \'draft\', \n
 \'cancelled\' and \'deleted\'.\n
+\n
+The `mirror_section_relative_url` parameter must be passed explicitly if the\n
+context invoice has multiple sections.\n
 """\n
 portal = context.getPortalObject()\n
 total_payable_price_per_node_section = dict()\n
@@ -194,6 +197,12 @@ for related_transaction in context.getCausalityRelatedValueList(\n
 if detailed:\n
   return total_payable_price_per_node_section\n
 else:\n
+  if mirror_section_relative_url:\n
+    total_amount = 0\n
+    for (node, mirror_section), amount in total_payable_price_per_node_section.items():\n
+      if mirror_section == mirror_section_relative_url:\n
+        total_amount += amount\n
+    return total_amount\n
   return sum(total_payable_price_per_node_section.values())\n
 
 
@@ -219,7 +228,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>detailed=0, at_date=None, account_id=None, simulation_state=None</string> </value>
+            <value> <string>detailed=0, at_date=None, account_id=None, simulation_state=None, mirror_section_relative_url=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -239,7 +248,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -249,6 +258,7 @@ else:\n
                             <string>at_date</string>
                             <string>account_id</string>
                             <string>simulation_state</string>
+                            <string>mirror_section_relative_url</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -280,6 +290,8 @@ else:\n
                             <string>ValueError</string>
                             <string>related_transaction_is_source</string>
                             <string>date</string>
+                            <string>total_amount</string>
+                            <string>node</string>
                             <string>sum</string>
                           </tuple>
                         </value>
@@ -294,6 +306,7 @@ else:\n
             <value>
               <tuple>
                 <int>0</int>
+                <none/>
                 <none/>
                 <none/>
                 <none/>
