@@ -23,7 +23,6 @@
  </portal_type>
  <portal_type id="Apparel Component">
   <item>Apparel Component Variation</item>
-  <item>Predicate Group</item>
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Apparel Component Module">
