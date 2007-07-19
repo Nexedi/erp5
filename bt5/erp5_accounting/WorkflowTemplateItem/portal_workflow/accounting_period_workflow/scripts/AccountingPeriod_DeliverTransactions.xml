@@ -149,8 +149,9 @@ closing_period.activate( \n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>closing_period</string>
+                            <string>_getattr_</string>
                             <string>portal</string>
                             <string>N_</string>
                             <string>accounting_module</string>

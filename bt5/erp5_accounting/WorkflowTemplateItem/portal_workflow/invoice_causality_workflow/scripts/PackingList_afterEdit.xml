@@ -114,8 +114,9 @@ context.activate().updateCausalityState()\n
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

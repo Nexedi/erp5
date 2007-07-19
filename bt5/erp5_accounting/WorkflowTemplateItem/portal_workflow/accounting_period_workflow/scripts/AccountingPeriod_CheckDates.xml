@@ -160,8 +160,9 @@ if len(period_list) > 1 :\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>closing_period</string>
+                            <string>_getattr_</string>
                             <string>portal</string>
                             <string>N_</string>
                             <string>valid_states</string>
@@ -171,7 +172,6 @@ if len(period_list) > 1 :\n
                             <string>_getiter_</string>
                             <string>period</string>
                             <string>len</string>
-                            <string>_getitem_</string>
                             <string>last_period</string>
                           </tuple>
                         </value>

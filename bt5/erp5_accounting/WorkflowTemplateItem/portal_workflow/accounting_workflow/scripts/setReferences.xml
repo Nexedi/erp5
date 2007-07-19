@@ -140,8 +140,9 @@ if transaction.getDestinationReference() in (None, \'\'):\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>source_section</string>
                             <string>destination_section</string>
                             <string>None</string>

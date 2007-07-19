@@ -147,8 +147,9 @@ container.validateTransactionLines(state_change)\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>error_message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
                             <string>module</string>
                             <string>source_section</string>
                             <string>None</string>

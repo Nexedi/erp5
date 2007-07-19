@@ -132,13 +132,13 @@ packing_list.activate().updateCausalityState()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list</string>
+                            <string>_getattr_</string>
                             <string>builder_list</string>
                             <string>packing_list_relative_url</string>
                             <string>_getiter_</string>
                             <string>builder</string>
-                            <string>_getitem_</string>
                             <string>delivery_builder</string>
                           </tuple>
                         </value>
