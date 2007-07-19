@@ -94,7 +94,7 @@ total_payable_price_per_node_section = dict()\n
 \n
 if simulation_state is None:\n
   state_list = [x[1] for x in context.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n
-  simulation_state = [x for x in state_list if x not in (\'draft\', \'cancelled\', \'deleted\')]\n
+  simulation_state = [x for x in state_list if x not in (\'draft\', \'cancelled\', \'deleted\', \'rejected\')]\n
 \n
 if context.AccountingTransaction_isSourceView():\n
   is_source = 1\n
