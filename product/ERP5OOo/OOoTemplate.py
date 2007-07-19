@@ -26,16 +26,12 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import getToolByName
 from types import StringType
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
-from Products.Formulator.Form import BasicForm
-from Products.Formulator.Form import fields
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ERP5Type import PropertySheet
-from AccessControl import getSecurityManager
 from urllib import quote
 from Globals import InitializeClass, DTMLFile, get_request
 from AccessControl import ClassSecurityInfo
@@ -47,9 +43,6 @@ except ImportError:
   from StringIO import StringIO
 import re
 import itertools
-import xmlrpclib
-
-from zLOG import LOG
 
 try:
   from webdav.Lockable import ResourceLockedError
@@ -480,7 +473,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     opts = extra_context.get("options", None)
     if opts is not None:
       format = opts.get('format', request.get('format', None))
-      if format is not None:
+      if format:
         return self._asFormat(ooo, format, request)
 
     # Do not send a RESPONSE if in batch_mode
@@ -508,36 +501,41 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     """
     Return OOo report as pdf
     """
-    return self._asFormat(ooo,'pdf',REQUEST)
+    return self._asFormat(ooo, 'pdf', REQUEST)
 
-  def _asFormat(self,ooo,format,REQUEST=None):
+  def _asFormat(self, ooo, format, REQUEST=None):
     # now create a temp OOoDocument to convert data to pdf
     from Products.ERP5Type.Document import newTempOOoDocument
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
-    tmp_ooo.edit(base_data = ooo,
-                fname =  self.title_or_id(),
-                source_reference = self.title_or_id(),
-                base_content_type = self.content_type,)
+    tmp_ooo.edit(base_data=ooo,
+                 fname=self.title_or_id(),
+                 source_reference=self.title_or_id(),
+                 base_content_type=self.content_type,)
     tmp_ooo.oo_data = ooo
+    
     if format == 'pdf':
       # slightly different implementation
       # now convert it to pdf
-      tgts=[x[1] for x in tmp_ooo.getTargetFormatItemList() if x[1].endswith('pdf')]
-      if len(tgts)>1:
+      tgts = [x[1] for x in tmp_ooo.getTargetFormatItemList()
+              if x[1].endswith('pdf')]
+      if len(tgts) > 1:
           raise ValueError, 'multiple pdf formats found - this shouldnt happen'
-      if len(tgts)==0:
+      if len(tgts) == 0:
           raise ValueError, 'no pdf format found'
-      fmt=tgts[0]
+      fmt = tgts[0]
       mime, data = tmp_ooo.convert(fmt)
       if REQUEST is not None:
-          REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
-          REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s.pdf"' % self.title_or_id())
+        REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
+        REQUEST.RESPONSE.setHeader('Content-disposition',
+                       'attachment;; filename="%s.pdf"' % self.title_or_id())
       return data
+
     mime, data = tmp_ooo.convert(format)
     if REQUEST is not None:
-        REQUEST.RESPONSE.setHeader('Content-type', mime)
-        REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s.%s"' % (self.title_or_id(),format))
-        # FIXME the above lines should return zip format when html was requested
+      REQUEST.RESPONSE.setHeader('Content-type', mime)
+      REQUEST.RESPONSE.setHeader('Content-disposition',
+               'attachment;; filename="%s.%s"' % (self.title_or_id(),format))
+      # FIXME the above lines should return zip format when html was requested
     return data
 
 InitializeClass(OOoTemplate)
