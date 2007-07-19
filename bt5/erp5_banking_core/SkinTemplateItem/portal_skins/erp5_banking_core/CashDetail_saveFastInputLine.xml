@@ -276,6 +276,8 @@ for resource_id in per_resource_dict.keys():\n
         cell.setInventory(variation_item["quantity"])\n
       else:\n
         cell.setQuantity(variation_item["quantity"])\n
+  line.getPrice() # Call getPrice now because it will be called on reindexation and it modifies the line.\n
+                  # So better modify it here so it\'s only saved once to ZODB.\n
 \n
 request  = context.REQUEST\n
 N_ = context.Base_translateString\n
