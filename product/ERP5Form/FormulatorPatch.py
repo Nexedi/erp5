@@ -1052,12 +1052,15 @@ class FloatWidget(TextWidget):
     def format_value(self, field, value):
         """Formats the value as requested"""
         if value not in (None,''):
+          precision = field.get_value('precision')
           input_style = field.get_value('input_style')
           percent = 0
           original_value = value
           if input_style.find('%')>=0:
             percent=1
             value = float(value) * 100
+          if precision:
+            value = round(value, precision)
           try :
             value = str(float(value))
           except ValueError:
@@ -1077,7 +1080,6 @@ class FloatWidget(TextWidget):
               i += 3
           else:
             value = value_list[0]
-          precision = field.get_value('precision')
           if precision != 0:
             value += '.'
           if precision not in (None,''):
