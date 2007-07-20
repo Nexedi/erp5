@@ -96,17 +96,14 @@ if site is None:\n
 # get only the office, not need of vault\n
 #context.log(\'Baobab_checkAccountingDateOpen\', \'get site for vault %s\' %(site))\n
 site = context.Baobab_getVaultSite(site)\n
-error = False\n
-if context.portal_catalog.countResults(portal_type=\'Accounting Date\', site_id=site.getId(), simulation_state="opened", limit=1)[0][0] == 0:\n
-  # If there is no opened accounting date, consider today as an openned accounting day.\n
-  if DateTime(date) < DateTime(DateTime().Date()):\n
-    error = True\n
-elif context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_date={\'query\':\'<=%s\' % (date, ), \'type\': \'date\', \'format\': \'%Y/%m/%d\'}, site_id=site.getId(), simulation_state="opened", limit=1)[0][0] == 0:\n
-  # If an accounting date is openned but posterior to checked date, verification fails.\n
-  error= True\n
+accounting_date_list = context.portal_catalog(portal_type=\'Accounting Date\', site_id=site.getId(), simulation_state="opened", sort_on=[("start_date", "DESC")], limit=1)\n
+if len(accounting_date_list) == 0:\n
+  opened_accounting_date = DateTime(DateTime().Date())\n
+else:\n
+  opened_accounting_date = accounting_date_list[0].getStartDate()\n
 \n
-if error:\n
-  msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
+if DateTime(date) < opened_accounting_date:\n
+  msg = Message(domain = "ui", message="Transaction date incompatible with opened accounting date ${accounting_date}.", mapping={\'accounting_date\': opened_accounting_date})\n
   raise ValidationFailed, (msg,)\n
 \n
 return "ok"\n
@@ -182,9 +179,8 @@ return "ok"\n
                             <string>site_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
-                            <string>False</string>
-                            <string>error</string>
-                            <string>True</string>
+                            <string>accounting_date_list</string>
+                            <string>opened_accounting_date</string>
                             <string>msg</string>
                           </tuple>
                         </value>
