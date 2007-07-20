@@ -35,6 +35,7 @@ class Comment:
   _properties = (
         {   'id'          : 'comment',
             'description' : 'Comments',
+            'default'     : '',
             'type'        : 'text',
             'mode'        : 'w' },
       )
