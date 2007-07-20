@@ -1943,6 +1943,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     selection = self.renderer.getSelection()
     selection_name = self.renderer.getSelectionName()
     ignore_layout = int(self.renderer.request.get('ignore_layout', 0))
+    ui_domain = 'erp5_ui'
 
     html_list = []
 
@@ -2043,7 +2044,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           error_text = error_dict[key].error_text
           error_text = cgi.escape(error_text)
           if isinstance(error_text, str):
-            error_text = unicode(error_text, encoding)
+            error_text = u'%s' % Message(domain=ui_domain, 
+                                         message=error_text)
           error_message = u'<br />' + error_text
         else:
           error_message = u''
@@ -2830,8 +2832,8 @@ class ListBoxValidator(Validator.Validator):
         here = getattr(form, 'aq_parent', REQUEST)
         columns = field.get_value('columns')
         editable_columns = field.get_value('editable_columns')
-        column_ids = map(lambda x: x[0], columns)
-        editable_column_ids = map(lambda x: x[0], editable_columns)
+        column_ids = [x[0] for x in columns]
+        editable_column_ids = [x[0] for x in editable_columns]
         selection_name = field.get_value('selection_name')
         #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
         params = here.portal_selections.getSelectionParamsFor(
@@ -2929,8 +2931,8 @@ class ListBoxValidator(Validator.Validator):
                 my_field = form.get_field(my_field_id)
                 REQUEST.cell = o
                 if my_field.get_value('editable',REQUEST=REQUEST) and field.need_validate(REQUEST):
-                  key = 'field_' + my_field.id + '_%s' % o.uid
-                  error_result_key = my_field.id + '_%s' % o.uid
+                  key = 'field_%s_%s' % (my_field.id, o.uid)
+                  error_result_key = '%s_%s' % (my_field.id, o.uid)
                   try:
                     value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
                     result[uid[4:]][sql] = value
