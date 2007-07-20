@@ -1059,10 +1059,11 @@ class FloatWidget(TextWidget):
           if input_style.find('%')>=0:
             percent=1
             value = float(value) * 100
-          if precision:
-            value = round(value, precision)
           try :
-            value = str(float(value))
+            float_value = float(value)
+            if precision:
+              float_value = round(float_value, precision)
+            value = str(float_value)
           except ValueError:
             return value
           else:

@@ -60,12 +60,18 @@ class TestFloatField(unittest.TestCase):
     self.assertEquals('0.01', self.widget.format_value(self.field, 0.011))
     # value is rounded
     self.assertEquals('0.01', self.widget.format_value(self.field, 0.009999))
-
+  
   def test_render_view(self):
     self.field.values['input_style'] = '-1 234.5'
     self.field.values['precision'] = 2
     self.field.values['editable'] = 0
     self.assertEquals('1&nbsp;000.00', self.field.render(1000))
+  
+  def test_render_string_value(self):
+    self.field.values['precision'] = 2
+    self.field.values['editable'] = 0
+    self.assertEquals('12.34', self.field.render("12.34"))
+    self.assertEquals('not float', self.field.render("not float"))
 
   def test_render_big_numbers(self):
     self.field.values['precision'] = 2
