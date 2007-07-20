@@ -39,21 +39,22 @@ def CMFBTreeFolder_allowedContentTypes(self):
   if myType is not None:
     allowed_types_to_check = []
     if myType.filter_content_types:
-      result = [portal_types.getTypeInfo(x) for x in 
-                   myType.allowed_content_types]
+      for portal_type in myType.allowed_content_types:
+        contentType = portal_types.getTypeInfo(portal_type)
+        if contentType is None:
+          raise AttributeError, "Portal type '%s' does not exist " \
+                                "and should not be allowed in '%s'" % \
+                                (portal_type, self.getPortalType())
+        result.append(contentType)
     else:
-      if myType is not None:
-          for contentType in portal_types.listTypeInfo(self):
-              if myType.allowType( contentType.getId() ):
-                  result.append( contentType )
+      for contentType in portal_types.listTypeInfo(self):
+        if myType.allowType(contentType.getId()):
+          result.append(contentType)
   else:
       result = portal_types.listTypeInfo()
 
-  return filter( lambda typ, container=self:
-                    typ.isConstructionAllowed( container )
-               , result )
-
-
+  return filter(
+      lambda typ, container=self: typ.isConstructionAllowed(container),
+      result)
 
 CMFBTreeFolder.allowedContentTypes = CMFBTreeFolder_allowedContentTypes
-
