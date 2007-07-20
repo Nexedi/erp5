@@ -1,7 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Project">
   <item>Project Milestone</item>
-  <item>Web Page</item>
   <item>File</item>
   <item>Project Line</item>
   <item>Image</item>
