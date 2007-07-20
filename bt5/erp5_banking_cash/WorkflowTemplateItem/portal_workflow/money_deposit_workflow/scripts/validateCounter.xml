@@ -102,13 +102,13 @@ if destination is None:\n
 transaction.Baobab_checkCounterDateOpen(site=destination, date=transaction.getStartDate())\n
 \n
 site = transaction.getDestinationValue()\n
-\n
+# I comment theses lines, because it\'s not necessary to control if all counter is opened or not at the moment : CISSE\n
 # check that the counter is opened\n
-counter_list = [x.getObject() for x in transaction.portal_catalog(portal_type="Counter", simulation_state = \'open\', site_uid = site.getUid())]\n
+#counter_list = [x.getObject() for x in transaction.portal_catalog(portal_type="Counter", simulation_state = \'open\', site_uid = site.getUid())]\n
 \n
-if len(counter_list) == 0:\n
-  msg = Message(domain = "ui", message="Counter is not opened")\n
-  raise ValidationFailed, (msg,)\n
+#if len(counter_list) == 0:\n
+#  msg = Message(domain = "ui", message="Counter is not opened")\n
+#  raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -182,12 +182,6 @@ if len(counter_list) == 0:\n
                             <string>var_state</string>
                             <string>total_price</string>
                             <string>site</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>counter_list</string>
-                            <string>len</string>
                           </tuple>
                         </value>
                     </item>

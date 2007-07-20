@@ -95,7 +95,11 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>MonetarySurvey_init</string> </value>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>property_sheet_list</string> </key>

@@ -70,6 +70,17 @@ from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
 \n
+date = transaction.getStartDate()\n
+destination= transaction.getDestination()\n
+# check we are in an opened accounting day\n
+transaction.Baobab_checkCounterDateOpen(site=destination, date=transaction.getStartDate())\n
+\n
+site = transaction.getDestinationValue()\n
+\n
+# check again that the counter is open\n
+\n
+context.Baobab_checkCounterOpened(destination)\n
+\n
 if transaction.getResource() is None:\n
   msg = Message(domain="ui", message="No resource defined.")\n
   raise ValidationFailed, (msg,)\n
@@ -77,8 +88,7 @@ if transaction.getResource() is None:\n
 # Check getBaobabSource and getBaobabDestination\n
 #transaction.Base_checkBaobabSourceAndDestination()\n
 \n
-date = transaction.getStartDate()\n
-destination= transaction.getDestination()\n
+\n
 # check we don\'t change of user\n
 transaction.Baobab_checkSameUserVault(destination)\n
 \n
@@ -92,17 +102,7 @@ if destination is None:\n
   msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
   raise ValidationFailed, (msg,)\n
 \n
-# check we are in an opened accounting day\n
-transaction.Baobab_checkCounterDateOpen(site=destination, date=transaction.getStartDate())\n
 \n
-site = transaction.getDestinationValue()\n
-\n
-# check that the counter is opened\n
-counter_list = [x.getObject() for x in transaction.portal_catalog(portal_type="Counter", simulation_state = \'open\', site_uid = site.getUid())]\n
-\n
-if len(counter_list) == 0:\n
-  msg = Message(domain = "ui", message="Counter is not opened")\n
-  raise ValidationFailed, (msg,)\n
 \n
 # Get price and total_price.\n
 price = transaction.getSourceTotalAssetPrice()\n
@@ -169,18 +169,13 @@ if price != cash_detail:\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>None</string>
-                            <string>msg</string>
                             <string>date</string>
                             <string>destination</string>
-                            <string>lettering</string>
                             <string>site</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>counter_list</string>
-                            <string>len</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>msg</string>
+                            <string>lettering</string>
                             <string>price</string>
                             <string>cash_detail</string>
                           </tuple>

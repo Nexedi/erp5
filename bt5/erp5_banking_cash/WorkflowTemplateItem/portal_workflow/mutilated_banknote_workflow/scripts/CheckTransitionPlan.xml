@@ -71,6 +71,9 @@ from Products.ERP5Type.Message import Message\n
 ob = state_change[\'object\']\n
 ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=ob.getStartDate())\n
 \n
+\n
+\n
+\n
 # check presence of banknote\n
 if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
   msg = Message(domain = "ui", message="Transition forbidden with exchanged banknote line defined.")\n

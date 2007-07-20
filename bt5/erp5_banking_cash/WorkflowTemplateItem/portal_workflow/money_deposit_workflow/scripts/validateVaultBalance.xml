@@ -97,6 +97,9 @@ destination_object = context.portal_categories.getCategoryValue(destination)\n
 # check again that we are in the good accounting date\n
 transaction.Baobab_checkCounterDateOpen(site=destination_object, date=transaction.getStartDate())\n
 \n
+# check again that the counter is open\n
+\n
+context.Baobab_checkCounterOpened(destination)\n
 \n
 # Get price and total_price.\n
 price = transaction.getSourceTotalAssetPrice()\n

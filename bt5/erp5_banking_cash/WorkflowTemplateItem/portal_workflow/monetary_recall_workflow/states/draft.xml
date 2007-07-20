@@ -51,6 +51,8 @@
                 <string>delete_action</string>
                 <string>plan</string>
                 <string>plan_action</string>
+                <string>reject</string>
+                <string>reject_action</string>
               </tuple>
             </value>
         </item>
@@ -84,6 +86,7 @@
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
+                        <string>Assistant</string>
                       </tuple>
                     </value>
                 </item>
@@ -113,6 +116,7 @@
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
+                        <string>Assistant</string>
                       </tuple>
                     </value>
                 </item>

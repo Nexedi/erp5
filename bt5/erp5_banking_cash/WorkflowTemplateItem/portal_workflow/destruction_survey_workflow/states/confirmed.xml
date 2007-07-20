@@ -74,6 +74,7 @@
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
+                        <string>Assistant</string>
                       </tuple>
                     </value>
                 </item>
@@ -101,6 +102,7 @@
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
+                        <string>Assistant</string>
                       </tuple>
                     </value>
                 </item>

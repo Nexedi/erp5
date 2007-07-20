@@ -73,12 +73,29 @@ from Products.ERP5Type.Message import Message\n
 transaction = state_change[\'object\']\n
 date = transaction.getStartDate()\n
 vault = transaction.getSource()\n
-resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
+destination = transaction.getDestination()\n
+\n
 \n
 # check we are in an opened accounting day\n
 transaction.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
+if (\'encaisse_des_billets_et_monnaies\'  not in vault) and (\'encaisse_des_billets_a_ventiler_et_a_detruire\' not in vault):\n
+   msg = Message(domain="ui", message="Invalid source.")\n
+   raise ValidationFailed, (msg,)\n
 \n
+if (\'encaisse_des_billets_et_monnaies\'  not in destination) and (\'encaisse_des_billets_a_ventiler_et_a_detruire\' not in destination):\n
+   msg = Message(domain="ui", message="Invalid destination.")\n
+   raise ValidationFailed, (msg,)\n
+\n
+if (\'encaisse_des_billets_et_monnaies\'  in vault) and (\'encaisse_des_billets_a_ventiler_et_a_detruire\' not in destination):\n
+   msg = Message(domain="ui", message="Impossible Monetary Survey.")\n
+   raise ValidationFailed, (msg,)\n
+\n
+if (\'encaisse_des_billets_a_ventiler_et_a_detruire\'  in vault) and (\'encaisse_des_billets_et_monnaies\' not in destination):\n
+   msg = Message(domain="ui", message="Impossible Monetary Survey Reintregration.")\n
+   raise ValidationFailed, (msg,)\n
+\n
+resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
 total_price = transaction.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
@@ -152,10 +169,11 @@ elif resource <> 0 :\n
                             <string>_getattr_</string>
                             <string>date</string>
                             <string>vault</string>
+                            <string>destination</string>
+                            <string>msg</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>
-                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

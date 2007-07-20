@@ -91,6 +91,10 @@ outgoing_source = counter_site + encaisse_billets_et_monnaies\n
 \n
 # check again that we are in the good accounting date\n
 transaction.Baobab_checkCounterDateOpen(site=outgoing_source, date=transaction.getStartDate())\n
+\n
+# check again that the counter is open\n
+\n
+context.Baobab_checkCounterOpened(counter_site)\n
 base_price = transaction.getSourceTotalAssetPrice()\n
 # Check the amount.\n
 \n
@@ -191,6 +195,7 @@ elif resource_two!= 0 :\n
                             <string>counter_site</string>
                             <string>incoming_destination</string>
                             <string>outgoing_source</string>
+                            <string>context</string>
                             <string>base_price</string>
                             <string>None</string>
                             <string>msg</string>

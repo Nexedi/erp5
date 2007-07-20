@@ -80,6 +80,7 @@
                 <string>Assignor</string>
                 <string>Assignee</string>
                 <string>Manager</string>
+                <string>Assistant</string>
               </tuple>
             </value>
         </item>

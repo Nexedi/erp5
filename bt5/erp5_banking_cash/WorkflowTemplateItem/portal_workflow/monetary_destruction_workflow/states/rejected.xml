@@ -41,6 +41,8 @@
                 <string>cancel_action</string>
                 <string>delete</string>
                 <string>delete_action</string>
+                <string>draft</string>
+                <string>draft_action</string>
                 <string>plan</string>
                 <string>plan_action</string>
               </tuple>
@@ -74,6 +76,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>DestinationAssignee</string>
                         <string>DestinationAssignor</string>
                         <string>Manager</string>
@@ -86,6 +89,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -95,6 +99,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -105,6 +110,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>DestinationAssignee</string>
                         <string>DestinationAssignor</string>
                         <string>Manager</string>

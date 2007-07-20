@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>initial_state</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>empty</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>

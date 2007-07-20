@@ -77,6 +77,10 @@ vault = \'%s/surface/caisse_courante/encaisse_des_billets_et_monnaies\' %(ob.get
 date = ob.getStartDate()\n
 ob.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
+# check again that the counter is open\n
+source = ob.getSource()\n
+context.Baobab_checkCounterOpened(source)\n
+\n
 if len(ob.objectValues(portal_type="Outgoing Mutilated Banknote Line")) == 0:\n
   msg = Message(domain = "ui", message="You must defined returned banknote.")\n
   raise ValidationFailed, (msg,)\n
@@ -145,6 +149,8 @@ elif resource <> 0 :\n
                             <string>_getattr_</string>
                             <string>vault</string>
                             <string>date</string>
+                            <string>source</string>
+                            <string>context</string>
                             <string>len</string>
                             <string>msg</string>
                             <string>resource</string>

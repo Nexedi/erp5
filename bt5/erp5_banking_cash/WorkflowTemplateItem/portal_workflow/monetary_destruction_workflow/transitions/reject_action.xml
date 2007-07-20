@@ -77,6 +77,7 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
+                <string>Assignor</string>
                 <string>Assignee</string>
                 <string>DestinationAssignor</string>
                 <string>DestinationAssignee</string>

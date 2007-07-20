@@ -107,6 +107,7 @@
                     <value>
                       <list>
                         <string>my_source_reference</string>
+                        <string>my_source</string>
                         <string>my_source_total_asset_price</string>
                       </list>
                     </value>
@@ -116,6 +117,7 @@
                     <value>
                       <list>
                         <string>my_start_date</string>
+                        <string>my_destination</string>
                         <string>my_description</string>
                       </list>
                     </value>

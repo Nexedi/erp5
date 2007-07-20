@@ -80,6 +80,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>DestinationAssignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
@@ -91,6 +92,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -100,6 +102,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -110,6 +113,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>DestinationAssignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>

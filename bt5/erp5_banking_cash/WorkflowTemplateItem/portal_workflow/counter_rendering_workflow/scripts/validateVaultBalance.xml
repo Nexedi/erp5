@@ -83,9 +83,8 @@ transaction.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
 # check counter is opened\n
 site = transaction.getSourceValue()\n
-if not context.Baobab_checkCounterOpened(site):\n
-  msg = Message(domain = "ui", message="Counter is not opened")\n
-  raise ValidationFailed, (msg,)\n
+context.Baobab_checkCounterOpened(site,simulation_state_list=[\'open\', \'closing\'])\n
+\n
 \n
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
 \n
@@ -158,10 +157,10 @@ elif resource <> 0 :\n
                             <string>date</string>
                             <string>site</string>
                             <string>context</string>
-                            <string>msg</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

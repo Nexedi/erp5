@@ -79,9 +79,10 @@ transaction.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
 # check counter is opened\n
 site = transaction.getDestinationValue()\n
-if not context.Baobab_checkCounterOpened(site):\n
-  msg = Message(domain = "ui", message="Counter is not opened")\n
-  raise ValidationFailed, (msg,)\n
+source_counter = transaction.getDestination(None)\n
+\n
+context.Baobab_checkCounterOpened(source_counter)\n
+\n
 \n
 # use of the constraint : Test source and destination\n
 vliste = transaction.checkConsistency()\n
@@ -165,13 +166,15 @@ elif resource <> 0 :\n
                             <string>vault</string>
                             <string>date</string>
                             <string>site</string>
+                            <string>None</string>
+                            <string>source_counter</string>
                             <string>context</string>
-                            <string>msg</string>
                             <string>vliste</string>
                             <string>len</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

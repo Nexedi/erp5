@@ -49,6 +49,8 @@
                 <string>confirm_action</string>
                 <string>delete</string>
                 <string>delete_action</string>
+                <string>draft</string>
+                <string>draft_action</string>
               </tuple>
             </value>
         </item>
@@ -80,6 +82,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
                       </tuple>
@@ -89,6 +92,8 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -97,6 +102,8 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -107,6 +114,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
                       </tuple>

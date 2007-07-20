@@ -85,6 +85,7 @@
               <tuple>
                 <string>Manager</string>
                 <string>Assignor</string>
+                <string>Assistant</string>
               </tuple>
             </value>
         </item>

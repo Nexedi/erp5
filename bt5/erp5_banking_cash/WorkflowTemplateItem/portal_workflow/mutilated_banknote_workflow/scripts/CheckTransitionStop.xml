@@ -72,6 +72,8 @@ ob = state_change[\'object\']\n
 \n
 ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=ob.getStartDate())\n
 \n
+\n
+\n
 # check presence of banknote\n
 if len(ob.objectValues()) == 0:\n
   msg = Message(domain = "ui", message="No mutilated banknotes defined.")\n

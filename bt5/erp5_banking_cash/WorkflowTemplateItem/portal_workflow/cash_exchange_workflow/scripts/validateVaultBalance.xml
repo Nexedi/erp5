@@ -83,6 +83,11 @@ transaction.Baobab_checkSameUserVault(counter_site)\n
 \n
 # check again that we are in the good accounting date\n
 transaction.Baobab_checkCounterDateOpen(site=caisse_outgoing, date=transaction.getStartDate())\n
+\n
+# check that the counter is open\n
+\n
+context.Baobab_checkCounterOpened(counter_site)\n
+\n
 # use of the constraint : Test cash status line\n
 #vliste = transaction.checkConsistency()\n
 #transaction.log(\'vliste\', vliste)\n
@@ -177,6 +182,7 @@ if amount_total != outgoing_total:\n
                             <string>counter_site</string>
                             <string>caisse_incoming</string>
                             <string>caisse_outgoing</string>
+                            <string>context</string>
                             <string>resource_two</string>
                             <string>incoming_total</string>
                             <string>outgoing_total</string>
