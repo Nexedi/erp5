@@ -151,6 +151,7 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
       catalog_kw[\'vault_type_uid\']=vault_type_uid_list\n
     site_member_list = context.portal_catalog(portal_type=\'Category\',\n
                              relative_url=\'%s%%\' % site_object.getRelativeUrl(),\n
+                             limit=None,\n
                              **catalog_kw\n
                              )\n
     for site_member in site_member_list:\n

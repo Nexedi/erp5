@@ -84,13 +84,14 @@ if len(date_list) == 0:\n
 else:\n
   current_date = date_list[0].getStartDate()\n
 \n
-site_uid = transaction.getSiteUid()\n
+# We should not reject automatically\n
+# I (seb) do not recommand this\n
+#site_uid = transaction.getSiteUid()\n
 \n
-operation_list_object = transaction.Baobab_getRemainingOperationList(site_uid=site_uid, date=current_date, simulation_state=[\'confirmed\',])\n
+#operation_list_object = transaction.Baobab_getRemainingOperationList(site_uid=site_uid, date=current_date, simulation_state=[\'confirmed\',])\n
 \n
-for operation in operation_list_object:\n
-  context.log(\'cancelling operations\', operation.getRelativeUrl())\n
-  operation.reject()\n
+#for operation in operation_list_object:\n
+#  operation.reject()\n
 </string> </value>
         </item>
         <item>
@@ -156,9 +157,6 @@ for operation in operation_list_object:\n
                             <string>current_date</string>
                             <string>len</string>
                             <string>msg</string>
-                            <string>site_uid</string>
-                            <string>operation_list_object</string>
-                            <string>operation</string>
                           </tuple>
                         </value>
                     </item>

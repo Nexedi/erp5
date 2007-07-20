@@ -65,14 +65,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>site = context.Baobab_getVaultSite(counter)\n
-counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", simulation_state = \'open\', site_uid = site.getUid())]\n
-for counter_ob in counter_list:\n
-#  context.log(counter.getRelativeUrl(), counter_ob.getSite())\n
-  if "site/%s" %counter_ob.getSite() in counter.getRelativeUrl() or counter.getRelativeUrl() in "site/%s" %counter_ob.getSite():\n
-    return 1\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+if simulation_state_list is None:\n
+  simulation_state_list = [\'open\']\n
+\n
+site = context.Baobab_getVaultSite(counter)\n
+counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", \n
+         simulation_state = simulation_state_list, site_uid = site.getUid())]\n
+if same_type(counter, \'a\'):\n
+  counter_relative_url = counter\n
 else:\n
-  return 0\n
+  counter_relative_url = counter.getRelativeUrl()\n
+found = 0\n
+if "guichet" in counter_relative_url:\n
+  for counter_ob in counter_list:\n
+    if "site/%s" %counter_ob.getSite() in counter_relative_url or counter_relative_url in "site/%s" %counter_ob.getSite():\n
+      found = 1\n
+if found == 0:\n
+  msg = Message(domain = "ui", message="Counter is not opened")\n
+  raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -95,7 +108,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>counter</string> </value>
+            <value> <string>counter, simulation_state_list=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -123,13 +136,19 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>counter</string>
+                            <string>simulation_state_list</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>site</string>
@@ -138,7 +157,11 @@ else:\n
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>counter_list</string>
+                            <string>same_type</string>
+                            <string>counter_relative_url</string>
+                            <string>found</string>
                             <string>counter_ob</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>
@@ -150,7 +173,9 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

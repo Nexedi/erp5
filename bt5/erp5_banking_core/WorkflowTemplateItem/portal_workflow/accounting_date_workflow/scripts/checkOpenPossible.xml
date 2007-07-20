@@ -79,19 +79,6 @@ site_uid = accounting_date.getSiteUid()\n
 if site_uid is None:\n
   msg = Message(domain=\'ui\',message="Sorry, the site is not defined")\n
   raise ValidationFailed (msg,)\n
-\n
-# Check if date defined on the accounting_date is the current date\n
-if now.Date() != accounting_date.getStartDate().Date():\n
-  msg = Message(domain=\'ui\',message="Sorry, the date is not today")\n
-  raise ValidationFailed (msg,)\n
-\n
-# Check for any other opened accounting date on the same site\n
-accounting_date_uid = accounting_date.getUid()\n
-opened_accounting_date_list = accounting_date.portal_catalog(portal_type=\'Accounting Date\', site_uid=site_uid, simulation_state=\'opened\')\n
-for opened_accounting_date in opened_accounting_date_list:\n
-  if opened_accounting_date.getUid() != accounting_date_uid:\n
-    msg = Message(domain=\'ui\',message="Sorry, there is already an opened accounting date")\n
-    raise ValidationFailed (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -147,10 +134,6 @@ for opened_accounting_date in opened_accounting_date_list:\n
                             <string>site_uid</string>
                             <string>None</string>
                             <string>msg</string>
-                            <string>accounting_date_uid</string>
-                            <string>opened_accounting_date_list</string>
-                            <string>_getiter_</string>
-                            <string>opened_accounting_date</string>
                           </tuple>
                         </value>
                     </item>

@@ -71,14 +71,18 @@
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
+from DateTime import DateTime\n
 \n
 if date is None:\n
   # get current date\n
-  from DateTime import DateTime\n
   date = DateTime()\n
 \n
 # Make sure we have a date with no hours\n
-date = date.Date()\n
+try:\n
+  date = date.Date()\n
+except AttributeError:\n
+  # Assume that non-date parameter contains the bare date.\n
+  pass\n
 \n
 if site is None:\n
   # get site from user assignment\n
@@ -92,11 +96,20 @@ if site is None:\n
 # get only the office, not need of vault\n
 #context.log(\'Baobab_checkAccountingDateOpen\', \'get site for vault %s\' %(site))\n
 site = context.Baobab_getVaultSite(site)\n
+error = False\n
+if context.portal_catalog.countResults(portal_type=\'Accounting Date\', site_id=site.getId(), simulation_state="opened", limit=1)[0][0] == 0:\n
+  # If there is no opened accounting date, consider today as an openned accounting day.\n
+  if DateTime(date) < DateTime(DateTime().Date()):\n
+    error = True\n
+elif context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_date={\'query\':\'<=%s\' % (date, ), \'type\': \'date\', \'format\': \'%Y/%m/%d\'}, site_id=site.getId(), simulation_state="opened", limit=1)[0][0] == 0:\n
+  # If an accounting date is openned but posterior to checked date, verification fails.\n
+  error= True\n
 \n
-if context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_date={\'query\':\'<=%s\' % (date, ), \'type\': \'date\', \'format\': \'%Y/%m/%d\'}, site_id=site.getId(), simulation_state="opened", limit=1)[0][0] == 0:\n
-  raise Exception, context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_date={\'query\':\'<=%s\' % (date, ), \'type\': \'date\', \'format\': \'%Y/%m/%d\'}, site_id=site.getId(), simulation_state="opened", limit=1, src__=1)\n
+if error:\n
   msg = Message(domain = "ui", message="Transaction not in the good accounting date")\n
   raise ValidationFailed, (msg,)\n
+\n
+return "ok"\n
 
 
 ]]></string> </value>
@@ -161,14 +174,17 @@ if context.portal_catalog.countResults(portal_type=\'Accounting Date\', start_da
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>None</string>
                             <string>DateTime</string>
+                            <string>None</string>
                             <string>_getattr_</string>
+                            <string>AttributeError</string>
                             <string>context</string>
                             <string>site_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
-                            <string>Exception</string>
+                            <string>False</string>
+                            <string>error</string>
+                            <string>True</string>
                             <string>msg</string>
                           </tuple>
                         </value>
