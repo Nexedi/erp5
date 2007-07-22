@@ -287,8 +287,17 @@ class BaobabConduit(ERP5Conduit):
         parent_object_path = erp5_site_path + path
         try:
           # Get the object with the path
-          parent_object = object.restrictedTraverse(parent_object_path)
+          parent_object_path_list = parent_object_path.split('/')
+          root = getattr(object, parent_object_path_list[0])
+          parent_object = root
+          for subpath in parent_object_path_list[1:]:
+            parent_object = getattr(aq_base(parent_object), subpath, None)
+            if parent_object is None:
+              break
           if parent_object is not None:
+            # call restrictedTraverse to make sure to get object
+            # with acquisition, wich is required for creating sub object
+            parent_object = object.restrictedTraverse(parent_object_path)
             break
         except ConflictError:
           raise
@@ -322,10 +331,11 @@ class BaobabConduit(ERP5Conduit):
         subobject.setCareerRole('client')
         # We first try to get the organisation corresponding
         organisation_id = 'site_%s' % object_id[:3]
-        organisation = person_module_object.portal_catalog(
-                                              portal_type='Organisation',
-                                              id=organisation_id
-                                              )[0].getObject()
+        organisation = organisation_module_object._getOb(organisation_id)
+        #organisation = person_module_object.portal_catalog(
+        #                                      portal_type='Organisation',
+        #                                      id=organisation_id
+        #                                      )[0].getObject()
         subobject._setCareerSubordinationValue(organisation)
 
       else: # This is an organisation object
@@ -370,9 +380,14 @@ class BaobabConduit(ERP5Conduit):
       # Get the person or organisation thanks to the portal_type
       dest = findObjectFromSpecialPortalType(portal_type,object_id=object_id)
       if dest == None: return None
-      subobject = dest.newContent( portal_type = 'Agent'
-                                 , id          = object_id
-                                 )
+      try:
+        subobject = dest._getOb(object_id)
+      except (AttributeError, KeyError, TypeError):
+        subobject = None
+      if subobject is None:
+        subobject = dest.newContent( portal_type = 'Agent'
+                                   , id          = object_id
+                                   )
       # try to get the agent in the person module
       person = findObjectFromSpecialPortalType('Person_' + object_id)
       if person == None:
@@ -386,9 +401,14 @@ class BaobabConduit(ERP5Conduit):
       # Get the person or organisation thanks to the portal_type
       dest = findObjectFromSpecialPortalType(portal_type)
       if dest == None: return None
-      subobject = dest.newContent( portal_type = 'Agent Privilege'
-                                 , id          = object_id
-                                 )
+      try:
+        subobject = dest._getOb(object_id)
+      except (AttributeError, KeyError, TypeError):
+        subobject = None
+      if subobject is None:
+        subobject = dest.newContent( portal_type = 'Agent Privilege'
+                                   , id          = object_id
+                                   )
 
     ### handle inventory objects
     elif portal_type == 'Cash Inventory':
@@ -595,9 +615,11 @@ class BaobabConduit(ERP5Conduit):
         # we should get only 1 bank account
         bank_account_list = [x.getObject() for x in object.portal_catalog(
                                portal_type=('Bank Account'),
+                               string_index=bank_account_number,
                                )]
         # Make sure we have found the right bank account
         for bank_account in bank_account_list:
+           LOG('BaobabConduit editDocument account number',0, (bank_account.getInternalBankAccountNumber(), bank_account_number))
            if bank_account.getInternalBankAccountNumber() == bank_account_number:
              bank_account_object = bank_account
              break
@@ -808,6 +830,8 @@ class BaobabConduit(ERP5Conduit):
 
   def editMandataireNom(self, document, value):
     # Convert mandataire_nom to first_name
+    LOG('BaobabConduit.editMandataireNom, document', 0, document)
+    LOG('BaobabConduit.editMandataireNom, document.getAgentValue()', 0, document.getAgentValue())
     old_value = document.getAgentValue().getFirstName()
     new_value = value
     if old_value != new_value:
