@@ -1679,7 +1679,27 @@ class TestAccounting(ERP5TypeTestCase):
                                   payment_mode='check',
                                   batch_mode=1)
     self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
-    
+
+  def test_SourceDestinationReference(self):
+    """Check that source reference and destination reference are filled
+    automatically.
+    """
+    # clear all existing ids in portal ids
+    if hasattr(self.portal.portal_ids, 'dict_ids'):
+      self.portal.portal_ids.clear()
+    accounting_transaction = self.createAccountingTransaction()
+    self.portal.portal_workflow.doActionFor(
+          accounting_transaction, 'stop_action')
+    self.assertEquals('1', accounting_transaction.getSourceReference())
+    self.assertEquals('1', accounting_transaction.getDestinationReference())
+
+    other_transaction = self.createAccountingTransaction()
+    other_transaction.setDestinationSectionValue(self.other_vendor)
+    self.portal.portal_workflow.doActionFor(other_transaction, 'stop_action')
+    self.assertEquals('2', other_transaction.getSourceReference())
+    self.assertEquals('1', other_transaction.getDestinationReference())
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccounting))
