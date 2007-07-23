@@ -80,9 +80,9 @@ transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
 \n
 site = transaction.getSourceValue()\n
 \n
-if not transaction.Baobab_checkCounterOpened(site):\n
-  msg = Message(domain = "ui", message="Counter is not opened")\n
-  raise ValidationFailed, (msg,)\n
+#if not transaction.Baobab_checkCounterOpened(site):\n
+#  msg = Message(domain = "ui", message="Counter is not opened")\n
+#  raise ValidationFailed, (msg,)\n
 \n
 # For safety, check the consistency again.\n
 context.validateConsistency(state_change)\n

@@ -76,6 +76,12 @@ if destination is None:\n
   message = Message(domain="ui",message="Please select a destination")\n
   raise ValidationFailed, (message,)\n
 \n
+# Check that the destination is not empty\n
+description = object.getDescription()\n
+if description in (None, \'\'):\n
+  message = Message(domain="ui",message="Please set a description")\n
+  raise ValidationFailed, (message,)\n
+\n
 # Check that there is a least one line\n
 if len(object.objectValues())==0:\n
   message = Message(domain="ui",message="Please enter some check or checkbooks")\n
@@ -134,6 +140,7 @@ if len(object.objectValues())==0:\n
                             <string>destination</string>
                             <string>None</string>
                             <string>message</string>
+                            <string>description</string>
                             <string>len</string>
                           </tuple>
                         </value>

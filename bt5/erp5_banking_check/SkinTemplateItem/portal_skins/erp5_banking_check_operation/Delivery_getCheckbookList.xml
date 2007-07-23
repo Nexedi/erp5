@@ -89,17 +89,18 @@ if listbox is None:\n
   if node is None:\n
     node = context.getBaobabSource()\n
 \n
-  reference_date = DateTime()\n
+  if at_date is None:\n
+    at_date = DateTime()\n
   item_list = []\n
   listbox = []\n
   if node is not None or disable_node:\n
     getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
-    #context.log(\'Delivery_viewCheckbookInputDialog\', getCurrentTrackingList(at_date=reference_date, node=node,src__=1,where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'"))\n
-    #return [x.path for x in  getCurrentTrackingList(at_date=reference_date, node=node)]\n
+    #context.log(\'Delivery_viewCheckbookInputDialog\', getCurrentTrackingList(at_date=at_date, node=node,src__=1,where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'"))\n
+    #return [x.path for x in  getCurrentTrackingList(at_date=at_date, node=node)]\n
     if disable_node:\n
       node=None\n
     current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
-                               at_date=reference_date, node=node,\n
+                               at_date=at_date, node=node,\n
                                where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
     for item in current_tracking_list:\n
       exclude=0\n
@@ -129,18 +130,21 @@ if listbox is None:\n
           item_dict[\'resource_title\'] = item.getResourceTitle()\n
           item_dict[\'destination_trade\'] = item.getDestinationTradeTitle()\n
           item_dict[\'check_amount_title\'] = item.getCheckAmountTitle()\n
+          item_dict[\'internal_bank_account_number\'] = \'\'\n
+          destination_payment_value = item.getDestinationPaymentValue()\n
+          if destination_payment_value is not None:\n
+            item_dict[\'internal_bank_account_number\'] = destination_payment_value.getInternalBankAccountNumber()\n
           item_dict[\'selection\'] = 0\n
           item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
 \n
           listbox.append(item_dict)\n
 \n
-if batch_mode:\n
-  return listbox\n
-context.Base_updateDialogForm(listbox=listbox\n
-                              )\n
-return context.asContext(context=None\n
-                         , portal_type=context.getPortalType()\n
-                         ).CheckbookDelivery_fastInputForm(**kw)\n
+return listbox\n
+#context.Base_updateDialogForm(listbox=listbox\n
+#                              )\n
+#return context.asContext(context=None\n
+#                         , portal_type=context.getPortalType()\n
+#                         ).CheckbookDelivery_fastInputForm(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -163,7 +167,7 @@ return context.asContext(context=None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,**kw</string> </value>
+            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,at_date=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -183,7 +187,7 @@ return context.asContext(context=None\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -196,6 +200,7 @@ return context.asContext(context=None\n
                             <string>batch_mode</string>
                             <string>simulation_state</string>
                             <string>disable_node</string>
+                            <string>at_date</string>
                             <string>kw</string>
                             <string>DateTime</string>
                             <string>Dummy</string>
@@ -205,7 +210,6 @@ return context.asContext(context=None\n
                             <string>vault</string>
                             <string>None</string>
                             <string>context</string>
-                            <string>reference_date</string>
                             <string>item_list</string>
                             <string>getCurrentTrackingList</string>
                             <string>append</string>
@@ -221,7 +225,7 @@ return context.asContext(context=None\n
                             <string>item_portal_type</string>
                             <string>item_dict</string>
                             <string>_write_</string>
-                            <string>_apply_</string>
+                            <string>destination_payment_value</string>
                           </tuple>
                         </value>
                     </item>
@@ -241,12 +245,13 @@ return context.asContext(context=None\n
                 <int>0</int>
                 <none/>
                 <int>0</int>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_viewCheckbookInputDialog</string> </value>
+            <value> <string>Delivery_getCheckbookList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

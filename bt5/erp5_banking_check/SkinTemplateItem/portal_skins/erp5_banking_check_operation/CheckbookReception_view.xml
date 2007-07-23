@@ -95,9 +95,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_destination_section</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

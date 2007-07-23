@@ -71,7 +71,7 @@ if vault is not None:\n
   if not vault.endswith(\'encaisse_des_billets_et_monnaies\'):\n
     vault = "%s/%s" % (vault,\'encaisse_des_billets_et_monnaies\')\n
 \n
-listbox_data = context.Delivery_viewCheckbookInputDialog(batch_mode=1,node=vault)\n
+listbox_data = context.Delivery_getCheckbookList(batch_mode=1,node=vault,at_date=at_date)\n
 \n
 result_list = []\n
 i=0\n
@@ -101,7 +101,7 @@ return result_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault=None,at_date=None,from_date=None,**kw</string> </value>
+            <value> <string>vault=None,at_date=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,7 +121,7 @@ return result_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -129,7 +129,6 @@ return result_list\n
                           <tuple>
                             <string>vault</string>
                             <string>at_date</string>
-                            <string>from_date</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
@@ -142,6 +141,7 @@ return result_list\n
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>_apply_</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
@@ -154,7 +154,6 @@ return result_list\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
                 <none/>
                 <none/>
               </tuple>

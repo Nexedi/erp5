@@ -16,18 +16,12 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>rejected</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -37,7 +31,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>Rejected</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -45,6 +39,12 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
+                <string>delete</string>
+                <string>delete_action</string>
+                <string>deliver</string>
+                <string>deliver_action</string>
+                <string>draft</string>
+                <string>draft_action</string>
               </tuple>
             </value>
         </item>
@@ -74,11 +74,21 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                        <string>Reviewer</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Assistant</string>
+                        <string>Manager</string>
+                        <string>Reviewer</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Assistant</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
@@ -86,6 +96,8 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -94,11 +106,11 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                        <string>Reviewer</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Assistant</string>
+                        <string>Manager</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>

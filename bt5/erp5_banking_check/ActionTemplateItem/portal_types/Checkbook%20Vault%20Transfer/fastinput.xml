@@ -77,7 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/CheckbookDelivery_fastInputForm</string> </value>
+            <value> <string>string:${object_url}/CheckbookDelivery_fastInputForm?your_fast_input_type=checkbook_vault_transfer</string> </value>
         </item>
       </dictionary>
     </pickle>

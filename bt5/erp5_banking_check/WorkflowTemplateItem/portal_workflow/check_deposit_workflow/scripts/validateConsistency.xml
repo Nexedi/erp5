@@ -124,7 +124,7 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
     interval = getIntervalBetweenDates(check_operation_line.getStartDate(), check_operation_line.getStopDate())\n
     if interval[\'year\'] >= 3:\n
       if interval[\'month\'] > 0 or interval["day"] > 0:\n
-        msg = Message(domain=\'ui\', message="Check $s is more than 3 years old.",\n
+        msg = Message(domain=\'ui\', message="Check $check is more than 3 years old.",\n
                       mapping={"check" : check_operation_line.getAggregateFreeText()})\n
         raise ValidationFailed, (msg,)\n
       \n

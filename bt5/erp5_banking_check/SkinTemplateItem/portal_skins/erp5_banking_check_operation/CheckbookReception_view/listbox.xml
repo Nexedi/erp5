@@ -353,7 +353,7 @@
                           <string>Value of check</string>
                         </tuple>
                         <tuple>
-                          <string>destination_section</string>
+                          <string>destination_trade_title</string>
                           <string>Owner</string>
                         </tuple>
                         <tuple>
@@ -527,11 +527,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

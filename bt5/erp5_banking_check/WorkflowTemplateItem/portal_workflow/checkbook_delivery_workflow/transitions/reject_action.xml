@@ -21,15 +21,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Reject</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string></string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?field_my_workflow_action=reject_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>delete</string> </value>
+            <value> <string>reject</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delete_action</string> </value>
+            <value> <string>reject_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -77,9 +77,8 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Manager</string>
                 <string>Assignor</string>
-                <string>Assistant</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>

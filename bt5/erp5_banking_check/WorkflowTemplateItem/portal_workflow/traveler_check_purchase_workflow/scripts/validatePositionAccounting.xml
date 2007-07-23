@@ -84,12 +84,15 @@ transaction.Baobab_checkSameUserVault(source)\n
 # check we are in an opened accounting day\n
 transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
 \n
-site = transaction.getSourceValue()\n
+context.Baobab_checkCounterOpened(source)\n
 \n
-if \'guichet\' in site.getVaultType():\n
-  if not context.Baobab_checkCounterOpened(site):\n
-    msg = Message(domain = "ui", message="Counter is not opened")\n
-    raise ValidationFailed, (msg,)\n
+\n
+#site = transaction.getSourceValue()\n
+\n
+#if \'guichet\' in site.getVaultType():\n
+#  if not context.Baobab_checkCounterOpened(site):\n
+#    msg = Message(domain = "ui", message="Counter is not opened")\n
+#    raise ValidationFailed, (msg,)\n
 \n
 # First we have to look if we have some checks with some prices,\n
 # if so, this means that we are saling such kinds of check, thus\n
@@ -190,7 +193,6 @@ if total_credit>0:\n
                             <string>None</string>
                             <string>source</string>
                             <string>msg</string>
-                            <string>site</string>
                             <string>context</string>
                             <string>movement_list</string>
                             <string>total_credit</string>

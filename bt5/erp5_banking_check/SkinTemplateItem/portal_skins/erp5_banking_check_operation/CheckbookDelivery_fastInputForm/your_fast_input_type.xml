@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_destination_section</string> </value>
+            <value> <string>your_fast_input_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -173,7 +173,9 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -236,7 +238,7 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -248,7 +250,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Owner</string> </value>
+                    <value> <string>your_fast_input_type</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -271,18 +273,31 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getDestinationPaymentValue().getParentValue().getTitle()</string> </value>
+            <value> <string>python: getattr(request, \'fast_input_type\', \'\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>

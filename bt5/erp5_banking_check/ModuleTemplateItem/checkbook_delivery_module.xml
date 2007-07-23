@@ -5,6 +5,7 @@
    <name>Access Transient Objects</name>
    <role>Assignee</role>
    <role>Assignor</role>
+   <role>Assistant</role>
    <role>Associate</role>
    <role>Auditor</role>
    <role>Author</role>
@@ -18,6 +19,7 @@
    <name>Access contents information</name>
    <role>Assignee</role>
    <role>Assignor</role>
+   <role>Assistant</role>
    <role>Associate</role>
    <role>Auditor</role>
    <role>Author</role>
@@ -35,6 +37,7 @@
    <name>Access session data</name>
    <role>Assignee</role>
    <role>Assignor</role>
+   <role>Assistant</role>
    <role>Associate</role>
    <role>Auditor</role>
    <role>Authenticated</role>
@@ -305,6 +308,7 @@
   <permission type='tuple'>
    <name>Add portal content</name>
    <role>Assignor</role>
+   <role>Assistant</role>
    <role>Author</role>
    <role>Manager</role>
   </permission>
@@ -314,6 +318,7 @@
   </permission>
   <permission type='tuple'>
    <name>Add portal folders</name>
+   <role>Assistant</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -478,6 +483,7 @@
   <permission type='tuple'>
    <name>List folder contents</name>
    <role>Assignee</role>
+   <role>Assistant</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -644,6 +650,7 @@
    <name>View</name>
    <role>Assignee</role>
    <role>Assignor</role>
+   <role>Assistant</role>
    <role>Associate</role>
    <role>Auditor</role>
    <role>Author</role>
@@ -656,6 +663,7 @@
    <name>View History</name>
    <role>Assignee</role>
    <role>Assignor</role>
+   <role>Assistant</role>
    <role>Associate</role>
    <role>Auditor</role>
    <role>Author</role>

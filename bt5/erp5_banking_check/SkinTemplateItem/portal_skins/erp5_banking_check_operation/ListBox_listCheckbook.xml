@@ -80,74 +80,47 @@ item_list = []\n
 listbox = []\n
 invalid_check_state_list = (\'draft\', \'confirmed\')\n
 \n
-getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
-current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
-                           at_date=reference_date, node=node,\n
-                           where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
-\n
-context_portal_type = context.getPortalType()\n
 simulation_state = None\n
 model_filter_dict = {}\n
+fast_input_type = getattr(request, \'your_fast_input_type\', None)\n
+if fast_input_type is None:\n
+  fast_input_type = getattr(request, \'field_your_fast_input_type\')\n
+\n
+context.log(\'ListBox_listCheckbook, fast_input_type\', fast_input_type)\n
+\n
+\n
 disable_node = 0\n
-if context_portal_type == \'Traveler Check Purchase\':\n
+at_date = context.getStartDate()\n
+if fast_input_type == \'traveler_check_purchase\':\n
   model_filter_dict[\'fixed_price\']=1\n
   item_portal_type_list = (\'Check\',)\n
   destination_payment = context.getDestinationPayment()\n
   disable_node = 1\n
-elif context_portal_type == \'Traveler Check Sale\':\n
+if fast_input_type == \'checkbook_delivery\':\n
+  destination_payment = context.getDestinationPayment()\n
+elif fast_input_type == \'traveler_check_sale\':\n
   model_filter_dict[\'fixed_price\']=1\n
   item_portal_type_list = (\'Check\',)\n
-elif context_portal_type == \'Checkbook Movement\':\n
+elif fast_input_type == \'checkbook_movement\':\n
   # Nothing special here\n
   pass\n
-elif context_portal_type == \'Checkbook Usual Cash Transfer\':\n
+elif fast_input_type == \'checkbook_vault_transfer\':\n
+  # Nothing special here\n
+  pass\n
+elif fast_input_type == \'checkbook_usual_cash_transfer\':\n
   model_filter_dict[\'fixed_price\']=1\n
   item_portal_type_list = (\'Check\',)\n
 \n
 \n
 \n
-context.log(\'current_tracking_list\',current_tracking_list)\n
-context.log(\'context_portal_type\',context_portal_type)\n
-context.log(\'item_portal_type_list\',item_portal_type_list)\n
-for item in current_tracking_list:\n
-  exclude=0\n
-  if model_filter_dict is not None:\n
-    resource = item.getResourceValue()\n
-    for property,value in model_filter_dict.items():\n
-      if resource.getProperty(property)!=value:\n
-        exclude=1\n
-  if destination_payment is not None:\n
-    if destination_payment!=item.getDestinationPayment():\n
-      exclude=1\n
-  context.log(\'exclude\',exclude)\n
-  if not exclude:\n
-    item_portal_type = item.getPortalType()\n
-    context.log(\'item_portal_type\',item_portal_type)\n
-    if item_portal_type  in item_portal_type_list:\n
-      if item_portal_type==\'Check\' and item.getSimulationState() not in (\'draft\',\'confirmed\'):\n
-        continue\n
-      context.log(\'simulation_state\',simulation_state)\n
-      if simulation_state is not None:\n
-        context.log(\'item\',item.getRelativeUrl())\n
-        context.log(\'item.getSimulationState\',item.getSimulationState())\n
-        context.log(\'item.getReferenceRangeMin\',item.getReference())\n
-        if item.getSimulationState()!=simulation_state:\n
-          continue\n
-      item_dict = {}\n
-      if item_portal_type==\'Check\':\n
-        item_dict[\'reference_range_max\'] = item.getReference()\n
-        item_dict[\'reference_range_min\'] = item.getReference()\n
-      else:\n
-        item_dict[\'reference_range_min\'] = item.getReferenceRangeMin()\n
-        item_dict[\'reference_range_max\'] = item.getReferenceRangeMax()\n
-      item_dict[\'resource_title\'] = item.getResourceTitle()\n
-      item_dict[\'destination_trade\'] = item.getDestinationTradeTitle()\n
-      item_dict[\'check_amount_title\'] = item.getCheckAmountTitle()\n
-      item_dict[\'selection\'] = 0\n
-      item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
-\n
-      listbox.append(item_dict)\n
-\n
+listbox = context.Delivery_getCheckbookList(\n
+                    item_portal_type_list=item_portal_type_list,\n
+                    destination_payment=destination_payment,\n
+                    model_filter_dict=model_filter_dict,\n
+                    simulation_state=simulation_state,\n
+                    disable_node=disable_node,\n
+                    at_date=at_date,\n
+                    node=node)\n
 \n
 context.Base_updateDialogForm(listbox=listbox)\n
 return context.ListBox_initializeFastInput()\n
@@ -213,24 +186,13 @@ return context.ListBox_initializeFastInput()\n
                             <string>item_list</string>
                             <string>listbox</string>
                             <string>invalid_check_state_list</string>
-                            <string>getCurrentTrackingList</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>current_tracking_list</string>
-                            <string>context_portal_type</string>
                             <string>simulation_state</string>
                             <string>model_filter_dict</string>
+                            <string>getattr</string>
+                            <string>fast_input_type</string>
                             <string>disable_node</string>
+                            <string>at_date</string>
                             <string>_write_</string>
-                            <string>item</string>
-                            <string>exclude</string>
-                            <string>resource</string>
-                            <string>property</string>
-                            <string>value</string>
-                            <string>item_portal_type</string>
-                            <string>item_dict</string>
                           </tuple>
                         </value>
                     </item>
