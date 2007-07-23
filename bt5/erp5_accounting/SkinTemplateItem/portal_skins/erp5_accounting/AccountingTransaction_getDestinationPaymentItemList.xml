@@ -68,26 +68,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def sort(a, b):\n
-  return cmp(a[0], b[0])\n
-\n
-item_list = [[\'\', \'\']]\n
-\n
-entity = context.getDestinationSectionValue()\n
-if entity is not None:\n
-  bank_account_id_list = entity.contentIds(filter={\'portal_type\':\n
-                 entity.getPortalPaymentNodeTypeList()})\n
-  for bank_account_id in bank_account_id_list:\n
-    # skip objects we are not allowed to access\n
-    bank_account = entity.restrictedTraverse(bank_account_id, None)\n
-    if bank_account is not None and \\\n
-              bank_account.getValidationState() != \'invalidated\':\n
-      url = bank_account.getRelativeUrl()\n
-      label = bank_account.getReference() or bank_account.getTitle()\n
-      item_list.append([label, url])\n
-\n
-item_list.sort(sort)\n
-return item_list\n
+            <value> <string>return context.AccountModule_getBankAccountItemList(\n
+        organisation=context.getDestinationSection(),\n
+        skip_invalidated_bank_accounts=\n
+                    (context.getSimulationState() != \'delivered\'))\n
 </string> </value>
         </item>
         <item>
@@ -130,18 +114,8 @@ return item_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>sort</string>
-                            <string>item_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>entity</string>
-                            <string>None</string>
-                            <string>bank_account_id_list</string>
-                            <string>_getiter_</string>
-                            <string>bank_account_id</string>
-                            <string>bank_account</string>
-                            <string>url</string>
-                            <string>label</string>
                           </tuple>
                         </value>
                     </item>
