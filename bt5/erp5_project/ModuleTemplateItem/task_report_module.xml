@@ -64,9 +64,6 @@
    <name>Add CMF Caching Policy Managers</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Add CMF Calendar Tools</name>
-  </permission>
   <permission type='tuple'>
    <name>Add CMF Core Tools</name>
    <role>Manager</role>
@@ -95,6 +92,9 @@
    <name>Add CMFActivity Tools</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add CMFCalendar Tools</name>
+  </permission>
   <permission type='tuple'>
    <name>Add CMFCategory Tools</name>
    <role>Manager</role>
@@ -102,6 +102,30 @@
   <permission type='tuple'>
    <name>Add CMFMailIn Tools</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add CMFWiki Comment</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ChartObject</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ChartTemplate</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Elements</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Slot Classs</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Slots</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composite Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Composites</name>
   </permission>
   <permission type='tuple'>
    <name>Add Configured CMF Sites</name>
@@ -246,6 +270,9 @@
    <name>Add Plugin Registrys</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
+  </permission>
   <permission type='tuple'>
    <name>Add Python Scripts</name>
    <role>Manager</role>
@@ -257,6 +284,9 @@
   <permission type='tuple'>
    <name>Add ReStructuredText Documents</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add RenderableObject</name>
   </permission>
   <permission type='tuple'>
    <name>Add Session Data Manager</name>
@@ -276,10 +306,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add User Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Versions</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -305,17 +331,15 @@
    <name>Add ZCatalogs</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>Add ZMailIn Clients</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add ZMailMessages</name>
-   <role>Manager</role>
+  <permission type='list'>
+   <name>Add ZGDCharts</name>
   </permission>
   <permission type='tuple'>
    <name>Add ZODB Mount Points</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add Zope Schedulers</name>
   </permission>
   <permission type='tuple'>
    <name>Add Zope Tutorials</name>
@@ -348,6 +372,12 @@
   <permission type='tuple'>
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Change CMFWiki Regulations</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Composites</name>
   </permission>
   <permission type='tuple'>
    <name>Change DTML Documents</name>
@@ -409,13 +439,8 @@
    <name>Change Versions</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>Change ZMailIn</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change ZMailMessages</name>
-   <role>Manager</role>
+  <permission type='list'>
+   <name>Change ZGDChart</name>
   </permission>
   <permission type='tuple'>
    <name>Change bindings</name>
@@ -453,12 +478,14 @@
    <name>Change proxy roles</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Change user folder</name>
-  </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
+   <role>Assignor</role>
+   <role>Author</role>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Create CMFWiki Page</name>
   </permission>
   <permission type='tuple'>
    <name>Create Transient Objects</name>
@@ -480,6 +507,9 @@
   <permission type='tuple'>
    <name>Download ExtFile/ExtImage</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Edit CMFWiki Page</name>
   </permission>
   <permission type='tuple'>
    <name>Edit Factories</name>
@@ -568,6 +598,9 @@
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
+  </permission>
   <permission type='tuple'>
    <name>Manage languages</name>
    <role>Manager</role>
@@ -597,16 +630,15 @@
    <role>Assignor</role>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Move CMFWiki Page</name>
+  </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connection</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connections</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Post mail to ZMailIn</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -669,6 +701,9 @@
    <name>Use Factories</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Use external editor</name>
+  </permission>
   <permission type='tuple'>
    <name>Use mailhost services</name>
    <role>Manager</role>
@@ -692,10 +727,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>View ZMailMessage</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>View management screens</name>
    <role>Manager</role>
   </permission>
@@ -712,31 +743,10 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Zwiki: Add comments</name>
+   <name>ZopeScheduler: Manage scheduling task</name>
   </permission>
   <permission type='list'>
-   <name>Zwiki: Add pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Add wikis</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Change page types</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Delete pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Edit pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Rate pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Rename pages</name>
-  </permission>
-  <permission type='list'>
-   <name>Zwiki: Reparent pages</name>
+   <name>ZopeScheduler: Schedule tasks</name>
   </permission>
  </permission_list>
  <portal_type>Task Report Module</portal_type>
