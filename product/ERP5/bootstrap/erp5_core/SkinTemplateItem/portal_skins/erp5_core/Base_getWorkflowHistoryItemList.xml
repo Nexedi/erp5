@@ -72,6 +72,7 @@
 from Products.ERP5Type.Document import newTempBase\n
 from Products.ERP5Type.Document import newTempMappedValue\n
 \n
+marker = []\n
 result = []\n
 i = 1\n
 portal_object = context.getPortalObject()\n
@@ -100,17 +101,17 @@ for workflow_item in workflow_item_list:\n
     if key.endswith(\'state\'): \n
       key = \'state\'\n
       if display:\n
-        value = wf_states.get(value, None) and wf_states[value].title\n
+        value = wf_states.get(value, marker) and wf_states[value].title\n
       else:\n
-        value = wf_states.get(value, None) and wf_states[value].id\n
+        value = wf_states.get(value, marker) and wf_states[value].id\n
     if key == \'action\':\n
       if value != \'\' and value is not None:\n
         if value == "\'edit\'":\n
           value = "edit"\n
         if display:\n
-          value = wf_transitions.get(value, None) and (wf_transitions[value].title or wf_transitions[value].actbox_name) or value\n
+          value = wf_transitions.get(value, marker) and (wf_transitions[value].title or wf_transitions[value].actbox_name) or value\n
         else:\n
-          value = wf_transitions.get(value, None) and (wf_transitions[value].id or wf_transitions[value].actbox_name) or value\n
+          value = wf_transitions.get(value, marker) and (wf_transitions[value].id or wf_transitions[value].actbox_name) or value\n
     if display:\n
       if key == \'error_message\' and not same_type(value, \'\'):\n
         value = \'%s\' %value\n
@@ -118,7 +119,7 @@ for workflow_item in workflow_item_list:\n
         value = context.Localizer.erp5_ui.gettext(value)\n
       elif same_type(value, \'\') and key in ( \'action\', \'state\' ): \n
         value = context.Localizer.erp5_ui.gettext(value)\n
-    if value is None:\n
+    if value is marker:\n
       value = \'Does not exist\'\n
     o.setProperty(key, value)\n
  \n
@@ -205,6 +206,7 @@ return result\n
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>newTempMappedValue</string>
+                            <string>marker</string>
                             <string>result</string>
                             <string>i</string>
                             <string>portal_object</string>
