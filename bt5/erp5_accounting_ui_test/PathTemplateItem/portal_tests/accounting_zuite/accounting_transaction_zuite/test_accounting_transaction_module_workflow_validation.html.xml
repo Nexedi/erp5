@@ -177,11 +177,11 @@ Accounting Transaction Module Workflow Actions\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[8]</td>\n
   <td>Draft</td>\n
 </tr>\n
-<!-- now it\'s Validated -->\n
+<!-- now it\'s Stopped -->\n
 <tr>\n
   <td>assertText</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[8]</td>\n
-  <td>Validated</td>\n
+  <td>Stopped</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -245,7 +245,7 @@ Accounting Transaction Module Workflow Actions\n
 <tr>\n
   <td>assertText</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[8]</td>\n
-  <td>Validated</td>\n
+  <td>Stopped</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -275,12 +275,12 @@ Accounting Transaction Module Workflow Actions\n
 <tr>\n
   <td>assertText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[8]</td>\n
-  <td>Validated</td>\n
+  <td>Stopped</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[8]</td>\n
-  <td>Validated</td>\n
+  <td>Stopped</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n

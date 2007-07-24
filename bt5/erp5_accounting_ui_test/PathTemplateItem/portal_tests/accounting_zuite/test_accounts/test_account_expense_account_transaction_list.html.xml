@@ -113,7 +113,7 @@ Test Transactions related to an account\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[7]</td>\n
-  <td>Validated</td>\n
+  <td>Stopped</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
@@ -159,7 +159,7 @@ Test Transactions related to an account\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[7]</td>\n
-  <td>Validated</td>\n
+  <td>Stopped</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n

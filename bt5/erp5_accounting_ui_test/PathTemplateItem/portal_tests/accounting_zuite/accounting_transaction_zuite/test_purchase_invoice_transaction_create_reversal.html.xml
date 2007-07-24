@@ -198,7 +198,7 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
 </tr>\n
 <tr>\n
   <td>assertTextPresent</td>\n
-  <td>Validated</td>\n
+  <td>Stopped</td>\n
   <td></td>\n
 </tr>\n
 <!-- next step to delivered step. -->\n
