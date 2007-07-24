@@ -459,10 +459,10 @@ class BaobabConduit(ERP5Conduit):
            inventory_currency == currency_id    and \
            inventory_vault    == vault_path     :
           new_inventory = inventory
-          LOG( 'BaobabConduit:'
-             , 0
-             , "previous Cash Inventory found (%s) !" % (repr(new_inventory))
-             )
+          #LOG( 'BaobabConduit:'
+          #   , 0
+          #   , "previous Cash Inventory found (%s) !" % (repr(new_inventory))
+          #   )
           break
       # no previous inventory found, create one
       if new_inventory == None:
@@ -498,7 +498,7 @@ class BaobabConduit(ERP5Conduit):
     if object == None: return
 
     ### Cash Inventory objects needs two properties to generate the vault path
-    LOG('BaobabConduit.editDocument, object', 0, object)
+    #LOG('BaobabConduit.editDocument, object', 0, object)
     if object.getPortalType() == 'Cash Inventory Group':
       vault_path = self.getVaultPathFromCodification( object         = object
                                                     , agency_code    = kw['agency_code']
