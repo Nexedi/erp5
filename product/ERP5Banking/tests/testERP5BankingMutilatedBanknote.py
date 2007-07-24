@@ -70,6 +70,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
       Method called before the launch of the test to initialize some data
     """
+    self.simulation_tool = self.getSimulationTool()
     # Set some variables :
     self.initDefaultVariable()
     # the cahs transfer module
@@ -88,8 +89,10 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
 
     line_list = [inventory_dict_line_1,]
     self.mutilated_banknote_vault = self.paris.surface.caisse_courante.billets_mutiles
+    self.maculated_banknote_vault = self.paris.surface.caisse_courante.billets_macules
     self.usual_vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.hq_mutilated_banknote_vault = self.siege.surface.caisse_courante.billets_mutiles
+    self.hq_maculated_banknote_vault = self.siege.surface.caisse_courante.billets_macules
     self.hq_usual_vault = self.siege.surface.caisse_courante.encaisse_des_billets_et_monnaies
     
     self.createCashInventory(source=None, destination=self.usual_vault, currency=self.currency_1,
@@ -147,13 +150,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check the initial inventory before any operations
     """
-    self.simulation_tool = self.getSimulationTool()
     # check we have 5 banknotes of 10000 in mutilated_banknote
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    # check we have 12 coin of 200 in mutilated_banknote
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=5.0)
+    # mutilated banknote inventory contains no 10000 banknote
+    self.checkBanknoteInventory(node_path=self.mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
+    # maculated banknote inventory contains no 10000 banknote
+    self.checkBanknoteInventory(node_path=self.maculated_banknote_vault.getRelativeUrl(), quantity=0.0)
 
   def stepCreateMutilatedBanknote(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -309,19 +311,10 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check the final inventory when document got rejected without HQ request
     """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=5.0)
+    self.checkFinalInventory()
 
-  def stepCheckFinalInventoryWithNoPayBackAfterHQRequest(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check the final inventory when document got rejected with HQ request
-    """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+  stepCheckFinalInventoryWithNoPayBackAfterHQRequest = stepCheckFinalInventoryWithNoPayBack
 
   def stepClearMutilatedBanknoteModule(self, sequence=None, sequence_list=None, **kw):
     """
@@ -412,22 +405,17 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
         self.fail('Wrong cell created : %s' % cell.getId())
 
   def stepCheckFinalInventoryWithPayBack(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check the initial inventory before any operations
-    """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=0.0)
+    self.checkFinalInventory()
 
-  def stepCheckFinalInventoryWithPayBackAfterHQRequest(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check the initial inventory before any operations
-    """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+  def checkFinalInventory(self):
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault.getRelativeUrl(), quantity=5.0)
+    self.checkBanknoteInventory(node_path=self.mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
+    self.checkBanknoteInventory(node_path=self.maculated_banknote_vault.getRelativeUrl(), quantity=0.0)
+    self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
+    self.checkBanknoteInventory(node_path=self.hq_maculated_banknote_vault.getRelativeUrl(), quantity=0.0)
+
+  stepCheckFinalInventoryWithPayBackAfterHQRequest = stepCheckFinalInventoryWithPayBack
 
   #
   # Headquarter part
@@ -450,13 +438,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check the initial inventory before any operations
     """
-    self.simulation_tool = self.getSimulationTool()
     # check we have 5 banknotes of 10000 in mutilated_banknote
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    # check we have 12 coin of 200 in mutilated_banknote
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault.getRelativeUrl(), quantity=5.0)
+    # mutilated banknote inventory contains no 10000 banknote
+    self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
+    # maculated banknote inventory contains no 10000 banknote
+    self.checkBanknoteInventory(node_path=self.hq_maculated_banknote_vault.getRelativeUrl(), quantity=0.0)
 
   def stepCreateHQMutilatedBanknote(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -475,6 +462,8 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.hq_mutilated_banknote.getSource(), 'site/testsite/siege')
     self.assertEqual(self.hq_mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
     self.assertEqual(self.hq_mutilated_banknote.getDestination(), self.hq_mutilated_banknote_vault.getRelativeUrl())
+    # set causality
+    self.hq_mutilated_banknote.setCausalityValue(self.mutilated_banknote)
     # set source reference
     self.setDocumentSourceReference(self.hq_mutilated_banknote)
     # check source reference
@@ -562,14 +551,44 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "finished")
     sequence.edit(headquarter=1)
 
+  def checkBanknoteInventory(self, node_path, quantity):
+    """
+      Check that node contains expected quantity of banknotes.
+    """
+    resource_path = self.billet_10000.getRelativeUrl()
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=node_path, resource=resource_path), quantity)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=node_path, resource=resource_path), quantity)
+
+  def stepCheckMutilatedBanknoteInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check mutilated banknote inventory
+    """
+    self.checkBanknoteInventory(node_path=self.mutilated_banknote_vault.getRelativeUrl(), quantity=5.0)
+
+  def stepCheckHQMutilatedBanknoteInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check HQ mutilated banknote inventory
+    """
+    self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=5.0)
+
+  def stepCheckMaculatedBanknoteInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check maculated banknote inventory
+    """
+    self.checkBanknoteInventory(node_path=self.maculated_banknote_vault.getRelativeUrl(), quantity=5.0)
+
+  def stepCheckHQMaculatedBanknoteInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check HQ maculated banknote inventory
+    """
+    self.checkBanknoteInventory(node_path=self.hq_maculated_banknote_vault.getRelativeUrl(), quantity=5.0)
+
   def stepCheckHQFinalInventoryWithNoPayBack(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the initial inventory before any operations
     """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=5.0)
+    self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
 
   def stepClearHQMutilatedBanknoteModule(self, sequence=None, sequence_list=None, **kw):
     """
@@ -611,10 +630,20 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check the final inventory when the mutilated payment was approved by headquaters.
     """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_usual_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.hq_mutilated_banknote_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault.getRelativeUrl(), quantity=5.0)
+    self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
+
+  def stepSetMaculatedState(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Inform that the banknotes are in a maculated state, not in a mutilated state.
+    """
+    self.mutilated_banknote.setDestinationValue(self.maculated_banknote_vault)
+
+  def stepSetHQMaculatedState(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Inform that the banknotes are in a maculated state, not in a mutilated state.
+    """
+    self.hq_mutilated_banknote.setDestinationValue(self.hq_maculated_banknote_vault)
 
   ##################################
   ##  Tests
@@ -626,24 +655,26 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # define the sequence
-    # sequence 1 : no payback
+    # sequence 1 : no payback, mutilated banknotes
     sequence_string_1 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                         + 'CreateMutilatedBanknote Tic TryStopWithNoLineDefined ' \
                         + 'CreateIncomingLine Tic TryStopWithNoAmountDefined ' \
                         + 'StopDocument Tic ' \
+                        + 'CheckMutilatedBanknoteInventory ' \
                         + 'ArchiveDocument Tic ' \
                         + 'CheckFinalInventoryWithNoPayBack ClearMutilatedBanknoteModule'
     
-    # sequence 2 : pay back
+    # sequence 2 : pay back, maculated banknotes
     sequence_string_2 = 'Tic CheckObjects Tic CheckInitialInventory ' \
-                        + 'CreateMutilatedBanknote Tic ' \
+                        + 'CreateMutilatedBanknote SetMaculatedState Tic ' \
                         + 'CreateIncomingLine Tic ' \
                         + 'StopDocument Tic ' \
+                        + 'CheckMaculatedBanknoteInventory ' \
                         + 'TryFinishWithNoLineDefined CreateExchangedLine Tic TryFinishWithNoAmountDefined FinishDocument Tic ' \
                         + 'TryDeliverWithNoLineDefined CreateOutgoingLine Tic TryDeliverWithWrongAmountDefined DeliverDocument Tic ' \
                         + 'CheckFinalInventoryWithPayBack ClearMutilatedBanknoteModule'
 
-    # sequence 3 : ask headquarters then no payback
+    # sequence 3 : ask headquarters then no payback, mutilated banknotes
     sequence_string_3 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                         + 'CreateMutilatedBanknote Tic ' \
                         + 'CreateIncomingLine Tic ' \
@@ -653,6 +684,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CheckHQInitialInventory ' \
                         + 'CreateHQMutilatedBanknote Tic '\
                         + 'TryStopHQWithNoLineDefined Tic CreateHQIncomingLine Tic TryStopHQWithNoAmountDefined StopHQDocument Tic ' \
+                        + 'CheckHQMutilatedBanknoteInventory ' \
                         + 'TryPlanHQDocument ' \
                         + 'ArchiveHQDocument Tic ' \
                         + 'HQLogout ' \
@@ -660,15 +692,16 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'ArchiveDocument Tic ' \
                         + 'CheckFinalInventoryWithNoPayBackAfterHQRequest ClearMutilatedBanknoteModule'
     
-    # sequence 4 : ask headquarters then payback
+    # sequence 4 : ask headquarters then payback, maculated banknotes
     sequence_string_4 = 'Tic CheckObjects Tic CheckInitialInventory ' \
-                        + 'CreateMutilatedBanknote Tic ' \
+                        + 'CreateMutilatedBanknote SetMaculatedState Tic ' \
                         + 'CreateIncomingLine Tic ' \
                         + 'StopDocument Tic ' \
+                        + 'CheckHQMaculatedBanknoteInventory ' \
                         + 'PlanDocument Tic ' \
                         + 'HQLogin ' \
                         + 'CheckHQInitialInventory ' \
-                        + 'CreateHQMutilatedBanknote Tic '\
+                        + 'CreateHQMutilatedBanknote SetHQMaculatedState Tic ' \
                         + 'CreateHQIncomingLine Tic StopHQDocument Tic ' \
                         + 'TryFinishHQWithNoLineDefined CreateHQExchangedLine Tic TryFinishHQWithNoAmountDefined FinishHQDocument Tic ' \
                         + 'HQLogout ' \
