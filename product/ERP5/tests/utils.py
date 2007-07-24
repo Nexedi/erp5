@@ -25,16 +25,17 @@
 #
 ##############################################################################
 
+import os.path
 import tarfile
 import xml.parsers.expat
 import xml.dom.minidom
 from urllib import url2pathname
 
 
-class BusinessTemplateInfo:
+class BusinessTemplateInfoBase:
 
-  def __init__(self, tar_path):
-    self.tar = tarfile.open(tar_path, 'r:gz')
+  def __init__(self, target):
+    self.target = target
     self.setUp()
 
   def setUp(self):
@@ -48,28 +49,41 @@ class BusinessTemplateInfo:
     self.setUpAllowedContentTypes()
     self.setUpActions()
 
+  def findFileInfosByName(self, startswith='', endswith=''):
+    raise NotImplementedError
+
+  def getFileInfo(self, name):
+    raise NotImplementedError
+
+  def getFileInfoName(self, fileinfo):
+    raise NotImplementedError
+
+  def readFileInfo(self, fileinfo):
+    raise NotImplementedError
+
+  def getPrefix(self):
+    raise NotImplementedError
+
   def setUpTitle(self):
-    for tarinfo in self.tar.getmembers():
-      if tarinfo.name.endswith('/bt/title'):
-        self.title = self.tar.extractfile(tarinfo).read()
+    for i in self.findFileInfosByName(endswith='/bt/title'):
+      self.title = self.readFileInfo(i)
 
   def setUpModules(self):
-    name = '%s/ModuleTemplateItem/' % self.title
-    for tarinfo in self.tar.getmembers():
-      if tarinfo.name.startswith(name) and tarinfo.type==tarfile.REGTYPE:
-        source = self.tar.extractfile(tarinfo).read()
-        doc = xml.dom.minidom.parseString(source)
-        module_id = doc.getElementsByTagName('id')[0].childNodes[0].data
-        portal_type = doc.getElementsByTagName('portal_type')[0].childNodes[0].data
-        self.modules[module_id] = portal_type
+    name = '%s/ModuleTemplateItem/' % self.getPrefix()
+    for i in self.findFileInfosByName(startswith=name):
+      source = self.readFileInfo(i)
+      doc = xml.dom.minidom.parseString(source)
+      module_id = doc.getElementsByTagName('id')[0].childNodes[0].data
+      portal_type = doc.getElementsByTagName('portal_type')[0].childNodes[0].data
+      self.modules[module_id] = portal_type
 
   def setUpAllowedContentTypes(self):
-    name = '%s/PortalTypeAllowedContentTypeTemplateItem/allowed_content_types.xml' % self.title
+    name = '%s/PortalTypeAllowedContentTypeTemplateItem/allowed_content_types.xml' % self.getPrefix()
     try:
-      tarinfo = self.tar.getmember(name)
-    except KeyError:
+      fileinfo = self.getFileInfo(name)
+    except NotFoundError:
       return
-    source = self.tar.extractfile(tarinfo).read()
+    source = self.readFileInfo(fileinfo)
     doc = xml.dom.minidom.parseString(source)
     for portal_type_node in doc.getElementsByTagName('portal_type'):
       portal_type = portal_type_node.getAttribute('id')
@@ -130,11 +144,74 @@ class BusinessTemplateInfo:
       p.Parse(source)
       return handler.data
 
-    name = '%s/ActionTemplateItem/portal_types/' % self.title
-    for tarinfo in self.tar.getmembers():
-      if tarinfo.name.startswith(name) and tarinfo.type==tarfile.REGTYPE:
-        portal_type = url2pathname(tarinfo.name.split('/')[-2])
-        if not portal_type in self.actions:
-          self.actions[portal_type] = []
-        data = parse(self.tar.extractfile(tarinfo).read())
-        self.actions[portal_type].append(data)
+    name = '%s/ActionTemplateItem/portal_types/' % self.getPrefix()
+    for i in self.findFileInfosByName(startswith=name):
+      portal_type = url2pathname(self.getFileInfoName(i).split('/')[-2])
+      if not portal_type in self.actions:
+        self.actions[portal_type] = []
+      data = parse(self.readFileInfo(i))
+      self.actions[portal_type].append(data)
+
+
+class NotFoundError(Exception):
+  """FileInfo does not exists."""
+
+
+class BusinessTemplateInfoTar(BusinessTemplateInfoBase):
+
+  def __init__(self, target):
+    self.target = tarfile.open(target, 'r:gz')
+    self.setUp()
+
+  def getPrefix(self):
+    return self.title
+
+  def findFileInfosByName(self, startswith='', endswith=''):
+    for tarinfo in self.target.getmembers():
+      if (tarinfo.name.startswith(startswith) and
+          tarinfo.name.endswith(endswith) and
+          tarinfo.type==tarfile.REGTYPE):
+        yield tarinfo
+
+  def getFileInfo(self, name):
+    try:
+      return self.target.getmember(name)
+    except KeyError:
+      raise NotFoundError
+
+  def getFileInfoName(self, fileinfo):
+    return fileinfo.name
+
+  def readFileInfo(self, fileinfo):
+    return self.target.extractfile(fileinfo).read()
+
+
+class BusinessTemplateInfoDir(BusinessTemplateInfoBase):
+
+  def getPrefix(self):
+    return self.target
+
+  def findFileInfosByName(self, startswith='', endswith=''):
+    allfiles = []
+    def visit(arg, dirname, names):
+      if '.svn' in dirname:
+        return
+      for i in names:
+        path = os.path.join(self.target, dirname, i)
+        if os.path.isfile(path):
+          allfiles.append(path)
+    os.path.walk(self.target, visit, None)
+    for i in allfiles:
+      if i.startswith(startswith) and i.endswith(endswith):
+        yield i
+
+  def getFileInfo(self, name):
+    if not os.path.isfile(name):
+      raise NotFoundError
+    return name
+
+  def getFileInfoName(self, fileinfo):
+    return fileinfo
+
+  def readFileInfo(self, fileinfo):
+    return file(fileinfo).read()

@@ -54,7 +54,6 @@ bt5_path = os.path.join(INSTANCE_HOME, 'bt5')
 target_business_templates = (
   'erp5_base',
   'erp5_trade',
-  'erp5_mysql_innodb_catalog',
 
   'erp5_pdf_editor',
   'erp5_pdf_style',
@@ -146,10 +145,17 @@ def makeTestMethod(module_id, portal_type, view_name):
 
 
 def addTestMethodDynamically():
-  from Products.ERP5.tests.utils import BusinessTemplateInfo
+  from Products.ERP5.tests.utils import BusinessTemplateInfoTar
+  from Products.ERP5.tests.utils import BusinessTemplateInfoDir
   for i in target_business_templates:
-    business_template = os.path.join(bt5_path, '%s.bt5' % i)
-    business_template_info = BusinessTemplateInfo(business_template)
+    business_template = os.path.join(bt5_path, i)
+    if os.path.isdir(business_template):
+      business_template_info = BusinessTemplateInfoDir(business_template)
+    elif os.path.isfile(business_template+'.bt5'):
+      business_template_info = BusinessTemplateInfoTar(business_template+'.bt5')
+    else:
+      raise KeyError, "Can't find the business template:%s." % i
+
     for module_id, module_portal_type in business_template_info.modules.items():
       for portal_type in business_template_info.allowed_content_types.get(
         module_portal_type, ()):
@@ -164,7 +170,6 @@ def addTestMethodDynamically():
             setattr(TestXHTML, method_name, method)
 
 addTestMethodDynamically()
-
 
 if __name__ == '__main__':
     framework()
