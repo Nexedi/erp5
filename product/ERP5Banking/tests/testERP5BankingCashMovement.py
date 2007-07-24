@@ -406,7 +406,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # get state of the cash_movement
     state = self.cash_movement.getSimulationState()
     # check the state is draft
-    self.assertEqual(state, 'draft')
+    self.assertEqual(state, 'empty')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_movement, name='history', wf_id='cash_movement_workflow')
     # check its len is 2

@@ -164,6 +164,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
 
     # open counter date and counter
     self.openCounterDate(site=self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante)
+    self.openCounter(site=self.paris.surface.banque_interne.guichet_1)
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):

@@ -682,6 +682,8 @@ class TestERP5BankingMixin:
     """
     # create a counter
     counter_module = self.getCounterModule()
+    while "guichet" not in site.getId():
+      site = site.getParentValue()
     counter = counter_module.newContent(id=id, site_value=site)
     # open it
     counter.open()

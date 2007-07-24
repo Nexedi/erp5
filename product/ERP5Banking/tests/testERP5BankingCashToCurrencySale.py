@@ -141,6 +141,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
     self.login('super_user')
     # open counter date and counter
     self.openCounterDate(site=self.paris.surface.banque_interne.guichet_1)
+    self.openCounter(site=self.paris.surface.banque_interne.guichet_1)
 
 
 

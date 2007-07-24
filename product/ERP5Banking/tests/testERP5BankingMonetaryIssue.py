@@ -382,7 +382,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin, TestER
     self.monetary_issue.setSourceTotalAssetPrice('2000000.0')
     state = self.monetary_issue.getSimulationState()
     # check that state is draft
-    self.assertEqual(state, 'draft')
+    self.assertEqual(state, 'empty')
     self.workflow_tool.doActionFor(self.monetary_issue, 'confirm_action', wf_id='monetary_issue_workflow')
     self.assertEqual(self.monetary_issue.getSimulationState(), 'confirmed')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_issue, name='history', wf_id='monetary_issue_workflow')

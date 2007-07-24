@@ -322,7 +322,7 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     # get state of the cash transfer
     state = self.destruction_survey.getSimulationState()
     # check the state is draft
-    self.assertEqual(state, 'draft')
+    self.assertEqual(state, 'empty')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.destruction_survey, name='history', wf_id='destruction_survey_workflow')
     # check its len is 2

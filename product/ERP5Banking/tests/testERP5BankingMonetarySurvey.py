@@ -335,7 +335,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     # get state of the cash transfer
     state = self.monetary_survey.getSimulationState()
     # check the state is draft
-    self.assertEqual(state, 'draft')
+    self.assertEqual(state, 'empty')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_survey, name='history', wf_id='monetary_survey_workflow')
     # check its len is 2

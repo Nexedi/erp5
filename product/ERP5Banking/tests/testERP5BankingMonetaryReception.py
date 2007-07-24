@@ -300,7 +300,7 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     state = self.monetary_reception.getSimulationState()
     # check that state is draft
-    self.assertEqual(state, 'draft')
+    self.assertEqual(state, 'empty')
     self.workflow_tool.doActionFor(self.monetary_reception, 'confirm_action', wf_id='monetary_reception_workflow')
     self.assertEqual(self.monetary_reception.getSimulationState(), 'confirmed')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_reception, name='history', wf_id='monetary_reception_workflow')

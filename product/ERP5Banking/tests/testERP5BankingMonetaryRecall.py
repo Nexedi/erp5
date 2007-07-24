@@ -369,7 +369,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # get state of the monetary recall
     state = self.monetary_recall.getSimulationState()
     # check the state is draft
-    self.assertEqual(state, 'draft')
+    self.assertEqual(state, 'empty')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_recall, name='history', wf_id='monetary_recall_workflow')
     # check its len is 2

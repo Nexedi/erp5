@@ -126,7 +126,6 @@ class TestERP5BankingTravelerCheckSaleMixin:
     self.reception_destination_site = self.paris
     self.destination_site = self.paris.surface.banque_interne.guichet_1
     self.source_vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
-    self.destination_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
              
     self.destination_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
     self.traveler_check_source = self.destination_vault

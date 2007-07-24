@@ -103,7 +103,7 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                              currency=self.currency_1,
                              line_list=self.line_list)
 
-    self.openCounter(site=self.money_deposit_counter_vault,id='counter_2')
+    self.openCounter(site=self.money_deposit_counter.guichet_1,id='counter_2')
 
     # Define foreign currency variables
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
