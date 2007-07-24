@@ -106,6 +106,7 @@
                         <string>my_source_total_asset_price</string>
                         <string>my_destination_total_asset_price</string>
                         <string>my_source_trade</string>
+                        <string>my_causality_source_reference</string>
                       </list>
                     </value>
                 </item>
