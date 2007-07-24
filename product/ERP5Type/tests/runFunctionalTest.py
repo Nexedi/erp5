@@ -22,7 +22,9 @@ else:
 
 instance_home = os.path.join(real_instance_home, 'unit_test')
 profile_dir = os.path.join(instance_home, 'profile')
-bt5_dir_list = ','.join([os.path.join(instance_home, 'Products/ERP5/bootstrap'), os.path.join(instance_home, 'bt5')])
+bt5_dir_list = ','.join([
+                    os.path.join(instance_home, 'Products/ERP5/bootstrap'),
+                    os.path.join(instance_home, 'bt5')])
 
 def main():
   setPreference()
@@ -76,14 +78,17 @@ def runFirefox():
   os.environ['DISPLAY'] = ':123'
   os.environ['HOME'] = profile_dir
   prepareFirefox()
-  pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", profile_dir, "http://%s:%d/%s/portal_tests?auto=true&__ac_name=ERP5TypeTestCase&__ac_password=" % (host, port, portal_name))
+  pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", profile_dir,
+          "http://%s:%d/%s/portal_tests?auto=true&__ac_name=ERP5TypeTestCase"
+          "&__ac_password=" % (host, port, portal_name))
   os.environ['MOZ_NO_REMOTE'] = '0'
   print 'firefox : %d' % pid
   return pid
 
 def getStatus():
   try:
-    status = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults' % (host, port, portal_name)).read()
+    status = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults'
+                                % (host, port, portal_name)).read()
   except urllib2.HTTPError, e:
     if e.msg == "No Content" :
       status = ""
@@ -92,29 +97,37 @@ def getStatus():
   return status
 
 def setPreference():
-  urllib2.urlopen('http://%s:%d/%s/BTZuite_setPreference?__ac_name=ERP5TypeTestCase&__ac_password=&working_copy_list=%s' % (host, port, portal_name, bt5_dir_list))
+  urllib2.urlopen('http://%s:%d/%s/BTZuite_setPreference?__ac_name='
+              'ERP5TypeTestCase&__ac_password=&working_copy_list=%s' %
+                                  (host, port, portal_name, bt5_dir_list))
 
 def unsubscribeFromTimerService():
-  urllib2.urlopen('http://%s:%d/%s/portal_activities/?unsubscribe:method=&__ac_name=ERP5TypeTestCase&__ac_password=' % (host, port, portal_name))
+  urllib2.urlopen('http://%s:%d/%s/portal_activities/?unsubscribe:method='
+                  '&__ac_name=ERP5TypeTestCase&__ac_password=' %
+                                  (host, port, portal_name))
 
 def sendResult():
-  result_uri = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults' % (host, port, portal_name)).readline()
+  result_uri = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults' %
+                                    (host, port, portal_name)).readline()
   file_content = urllib2.urlopen(result_uri).read()
   passes_re = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
   failures_re = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
   check_re = re.compile('<img[^>]*?/check.gif"\s*[^>]*?>')
   error_re = re.compile('<img[^>]*?/error.gif"\s*[^>]*?>')
-  error_title_re = re.compile('error.gif.*?>([^>]*?)</td></tr>', re.S) 
-  pass_test_re = re.compile('<div style="padding-top: 10px;">\s*<p>\s*<img[^>]*?/check.gif".*?</div>\s.*?</div>\s*', re.S)
+  error_title_re = re.compile('error.gif.*?>([^>]*?)</td></tr>', re.S)
+  pass_test_re = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
+                        '<img[^>]*?/check.gif".*?</div>\s.*?</div>\s*', re.S)
   footer_re = re.compile('<h2> Remote Client Data </h2>.*</table>', re.S)
 
   passes = passes_re.search(file_content).group(1)
   failures = failures_re.search(file_content).group(1)
-  error_titles = [re.compile('\s+').sub(' ', x).strip() for x in error_title_re.findall(file_content)]
+  error_titles = [re.compile('\s+').sub(' ', x).strip()
+                  for x in error_title_re.findall(file_content)]
   os.chdir('%s/Products/ERP5' % instance_home)
   revision = pysvn.Client().info('.').revision.number
 
-  subject = "ERP5 r%s: Functional Tests, %s Passes, %s Failures" % (revision, passes, failures)
+  subject = "ERP5 r%s: Functional Tests, %s Passes, %s Failures" \
+                                          % (revision, passes, failures)
   summary = """
 Test Summary
 
@@ -126,15 +139,22 @@ Following tests failed:
 %s""" % (passes, failures, "\n".join(error_titles))
   file_content = pass_test_re.sub('', file_content)
   file_content = footer_re.sub('', file_content)
-  file_content = check_re.sub('<span style="color: green">PASS</span>', file_content)
-  file_content = error_re.sub('<span style="color: red">FAIL</span>', file_content)
+  file_content = check_re.sub(
+                      '<span style="color: green">PASS</span>', file_content)
+  file_content = error_re.sub(
+                      '<span style="color: red">FAIL</span>', file_content)
   status = (not failures)
-  sendMail(subject = subject, body = summary, status = status,
-           attachments = [file_content], from_mail = 'kazuhiko@nexedi.com',
-           to_mail = ['erp5-report@erp5.org'])
+  sendMail(subject=subject,
+           body=summary,
+           status=status,
+           attachments=[file_content],
+           from_mail='kazuhiko@nexedi.com',
+           to_mail=['erp5-report@erp5.org'])
+
 
 if __name__ == "__main__":
   startZope()
   main()
   sendResult()
   stopZope()
+
