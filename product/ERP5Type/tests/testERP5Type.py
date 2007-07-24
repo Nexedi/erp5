@@ -1096,6 +1096,19 @@ class TestPropertySheet:
       self.assertEquals(self.getPersonModule(), obj.getParentValue())
       self.assertEquals(self.getPersonModule(), copy.getParentValue())
 
+      # Test category accessor
+      gender = self.getCategoryTool().gender.newContent(
+                            portal_type='Category', id='male')
+      # Category can not be used as asContext parameter
+#       new_copy = obj.asContext(gender=gender.getCategoryRelativeUrl())
+#       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
+      new_copy = obj.asContext()
+      new_copy.edit(gender=gender.getCategoryRelativeUrl())
+      get_transaction().commit()
+      self.tic()
+      self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
+      self.assertEquals(None, obj.getGender())
+
     def test_21_ActionCondition(self, quiet=quiet, run=run_all_test):
       """Tests action conditions
       """
