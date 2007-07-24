@@ -200,11 +200,13 @@ class BaobabConduit(ERP5Conduit):
     from Products.Baobab.Conduit import vault_code_to_path
     from Products.Baobab.Conduit import variation_translate_dict
     from Products.Baobab.Conduit import status_code_to_cash_status
+    from Products.Baobab.Conduit import former_coin_variation_list
   except ImportError:
     inventory_code_to_path = {}
     vault_code_to_path = {}
     ariation_translate_dict = {}
     status_code_to_cash_status = {}
+    former_coin_variation_list = []
 
   """
     Methods below are tools to use the property_map.
@@ -540,10 +542,10 @@ class BaobabConduit(ERP5Conduit):
            currency_name not in (None, '')                    and \
            currency_cash.getBasePrice()       == base_price   and \
            currency_cash.getPriceCurrencyId() == currency_name:
-          if currency_portal_type == 'Coin' and kw.get('variation', None) == 'ANC' and \
-             not currency_cash.getFormer():
-            # If we are searching for an 'ANC' variation of a coin, getFormer
-            # must be true for the currency cash to match.
+          # getFormer value must match searched coin variation.
+          if currency_portal_type == 'Coin' and \
+             (kw.get('variation', None) in former_coin_variation_list) != \
+             bool(currency_cash.getFormer()):
             continue
           line_currency_cash = currency_cash
           break
