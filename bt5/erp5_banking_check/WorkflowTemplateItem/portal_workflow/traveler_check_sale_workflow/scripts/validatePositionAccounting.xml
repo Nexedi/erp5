@@ -164,10 +164,7 @@ transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
 \n
 site = transaction.getSourceValue()\n
 \n
-if \'guichet\' in site.getVaultType():\n
-  if not context.Baobab_checkCounterOpened(site):\n
-    msg = Message(domain = "ui", message="Counter is not opened")\n
-    raise ValidationFailed, (msg,)\n
+context.Baobab_checkCounterOpened(site)\n
 
 
 ]]></string> </value>
