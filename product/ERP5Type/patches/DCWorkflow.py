@@ -30,6 +30,7 @@ from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToMixedCase
 from string import join
+import sys
 from zLOG import LOG
 
 # Patch WorkflowUIMixin to add description on workflows
@@ -257,6 +258,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         except ValidationFailed, validation_exc:
             before_script_success = 0
             before_script_error_message = validation_exc.msg
+            validation_exc_traceback = sys.exc_traceback
         except ObjectMoved, moved_exc:
             ob = moved_exc.getNewObject()
             # Re-raise after transition
@@ -308,7 +310,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
                                 error_message = before_script_error_message)
         if validation_exc :
             # reraise validation failed exception
-            raise validation_exc
+            raise validation_exc, None, validation_exc_traceback
         return new_sdef
 
     # Update state.
