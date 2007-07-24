@@ -210,12 +210,13 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.incoming_line.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.incoming_line.objectValues()), 2)
+    mutilated_banknote_destination = self.mutilated_banknote.getDestination()
     for variation in self.variation_list:
       cell = self.incoming_line.getCell('emission_letter/not_defined', variation, 'cash_status/mutilated')
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       self.assertEqual(cell.getBaobabSourceValue(), None)
-      self.assertEqual(cell.getBaobabDestination(), self.mutilated_banknote_vault.getRelativeUrl())
+      self.assertEqual(cell.getBaobabDestination(), mutilated_banknote_destination)
       if cell.getId() == 'movement_0_0_0':
         self.assertEqual(cell.getQuantity(), 2.0)
       elif cell.getId() == 'movement_0_1_0':
@@ -496,12 +497,13 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.hq_incoming_line.getQuantityUnit(), 'unit')
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.hq_incoming_line.objectValues()), 2)
+    hq_mutilated_banknote_destination = self.hq_mutilated_banknote.getDestination()
     for variation in self.variation_list:
       cell = self.hq_incoming_line.getCell('emission_letter/not_defined', variation, 'cash_status/mutilated')
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       self.assertEqual(cell.getBaobabSourceValue(), None)
-      self.assertEqual(cell.getBaobabDestination(), self.hq_mutilated_banknote_vault.getRelativeUrl())
+      self.assertEqual(cell.getBaobabDestination(), hq_mutilated_banknote_destination)
       if cell.getId() == 'movement_0_0_0':
         self.assertEqual(cell.getQuantity(), 2.0)
       elif cell.getId() == 'movement_0_1_0':
