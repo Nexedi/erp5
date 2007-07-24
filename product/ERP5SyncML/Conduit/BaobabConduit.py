@@ -544,7 +544,7 @@ class BaobabConduit(ERP5Conduit):
            currency_cash.getPriceCurrencyId() == currency_name:
           # getFormer value must match searched coin variation.
           if currency_portal_type == 'Coin' and \
-             (kw.get('variation', None) in former_coin_variation_list) != \
+             (kw.get('variation', None) in self.former_coin_variation_list) != \
              bool(currency_cash.getFormer()):
             continue
           line_currency_cash = currency_cash
