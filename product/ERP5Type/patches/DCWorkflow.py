@@ -115,8 +115,6 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       return None  # Optimization
     workflow_tool = getToolByName(self, 'portal_workflow')
     workflow = getattr(workflow_tool, self.id)
-    portal_url = getToolByName(self, 'portal_url')
-    portal_url = portal_url()
     _getPortalTypeListForWorkflow = CachingMethod(workflow.getPortalTypeListForWorkflow,
                                                   id=('_getPortalTypeListForWorkflow', self.id), 
                                                   cache_factory = 'erp5_ui_long')
@@ -125,6 +123,8 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       return None
 
     def _listGlobalActions(user=None, id=None, portal_path=None):
+      portal_url = getToolByName(self, 'portal_url')
+      portal_url = portal_url()
       sm = getSecurityManager()
       portal = self._getPortalRoot()
       res = []
