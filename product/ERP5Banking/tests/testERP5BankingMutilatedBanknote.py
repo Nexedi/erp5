@@ -84,7 +84,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
                              'resource': self.billet_10000,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
+                             'variation_value': ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_10000}
 
     line_list = [inventory_dict_line_1,]
@@ -118,7 +118,8 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.login('super_user')
     self.openCounterDate(site=self.paris)
     self.openCounterDate(site=self.siege, id='counter_date_2')
-
+    self.openCounter(site=self.paris.surface.banque_interne.guichet_1)
+    self.openCounter(site=self.siege.surface.banque_interne.guichet_1, id='counter_2')
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -172,7 +173,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.stepTic()
     self.assertEqual(len(self.mutilated_banknote_module.objectValues()), 1)
     self.assertEqual(self.mutilated_banknote.getPortalType(), 'Mutilated Banknote')
-    self.assertEqual(self.mutilated_banknote.getSource(), 'site/testsite/paris')
+    self.assertEqual(self.mutilated_banknote.getSource(), 'site/testsite/paris/surface/banque_interne/guichet_1')
     self.assertEqual(self.mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
     self.assertEqual(self.mutilated_banknote.getDestination(), self.mutilated_banknote_vault.getRelativeUrl())
     # set source reference
@@ -247,7 +248,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # create an exchanged
     self.addCashLineToDelivery(self.mutilated_banknote, 'exchanged_line', 'Exchanged Mutilated Banknote Line', self.billet_10000,
-                               ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
+                               ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/cancelled') + self.variation_list,
                                self.quantity_10000)
     self.stepTic()
     self.assertEqual(len(self.mutilated_banknote.objectValues()), 2)
@@ -260,7 +261,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.exchanged_line.objectValues()), 2)
     for variation in self.variation_list:
-      cell = self.exchanged_line.getCell('emission_letter/not_defined', variation, 'cash_status/to_sort')
+      cell = self.exchanged_line.getCell('emission_letter/not_defined', variation, 'cash_status/cancelled')
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       self.assertEqual(cell.getBaobabSourceValue(), None)
@@ -381,7 +382,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # create an exchanged
     self.addCashLineToDelivery(self.mutilated_banknote, 'outgoing_line', 'Outgoing Mutilated Banknote Line', self.billet_10000,
-                               ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
+                               ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
                                self.quantity_10000)
     self.stepTic()
     # get the line
@@ -393,7 +394,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.outgoing_line.objectValues()), 2)
     for variation in self.variation_list:
-      cell = self.outgoing_line.getCell('emission_letter/not_defined', variation, 'cash_status/to_sort')
+      cell = self.outgoing_line.getCell('emission_letter/not_defined', variation, 'cash_status/valid')
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       self.assertEqual(cell.getBaobabSource(), None)
@@ -406,7 +407,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
         self.fail('Wrong cell created : %s' % cell.getId())
 
   def stepCheckFinalInventoryWithPayBack(self, sequence=None, sequence_list=None, **kwd):
-    self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=0.0)
+    self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'variation_text': '%cash_status/valid%'})
     self.checkFinalInventory()
 
   def checkFinalInventory(self):
@@ -454,17 +455,16 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                                                                            portal_type='Mutilated Banknote',
                                                                            source_total_asset_price=0.0,
                                                                            destination_total_asset_price=0.0,
-                                                                           destination_value=self.hq_mutilated_banknote_vault
+                                                                           destination_value=self.hq_mutilated_banknote_vault,
+                                                                           causality_value=self.mutilated_banknote
                                                                            )
-    self.stepTic()
     self.hq_mutilated_banknote.edit(source_trade='site/testsite/paris')
+    self.stepTic()
     self.assertEqual(len(self.mutilated_banknote_module.objectValues()), 2)
     self.assertEqual(self.hq_mutilated_banknote.getPortalType(), 'Mutilated Banknote')
-    self.assertEqual(self.hq_mutilated_banknote.getSource(), 'site/testsite/siege')
+    self.assertEqual(self.hq_mutilated_banknote.getSource(), 'site/testsite/siege/surface/banque_interne/guichet_1')
     self.assertEqual(self.hq_mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
     self.assertEqual(self.hq_mutilated_banknote.getDestination(), self.hq_mutilated_banknote_vault.getRelativeUrl())
-    # set causality
-    self.hq_mutilated_banknote.setCausalityValue(self.mutilated_banknote)
     # set source reference
     self.setDocumentSourceReference(self.hq_mutilated_banknote)
     # check source reference
@@ -553,13 +553,15 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "finished")
     sequence.edit(headquarter=1)
 
-  def checkBanknoteInventory(self, node_path, quantity):
+  def checkBanknoteInventory(self, node_path, quantity, get_inventory_kw=None):
     """
       Check that node contains expected quantity of banknotes.
     """
+    if get_inventory_kw is None:
+      get_inventory_kw = {}
     resource_path = self.billet_10000.getRelativeUrl()
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=node_path, resource=resource_path), quantity)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=node_path, resource=resource_path), quantity)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=node_path, resource=resource_path, **get_inventory_kw), quantity)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=node_path, resource=resource_path, **get_inventory_kw), quantity)
 
   def stepCheckMutilatedBanknoteInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -603,7 +605,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # create an exchanged
     self.addCashLineToDelivery(self.hq_mutilated_banknote, 'hq_exchanged_line', 'Exchanged Mutilated Banknote Line', self.billet_10000,
-                               ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
+                               ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/cancelled') + self.variation_list,
                                self.quantity_10000)
     self.stepTic()
     self.assertEqual(len(self.hq_mutilated_banknote.objectValues()), 2)
@@ -616,7 +618,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     # check we have two delivery cells: (one for year 1992 and one for 2003)
     self.assertEqual(len(self.hq_exchanged_line.objectValues()), 2)
     for variation in self.variation_list:
-      cell = self.hq_exchanged_line.getCell('emission_letter/not_defined', variation, 'cash_status/to_sort')
+      cell = self.hq_exchanged_line.getCell('emission_letter/not_defined', variation, 'cash_status/cancelled')
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       self.assertEqual(cell.getBaobabSourceValue(), None)
@@ -699,12 +701,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CreateMutilatedBanknote SetMaculatedState Tic ' \
                         + 'CreateIncomingLine Tic ' \
                         + 'StopDocument Tic ' \
-                        + 'CheckHQMaculatedBanknoteInventory ' \
                         + 'PlanDocument Tic ' \
                         + 'HQLogin ' \
                         + 'CheckHQInitialInventory ' \
                         + 'CreateHQMutilatedBanknote SetHQMaculatedState Tic ' \
                         + 'CreateHQIncomingLine Tic StopHQDocument Tic ' \
+                        + 'CheckHQMaculatedBanknoteInventory ' \
                         + 'TryFinishHQWithNoLineDefined CreateHQExchangedLine Tic TryFinishHQWithNoAmountDefined FinishHQDocument Tic ' \
                         + 'HQLogout ' \
                         + 'CheckHQFinalInventoryWithPayBack ClearHQMutilatedBanknoteModule Tic '\
