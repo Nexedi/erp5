@@ -66,10 +66,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>user_site = context.Baobab_getUserAssignedRootSiteList()[0]\n
-if user_site in (\'\', None):\n
+user_counter = context.Baobab_getUserAssignedSiteList()[0]\n
+if user_site in (\'\', None) or user_counter in (\'\', None):\n
   raise ValueError, "Unable to determine site"\n
-else:\n
-  context.edit(source=user_site, source_trade=user_site)\n
+if \'guichet\' not in user_counter:\n
+  raise ValueError, "You are not assigned to a counter"\n
+context.edit(source=user_counter, source_trade=user_site)\n
 </string> </value>
         </item>
         <item>
@@ -123,6 +125,7 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>user_site</string>
+                            <string>user_counter</string>
                             <string>None</string>
                             <string>ValueError</string>
                           </tuple>

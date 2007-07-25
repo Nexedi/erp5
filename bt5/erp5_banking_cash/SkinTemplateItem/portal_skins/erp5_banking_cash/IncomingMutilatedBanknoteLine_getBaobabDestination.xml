@@ -70,10 +70,11 @@
 # To do this, the "mutilated" from "caisse_courante/billets_mutiles" are destroyed from erp5 point of view and new ones with state "canceled" are added to "caisse_courante/encaisse_des_billets_et_monnaies".\n
 # See ExchangedMutilatedBanknoteLine_getBaobabDestination (those lines are created at "planned" state).\n
 \n
-if context.getParent().getSimulationState() in (\'finished\', \'delivered\'):\n
+mutilated_banknote = context.getParent()\n
+if mutilated_banknote.getSimulationState() in (\'finished\', \'delivered\'):\n
   return None\n
 else:\n
-  return \'%s/surface/caisse_courante/billets_mutiles\' % (context.getParent().getSource(), )\n
+  return mutilated_banknote.getDestination()\n
 </string> </value>
         </item>
         <item>
@@ -126,6 +127,7 @@ else:\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>mutilated_banknote</string>
                             <string>None</string>
                           </tuple>
                         </value>

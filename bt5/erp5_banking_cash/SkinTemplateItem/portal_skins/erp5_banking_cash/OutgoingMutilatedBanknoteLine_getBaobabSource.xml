@@ -66,7 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>if context.getSimulationState() == "delivered":\n
-  return "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(context.getSource(),)\n
+  return "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(context.getSourceTrade(),)\n
 else:\n
   return None\n
 </string> </value>
