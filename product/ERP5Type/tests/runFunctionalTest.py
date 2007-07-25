@@ -18,7 +18,7 @@ usage: %(program)s [options]
 Options:
   -h, --help                 this help screen
   --email_to_address=STRING  send results to this address by email (defaults to
-                             erp5-report@erp5.org
+                             erp5-report@erp5.org)
   -s, --stdout               prints the results on stdout instead of sending
                              results by email
                              
