@@ -671,7 +671,8 @@ class PlanningBoxWidget(Widget.Widget):
      'delimiter',
      # specific methods for inserting info block
      'info_center', 'info_topleft', 'info_topright',
-     'info_backleft', 'info_backright'
+     'info_backleft', 'info_backright',
+     'info_tooltip'
      ]
 
   # Planning properties (accessed through Zope Management Interface)
@@ -927,6 +928,14 @@ class PlanningBoxWidget(Widget.Widget):
       title='Specific method of data called for inserting info in '
             'block backright',
       description='Method for displaying info in the backright of a ' \
+                  'block object',
+      default='',
+      required=0)
+
+  info_tooltip = fields.StringField('info_tooltip',
+      title='Specific method of data called for inserting info in '
+            'block tooltip',
+      description='Method for displaying info as tootip of a ' \
                   'block object',
       default='',
       required=0)
@@ -1847,6 +1856,7 @@ class BasicGroup:
     info_topright = self.field.get_value('info_topright')
     info_botleft = self.field.get_value('info_backleft')
     info_botright = self.field.get_value('info_backright')
+    info_tooltip = self.field.get_value('info_tooltip')
     # getting info method from activity itself if exists
     info_center_method = getattr(self.object.getObject(),info_center,None)
     info_topright_method = getattr(self.object.getObject(),info_topright,None)
@@ -1854,6 +1864,8 @@ class BasicGroup:
     info_botleft_method = getattr(self.object.getObject(),info_botleft,None)
     info_botright_method = \
                   getattr(self.object.getObject(),info_botright,None)
+    info_tooltip_method = \
+                  getattr(self.object.getObject(), info_tooltip, None)
     # if method recovered is not null, then updating
     # XXX Does script have to manage multiple context object ?
     if info_center_method is not None:
@@ -1866,6 +1878,8 @@ class BasicGroup:
       info['info_botleft'] = str(info_botleft_method())
     if info_botright_method is not None:
       info['info_botright'] = str(info_botright_method())
+    if info_tooltip_method is not None:
+      info['info_tooltip'] = str(info_tooltip_method())
 
     if activity_list not in ([],None):
       indic=0
@@ -1948,6 +1962,8 @@ class BasicGroup:
             info_botleft_method = getattr(activity_content,info_botleft,None)
             info_botright_method = \
                  getattr(activity_content,info_botright,None)
+            info_tooltip_method = \
+                 getattr(activity_content,info_tooltip,None)
             if obj.getUid() not in self.sec_layer_uid_list:
               # if value recovered is not null, then updating
               if info_center_method is not None:
@@ -1966,6 +1982,8 @@ class BasicGroup:
               info['info_topleft'] = ''
               info['info_botleft'] = ''
               info['info_botright'] = ''
+            if info_tooltip_method is not None:
+               info['info_tooltip']=str(info_tooltip_method())
 
             title = info['info_center']
             color_script = getattr(activity_content.getObject(),
@@ -2809,7 +2827,10 @@ class Bloc:
         self.buildInfo(info_dict=info_dict, area='info_botleft'),
         self.buildInfo(info_dict=info_dict, area='info_botright'),
       ]
-      self.title = " | ".join(title_list)
+      if info_dict.has_key('info_tooltip'):
+        self.title = info_dict['info_tooltip']
+      else:
+        self.title = " | ".join(title_list)
 
     if self.error != 0:
       # field has error
