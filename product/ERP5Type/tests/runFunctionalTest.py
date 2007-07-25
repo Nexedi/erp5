@@ -2,15 +2,34 @@
 import os
 import re
 import signal
+import sys
+import getopt
 from time import sleep
 import urllib2
 from subprocess import Popen, PIPE
 from sendMail import sendMail
 import pysvn
 
+
+__doc__ = """%(program)s: Zelenium functional test runner for the ERP5 Project
+
+usage: %(program)s [options]
+
+Options:
+  -h, --help                 this help screen
+  --email_to_address=STRING  send results to this address by email (defaults to
+                             erp5-report@erp5.org
+  -s, --stdout               prints the results on stdout instead of sending
+                             results by email
+                             
+"""
+
+
 host = 'localhost'
 port = 8080
 portal_name = 'erp5_portal'
+send_mail = 1
+mail_to_address = 'erp5-report@erp5.org'
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
@@ -25,6 +44,36 @@ profile_dir = os.path.join(instance_home, 'profile')
 bt5_dir_list = ','.join([
                     os.path.join(instance_home, 'Products/ERP5/bootstrap'),
                     os.path.join(instance_home, 'bt5')])
+
+
+
+def usage(stream, msg=None):
+  if msg:
+    print >>stream, msg
+    print >>stream
+  program = os.path.basename(sys.argv[0])
+  print >>stream, __doc__ % {"program": program}
+
+def parseArgs():
+  global send_mail
+  global mail_to_address
+  try:
+    opts, args = getopt.getopt(sys.argv[1:],
+          "hs", ["help", "stdout",
+                "email_to_address="] )
+  except getopt.GetoptError, msg:
+    usage(sys.stderr, msg)
+    sys.exit(2)
+  
+  for opt, arg in opts:
+    if opt in ("-s", "--stdout"):
+      send_mail = 0
+    elif opt == '--email_to_address':
+      email_to_address = arg
+    elif opt in ('-h', '--help'):
+      usage(sys.stdout)
+      sys.exit()
+
 
 def main():
   setPreference()
@@ -79,7 +128,7 @@ def runFirefox():
   os.environ['HOME'] = profile_dir
   prepareFirefox()
   pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", profile_dir,
-          "http://%s:%d/%s/portal_tests?auto=true&__ac_name=ERP5TypeTestCase"
+      "http://%s:%d/%s/portal_tests/?auto=true&__ac_name=ERP5TypeTestCase"
           "&__ac_password=" % (host, port, portal_name))
   os.environ['MOZ_NO_REMOTE'] = '0'
   print 'firefox : %d' % pid
@@ -144,17 +193,27 @@ Following tests failed:
   file_content = error_re.sub(
                       '<span style="color: red">FAIL</span>', file_content)
   status = (not failures)
-  sendMail(subject=subject,
-           body=summary,
-           status=status,
-           attachments=[file_content],
-           from_mail='kazuhiko@nexedi.com',
-           to_mail=['erp5-report@erp5.org'])
-
+  if send_mail:
+    sendMail(subject=subject,
+             body=summary,
+             status=status,
+             attachments=[file_content],
+             from_mail='kazuhiko@nexedi.com',
+             to_mail=[email_to_address])
+  else:
+    print '-' * 79
+    print subject
+    print '-' * 79
+    print summary
+    print '-' * 79
+    print file_content
+  return status
 
 if __name__ == "__main__":
+  parseArgs()
   startZope()
   main()
-  sendResult()
+  status = sendResult()
   stopZope()
+  sys.exit(status)
 
