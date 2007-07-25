@@ -231,7 +231,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     """
     state = self.checkbook_delivery.getSimulationState()
     # check that state is draft
-    self.assertEqual(state, 'draft')
+    self.assertEqual(state, 'empty')
     self.workflow_tool.doActionFor(self.checkbook_delivery, 
                                    'deliver_action', 
                                    wf_id='checkbook_delivery_workflow')

@@ -268,7 +268,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     state = self.checkbook_reception.getSimulationState()
     # check that state is draft
-    self.assertEqual(state, 'draft')
+    self.assertEqual(state, 'empty')
     self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action', wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception.getSimulationState(), 'confirmed')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_reception, name='history', wf_id='checkbook_reception_workflow')
