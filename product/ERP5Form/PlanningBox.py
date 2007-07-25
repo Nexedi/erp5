@@ -655,8 +655,11 @@ class PlanningBoxWidget(Widget.Widget):
      # axis position
      'y_axis_position', 'x_axis_position',
      'report_root_list', 'selection_name',
+     # Main List Method
      'portal_types', 'sort',
      'list_method',
+     # Second Layer Properties
+     'second_layer_list_method',
      # method used to get title of each line
      'title_line',
      # specific block properties
@@ -815,6 +818,13 @@ class PlanningBoxWidget(Widget.Widget):
       description="Method to use to list objects",
       default='',
       required=0)
+
+  second_layer_list_method = fields.MethodField('second_layer_list_method',
+     title='Secondary Layer List Method',
+     description="Method to use to list background objects",
+     default='',
+     required=0)
+
 
   title_line = fields.StringField('title_line',
       title="Specific method which fetches the title of each line",
@@ -1003,6 +1013,7 @@ class PlanningBoxWidget(Widget.Widget):
     # getting form
     form = field.aq_parent
     list_method = field.get_value('list_method')
+    sec_layer_list_method = field.get_value('second_layer_list_method')
     title_line = field.get_value('title_line')
     # list of domain
     report_root_list = field.get_value('report_root_list')
@@ -1029,12 +1040,14 @@ class PlanningBoxWidget(Widget.Widget):
     # creating BasicStructure instance (and initializing its internal values)
     basic = BasicStructure(context=context,
                            form=form, field=field,
-                           REQUEST=REQUEST, list_method=list_method,
+                           REQUEST=REQUEST, 
+                           list_method=list_method,
+                           sec_layer_list_method=sec_layer_list_method,
                            selection=selection, params=params,
                            selection_name=selection_name,
                            title_line=title_line,
                            report_root_list=report_root_list,
-                           portal_types=portal_types,
+                           portal_types=portal_types, 
                            sort=sort,
                            list_error=list_error)
     # call build method to generate BasicStructure
@@ -1070,7 +1083,7 @@ class BasicStructure:
   def __init__ (self, context='', form='', field='', REQUEST='', list_method='',
                 selection=None, params = '', selection_name='',
                 report_root_list='', title_line='', portal_types='',
-                sort=None, list_error=None):
+                sec_layer_list_method=None, sort=None, list_error=None):
     """
     Init main internal parameters
     """
@@ -1082,6 +1095,7 @@ class BasicStructure:
     self.selection = selection
     self.params = params
     self.list_method = list_method
+    self.sec_layer_list_method = sec_layer_list_method
     self.title_line = title_line
     self.selection_name = selection_name
     self.report_root_list = report_root_list
@@ -1138,6 +1152,11 @@ class BasicStructure:
     portal_categories = getattr(self.form,'portal_categories',None)
     portal_domains = getattr(self.form,'portal_domains',None)
 
+    if getattr(self.sec_layer_list_method, 'method_name', None) is not None:
+       self.sec_layer_list_method = getattr(
+                                      self.context,
+                                      self.sec_layer_list_method.method_name)
+
     ##################################################
     ############### BUILDING QUERY ###################
     ##################################################
@@ -1150,7 +1169,7 @@ class BasicStructure:
     # names.
     if 'select_expression' in kw:
       del kw['select_expression']
-    if hasattr(self.list_method, 'method_name'):
+    if getattr(self.list_method, 'method_name', None) is not None:
       if self.list_method.method_name == 'ObjectValues':
         # list_method is available
         self.list_method = self.context.objectValues
@@ -1232,6 +1251,7 @@ class BasicStructure:
                                     is_report_opened=is_report_opened,
                                     sort_on=self.selection.sort_on,
                                     form_id=self.form.id)
+
     if report_tree_list == []:
       raise PlanningBoxError, "Report tree list is empty on %s" % \
         self.field.absolute_url()
@@ -1312,33 +1332,51 @@ class BasicStructure:
           # no list_method found
           raise PlanningBoxError, "No list method found on %s" % \
               self.field.absolute_url()
-        
+
+        # Defining the Secondary Layer Object List
+        if self.sec_layer_list_method not in (None,''):
+          sec_layer_object_list = self.selection(
+                          method=self.sec_layer_list_method,
+                          context=self.context, 
+                          REQUEST=self.REQUEST)          
+        else:
+          sec_layer_object_list = []
         # recovering exeption_uid_list
         exception_uid_list = object_tree_line.getExceptionUidList()
-        # XXX filter the object to the right domain.
-        # Can be improved in future.
+
         domain_obj = object_tree_line.getObject()
         new_object_list = []
+        sec_new_object_list = []
         if domain_obj.getPortalType() == 'Domain':
           category_obj = domain_obj.getMembershipCriterionCategory()
-          base_category_list = domain_obj.getMembershipCriterionBaseCategoryList()
-          for bc in base_category_list:
+          for bc in domain_obj.getMembershipCriterionBaseCategoryList():
             if (category_obj is not None) and (bc is not None):
               category_value = category_obj.getRelativeUrl()
-              for s_obj in object_list:
-                if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_value:
-                  new_object_list.append(s_obj)
+              new_object_list.extend([ s_obj for s_obj in object_list \
+                   if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_value])
+ 
+              sec_new_object_list.extend([ s_obj for s_obj in sec_layer_object_list \
+                   if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_value])
+
           object_list = new_object_list
+          sec_layer_object_list = sec_new_object_list
 
         if exception_uid_list not in ([],None) :
           # Filter folders if parent tree :
           # build new object_list for current line
           # (list of relative elements)
-          new_object_list = []
-          for selected_object in object_list:
-            if selected_object.getUid() not in exception_uid_list:
-              new_object_list.append(selected_object)
+          new_object_list = [s_obj for s_obj in object_list \
+                             if s_obj.getUid() not in exception_uid_list]
+          sec_new_object_list = [s_obj for s_obj in object_list \
+                                 if s_obj.getUid() not in exception_uid_list]
+
+          sec_layer_object_list = sec_new_object_list
           object_list = new_object_list
+
+        self.sec_layer_uid_list = [obj.getUid() for obj in sec_layer_object_list]
+        # The order is important 
+        sec_layer_object_list.extend(object_list)
+        object_list = sec_layer_object_list
 
         if not object_tree_line.getIsPureSummary():
           # Object is not pure summary
@@ -1735,7 +1773,8 @@ class BasicStructure:
                                 is_pure_summary=is_pure_summary,
                                 secondary_axis_start = group_start,
                                 secondary_axis_stop  = group_stop,
-                                property_dict = property_dict)
+                                property_dict = property_dict,
+                                sec_layer_uid_list=self.sec_layer_uid_list)
 
         if object_list not in [None, []]:
           child_group.setBasicActivities(object_list,self.list_error,
@@ -1765,7 +1804,8 @@ class BasicGroup:
   def __init__ (self, title='', name='',url='', constraints='', depth=0,
                 position=0, field = None, object = None, is_open=0,
                 is_pure_summary=1, secondary_axis_start=None,
-                secondary_axis_stop=None, property_dict = {}):
+                secondary_axis_stop=None, sec_layer_uid_list=[],
+                property_dict = {}):
     self.title = title
     self.name = name
     self.url = url
@@ -1785,7 +1825,7 @@ class BasicGroup:
     # property_dict holds all information about the current axis_group
     # type of group, stat, etc.
     self.property_dict = property_dict
-
+    self.sec_layer_uid_list = sec_layer_uid_list
 
   def setBasicActivities(self,activity_list, list_error,secondary_axis_info):
     """
@@ -1908,18 +1948,24 @@ class BasicGroup:
             info_botleft_method = getattr(activity_content,info_botleft,None)
             info_botright_method = \
                  getattr(activity_content,info_botright,None)
-
-            # if value recovered is not null, then updating
-            if info_center_method is not None:
-               info['info_center']=str(info_center_method())
-            if info_topright_method is not None:
-               info['info_topright']=str(info_topright_method())
-            if info_topleft_method is not None:
-               info['info_topleft']=str(info_topleft_method())
-            if info_botleft_method is not None:
-               info['info_botleft'] =str(info_botleft_method())
-            if info_botright_method is not None:
-               info['info_botright']=str(info_botright_method())
+            if obj.getUid() not in self.sec_layer_uid_list:
+              # if value recovered is not null, then updating
+              if info_center_method is not None:
+                 info['info_center']=str(info_center_method())
+              if info_topright_method is not None:
+                 info['info_topright']=str(info_topright_method())
+              if info_topleft_method is not None:
+                 info['info_topleft']=str(info_topleft_method())
+              if info_botleft_method is not None:
+                 info['info_botleft'] =str(info_botleft_method())
+              if info_botright_method is not None:
+                 info['info_botright']=str(info_botright_method())
+            else:
+              info['info_center'] = ''
+              info['info_topright'] = ''
+              info['info_topleft'] = ''
+              info['info_botleft'] = ''
+              info['info_botright'] = ''
 
             title = info['info_center']
             color_script = getattr(activity_content.getObject(),
@@ -2256,7 +2302,6 @@ class PlanningStructure:
     complete axis informations (and more precisely axis position objects) thanks
     to the actual planning structure
     """
-
     # processing main axis
     for axis_group_element in self.main_axis.axis_group:
       position_main = axis_group_element.position_main
@@ -2365,7 +2410,8 @@ class PlanningStructure:
                               calendar_view=self.calendar_view,
                               property_dict=basic_group_object.property_dict)
             # adding activity to the current group
-            axis_group.addActivity(activity,axis_element_already_present)
+            axis_group.addActivity(activity, axis_element_already_present,
+                                   basic_structure)
         else:
           # case group is stat group. Using special method that prevent
           # from generating more than 1 axis element and divide tasks size if
@@ -2926,7 +2972,8 @@ class AxisGroup:
     self.tooltip = info_title.info
 
 
-  def addActivity(self, activity=None, axis_element_already_insered= 0):
+  def addActivity(self, activity=None, axis_element_already_insered= 0,
+                  basic_structure=None):
     """
     Procedure that permits to add activity to the corresponding AxisElement in
     an AxisGroup. This can create new Axis Element in the actual AxisGroup if
@@ -2944,15 +2991,16 @@ class AxisGroup:
         # recovering all activity properties of the actual axis_element and
         # iterating through them to check if one of them crosses the new one
         for activity_statement in axis_element.activity_list:
-
           if activity_statement.isValidPosition(activity.secondary_axis_begin,
-                                             activity.secondary_axis_end) != 0:
+                                      activity.secondary_axis_end) != 0:
             # isValidPosition returned 1 or 2, this means the activity already
             # present does prevent from adding the new activity as there is
             # coverage on the current axis_element.
             # stop iterating actual axis_element and try with the next one
-            can_add = 0
-            break
+            if activity_statement.object.getUid() not in \
+                            basic_structure.sec_layer_uid_list:
+              can_add = 0
+              break
 
         if can_add:
           # the whole activity_statements in actual axis have been succesfully
