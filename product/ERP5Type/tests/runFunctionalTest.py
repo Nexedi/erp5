@@ -9,7 +9,7 @@ import urllib2
 from subprocess import Popen, PIPE
 from sendMail import sendMail
 import pysvn
-
+import atexit
 
 __doc__ = """%(program)s: Zelenium functional test runner for the ERP5 Project
 
@@ -212,8 +212,7 @@ Following tests failed:
 if __name__ == "__main__":
   parseArgs()
   startZope()
+  atexit.register(stopZope)
   main()
-  status = sendResult()
-  stopZope()
-  sys.exit(status)
+  sys.exit(sendResult())
 
