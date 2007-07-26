@@ -172,29 +172,37 @@ class ERP5UserManager(BasePlugin):
         # (no docstring to prevent publishing)
         if not login:
           return []
-        # because we aren't logged in, we have to create our own
-        # SecurityManager to be able to access the Catalog
-        sm = getSecurityManager()
-        if sm.getUser().getId() != SUPER_USER:
-          newSecurityManager(self, self.getUser(SUPER_USER))
 
-        try:
+        def _getUserByLogin(login):
+          import pdb; pdb.set_trace()
+          # because we aren't logged in, we have to create our own
+          # SecurityManager to be able to access the Catalog
+          sm = getSecurityManager()
+          if sm.getUser() != SUPER_USER:
+            newSecurityManager(self, self.getUser(SUPER_USER))
+  
           try:
-            result = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
-                                    portal_type="Person", reference=login)
-          except ConflictError:
-            raise
-          except:
-            LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=sys.exc_info())
-            # Here we must raise an exception to prevent calers from caching
-            # a result of a degraded situation.
-            # The kind of exception does not matter as long as it's catched by
-            # PAS and causes a lookup using another plugin or user folder.
-            # As PAS does not define explicitely such exception, we must use
-            # the _SWALLOWABLE_PLUGIN_EXCEPTIONS list.
-            raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
-        finally:
-          setSecurityManager(sm)
+            try:
+              result = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+                                      portal_type="Person", reference=login)
+            except ConflictError:
+              raise
+            except:
+              LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=sys.exc_info())
+              # Here we must raise an exception to prevent calers from caching
+              # a result of a degraded situation.
+              # The kind of exception does not matter as long as it's catched by
+              # PAS and causes a lookup using another plugin or user folder.
+              # As PAS does not define explicitely such exception, we must use
+              # the _SWALLOWABLE_PLUGIN_EXCEPTIONS list.
+              raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
+          finally:
+            setSecurityManager(sm)
+          return result
+        _getUserByLogin = CachingMethod(_getUserByLogin,
+                                        id='ERP5UserManager_getUserByLogin',
+                                        cache_factory='erp5_content_short')
+        result = _getUserByLogin(login)
         return [item.getObject() for item in result]
 
 classImplements( ERP5UserManager
