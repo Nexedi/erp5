@@ -173,6 +173,8 @@ class ERP5UserManager(BasePlugin):
         if not login:
           return []
 
+        portal = self.getPortalObject()
+
         def _getUserByLogin(login):
           # because we aren't logged in, we have to create our own
           # SecurityManager to be able to access the Catalog
@@ -182,7 +184,7 @@ class ERP5UserManager(BasePlugin):
   
           try:
             try:
-              result = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+              result = portal.portal_catalog.unrestrictedSearchResults(
                                       portal_type="Person", reference=login)
             except ConflictError:
               raise
@@ -197,12 +199,12 @@ class ERP5UserManager(BasePlugin):
               raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
           finally:
             setSecurityManager(sm)
-          return result
+          return [x.path for x in result]
         _getUserByLogin = CachingMethod(_getUserByLogin,
                                         id='ERP5UserManager_getUserByLogin',
                                         cache_factory='erp5_content_short')
         result = _getUserByLogin(login)
-        return [item.getObject() for item in result]
+        return [portal.unrestrictedTraverse(x) for x in result]
 
 classImplements( ERP5UserManager
                , IAuthenticationPlugin
