@@ -1686,7 +1686,7 @@ class TestAccounting(ERP5TypeTestCase):
     """
     # clear all existing ids in portal ids
     if hasattr(self.portal.portal_ids, 'dict_ids'):
-      self.portal.portal_ids.clear()
+      self.portal.portal_ids.dict_ids.clear()
     accounting_transaction = self.createAccountingTransaction()
     self.portal.portal_workflow.doActionFor(
           accounting_transaction, 'stop_action')
