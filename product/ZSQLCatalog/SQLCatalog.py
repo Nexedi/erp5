@@ -399,9 +399,12 @@ class Query(QueryMixin):
     elif value is None:
       where_expression.append("%s is NULL" % (key))
     elif isinstance(value, (tuple, list)) and self.operator.upper() == 'IN':
-      escaped_value_list = [self._quoteSQLString(x) for x in value]
-      escaped_value_string = ', '.join(escaped_value_list)
-      where_expression.append("%s IN (%s)" % (key, escaped_value_string))
+      if len(value):
+        escaped_value_list = [self._quoteSQLString(x) for x in value]
+        escaped_value_string = ', '.join(escaped_value_list)
+        where_expression.append("%s IN (%s)" % (key, escaped_value_string))
+      else:
+        where_expression.('0') # "foo IN ()" is invalid SQL syntax, so use a "false" value.
     else:
       where_expression.append("%s = %s" % 
            (self._quoteSQLKey(key), self._quoteSQLString(value)))
