@@ -180,7 +180,7 @@ class ERP5UserManager(BasePlugin):
 
         try:
           try:
-            result = self.getPortalObject().portal_catalog(
+            result = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
                                     portal_type="Person", reference=login)
           except ConflictError:
             raise
