@@ -33,7 +33,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type import _dtmldir
-from Products.ERP5Type.Cache import * 
+from Products.ERP5Type.Cache import *
 from Products.ERP5Type.CachePlugins.RamCache import RamCache
 from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
 from Products.ERP5Type.CachePlugins.SQLCache import SQLCache
@@ -93,9 +93,9 @@ class CacheTool(BaseTool):
           cache_obj = SQLCache(kw)
         if cache_obj:
           ## set cache expire check interval
-          cache_obj.cache_expire_check_interval = cp.getCacheExpireCheckInterval() 
+          cache_obj.cache_expire_check_interval = cp.getCacheExpireCheckInterval()
           rd[cache_scope]['cache_plugins'].append(cache_obj)
-          rd[cache_scope]['cache_params']['cache_duration'] = cf.getCacheDuration() 
+          rd[cache_scope]['cache_params']['cache_duration'] = cf.getCacheDuration()
     return rd
 
   ##
@@ -118,7 +118,7 @@ class CacheTool(BaseTool):
     """ Parse given connection string. Code "borrowed" from ZMySLQDA.db """
     kwargs = {}
     items = connection_string.split()
-    if not items: 
+    if not items:
       return kwargs
     lockreq, items = items[0], items[1:]
     if lockreq[0] == "*":
@@ -138,13 +138,13 @@ class CacheTool(BaseTool):
       kwargs['db'] = kwargs['db'][1:]
     if not kwargs['db']:
       del kwargs['db']
-    if not items: 
+    if not items:
       return kwargs
     kwargs['user'], items = items[0], items[1:]
-    if not items: 
+    if not items:
       return kwargs
     kwargs['passwd'], items = items[0], items[1:]
-    if not items: 
+    if not items:
       return kwargs
     kwargs['unix_socket'], items = items[0], items[1:]
     return kwargs
@@ -189,7 +189,7 @@ class CacheTool(BaseTool):
     """ Clear specified or default cache factory. """
     ram_cache_root = self.getRamCacheRoot()
     for cf_key in cache_factory_list:
-      if ram_cache_root.has_key(cf_key):	    
+      if ram_cache_root.has_key(cf_key):
         for cp in ram_cache_root[cf_key].getCachePluginList():
           cp.clearCache()
     if REQUEST is not None:
