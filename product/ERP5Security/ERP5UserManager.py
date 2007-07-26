@@ -174,7 +174,6 @@ class ERP5UserManager(BasePlugin):
           return []
 
         def _getUserByLogin(login):
-          import pdb; pdb.set_trace()
           # because we aren't logged in, we have to create our own
           # SecurityManager to be able to access the Catalog
           sm = getSecurityManager()
