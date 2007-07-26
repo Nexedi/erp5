@@ -486,11 +486,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           query = Query(allowedRolesAndUsers=allowedRolesAndUsers)
       else:
-        if allowedRolesAndUsers:
-          allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
-          security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
-          if len(security_uid_list) == 0:
-            security_uid_list = None
+        allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
+        security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
         if role_column_dict:
           query_list = []
           for key, value in role_column_dict.items():
@@ -498,9 +495,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             query_list.append(new_query)
           operator_kw = {'operator': 'AND'}
           query = ComplexQuery(*query_list, **operator_kw)
-          if allowedRolesAndUsers and security_uid_list:
-            query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
-                                 query, operator='OR')
+          query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
+                               query, operator='OR')
         else:
           query = Query(security_uid=security_uid_list, operator='IN')
       if original_query is not None:
