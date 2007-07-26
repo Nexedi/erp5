@@ -499,10 +499,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           operator_kw = {'operator': 'AND'}
           query = ComplexQuery(*query_list, **operator_kw)
           if allowedRolesAndUsers and security_uid_list:
-            query = ComplexQuery(Query(security_uid=security_uid_list),
+            query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
                                  query, operator='OR')
         else:
-          query = Query(security_uid=security_uid_list)
+          query = Query(security_uid=security_uid_list, operator='IN')
       if original_query is not None:
         query = ComplexQuery(query, original_query, operator='AND')
       return query
