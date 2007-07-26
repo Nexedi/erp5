@@ -29,7 +29,7 @@ host = 'localhost'
 port = 8080
 portal_name = 'erp5_portal'
 send_mail = 1
-mail_to_address = 'erp5-report@erp5.org'
+email_to_address = 'erp5-report@erp5.org'
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
@@ -56,7 +56,7 @@ def usage(stream, msg=None):
 
 def parseArgs():
   global send_mail
-  global mail_to_address
+  global email_to_address
   try:
     opts, args = getopt.getopt(sys.argv[1:],
           "hs", ["help", "stdout",
