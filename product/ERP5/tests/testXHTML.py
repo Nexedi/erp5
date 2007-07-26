@@ -38,6 +38,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
+from glob import glob
 import time
 
 try:
@@ -49,7 +50,7 @@ except ImportError:
 # Test Setting
 #
 INSTANCE_HOME = os.environ['INSTANCE_HOME']
-bt5_path = os.path.join(INSTANCE_HOME, 'bt5')
+bt5_path = glob(os.path.join(INSTANCE_HOME, 'bt5', '*'))[0]
 # dependency order
 target_business_templates = (
   'erp5_base',
