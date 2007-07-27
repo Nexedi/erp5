@@ -133,8 +133,9 @@ if len(active_careers) > 0:\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>career_object</string>
+                            <string>_getattr_</string>
                             <string>person_object</string>
                             <string>active_careers</string>
                             <string>_getiter_</string>

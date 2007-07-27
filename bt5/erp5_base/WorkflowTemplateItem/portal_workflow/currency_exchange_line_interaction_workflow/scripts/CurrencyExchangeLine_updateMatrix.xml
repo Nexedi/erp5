@@ -141,10 +141,11 @@ if cell_range_key_list != [[None, None]] :\n
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
                             <string>base_id</string>
                             <string>kwd</string>
+                            <string>_getattr_</string>
                             <string>cell_range_key_list</string>
                             <string>resource_list</string>
                             <string>price_currency_list</string>
@@ -153,7 +154,6 @@ if cell_range_key_list != [[None, None]] :\n
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>_getitem_</string>
                             <string>None</string>
                             <string>i</string>
                             <string>k</string>

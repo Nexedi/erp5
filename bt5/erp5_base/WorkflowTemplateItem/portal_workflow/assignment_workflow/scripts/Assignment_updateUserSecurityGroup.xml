@@ -137,6 +137,7 @@ if person_security_script is not None:\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>assignment_object</string>
                             <string>person_object</string>
                             <string>getattr</string>

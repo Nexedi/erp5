@@ -139,8 +139,9 @@ if len(assignment_site_list) != 1:\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>assignment_object</string>
+                            <string>_getattr_</string>
                             <string>person_object</string>
                             <string>assignment_site_list</string>
                             <string>_getiter_</string>
