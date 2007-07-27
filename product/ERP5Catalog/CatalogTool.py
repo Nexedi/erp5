@@ -495,8 +495,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             query_list.append(new_query)
           operator_kw = {'operator': 'AND'}
           query = ComplexQuery(*query_list, **operator_kw)
-          query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
-                               query, operator='OR')
+          # If security_uid_list is empty, adding it to criterions will only
+          # result in "false or [...]", so avoid useless overhead by not
+          # adding it at all.
+          if security_uid_list:
+            query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
+                                 query, operator='OR')
         else:
           query = Query(security_uid=security_uid_list, operator='IN')
       if original_query is not None:
