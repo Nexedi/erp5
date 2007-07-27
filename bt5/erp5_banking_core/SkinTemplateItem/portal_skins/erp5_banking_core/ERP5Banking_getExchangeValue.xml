@@ -67,13 +67,17 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-rate_list = context.CurrencyExchange_getExchangeRateList(from_currency=from_currency,\n
+rate = None\n
+method = getattr(context, \'getCurrencyExchangeRate\', None)\n
+if method is not None:\n
+  rate = method()\n
+if rate is None:\n
+  rate_list = context.CurrencyExchange_getExchangeRateList(from_currency=from_currency,\n
                  to_currency=to_currency, \n
                  currency_exchange_type=currency_exchange_type,\n
                  start_date=start_date)\n
-rate = None\n
-if len(rate_list) > 0:\n
-  rate = rate_list[0]\n
+  if len(rate_list) > 0:\n
+    rate = rate_list[0]\n
 \n
 price = context.getSourceTotalAssetPrice()\n
 \n
@@ -145,11 +149,13 @@ return round(rate * price)\n
                             <string>to_currency</string>
                             <string>currency_exchange_type</string>
                             <string>start_date</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>rate_list</string>
                             <string>None</string>
                             <string>rate</string>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>method</string>
+                            <string>_getattr_</string>
+                            <string>rate_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>price</string>
