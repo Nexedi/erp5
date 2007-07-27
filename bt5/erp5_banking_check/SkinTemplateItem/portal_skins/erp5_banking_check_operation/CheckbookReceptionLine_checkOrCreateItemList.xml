@@ -242,6 +242,7 @@ for i in xrange(quantity):\n
         check.setReference(j)\n
         check.setResource(model)\n
   else:\n
+    last_reference_value = reference_to_int(reference_range_min)\n
     if check == 1:\n
       checkReferenceUniqueness(reference_range_min, model, destination_payment_uid)\n
     if create == 1:\n
@@ -252,7 +253,6 @@ for i in xrange(quantity):\n
         item_type = line.getCheckTypeValue()\n
         item.setPrice(item_type.getPrice())\n
         item.setPriceCurrency(line.getPriceCurrency())\n
-      last_reference_value = reference_to_int(reference_range_min)\n
       #tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference_range_min)\n
       #encountered_check_identifiers_dict[tag] = None\n
   # update reference_range_min for the next pass\n
