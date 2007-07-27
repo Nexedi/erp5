@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: "siege" not in here.getSourceTrade("")</string> </value>
+            <value> <string>python: "siege" not in here.getSource("")</string> </value>
         </item>
       </dictionary>
     </pickle>
