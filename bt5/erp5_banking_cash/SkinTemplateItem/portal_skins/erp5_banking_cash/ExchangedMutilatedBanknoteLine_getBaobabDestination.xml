@@ -65,19 +65,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>destination = "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" %(context.getSourceTrade(),)\n
-\n
-# If it was sent to headquarters, the destination\n
-# must be None\n
-parent = context.getParentValue()\n
-for workflow_item in \\\n
-     parent.Base_getWorkflowHistoryItemList(\'mutilated_banknote_workflow\',\n
-     display=0):\n
-  if workflow_item.state == \'planned\':\n
-    destination = None\n
-    break\n
-\n
-return destination\n
+            <value> <string>mutilated_banknote = context.getParentValue()\n
+mutilated_banknote_source_trade = mutilated_banknote.getSourceTrade(\'\')\n
+if \'siege\' not in mutilated_banknote_source_trade and mutilated_banknote.getWorkflowState() in (\'finished\', \'delivered\'):\n
+  return "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" % (mutilated_banknote_source_trade, )\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -130,10 +122,8 @@ return destination\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>destination</string>
-                            <string>parent</string>
-                            <string>_getiter_</string>
-                            <string>workflow_item</string>
+                            <string>mutilated_banknote</string>
+                            <string>mutilated_banknote_source_trade</string>
                             <string>None</string>
                           </tuple>
                         </value>
