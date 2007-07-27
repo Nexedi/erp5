@@ -83,7 +83,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
    tal:define="object_uid           here/getUid | nothing;\n
                object_path          here/getPath | nothing;\n
                form                 nocall: form | nothing;\n
-               form_id              form/id | nothing;\n
+               form_id              form/id | template/title_or_id | nothing;\n
                form_action          python: form and form.action not in (\'\', None) and here.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
                local_parameter_list local_parameter_list | python: {};\n
                dummy                python: local_parameter_list.update({\'object_uid\': object_uid, \'object_path\': object_path, \'form_id\': form_id});\n
