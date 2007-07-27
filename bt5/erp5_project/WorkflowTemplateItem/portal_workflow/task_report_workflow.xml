@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>manager_bypass</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
