@@ -51,6 +51,8 @@ try:
 except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0
 
+from Products.ERP5.Document.Document import ConversionError
+
 # Constructors
 manage_addOOoTemplate = DTMLFile("dtml/OOoTemplate_add", globals())
 
@@ -63,11 +65,12 @@ def addOOoTemplate(self, id, title="", REQUEST=None):
   """
   # add actual object
   id = self._setObject(id, OOoTemplate(id, title))
-  file = REQUEST.form.get('file')
-  if file.filename:
-    # Get the template in the associated context and upload the file
-    getattr(self,id).pt_upload(REQUEST, file)
-  # respond to the add_and_edit button if necessary
+  if REQUEST is not None:
+    file = REQUEST.form.get('file')
+    if file.filename:
+      # Get the template in the associated context and upload the file
+      getattr(self,id).pt_upload(REQUEST, file)
+      # respond to the add_and_edit button if necessary
   add_and_edit(self, id, REQUEST)
   return ''
 
@@ -394,9 +397,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
   def pt_render(self, source=0, extra_context={}):
     # Get request
     request = extra_context.get('REQUEST', None)
-    if not request:
-      request = get_request()
-
+    if request is None:
+      request = self.REQUEST
     # Get parent object (the one to render this template on)
     here = getattr(self, 'aq_parent', None)
     if here is None:
@@ -413,6 +415,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     ooo_builder = OOoBuilder(ooo_document)
     # Pass builder instance as extra_context
     extra_context['ooo_builder'] = ooo_builder
+    
     # And render page template
     doc_xml = ZopePageTemplate.pt_render(self, source=source, extra_context=extra_context)
 
@@ -423,6 +426,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       default_styles_text = ooo_builder.extract('styles.xml')
     except AttributeError:
       default_styles_text = None
+
     # Add the associated files
     for dir_name, document_dict in attachments_dict.iteritems():
       # Special case : the document is an OOo one
@@ -441,9 +445,6 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
         ooo_builder.addFileEntry(full_path=dir_name,
                   media_type=document_dict['doc_type'], content = document_dict['document'] )
 
-    # Get request and batch_mode
-    batch_mode = extra_context.get('batch_mode', 0)
-
     # Debug mode
     if request.get('debug',0):
       return doc_xml
@@ -457,6 +458,12 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     except AttributeError:
       self.OLE_documents_zipstring = None
 
+    # Convert if necessary
+    opts = extra_context.get("options", None)
+
+    # Get request and batch_mode
+    batch_mode = opts.get('batch_mode', None)
+
     # If the file has embedded OLE documents, restore it
     if self.OLE_documents_zipstring:
       additional_builder = OOoBuilder( self.OLE_documents_zipstring )
@@ -467,24 +474,22 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     ooo_builder.updateManifest()
 
     # Produce final result
-    ooo = ooo_builder.render(self.title or self.id)
-
-    # Convert if necessary
-    opts = extra_context.get("options", None)
+    ooo = ooo_builder.render(name=self.title or self.id)
+    
     if opts is not None:
       format = opts.get('format', request.get('format', None))
       if format:
-        return self._asFormat(ooo, format, request)
+        return self._asFormat(ooo, format, request, batch_mode)
 
-    # Do not send a RESPONSE if in batch_mode
-    if request and not batch_mode:
+    if format is None and not batch_mode:
       request.RESPONSE.setHeader('Content-Type','%s;; charset=utf-8' % self.content_type)
-      request.RESPONSE.setHeader('Content-Length',len(ooo))
-      request.RESPONSE.setHeader('Content-Disposition','inline;filename=%s' %
-                                  self.title_or_id())
-
+      request.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s' % self.title_or_id())
+    else:
+      request.RESPONSE.setHeader('Content-Type','%s;; charset=utf-8' % 'text/html')
+      request.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s' % self.title_or_id())
+        
     return ooo
-
+  
   def om_icons(self):
     """Return a list of icon URLs to be displayed by an ObjectManager"""
     icons = ({'path': 'misc_/ERP5OOo/OOo.png',
@@ -503,8 +508,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     """
     return self._asFormat(ooo, 'pdf', REQUEST)
 
-  def _asFormat(self, ooo, format, REQUEST=None):
-    # now create a temp OOoDocument to convert data to pdf
+  def _asFormat(self, ooo, format, REQUEST=None, batch_mode=0):
+    # Now create a temp OOoDocument to convert data to pdf
     from Products.ERP5Type.Document import newTempOOoDocument
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
     tmp_ooo.edit(base_data=ooo,
@@ -512,30 +517,30 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
                  source_reference=self.title_or_id(),
                  base_content_type=self.content_type,)
     tmp_ooo.oo_data = ooo
-    
-    if format == 'pdf':
-      # slightly different implementation
+    if format == 'pdf' and not batch_mode:
+      # Slightly different implementation
       # now convert it to pdf
       tgts = [x[1] for x in tmp_ooo.getTargetFormatItemList()
               if x[1].endswith('pdf')]
       if len(tgts) > 1:
-          raise ValueError, 'multiple pdf formats found - this shouldnt happen'
+        REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
+        REQUEST.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s.pdf' % self.title_or_id())
+        raise ValueError, 'multiple pdf formats found - this shouldnt happen'
       if len(tgts) == 0:
-          raise ValueError, 'no pdf format found'
+        REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
+        REQUEST.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s.pdf' % self.title_or_id())    
+        raise ValueError, 'no pdf format found'
       fmt = tgts[0]
       mime, data = tmp_ooo.convert(fmt)
       if REQUEST is not None:
-        REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
-        REQUEST.RESPONSE.setHeader('Content-disposition',
-                       'attachment;; filename="%s.pdf"' % self.title_or_id())
+          REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
+          REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;filename=%s.pdf' % self.title_or_id())
       return data
-
-    mime, data = tmp_ooo.convert(format)
+    mime , data = tmp_ooo.convert(format)
     if REQUEST is not None:
       REQUEST.RESPONSE.setHeader('Content-type', mime)
-      REQUEST.RESPONSE.setHeader('Content-disposition',
-               'attachment;; filename="%s.%s"' % (self.title_or_id(),format))
-      # FIXME the above lines should return zip format when html was requested
+      REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;filename=%s.%s' % (self.title_or_id(),format))
+        # FIXME the above lines should return zip format when html was requested
     return data
 
 InitializeClass(OOoTemplate)

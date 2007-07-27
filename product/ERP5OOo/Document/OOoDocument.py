@@ -373,7 +373,7 @@ class OOoDocument(File, ConversionCacheMixin):
       if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
         self.setConversion(data, mime, format=format)
       else:
-        temp_image = self.portal_contributions.newContent(
+        self.portal_contributions.newContent(
                                        portal_type='Image',
                                        temp_object=1)
         temp_image._setData(data)

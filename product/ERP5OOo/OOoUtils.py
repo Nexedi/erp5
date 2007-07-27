@@ -176,7 +176,6 @@ class OOoBuilder:
     """ Add a path to the manifest """
     MANIFEST_FILENAME = 'META-INF/manifest.xml'
     meta_infos = self.extract(MANIFEST_FILENAME)
-
     # prevent some duplicates
     for meta_line in meta_infos.split('\n'):
         for new_meta_line in self._manifest_additions_list:
@@ -207,9 +206,9 @@ class OOoBuilder:
     returns the OOo document
     """
     request = get_request()
-    request.response.setHeader('Content-type', OOo_mimeType_dict.get(extension, 'application/vnd.sun.xml.writer'))
     if name:
-      request.response.setHeader('Content-Disposition', 'attachment; filename=%s.%s' % (name, extension))
+      request.response.setHeader('Content-Disposition', 'inline; filename=%s.%s' % (name, extension))
+
     self._document.seek(0)
     return self._document.read()
 
