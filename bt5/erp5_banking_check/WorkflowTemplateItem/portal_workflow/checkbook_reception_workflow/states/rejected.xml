@@ -43,8 +43,8 @@
                 <string>confirm_action</string>
                 <string>delete</string>
                 <string>delete_action</string>
-                <string>reject</string>
-                <string>reject_action</string>
+                <string>draft</string>
+                <string>draft_action</string>
               </tuple>
             </value>
         </item>

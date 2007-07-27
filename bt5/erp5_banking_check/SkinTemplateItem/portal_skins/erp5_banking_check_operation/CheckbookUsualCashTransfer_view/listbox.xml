@@ -360,6 +360,10 @@
                           <string>destination_trade_title</string>
                           <string>Owner</string>
                         </tuple>
+                        <tuple>
+                          <string>aggregate_price</string>
+                          <string>Price</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -402,7 +406,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>aggregate_price</string>
+                          <string>aggregate_price</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -527,11 +536,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

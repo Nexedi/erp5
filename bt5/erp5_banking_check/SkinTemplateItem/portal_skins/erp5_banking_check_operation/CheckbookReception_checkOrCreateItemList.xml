@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># It was decided that it is possible to receive in an agency only\n
+# checks and checkbooks for accounts managed by that agency. Moreover\n
+# we have decided that we will not allow many checkbook reception at\n
+# a time inside an agency, like this we can create many activities with\n
+# the tag "CheckbookReception_[Agency Code or Url]" in order to make sure\n
+# we will not do duplicate (of course we check that there is not already\n
+# a check or checkbook with this references.\n
+\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+destination_id = context.getDestinationId()\n
+if destination_id is None:\n
+  msg = Message(domain=\'ui\', message=\'Sorry, you must define the site\')\n
+  raise ValidationFailed, (msg, )\n
+\n
+# first check that there is not a particular tag\n
+checkbook_reception_tag = "CheckbookReception_%s" % destination_id\n
+if context.portal_activities.countMessageWithTag(checkbook_reception_tag) != 0:\n
+  msg = Message(domain=\'ui\', message=\'Sorry, there is already a checkbook reception newly validated\')\n
+  raise ValidationFailed, (msg, )\n
+\n
+line_list = context.objectValues(portal_type=\'Checkbook Reception Line\')\n
+if check == 1:\n
+  encountered_check_identifiers_dict = {}\n
+  for line in line_list:\n
+    encountered_check_identifiers_dict = line.CheckbookReceptionLine_checkOrCreateItemList(check=1, \n
+         encountered_check_identifiers_dict=encountered_check_identifiers_dict)\n
+\n
+if create==1:\n
+  for line in line_list:\n
+    line.activate(tag=checkbook_reception_tag).\\\n
+        CheckbookReceptionLine_checkOrCreateItemList(create=1, tag=checkbook_reception_tag)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>check=0, create=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>check</string>
+                            <string>create</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>destination_id</string>
+                            <string>None</string>
+                            <string>msg</string>
+                            <string>checkbook_reception_tag</string>
+                            <string>line_list</string>
+                            <string>encountered_check_identifiers_dict</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CheckbookReception_checkOrCreateItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

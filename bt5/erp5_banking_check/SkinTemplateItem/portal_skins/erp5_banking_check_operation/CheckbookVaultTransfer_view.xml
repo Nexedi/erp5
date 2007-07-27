@@ -95,7 +95,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_aggregate_price</string>
+                      </list>
                     </value>
                 </item>
                 <item>
