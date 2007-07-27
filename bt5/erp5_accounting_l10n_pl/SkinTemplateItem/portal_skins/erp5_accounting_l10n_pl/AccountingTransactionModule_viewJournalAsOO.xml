@@ -151,7 +151,7 @@
           </table:table-cell>\n
         </table:table-row>\n
 \n
-        <table:table-row table:style-name=\'ro1\' tal:repeat="transaction python:here.AccountingTransactionModule_getJournalAccountingTransactionList()">\n
+        <table:table-row table:style-name=\'ro1\' tal:repeat="transaction python:here.AccountingTransactionModule_getJournalAccountingTransactionPolishAccountingList()">\n
           <table:table-cell table:style-name=\'ce3\' office:value-type=\'date\'>\n
               <text:p tal:content="transaction/date"></text:p>\n
           </table:table-cell>\n
