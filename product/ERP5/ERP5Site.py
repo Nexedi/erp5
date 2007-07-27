@@ -107,9 +107,7 @@ def getCatalogStorageList(*args, **kw):
   """
   result = []
   bootstrap_dir = getBootstrapDirectory()
-  #import pdb; pdb.set_trace()
   for item in os.listdir(bootstrap_dir):
-    #LOG('getCatalogStorageList', 0, item)
     if item == '.svn':
       continue
     if item.endswith('.bt5') and os.path.isfile(item):
