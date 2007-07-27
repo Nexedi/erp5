@@ -552,10 +552,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   # Catalog related
   security.declarePublic( 'reindexObject' )
   def reindexObject(self, *args, **kw):
-    """
-      Fixes the hierarchy structure (use of Base class)
-      XXXXXXXXXXXXXXXXXXXXXXXX
-      BUG here : when creating a new base category
+    """Fixes the hierarchy structure (use of Base class)
     """
     return Base.reindexObject(self, *args, **kw)
 
@@ -571,10 +568,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
 
   security.declarePublic( 'recursiveReindexObject' )
   def recursiveReindexObject(self, activate_kw=None, **kw):
-    """
-      Fixes the hierarchy structure (use of Base class)
-      XXXXXXXXXXXXXXXXXXXXXXXX
-      BUG here : when creating a new base category
+    """Recursively indexes the content of self.
     """
     if self.isIndexable:
       if activate_kw is None and self.objectCount() > REINDEX_SPLIT_COUNT:
