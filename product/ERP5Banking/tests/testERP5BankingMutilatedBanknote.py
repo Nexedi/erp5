@@ -265,11 +265,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       self.assertEqual(cell.getBaobabSourceValue(), None)
-      headquarter = sequence.get('headquarter', 0)
-      if headquarter:
-        self.assertEqual(cell.getBaobabDestination(), None)
-      else:
-        self.assertEqual(cell.getBaobabDestination(), self.usual_vault.getRelativeUrl())
+      self.assertEqual(cell.getBaobabDestinationValue(), None)
       if cell.getId() == 'movement_0_0_0':
         self.assertEqual(cell.getQuantity(), 2.0)
       elif cell.getId() == 'movement_0_1_0':
@@ -622,7 +618,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       self.assertEqual(cell.getBaobabSourceValue(), None)
-      self.assertEqual(cell.getBaobabDestination(), self.hq_usual_vault.getRelativeUrl())
+      self.assertEqual(cell.getBaobabDestination(), None)
       if cell.getId() == 'movement_0_0_0':
         self.assertEqual(cell.getQuantity(), 2.0)
       elif cell.getId() == 'movement_0_1_0':
