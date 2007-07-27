@@ -105,6 +105,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>your_exchange_rate</string>
+                        <string>my_currency_exchange_rate</string>
                         <string>my_price</string>
                         <string>my_discount_ratio</string>
                         <string>my_quantity</string>

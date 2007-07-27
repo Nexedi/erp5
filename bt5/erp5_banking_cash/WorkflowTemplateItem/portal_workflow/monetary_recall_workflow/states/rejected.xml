@@ -45,8 +45,6 @@
                 <string>delete_action</string>
                 <string>draft</string>
                 <string>draft_action</string>
-                <string>order</string>
-                <string>order_action</string>
                 <string>plan</string>
                 <string>plan_action</string>
               </tuple>

@@ -9,6 +9,7 @@ Cash Exchange | Simulation
 Cash Movement | Price
 Cash Sorting | Price
 Cash To Currency Purchase | Amount
+Cash To Currency Purchase | CurrencyExchangeRate
 Cash To Currency Purchase | Discount
 Cash To Currency Purchase | Price
 Cash To Currency Purchase | Reference

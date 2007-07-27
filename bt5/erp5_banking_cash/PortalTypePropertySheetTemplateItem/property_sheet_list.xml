@@ -19,6 +19,7 @@
  </portal_type>
  <portal_type id="Cash To Currency Purchase">
   <item>Discount</item>
+  <item>CurrencyExchangeRate</item>
   <item>Resource</item>
   <item>Price</item>
   <item>Reference</item>
