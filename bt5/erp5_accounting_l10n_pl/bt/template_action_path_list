@@ -23,20 +23,5 @@ Accounting Transaction Module | third_parties_report
 Accounting Transaction Module | trial_balance_report
 Accounting Transaction Module | validate_transactions
 Accounting Transaction Module | view
-Address | history
-Address | metadata
-Address | print
-Address | print_pdf
-Address | view
-Organisation | coordinates
-Organisation | details
-Organisation | document_view
-Organisation | financial_view
-Organisation | history
-Organisation | jump_active_accounting_pref
-Organisation | jump_to_accounting
-Organisation | list
-Organisation | metadata
-Organisation | print
-Organisation | transactions
-Organisation | view
+Address | polish_tax_details
+Organisation | polish_tax_details
