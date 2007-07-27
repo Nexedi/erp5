@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>mutilated_banknote = context.getParentValue()\n
 mutilated_banknote_source_trade = mutilated_banknote.getSourceTrade(\'\')\n
-if \'siege\' not in mutilated_banknote_source_trade and mutilated_banknote.getWorkflowState() in (\'finished\', \'delivered\'):\n
+if \'siege\' not in mutilated_banknote_source_trade and mutilated_banknote.getSimulationState() in (\'finished\', \'delivered\'):\n
   return "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" % (mutilated_banknote_source_trade, )\n
 return None\n
 </string> </value>
