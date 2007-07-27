@@ -104,7 +104,6 @@
                         <string>my_stop_date</string>
                         <string>my_price_currency</string>
                         <string>my_overdraft_facility</string>
-                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -117,6 +116,7 @@
                         <string>my_branch</string>
                         <string>my_bank_account_number</string>
                         <string>my_bank_account_key</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
