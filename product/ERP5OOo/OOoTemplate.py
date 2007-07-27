@@ -223,7 +223,7 @@ class OOoTemplate(ZopePageTemplate):
     def replaceIncludes(match):
       options_dict = dict( style="fr1", x="0cm", y="0cm" )
       options_dict.update( dict(arguments_re.findall( match.group(1) )) )
-      document = self._resolvePath( options_dict['path'] )
+      document = self._resolvePath( options_dict['path'].encode() )
       #document_text = document.read()
       document_text = ZopePageTemplate.pt_render(document) # extra_context is missing
 
@@ -306,7 +306,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     def replaceIncludesImg(match):
       options_dict = dict( x='0cm', y='0cm', style="fr1" )
       options_dict.update( dict(arguments_re.findall( match.group(1) )) )
-      picture = self._resolvePath( options_dict['path'] )
+      picture = self._resolvePath( options_dict['path'].encode() )
 
       # "standard" filetype == Image or File , for ERP objects the
       # manipulations are different
