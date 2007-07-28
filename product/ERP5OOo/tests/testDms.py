@@ -50,6 +50,7 @@
 #
 
 from random import randint
+import time
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -71,7 +72,7 @@ os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 QUIET = 0
-RUN_ALL_TEST = 0
+RUN_ALL_TEST = 1
 
 # Define the conversion server host
 conversion_server_host = ('127.0.0.1', 8008)
@@ -107,12 +108,27 @@ def makeFileUpload(name):
   path = makeFilePath(name)
   return FileUploadTest(path, name)
 
+class DummyLocalizer:
+
+  """
+    A replacement for stock cookie - based localizer
+  """
+
+  lang = 'en'
+
+  def get_selected_language(self):
+    return self.lang
+
+  def changeLanguage(self, lang):
+    self.lang = lang
+
+  def translate(self, dictionnary, word):
+    return word
 
 class TestDocument(ERP5TypeTestCase):
   """
+    Test basic document - related operations
   """
-
-  # Different variables used for this test
 
   def getTitle(self):
     return "DMS"
@@ -120,70 +136,47 @@ class TestDocument(ERP5TypeTestCase):
   ## setup
 
   def afterSetUp(self, quiet=QUIET, run=0):
-    pass
-    #self.createCategoryList()
-    #self.createObjectList()
-    #self.setSystemPreference()
-    #self.login()
-    #portal = self.getPortal()
+    self.portal = self.getPortal()
+    # set a dummy localizer (because normally it is cookie based)
+    self.portal.Localizer = DummyLocalizer()
 
   def getDocumentModule(self):
     return getattr(self.getPortal(),'document_module')
 
   def getBusinessTemplateList(self):
-    return ()
-    #return ('erp5_base','erp5_trade','erp5_project','erp5_dms')
+    return ('erp5_base', 'erp5_web', 'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
 
   def getNeededCategoryList(self):
-    return ('function/publication/reviewer','function/project/director','function/hq')
+    return ()
 
-  def createCategoryList(self):
-    """Create the categories for our test. """
-    # create categories
-    for cat_string in self.getNeededCategoryList():
-      base_cat = cat_string.split("/")[0]
-      path = self.getPortal().portal_categories[base_cat]
-      for cat in cat_string.split("/")[1:]:
-        if not cat in path.objectIds():
-          path = path.newContent(
-            portal_type='Category',
-            id=cat,
-            title=cat,
-            immediate_reindex=1)
-        else:
-          path = path[cat]
+    pass
 
-  def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
-    default_pref.setPreferredDocumentFileNameRegularExpression(
-           "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})")
-    default_pref.setPreferredDocumentReferenceRegularExpression(
-           "(?P<reference>[A-Z]{3,6})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?")
-    default_pref.enable()
+  def tearDown(self):
+    """
+      Do some stuff after each test:
+      - clear document module
+    """
+    # XXX Is it safe to overwrite tearDown?
+    self.clearDocumentModule()
+
+  def clearDocumentModule(self):
+    """
+      Remove everything after each run
+    """
+    doc_module = self.getDocumentModule()
+    ids = [i for i in doc_module.objectIds()]
+    doc_module.manage_delObjects(ids)
+    get_transaction().commit()
+    self.tic()
 
   ## helper methods
 
-  def getUserFolder(self):
-    return self.getPortal().acl_users
-
-  def login(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Create a new manager user and login.
-    """
-    user_name = 'dms_user'
-    user_folder = self.portal.acl_users
-    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor'], [])
-    user = user_folder.getUserById(user_name).__of__(user_folder)
-    newSecurityManager(None, user)
-
-  def createTestDocument(self, file_name=None, reference='TEST', version='002', language='en'):
+  def createTestDocument(self, file_name=None, portal_type='Text', reference='TEST', version='002', language='en'):
     """
       Creates a text document
     """
     dm=self.getPortal().document_module
-    doctext=dm.newContent(portal_type='Text Document')
+    doctext=dm.newContent(portal_type=portal_type)
     if file_name is not None:
       f = open(makeFilePath(file_name))
       doctext.setTextContent(f.read())
@@ -200,6 +193,9 @@ class TestDocument(ERP5TypeTestCase):
     """
     document_module = self.portal.document_module
     return getattr(document_module, id)
+
+  def clearCache(self):
+    self.portal.portal_caches.clearAllCache()
 
   ## steps
   
@@ -221,7 +217,7 @@ class TestDocument(ERP5TypeTestCase):
     self.failUnless(self.getCatalogTool()!=None)
     self.failUnless(self.getWorkflowTool()!=None)
 
-  def test_02_RevisionSystem(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def no_test_02_RevisionSystem(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
       Test revision mechanism
     """
@@ -243,15 +239,37 @@ class TestDocument(ERP5TypeTestCase):
     """
     if not run: return
     printAndLog('\nTest Versioning System')
-    # create a test document, set coordinates (reference=TEST, version=002, language=en)
-    # create a second test document, set coordinates (reference=TEST, version=002, language=en)
-    # create a third test document, set its reference to ANOTHER
-    # run isVersionUnique on all three (should return False, False, True)
-    # change version of the second doc to 003
-    # run isVersionUnique on all three (should return True)
-    # run getLatestVersionValue on first and second (should return the second)
-    # run getVersionValueList on first and second (should return the two)
-    # run getVersionValueList on third (should return the third)
+    # create a document 1, set coordinates (reference=TEST, version=002, language=en)
+    # create a document 2, set coordinates (reference=TEST, version=002, language=en)
+    # create a document 3, set coordinates (reference=TEST, version=004, language=en)
+    # run isVersionUnique on 1, 2, 3 (should return False, False, True)
+    # change version of 2 to 003
+    # run isVersionUnique on 1, 2, 3  (should return True)
+    # run getLatestVersionValue on all (should return 3)
+    # run getVersionValueList on 2 (should return [3, 2, 1])
+    document_module = self.getDocumentModule()
+    docs = {}
+    docs[1] = self.createTestDocument(reference='TEST', version='002', language='en')
+    docs[2] = self.createTestDocument(reference='TEST', version='002', language='en')
+    docs[3] = self.createTestDocument(reference='TEST', version='004', language='en')
+    docs[4] = self.createTestDocument(reference='ANOTHER', version='002', language='en')
+    get_transaction().commit()
+    self.tic()
+    self.failIf(docs[1].isVersionUnique())
+    self.failIf(docs[2].isVersionUnique())
+    self.failUnless(docs[3].isVersionUnique())
+    docs[2].setVersion('003')
+    get_transaction().commit()
+    self.tic()
+    self.failUnless(docs[1].isVersionUnique())
+    self.failUnless(docs[2].isVersionUnique())
+    self.failUnless(docs[3].isVersionUnique())
+    self.failUnless(docs[1].getLatestVersionValue() == docs[3])
+    self.failUnless(docs[2].getLatestVersionValue() == docs[3])
+    self.failUnless(docs[3].getLatestVersionValue() == docs[3])
+    version_list = [br.getRelativeUrl() for br in docs[2].getVersionValueList()]
+    self.failUnless(version_list == [docs[3].getRelativeUrl(), docs[2].getRelativeUrl(), docs[1].getRelativeUrl()])
+    self.clearDocumentModule()
 
   def test_04_VersioningWithLanguage(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
@@ -265,7 +283,7 @@ class TestDocument(ERP5TypeTestCase):
     # (3) TEST, 002, pl
     # (4) TEST, 003, en
     # (5) TEST, 003, sp
-    # the following calls should produce the following output:
+    # the following calls (on any doc) should produce the following output:
     # getOriginalLanguage() = 'en'
     # getLanguageList = ('en', 'fr', 'pl', 'sp')
     # getLatestVersionValue() = 4
@@ -273,10 +291,45 @@ class TestDocument(ERP5TypeTestCase):
     # getLatestVersionValue('fr') = 2
     # getLatestVersionValue('pl') = 3
     # getLatestVersionValue('ru') = None
-    # Set user language with Localizer to 'sp'
+    # change user language into 'sp'
     # getLatestVersionValue() = 5
+    # add documents:
+    # (6) TEST, 004, pl
+    # (7) TEST, 004, en
+    # getLatestVersionValue() = 7
+    localizer = self.portal.Localizer
+    document_module = self.getDocumentModule()
+    docs = {}
+    docs[1] = self.createTestDocument(reference='TEST', version='002', language='en')
+    time.sleep(1) # time span here because catalog records only full seconds
+    docs[2] = self.createTestDocument(reference='TEST', version='002', language='fr')
+    time.sleep(1)
+    docs[3] = self.createTestDocument(reference='TEST', version='002', language='pl')
+    time.sleep(1)
+    docs[4] = self.createTestDocument(reference='TEST', version='003', language='en')
+    time.sleep(1)
+    docs[5] = self.createTestDocument(reference='TEST', version='003', language='sp')
+    time.sleep(1)
+    get_transaction().commit()
+    self.tic()
+    doc = docs[2] # can be any
+    self.failUnless(doc.getOriginalLanguage() == 'en')
+    self.failUnless(doc.getLanguageList() == ['en', 'fr', 'pl', 'sp'])
+    self.failUnless(doc.getLatestVersionValue() == docs[4]) # there are two latest - it chooses the one in user language
+    self.failUnless(doc.getLatestVersionValue('en') == docs[4])
+    self.failUnless(doc.getLatestVersionValue('fr') == docs[2])
+    self.failUnless(doc.getLatestVersionValue('pl') == docs[3])
+    self.failUnless(doc.getLatestVersionValue('ru') == None)
+    localizer.changeLanguage('sp') # change user language
+    self.failUnless(doc.getLatestVersionValue() == docs[5]) # there are two latest - it chooses the one in user language
+    docs[6] = document_module.newContent(reference='TEST', version='004', language='pl')
+    docs[7] = document_module.newContent(reference='TEST', version='004', language='en')
+    get_transaction().commit()
+    self.tic()
+    self.failUnless(doc.getLatestVersionValue() == docs[7]) # there are two latest, neither in user language - it chooses the one in original language
+    self.clearDocumentModule()
 
-  def test_05_UniqueReference(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def no_test_05_UniqueReference(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
       Test automatic setting of unique reference
     """
@@ -288,7 +341,7 @@ class TestDocument(ERP5TypeTestCase):
     # run setUniqueReference('uniq') on the third
     # reference of the third doc should now be TEST-uniq-1
 
-  def test_06_testExplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def no_test_06_testExplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
       Test explicit relations.
       Explicit relations are just like any other relation, so no need to test them here
@@ -306,7 +359,7 @@ class TestDocument(ERP5TypeTestCase):
     # getSimilarCloudValueList on 4 should return 2, 3 and 5
     # getSimilarCloudValueList(depth=1) on 4 should return 3 and 5
 
-  def test_07_testImplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def no_test_07_testImplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
       Test implicit (wiki-like) relations.
     """
