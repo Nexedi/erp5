@@ -655,9 +655,12 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     original_language = self.getOriginalLanguage()
     user_language = self.Localizer.get_selected_language()
 
-    # if language was given return it
+    # if language was given return it (if there are any docs in this language)
     if language is not None:
-      return res[0].getObject()
+      try:
+        return res[0].getObject()
+      except IndexError:
+        return None
     else:
       first = res[0]
       in_original = None
