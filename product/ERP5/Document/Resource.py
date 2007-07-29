@@ -636,29 +636,29 @@ class Resource(XMLMatrix, Variated):
       return float(method())
 
     security.declareProtected(Permissions.AccessContentsInformation, 
-                              'getPrice')
-    def getPrice(self, default=None, context=None, REQUEST=None, **kw):
+                              'getPriceCalculationOperandDict')
+    def getPriceCalculationOperandDict(self, default=None, context=None,
+            REQUEST=None, **kw):
+      """Return a dictionary which contains operands for price calculation.
+      Consult the doc string in Movement.getPriceCalculationOperandDict
+      for more details.
       """
-      Return the unit price of a resource in a specific context.
-      """
-      # see Movement.getPrice
-      if isinstance(default, Base) and context is None:
-        msg = 'getPrice first argument is supposed to be the default value'\
-              ' accessor, the context should be passed as with the context='\
-              ' keyword argument'
-        warn(msg, DeprecationWarning)
-        LOG('ERP5', WARNING, msg)
-        context = default
-        default = None
-      
-      # First, try to use a type-based method for the calculation.
+      # First, try to use a new type-based method for the calculation.
       # Note that this is based on self (i.e. a resource) instead of context
       # (i.e. a movement).
-      method = self._getTypeBasedMethod('getPrice')
+      method = self._getTypeBasedMethod('getPriceCalculationOperandDict')
       if method is not None:
         return method(default=default, movement=context, REQUEST=REQUEST, **kw)
 
-      # This below is used only if the type-based method is not
+      # Next, try an old type-based method which returns only a final result.
+      method = self._getTypeBasedMethod('getPrice')
+      if method is not None:
+        price = method(default=default, movement=context, REQUEST=REQUEST, **kw)
+        if price is not None:
+          return {'price': price}
+        return default
+
+      # This below is used only if any type-based method is not
       # available at all. We should provide the default implementation
       # in a Business Template as Resource_getPrice, thus this will not
       # be used in the future. Kept only for backward compatibility in
@@ -727,7 +727,31 @@ class Resource(XMLMatrix, Variated):
         priced_quantity = self.getPricedQuantity()
         unit_base_price = unit_base_price / priced_quantity
       # Return result
-      return unit_base_price
+      if unit_base_price is not None:
+        return {'price': unit_base_price}
+      return default
+
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getPrice')
+    def getPrice(self, default=None, context=None, REQUEST=None, **kw):
+      """
+      Return the unit price of a resource in a specific context.
+      """
+      # see Movement.getPrice
+      if isinstance(default, Base) and context is None:
+        msg = 'getPrice first argument is supposed to be the default value'\
+              ' accessor, the context should be passed as with the context='\
+              ' keyword argument'
+        warn(msg, DeprecationWarning)
+        LOG('ERP5', WARNING, msg)
+        context = default
+        default = None
+      
+      operand_dict = self.getPriceCalculationOperandDict(default=default, 
+              context=context, REQUEST=REQUEST, **kw)
+      if operand_dict is not None:
+        return operand_dict['price']
+      return default
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getQuantityPrecision')

@@ -199,8 +199,9 @@ class Movement(XMLObject, Amount):
   # _getPrice is defined in the order / delivery
   # Pricing mehod
   def _getPrice(self, context):
-    # Call a script on the context
-    return context.Movement_lookupPrice()
+    operand_dict = self.getPriceCalculationOperandDict(context=context)
+    if operand_dict is not None:
+      return operand_dict['price']
 
   def _getTotalPrice(self, default=None, context=None):
     price = self.getPrice(context=context)
@@ -210,6 +211,34 @@ class Movement(XMLObject, Amount):
       return quantity * price
     else:
       return default
+
+  security.declareProtected(Permissions.AccessContentsInformation, 
+          'getPriceCalculationOperandDict')
+  def getPriceCalculationOperandDict(self, default=None, context=None, **kw):
+    """Return a dict object which contains operands used for price
+    calculation. The returned items depend on a site configuration,
+    because this will invoke a custom script at the end. The only
+    assumption is that the dict must contain a key 'price'
+    which represents the final result of the price calculation.
+    
+    The purpose is to obtain descriptive information to notify the user
+    of how a price is calculated in details, in particular, for invoices
+    and quotations. So a script which is eventually called should provide
+    all values required for generating such reports (e.g. a price,
+    a price without a discount, and a discount).
+    """
+    # First, try a type-based method, and if not present, use 
+    # the good-old-days way (which only returns a final result).
+    if context is None:
+      context = self
+    method = context._getTypeBasedMethod('getPriceCalculationOperandDict')
+    if method is not None:
+      operand_dict = method(**kw)
+      if operand_dict is None:
+        return default
+      assert 'price' in operand_dict 
+      return operand_dict
+    return {'price': context.Movement_lookupPrice()}
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
   def getPrice(self, default=None, **kw):
