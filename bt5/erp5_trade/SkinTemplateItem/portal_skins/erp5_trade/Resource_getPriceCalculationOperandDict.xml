@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>price_parameter_dict = context.getPriceParameterDict(context=movement, REQUEST=REQUEST, **kw)\n
+\n
+# Calculate the unit price\n
+unit_base_price = None\n
+# Calculate\n
+#     ((base_price + SUM(additional_price) +\n
+#     variable_value * SUM(variable_additional_price)) *\n
+#     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))) +\n
+#     SUM(non_discountable_additional_price)) *\n
+#     (1 + SUM(surcharge_ratio))\n
+#     Or, as (nearly) one single line :\n
+#     ((bp + S(ap) + v * S(vap))\n
+#       * (1 - m(1, M(S(dr), edr)))\n
+#       + S(ndap))\n
+#     * (1 + S(sr))\n
+# Variable value is dynamically configurable through a python script.\n
+# It can be anything, depending on business requirements.\n
+# It can be seen as a way to define a pricing model that not only\n
+# depends on discrete variations, but also on a continuous property\n
+# of the object\n
+\n
+base_price = price_parameter_dict[\'base_price\']\n
+if base_price in (None, \'\'):\n
+  # XXX Compatibility\n
+  # base_price must not be defined on resource\n
+  base_price = context.getBasePrice()\n
+\n
+if base_price not in (None, \'\'):\n
+  unit_base_price = base_price\n
+\n
+  # Sum additional price\n
+  unit_base_price += sum(price_parameter_dict[\'additional_price\'])\n
+\n
+  # Sum variable additional price\n
+  variable_value = 1.0\n
+  unit_base_price += sum(price_parameter_dict[\'variable_additional_price\']) * variable_value\n
+\n
+  # Discount\n
+  sum_discount_ratio = sum(price_parameter_dict[\'discount_ratio\'])\n
+  exclusive_discount_ratio = price_parameter_dict[\'exclusive_discount_ratio\'] or 0\n
+  d_ratio = max(0, sum_discount_ratio, exclusive_discount_ratio)\n
+  if d_ratio != 0:\n
+    unit_base_price *= 1 - min(1, d_ratio)\n
+\n
+  # Sum non discountable additional price\n
+  unit_base_price += sum(price_parameter_dict[\'non_discountable_additional_price\'])\n
+\n
+  # Surcharge ratio\n
+  sum_surcharge_ratio = sum(price_parameter_dict[\'surcharge_ratio\']) + 1\n
+  unit_base_price *= sum_surcharge_ratio\n
+\n
+  # Divide by the priced quantity\n
+  priced_quantity = context.getPricedQuantity()\n
+  unit_base_price /= priced_quantity\n
+\n
+# Return result\n
+if unit_base_price is not None:\n
+  return {\'price\': unit_base_price}\n
+return default\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>default=None, movement=None, REQUEST=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>default</string>
+                            <string>movement</string>
+                            <string>REQUEST</string>
+                            <string>kw</string>
+                            <string>_apply_</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>price_parameter_dict</string>
+                            <string>None</string>
+                            <string>unit_base_price</string>
+                            <string>_getitem_</string>
+                            <string>base_price</string>
+                            <string>sum</string>
+                            <string>variable_value</string>
+                            <string>sum_discount_ratio</string>
+                            <string>exclusive_discount_ratio</string>
+                            <string>max</string>
+                            <string>d_ratio</string>
+                            <string>min</string>
+                            <string>sum_surcharge_ratio</string>
+                            <string>priced_quantity</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Resource_getPriceCalculationOperandDict</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

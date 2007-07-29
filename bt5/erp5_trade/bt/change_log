@@ -1,3 +1,6 @@
+207-07-30 yo
+* Add Resource_getPriceCalculationOperandDict.
+
 2006-09-12 Romain
 * Fix ReturnedSalePackingListModule_viewReturnedSalePackingListList
 * Fix group's name.
