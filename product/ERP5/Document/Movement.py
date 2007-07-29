@@ -232,6 +232,11 @@ class Movement(XMLObject, Amount):
     if context is None:
       context = self
     method = context._getTypeBasedMethod('getPriceCalculationOperandDict')
+    if method is None:
+      # Try this, because when the context is an instance of a derived
+      # class of Movement, Movement_getPriceCalculationOperandDict is
+      # not searched.
+      method = getattr(context, 'Movement_getPriceCalculationOperandDict', None)
     if method is not None:
       operand_dict = method(**kw)
       if operand_dict is None:
