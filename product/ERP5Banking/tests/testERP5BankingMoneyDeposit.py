@@ -240,7 +240,7 @@ class TestERP5BankingMoneyDepositMixin:
     self.assertEqual(self.money_deposit.getSimulationState(), 'confirmed')
     self.assertEqual(self.money_deposit.getSourceTotalAssetPrice(), 20000.0)
 
-  def stepSendToValidation(self, sequence=None, sequence_list=None, **kwd):
+  def stepMoneyDepositSendToValidation(self, sequence=None, sequence_list=None, **kwd):
     """
     """
     self.workflow_tool.doActionFor(self.money_deposit, 'order_action', wf_id='money_deposit_workflow')
@@ -336,7 +336,7 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMoneyDepositMixin,
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateMoneyDeposit Tic ' \
-                    + 'SendToValidation Tic ' \
+                    + 'MoneyDepositSendToValidation Tic ' \
                     + 'MoneyDepositSendToCounter Tic ' \
                     + 'MoneyDepositInputCashDetails ' \
                     + 'CheckConfirmedInventory Tic ' \

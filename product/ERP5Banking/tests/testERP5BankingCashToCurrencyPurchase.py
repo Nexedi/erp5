@@ -235,7 +235,11 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     self.cash_to_currency_purchase.setDiscountRatio(None)
     self.cash_to_currency_purchase.setDiscount(3000)
     self.assertEqual(script(),62000)
-
+    # Check that we can define a specific rate
+    self.cash_to_currency_purchase.setCurrencyExchangeRate(660)
+    self.assertEqual(script(),63000)
+    self.cash_to_currency_purchase.setCurrencyExchangeRate(None)
+    self.assertEqual(script(),62000)
 
   #def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
   def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
@@ -391,7 +395,6 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     self.assertEqual(self.cash_to_currency_purchase.getTotalQuantity(deliveryLineType="Outgoing Cash To Currency Purchase Line"), 130.0)
     # check the total price
     self.assertEqual(self.cash_to_currency_purchase.getTotalPrice(deliveryLineType="Outgoing Cash To Currency Purchase Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 120.0)
-
 
 
 

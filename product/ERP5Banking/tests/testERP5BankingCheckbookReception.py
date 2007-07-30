@@ -303,7 +303,6 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     confirm the monetary reception
     """
-    #import pdb; pdb.set_trace()
     msg = self.assertWorkflowTransitionFails(self.checkbook_reception2, 
         'checkbook_reception_workflow', 'deliver_action') 
     self.failUnless(msg.find('The following references are already allocated')
@@ -322,7 +321,6 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     confirm the monetary reception
     """
-    #import pdb; pdb.set_trace()
     msg = self.assertWorkflowTransitionFails(self.checkbook_reception4, 
         'checkbook_reception_workflow', 'deliver_action') 
     self.failUnless(msg.find('The following references are already allocated')
@@ -399,7 +397,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'ConfirmCheckbookReception3 Tic ' \
                     + 'CreateCheckAndCheckbookLineList4 Tic ' \
                     + 'ConfirmCheckbookReception4 Tic ' \
-                    + 'DeliverCheckbookReception3 ' \
+                    + 'DeliverCheckbookReception3 Tic ' \
                     + 'DeliverCheckbookReception4Fails '
     sequence_list.addSequenceString(sequence_string)
 

@@ -330,6 +330,7 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'CreateMoneyDeposit ' \
                       'ValidateAnotherCheckPaymentWorks Tic ' \
                       'SendToCounter ' \
+                      'MoneyDepositSendToValidation ' \
                       'MoneyDepositSendToCounter ' \
                       'stepValidateAnotherCheckPaymentFails Tic ' \
                       'CheckAccountConfirmedInventory ' \
