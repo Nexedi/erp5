@@ -95,10 +95,7 @@ be a problem).</string> </value>
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple>
-                <string>node</string>
-                <string>resource</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -113,6 +110,10 @@ be a problem).</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
