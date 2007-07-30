@@ -230,8 +230,6 @@ class TestERP5BankingMoneyDepositMixin:
     self.assertNotEqual(self.money_deposit.getSourceReference(), None)
     self.assertNotEqual(self.money_deposit.getSourceReference(), '')
 
-
-
   def stepMoneyDepositSendToCounter(self, sequence=None, sequence_list=None, **kwd):
     """
     Send the check payment to the counter
@@ -240,10 +238,14 @@ class TestERP5BankingMoneyDepositMixin:
     """
     self.workflow_tool.doActionFor(self.money_deposit, 'confirm_action', wf_id='money_deposit_workflow')
     self.assertEqual(self.money_deposit.getSimulationState(), 'confirmed')
-
     self.assertEqual(self.money_deposit.getSourceTotalAssetPrice(), 20000.0)
 
-
+  def stepSendToValidation(self, sequence=None, sequence_list=None, **kwd):
+    """
+    """
+    self.workflow_tool.doActionFor(self.money_deposit, 'order_action', wf_id='money_deposit_workflow')
+    self.assertEqual(self.money_deposit.getSimulationState(), 'ordered')
+    self.assertEqual(self.money_deposit.getSourceTotalAssetPrice(), 20000.0)
 
   def stepMoneyDepositInputCashDetails(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -260,8 +262,6 @@ class TestERP5BankingMoneyDepositMixin:
             ('emission_letter/p', 'cash_status/valid') + self.variation_list[1:],
             {self.variation_list[1] : 2})
     self.assertEqual(self.money_deposit.line_2.getPrice(), 5000)
-
-
 
   def stepCheckConfirmedInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -281,9 +281,6 @@ class TestERP5BankingMoneyDepositMixin:
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 120000)
 
-
-
-  
   def stepDeliverMoneyDeposit(self, sequence=None, sequence_list=None, **kwd):
 
     self.assertEqual(self.money_deposit.getSourceTotalAssetPrice(),
@@ -293,7 +290,6 @@ class TestERP5BankingMoneyDepositMixin:
     
     self.assertEqual(self.money_deposit.getSourceTotalAssetPrice(), 20000.0)
     self.assertEqual(20000.0, self.money_deposit.getTotalPrice(portal_type = 'Cash Delivery Cell'))
-
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -314,14 +310,11 @@ class TestERP5BankingMoneyDepositMixin:
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 120000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 120000)
 
-
   def stepDelMoneyDeposit(self, sequence=None, sequence_list=None, **kwd):
     """
     Delete the invalid vault_transfer line previously create
     """
     self.money_deposit_module.deleteContent('money_deposit_1')
-
-
 
   ##################################
   ##  Tests
@@ -342,7 +335,8 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMoneyDepositMixin,
     sequence_list = SequenceList()
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
-                    + 'CreateMoneyDeposit ' \
+                    + 'CreateMoneyDeposit Tic ' \
+                    + 'SendToValidation Tic ' \
                     + 'MoneyDepositSendToCounter Tic ' \
                     + 'MoneyDepositInputCashDetails ' \
                     + 'CheckConfirmedInventory Tic ' \
