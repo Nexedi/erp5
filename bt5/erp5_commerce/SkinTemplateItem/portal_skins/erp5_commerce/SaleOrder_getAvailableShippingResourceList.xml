@@ -205,12 +205,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
- This will return all Products that have set product_line=\'shipping\'.\n
+ This will return all Products that have set product_line=\'shipping\'. XXX\n
  Such products are used for shipping purposes i.e. they can not be sold.\n
 """\n
+portal = context.getPortalObject()\n
 \n
-result = [r.getObject() for r in context.portal_catalog(portal_type=\'Product\')]\n
-return [o for o in result if o.getProductLine() in (\'shipping\',)]\n
+# XXX hardcoded category\n
+shipping_product_line_category_uid = portal.portal_categories.product_line.shipping.getUid()\n
+\n
+return [r.getObject() for r in portal.portal_catalog(\n
+                 product_line_uid=shipping_product_line_category_uid,\n
+                 portal_type=portal.getPortalResourceTypeList())]\n
 </string> </value>
         </item>
         <item>
@@ -262,14 +267,14 @@ return [o for o in result if o.getProductLine() in (\'shipping\',)]\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>shipping_product_line_category_uid</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>r</string>
-                            <string>result</string>
-                            <string>o</string>
                           </tuple>
                         </value>
                     </item>
