@@ -418,6 +418,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     
     # And render page template
     doc_xml = ZopePageTemplate.pt_render(self, source=source, extra_context=extra_context)
+    if isinstance(doc_xml, unicode):
+      doc_xml = doc_xml.encode('utf-8')
 
     # Replace the includes
     (doc_xml,attachments_dict) = self.renderIncludes(here, doc_xml)
