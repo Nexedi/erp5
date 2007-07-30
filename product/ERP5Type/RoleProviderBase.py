@@ -260,6 +260,8 @@ class RoleProviderBase:
       """
       portal_catalog = self.portal_catalog
 
+      update_role_tag = "%s.%s" % (self.__class__.__name__, "updateRoleMapping")
+
       object_list = portal_catalog(portal_type = self.id, limit=None)
       # We need to use activities in order to make sure it will
       # work for an important number of objects
@@ -268,9 +270,17 @@ class RoleProviderBase:
       object_path_list = [x.path for x in object_list]
       for i in xrange(0, object_list_len, 100):
         current_path_list = object_path_list[i:i+100]
-        portal_activities.activate(activity='SQLQueue')\
-              .callMethodOnObjectList(current_path_list, 
-                     'updateLocalRolesOnSecurityGroups')
+        portal_activities.activate(activity='SQLQueue',
+                                   priority=6,
+                                   tag=update_role_tag)\
+              .callMethodOnObjectList(current_path_list,
+                                      'updateLocalRolesOnSecurityGroups',
+                                      reindex=False)
+        portal_activities.activate(activity='SQLQueue',
+                                   priority=6,
+                                   after_tag=update_role_tag)\
+              .callMethodOnObjectList(current_path_list,
+                                      'reindexObjectSecurity')
 
       if REQUEST is not None:
         return self.manage_editRolesForm(REQUEST, 

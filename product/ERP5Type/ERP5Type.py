@@ -423,7 +423,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
       return factory_method(portal, id).propertyMap()
 
     security.declarePrivate('updateLocalRolesOnSecurityGroups')
-    def updateLocalRolesOnSecurityGroups(self, ob, user_name = None):
+    def updateLocalRolesOnSecurityGroups(self, ob, user_name=None,
+                                         reindex=True):
       """
         Assign Local Roles to Groups on object 'ob', based on Portal Type Role
         Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
@@ -605,7 +606,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
           ob.manage_addLocalGroupRoles(group, role_list)
           ob.manage_addLocalRoles(group, role_list)
       # Make sure that the object is reindexed
-      ob.reindexObjectSecurity()
+      if reindex:
+        ob.reindexObjectSecurity()
 
     # XXX compat. alias
     security.declareProtected(Permissions.ModifyPortalContent,
