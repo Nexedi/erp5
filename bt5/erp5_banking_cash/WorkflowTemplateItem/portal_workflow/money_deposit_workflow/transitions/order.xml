@@ -49,19 +49,19 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>deliver</string> </value>
+            <value> <string>order</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>ordered</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>validateSourceAndDestination</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Delivered</string> </value>
+            <value> <string>Order</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

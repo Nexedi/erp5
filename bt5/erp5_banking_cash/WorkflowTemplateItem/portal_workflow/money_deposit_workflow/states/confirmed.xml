@@ -78,6 +78,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>DestinationAssignee</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
                       </tuple>
@@ -87,7 +88,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
+                        <string>DestinationAssignee</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -106,6 +107,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>DestinationAssignee</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
                       </tuple>

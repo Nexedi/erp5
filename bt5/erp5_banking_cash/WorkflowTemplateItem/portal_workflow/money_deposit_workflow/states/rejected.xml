@@ -23,11 +23,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Possibility should be given through special script code to cancel payment (and before that, allow modifications)</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>rejected</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -37,7 +37,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Deposed</string> </value>
+            <value> <string>Rejected</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -45,6 +45,8 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
+                <string>order</string>
+                <string>order_action</string>
               </tuple>
             </value>
         </item>
@@ -86,6 +88,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -94,6 +97,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

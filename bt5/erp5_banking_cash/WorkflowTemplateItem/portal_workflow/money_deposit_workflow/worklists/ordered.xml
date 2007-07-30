@@ -27,19 +27,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Money Deposit To Confirm (%(count)s)</string> </value>
+            <value> <string>Money Deposit To Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Money Deposit&reset=1
+Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Money Deposit&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Money Deposit To Confirm</string> </value>
+            <value> <string>Money Deposit To Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Money Deposit&r
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirmed</string> </value>
+            <value> <string>ordered</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -74,7 +74,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Money Deposit&r
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignee</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>
@@ -106,7 +106,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Money Deposit&r
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>confirmed</string>
+                        <string>ordered</string>
                       </tuple>
                     </value>
                 </item>
