@@ -31,6 +31,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
@@ -42,7 +48,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Session Tool</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
