@@ -208,6 +208,7 @@
   Do whatever is necessary to finalize an order.\n
   This script is called after customer completes shopping.\n
 """\n
+from DateTime import DateTime\n
 request = context.REQUEST\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 translateString = context.Base_translateString\n
@@ -226,6 +227,8 @@ if isAnon:\n
 sale_order_module = context.getPortalObject().sale_order_module\n
 sale_order = sale_order_module.newContent(portal_type=\'Sale Order\')\n
 sale_order.setDestination(customer.getRelativeUrl())\n
+sale_order.setStartDate(DateTime())\n
+sale_order.setReceivedDate(DateTime())\n
 \n
 ## set order default currency\n
 sale_order.setDefaultPriceCurrency(context.SaleOrder_getShoppingCartDefaultCurrency().getRelativeUrl())\n
@@ -293,6 +296,7 @@ context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
