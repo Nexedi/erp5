@@ -73,8 +73,29 @@
 """\n
   Add resource to shopping cart.\n
 """\n
+from Products.Formulator.Errors import FormValidationError\n
+request = container.REQUEST\n
+form = getattr(context, form_id)\n
 \n
-quantity = int(field_your_buy_quantity) #(context.REQUEST.get(\'field_your_buy_quantity\', 0))\n
+# FIXME:\n
+# this handling of validation errors should be automatically handled by the \n
+# button itself\n
+try:\n
+  params = form.validate_all_to_request(request)\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  # Make sure editors are pushed back as values into the REQUEST object\n
+  for f in form.get_fields():\n
+    field_id = f.id\n
+    if request.has_key(field_id):\n
+      value = request.get(field_id)\n
+      if callable(value):\n
+        value(request)\n
+  return form(request)\n
+\n
+quantity = int(request.get(\'your_buy_quantity\'))\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
 \n
@@ -100,9 +121,9 @@ if line_found == False:\n
   order_line.setResource(resource.getRelativeUrl())\n
   order_line.setQuantity(quantity)\n
 \n
-translateString = context.Base_translateString\n
+N_ = context.Base_translateString\n
 context.Base_redirect(\'view\', \\\n
-                      keep_items={\'portal_status_message\': translateString("Added to cart.", mapping = dict())})\n
+                      keep_items={\'portal_status_message\': N_("Added to cart.")})\n
 
 
 ]]></string> </value>
@@ -121,7 +142,7 @@ context.Base_redirect(\'view\', \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>resource=None, field_your_buy_quantity = 0</string> </value>
+            <value> <string>form_id, resource=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -147,23 +168,35 @@ context.Base_redirect(\'view\', \\\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>resource</string>
-                            <string>field_your_buy_quantity</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>FormValidationError</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>form</string>
+                            <string>params</string>
+                            <string>validation_errors</string>
+                            <string>field_errors</string>
+                            <string>_getiter_</string>
+                            <string>f</string>
+                            <string>field_id</string>
+                            <string>value</string>
+                            <string>callable</string>
                             <string>int</string>
                             <string>quantity</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>shopping_cart</string>
                             <string>shopping_cart_items</string>
                             <string>None</string>
                             <string>False</string>
                             <string>line_found</string>
-                            <string>_getiter_</string>
                             <string>order_line</string>
                             <string>new_quantity</string>
                             <string>True</string>
-                            <string>translateString</string>
-                            <string>dict</string>
+                            <string>N_</string>
                           </tuple>
                         </value>
                     </item>
@@ -177,7 +210,6 @@ context.Base_redirect(\'view\', \\\n
             <value>
               <tuple>
                 <none/>
-                <int>0</int>
               </tuple>
             </value>
         </item>
