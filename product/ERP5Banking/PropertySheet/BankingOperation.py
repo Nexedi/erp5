@@ -43,5 +43,5 @@ class BankingOperation:
         'mode'        : 'w' },
       )
 
-  _categories = ()
+  _categories = ('site',)
 

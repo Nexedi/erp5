@@ -58,6 +58,7 @@ class CashDelivery(BankingOperation):
                     , PropertySheet.Price
                     , PropertySheet.VariationRange
                     , PropertySheet.ItemAggregation
+                    , PropertySheet.BankingOperation
                     )
 
   security.declareProtected(Permissions.View, 'getBaobabSource')
