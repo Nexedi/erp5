@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Testing Relation Fields</string> </value>
+            <value> <string>Testing Proxy Fields</string> </value>
         </item>
       </dictionary>
     </pickle>
