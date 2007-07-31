@@ -195,7 +195,7 @@ class FolderMixIn(ExtensionClass.Base):
         idGenerator = self._generateNextId
       my_id = idGenerator()
       while self.hasContent(my_id):
-        my_id = self._generateNextId()
+        my_id = idGenerator()
     else:
       my_id = str(self.portal_ids.generateNewId( id_group=id_group,
                                                  default=default,
