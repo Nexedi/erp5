@@ -367,7 +367,7 @@ class ProxyField(ZMIField):
     """
     template_field = self.getTemplateField()
     if template_field.__class__ == ProxyField:
-      return template_field.getTemplateField()
+      return template_field.getRecursiveTemplateField()
     else:
       return template_field
 
