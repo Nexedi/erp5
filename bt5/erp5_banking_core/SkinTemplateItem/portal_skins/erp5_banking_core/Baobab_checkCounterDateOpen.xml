@@ -121,9 +121,7 @@ if context.portal_catalog.countResults(portal_type=\'Counter Date\', start_date=
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -136,9 +136,7 @@ return "ok"\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
