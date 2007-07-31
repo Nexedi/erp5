@@ -28,13 +28,32 @@
 
 import unittest
 
-# Load monkey patches
+# Make it possible to use Globals.get_request
+class DummyRequest(dict):
+  def set(self, k, v):
+    self[k] = v
+
+global request
+request = DummyRequest()
+
+def get_request():
+  global request
+  return request
+
+# apply patch (before it's imported by other modules)
+import Globals
+Globals.get_request = get_request
+
+
+# Initialize ERP5Form Product to load monkey patches
 from Testing import ZopeTestCase
 ZopeTestCase.installProduct('ERP5Form')
 
 from Products.Formulator.StandardFields import FloatField
 from Products.Formulator.StandardFields import StringField
-from Products.Formulator.TALESField import TALESMethod
+
+from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Form.Form import ERP5Form
 
 
 class TestFloatField(unittest.TestCase):
@@ -92,9 +111,79 @@ class TestStringField(unittest.TestCase):
     self.assertEquals('&lt;script&gt;', self.field.render("<script>"))
 
 
+class TestProxyField(unittest.TestCase):
+  def setUp(self):
+    self.container = Folder('container').__of__(Folder('root'))
+    self.container._setObject('Base_viewProxyFieldLibrary',
+                               ERP5Form('Base_viewProxyFieldLibrary', 'Proxys'))
+    self.container._setObject('Base_view',
+                               ERP5Form('Base_view', 'View'))
+    global request
+    request = DummyRequest()
+
+  def test_get_template_field(self):
+    self.container.Base_viewProxyFieldLibrary.manage_addField(
+                        'my_title', 'Title', 'StringField')
+    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+    self.container.Base_view.manage_addField(
+                      'my_title', 'Not Title', 'ProxyField')
+    proxy_field = self.container.Base_view.my_title
+    proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                        field_id='my_title',))
+    self.assertEquals(original_field, proxy_field.getTemplateField())
+
+  def test_simple_surcharge(self):
+    self.container.Base_viewProxyFieldLibrary.manage_addField(
+                        'my_title', 'Title', 'StringField')
+    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+    self.assertEquals('Title', original_field.get_value('title'))
+
+    self.container.Base_view.manage_addField(
+                      'my_title', 'Not Title', 'ProxyField')
+    proxy_field = self.container.Base_view.my_title
+    proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                        field_id='my_title',))
+    self.assert_(proxy_field.is_delegated('title'))
+    self.assertEquals('Title', proxy_field.get_value('title'))
+
+  def test_get_value_default(self):
+    # If the proxy field is named 'my_id', it will get 'id'
+    # property on the context, regardless of the id of the proxified field
+    self.container.Base_viewProxyFieldLibrary.manage_addField(
+                        'my_title', 'Title', 'StringField')
+    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+
+    self.container.Base_view.manage_addField(
+                      'my_id', 'ID', 'ProxyField')
+    proxy_field = self.container.Base_view.my_id
+    proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                        field_id='my_title',))
+    self.assertEquals('container', self.container.getId())
+    self.assertEquals('container', proxy_field.get_value('default'))
+
+  def test_tales_context(self):
+    # in the TALES context, "field" will be the proxyfield, not the original
+    # field.
+    self.container.Base_viewProxyFieldLibrary.manage_addField(
+                        'my_title', 'Title', 'StringField')
+    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+    original_field.manage_tales_xmlrpc(dict(title='field/getId'))
+    self.assertEquals('my_title', original_field.get_value('title'))
+
+    self.container.Base_view.manage_addField(
+                      'my_reference', 'Not Title', 'ProxyField')
+    proxy_field = self.container.Base_view.my_reference
+    proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                        field_id='my_title',))
+    # 'my_reference' is the ID of the proxy field
+    self.assertEquals('my_reference', proxy_field.get_value('title'))
+
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestFloatField))
   suite.addTest(unittest.makeSuite(TestStringField))
+  suite.addTest(unittest.makeSuite(TestProxyField))
   return suite
 

@@ -67,7 +67,16 @@ def get_value(self, id, **kw):
             container = obj.aq_inner.aq_parent
         else:
             container = None
-        kw['field'] = self
+
+        if REQUEST is not None:
+          # Proxyfield stores the "real" field in the request. Look if the
+          # corresponding field exists in request, and use it as field in the
+          # TALES context 
+          field = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id), self)
+          kw['field'] = field
+        else:
+          kw['field'] = self
+
         kw['form'] = form
         kw['request'] = REQUEST
         kw['here'] = obj
@@ -118,7 +127,8 @@ def get_value(self, id, **kw):
             # stored in the context, only if the field is prefixed with my_.
             REQUEST = get_request()
             if REQUEST is not None:
-              field_id = REQUEST.get('%s_%s_id' % (self.id, id), self.id)
+              field_id = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id),
+                                      self).id
             else:
               field_id = self.id
 
