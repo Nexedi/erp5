@@ -416,6 +416,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       user = _getAuthenticatedUser(self)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
+      column_map = self.getSQLCatalog().getColumnMap()
 
       # Patch for ERP5 by JP Smets in order
       # to implement worklists and search of local roles
@@ -433,7 +434,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             for role in local_roles:
               # Performance optimisation
               lower_role = role.lower()
-              if self.getSQLCatalog().getColumnMap().has_key(lower_role):
+              if lower_role in column_map:
                 # If a given role exists as a column in the catalog,
                 # then it is considered as single valued and indexed
                 # through the catalog.
