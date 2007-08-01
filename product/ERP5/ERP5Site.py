@@ -208,6 +208,13 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     return self.index_html()
 
+  def _getAcquireLocalRoles(self):
+    """
+      Prevent local roles from being acquired outside of Portal object.
+      See ERP5Security/__init__.py:mergedLocalRoles .
+    """
+    return False
+
   security.declareProtected(Permissions.ManagePortal, 'enableRefererCheck')
   def enableRefererCheck(self):
     """Enable a ReferCheckerBeforeTraverseHook to check users have valid
