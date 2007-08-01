@@ -143,7 +143,7 @@ class TestERP5BankingCheckPaymentMixin:
     self.createCheckAndCheckbookModel()
     # create a check
     self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
-                                            vault=self.bi_counter,
+                                            vault=self.paris,
                                             bank_account=self.bank_account_1,
                                             min=50,
                                             max=100,
@@ -152,27 +152,33 @@ class TestERP5BankingCheckPaymentMixin:
     self.check_1 = self.createCheck(id='check_1',
                                     reference='0000050',
                                     resource_value=self.check_model,
-                                    checkbook=self.checkbook_1)
+                                    checkbook=self.checkbook_1,
+                                    destination_value=self.paris)
     self.check_2 = self.createCheck(id='check_2',
                                     reference='0000051',
                                     resource_value=self.check_model,
-                                    checkbook=self.checkbook_1)
+                                    checkbook=self.checkbook_1,
+                                    destination_value=self.paris)
     self.check_3 = self.createCheck(id='check_3',
                                     reference='0000052',
                                     resource_value=self.check_model,
-                                    checkbook=self.checkbook_1)
+                                    checkbook=self.checkbook_1,
+                                    destination_value=self.paris)
     self.check_4 = self.createCheck(id='check_4',
                                     reference='0000053',
                                     resource_value=self.check_model,
-                                    checkbook=self.checkbook_1)
+                                    checkbook=self.checkbook_1,
+                                    destination_value=self.paris)
     self.check_5 = self.createCheck(id='check_5',
                                     reference='0000054',
                                     resource_value=self.check_model,
-                                    checkbook=self.checkbook_1)
+                                    checkbook=self.checkbook_1,
+                                    destination_value=self.paris)
     self.check_5 = self.createCheck(id='check_6',
                                     reference='0000056',
                                     resource_value=self.check_model,
-                                    checkbook=self.checkbook_1)
+                                    checkbook=self.checkbook_1,
+                                    destination_value=self.paris)
     self.non_existant_check_reference = '0000055'
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):

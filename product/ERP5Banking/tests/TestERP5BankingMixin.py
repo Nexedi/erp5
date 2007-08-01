@@ -804,7 +804,8 @@ class TestERP5BankingMixin:
     return bank_account
 
 
-  def createCheckbook(self, id, vault, bank_account, min, max, date=None):
+  def createCheckbook(self, id, vault, bank_account, min, max, date=None,
+                      destination_value=None):
     """
     Create a checkbook for the given bank account
     """
@@ -859,7 +860,7 @@ class TestERP5BankingMixin:
     self.checkbook_model_1 = self.checkbook_model
 
   def createCheck(self, id, reference, checkbook, bank_account=None,
-                        resource_value=None):
+                        resource_value=None, destination_value=None):
     """
     Create Check in a checkbook
     """
@@ -867,7 +868,8 @@ class TestERP5BankingMixin:
                                  portal_type = 'Check',
                                  reference=reference,
                                  destination_payment_value=bank_account,
-                                 resource_value=resource_value
+                                 resource_value=resource_value,
+                                 destination_value=destination_value
                                 )
 
     # mark the check as issued
