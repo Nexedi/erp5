@@ -662,6 +662,7 @@ class TestERP5BankingMixin:
     if open:
       date_object.open()
     setattr(self, id, date_object)
+    date_object.assignRoleToSecurityGroup()
 
   def openAccountingDate(self, date=None, site=None, id='accounting_date_1', open=True):
     """
@@ -804,8 +805,7 @@ class TestERP5BankingMixin:
     return bank_account
 
 
-  def createCheckbook(self, id, vault, bank_account, min, max, date=None,
-                      destination_value=None):
+  def createCheckbook(self, id, vault, bank_account, min, max, date=None):
     """
     Create a checkbook for the given bank account
     """
