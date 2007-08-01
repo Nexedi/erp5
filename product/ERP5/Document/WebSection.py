@@ -369,7 +369,7 @@ class WebSection(Domain):
       """
       cache = getReadOnlyTransactionCache(self)
       if cache is not None:
-        key = ('getDocumentValueList', self, document.getPath())
+        key = ('getPermanentURL', self, document.getPath())
         try:
           return cache[key]
         except KeyError:
@@ -395,7 +395,7 @@ class WebSection(Domain):
       """
       cache = getReadOnlyTransactionCache(self)
       if cache is not None:
-        key = ('getDocumentValueList', self, document.getPath())
+        key = ('getBreadcrumbItemList', self, document.getPath())
         try:
           return cache[key]
         except KeyError:
