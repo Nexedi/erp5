@@ -427,7 +427,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           local_roles = kw['local_roles']
           new_allowedRolesAndUsers = []
           # Turn it into a list if necessary according to ';' separator
-          if type(local_roles) == type('a'):
+          if isinstance(local_roles, str):
             local_roles = local_roles.split(';')
           # Local roles now has precedence (since it comes from a WorkList)
           for user_or_group in allowedRolesAndUsers:
