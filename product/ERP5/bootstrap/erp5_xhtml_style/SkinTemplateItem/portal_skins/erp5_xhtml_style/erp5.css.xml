@@ -497,6 +497,9 @@ div.index_html table {\n
   display: none;\n
 }\n
 \n
+/* The fields set for generated hidden fields */\n
+#hidden_fieldset { display: None }\n
+\n
 /* Main bar */\n
 \n
 #main_bar {\n

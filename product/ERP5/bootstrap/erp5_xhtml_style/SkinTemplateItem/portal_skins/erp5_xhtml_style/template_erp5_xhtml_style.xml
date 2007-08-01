@@ -127,13 +127,13 @@ IDEAS:\n
           tal:attributes="enctype form/Form_getEnctype | nothing;\n
                           action url;\n
                           method python:str(path(\'form/method | string:post\')).lower()">\n
-      <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->\n
-      <!-- We should probably call the default method instead -->\n
-      <fieldset>\n
-      <input tal:condition="form_action | nothing"\n
-             id="hidden_button" type="submit" value="dummy"\n
-             tal:attributes="name string:${form_action}:method" />\n
-      <tal:block metal:use-macro="global_definitions_macros/http_definitions"/>\n
+      <fieldset id="hidden_fieldset">\n
+        <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->\n
+        <!-- We should probably call the default method instead -->\n
+        <input tal:condition="form_action | nothing"\n
+               id="hidden_button" type="submit" value="dummy"\n
+               tal:attributes="name string:${form_action}:method" />\n
+        <tal:block metal:use-macro="global_definitions_macros/http_definitions"/>\n
       </fieldset>\n
       <tal:block metal:define-slot="layout">\n
       <div id="bars">\n
