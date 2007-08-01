@@ -414,6 +414,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         getSecurityQuery instead
       """
       user = _getAuthenticatedUser(self)
+      user_is_superuser = (user == SUPER_USER)
+      user_str = str(user)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
       column_map = self.getSQLCatalog().getColumnMap()
@@ -421,26 +423,26 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       # Patch for ERP5 by JP Smets in order
       # to implement worklists and search of local roles
       if kw.has_key('local_roles'):
+        local_roles = kw['local_roles']
         # XXX user is not enough - we should also include groups of the user
         # Only consider local_roles if it is not empty
-        if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
-          local_roles = kw['local_roles']
+        if local_roles not in (None, '', []): # XXX: Maybe "if local_roles:" is enough.
           new_allowedRolesAndUsers = []
           # Turn it into a list if necessary according to ';' separator
           if isinstance(local_roles, str):
             local_roles = local_roles.split(';')
+          local_roles = [x.lower() for x in local_roles]
           # Local roles now has precedence (since it comes from a WorkList)
           for user_or_group in allowedRolesAndUsers:
             for role in local_roles:
               # Performance optimisation
-              lower_role = role.lower()
-              if lower_role in column_map:
+              if role in column_map:
                 # If a given role exists as a column in the catalog,
                 # then it is considered as single valued and indexed
                 # through the catalog.
-                if user != SUPER_USER:
-                  role_column_dict[lower_role] = str(user) # XXX This should be a list
-                                                           # which also includes all user groups
+                if not user_is_superuser:
+                  role_column_dict[role] = user_str  # XXX This should be a list
+                                                     # which also includes all user groups
               else:
                 # Else, we use the standard approach
                 new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
@@ -449,9 +451,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # We only consider here the Owner role (since it was not indexed)
         # since some objects may only be visible by their owner
         # which was not indexed
-        if self.getSQLCatalog().getColumnMap().has_key('owner'):
-          if user != SUPER_USER:
-            role_column_dict['owner'] = str(user)
+        if 'owner' in column_map:
+          if not user_is_superuser:
+            role_column_dict['owner'] = user_str
             # XXX this is inconsistent withe "check for proxy role in stack"
             # in _listAllowedRolesAndUsers. We should use the proxy user
             # to be consistent
