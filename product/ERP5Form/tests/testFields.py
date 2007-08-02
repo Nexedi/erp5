@@ -161,7 +161,7 @@ class TestProxyField(unittest.TestCase):
     self.assertEquals('container', self.container.getId())
     self.assertEquals('container', proxy_field.get_value('default'))
 
-  def test_tales_context(self):
+  def test_field_tales_context(self):
     # in the TALES context, "field" will be the proxyfield, not the original
     # field.
     self.container.Base_viewProxyFieldLibrary.manage_addField(
@@ -178,6 +178,22 @@ class TestProxyField(unittest.TestCase):
     # 'my_reference' is the ID of the proxy field
     self.assertEquals('my_reference', proxy_field.get_value('title'))
 
+  def test_form_tales_context(self):
+    # in the TALES context, "form" will be the form containing the proxyfield,
+    # not the original form (ie. the field library).
+    self.container.Base_viewProxyFieldLibrary.manage_addField(
+                        'my_title', 'Title', 'StringField')
+    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+    original_field.manage_tales_xmlrpc(dict(title='form/getId'))
+    self.assertEquals('Base_viewProxyFieldLibrary',
+                       original_field.get_value('title'))
+
+    self.container.Base_view.manage_addField(
+                      'my_title', 'Title', 'ProxyField')
+    proxy_field = self.container.Base_view.my_title
+    proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                        field_id='my_title',))
+    self.assertEquals('Base_view', proxy_field.get_value('title'))
 
 
 def test_suite():
