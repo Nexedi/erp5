@@ -772,7 +772,10 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       Returns the list of revision numbers of the current document
       by by analysing the change log of the current object.
     """
-    return range(0, self.getRevision())
+    revision = self.getRevision()
+    if revision == '':
+      return []
+    return [str(r) for r in range(0, int(self.getRevision()))]
 
   security.declareProtected(Permissions.ModifyPortalContent, 'mergeRevision')
   def mergeRevision(self):
