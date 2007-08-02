@@ -1,7 +1,4 @@
 <property_sheet_list>
- <portal_type id="Inventory">
-  <item>DuplicateInventory</item>
- </portal_type>
  <portal_type id="Sale Order">
   <item>PaymentCondition</item>
  </portal_type>
