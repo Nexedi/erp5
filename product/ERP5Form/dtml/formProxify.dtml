@@ -1,0 +1,63 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<dtml-let form_field_list=getAllFormFieldList>
+
+<p class="form-help">
+Proxify non-proxy fields.
+</p>
+
+<form action="proxifyField" method="POST">
+
+<table border="2">
+<tr>
+<th>Id</th>
+<th>Type</th>
+<th>Proxy Target</th>
+</tr>
+
+<dtml-in objectValues sort=id>
+<dtml-let temp="getProxyableFieldList(_['sequence-item'], form_field_list)"
+          form_order="temp[0]"
+          matched="temp[1]">
+<tr>
+<td><a href="<dtml-var absolute_url>/manage_workspace"><dtml-var id></a></td>
+<td><dtml-var meta_type></td>
+<td>
+<select name="field_dict.<dtml-var id>:record:ignore_empty">
+<option value="" selected></option>
+
+<dtml-in form_order>
+<dtml-let form_path="_['sequence-item']"
+          matched_field_list="matched[form_path]">
+<optgroup label="<dtml-var form_path>">
+<dtml-in matched_field_list>
+<dtml-let item="_['sequence-item']"
+          form_id="item['form_id']"
+          field_object="item['field_object']"
+          field_id="field_object.getId()"
+          field_type="item['field_type']"
+          proxy_mark="item['proxy_flag'] and ' (Proxy)' or ''">
+<option value="<dtml-var "'%s.%s' % (form_id, field_id)">">
+<dtml-var "'%s%s' % (field_id, proxy_mark)">
+</option>
+</dtml-let>
+</dtml-in>
+</optgroup>
+</dtml-let>
+</dtml-in>
+</select>
+</td>
+</tr>
+
+</dtml-let>
+</dtml-in>
+</table>
+
+<input type="submit" value="Apply">
+
+</form>
+
+</dtml-let>
+
+<dtml-var manage_page_footer>

@@ -32,7 +32,7 @@ from Products.Formulator.Errors import FormValidationError, ValidationError
 from Products.Formulator.DummyField import fields
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
-from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.utils import _checkPermission, getToolByName
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet, Permissions
 
@@ -341,6 +341,11 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Declarative Security
     security = ClassSecurityInfo()
 
+    # Tabs in ZMI
+    manage_options = (ZMIForm.manage_options[:5] +
+                      ({'label':'Proxify', 'action':'formProxify'},)+
+                      ZMIForm.manage_options[5:])
+
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem)
@@ -351,6 +356,10 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # This is a patched dtml formOrder
     security.declareProtected('View management screens', 'formOrder')
     formOrder = DTMLFile('dtml/formOrder', globals())
+
+    # Proxify form
+    security.declareProtected('View management screens', 'formProxify')
+    formProxify = DTMLFile('dtml/formProxify', globals())
 
     # Default Attributes
     pt = 'form_view'
@@ -502,6 +511,159 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         return RESPONSE
 
     manage_FTPput = PUT
+
+    #Methods for Proxify tab.
+    security.declareProtected('View management screens', 'getAllFormFieldList')
+    def getAllFormFieldList(self):
+        """"""
+        form_list = []
+        def iterate(obj):
+            for i in obj.objectValues():
+                if i.meta_type=='ERP5 Form':
+                    form_id = i.getId()
+                    form_path = '%s.%s' % (obj.getId(), form_id)
+                    field_list = []
+                    form_list.append({'form_path':form_path,
+                                      'form_id':form_id,
+                                      'field_list':field_list})
+                    for field in i.objectValues():
+                        if field.meta_type=='ProxyField':
+                            template_field = field.getRecursiveTemplateField()
+                            template_meta_type = getattr(template_field,
+                                                         'meta_type', None)
+                            field_type = '%s(Proxy)' % template_meta_type
+                            proxy_flag = True
+                        else:
+                            field_type = field.meta_type
+                            proxy_flag = False
+                        field_list.append({'field_object':field,
+                                           'field_type':field_type,
+                                           'proxy_flag':proxy_flag})
+                if i.meta_type=='Folder':
+                    iterate(i)
+        iterate(getToolByName(self, 'portal_skins'))
+        return form_list
+
+    security.declareProtected('View management screens', 'getProxyableFieldList')
+    def getProxyableFieldList(self, field, form_field_list=None):
+        """"""
+        meta_type = field.meta_type
+        matched = {}
+        form_order = []
+
+        if form_field_list is None:
+            form_field_list = self.getAllFormFieldList()
+
+        for i in form_field_list:
+            for data in i['field_list']:
+                if data['field_type'].startswith(meta_type):
+                    form_path = i['form_path']
+                    form_id = i['form_id']
+                    field_type = data['field_type']
+                    field_object = data['field_object']
+                    if field.aq_base is field_object.aq_base:
+                        continue
+                    proxy_flag = data['proxy_flag']
+                    if not form_path in form_order:
+                        form_order.append(form_path)
+                        matched[form_path] = []
+                    matched[form_path].append({'form_id':form_id,
+                                               'field_type':field_type,
+                                               'field_object':field_object,
+                                               'proxy_flag':proxy_flag})
+        form_order.sort()
+        return form_order, matched
+
+    security.declareProtected('Change Formulator Forms', 'proxifyField')
+    def proxifyField(self, field_dict=None):
+        """Convert fields to proxy fields"""
+        from Products.ERP5Form.ProxyField import ProxyWidget
+        from Products.Formulator.MethodField import Method
+        from Products.Formulator.TALESField import TALESMethod
+
+        def copy(dict):
+            new_dict = {}
+            for key, value in dict.items():
+                if value=='':
+                    continue
+                if type(value) is Method:
+                    value = Method(value.method_name)
+                elif type(value) is TALESMethod:
+                    value = TALESMethod(value._text)
+                elif not isinstance(value, (str, unicode, int, long, bool,
+                                            list, tuple, dict)):
+                    raise ValueError, str(value)
+                new_dict[key] = value
+            return new_dict
+
+        def is_equal(a, b):
+            type_a = type(a)
+            type_b = type(b)
+            if type_a is not type_b:
+                return False
+            elif type_a is Method:
+                return a.method_name==b.method_name
+            elif type_a is TALESMethod:
+                return a._text==b._text
+            else:
+                return a==b
+
+        def remove_same_value(new_dict, target_dict):
+            for key, value in new_dict.items():
+                target_value = target_dict.get(key)
+                if is_equal(value, target_value):
+                    del new_dict[key]
+            return new_dict
+
+        def get_group_and_position(field_id):
+            for i in self.groups.keys():
+                if field_id in self.groups[i]:
+                    return i, self.groups[i].index(field_id)
+
+        def set_group_and_position(group, position, field_id):
+            self.field_removed(field_id)
+            self.groups[group].insert(position, field_id)
+            # Notify changes explicitly.
+            self.groups = self.groups
+
+        if field_dict is None:
+            return
+
+        for field_id in field_dict.keys():
+            target = field_dict[field_id]
+            target_form_id, target_field_id = target.split('.')
+
+            # keep current group and position.
+            group, position = get_group_and_position(field_id)
+
+            # create proxy field
+            old_field = getattr(self, field_id)
+            self.manage_delObjects(field_id)
+            self.manage_addField(id=field_id, title='', fieldname='ProxyField')
+            proxy_field = getattr(self, field_id)
+            proxy_field.values['form_id'] = target_form_id
+            proxy_field.values['field_id'] = target_field_id
+
+            target_field = proxy_field.getRecursiveTemplateField()
+
+            # copy data
+            new_values = remove_same_value(copy(old_field.values),
+                                           target_field.values)
+            new_tales = remove_same_value(copy(old_field.tales),
+                                          target_field.tales)
+
+            delegated_list = []
+            for i in (new_values.keys()+new_tales.keys()):
+                if not i in delegated_list:
+                    delegated_list.append(i)
+            proxy_field.values.update(new_values)
+            proxy_field.tales.update(new_tales)
+            proxy_field.delegated_list = delegated_list
+
+            # move back to the original group and position.
+            set_group_and_position(group, position, field_id)
+
+        return self.formProxify(manage_tabs_message='Changed')
 
     psyco.bind(__call__)
     psyco.bind(_exec)
