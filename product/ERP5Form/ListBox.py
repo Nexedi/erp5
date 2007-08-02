@@ -3026,7 +3026,12 @@ class ListBox(ZMIField):
     """Return the name of the list method. If not defined, return None.
 
        XXX - Is this method really necessary - I am not sure - JPS
-       Why not use Formulator API instead ?
+       Why not use Formulator API instead ? -> the answer is that it is a
+         MethodField, and it's method_name attribute is not available from
+         restricted environment.
+
+      XXX also this method is not compatible with ProxyFields.
+      It will go away soon.
     """
     list_method = self.get_value('list_method')
     try:
