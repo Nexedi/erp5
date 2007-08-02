@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>Person_exportPersonAsvCard</string> </value>
+            <value> <string>Person_viewPersonAsvCard</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>
