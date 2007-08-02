@@ -44,6 +44,9 @@
   These are subject to another suite "testIngestion".
 """
 
+# XXX test_02 works only with oood on
+# XXX test_03 and test_04 work only WITHOUT oood (because of a known bug in erp5_dms)
+
 
 #
 # Skeleton ZopeTestCase
@@ -76,6 +79,10 @@ RUN_ALL_TEST = 1
 
 # Define the conversion server host
 conversion_server_host = ('127.0.0.1', 8008)
+
+TEST_FILES_HOME = os.path.join(os.getenv('INSTANCE_HOME'), 'Products', 'ERP5OOo', 'tests', 'test_document')
+FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
+REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
 
 def printAndLog(msg):
@@ -137,8 +144,17 @@ class TestDocument(ERP5TypeTestCase):
 
   def afterSetUp(self, quiet=QUIET, run=0):
     self.portal = self.getPortal()
+    self.setSystemPreference()
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
+
+  def setSystemPreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
+    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
+    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
+    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
+    default_pref.enable()
 
   def getDocumentModule(self):
     return getattr(self.getPortal(),'document_module')
@@ -148,8 +164,6 @@ class TestDocument(ERP5TypeTestCase):
 
   def getNeededCategoryList(self):
     return ()
-
-    pass
 
   def tearDown(self):
     """
@@ -163,6 +177,7 @@ class TestDocument(ERP5TypeTestCase):
     """
       Remove everything after each run
     """
+    printAndLog("clearing document module...")
     doc_module = self.getDocumentModule()
     ids = [i for i in doc_module.objectIds()]
     doc_module.manage_delObjects(ids)
@@ -217,21 +232,44 @@ class TestDocument(ERP5TypeTestCase):
     self.failUnless(self.getCatalogTool()!=None)
     self.failUnless(self.getWorkflowTool()!=None)
 
-  def no_test_02_RevisionSystem(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_02_RevisionSystem(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
       Test revision mechanism
     """
     if not run: return
     printAndLog('\nTest Revision System')
     # create a test document
-    # revision should be 1
+    # revision should be 0
     # upload file (can be the same) into it
-    # revision should now be 2
+    # revision should now be 1
     # edit the document with any value or no values
-    # revision should now be 3
+    # revision should now be 2
     # contribute the same file through portal_contributions
-    # there should still be only one document, with revision 4 (because it should have done mergeRevision)
-    # getRevisionList should return (1, 2, 3, 4)
+    # the same document should now have revision 3 (because it should have done mergeRevision)
+    # getRevisionList should return (0, 1, 2, 3)
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file)
+    document.immediateReindexObject()
+    get_transaction().commit()
+    self.tic()
+    document_url = document.getRelativeUrl()
+    def getTestDocument():
+      return self.portal.restrictedTraverse(document_url)
+    self.failUnless(getTestDocument().getRevision() == '0')
+    getTestDocument().edit(file=file)
+    get_transaction().commit()
+    self.tic()
+    self.failUnless(getTestDocument().getRevision() == '1')
+    getTestDocument().edit(title='Hey Joe')
+    get_transaction().commit()
+    self.tic()
+    self.failUnless(getTestDocument().getRevision() == '2')
+    another_document = self.portal.portal_contributions.newContent(file=file)
+    get_transaction().commit()
+    self.tic()
+    self.failUnless(getTestDocument().getRevision() == '3')
+    self.failUnless(getTestDocument().getRevisionList() == ['0', '1', '2'] )
 
   def test_03_Versioning(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
@@ -269,7 +307,6 @@ class TestDocument(ERP5TypeTestCase):
     self.failUnless(docs[3].getLatestVersionValue() == docs[3])
     version_list = [br.getRelativeUrl() for br in docs[2].getVersionValueList()]
     self.failUnless(version_list == [docs[3].getRelativeUrl(), docs[2].getRelativeUrl(), docs[1].getRelativeUrl()])
-    self.clearDocumentModule()
 
   def test_04_VersioningWithLanguage(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
@@ -327,7 +364,6 @@ class TestDocument(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.failUnless(doc.getLatestVersionValue() == docs[7]) # there are two latest, neither in user language - it chooses the one in original language
-    self.clearDocumentModule()
 
   def no_test_05_UniqueReference(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
