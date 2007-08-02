@@ -70,7 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string>if select_jump == \'\':\n
   return\n
-return context.ERP5Site_redirect(select_jump, **kw)\n
+\n
+request = container.REQUEST\n
+return context.ERP5Site_redirect(select_jump,\n
+     keep_items=dict(form_id=request.get(\'form_id\', \'view\')), **kw)\n
 </string> </value>
         </item>
         <item>
@@ -121,9 +124,12 @@ return context.ERP5Site_redirect(select_jump, **kw)\n
                           <tuple>
                             <string>select_jump</string>
                             <string>kw</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>_apply_</string>
                             <string>context</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
