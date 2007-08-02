@@ -105,11 +105,11 @@ class DuplicateInventory(Constraint):
                                    variation_text=variation_text,
                                    from_date=date, at_date=date,
                                    node=node)
-          LOG('inventory_list sql src', 0, getCurrentInventoryList(resource=resource,
-            variation_text=variation_text,
-            from_date=date, at_date=date,
-            node=node, src__=1))
-          LOG('len inventory_list',0,len(inventory_list))
+#           LOG('inventory_list sql src', 0, getCurrentInventoryList(resource=resource,
+#             variation_text=variation_text,
+#             from_date=date, at_date=date,
+#             node=node, src__=1))
+#           LOG('len inventory_list',0,len(inventory_list))
           for inventory in inventory_list:
             movement = getObjectFromUid(inventory.stock_uid)
             if movement.getPortalType().find('Inventory') >= 0:
