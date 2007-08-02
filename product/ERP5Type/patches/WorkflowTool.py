@@ -159,7 +159,7 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurity
             criterion_value = security_cache[security_cache_key]
           else:
             security_query = getSecurityUidList(**{criterion_id: criterion_value})
-            criterion_value = security_query.getValue()
+            criterion_value = security_query
             security_cache[security_cache_key] = criterion_value
           criterion_id = SECURITY_COLUMN_ID
         else:
