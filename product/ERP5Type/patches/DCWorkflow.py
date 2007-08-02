@@ -202,6 +202,61 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
 
 DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 
+from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID, WORKLIST_METADATA_KEY
+def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info):
+  """
+    Return a dict which has an entry per worklist definition
+    (worklist id as key) and which value is a dict composed of
+    variable matches.
+  """
+  if not self.worklists:
+    return None
+  workflow_tool = getToolByName(self, 'portal_workflow')
+  workflow = getattr(workflow_tool, self.id)
+
+  def getPortalTypeListForWorkflow(workflow_id):
+      workflow_tool = getToolByName(self, 'portal_workflow')
+      result = []
+      for type_info in workflow_tool._listTypeInfo():
+        portal_type = type_info.id
+        if workflow_id in workflow_tool.getChainFor(portal_type):
+          result.append(portal_type)
+      return result
+
+  _getPortalTypeListForWorkflow = CachingMethod(getPortalTypeListForWorkflow,
+                            id='_getPortalTypeListForWorkflow', cache_factory = 'erp5_ui_long')
+  portal_type_list = _getPortalTypeListForWorkflow(self.id)
+  if not portal_type_list:
+    return None
+  variable_match_dict = {}
+  security_manager = getSecurityManager()
+  portal = self.getPortalObject()
+  for worklist_id, worklist_definition in self.worklists.items():
+    action_box_name = worklist_definition.actbox_name
+    guard = worklist_definition.guard
+    if action_box_name:
+      variable_match = dict([(x, [y % info for y in worklist_definition.getVarMatch(x)]) for x in worklist_definition.getVarMatchKeys()])
+      variable_match.setdefault('portal_type', portal_type_list)
+      if not (guard is None or guard.check(security_manager, self, portal)):
+        variable_match[SECURITY_PARAMETER_ID] = guard.roles
+      format_data = TemplateDict()
+      format_data._push(info)
+      format_data._push({'portal_type': ' OR '.join(variable_match['portal_type']),
+                         'local_roles': ';'.join(variable_match.get(SECURITY_PARAMETER_ID, []))})
+      variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
+                                               'worklist_title': action_box_name,
+                                               'worklist_id': worklist_id,
+                                               'workflow_title': self.title,
+                                               'workflow_id': self.id,
+                                               'action_box_url': worklist_definition.actbox_url,
+                                               'action_box_category': worklist_definition.actbox_category}
+      variable_match_dict[worklist_id] = variable_match
+  if len(variable_match_dict) == 0:
+    return None
+  return variable_match_dict
+
+DCWorkflowDefinition.getWorklistVariableMatchDict = DCWorkflowDefinition_getWorklistVariableMatchDict
+
 class ValidationFailed(Exception):
     """Transition can not be executed because data is not in consistent state"""
     def __init__(self, message_instance=None):
