@@ -104,7 +104,8 @@ class TestIngestion(ERP5TypeTestCase):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base', 'erp5_trade', 'erp5_project', 'erp5_dms')
+    return ('erp5_base', 'erp5_web', 'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
+    #return ('erp5_base', 'erp5_trade', 'erp5_project', 'erp5_dms')
 
   def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -118,6 +119,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.createDefaultCategoryList()
     self.setSystemPreference()
     self.createTools()
+    self.setSimulatedNotificationScript()
 
   def createTools(self):
     """
@@ -147,6 +149,18 @@ class TestIngestion(ERP5TypeTestCase):
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     default_pref.enable()
+
+  def setSimulatedNotificationScript(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create simulated (empty) email notification script
+    """
+    context = self.portal.portal_skins.custom
+    script_id = 'Document_notifyByEmail'
+    if not hasattr(context, script_id):
+      factory = context.manage_addProduct['PythonScripts'].manage_addPythonScript
+      factory(id=script_id)
+    script = getattr(context, script_id)
+    script.ZPythonScript_edit('email_to, event, doc, **kw', 'return')
 
 
   ##################################
@@ -305,6 +319,7 @@ class TestIngestion(ERP5TypeTestCase):
     context = getattr(document_module, document_id)
     for revision, format in enumerate(format_list):
       filename = 'TEST-en-002.' + format
+      printAndLog('Ingesting file: ' + filename)
       f = makeFileUpload(filename)
       context.edit(file=f)
       context.convertToBaseFormat()
@@ -360,6 +375,7 @@ class TestIngestion(ERP5TypeTestCase):
                         )
     for extension, portal_type in extension_to_type:
       filename = 'TEST-en-002.' + extension
+      printAndLog(filename)
       file = makeFileUpload(filename)
       if with_portal_type:
         ob = self.portal.portal_contributions.newContent(portal_type=portal_type, file=file)
@@ -699,7 +715,7 @@ class TestIngestion(ERP5TypeTestCase):
       ingest all supported presentation formats
       make sure they are converted
     """
-    format_list = ['sxd','sda']
+    format_list = ['sxd',]
     self.ingestFormatList('four', format_list)
 
   def stepIngestPDFFormats(self, sequence=None, sequence_list=None, **kw):
@@ -718,10 +734,10 @@ class TestIngestion(ERP5TypeTestCase):
     self.ingestFormatList('six', format_list, 'Image')
 
   def stepCheckTextDocumentExportList(self, sequence=None, sequence_list=None, **kw):
-    self.checkDocumentExportList('one', 'doc', ['pdf', 'doc', 'rtf', 'html-writer', 'txt'])
+    self.checkDocumentExportList('one', 'doc', ['pdf', 'doc', 'rtf', 'writer.html', 'txt'])
 
   def stepCheckSpreadsheetDocumentExportList(self, sequence=None, sequence_list=None, **kw):
-    self.checkDocumentExportList('two', 'xls', ['csv', 'html-calc', 'xls', 'calc.pdf'])
+    self.checkDocumentExportList('two', 'xls', ['csv', 'calc.html', 'xls', 'calc.pdf'])
 
   def stepCheckPresentationDocumentExportList(self, sequence=None, sequence_list=None, **kw):
     self.checkDocumentExportList('three', 'ppt', ['impr.pdf', 'ppt'])
@@ -872,9 +888,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.failUnless(hasattr(self.portal, 'portal_mailin'))
     f = open(makeFilePath('email_from.txt'))
     res = self.portal.portal_mailin.postUTF8MailMessage(f.read())
-    # we check if the mailin returned anything - it should return a message saying that the recipient does not exist
-    # the exact wording may differ
-    # the way mailin works is that if mail was accepted it returns None
+    printAndLog(res)
     self.failIf(res)  
     get_transaction().commit()
     self.tic()
@@ -994,7 +1008,7 @@ class TestIngestion(ERP5TypeTestCase):
                 ]
     self.playSequence(step_list, quiet)
 
-  def test_04_MetadataEditing(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_041_MetadataEditing(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       Check metadata in the object and in the ODF document
       Edit metadata on the object
@@ -1164,7 +1178,7 @@ if __name__ == '__main__':
   framework()
 else:
   import unittest
-  def test_suite():
+  def notest_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestIngestion))
     return suite
