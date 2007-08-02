@@ -84,6 +84,7 @@ related_list = search_method(portal_type = portal_type)\n
 if same_type(portal_type, \'\'):\n
   portal_type = [portal_type]\n
 \n
+relation_found = 0\n
 if len(related_list) == 0:\n
   url = context.absolute_url()\n
   message = N_(\'No %s Related\' % portal_type[0],\n
@@ -91,6 +92,7 @@ if len(related_list) == 0:\n
       mapping = { \'portal_type\': N_(portal_type[0])}), \'utf8\'))\n
 \n
 elif len(related_list) == 1:\n
+  relation_found = 1\n
   related_object = context.restrictedTraverse(related_list[0], None)\n
   if related_object is None:\n
     # this might be a category\n
@@ -110,6 +112,7 @@ elif len(related_list) == 1:\n
   else :\n
     url = context.absolute_url()\n
     message = N_("You are not authorized to view the related document.")\n
+    relation_found = 0\n
 else :\n
   # compute the list of objects we are actually authorized to view\n
   related_object_list = []\n
@@ -125,6 +128,7 @@ else :\n
   if len(related_object_list) == 0 :\n
     url = context.absolute_url()\n
     message = N_("You are not authorized to view any related document.")\n
+    relation_found = 0\n
   else :\n
     request=context.REQUEST\n
     selection_uid_list = [x.getUid() for x in related_object_list]\n
@@ -136,7 +140,15 @@ else :\n
     return context.Base_jumpToRelatedObjectList(\n
                       uids=selection_uid_list, REQUEST=request)\n
 \n
-redirect_url = \'%s/%s?%s\' % (url, \'view\', make_query({\'portal_status_message\': message}))\n
+query_params = dict(portal_status_message=message)\n
+if selection_name and not relation_found:\n
+  query_params[\'selection_name\'] = selection_name\n
+  query_params[\'selection_index\'] = selection_index\n
+\n
+if relation_found:\n
+  form_id = \'view\'\n
+\n
+redirect_url = \'%s/%s?%s\' % (url, form_id, make_query(query_params))\n
 return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
 </string> </value>
         </item>
@@ -154,7 +166,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category, portal_type=(), related=1</string> </value>
+            <value> <string>base_category, portal_type=(), related=1, selection_name="", selection_index=0, form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -174,7 +186,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -183,6 +195,9 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>base_category</string>
                             <string>portal_type</string>
                             <string>related</string>
+                            <string>selection_name</string>
+                            <string>selection_index</string>
+                            <string>form_id</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
@@ -198,6 +213,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>search_method</string>
                             <string>related_list</string>
                             <string>same_type</string>
+                            <string>relation_found</string>
                             <string>len</string>
                             <string>url</string>
                             <string>_getitem_</string>
@@ -211,6 +227,9 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>request</string>
                             <string>selection_uid_list</string>
                             <string>kw</string>
+                            <string>dict</string>
+                            <string>query_params</string>
+                            <string>_write_</string>
                             <string>redirect_url</string>
                           </tuple>
                         </value>
@@ -226,6 +245,9 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
               <tuple>
                 <tuple/>
                 <int>1</int>
+                <string></string>
+                <int>0</int>
+                <string>view</string>
               </tuple>
             </value>
         </item>
@@ -235,7 +257,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value>                 <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
