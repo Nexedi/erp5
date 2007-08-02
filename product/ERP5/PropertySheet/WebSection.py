@@ -67,7 +67,13 @@ class WebSection:
         {   'id'          : 'visible',
             'description' : 'Defines visibility of current section.',
             'type'        : 'boolean',
-            'mode'        : '' },
+            'mode'        : 'rw' },
+        {   'id'          : 'custom_render_method_id',
+            'description' : 'ID of a page template, script, form or any callable object'
+                            'which overrides the default rendering of the section',
+            'type'        : 'string',
+            'default'     : None,
+            'mode'        : 'rw' },
     )
 
     _categories = ('aggregate', )

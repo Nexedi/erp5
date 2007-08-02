@@ -247,9 +247,14 @@ class WebSection(Domain):
       """
       self.REQUEST.set('current_web_section', self)
       if not self.REQUEST.get('editable_mode') and not self.REQUEST.get('ignore_layout'):
+        # Try to use a custom renderer if any
+        custom_render_method_id = self.getCustomRenderMethodId()
+        if custom_render_method_id is not None:
+          return getattr(self, custom_render_method_id)()
+        # The following could be moved to a typed based method for more flexibility
         document = self.getDefaultDocumentValue()
         if document is not None:
-          self.REQUEST.set('current_web_document', document)
+          self.REQUEST.set('current_web_document', document.__of__(self)) # Used to be document
           self.REQUEST.set('is_web_section_default_document', 1)
           return document.__of__(self)()
       return Domain.__call__(self)
