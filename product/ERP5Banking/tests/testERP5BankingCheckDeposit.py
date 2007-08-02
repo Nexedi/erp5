@@ -138,7 +138,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createCheckAndCheckbookModel()
     # create a check
     self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
-                                            vault=None,
+                                            vault=self.testsite.paris,
                                             bank_account=self.bank_account_2,
                                             min='0000050',
                                             max='0000100',

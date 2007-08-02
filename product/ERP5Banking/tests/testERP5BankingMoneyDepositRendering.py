@@ -222,9 +222,9 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     self.money_deposit_rendering = self.money_deposit_rendering_module.newContent(
                                          id='money_deposit_rendering_1',
                                          portal_type='Money Deposit Rendering',
-                                         source_value=self.document_vault,
                                          description='test',
                                          source_total_asset_price=52400.0)
+    self.money_deposit_rendering._setSourceValue(self.document_vault)
     # execute tic
     self.stepTic()
     # check we have only one money deposit rendering
