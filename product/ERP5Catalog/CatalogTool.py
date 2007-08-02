@@ -460,12 +460,27 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return allowedRolesAndUsers, role_column_dict
 
+    def getSecurityUidList(self, **kw):
+      """
+        Return a list of security Uids.
+        TODO: Add a cache.
+      """
+      allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
+      catalog = self.getSQLCatalog()
+      method = getattr(catalog, catalog.sql_search_security)
+      allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
+      security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+      return security_uid_list
+
     security.declarePublic( 'getSecurityQuery' )
     def getSecurityQuery(self, query=None, **kw):
       """
         Build a query based on allowed roles or on a list of security_uid
         values. The query takes into account the fact that some roles are
         catalogued with columns.
+
+        TODO: use getSecurityUidList and drop compatibility with old
+        security system.
       """
       allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
       catalog = self.getSQLCatalog()

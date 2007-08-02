@@ -113,7 +113,7 @@ SECURITY_COLUMN_ID = 'security_uid'
 COUNT_COLUMN_TITLE = 'count'
 INTERNAL_CRITERION_KEY_LIST = (WORKLIST_METADATA_KEY, SECURITY_PARAMETER_ID)
 
-def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurityQuery):
+def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurityUidList):
   """
     Get a list of dict of WorklistVariableMatchDict grouped by compatible conditions.
     Strip any variable which is not a catalog column.
@@ -151,9 +151,6 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurity
         if criterion_id in acceptable_key_dict or criterion_id in WORKLIST_METADATA_KEY:
           valid_criterion_dict[criterion_id] = criterion_value
         elif criterion_id == SECURITY_PARAMETER_ID:
-          # XXX: Only call getSecurityQuery to get the security uid list from
-          # generated query. The security API should be extended to allow
-          # access to those intermediate values.
           # Caching is done at this level to be as fast as possible.
           security_cache_key = list(criterion_value)
           security_cache_key.sort()
@@ -161,7 +158,7 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurity
           if security_cache_key in security_cache:
             criterion_value = security_cache[security_cache_key]
           else:
-            security_query = getSecurityQuery(**{criterion_id: criterion_value})
+            security_query = getSecurityUidList(**{criterion_id: criterion_value})
             criterion_value = security_query.getValue()
             security_cache[security_cache_key] = criterion_value
           criterion_id = SECURITY_COLUMN_ID
@@ -390,10 +387,10 @@ def WorkflowTool_listActions(self, info=None, object=None):
     def _getWorklistActionList():
       portal_url = getToolByName(self, 'portal_url')()
       portal_catalog = getToolByName(self, 'portal_catalog')
-      getSecurityQuery = portal_catalog.getSecurityQuery
+      getSecurityUidList = portal_catalog.getSecurityUidList
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible conditions
-      worklist_list_grouped_by_condition = groupWorklistListByCondition(worklist_dict=worklist_dict, acceptable_key_dict=acceptable_key_dict, getSecurityQuery=getSecurityQuery)
+      worklist_list_grouped_by_condition = groupWorklistListByCondition(worklist_dict=worklist_dict, acceptable_key_dict=acceptable_key_dict, getSecurityUidList=getSecurityUidList)
       LOG('WorklistGeneration', BLATHER, 'Will grab worklists in %s passes.' % (len(worklist_list_grouped_by_condition), ))
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         LOG('WorklistGeneration', BLATHER, 'Grabbing %s worklists...' % (len(grouped_worklist_dict), ))
