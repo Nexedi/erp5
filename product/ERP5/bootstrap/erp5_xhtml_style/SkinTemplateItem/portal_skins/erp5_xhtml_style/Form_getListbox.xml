@@ -79,11 +79,21 @@ form=context\n
 if form.meta_type != \'ERP5 Form\':\n
   return None\n
 \n
+# XXX We should not use meta_type properly,\n
+# XXX We need to discuss this problem.(yusei)\n
+def isListBox(field):\n
+  if field.meta_type==\'ListBox\':\n
+    return True\n
+  elif field.meta_type==\'ProxyField\':\n
+    template_field = field.getRecursiveTemplateField()\n
+    return isListBox(template_field)\n
+  return False\n
+\n
 # we start with \'bottom\' because most of the time\n
 # the listbox is there.\n
 for group in (\'bottom\', \'center\', \'left\', \'right\', \'Default\'):\n
   for field in form.get_fields_in_group(group):\n
-     if field.meta_type == \'ListBox\' and not(field[\'hidden\']) and field[\'enabled\']:\n
+     if isListBox(field) and not(field[\'hidden\']) and field[\'enabled\']:\n
        return field\n
 
 
@@ -139,6 +149,7 @@ for group in (\'bottom\', \'center\', \'left\', \'right\', \'Default\'):\n
                             <string>form</string>
                             <string>_getattr_</string>
                             <string>None</string>
+                            <string>isListBox</string>
                             <string>_getiter_</string>
                             <string>group</string>
                             <string>field</string>
