@@ -75,6 +75,19 @@ transaction = state_change[\'object\']\n
 vault = transaction.getSource()\n
 vaultDestination = transaction.getDestination()\n
 \n
+if transaction.isCurrencyHandover() and vaultDestination is not None:\n
+  msg = Message(domain="ui", \n
+         message="Sorry, you must not set a destination in case of currency handover.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+if vault is None:\n
+  msg = Message(domain="ui", \n
+         message="Sorry, you must define a source.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+if not transaction.isCurrencyHandover() and vaultDestination is not None:\n
+  msg = Message(domain="ui", \n
+         message="Sorry, you must define a destination.")\n
 \n
 # use of the constraint : Test source and destination\n
 vliste = transaction.checkConsistency()\n
@@ -164,17 +177,17 @@ elif resource <> 0 :\n
                             <string>_getattr_</string>
                             <string>vault</string>
                             <string>vaultDestination</string>
+                            <string>None</string>
+                            <string>msg</string>
                             <string>vliste</string>
                             <string>len</string>
                             <string>portal_type_with_no_space</string>
                             <string>getattr</string>
-                            <string>None</string>
                             <string>check_path_script</string>
                             <string>message</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>
-                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

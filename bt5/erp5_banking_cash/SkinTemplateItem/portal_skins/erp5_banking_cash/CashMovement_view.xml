@@ -110,6 +110,7 @@
                         <string>my_source</string>
                         <string>my_resource</string>
                         <string>my_source_total_asset_price</string>
+                        <string>my_currency_handover</string>
                       </list>
                     </value>
                 </item>
