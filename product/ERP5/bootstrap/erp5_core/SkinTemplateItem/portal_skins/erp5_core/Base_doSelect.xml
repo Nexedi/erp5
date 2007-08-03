@@ -69,50 +69,20 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from ZTUtils import make_query\n
-from ZODB.POSException import ConflictError\n
 \n
 request = context.REQUEST\n
 \n
 #return request\n
 \n
-if list_method_id:\n
-  kw = { \'selection_index\': selection_index,\n
-         \'selection_name\': selection_name,\n
-         \'list_method_id\': list_method_id,\n
-        }\n
-else:\n
-  kw = { \'selection_index\': selection_index,\n
-         \'selection_name\': selection_name,\n
-        }\n
+kw = { \'selection_index\': selection_index,\n
+       \'selection_name\': selection_name,\n
+      }\n
 \n
-if list_method_id:\n
-  try:\n
-    # Define form basic fields\n
-    form = getattr(context,form_id)\n
-    listbox_field = None\n
-    # Search listbox\n
-    for f in form.get_fields():\n
-      if f.meta_type == "ListBox":\n
-        listbox_field = f\n
-        break\n
-    # Lookup listbox Base_viewSearchResultList cols\n
-    for col_id, col_title in listbox_field.get_value(\'search_columns\'):\n
-      # Left is col_id\n
-      v = request.form.get(col_id, \'\')\n
-      kw[col_id] = v\n
-    # Redirect\n
-    request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_query(kw)))\n
-  except ConflictError:\n
-    raise\n
-  except:\n
-    # Default behaviour is not as great but returns something\n
-    return getattr(context,form_id)(request)\n
-else:\n
-  # Default behaviour is not as great but returns something\n
-  kw.update(request.form)\n
-  if kw.has_key(\'listbox_uid\'): del kw[\'listbox_uid\']\n
-  if kw.has_key(\'list_start\'): del kw[\'list_start\']\n
-  request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_query(kw)))\n
+# Default behaviour is not as great but returns something\n
+kw.update(request.form)\n
+if kw.has_key(\'listbox_uid\'): del kw[\'listbox_uid\']\n
+if kw.has_key(\'list_start\'): del kw[\'list_start\']\n
+request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_query(kw)))\n
 </string> </value>
         </item>
         <item>
@@ -129,7 +99,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\', selection_index=\'\', selection_name=\'\', list_method_id=None</string> </value>
+            <value> <string>form_id=\'\', selection_index=\'\', selection_name=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,7 +119,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -158,24 +128,12 @@ else:\n
                             <string>form_id</string>
                             <string>selection_index</string>
                             <string>selection_name</string>
-                            <string>list_method_id</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
-                            <string>ZODB.POSException</string>
-                            <string>ConflictError</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
                             <string>kw</string>
-                            <string>getattr</string>
-                            <string>form</string>
-                            <string>None</string>
-                            <string>listbox_field</string>
-                            <string>_getiter_</string>
-                            <string>f</string>
-                            <string>col_id</string>
-                            <string>col_title</string>
-                            <string>v</string>
                             <string>_write_</string>
                           </tuple>
                         </value>
@@ -192,7 +150,6 @@ else:\n
                 <string></string>
                 <string></string>
                 <string></string>
-                <none/>
               </tuple>
             </value>
         </item>
