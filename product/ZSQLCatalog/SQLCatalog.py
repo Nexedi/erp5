@@ -258,6 +258,13 @@ class Query(QueryMixin):
   def __call__(self):
     self.asSQLExpression()
 
+  def __hash__(self):
+    value = self.value
+    if isinstance(value, list):
+      value = tuple(value)
+    return hash((self.format, self.operator, self.range, self.search_mode,
+                 self.table_alias_list, self.key, value, self.type))
+
   def getRange(self):
     return self.range
 
@@ -453,6 +460,10 @@ class ComplexQuery(QueryMixin):
 
   def __call__(self):
     self.asSQLExpression()
+
+  def __hash__(self):
+    subquery_hash = hash(tuple([hash(x) for x in self.getQueryList()]))
+    return hash((subquery_hash, self.operator))
 
   def getQueryList(self):
     return self.query_list
