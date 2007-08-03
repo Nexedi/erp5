@@ -474,8 +474,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         raise DeprecationWarning, "The usage of allowedRolesAndUsers is "\
                                   "deprecated. Please update your catalog "\
                                   "business template."
-      allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
-      security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+      if allowedRolesAndUsers:
+        allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
+        security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+      else:
+        security_uid_list = []
       return security_uid_list, role_column_dict
 
     security.declarePublic( 'getSecurityQuery' )
