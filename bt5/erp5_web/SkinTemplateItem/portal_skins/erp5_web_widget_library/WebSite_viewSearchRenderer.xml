@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -88,7 +94,7 @@ Description:\n
           <input type="submit" name="search_area/WebSite_viewQuickSearchResultList:method" value="Search"/>\n
         </div>\n
         <div class="searchOptions">\n
-          <a tal:attributes="href string: ${web_site_url}/search_area/WebSite_viewAdvancedSearch" i18n:translate="" i18n:domain="ui">Advanced Search</a> | <a href="javascript:void 0" onclick="javascript:openTips();" value="" i18n:translate="" i18n:domain="ui">Search Tips</a>\n
+          <a tal:attributes="href string: search_area/Base_viewAdvancedSearchDialog" i18n:translate="" i18n:domain="ui">Advanced Search</a> | <a href="javascript:void 0" onclick="javascript:openTips();" value="" i18n:translate="" i18n:domain="ui">Search Tips</a>\n
         </div>\n
       </div>\n
       <div class="clear"></div>\n

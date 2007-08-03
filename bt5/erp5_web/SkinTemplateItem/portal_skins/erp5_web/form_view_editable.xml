@@ -54,19 +54,38 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:condition="here/portal_skins/updateSkinCookie | nothing"\n
-           tal:define="dummy here/setupCurrentSkin;" />\n
-<tal:block tal:define="response request/RESPONSE;\n
-                       mtool here/portal_membership;\n
-                       isAnon mtool/isAnonymousUser|nothing;">\n
-  <tal:block tal:condition="isAnon">\n
-    <tal:block tal:define="dummy python: response.expireCookie(\'__ac\', path=\'/\');\n
-                           url python: \'%s?came_from=%s&portal_status_message=%s\' % (request[\'came_from\'], request[\'came_from\'], here.getPortalObject().Localizer.translate(\'ui\', \'Sorry,+the+email+adress and/or+the+password+that+you+provided+are+incorrect.\'));\n
-                           dummy python: response.redirect(url);"/>\n
-  </tal:block>\n
-  <tal:block tal:condition="not: isAnon">\n
-    <tal:block tal:define="came_from python: \'%s\' % request.get(\'came_from\') or here.portal_url() + \'/view\';\n
-                           dummy python: response.redirect(came_from);" />\n
+<tal:block tal:replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+<!--\n
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+                   Vincent Pelletier <vincent@nexedi.com>\n
+                   Christophe Dumez <christophe@nexedi.com>\n
+                   Jean-Paul Smets <jp@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+-->\n
+</tal:block>\n
+<tal:block metal:define-macro="master">\n
+  <tal:block metal:use-macro="here/view_main/macros/master">\n
+    <tal:block metal:fill-slot="main"\n
+           tal:define="editable_mode python: True;\n
+                       dummy python: request.set(\'editable_mode\', editable_mode)">\n
+      <tal:block metal:use-macro="here/form_render/macros/master" />\n
+    </tal:block>\n
   </tal:block>\n
 </tal:block>
 
@@ -82,11 +101,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_login</string> </value>
+            <value> <string>form_view_editable</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Login Page Template used by login and registration main page</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

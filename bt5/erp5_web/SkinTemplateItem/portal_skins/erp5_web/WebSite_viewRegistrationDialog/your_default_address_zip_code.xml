@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>PasswordField</string>
+          <string>StringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>your_password</string> </value>
+            <value> <string>your_default_address_zip_code</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -22,7 +28,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>Password and confirm password do not match.</string> </value>
+                    <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
@@ -195,7 +201,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>visible_label</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -211,7 +217,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>12</int> </value>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -223,9 +229,7 @@
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
@@ -241,11 +245,11 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Password</string> </value>
+                    <value> <string>Post Code</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -261,25 +265,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>WebSite_validatePasswordsMatch</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>WebSite_createPersonAccount</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -81,41 +81,39 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
-                        <string>my_title</string>
-                        <string>my_short_title</string>
-                        <string>my_container_layout</string>
-                        <string>my_content_layout</string>
-                        <string>my_custom_render_method_id</string>
+                        <string>your_first_name</string>
+                        <string>your_last_name</string>
+                        <string>your_default_email_text</string>
+                        <string>your_default_telephone_text</string>
+                        <string>your_default_fax_text</string>
+                        <string>your_default_address_street_address</string>
+                        <string>your_default_address_city</string>
+                        <string>your_default_address_zip_code</string>
+                        <string>your_default_address_region</string>
+                        <string>your_reference</string>
+                        <string>your_password</string>
+                        <string>your_password_confirm</string>
+                        <string>submit</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_aggregate_title_list</string>
-                        <string>my_webmaster</string>
-                        <string>my_int_index</string>
-                        <string>my_visible</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -123,7 +121,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_view</string> </value>
+            <value> <string>WebSite_viewRegistrationDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -131,11 +129,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebSite_view</string> </value>
+            <value> <string>WebSite_createWebSiteAccountForm</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_view_editable</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -147,7 +145,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web Site</string> </value>
+            <value> <string>Create Your New Account</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

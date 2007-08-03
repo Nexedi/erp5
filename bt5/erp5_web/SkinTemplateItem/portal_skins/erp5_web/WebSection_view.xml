@@ -103,6 +103,7 @@
                         <string>my_short_title</string>
                         <string>my_container_layout</string>
                         <string>my_content_layout</string>
+                        <string>my_custom_render_method_id</string>
                       </list>
                     </value>
                 </item>

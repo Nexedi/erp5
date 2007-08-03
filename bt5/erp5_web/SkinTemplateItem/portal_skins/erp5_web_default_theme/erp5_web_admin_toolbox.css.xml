@@ -66,8 +66,13 @@
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 \n
-div.adminToolbox input, textarea, select { /* This should be common XXX */\n
+div.adminToolbox input, textarea{ /* This should be common XXX */\n
   border: 1px solid #999;\n
+}\n
+\n
+div.adminToolbox select {\n
+  border: 1px solid #999;\n
+  max-width: 12em;\n
 }\n
 \n
 div.adminToolbox input, textarea {\n

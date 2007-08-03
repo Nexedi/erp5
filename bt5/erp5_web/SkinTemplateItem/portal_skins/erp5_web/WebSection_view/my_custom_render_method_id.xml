@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>your_default_address_zip_code</string> </value>
+            <value> <string>my_custom_render_method_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -211,7 +217,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>10</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -243,7 +249,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Post Code</string> </value>
+                    <value> <string>Renderer ID</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
