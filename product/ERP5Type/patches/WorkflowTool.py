@@ -386,6 +386,7 @@ def WorkflowTool_listActions(self, info=None, object=None):
           worklist_dict[wf_id] = a
 
   if len(worklist_dict):
+    portal_url = getToolByName(self, 'portal_url')()
     def _getWorklistActionList():
       portal_url = getToolByName(self, 'portal_url')()
       portal_catalog = getToolByName(self, 'portal_catalog')
@@ -411,7 +412,7 @@ def WorkflowTool_listActions(self, info=None, object=None):
         LOG('WorklistGeneration', BLATHER, 'Creating %s actions.' % (len(action_list), ))
       return action_list
     user = str(_getAuthenticatedUser(self))
-    _getWorklistActionList = CachingMethod(_getWorklistActionList, id=('_getWorklistActionList', user), cache_factory = 'erp5_ui_short')
+    _getWorklistActionList = CachingMethod(_getWorklistActionList, id=('_getWorklistActionList', user, portal_url), cache_factory = 'erp5_ui_short')
     actions.extend(_getWorklistActionList())
   return actions 
 
