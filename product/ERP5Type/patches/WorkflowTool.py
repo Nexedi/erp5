@@ -322,23 +322,22 @@ def generateActionList(grouped_worklist_dict, worklist_result, portal_url):
   """
     For each worklist generate action_list as expected by portal_actions.
   """
-  action_dict = {}
+  action_list = []
+  append = action_list.append
   for key, value in grouped_worklist_dict.iteritems():
     document_count = worklist_result.get(key, 0)
     if document_count:
       metadata = value[WORKLIST_METADATA_KEY]
       format_data = metadata['format_data']
       format_data._push({'count': document_count})
-      action_dict[key] = {'name': metadata['worklist_title'] % format_data,
-                          'url': '%s/%s' % (portal_url, metadata['action_box_url'] % format_data),
-                          'worklist_id': metadata['worklist_id'],
-                          'workflow_title': metadata['workflow_title'],
-                          'workflow_id': metadata['workflow_id'],
-                          'permissions': (),  # Predetermined.
-                          'category': metadata['action_box_category']}
-  action_dict_key_list = action_dict.keys()
-  action_dict_key_list.sort()
-  return [action_dict[x] for x in action_dict_key_list]
+      append({'name': metadata['worklist_title'] % format_data,
+              'url': '%s/%s' % (portal_url, metadata['action_box_url'] % format_data),
+              'worklist_id': metadata['worklist_id'],
+              'workflow_title': metadata['workflow_title'],
+              'workflow_id': metadata['workflow_id'],
+              'permissions': (),  # Predetermined.
+              'category': metadata['action_box_category']})
+  return action_list
 
 def WorkflowTool_listActions(self, info=None, object=None):
   """
@@ -425,6 +424,11 @@ def WorkflowTool_listActions(self, info=None, object=None):
         group_action_list = generateActionList(grouped_worklist_dict=grouped_worklist_dict, worklist_result=worklist_result_dict, portal_url=portal_url)
         LOG('WorklistGeneration', BLATHER, 'Creating %s actions.' % (len(group_action_list), ))
         action_list.extend(group_action_list)
+      def get_action_ident(action):
+        return '/'.join((action['workflow_id'], action['worklist_id']))
+      def action_cmp(action_a, action_b):
+        return cmp(get_action_ident(action_a), get_action_ident(action_b))
+      action_list.sort(action_cmp)
       return action_list
     user = str(_getAuthenticatedUser(self))
     _getWorklistActionList = CachingMethod(_getWorklistActionList, id=('_getWorklistActionList', user, portal_url), cache_factory = 'erp5_ui_short')
