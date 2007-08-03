@@ -148,7 +148,7 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurity
     for worklist_id, worklist_match_dict in worklist.iteritems():
       valid_criterion_dict = {}
       for criterion_id, criterion_value in worklist_match_dict.iteritems():
-        if criterion_id in acceptable_key_dict or criterion_id in WORKLIST_METADATA_KEY:
+        if criterion_id in acceptable_key_dict or criterion_id == WORKLIST_METADATA_KEY:
           valid_criterion_dict[criterion_id] = criterion_value
         elif criterion_id == SECURITY_PARAMETER_ID:
           # Caching is done at this level to be as fast as possible.
