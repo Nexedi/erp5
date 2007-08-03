@@ -388,7 +388,6 @@ def WorkflowTool_listActions(self, info=None, object=None):
   if len(worklist_dict):
     portal_url = getToolByName(self, 'portal_url')()
     def _getWorklistActionList():
-      portal_url = getToolByName(self, 'portal_url')()
       portal_catalog = getToolByName(self, 'portal_catalog')
       getSecurityUidListAndRoleColumnDict = portal_catalog.getSecurityUidListAndRoleColumnDict
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
