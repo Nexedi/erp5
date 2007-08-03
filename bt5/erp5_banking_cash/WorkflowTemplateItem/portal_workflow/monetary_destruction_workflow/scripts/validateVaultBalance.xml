@@ -78,7 +78,8 @@ resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_t
 source_object = context.portal_categories.getCategoryValue(vault)\n
 \n
 # check again that we are in the good accounting date\n
-transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate())\n
+if check_source_counter_date:\n
+  transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate())\n
 \n
 if (\'encaisse_des_externes\' not in vault and \'encaisse_des_billets_retires_de_la_circulation\'  not in vault):\n
    msg = Message(domain="ui", message="Invalid source.")\n
@@ -139,7 +140,7 @@ if transaction.isDematerialization():\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, check_source_counter_date=1, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -159,13 +160,15 @@ if transaction.isDematerialization():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>check_source_counter_date</string>
+                            <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
@@ -195,7 +198,9 @@ if transaction.isDematerialization():\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>

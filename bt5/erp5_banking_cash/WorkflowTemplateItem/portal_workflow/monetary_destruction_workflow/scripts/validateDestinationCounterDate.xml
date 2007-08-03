@@ -78,7 +78,7 @@ source_section = transaction.getSourceSection()\n
 transaction.Baobab_checkCounterDateOpen(site=source_section, date=transaction.getStopDate())\n
 \n
 # Check source counter stock & date again.\n
-context.validateVaultBalance(state_change=state_change)\n
+context.validateVaultBalance(state_change=state_change, check_source_counter_date=0)\n
 
 
 ]]></string> </value>
