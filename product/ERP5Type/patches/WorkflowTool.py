@@ -113,7 +113,7 @@ SECURITY_COLUMN_ID = 'security_uid'
 COUNT_COLUMN_TITLE = 'count'
 INTERNAL_CRITERION_KEY_LIST = (WORKLIST_METADATA_KEY, SECURITY_PARAMETER_ID)
 
-def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurityUidList):
+def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurityUidListAndRoleColumnDict):
   """
     Get a list of dict of WorklistVariableMatchDict grouped by compatible conditions.
     Strip any variable which is not a catalog column.
@@ -158,8 +158,10 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurity
           if security_cache_key in security_cache:
             criterion_value = security_cache[security_cache_key]
           else:
-            security_query = getSecurityUidList(**{criterion_id: criterion_value})
-            criterion_value = security_query
+            security_uid_list, role_column_dict = getSecurityUidListAndRoleColumnDict(**{criterion_id: criterion_value})
+            # XXX: role_column_dict is ignored for now. This must be
+            # implemented.
+            criterion_value = security_uid_list
             security_cache[security_cache_key] = criterion_value
           criterion_id = SECURITY_COLUMN_ID
         else:

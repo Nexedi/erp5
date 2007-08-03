@@ -460,9 +460,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return allowedRolesAndUsers, role_column_dict
 
-    def getSecurityUidList(self, **kw):
+    def getSecurityUidListAndRoleColumnDict(self, **kw):
       """
-        Return a list of security Uids.
+        Return a list of security Uids and a dictionnary containing available
+        role columns.
+        
         TODO: Add a cache.
       """
       allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
@@ -470,7 +472,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       method = getattr(catalog, catalog.sql_search_security)
       allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
       security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
-      return security_uid_list
+      return security_uid_list, role_column_dict
 
     security.declarePublic( 'getSecurityQuery' )
     def getSecurityQuery(self, query=None, **kw):
