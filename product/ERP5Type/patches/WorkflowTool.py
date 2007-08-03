@@ -389,10 +389,10 @@ def WorkflowTool_listActions(self, info=None, object=None):
     def _getWorklistActionList():
       portal_url = getToolByName(self, 'portal_url')()
       portal_catalog = getToolByName(self, 'portal_catalog')
-      getSecurityUidList = portal_catalog.getSecurityUidList
+      getSecurityUidListAndRoleColumnDict = portal_catalog.getSecurityUidListAndRoleColumnDict
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible conditions
-      worklist_list_grouped_by_condition = groupWorklistListByCondition(worklist_dict=worklist_dict, acceptable_key_dict=acceptable_key_dict, getSecurityUidList=getSecurityUidList)
+      worklist_list_grouped_by_condition = groupWorklistListByCondition(worklist_dict=worklist_dict, acceptable_key_dict=acceptable_key_dict, getSecurityUidListAndRoleColumnDict=getSecurityUidListAndRoleColumnDict)
       LOG('WorklistGeneration', BLATHER, 'Will grab worklists in %s passes.' % (len(worklist_list_grouped_by_condition), ))
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         LOG('WorklistGeneration', BLATHER, 'Grabbing %s worklists...' % (len(grouped_worklist_dict), ))
