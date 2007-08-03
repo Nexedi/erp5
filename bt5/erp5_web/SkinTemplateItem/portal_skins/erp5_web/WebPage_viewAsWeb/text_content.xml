@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>text_content</string> </value>
         </item>
@@ -215,7 +221,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>page</string> </value>
+                    <value> <string>page hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
