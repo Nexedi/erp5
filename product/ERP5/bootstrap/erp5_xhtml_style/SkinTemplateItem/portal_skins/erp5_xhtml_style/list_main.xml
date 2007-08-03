@@ -82,7 +82,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   <tal:block tal:define="form_action string:Base_doSelect;\n
                          form_id form/id;\n
                          list_mode python: True;\n
-                         listmode_default_listbox python: form.Form_getListbox();\n
+                         listmode_default_listbox python:form.listbox;\n
                          selection_name listmode_default_listbox/selection_name;\n
                          selection_index request/selection_index | python:0;\n
                          dummy python: selection_name and request.set(\'selection_name\', selection_name);\n
