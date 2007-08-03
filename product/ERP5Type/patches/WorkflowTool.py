@@ -181,7 +181,7 @@ def generateNestedQuery(priority_list, criterion_dict, securityQueryHook=None, p
   """
   assert possible_worklist_id_dict is None or len(possible_worklist_id_dict) != 0
   my_priority_list = priority_list[:]
-  my_criterion_id = my_priority_list.pop(0)
+  my_criterion_id = my_priority_list.pop()
   query_list = []
   append = query_list.append
   my_criterion_dict = criterion_dict[my_criterion_id]
@@ -240,7 +240,6 @@ def getWorklistListQuery(grouped_worklist_dict, securityQueryHook):
     return cmp(max([len(x) for x in total_criterion_id_dict[criterion_id_a].itervalues()]),
                max([len(x) for x in total_criterion_id_dict[criterion_id_b].itervalues()]))
   total_criterion_id_list.sort(criterion_id_cmp)
-  total_criterion_id_list.reverse()
   query = generateNestedQuery(priority_list=total_criterion_id_list, criterion_dict=total_criterion_id_dict, securityQueryHook=securityQueryHook)
   assert query is not None
   group_by_expression = ', '.join([x for x in total_criterion_id_dict.keys() if x != SECURITY_PARAMETER_ID])
