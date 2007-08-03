@@ -409,7 +409,7 @@ def WorkflowTool_listActions(self, info=None, object=None):
         LOG('WorklistGeneration', BLATHER, 'Distributed into %s worklists.'% (len(worklist_result_dict), ))
         action_list = generateActionList(grouped_worklist_dict=grouped_worklist_dict, worklist_result=worklist_result_dict, portal_url=portal_url)
         LOG('WorklistGeneration', BLATHER, 'Creating %s actions.' % (len(action_list), ))
-        return action_list
+      return action_list
     user = str(_getAuthenticatedUser(self))
     _getWorklistActionList = CachingMethod(_getWorklistActionList, id=('_getWorklistActionList', user), cache_factory = 'erp5_ui_short')
     actions.extend(_getWorklistActionList())
