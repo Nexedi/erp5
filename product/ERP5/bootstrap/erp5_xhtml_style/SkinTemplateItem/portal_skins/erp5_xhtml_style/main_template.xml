@@ -84,7 +84,7 @@ IDEAS:\n
 <tal:block metal:define-macro="master">\n
   <tal:block\n
    tal:define="ignore_layout          request/ignore_layout | nothing;\n
-               layout_form_id         here/getApplicableLayout | nothing;\n
+               layout_form_id         request/layout_form_id | here/getApplicableLayout | nothing;\n
                layout_form    python: layout_form_id and getattr(here, layout_form_id, None) or None;\n
                is_web_mode    python: (layout_form is not None) and (not ignore_layout);\n
                editable_mode  python: (not is_web_mode) or request.get(\'editable_mode\', False);\n

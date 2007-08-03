@@ -78,7 +78,9 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block metal:define-macro="master">\n
+<tal:block metal:define-macro="master"\n
+           tal:define="editable_mode python: True;\n
+                       dummy python: request.set(\'editable_mode\', editable_mode)">\n
   <tal:block metal:use-macro="here/dialog_main/macros/master">\n
     <tal:block metal:fill-slot="main">\n
       <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
@@ -87,9 +89,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                              right_group python: form.get_fields_in_group(\'right\');\n
                              center_group python: form.get_fields_in_group(\'center\');\n
                              dialog_actions python: actions.get(dialog_category, []);\n
-                             field_render here/field_render/macros/field_render;\n
-                             editable_mode python: True;\n
-                             dummy python: request.set(\'editable_mode\', editable_mode)">\n
+                             field_render here/field_render/macros/field_render;">\n
         <tal:block tal:condition="preferred_html_style_developper_mode">\n
           <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
         </tal:block>\n
