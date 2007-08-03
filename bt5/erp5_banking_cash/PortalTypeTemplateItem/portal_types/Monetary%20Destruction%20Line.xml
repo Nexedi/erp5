@@ -34,12 +34,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_property_domain_dict</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
             <key> <string>_roles</string> </key>
             <value>
               <list/>
@@ -67,15 +61,20 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>BAOBAB Cash Delivery</string> </value>
+            <value> <string>ERP5Banking Cash Delivery Line</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>      A DeliveryLine object allows to implement lines in\n
+      Deliveries (packing list, order, invoice, etc.)\n
+\n
+      It may include a price (for insurance, for customs, for invoices,\n
+      for orders)\n
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addCashDelivery</string> </value>
+            <value> <string>addCashDeliveryLine</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -85,7 +84,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>delivery</string>
+                <string>delivery_movement</string>
               </tuple>
             </value>
         </item>
@@ -97,7 +96,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Monetary Destruction</string> </value>
+            <value> <string>Monetary Destruction Line</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -112,10 +111,6 @@
             <value>
               <tuple/>
             </value>
-        </item>
-        <item>
-            <key> <string>redirect_script</string> </key>
-            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -34,12 +34,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_property_domain_dict</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
             <key> <string>_roles</string> </key>
             <value>
               <list/>
@@ -63,19 +57,19 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>document.gif</string> </value>
+            <value> <string>order_line_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>BAOBAB Cash Delivery</string> </value>
+            <value> <string>ERP5Banking Cash Delivery Cell</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Une ligne tarifaire.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addCashDelivery</string> </value>
+            <value> <string>addCashDeliveryCell</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -85,7 +79,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>delivery</string>
+                <string>delivery_movement</string>
+                <string>order_movement</string>
               </tuple>
             </value>
         </item>
@@ -97,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Monetary Destruction</string> </value>
+            <value> <string>Monetary Destruction Cell</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -112,10 +107,6 @@
             <value>
               <tuple/>
             </value>
-        </item>
-        <item>
-            <key> <string>redirect_script</string> </key>
-            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

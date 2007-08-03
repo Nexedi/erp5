@@ -69,7 +69,10 @@
   <item>Banking Operation Line</item>
  </portal_type>
  <portal_type id="Monetary Destruction">
-  <item>Cash Delivery Line</item>
+  <item>Monetary Destruction Line</item>
+ </portal_type>
+ <portal_type id="Monetary Destruction Line">
+  <item>Monetary Destruction Cell</item>
  </portal_type>
  <portal_type id="Monetary Issue">
   <item>Monetary Issue Container</item>

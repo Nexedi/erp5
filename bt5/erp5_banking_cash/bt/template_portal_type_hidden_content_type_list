@@ -27,7 +27,8 @@ Incoming Cash To Currency Sale Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
 Internal Money Deposit | Banking Operation Line
 Internal Money Deposit | Cash Delivery Line
-Monetary Destruction | Cash Delivery Line
+Monetary Destruction Line | Monetary Destruction Cell
+Monetary Destruction | Monetary Destruction Line
 Monetary Issue Container | Container Line
 Monetary Issue | Monetary Issue Container
 Monetary Issue | Monetary Issue Line

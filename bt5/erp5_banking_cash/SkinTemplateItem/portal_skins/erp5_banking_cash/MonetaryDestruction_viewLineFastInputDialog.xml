@@ -98,7 +98,7 @@ else:\n
 variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n
 #, \'emission_letter_list\'     : emission_letter A REMETTRE APRES LES TESTS\n
-cash_detail_dict = {\'line_portal_type\'           : \'Cash Delivery Line\'\n
+cash_detail_dict = {\'line_portal_type\'           : \'Monetary Destruction Line\'\n
                     , \'operation_currency\'       : currency\n
                     , \'cash_status_list\'         : cash_status\n
                     , \'emission_letter_list\'      : emission_letter\n

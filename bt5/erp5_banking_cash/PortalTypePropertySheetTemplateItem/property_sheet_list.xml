@@ -82,6 +82,12 @@
   <item>Price</item>
   <item>Task</item>
  </portal_type>
+ <portal_type id="Monetary Destruction Cell">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Monetary Destruction Line">
+  <item>Cash Delivery Line</item>
+ </portal_type>
  <portal_type id="Monetary Issue">
   <item>Price</item>
   <item>Amount</item>

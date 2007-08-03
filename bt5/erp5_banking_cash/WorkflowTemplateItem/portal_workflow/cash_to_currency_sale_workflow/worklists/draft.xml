@@ -63,11 +63,8 @@ Base_viewWorklist?simulation_state=draft&portal_type=Cash To Currency Sale&reset
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -87,17 +84,14 @@ Base_viewWorklist?simulation_state=draft&portal_type=Cash To Currency Sale&reset
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -110,14 +104,6 @@ Base_viewWorklist?simulation_state=draft&portal_type=Cash To Currency Sale&reset
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Cash To Currency Sale</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>simulation_assigned</string> </key>
                     <value>
                       <tuple>
                         <string>Cash To Currency Sale</string>

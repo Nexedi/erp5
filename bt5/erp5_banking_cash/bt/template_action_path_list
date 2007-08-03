@@ -146,6 +146,11 @@ Internal Money Deposit | history
 Internal Money Deposit | metadata
 Internal Money Deposit | print
 Internal Money Deposit | view
+Monetary Destruction Cell | metadata
+Monetary Destruction Cell | view
+Monetary Destruction Line | metadata
+Monetary Destruction Line | print
+Monetary Destruction Line | view
 Monetary Destruction Module | list_ui
 Monetary Destruction Module | sort_on
 Monetary Destruction Module | view

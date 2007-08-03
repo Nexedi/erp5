@@ -65,65 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-transaction = state_change[\'object\']\n
-\n
-vault = transaction.getSource()\n
-resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Monetary Destruction Line\')\n
-\n
-source_object = context.portal_categories.getCategoryValue(vault)\n
-\n
-# check again that we are in the good accounting date\n
-transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate())\n
-\n
-if (\'encaisse_des_externes\' not in vault and \'encaisse_des_billets_retires_de_la_circulation\'  not in vault):\n
-   msg = Message(domain="ui", message="Invalid source.")\n
-   raise ValidationFailed, (msg,)\n
-\n
-if \'encaisse_des_externes\' in vault:\n
-   source_section = transaction.getSourceSection()\n
-   if source_section is None:\n
-     msg = Message(domain="ui", message="Invalid Foreign Agency.")\n
-     raise ValidationFailed, (msg,)\n
-\n
-\n
-\n
-\n
-# Get price and total_price.\n
-amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=[\'Monetary Destruction Line\',\'Monetary Destruction Cell\'],fast=0)\n
-\n
-if resource == 2:\n
-  msg = Message(domain="ui", message="No Resource.")\n
-  raise ValidationFailed, (msg,)\n
-elif amount != total_price:\n
-  msg = Message(domain="ui", message="Amount differ from total price.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource <> 0 :\n
-  msg = Message(domain="ui", message="Insufficient Balance.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-# In case of dematerialization, we must have only coins\n
-if transaction.isDematerialization():\n
-  for line in transaction.objectValues(portal_type=\'Cash Delivery Line\'):\n
-    if line.getResourceValue().getPortalType() != \'Coin\':\n
-      msg = Message(domain="ui", message="Sorry, dematerializatio is possible only with coins.")\n
-      raise ValidationFailed, (msg,)\n
-  # Also we must make sure that the source_section is defined\n
-  source_section = transation.getSourceSection()\n
-  if source_section is None:\n
-    msg = Message(domain="ui", message="Sorry, dematerializatio is possible only if the external agency is defined.")\n
-    raise ValidationFailed, (msg,)\n
-  if not \'encaisse_des_billets_retires_de_la_circulation\' in vault:\n
-    msg = Message(domain="ui", message="Invalid source.")\n
-    raise ValidationFailed, (msg,)\n
-
-
-]]></string> </value>
+            <value> <string>variation = context.getVariationText()\n
+result = variation.replace(\'retired\', \'new_not_emitted\')\n
+return result\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -138,8 +83,14 @@ if transaction.isDematerialization():\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>*args, **kwd</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -159,32 +110,18 @@ if transaction.isDematerialization():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
+                            <string>args</string>
+                            <string>kwd</string>
                             <string>_getattr_</string>
-                            <string>vault</string>
-                            <string>resource</string>
                             <string>context</string>
-                            <string>source_object</string>
-                            <string>msg</string>
-                            <string>source_section</string>
-                            <string>None</string>
-                            <string>amount</string>
-                            <string>total_price</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>transation</string>
+                            <string>variation</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>
@@ -201,7 +138,7 @@ if transaction.isDematerialization():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validateVaultBalance</string> </value>
+            <value> <string>MonetaryDestructionCell_getBaobabDestinationVariationText</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

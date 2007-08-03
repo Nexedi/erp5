@@ -37,6 +37,8 @@ Internal Money Deposit | Arrow
 Internal Money Deposit | InternalMoney
 Internal Money Deposit | Price
 Internal Money Deposit | Task
+Monetary Destruction Cell | Cash Delivery Line
+Monetary Destruction Line | Cash Delivery Line
 Monetary Destruction | Account
 Monetary Destruction | Amount
 Monetary Destruction | Price
