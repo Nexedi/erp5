@@ -404,7 +404,7 @@ class Query(QueryMixin):
         escaped_value_string = ', '.join(escaped_value_list)
         where_expression.append("%s IN (%s)" % (key, escaped_value_string))
       elif len(value) == 1:
-        where_expression.append("%s == %s" % (key, self._quoteSQLString(value[0])))
+        where_expression.append("%s = %s" % (key, self._quoteSQLString(value[0])))
       else:
         where_expression.append('0') # "foo IN ()" is invalid SQL syntax, so use a "false" value.
     else:
