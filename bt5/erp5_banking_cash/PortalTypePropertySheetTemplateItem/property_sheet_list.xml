@@ -79,14 +79,15 @@
  <portal_type id="Monetary Destruction">
   <item>Amount</item>
   <item>Account</item>
+  <item>MonetaryDestruction</item>
   <item>Price</item>
   <item>Task</item>
  </portal_type>
  <portal_type id="Monetary Destruction Cell">
-  <item>Cash Delivery Line</item>
+  <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Monetary Destruction Line">
-  <item>Cash Delivery Line</item>
+  <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Monetary Issue">
   <item>Price</item>
