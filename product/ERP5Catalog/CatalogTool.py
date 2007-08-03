@@ -469,7 +469,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
       catalog = self.getSQLCatalog()
-      method = getattr(catalog, catalog.sql_search_security)
+      method = getattr(catalog, catalog.sql_search_security, None)
+      if method is None:
+        raise DeprecationWarning, "The usage of allowedRolesAndUsers is "\
+                                  "deprecated. Please update your catalog "\
+                                  "business template."
       allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
       security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
       return security_uid_list, role_column_dict
@@ -480,19 +484,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         Build a query based on allowed roles or on a list of security_uid
         values. The query takes into account the fact that some roles are
         catalogued with columns.
-
-        TODO: use getSecurityUidList and drop compatibility with old
-        security system.
       """
-      allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
-      catalog = self.getSQLCatalog()
-      method = getattr(catalog, catalog.sql_search_security, '')
       original_query = query
-      if method in ('', None):
-        # XXX old way, should not be used anylonger
-        warnings.warn("The usage of allowedRolesAndUsers is deprecated.\n"
-                      "Please update your business template erp5_mysql_innodb.",
-                      DeprecationWarning)
+      try:
+        security_uid_list, role_column_dict = self.getSecurityUidListAndRoleColumnDict(**kw)
+      except DeprecationWarning, message:
+        warnings.warn(message, DeprecationWarning)
+        allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
         if role_column_dict:
           query_list = []
           for key, value in role_column_dict.items():
@@ -506,8 +504,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           query = Query(allowedRolesAndUsers=allowedRolesAndUsers)
       else:
-        allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
-        security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
         if role_column_dict:
           query_list = []
           for key, value in role_column_dict.items():
