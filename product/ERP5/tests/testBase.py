@@ -81,27 +81,13 @@ class TestBase(ERP5TypeTestCase):
     """
     return ('erp5_base',)
 
-  def login(self, quiet=0, run=run_all_test):
+  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('rc', '', ['Manager'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
-  def enableLightInstall(self):
-    """
-    You can override this. 
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
-  def afterSetUp(self, quiet=1, run=run_all_test):
+  def afterSetUp(self):
     self.login()
     portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
