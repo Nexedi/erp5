@@ -404,6 +404,7 @@ def WorkflowTool_listActions(self, info=None, object=None):
         security_query_cache_dict[security_cache_key] = query
       return query
     def _getWorklistActionList():
+      action_list = []
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible conditions
       worklist_list_grouped_by_condition = groupWorklistListByCondition(worklist_dict=worklist_dict, acceptable_key_dict=acceptable_key_dict)
@@ -421,8 +422,9 @@ def WorkflowTool_listActions(self, info=None, object=None):
         LOG('WorklistGeneration', BLATHER, '%s results' % (len(catalog_brain_result), ))
         worklist_result_dict = sumCatalogResultByWorklist(grouped_worklist_dict=grouped_worklist_dict, catalog_result=catalog_brain_result)
         LOG('WorklistGeneration', BLATHER, 'Distributed into %s worklists.'% (len(worklist_result_dict), ))
-        action_list = generateActionList(grouped_worklist_dict=grouped_worklist_dict, worklist_result=worklist_result_dict, portal_url=portal_url)
-        LOG('WorklistGeneration', BLATHER, 'Creating %s actions.' % (len(action_list), ))
+        group_action_list = generateActionList(grouped_worklist_dict=grouped_worklist_dict, worklist_result=worklist_result_dict, portal_url=portal_url)
+        LOG('WorklistGeneration', BLATHER, 'Creating %s actions.' % (len(group_action_list), ))
+        action_list.extend(group_action_list)
       return action_list
     user = str(_getAuthenticatedUser(self))
     _getWorklistActionList = CachingMethod(_getWorklistActionList, id=('_getWorklistActionList', user, portal_url), cache_factory = 'erp5_ui_short')
