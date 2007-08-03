@@ -111,12 +111,12 @@ elif resource <> 0 :\n
 if transaction.isDematerialization():\n
   for line in transaction.objectValues(portal_type=\'Cash Delivery Line\'):\n
     if line.getResourceValue().getPortalType() != \'Coin\':\n
-      msg = Message(domain="ui", message="Sorry, dematerializatio is possible only with coins.")\n
+      msg = Message(domain="ui", message="Sorry, dematerialization is possible only with coins.")\n
       raise ValidationFailed, (msg,)\n
   # Also we must make sure that the source_section is defined\n
-  source_section = transation.getSourceSection()\n
+  source_section = transaction.getSourceSection()\n
   if source_section is None:\n
-    msg = Message(domain="ui", message="Sorry, dematerializatio is possible only if the external agency is defined.")\n
+    msg = Message(domain="ui", message="Sorry, dematerialization is possible only if the external agency is defined.")\n
     raise ValidationFailed, (msg,)\n
   if not \'encaisse_des_billets_retires_de_la_circulation\' in vault:\n
     msg = Message(domain="ui", message="Invalid source.")\n
@@ -184,7 +184,6 @@ if transaction.isDematerialization():\n
                             <string>total_price</string>
                             <string>_getiter_</string>
                             <string>line</string>
-                            <string>transation</string>
                           </tuple>
                         </value>
                     </item>
