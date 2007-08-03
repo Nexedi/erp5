@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5Form.ListBox</string>
+          <string>ListBox</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -343,7 +346,7 @@
                           <string>Warehouse</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Inventory Date</string>
                         </tuple>
                         <tuple>
@@ -522,8 +525,11 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

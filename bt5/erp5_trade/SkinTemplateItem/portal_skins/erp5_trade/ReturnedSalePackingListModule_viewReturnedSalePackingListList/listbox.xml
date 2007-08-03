@@ -334,11 +334,11 @@
                           <string>Returned Sale Packing List</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_title</string>
+                          <string>destination_title</string>
                           <string>Destination</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_decision_title</string>
+                          <string>destination_decision_title</string>
                           <string>Destination Decision</string>
                         </tuple>
                         <tuple>
@@ -346,12 +346,12 @@
                           <string>Causality</string>
                         </tuple>
                         <tuple>
-                          <string>simulation_state</string>
-                          <string>State</string>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -437,6 +437,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list/>
@@ -459,7 +463,32 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Returned Sale Packing List</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Destination</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Destination Decision</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality_title</string>
+                          <string>Causality</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -484,7 +513,32 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Returned Sale Packing List</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Destination</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Destination Decision</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality_title</string>
+                          <string>Causality</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

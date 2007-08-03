@@ -338,7 +338,7 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Delivery Date</string>
                         </tuple>
                       </list>
@@ -379,7 +379,7 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Delivery Date</string>
                         </tuple>
                       </list>
@@ -479,6 +479,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -541,7 +545,7 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Delivery Date</string>
                         </tuple>
                       </list>
@@ -591,7 +595,7 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Delivery Date</string>
                         </tuple>
                       </list>

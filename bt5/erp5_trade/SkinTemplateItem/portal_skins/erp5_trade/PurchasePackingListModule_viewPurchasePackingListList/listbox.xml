@@ -326,12 +326,12 @@
                           <string>Causality</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -363,12 +363,12 @@
                           <string>Causality</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -454,6 +454,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -495,12 +499,12 @@
                           <string>Causality</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -541,12 +545,12 @@
                           <string>Causality</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>

@@ -338,19 +338,19 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>source_title</string>
                           <string>Source</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_title</string>
+                          <string>destination_title</string>
                           <string>Destination</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Shipping Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Delivery Date</string>
                         </tuple>
                       </list>
@@ -437,6 +437,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -464,7 +468,28 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Destination</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Shipping Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -489,7 +514,28 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Destination</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Shipping Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
