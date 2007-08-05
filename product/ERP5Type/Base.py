@@ -2126,7 +2126,7 @@ class Base( CopyContainer,
         # As ERP5 does not use Zope sessions, it is better to skip SESSION.
         for k in REQUEST.keys():
           if k != 'SESSION':
-            context[k] = REQUEST[k]
+            setattr(context, k, REQUEST[k])
       # Define local properties
       if kw is not None: context.__dict__.update(kw)
       # Make it a temp content
