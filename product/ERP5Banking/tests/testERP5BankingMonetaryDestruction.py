@@ -142,15 +142,24 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/s', 'cash_status/cancelled') + self.variation_list,
                              'quantity': self.quantity_5000}
+    inventory_dict_line_for_dematerialization = {'id' : 'inventory_line_3',
+                             'resource': self.piece_200,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/p', 'cash_status/retired') + self.variation_list,
+                             'quantity': self.quantity_200}
 
     
     self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]    
     self.line_list_for_externe = line_list_for_externe = [inventory_dict_line_for_externe_1, inventory_dict_line_for_externe_2]    
+    self.line_list_for_dematerialization = [inventory_dict_line_for_dematerialization]
     self.source = self.paris.caveau.serre.encaisse_des_billets_retires_de_la_circulation
     self.source_for_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
     ###self.destinat = self.paris.caveau.serre.encaisse_des_billets_detruits
+    self.destination = self.paris.caveau.serre.encaisse_des_billets_neufs_non_emis_en_transit_allant_a.madrid
     self.createCashInventory(source=None, destination=self.source, currency=self.currency_1,
                              line_list=line_list)
+    self.createCashInventory(source=None, destination=self.source, currency=self.currency_1,
+                             line_list=self.line_list_for_dematerialization)
     self.createCashInventory(source=None, destination=self.source_for_externe, currency=self.currency_1,
                              line_list=line_list_for_externe)
     
@@ -175,9 +184,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # open counter date and counter
     self.openCounterDate(site=self.paris)
     self.openCounterDate(site=self.madrid,id='counter_date_2')
-
-	
-
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -204,6 +210,37 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
 
+  def stepCheckInitialInventoryForDematerialization(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check we have  12 coins in source
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    # check we have 0 coins in destination
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+
+  def stepCheckFinalInventoryForDematerialization(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check we have  0 coins in source
+    self.assertEqual(self.simulation_tool.getCurrentInventory(
+      node=self.source.getRelativeUrl(), 
+      resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(
+      node=self.source.getRelativeUrl(), 
+      resource = self.piece_200.getRelativeUrl()), 0.0)
+    # check we have 12 coins in destination
+    self.assertEqual(self.simulation_tool.getCurrentInventory(
+      node=self.destination.getRelativeUrl(), 
+      resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(
+      node=self.destination.getRelativeUrl(), 
+      resource = self.piece_200.getRelativeUrl()), 12.0)
 
   def stepCheckInitialInventoryForExterne(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -216,34 +253,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # check we have 24 banknotes of 5000 in source
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-
-
-
-  def stepCheckSource(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check inventory in source vault (source) before a confirm
-    """
-    # check we have 5 banknotes of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    # check we have 24 banknotes of 5000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-    
-    
-
-  def stepCheckSourceForExterne(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check inventory in source vault (source) before a confirm
-    """
-    # check we have 5 banknotes of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    # check we have 24 banknotes of 5000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-
-
 
   def stepCreateMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -277,18 +286,24 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # check that its destination is destinat
     ##self.assertEqual(self.monetary_destruction.getDestination(), 'site/testsite/paris/caveau/serre/encaisse_des_billets_detruits')
     
+  def stepCreateMonetaryDestructionForDematerialization(self, 
+       sequence=None, sequence_list=None, **kwd):
+    self.stepCreateMonetaryDestruction(sequence=sequence, **kwd)
+    self.monetary_destruction.setDematerialization(True)
+    self.monetary_destruction.setSourceSectionValue(self.madrid)
     
   def stepCreateMonetaryDestructionForExterne(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a monetary destruction document and check it
     """
     # Monetary Destruction has source(serre) for source, destinat (serre) for destination, and a price coresponding to the sum of banknote of 10000 and of 5000 ( (2*3) * 10000 + (5*7) * 5000 )
-    self.monetary_destruction = self.monetary_destruction_module.newContent(id='monetary_destruction_1',
-                                                                            portal_type='Monetary Destruction',
-                                                                            source_value=self.source_for_externe,
-                                                                            destination_value=None,
-                                                                            source_total_asset_price=110000.0,
-                                                                            source_section_value=self.madrid)
+    self.monetary_destruction = self.monetary_destruction_module.newContent(
+                                        id='monetary_destruction_1',
+                                        portal_type='Monetary Destruction',
+                                        source_value=self.source_for_externe,
+                                        destination_value=None,
+                                        source_total_asset_price=110000.0,
+                                        source_section_value=self.madrid)
     # execute tic
     self.stepTic()
     # set source reference
@@ -305,7 +320,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # check that its source is source
     self.assertEqual(self.monetary_destruction.getSource(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_externes')
     # check that its destination is destinat
-    ##self.assertEqual(self.monetary_destruction.getDestination(), 'site/testsite/paris/caveau/serre/encaisse_des_billets_detruits')    
 
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
@@ -313,7 +327,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     Create the monetary destruction line 1 with banknotes of 10000 and check it has been well created
     """
     # create the monetary destruction line
-    self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_1', 'Cash Delivery Line', self.billet_10000,
+    self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_1', 'Monetary Destruction Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
             self.quantity_10000)
     # execute tic
@@ -323,7 +337,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # get the monetary destruction line
     self.valid_line_1 = getattr(self.monetary_destruction, 'valid_line_1')
     # check its portal type
-    self.assertEqual(self.valid_line_1.getPortalType(), 'Cash Delivery Line')
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Monetary Destruction Line')
     # check the resource is banknotes of 10000
     self.assertEqual(self.valid_line_1.getResourceValue(), self.billet_10000)
     # chek the value of the banknote
@@ -337,7 +351,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
       # get the delivery cell
       cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/cancelled')
       # chek portal types
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getPortalType(), 'Monetary Destruction Cell')
       # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       # check the source vault is source
@@ -359,7 +373,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     Create the monetary destruction line 1 with banknotes of 10000 and check it has been well created
     """
     # create the monetary destruction line
-    self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_1', 'Cash Delivery Line', self.billet_10000,
+    self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_1', 'Monetary Destruction Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/s', 'cash_status/cancelled') + self.variation_list,
             self.quantity_10000)
     # execute tic
@@ -369,7 +383,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # get the monetary destruction line
     self.valid_line_1 = getattr(self.monetary_destruction, 'valid_line_1')
     # check its portal type
-    self.assertEqual(self.valid_line_1.getPortalType(), 'Cash Delivery Line')
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Monetary Destruction Line')
     # check the resource is banknotes of 10000
     self.assertEqual(self.valid_line_1.getResourceValue(), self.billet_10000)
     # chek the value of the banknote
@@ -383,7 +397,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
       # get the delivery cell
       cell = self.valid_line_1.getCell('emission_letter/s', variation, 'cash_status/cancelled')
       # chek portal types
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getPortalType(), 'Monetary Destruction Cell')
       # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       # check the source vault is source
@@ -399,6 +413,44 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
+  def stepCreateValidLineForDematerialization(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create the vault transfer line 2 wiht coins of 200 and check it has been well created
+    """
+    # create the line
+    self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_1', 'Monetary Destruction Line', self.piece_200,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/retired') + self.variation_list,
+            self.quantity_200)
+    # execute tic
+    self.stepTic()
+    # check the number of lines (line1 + line2)
+    self.assertEqual(len(self.monetary_destruction.objectValues()), 1)
+    # get the second vault transfer line
+    self.valid_line_1 = getattr(self.monetary_destruction, 'valid_line_1')
+    # check portal types
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Monetary Destruction Line')
+    # check the resource is coin of 200
+    self.assertEqual(self.valid_line_1.getResourceValue(), self.piece_200)
+    # check the value of coin
+    self.assertEqual(self.valid_line_1.getPrice(), 200.0)
+    # check the unit of coin
+    self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
+    # check we have two delivery cells: (one for year 1992 and one for 2003)
+    self.assertEqual(len(self.valid_line_1.objectValues()), 2)
+    for variation in self.variation_list:
+      # get the delivery  cell
+      cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/retired')
+      # check the portal type
+      self.assertEqual(cell.getPortalType(), 'Monetary Destruction Cell')
+      self.failUnless(cell.getBaobabDestinationVariationText().find('new_not_emitted')>=0)
+      if cell.getId() == 'movement_0_0_0':
+        # check the quantity for coin for year 1992 is 5
+        self.assertEqual(cell.getQuantity(), 5.0)
+      elif cell.getId() == 'movement_0_1_0':
+        # check the quantity for coin for year 2003 is 7
+        self.assertEqual(cell.getQuantity(), 7.0)
+      else:
+        self.fail('Wrong cell created : %s' % cell.getId())
 
 
   def stepCheckSubTotal(self, sequence=None, sequence_list=None, **kwd):
@@ -418,7 +470,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     Create the monetary destruction line 2 wiht banknotes of 5000 and check it has been well created
     """
     # create the line
-    self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_2', 'Cash Delivery Line', self.billet_5000,
+    self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_2', 'Monetary Destruction Line', self.billet_5000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
             self.quantity_5000)
     # execute tic
@@ -428,7 +480,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # get the second monetary destruction line
     self.valid_line_2 = getattr(self.monetary_destruction, 'valid_line_2')
     # check portal types
-    self.assertEqual(self.valid_line_2.getPortalType(), 'Cash Delivery Line')
+    self.assertEqual(self.valid_line_2.getPortalType(), 'Monetary Destruction Line')
     # check the resource is banknotes of 5000
     self.assertEqual(self.valid_line_2.getResourceValue(), self.billet_5000)
     # check the value of banknote
@@ -441,7 +493,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
       # get the delivery  cell
       cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/cancelled')
       # check the portal type
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getPortalType(), 'Monetary Destruction Cell')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for banknote for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 11.0)
@@ -457,7 +509,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     Create the monetary destruction line 2 wiht banknotes of 5000 and check it has been well created
     """
     # create the line
-    self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_2', 'Cash Delivery Line', self.billet_5000,
+    self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_2', 'Monetary Destruction Line', self.billet_5000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/s', 'cash_status/cancelled') + self.variation_list,
             self.quantity_5000)
     # execute tic
@@ -467,7 +519,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # get the second monetary destruction line
     self.valid_line_2 = getattr(self.monetary_destruction, 'valid_line_2')
     # check portal types
-    self.assertEqual(self.valid_line_2.getPortalType(), 'Cash Delivery Line')
+    self.assertEqual(self.valid_line_2.getPortalType(), 'Monetary Destruction Line')
     # check the resource is banknotes of 5000
     self.assertEqual(self.valid_line_2.getResourceValue(), self.billet_5000)
     # check the value of banknote
@@ -480,7 +532,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
       # get the delivery  cell
       cell = self.valid_line_2.getCell('emission_letter/s', variation, 'cash_status/cancelled')
       # check the portal type
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      self.assertEqual(cell.getPortalType(), 'Monetary Destruction Cell')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for banknote for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 11.0)
@@ -499,7 +551,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     # create a line in which quanity of coin of 200 is higher that quantity available at source
     # here create a line with 12 (5+7) coin of 200 although the vault source has no coin of 200
-    self.addCashLineToDelivery(self.monetary_destruction, 'invalid_line', 'Cash Delivery Line', self.piece_200,
+    self.addCashLineToDelivery(self.monetary_destruction, 'invalid_line', 'Monetary Destruction Line', self.piece_200,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
             self.quantity_200)
     # execute tic
@@ -530,7 +582,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_destruction, name='history', wf_id='monetary_destruction_workflow')
     # check its len is 2
-    self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
     self.assertTrue('Insufficient balance' in "%s" %(msg,))
@@ -565,8 +616,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     Confirm the monetary destruction and check it
     """
-    # fix amount (10000 * 5.0 + 5000 * 24.0)
-    self.monetary_destruction.setSourceTotalAssetPrice('170000.0')
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_destruction, 'plan_action', wf_id='monetary_destruction_workflow')
     # execute tic
@@ -576,9 +625,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # check state is confirmed
     self.assertEqual(state, 'planned')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_destruction, name='history', wf_id='monetary_destruction_workflow')
-    # check len of workflow history is 4
-    self.assertEqual(len(workflow_history), 4)
 
 
   def stepCheckSourceDebitPlanned(self, sequence=None, sequence_list=None, **kwd):
@@ -650,15 +696,10 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
 
-
-
-
   def stepPlanMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the monetary_destruction and check it
     """
-    # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.monetary_destruction.setSourceTotalAssetPrice('170000.0')
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_destruction, 'plan_action', wf_id='monetary_destruction_workflow')
     # execute tic
@@ -669,16 +710,19 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(state, 'planned')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_destruction, name='history', wf_id='monetary_destruction_workflow')
-    # check len of workflow history is 4
-    self.assertEqual(len(workflow_history), 4)
     
+  def stepSetMonetaryDestructionSourceTotalAssetPrice(self, 
+                     sequence=None, sequence_list=None, **kwd):
+    self.monetary_destruction.setSourceTotalAssetPrice('170000.0')
+
+  def stepSetMonetaryDestructionSourceTotalAssetPriceForDematerialization(self, 
+                     sequence=None, sequence_list=None, **kwd):
+    self.monetary_destruction.setSourceTotalAssetPrice('2400.0')
 
   def stepOrderMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the monetary_destruction and check it
     """
-    # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.monetary_destruction.setSourceTotalAssetPrice('170000.0')
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_destruction, 'order_action', wf_id='monetary_destruction_workflow')
     # execute tic
@@ -689,15 +733,11 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(state, 'ordered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_destruction, name='history', wf_id='monetary_destruction_workflow')
-    # check len of workflow history is 4
-    self.assertEqual(len(workflow_history), 6)
     
   def stepConfirmMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the monetary_destruction and check it
     """
-    # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.monetary_destruction.setSourceTotalAssetPrice('170000.0')
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_destruction, 'confirm_action', wf_id='monetary_destruction_workflow', stop_date=DateTime())
     # execute tic
@@ -706,10 +746,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     state = self.monetary_destruction.getSimulationState()
     # check state is confirmed
     self.assertEqual(state, 'confirmed')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_destruction, name='history', wf_id='monetary_destruction_workflow')
-    # check len of workflow history is 8
-    self.assertEqual(len(workflow_history), 8)
 
   def stepConfirmToDeliverMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -725,13 +761,9 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # check that state is delivered
     self.assertEqual(state, 'delivered')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_destruction, name='history', wf_id='monetary_destruction_workflow')
 
 
   def stepDelMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Delete the invalid vault_transfer line previously create
-    """
     self.monetary_destruction_module.deleteContent('monetary_destruction_1')
 
   def stepResetInventory(self, 
@@ -769,14 +801,15 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     if not run: return
     sequence_list = SequenceList()
     # define the sequence
-    sequence_string = 'Tic CheckObjects Tic CheckInitialInventory CheckSource ' \
+    sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateMonetaryDestruction ' \
                     + 'CreateValidLine1 CheckSubTotal ' \
                     + 'CreateValidLine2 CheckTotal ' \
-                    + 'CheckSource ' \
+                    + 'CheckInitialInventory ' \
                     + 'CreateInvalidLine ' \
                     + 'TryPlannedMonetaryDestructionWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
+                    + 'SetMonetaryDestructionSourceTotalAssetPrice ' \
                     + 'PlannedMonetaryDestruction ' \
                     + 'CheckSourceDebitPlanned ' \
                     + 'ResetInventory Tic ' \
@@ -787,15 +820,16 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'Tic DelMonetaryDestruction Tic'
     sequence_list.addSequenceString(sequence_string)
     
-    # define the sequence
-    another_sequence_string = 'Tic CheckObjects Tic CheckInitialInventoryForExterne CheckSourceForExterne ' \
+    # This is the case of a destruction for another agency
+    another_sequence_string = 'Tic CheckObjects Tic CheckInitialInventoryForExterne ' \
                     + 'CreateMonetaryDestructionForExterne ' \
                     + 'CreateValidLineForExterne1 CheckSubTotal ' \
                     + 'CreateValidLineForExterne2 CheckTotal ' \
-                    + 'CheckSourceForExterne ' \
+                    + 'CheckInitialInventoryForExterne ' \
                     + 'CreateInvalidLine ' \
                     + 'TryPlannedMonetaryDestructionWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
+                    + 'SetMonetaryDestructionSourceTotalAssetPrice ' \
                     + 'PlanMonetaryDestruction ' \
                     + 'CheckSourceDebitPlannedForExterne ' \
                     + 'OrderMonetaryDestruction ' \
@@ -804,7 +838,25 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'DeliverFails ' \
                     + 'DeleteResetInventory Tic ' \
                     + 'ConfirmToDeliverMonetaryDestruction ' \
-                    + 'CheckSourceDebitForExterne '		    
+                    + 'CheckSourceDebitForExterne '	\
+                    + 'Tic DelMonetaryDestruction Tic '
+		    
+    sequence_list.addSequenceString(another_sequence_string)
+
+    # We will now do a dematerialization
+    # It will be the same workflow validation as the destruction for
+    # another agency
+    another_sequence_string = 'Tic CheckObjects Tic ' \
+                    + 'CheckInitialInventoryForDematerialization ' \
+                    + 'CreateMonetaryDestructionForDematerialization ' \
+                    + 'CreateValidLineForDematerialization ' \
+                    + 'CheckInitialInventoryForDematerialization ' \
+                    + 'SetMonetaryDestructionSourceTotalAssetPriceForDematerialization ' \
+                    + 'PlanMonetaryDestruction ' \
+                    + 'OrderMonetaryDestruction ' \
+                    + 'ConfirmMonetaryDestruction ' \
+                    + 'ConfirmToDeliverMonetaryDestruction ' \
+                    + 'CheckFinalInventoryForDematerialization '		    
 		    
     sequence_list.addSequenceString(another_sequence_string)
     
