@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -115,6 +121,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
         <tal:block tal:repeat="aggregate python: layout_form.Form_getGroupList([\'header\', \'left\', \'right\', \'footer\'])"\n
                    tal:define="dummy python: request.set(\'editable_mode\', True);\n
+                               dialog_mode dialog_mode | nothing;\n
+                               list_mode list_mode | nothing;\n
+                               dummy python: request.set(\'dialog_mode\', dialog_mode);\n
+                               dummy python: request.set(\'list_mode\', list_mode);\n
                                dummy python: request.set(\'http_parameters\', http_parameters);\n
                                dummy python: request.set(\'actions\', actions);\n
                                dummy python: request.set(\'current_web_section\',\n
