@@ -465,6 +465,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
         Return a list of security Uids and a dictionnary containing available
         role columns.
+
+        XXX: This method always uses default catalog. This should not break a
+        site as long as security uids are considered consistent among all
+        catalogs.
       """
       allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
       catalog = self.getSQLCatalog()
