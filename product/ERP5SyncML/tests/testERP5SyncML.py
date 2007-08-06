@@ -1326,19 +1326,21 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       LOG('Testing... ',0,'test_32_AddOneWaySubscription')
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(title=self.sub_id1, 
+    portal_sync.manage_addSubscription(title=self.sub_id1,
         publication_url=self.publication_url,
-        subscription_url=self.subscription_url1, 
+        subscription_url=self.subscription_url1,
         destination_path='/%s/person_client1' % portal_id,
-        source_uri='Person', 
-        target_uri='Person', 
-        query='objectValues', 
-        xml_mapping='', 
-        conduit='ERP5Conduit', 
+        source_uri='Person',
+        target_uri='Person',
+        query='objectValues',
+        xml_mapping=self.xml_mapping,
+        conduit='ERP5Conduit',
         gpg_key='',
         gid_generator='getId',
-        activity_enabled=False)
+        activity_enabled=False,
+        alert_code = SyncCode.ONE_WAY_FROM_SERVER)
     sub = portal_sync.getSubscription(self.sub_id1)
+    self.assertTrue(sub.isOneWayFromServer())
     self.failUnless(sub is not None)
 
   def test_33_OneWaySync(self, quiet=0, run=run_all_test):
@@ -1357,11 +1359,11 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     nb_person = self.populatePersonServer(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     for sub in portal_sync.getSubscriptionList():
-      self.assertEquals(sub.getSynchronizationType(),SyncCode.SLOW_SYNC)
+      self.assertEquals(sub.getSynchronizationType(), SyncCode.SLOW_SYNC)
     # First do the sync from the server to the client
     nb_message1 = self.synchronize(self.sub_id1)
     for sub in portal_sync.getSubscriptionList():
-      self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
+      self.assertEquals(sub.getSynchronizationType(), SyncCode.ONE_WAY_FROM_SERVER)
     self.assertEquals(nb_message1,self.nb_message_first_synchronization)
     subscription1 = portal_sync.getSubscription(self.sub_id1)
     self.assertEquals(len(subscription1.getObjectList()),nb_person)
@@ -1383,7 +1385,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     nb_message1 = self.synchronize(self.sub_id1)
     self.assertEquals(person1_c.getLastName(),self.last_name2)
     self.assertEquals(person1_s.getFirstName(),self.first_name1)
-
 
   def test_34_encoding(self, quiet=0, run=run_all_test):
     """
