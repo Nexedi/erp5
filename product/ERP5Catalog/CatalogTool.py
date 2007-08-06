@@ -484,6 +484,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           # dtml instead ?
           allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
           security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+          return security_uid_list
         _getSecurityUidList = CachingMethod(_getSecurityUidList,
                                             id='_getSecurityUidList',
                                             cache_factory='erp5_content_short')
