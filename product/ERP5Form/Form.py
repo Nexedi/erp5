@@ -61,21 +61,22 @@ def get_value(self, id, **kw):
     tales_expr = self.tales.get(id, "")
     if tales_expr:
         REQUEST = get_request()
-        form = self.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check
-        obj = getattr(form, 'aq_parent', None)
-        if obj is not None:
-            container = obj.aq_inner.aq_parent
-        else:
-            container = None
-
         if REQUEST is not None:
           # Proxyfield stores the "real" field in the request. Look if the
           # corresponding field exists in request, and use it as field in the
           # TALES context 
           field = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id), self)
-          kw['field'] = field
         else:
-          kw['field'] = self
+          field = self
+        
+        kw['field'] = field
+
+        form = field.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check
+        obj = getattr(form, 'aq_parent', None)
+        if obj is not None:
+            container = obj.aq_inner.aq_parent
+        else:
+            container = None
 
         kw['form'] = form
         kw['request'] = REQUEST
@@ -575,7 +576,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         return form_order, matched
 
     security.declareProtected('Change Formulator Forms', 'proxifyField')
-    def proxifyField(self, field_dict=None):
+    def proxifyField(self, field_dict=None, REQUEST=None):
         """Convert fields to proxy fields"""
         from Products.ERP5Form.ProxyField import ProxyWidget
         from Products.Formulator.MethodField import Method
@@ -644,13 +645,25 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             proxy_field.values['form_id'] = target_form_id
             proxy_field.values['field_id'] = target_field_id
 
-            target_field = proxy_field.getRecursiveTemplateField()
+            target_field = proxy_field.getTemplateField()
 
             # copy data
             new_values = remove_same_value(copy(old_field.values),
                                            target_field.values)
             new_tales = remove_same_value(copy(old_field.tales),
                                           target_field.tales)
+
+            if target_field.meta_type=='ProxyField':
+                for i in new_values.keys():
+                    if (not i in target_field.delegated_list and
+                        is_equal(target_field.get_recursive_orig_value(i),
+                                 new_values[i])):
+                        del new_values[i]
+                for i in new_tales:
+                    if (not i in target_field.delegated_list and
+                        is_equal(target_field.get_recursive_tales(i),
+                                 new_tales[i])):
+                        del new_tales[i]
 
             delegated_list = []
             for i in (new_values.keys()+new_tales.keys()):
@@ -663,7 +676,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             # move back to the original group and position.
             set_group_and_position(group, position, field_id)
 
-        return self.formProxify(manage_tabs_message='Changed')
+        if REQUEST is not None:
+            return self.formProxify(manage_tabs_message='Changed')
 
     psyco.bind(__call__)
     psyco.bind(_exec)
