@@ -80,6 +80,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 </tal:block>\n
 <tal:block metal:define-macro="master"\n
            tal:define="editable_mode python: True;\n
+                       dialog_mode python: True;\n
                        dummy python: request.set(\'editable_mode\', editable_mode)">\n
   <tal:block metal:use-macro="here/dialog_main/macros/master">\n
     <tal:block metal:fill-slot="main">\n
