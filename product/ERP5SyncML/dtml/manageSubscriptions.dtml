@@ -60,6 +60,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <tr>
         <td align="left" valign="top">
         <div class="form-label">
+        Alert Code<br/>
+        Two way = 200<br/>
+        One Way From Server = 204
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+        <select name="alert_code">
+          <dtml-in getAlertCodeList>
+            <dtml-let item=sequence-item>
+            <option value="<dtml-var item>"  <dtml-if expr="getAlertCode() == str(item)">SELECTED</dtml-if>><dtml-var item></option>
+            </dtml-let>
+          </dtml-in>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
         Publication Url
         </label></div>
         </td>

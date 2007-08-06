@@ -39,7 +39,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     Subscription's elements :</br>
         
         <b>Title :</b> the title used to identify the Subscription</br>
-        <b>Use Activity :</b> activate or not the use of activity.</br> 
+        <b>Use Activity :</b> activate or not the use of activity.</br>
+        <b>Alert Code :</b> Synchronisation type.</br>
+<u>Two Way</u> : A normal sync type in which the client and the server exchange information about modified data in these devices. The client sends the modifications first.<br/>
+<u>One way From Server</u> : A sync type in which the client gets all modifications from the server but the client does not send its modifications to the server.<br/>
         <b>Publication Url :</b> the server's adrress mail</br>
         <b>Subscription Url :</b> the client's address mail</br>
         <b>Destination Path :</b> the path where are yours objects</br>
