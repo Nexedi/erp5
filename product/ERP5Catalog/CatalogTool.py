@@ -38,6 +38,7 @@ from Globals import InitializeClass, DTMLFile, package_home
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime.DateTime import DateTime
 from Products.CMFActivity.ActiveObject import ActiveObject
+from Products.ERP5Type.Cache import CachingMethod
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -464,8 +465,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
         Return a list of security Uids and a dictionnary containing available
         role columns.
-        
-        TODO: Add a cache.
       """
       allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
       catalog = self.getSQLCatalog()
@@ -475,10 +474,16 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                                   "deprecated. Please update your catalog "\
                                   "business template."
       if allowedRolesAndUsers:
-        # XXX: What with this string transformation ?! Souldn't it be done in
-        # dtml instead ?
-        allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
-        security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+        allowedRolesAndUsers.sort()
+        def _getSecurityUidList(allowedRolesAndUsers):
+          # XXX: What with this string transformation ?! Souldn't it be done in
+          # dtml instead ?
+          allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
+          security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+        _getSecurityUidList = CachingMethod(_getSecurityUidList,
+                                            id='_getSecurityUidList',
+                                            cache_factory='erp5_ui_short')
+        security_uid_list = _getSecurityUidList(allowedRolesAndUsers)
       else:
         security_uid_list = []
       return security_uid_list, role_column_dict
