@@ -475,6 +475,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                                   "deprecated. Please update your catalog "\
                                   "business template."
       if allowedRolesAndUsers:
+        # XXX: What with this string transformation ?! Souldn't it be done in
+        # dtml instead ?
         allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
         security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
       else:
