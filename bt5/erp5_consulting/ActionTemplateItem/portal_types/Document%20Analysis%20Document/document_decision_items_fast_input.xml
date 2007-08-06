@@ -45,10 +45,6 @@
             <value> <string>document_decision_items_fast_input</string> </value>
         </item>
         <item>
-            <key> <string>optional</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>

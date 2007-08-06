@@ -37,6 +37,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>view</string> </value>
         </item>
