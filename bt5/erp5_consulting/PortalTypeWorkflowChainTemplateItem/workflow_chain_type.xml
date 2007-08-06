@@ -1,13 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Feature</type>
-  <workflow>feature_analysis_workflow, edit_workflow</workflow>
- </chain>
- <chain>
-  <type>Feature Document</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Test Case</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

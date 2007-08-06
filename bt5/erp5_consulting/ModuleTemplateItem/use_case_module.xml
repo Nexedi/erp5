@@ -41,10 +41,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>AccessContentsInformation</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
   </permission>
@@ -56,8 +52,9 @@
    <name>Add Browser Id Manager</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add CMF Action Icons Tools</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Active Processs</name>
@@ -67,29 +64,33 @@
    <name>Add CMF Caching Policy Managers</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add CMF Calendar Tools</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Core Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add CMF Default Tools</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Report Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add CMF Setup Tools</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Sites</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add CMF Unique Id Tools</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMFActivity Tools</name>
@@ -103,8 +104,9 @@
    <name>Add CMFMailIn Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add Configured CMF Sites</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Content Type Registrys</name>
@@ -170,8 +172,9 @@
    <name>Add ERP5Form Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add ERP5Subversion Tools</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add ERP5SyncML Tools</name>
@@ -226,6 +229,10 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
+   <name>Add MimetypesRegistry Tools</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
    <name>Add Page Templates</name>
    <role>Manager</role>
   </permission>
@@ -241,11 +248,12 @@
    <name>Add Pluggable Index</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add Plugin Registrys</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add Portal ZSyncer Tools</name>
+   <name>Add PortalTransforms Tools</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -300,8 +308,9 @@
    <name>Add Z MySQL Database Connections</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+  <permission type='tuple'>
+   <name>Add Z MySQL Deferred Database Connections</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add ZCatalogs</name>
@@ -317,10 +326,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add ZODB Mount Points</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add ZSyncers</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -439,8 +444,10 @@
    <name>Change configuration</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Change local roles</name>
+   <role>Assignor</role>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Change permissions</name>
@@ -460,6 +467,11 @@
   </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
+   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -489,6 +501,10 @@
   </permission>
   <permission type='tuple'>
    <name>Edit ReStructuredText</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>Edit target</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -536,8 +552,9 @@
    <name>Manage Access Rules</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Manage Groups</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Manage Transient Object Container</name>
@@ -628,8 +645,9 @@
    <name>Search ZCatalog</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Search for principals</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Set own password</name>
@@ -703,18 +721,6 @@
   </permission>
   <permission type='tuple'>
    <name>WebDAV access</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>ZSyncer: Use ZSyncer</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>ZopeProfiler: manage</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>ZopeProfiler: view</name>
    <role>Manager</role>
   </permission>
  </permission_list>
