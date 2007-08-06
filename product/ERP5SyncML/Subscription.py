@@ -669,13 +669,14 @@ class Subscription(Folder, SyncCode):
   def __init__(self, id, title, publication_url, subscription_url, 
       destination_path, source_uri, target_uri, query, xml_mapping, 
       conduit, gpg_key, id_generator, gid_generator, media_type, login, 
-      password, activity_enabled):
+      password, activity_enabled, alert_code):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
       process
     """
     self.id = id
+    self.setAlertCode(alert_code)
     self.setActivityEnabled(activity_enabled)
     self.publication_url = (publication_url)
     self.subscription_url = str(subscription_url)
@@ -699,8 +700,21 @@ class Subscription(Folder, SyncCode):
     self.setConduit(conduit)
     Folder.__init__(self, id)
     self.title = title
-    
+
     #self.signatures = PersitentMapping()
+
+  def getAlertCodeList(self):
+    #XXX replace by a dictionary or a list in SyncCode
+    return [self.TWO_WAY, self.ONE_WAY_FROM_SERVER]
+
+  def getAlertCode(self):
+    return getattr(self, 'alert_code', 200)
+
+  def setAlertCode(self, value):
+    self.alert_code = int(value)
+
+  def isOneWayFromServer(self):
+    return self.getDomainType() == self.SUB and self.getAlertCode() == self.ONE_WAY_FROM_SERVER
 
   def getActivityEnabled(self):
     """
