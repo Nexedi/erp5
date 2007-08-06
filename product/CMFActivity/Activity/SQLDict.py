@@ -123,12 +123,12 @@ class SQLDict(RAMDict):
 
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
     uid_set = activity_buffer.getUidSet(self)
-    return (tuple(m.object_path), m.method_id, m.activity_kw.get('tag')) in uid_set
+    return (tuple(m.object_path), m.method_id, m.activity_kw.get('tag'), m.activity_kw.get('group_id')) in uid_set
 
   def registerMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = 1
     uid_set = activity_buffer.getUidSet(self)
-    uid_set.add((tuple(m.object_path), m.method_id, m.activity_kw.get('tag')))
+    uid_set.add((tuple(m.object_path), m.method_id, m.activity_kw.get('tag'), m.activity_kw.get('group_id')))
     message_list = activity_buffer.getMessageList(self)
     message_list.append(m)
 
@@ -136,12 +136,12 @@ class SQLDict(RAMDict):
     m.is_registered = 0 # This prevents from inserting deleted messages into the queue
     class_name = self.__class__.__name__
     uid_set = activity_buffer.getUidSet(self)
-    uid_set.discard((tuple(m.object_path), m.method_id, m.activity_kw.get('tag')))
+    uid_set.discard((tuple(m.object_path), m.method_id, m.activity_kw.get('tag'), m.activity_kw.get('group_id')))
 
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
     message_list = activity_buffer.getMessageList(self)
     return [m for m in message_list if m.is_registered]
-
+  
   def validateMessage(self, activity_tool, message, uid_list, priority, processing_node):
     validation_state = message.validate(self, activity_tool, check_order_validation=0)
     if validation_state is not VALID:
@@ -199,7 +199,7 @@ class SQLDict(RAMDict):
         # Validate message (make sure object exists, priority OK, etc.)
         if not self.validateMessage(activity_tool, m, uid_list, line.priority, processing_node):
           return 0
-
+        
         if group_method_id not in (None, '', '\0'):
           # Count the number of objects to prevent too many objects.
           if m.hasExpandMethod():
@@ -212,7 +212,7 @@ class SQLDict(RAMDict):
             result = readMessage(processing_node=processing_node,
                                  to_date=now_date, group_method_id=group_method_id,
                                  order_validation_text=order_validation_text)
-            #LOG('SQLDict dequeueMessage', 0, 'result = %d' % (len(result)))
+            #LOG('SQLDict dequeueMessage', 0, 'result = %d, group_method_id %s' % (len(result), group_method_id))
             path_and_method_id_dict = {}
             for line in result:
               path = line.path
@@ -226,7 +226,7 @@ class SQLDict(RAMDict):
 
               uid_list = activity_tool.SQLDict_readUidList(path=path, method_id=method_id,
                                                            processing_node=None,
-                                                           to_date=now_date,
+                                                           to_date=now_date, group_method_id=group_method_id,
                                                            order_validation_text=order_validation_text)
               uid_list = [x.uid for x in uid_list]
               if len(uid_list) > 0:
@@ -263,7 +263,7 @@ class SQLDict(RAMDict):
         if group_method_id not in (None, ""):
           LOG('SQLDict', INFO,
               'invoking a group method %s with %d objects '\
-              ' (%d objects in expanded form)' % (
+              ' (%d objects in expanded form)' % ( 
             group_method_id, len(message_list), count))
           activity_tool.invokeGroup(group_method_id, message_list)
         else:
