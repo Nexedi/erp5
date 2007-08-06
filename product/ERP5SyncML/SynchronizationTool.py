@@ -45,6 +45,7 @@ from XMLSyncUtils import Parse
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
+from SyncCode import SyncCode
 from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
@@ -202,11 +203,11 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_addSubscription')
   def manage_addSubscription(self, title, publication_url, subscription_url,
-                       destination_path, source_uri, target_uri, query, 
-                       xml_mapping, conduit, gpg_key, 
-                       synchronization_id_generator=None, gid_generator=None, 
-                       media_type=None, login=None, password=None, 
-                       RESPONSE=None, activity_enabled=False):
+                       destination_path, source_uri, target_uri, query,
+                       xml_mapping, conduit, gpg_key,
+                       synchronization_id_generator=None, gid_generator=None,
+                       media_type=None, login=None, password=None,
+                       RESPONSE=None, activity_enabled=False, alert_code=SyncCode.TWO_WAY):
     """
       XXX should be renamed as addSubscription
       create a new subscription
@@ -217,10 +218,10 @@ class SynchronizationTool( SubscriptionSynchronization,
     folder = self.getObjectContainer()
     new_id = self.getSubscriptionIdFromTitle(title)
     sub = Subscription(new_id, title, publication_url, subscription_url,
-                       destination_path, source_uri, target_uri, query, 
+                       destination_path, source_uri, target_uri, query,
                        xml_mapping, conduit, gpg_key,
-                       synchronization_id_generator, gid_generator, media_type, 
-                       login, password, activity_enabled)
+                       synchronization_id_generator, gid_generator, media_type,
+                       login, password, activity_enabled, alert_code)
     folder._setObject( new_id, sub )
     #if len(self.list_subscriptions) == 0:
     #  self.list_subscriptions = PersistentMapping()
@@ -228,13 +229,13 @@ class SynchronizationTool( SubscriptionSynchronization,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'manage_editPublication')
-  def manage_editPublication(self, title, publication_url, 
-                            destination_path, source_uri, query, xml_mapping, 
-                            conduit, gpg_key, synchronization_id_generator, 
-                            gid_generator,  media_type=None, auth_required=0, 
-                            authentication_format='', authentication_type='', 
+  def manage_editPublication(self, title, publication_url,
+                            destination_path, source_uri, query, xml_mapping,
+                            conduit, gpg_key, synchronization_id_generator,
+                            gid_generator,  media_type=None, auth_required=0,
+                            authentication_format='', authentication_type='',
                             RESPONSE=None, activity_enabled=False):
     """
       modify a publication
@@ -262,9 +263,9 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_editSubscription')
   def manage_editSubscription(self, title, publication_url, subscription_url,
-      destination_path, source_uri, target_uri, query, xml_mapping, conduit, 
-      gpg_key, synchronization_id_generator, gid_generator, media_type=None, 
-      login='', password='', RESPONSE=None, activity_enabled=False):
+      destination_path, source_uri, target_uri, query, xml_mapping, conduit,
+      gpg_key, synchronization_id_generator, gid_generator, media_type=None,
+      login='', password='', RESPONSE=None, activity_enabled=False, alert_code=SyncCode.TWO_WAY):
     """
       modify a subscription
     """
@@ -285,6 +286,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     sub.setMediaType(media_type)
     sub.setLogin(login)
     sub.setPassword(password)
+    sub.setAlertCode(alert_code)
+
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
