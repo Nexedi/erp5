@@ -509,18 +509,21 @@ def updateRoleMappings(self, REQUEST=None):
     elif include_default == 1:
       portal_type_list.append(tid)
 
-  count = 0
-  #update the objects using these portal types
-  if len(portal_type_list) > 0:
-    portal_catalog = self.portal_catalog
-    for brain in portal_catalog(portal_type=portal_type_list):
-      obj = brain.getObject()
-      self.updateRoleMappingsFor(obj)
-      count += 1
+  object_list = self.portal_catalog(portal_type=portal_type_list, limit=None)
+  object_list_len = len(object_list)
+  portal_activities = self.portal_activities
+  object_path_list = [x.path for x in object_list]
+  for i in xrange(0, object_list_len, 100):
+    current_path_list = object_path_list[i:i+100]
+    portal_activities.activate(activity='SQLQueue',
+                                priority=5)\
+          .callMethodOnObjectList(current_path_list,
+                                  'updateRoleMappingsFor',
+                                  wf_id = self.getId())
 
   if REQUEST is not None:
     return self.manage_properties(REQUEST,
-        manage_tabs_message='%d object(s) updated.' % count)
+        manage_tabs_message='%d object(s) updated.' % object_list_len)
   else:
     return count
 
