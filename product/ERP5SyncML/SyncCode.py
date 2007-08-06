@@ -38,6 +38,7 @@ class SyncCode(Persistent):
   TWO_WAY = 200
   SLOW_SYNC = 201 # This means we get the data from the publication
   WAITING_DATA = 214
+  ONE_WAY_FROM_SERVER = 204
 
   # SyncML Status Codes
   SUCCESS = 200
