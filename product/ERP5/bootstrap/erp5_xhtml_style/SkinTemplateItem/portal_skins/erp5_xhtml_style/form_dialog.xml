@@ -150,7 +150,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <tal:block tal:condition="preferred_html_style_developper_mode">\n
               <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper"/>\n
             </tal:block>\n
-            <tal:block tal:define="field_description python: here.Base_getFieldDescription(form_id=form.id, field=field)"\n
+            <tal:block tal:define="field_description field/Field_getDescription"\n
                        tal:condition="preferred_html_style_translator_mode">\n
               <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator"/>\n
             </tal:block>\n

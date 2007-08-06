@@ -70,26 +70,36 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
+field = context\n
 field_id = field.getId()\n
+form = field.aq_parent\n
+form_id = form.getId()\n
+document = form.aq_parent\n
+if getattr(document, \'getPortalType\', None) is None:\n
+  document = None\n
 \n
-def getFieldDescription():\n
+def getFieldDescription(field_id):\n
   desc = field.get_value(\'description\')\n
   if desc in (\'\', None):\n
-    id = field_id.split(\'_\', 1)\n
-    if id[0] == \'my\':\n
-      try:\n
-        properties = context.propertyMap()\n
-      except AttributeError: # If context has no propertyMap, give up\n
-        properties = []\n
-      for property in properties:\n
-        if id[1] == property[\'id\']:\n
-          return property.get(\'description\', \'\')\n
+    split_id = field_id.split(\'_\', 1)\n
+    if split_id[0] == \'my\':\n
+      if document is None:\n
+        desc = \'Dummy field description for %s\' % (field_id, )\n
+      else:\n
+        try:\n
+          properties = document.propertyMap()\n
+        except AttributeError: # If context has no propertyMap, give up\n
+          properties = []\n
+        for property in properties:\n
+          if split_id[1] == property[\'id\']:\n
+            desc = property.get(\'description\', \'\')\n
+            break\n
   return desc\n
 \n
-getFieldDescription = CachingMethod(getFieldDescription, (\'getFieldDescription\', form_id, field_id), \\\n
-                                    cache_factory=\'erp5_ui_long\')\n
-\n
-return getFieldDescription()\n
+if document is not None:\n
+  getFieldDescription = CachingMethod(getFieldDescription, (\'getFieldDescription\', form_id), \\\n
+                                      cache_factory=\'erp5_ui_long\')\n
+return getFieldDescription(field_id)\n
 </string> </value>
         </item>
         <item>
@@ -112,7 +122,7 @@ return getFieldDescription()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, field</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,18 +142,23 @@ return getFieldDescription()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
-                            <string>field</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
+                            <string>context</string>
+                            <string>field</string>
                             <string>_getattr_</string>
                             <string>field_id</string>
+                            <string>form</string>
+                            <string>form_id</string>
+                            <string>document</string>
+                            <string>getattr</string>
+                            <string>None</string>
                             <string>getFieldDescription</string>
                           </tuple>
                         </value>
@@ -161,7 +176,7 @@ return getFieldDescription()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getFieldDescription</string> </value>
+            <value> <string>Field_getDescription</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
