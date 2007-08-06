@@ -486,7 +486,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
         _getSecurityUidList = CachingMethod(_getSecurityUidList,
                                             id='_getSecurityUidList',
-                                            cache_factory='erp5_ui_short')
+                                            cache_factory='erp5_content_short')
         security_uid_list = _getSecurityUidList(allowedRolesAndUsers)
       else:
         security_uid_list = []
