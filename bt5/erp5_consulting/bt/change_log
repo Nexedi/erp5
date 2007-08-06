@@ -1,4 +1,7 @@
-2006-05-03 vincent
+2008-08-06 JPS
+* Removed feature module (now called requirement and part of erp5_project bt)
+
+2006-04-12 vincent
 * Add Test Case Module & Test Case Report Module
 
 2006-02-22 kevin

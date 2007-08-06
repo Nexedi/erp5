@@ -21,19 +21,6 @@ Document Analysis | list_ui
 Document Analysis | sort_on
 Document Analysis | view
 Document Analysis | view_lexicons
-Feature Document | fast_input
-Feature Document | list_ui
-Feature Document | print_pdf
-Feature Document | sort_on
-Feature Document | view
-Feature Module | fast_input
-Feature Module | list_ui
-Feature Module | print_pdf
-Feature Module | sort_on
-Feature Module | view
-Feature | fast_input
-Feature | print_pdf
-Feature | view
 Test Case Actor | history
 Test Case Actor | metadata
 Test Case Actor | print_pdf

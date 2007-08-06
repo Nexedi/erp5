@@ -2,7 +2,6 @@ This BT contain all necessary modules to help consultant to manage ERP5 projects
 
 Included modules are :
  - Use Case module
+ - Document Analysis module
  - Test Case module
  - Test Report module
- - Document Analysis module
- - Features module

@@ -1,8 +1,4 @@
 Document Analysis Lexicon | DocumentAnalysisLexicon
-Feature | Document
-Feature | DublinCore
-Feature | Folder
-Feature | XMLObject
 Test Case Actor | SortIndex
 Test Case Step | SortIndex
 Test Case | SortIndex
