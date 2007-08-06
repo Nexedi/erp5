@@ -228,6 +228,9 @@
    <name>Add MessageCatalogs</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add MimetypesRegistry Tools</name>
+  </permission>
   <permission type='tuple'>
    <name>Add Page Templates</name>
    <role>Manager</role>
@@ -247,6 +250,9 @@
   <permission type='tuple'>
    <name>Add Plugin Registrys</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
   </permission>
   <permission type='tuple'>
    <name>Add Python Scripts</name>
@@ -300,9 +306,8 @@
    <name>Add Z MySQL Database Connections</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>Add Z MySQL Database Deferred Connections</name>
-   <role>Manager</role>
+  <permission type='list'>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='tuple'>
    <name>Add ZCatalogs</name>
