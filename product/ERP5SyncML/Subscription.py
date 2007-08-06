@@ -777,10 +777,10 @@ class Subscription(Folder, SyncCode):
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     code = self.SLOW_SYNC
     if len(self.objectValues()) > 0:
-      code = self.TWO_WAY
+      code = self.getAlertCode()
     if default is not None:
       code = default
-    # LOG('Subscription',0,'getSynchronizationType: %s' % code)
+    #LOG('Subscription',0,'getSynchronizationType: %s' % code)
     return code
 
   def setXMLMapping(self, value):
@@ -912,21 +912,23 @@ class Subscription(Folder, SyncCode):
     """
     self.publication_url = publication_url
 
-  def getXMLMapping(self):
+  def getXMLMapping(self, force=0):
     """
       return the xml mapping
     """
-    xml_mapping = getattr(self,'xml_mapping','asXML')
+    if self.isOneWayFromServer() and force == 0:
+      return None
+    xml_mapping = getattr(self, 'xml_mapping', None)
     return xml_mapping
 
-  def getXMLFromObject(self,object):
+  def getXMLFromObject(self, object):
     """
       return the xml mapping
     """
     xml_mapping = self.getXMLMapping()
     xml = ''
     if xml_mapping is not None:
-      func = getattr(object,xml_mapping,None)
+      func = getattr(object, xml_mapping, None)
       if func is not None:
         xml = func()
     return xml
@@ -936,7 +938,7 @@ class Subscription(Folder, SyncCode):
     This set the method name wich allows to find a gid
     from any object
     """
-    if method in (None,'','None'):
+    if method in (None, '', 'None'):
       method = 'getId'
     self.gid_generator = method
 
