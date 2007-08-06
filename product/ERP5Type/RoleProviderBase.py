@@ -271,19 +271,19 @@ class RoleProviderBase:
       for i in xrange(0, object_list_len, 100):
         current_path_list = object_path_list[i:i+100]
         portal_activities.activate(activity='SQLQueue',
-                                   priority=6,
+                                   priority=3,
                                    tag=update_role_tag)\
               .callMethodOnObjectList(current_path_list,
                                       'updateLocalRolesOnSecurityGroups',
                                       reindex=False)
         portal_activities.activate(activity='SQLQueue',
-                                   priority=6,
+                                   priority=3,
                                    after_tag=update_role_tag)\
               .callMethodOnObjectList(current_path_list,
                                       'reindexObjectSecurity')
 
       if REQUEST is not None:
-        return self.manage_editRolesForm(REQUEST, 
+        return self.manage_editRolesForm(REQUEST,
                  manage_tabs_message='%d objects updated' % (object_list_len,))
 
 InitializeClass(RoleProviderBase)
