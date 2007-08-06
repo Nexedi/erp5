@@ -2617,6 +2617,16 @@ class Base( CopyContainer,
                   DeprecationWarning)
     self.updateLocalRolesOnSecurityGroups(**kw)
 
+  security.declareProtected(Permissions.ManagePortal,
+                            'updateRoleMappingsFor')
+  def updateRoleMappingsFor(self, wf_id,**kw):
+    """
+    Update security policy according to workflow settings given by wf_id
+    """
+    workflow = self.portal_workflow.getWorkflowById(wf_id)
+    if workflow is not None:
+      workflow.updateRoleMappingsFor(self)
+
   # Template Management
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
   def getDocumentTemplateList(self) :
