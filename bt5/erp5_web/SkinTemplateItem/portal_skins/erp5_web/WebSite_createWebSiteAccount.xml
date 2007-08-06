@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This script is a sample script sceleton (part of erp5_web)\n
+  This script is a sample script skeleton (part of erp5_web)\n
   which can be used to create user (Person object) \n
   \n
   Notes:\n
@@ -82,7 +82,7 @@
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 \n
 # validate form manually\n
-form = context.WebSite_createWebSiteAccountForm\n
+form = context.WebSite_viewRegistrationDialog\n
 try:\n
   form.validate_all_to_request(context.REQUEST)\n
 except (FormValidationError, ValidationError,), validation_errors:\n
