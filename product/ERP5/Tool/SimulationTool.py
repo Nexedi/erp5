@@ -765,7 +765,7 @@ class SimulationTool(BaseTool):
       if len(result) > 0:
         if len(result) != 1:
           raise ValueError, 'Sorry we must have only one'
-        inventory = result[0].inventory
+        inventory = result[0].total_quantity
         if inventory is not None:
           total_result = inventory
 
@@ -937,7 +937,7 @@ class SimulationTool(BaseTool):
       if src__ :
         return result
 
-      return map(lambda r: (r.node_title, r.inventory), result)
+      return map(lambda r: (r.node_title, r.total_quantity), result)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryChart')
