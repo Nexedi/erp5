@@ -245,7 +245,7 @@ def getWorklistListQuery(grouped_worklist_dict, securityQueryHook):
   if SECURITY_PARAMETER_ID not in total_criterion_id_list:
     # This request has no defined local_roles, so we must use default security query
     query = ComplexQuery(query, securityQueryHook(), operator='AND')
-  group_by_expression = ', '.join([x for x in total_criterion_id_dict.keys() if x != SECURITY_PARAMETER_ID])
+  group_by_expression = ', '.join([x for x in total_criterion_id_list if x != SECURITY_PARAMETER_ID])
   assert COUNT_COLUMN_TITLE not in total_criterion_id_dict
   select_expression = 'count(*) as %s, %s' % (COUNT_COLUMN_TITLE, group_by_expression)
   return (select_expression, group_by_expression, query)
