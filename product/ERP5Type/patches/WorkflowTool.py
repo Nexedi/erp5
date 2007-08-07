@@ -242,7 +242,7 @@ def getWorklistListQuery(grouped_worklist_dict, securityQueryHook):
   total_criterion_id_list.sort(criterion_id_cmp)
   query = generateNestedQuery(priority_list=total_criterion_id_list, criterion_dict=total_criterion_id_dict, securityQueryHook=securityQueryHook)
   assert query is not None
-  if SECURITY_COLUMN_ID not in total_criterion_id_list:
+  if SECURITY_PARAMETER_ID not in total_criterion_id_list:
     # This request has no defined local_roles, so we must use default security query
     query = ComplexQuery(query, securityQueryHook(), operator='AND')
   group_by_expression = ', '.join([x for x in total_criterion_id_dict.keys() if x != SECURITY_PARAMETER_ID])
