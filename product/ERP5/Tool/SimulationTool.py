@@ -624,7 +624,7 @@ class SimulationTool(BaseTool):
           group_by_expression_list.append('%s.resource_uid' % table)
         new_kw['group_by_expression'] = ', '.join(group_by_expression_list)
       
-      sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
+      sql_kw.update(self.portal_catalog.buildSQLQuery(query_table=table, **new_kw))
       return sql_kw
 
     #######################################################
