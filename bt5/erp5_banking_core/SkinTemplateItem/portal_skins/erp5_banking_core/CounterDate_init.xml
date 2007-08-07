@@ -91,6 +91,7 @@ if previous_reference not in (\'\',None):\n
 else:\n
   reference = \'1\'\n
 context.setReference(reference)\n
+context.assignRoleToSecurityGroup()\n
 
 
 ]]></string> </value>

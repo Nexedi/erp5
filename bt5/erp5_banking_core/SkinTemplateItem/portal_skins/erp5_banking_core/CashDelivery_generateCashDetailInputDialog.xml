@@ -70,6 +70,9 @@
 # listbox is not passed at the first time when this script is called.\n
 # when the user clicks on the Update button, listbox is passed, and\n
 # the contents must be preserved in the form.\n
+#\n
+# rendering_vault : the vault that we want to render, if specified we will use\n
+#                   getInventory in order to automatically full the fast input\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 portal = context.getPortalObject()\n
@@ -163,7 +166,6 @@ if listbox is None:\n
   #result = context.portal_catalog(portal_type = currency_cash_portal_type)\n
   #currency_cash_list = [x.getObject() for x in result if x.getObject().getPriceCurrency() == currency and len(x.getObject().getVariationList())>0]\n
 \n
-  context.log(\'CashDelivery_generateCashDetailInputDialog\', \'currency_list = %r, operation_cur = %s\' % ([x.getTitle() for x in currency_cash_list], operation_currency))\n
 \n
   # If only one variation is specified, we want to display a part of cash currencies which\n
   # exists in this variation (creation year, such as 2003).\n
@@ -176,7 +178,6 @@ if listbox is None:\n
     currency_cash_list = new_currency_cash_list\n
 \n
   currency_cash_list = context.Base_sortCurrencyCashList(currency_cash_list)\n
-  context.log(\'CashDelivery_generateCashDetailInputDialog after sort\', \'currency_list = %r, operation_cur = %s\' % ([x.getTitle() for x in currency_cash_list], operation_currency))\n
 \n
   # Get the axis information based on the specified column base category.\n
   # axis_list_dict contains the lists of objects, while axis_dict contains\n
@@ -219,6 +220,17 @@ if listbox is None:\n
   total_price = 0\n
   listbox = []\n
 \n
+  inventory_dict = {}\n
+  if rendering_vault is not None and len(context.objectValues(portal_type=line_portal_type))==0:\n
+    # build the list of ressources for this vault\n
+    inventory_list = context.CounterModule_getVaultTransactionList(vault=rendering_vault, at_date=context.getStartDate())\n
+    # build the dict of ressources for this vault, the dict\n
+    # allow to parse the list only one time\n
+    for inventory in inventory_list:\n
+      resource_id = inventory.resource_id\n
+      resource_list = inventory_dict.setdefault(resource_id, [])\n
+      resource_list.append(inventory)\n
+\n
   for currency_cash in currency_cash_list:\n
     if currency_cash.getPortalType() == \'Coin\':\n
       cash_status_list = coin_cash_status_list\n
@@ -227,11 +239,12 @@ if listbox is None:\n
       cash_status_list = banknote_cash_status_list\n
       emission_letter_list = banknote_emission_letter_list\n
     # Search if the current object contains a line with a given portal type.\n
-    cash_delivery_line = context.CashDelivery_searchLineByResource(currency_cash.getId(), line_portal_type)\n
+    currency_cash_id = currency_cash.getId()\n
+    cash_delivery_line = context.CashDelivery_searchLineByResource(currency_cash_id, line_portal_type)\n
     # This variable counts the number of lines added for this currency cash.\n
     line_number = 0\n
 \n
-    if cash_delivery_line is not None:\n
+    if cash_delivery_line is not None or len(inventory_dict.get(currency_cash_id, ()))>0:\n
       # If a line exists for this cash currency, add lines into the listbox according to\n
       # the currency information.\n
       #context.log("cash_delivery_line", "cash_delivery_line = %s, currency = %s, type = %s" %(cash_delivery_line, currency_cash, line_portal_type))\n
@@ -240,13 +253,21 @@ if listbox is None:\n
 \n
       # Collect cells according to the categories.\n
       cell_dict_dict = {}\n
-      for cell in cash_delivery_line.getCellValueList():\n
-        category1 = cell.getProperty(axis_dict[\'line1\'])\n
-        category2 = cell.getProperty(axis_dict[\'line2\'])\n
-        column_category = cell.getProperty(axis_dict[\'column\'])\n
+      cell_list = []\n
+      if cash_delivery_line is not None:\n
+        cell_list = cash_delivery_line.getCellValueList()\n
+      else:\n
+        # the result is inside the currency_dict\n
+        cell_list = inventory_dict[currency_cash_id]\n
+      for cell in cell_list:\n
+        category1 = cell.getProperty(axis_dict[\'line1\']).split(\'/\')[-1]\n
+        category2 = cell.getProperty(axis_dict[\'line2\']).split(\'/\')[-1]\n
+        column_category = cell.getProperty(axis_dict[\'column\']).split(\'/\')[-1]\n
         key = (category1, category2)\n
         #context.log(str((key, axis_dict[\'column\'], column_category, cell.getVariation())), cell)\n
         cell_dict_dict.setdefault(key, {})[column_category] = cell\n
+\n
+\n
 \n
       # Sort the keys to obtain a consistent behavior.\n
       key_list = cell_dict_dict.keys()\n
@@ -267,7 +288,7 @@ if listbox is None:\n
           if use_inventory:\n
             quantity = cell.getInventory()\n
           else:\n
-            quantity = cell.getQuantity()\n
+            quantity = cell.getProperty(\'quantity\')\n
           if not quantity:\n
             continue\n
 \n
@@ -312,7 +333,6 @@ if listbox is None:\n
         currency_dict[\'column%d\' % (counter + 1)] = 0\n
       listbox.append(currency_dict)\n
       \n
-  context.log(\'generateFastInput, listbox\',listbox)\n
   other_parameter_list = (operation_currency, line_portal_type, read_only, column_base_category, use_inventory)\n
   context.Base_updateDialogForm(listbox=listbox\n
                                 , calculated_price=total_price\n
@@ -450,7 +470,7 @@ else :\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None,cash_detail_dict=None, **kw</string> </value>
+            <value> <string>listbox=None,cash_detail_dict=None, rendering_vault=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -470,7 +490,7 @@ else :\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -478,6 +498,7 @@ else :\n
                           <tuple>
                             <string>listbox</string>
                             <string>cash_detail_dict</string>
+                            <string>rendering_vault</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
@@ -523,11 +544,18 @@ else :\n
                             <string>axis_list_dict</string>
                             <string>axis_dict</string>
                             <string>total_price</string>
+                            <string>inventory_dict</string>
+                            <string>inventory_list</string>
+                            <string>inventory</string>
+                            <string>resource_id</string>
+                            <string>resource_list</string>
+                            <string>currency_cash_id</string>
                             <string>cash_delivery_line</string>
                             <string>line_number</string>
                             <string>currency_dict</string>
                             <string>resource_price</string>
                             <string>cell_dict_dict</string>
+                            <string>cell_list</string>
                             <string>cell</string>
                             <string>category1</string>
                             <string>category2</string>
@@ -557,7 +585,6 @@ else :\n
                             <string>max</string>
                             <string>int</string>
                             <string>next_listbox_key</string>
-                            <string>resource_id</string>
                             <string>resource_value</string>
                             <string>lines_to_add</string>
                             <string>xrange</string>
@@ -577,6 +604,7 @@ else :\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
               </tuple>

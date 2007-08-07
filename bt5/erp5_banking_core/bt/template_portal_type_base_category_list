@@ -4,7 +4,9 @@ Cash Delivery Cell | variation
 Check Model Type Variation | check_type
 Check Operation Line | aggregate_resource
 Check | check_type
+Check | site
 Checkbook Model | composition
 Checkbook | check_amount
 Checkbook | resource
+Checkbook | site
 Counter Date | site

@@ -298,6 +298,7 @@ for resource in resource_dict.keys():\n
           (explanation_value.getTranslatedPortalType(),source_reference)\n
   tmp_dict[\'base_price\'] = resource_value.getBasePrice()\n
   tmp_dict[\'resource_title\'] = resource_value.getTitle()\n
+  tmp_dict[\'resource_id\'] = resource_value.getId()\n
   #context.log(\'resource_value\',resource_value.getRelativeUrl())\n
   try:\n
     tmp_dict[\'resource_translated_title\'] = resource_value.getTranslatedTitle()\n
@@ -321,6 +322,7 @@ for resource in resource_dict.keys():\n
         total_quantity = round(total_quantity / banknote_quantity_divisor,0)\n
         total_price = round(total_price / banknote_quantity_divisor,0)\n
     tmp_dict.update({\'total_quantity\' : total_quantity,\n
+        \'quantity\': total_quantity,\n
         \'total_price\' : total_price,})\n
     tmp_dict.update({\'vault\' : vault})\n
     if vault_report_type==\'history\':\n

@@ -9,6 +9,7 @@
   <item>variation</item>
  </portal_type>
  <portal_type id="Check">
+  <item>site</item>
   <item>check_type</item>
  </portal_type>
  <portal_type id="Check Model Type Variation">
@@ -19,6 +20,7 @@
  </portal_type>
  <portal_type id="Checkbook">
   <item>resource</item>
+  <item>site</item>
   <item>check_amount</item>
  </portal_type>
  <portal_type id="Checkbook Model">

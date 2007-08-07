@@ -67,6 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
+return\n
 \n
 if simulation_state_list is None:\n
   simulation_state_list = [\'open\']\n
