@@ -2071,7 +2071,7 @@ class Catalog( Folder,
               new_key = '%s.%s' % (query_table, key)
             elif key == 'uid':
               # uid is always ambiguous so we can only change it here
-              new_key = 'catalog.uid'
+              new_key = '%s.uid' % (query_table, )
           else:
             new_key = key
           if new_key is not None:
@@ -2087,7 +2087,7 @@ class Catalog( Folder,
     select_expression = ''
     group_by_expression = ''
 
-    from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
+    from_table_dict = {}
     if len(kw):
       if kw.has_key('select_expression'):
         select_expression_list.append(kw['select_expression'])
