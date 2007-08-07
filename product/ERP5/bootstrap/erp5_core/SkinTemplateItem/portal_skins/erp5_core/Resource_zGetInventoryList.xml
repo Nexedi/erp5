@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -164,23 +161,23 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>from_table_list</string>
-<string>where_expression</string>
-<string>order_by_expression</string>
-<string>group_by_expression</string>
-<string>selection_domain</string>
-<string>selection_report</string>
-<string>ignore_variation</string>
-<string>standardize</string>
-<string>omit_simulation</string>
-<string>section_filtered</string>
-<string>omit_input</string>
-<string>omit_output</string>
-<string>input_simulation_state</string>
-<string>output_simulation_state</string>
-<string>precision</string>
-<string>inventory_list</string>
-<string>statistic</string>
+                            <string>from_table_list</string>
+                            <string>where_expression</string>
+                            <string>order_by_expression</string>
+                            <string>group_by_expression</string>
+                            <string>selection_domain</string>
+                            <string>selection_report</string>
+                            <string>ignore_variation</string>
+                            <string>standardize</string>
+                            <string>omit_simulation</string>
+                            <string>section_filtered</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                            <string>input_simulation_state</string>
+                            <string>output_simulation_state</string>
+                            <string>precision</string>
+                            <string>inventory_list</string>
+                            <string>statistic</string>
                           </list>
                         </value>
                     </item>
@@ -253,13 +250,13 @@ statistic</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let join_with_catalog="omit_simulation or inventory_list or statistic">\n
+\n
 SELECT\n
 <dtml-if expr="precision is not None">\n
-  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS inventory,\n
   SUM(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
   SUM(ROUND(stock.total_price, <dtml-var precision>)) AS total_price\n
 <dtml-else>\n
-  SUM(stock.quantity) AS inventory,\n
   SUM(stock.quantity) AS total_quantity,\n
   SUM(stock.total_price) AS total_price\n
 </dtml-if>\n
@@ -298,8 +295,10 @@ SELECT\n
 \n
 FROM\n
   stock\n
-  <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
-       JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+  <dtml-if join_with_catalog>\n
+    <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if> JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+    , catalog as node, catalog as resource, catalog as catalog\n
+  </dtml-if>\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key != \'stock\'">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
@@ -307,7 +306,6 @@ FROM\n
 </dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
-  , catalog as node, catalog as resource\n
 \n
 WHERE\n
   1 = 1\n
@@ -315,11 +313,12 @@ WHERE\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 \n
+<dtml-if join_with_catalog>\n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
-\n
-<dtml-if omit_simulation>\n
-  AND catalog.portal_type != \'Simulation Movement\'\n
+  <dtml-if omit_simulation>\n
+    AND catalog.portal_type != \'Simulation Movement\'\n
+  </dtml-if>\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
@@ -336,6 +335,7 @@ GROUP BY\n
 ORDER BY\n
   <dtml-var order_by_expression>\n
 </dtml-if>\n
+</dtml-let>\n
 
 
 ]]></string> </value>
@@ -345,9 +345,11 @@ ORDER BY\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -374,13 +376,13 @@ ORDER BY\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let join_with_catalog="omit_simulation or inventory_list or statistic">\n
+\n
 SELECT\n
 <dtml-if expr="precision is not None">\n
-  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS inventory,\n
   SUM(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
   SUM(ROUND(stock.total_price, <dtml-var precision>)) AS total_price\n
 <dtml-else>\n
-  SUM(stock.quantity) AS inventory,\n
   SUM(stock.quantity) AS total_quantity,\n
   SUM(stock.total_price) AS total_price\n
 </dtml-if>\n
@@ -419,8 +421,10 @@ SELECT\n
 \n
 FROM\n
   stock\n
-  <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
-       JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+  <dtml-if join_with_catalog>\n
+    <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if> JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+    , catalog as node, catalog as resource, catalog as catalog\n
+  </dtml-if>\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key != \'stock\'">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
@@ -428,7 +432,6 @@ FROM\n
 </dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
-  , catalog as node, catalog as resource\n
 \n
 WHERE\n
   1 = 1\n
@@ -436,11 +439,12 @@ WHERE\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 \n
+<dtml-if join_with_catalog>\n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
-\n
-<dtml-if omit_simulation>\n
-  AND catalog.portal_type != \'Simulation Movement\'\n
+  <dtml-if omit_simulation>\n
+    AND catalog.portal_type != \'Simulation Movement\'\n
+  </dtml-if>\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
@@ -457,6 +461,7 @@ GROUP BY\n
 ORDER BY\n
   <dtml-var order_by_expression>\n
 </dtml-if>\n
+</dtml-let>\n
 
 
 ]]></string> </value>
