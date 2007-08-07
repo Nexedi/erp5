@@ -130,13 +130,14 @@ inventory_list = context.portal_simulation.getCurrentInventoryList(\n
                    variation_text=variation_text_dict.keys())\n
 \n
 inventory_dict = {}\n
-inventory_key_order = [\'node\', \'resource\', \'variation_text\']\n
+inventory_column_id_order = [\'node_relative_url\', \'resource_relative_url\', \'variation_text\']\n
+inventory_parameter_id_order = [\'node\', \'resource\', \'variation_text\']\n
 for inventory_line in inventory_list:\n
-  inventory_key = tuple([inventory_line[x] for x in inventory_key_order])\n
+  inventory_key = tuple([inventory_line[x] for x in inventory_column_id_order])\n
   inventory_dict[inventory_key] = inventory_line[\'inventory\']\n
 \n
 def getCurrentInventory(**criterion_dict):\n
-  inventory_key = tuple([criterion_dict[x] for x in inventory_key_order])\n
+  inventory_key = tuple([criterion_dict[x] for x in inventory_parameter_id_order])\n
   return inventory_dict.get(inventory_key, 0)\n
 \n
 for line in line_list :\n
@@ -266,7 +267,8 @@ return 0\n
                             <string>activity_tool</string>
                             <string>checkActivities</string>
                             <string>inventory_list</string>
-                            <string>inventory_key_order</string>
+                            <string>inventory_column_id_order</string>
+                            <string>inventory_parameter_id_order</string>
                             <string>inventory_line</string>
                             <string>tuple</string>
                             <string>append</string>
