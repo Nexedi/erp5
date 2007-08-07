@@ -932,11 +932,11 @@ class Subscription(Folder, SyncCode):
     xml_mapping = getattr(self, 'xml_mapping', None)
     return xml_mapping
 
-  def getXMLFromObject(self, object):
+  def getXMLFromObject(self, object, force=0):
     """
       return the xml mapping
     """
-    xml_mapping = self.getXMLMapping()
+    xml_mapping = self.getXMLMapping(force=force)
     xml = ''
     if xml_mapping is not None:
       func = getattr(object, xml_mapping, None)

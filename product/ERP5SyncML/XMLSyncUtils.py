@@ -1090,8 +1090,8 @@ class XMLSyncUtilsMixin(SyncCode):
             data_subnode = self.getDataSubNode(action)
         if action.nodeName == 'Add':
           # Then store the xml of this new subobject
+          reset = 0
           if object is None:
-            #if object_id is not None:
             add_data = conduit.addNode(xml=data_subnode, 
                 object=destination, object_id=object_id)
             if add_data['conflict_list'] not in ('', None, []):
@@ -1103,6 +1103,7 @@ class XMLSyncUtilsMixin(SyncCode):
               signature.setPath(object.getPhysicalPath())
               signature.setObjectId(object.getId())
           else:
+            reset = 1
             #Object was retrieve but need to be updated without recreated
             #usefull when an object is only deleted by workflow.
             add_data = conduit.addNode(xml=data_subnode,
@@ -1113,17 +1114,21 @@ class XMLSyncUtilsMixin(SyncCode):
               conflict_list += add_data['conflict_list']
           if object is not None:
             #LOG('SyncModif',0,'addNode, found the object')
-            #mapping = getattr(object,domain.getXMLMapping(),None)
-            xml_object = domain.getXMLFromObject(object)
-            #if mapping is not None:
-            #  xml_object = mapping()
+            if reset:
+              #After a reset we want copy the LAST XML view on Signature.
+              #this implementation is not sufficient, need to be improved.
+              string_io = StringIO()
+              PrettyPrint(data_subnode, stream=string_io)
+              xml_object = string_io.getvalue()
+            else:
+              xml_object = domain.getXMLFromObject(object)
             signature.setStatus(self.SYNCHRONIZED)
             #signature.setId(object.getId())
             signature.setPath(object.getPhysicalPath())
             signature.setXML(xml_object)
             xml_confirmation += self.SyncMLConfirmation(
-                cmd_id=cmd_id, 
-                cmd='Add', 
+                cmd_id=cmd_id,
+                cmd='Add',
                 sync_code=self.ITEM_ADDED,
                 remote_xml=action)
             cmd_id +=1
