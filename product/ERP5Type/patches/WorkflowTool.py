@@ -242,6 +242,9 @@ def getWorklistListQuery(grouped_worklist_dict, securityQueryHook):
   total_criterion_id_list.sort(criterion_id_cmp)
   query = generateNestedQuery(priority_list=total_criterion_id_list, criterion_dict=total_criterion_id_dict, securityQueryHook=securityQueryHook)
   assert query is not None
+  if SECURITY_COLUMN_ID not in total_criterion_id_list:
+    # This request has no defined local_roles, so we must use default security query
+    query = ComplexQuery(query, securityQueryHook(), operator='AND')
   group_by_expression = ', '.join([x for x in total_criterion_id_dict.keys() if x != SECURITY_PARAMETER_ID])
   assert COUNT_COLUMN_TITLE not in total_criterion_id_dict
   select_expression = 'count(*) as %s, %s' % (COUNT_COLUMN_TITLE, group_by_expression)
@@ -386,13 +389,18 @@ def WorkflowTool_listActions(self, info=None, object=None):
     portal_catalog = getToolByName(self, 'portal_catalog')
     getSecurityUidListAndRoleColumnDict = portal_catalog.getSecurityUidListAndRoleColumnDict
     security_query_cache_dict = {}
-    def securityQueryHook(role_list):
+    def securityQueryHook(role_list=None):
+      if role_list is None:
+        role_list = []
       security_cache_key = list(role_list)
       security_cache_key.sort()
       security_cache_key = tuple(security_cache_key)
       query = security_query_cache_dict.get(security_cache_key, None)
       if query is None:
-        security_uid_list, role_column_dict = getSecurityUidListAndRoleColumnDict(**{SECURITY_PARAMETER_ID: role_list})
+        security_kw = {}
+        if len(role_list):
+          security_kw[SECURITY_PARAMETER_ID] = role_list
+        security_uid_list, role_column_dict = getSecurityUidListAndRoleColumnDict(**security_kw)
         security_query_list = [Query(operator='IN', **{SECURITY_COLUMN_ID: security_uid_list})]
         for column_id, value in role_column_dict.iteritems():
           if not isinstance(value, (list, tuple)):
