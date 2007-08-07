@@ -3026,6 +3026,8 @@ class ListBoxEditor:
           gv[k] = getattr(request, k, None)
       for url, v in self.update_dict.items():
         v.update(gv)
+        ## XXX security check is needed.
+        ## XXX we need to make restricted version of edit method.
         self.field.restrictedTraverse(url).edit(**v)
 
 allow_class(ListBoxEditor)
