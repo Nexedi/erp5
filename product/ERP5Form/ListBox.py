@@ -2997,9 +2997,39 @@ class ListBoxValidator(Validator.Validator):
             LOG("ListBox FormValidationError",0,str(error_result))
             LOG("ListBox FormValidationError",0,str(errors))
             raise FormValidationError(errors, error_result)
-        return result
+
+        return ListBoxEditor(field, result)
 
 ListBoxValidatorInstance = ListBoxValidator()
+
+class ListBoxEditor:
+  """
+  A class holding all values required to update objects
+  """
+
+  def __init__(self, field, update_dict):
+    self.field = field
+    self.update_dict = update_dict
+
+  def view(self):
+    return self.__dict__
+
+  def __call__(self, REQUEST):
+    pass
+
+  def edit(self, context):
+    if self.update_dict is not None:
+      gv = {}
+      if self.field.has_value('global_attributes'):
+        hidden_attributes = map(lambda x:x[0], self.field.get_value('global_attributes'))
+        for k in hidden_attributes:
+          gv[k] = getattr(request, k, None)
+      for url, v in self.update_dict.items():
+        v.update(gv)
+        self.field.restrictedTraverse(url).edit(**v)
+
+allow_class(ListBoxEditor)
+
 
 class ListBox(ZMIField):
   meta_type = "ListBox"
