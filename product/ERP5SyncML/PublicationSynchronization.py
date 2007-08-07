@@ -52,7 +52,7 @@ class PublicationSynchronization(XMLSyncUtils):
       Read the client xml message
       Send the first XML message from the server
     """
-    #LOG('PubSyncInit',0,'Starting... publication: %s' % str(publication))
+    LOG('PubSyncInit',0,'Starting... publication: %s' % str(publication))
     
     #the session id is set at the same value of those of the client
     subscriber.setSessionId(self.getSessionId(xml_client))
@@ -72,153 +72,145 @@ class PublicationSynchronization(XMLSyncUtils):
       alert = self.checkAlert(xml_client)
       alert_code = self.getAlertCode(xml_client)
       cred = self.checkCred(xml_client)
-      #XXX this is in developement, it's just for tests
+
+      #the source and the target of the subscriber are reversed compared 
+      # to those of the publication :
+      subscriber.setSourceURI(self.getTargetURI(xml_client))
+      subscriber.setTargetURI(self.getSourceURI(xml_client))
+
+      # If slow sync, then resend everything
+      if alert_code == self.SLOW_SYNC:
+        LOG('Warning !!!, reseting client synchronization for subscriber:',0,
+            subscriber)
+        subscriber.resetAllSignatures()
+
+      # Check if the last time synchronization is the same as the client one
+      mess='\nsubscriber.getNextAnchor:\t%s\nsubscriber.getLastAnchor:\t%s\
+        \nlast_anchor:\t\t\t%s\nnext_anchor:\t\t\t%s' % \
+        (subscriber.getNextAnchor(), subscriber.getLastAnchor(), last_anchor, \
+        next_anchor)
+      #LOG('PubSyncInit',0,mess)
+      
+      if subscriber.getNextAnchor() != last_anchor:
+        if last_anchor in (None, ''):
+          LOG('PubSyncInit',0,'anchor null')
+          #raise ValueError, "Sorry, the anchor was null"
+        else:
+          message = "bad anchors in PubSyncInit! " + \
+              subscriber.getNextAnchor() + " and " + last_anchor
+          LOG('PubSyncInit',0,message)
+      else:
+        subscriber.setNextAnchor(next_anchor)
+
+      xml_list = []
+      xml = xml_list.append
+      cmd_id = 1 # specifies a SyncML message-unique command identifier      
+      xml('<SyncML>\n')
+      # syncml header
+      xml(self.SyncMLHeader(subscriber.getSessionId(),
+        subscriber.getMessageId(), 
+        subscriber.getSubscriptionUrl(), 
+        publication.getPublicationUrl()))
+      # syncml body
+      xml(' <SyncBody>\n')
+
+
       if publication.isAuthenticationRequired():
+        #at the begining, the code is initialised at UNAUTHORIZED
+        auth_code=self.UNAUTHORIZED
+        LOG('PubSyncInit',0,'authentication required')
         if not cred:
-          #LOG('PubSyncInit',0,'authentication required')
+          auth_code=self.AUTH_REQUIRED
+          LOG("there's no credential !!!",0,'')
 	        # Prepare the xml message for the Sync initialization package
-          cmd_id = 1 # specifies a SyncML message-unique command identifier
-          xml_list = []
-          xml = xml_list.append
-          xml('<SyncML>\n')
-          # syncml header
-          xml(self.SyncMLHeader(subscriber.getSessionId(),
-            subscriber.getMessageId(), subscriber.getSubscriptionUrl(), 
-            publication.getPublicationUrl()))
-          # syncml body
-          xml(' <SyncBody>\n')
-	        # chal message
           xml(self.SyncMLChal(cmd_id, "SyncHdr", 
             publication.getPublicationUrl(), subscriber.getSubscriptionUrl(), 
             publication.getAuthenticationFormat(), 
-            publication.getAuthenticationType(), self.AUTH_REQUIRED))
+            publication.getAuthenticationType(), auth_code))
           cmd_id += 1
-
-          xml(' </SyncBody>\n')
-
-          xml('</SyncML>\n')
-          xml_a = ''.join(xml_list)
-
-          self.sendResponse(from_url=publication.getPublicationUrl(),
-            to_url=subscriber.getSubscriptionUrl(), 
-            sync_id=publication.getTitle(), xml=xml_a, domain=publication)
-
-        else:#(if the subscriber begin the session with a cred) -> to be tested
-          (authentication_format, authentication_type, data) = self.getCred(xml_client)
-          #at the begining, the code is initialised at UNAUTHORIZED
-          auth_code=self.UNAUTHORIZED
-          
-          if authentication_format == publication.getAuthenticationFormat():
-            if authentication_type == publication.getAuthenticationType():
-              decoded = subscriber.decode(authentication_format, data)
-              if decoded not in ('', None) and ':' in decoded:
-                (login, password) = decoded.split(':')
-                uf = self.getPortalObject().acl_users
-                for plugin_name, plugin in uf._getOb('plugins').listPlugins(
-                                          IAuthenticationPlugin ):
-                  if plugin.authenticateCredentials(
-                            {'login':login, 'password':password}) is not None:
-                    subscriber.setAuthenticated(True)
-                    auth_code=self.AUTH_ACCEPTED
-                    #here we must log in with the user authenticated :
-                    user = uf.getUserById(login).__of__(uf)
-                    newSecurityManager(None, user)
-                    subscriber.setUser(login)
-                    break
-                  else:
-                    auth_code=self.UNAUTHORIZED
+	        # chal message
+          xml_status, cmd_id = self.SyncMLStatus(xml_client, auth_code,
+              cmd_id, next_anchor, subscription=subscriber).values()
+          xml(xml_status)
+        else:
+          (authentication_format, authentication_type, data) = \
+              self.getCred(xml_client)
+          if authentication_type == publication.getAuthenticationType():
+            authentication_format = publication.getAuthenticationFormat()
+            decoded = subscriber.decode(authentication_format, data)
+            if decoded not in ('', None) and ':' in decoded:
+              (login, password) = decoded.split(':')
+              uf = self.getPortalObject().acl_users
+              for plugin_name, plugin in uf._getOb('plugins').listPlugins(
+                                        IAuthenticationPlugin ):
+                if plugin.authenticateCredentials(
+                          {'login':login, 'password':password}) is not None:
+                  subscriber.setAuthenticated(True)
+                  auth_code=self.AUTH_ACCEPTED
+                  #here we must log in with the user authenticated :
+                  user = uf.getUserById(login).__of__(uf)
+                  newSecurityManager(None, user)
+                  subscriber.setUser(login)
+                  break
+                else:
+                  auth_code=self.UNAUTHORIZED
           #in all others cases, the auth_code is set to UNAUTHORIZED  
 
 
           # Prepare the xml message for the Sync initialization package
-          cmd_id = 1 # specifies a SyncML message-unique command identifier
-          xml_list = []
-          xml = xml_list.append
-          xml('<SyncML>\n')
-          # syncml header
-          xml(self.SyncMLHeader(subscriber.getSessionId(),
-            subscriber.getMessageId(), 
-            subscriber.getSubscriptionUrl(), 
-            publication.getPublicationUrl()))
-          # syncml body
-          xml(' <SyncBody>\n')
-          xml(self.SyncMLStatus(cmd_id, subscriber.getSubscriptionUrl(), 
-            publication.getPublicationUrl(), auth_code))
-          cmd_id += 1
           if auth_code == self.AUTH_ACCEPTED:
+            xml_status, cmd_id = self.SyncMLStatus(xml_client, auth_code,
+                cmd_id, next_anchor, subscription=subscriber).values()
+            xml(xml_status)
             # alert message
-            xml(self.SyncMLAlert(cmd_id, sync_type, 
-              subscriber.getSubscriptionUrl(), publication.getPublicationUrl(),
-              subscriber.getLastAnchor(), subscriber.getNextAnchor()))
+            xml(self.SyncMLAlert(cmd_id, sync_type, subscriber.getTargetURI(), 
+              subscriber.getSourceURI(), subscriber.getLastAnchor(), 
+              next_anchor))
             cmd_id += 1
           else:
 	          # chal message
             xml(self.SyncMLChal(cmd_id, "SyncHdr", 
               publication.getPublicationUrl(), subscriber.getSubscriptionUrl(), 
               publication.getAuthenticationFormat(), 
-              publication.getAuthenticationType(), self.AUTH_REQUIRED))
+              publication.getAuthenticationType(), auth_code))
             cmd_id += 1
-          xml(' </SyncBody>\n')
-          xml('</SyncML>\n')
-          xml_a = ''.join(xml_list)
+            xml_status, cmd_id = self.SyncMLStatus(xml_client, 
+                self.AUTH_REQUIRED, cmd_id, next_anchor, 
+                subscription=subscriber).values()
+            xml(xml_status)
 
-          self.sendResponse(from_url=publication.getPublicationUrl(),
-          to_url=subscriber.getSubscriptionUrl(),
-          sync_id=publication.getTitle(), xml=xml_a, domain=publication)
+      elif alert is not None: #if no identification is required :
+        # syncml header
+        xml_status, cmd_id = self.SyncMLStatus(xml_client, self.AUTH_ACCEPTED, 
+            cmd_id, next_anchor, subscription=subscriber).values()
+        xml(xml_status)
+        # alert message
+        xml(self.SyncMLAlert(cmd_id, sync_type, subscriber.getTargetURI(),
+          subscriber.getSourceURI(), subscriber.getLastAnchor(), next_anchor))
+        cmd_id += 1
 
-      else :
-        # If slow sync, then resend everything
-        if alert_code == self.SLOW_SYNC:
-          LOG('Warning !!!, reseting client synchronization for subscriber:',0,
-              subscriber)
-          subscriber.resetAllSignatures()
-
-        # Check if the last time synchronization is the same as the client one
-        mess='\nsubscriber.getNextAnchor:\t%s\nsubscriber.getLastAnchor:\t%s\
-        \nlast_anchor:\t\t\t%s\nnext_anchor:\t\t\t%s' % (subscriber.getNextAnchor(), subscriber.getLastAnchor(), last_anchor, next_anchor)
-        #LOG('PubSyncInit',0,mess)
-        
-        if subscriber.getNextAnchor() != last_anchor:
-          if last_anchor == None:
-            #LOG('PubSyncInit',0,'anchor null')
-            raise ValueError, "Sorry, the anchor was null"
-          else:
-            message = "bad anchors in PubSyncInit! " + \
-                subscriber.getNextAnchor() + " and " + last_anchor
-            #LOG('PubSyncInit',0,message)
-        else:
-	        subscriber.setNextAnchor(next_anchor)
       # We have to set every object as NOT_SYNCHRONIZED
       subscriber.startSynchronization()
     else:
-      # We have started the sync from the server (may be for a conflict resolution)
-      pass
+      # We have started the sync from the server (may be for a conflict 
+      # resolution)
+      raise ValueError, "the syncml message is None. Maybe a synchronisation \
+          has been started from the server (forbiden)"
+      # a synchronisation is always starded from a client and can't be from
+      # a server ! 
 
-    if alert is not None and not publication.isAuthenticationRequired():
-      # Prepare the xml message for the Sync initialization package
-      cmd_id = 1 # specifies a SyncML message-unique command identifier
-      xml_list = []
-      xml = xml_list.append
+    xml('  <Final/>\n')
+    xml(' </SyncBody>\n')
+    xml('</SyncML>\n')
+    xml_a = ''.join(xml_list)
+    
+    if publication.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
+      xml_a = self.xml2wbxml(xml_a)
+    self.sendResponse(from_url=publication.getPublicationUrl(),
+      to_url=subscriber.getSubscriptionUrl(), sync_id=publication.getTitle(), 
+      xml=xml_a, domain=publication, 
+      content_type=publication.getSyncContentType())
 
-      xml('<SyncML>\n')
-      # syncml header
-      xml(self.SyncMLHeader(subscriber.getSessionId(), 
-        subscriber.incrementMessageId(), subscriber.getSubscriptionUrl(), 
-        publication.getPublicationUrl()))
-      # syncml body
-      xml(' <SyncBody>\n')
-      # alert message
-      xml(self.SyncMLAlert(cmd_id, sync_type, subscriber.getSubscriptionUrl(),
-        publication.getPublicationUrl(), subscriber.getLastAnchor(), 
-        subscriber.getNextAnchor()))
-      cmd_id += 1
-      xml(' </SyncBody>\n')
-      xml('</SyncML>\n')
-      xml_a = ''.join(xml_list)
-
-      self.sendResponse(from_url=publication.getPublicationUrl(),
-        to_url=subscriber.getSubscriptionUrl(), sync_id=publication.getTitle(), 
-        xml=xml_a, domain=publication)
     return {'has_response':1,'xml':xml_a}
 
 
@@ -226,7 +218,7 @@ class PublicationSynchronization(XMLSyncUtils):
     """
       This is the synchronization method for the server
     """
-    #LOG('PubSync',0,'Starting... publication: %s' % str(publication_path))
+    LOG('PubSync',0,'Starting... publication: %s' % str(publication_path))
     # Read the request from the client
     publication = self.unrestrictedTraverse(publication_path)
     xml_client = msg
@@ -244,18 +236,19 @@ class PublicationSynchronization(XMLSyncUtils):
         #LOG('PubSync',0,'This is not a SyncML Message')
         raise ValueError, "Sorry, This is not a SyncML Message"
       alert_code = self.getAlertCode(xml_client)
-
+      
       # Get informations from the header
       client_header = first_node.childNodes[1]
       if client_header.nodeName != "SyncHdr":
         #LOG('PubSync',0,'This is not a SyncML Header')
         raise ValueError, "Sorry, This is not a SyncML Header"
-      subscription_url = self.getSourceURI(client_header)
+      subscription_url = self.getSubscriptionUrl(client_header)
       # Get the subscriber or create it if not already in the list
       subscriber = publication.getSubscriber(subscription_url)
       if subscriber == None:
         subscriber = Subscriber(publication.generateNewId(),subscription_url)
         subscriber.setXMLMapping(publication.getXMLMapping())
+        subscriber.setConduit(publication.getConduit())
         publication.addSubscriber(subscriber)
         # first synchronization
         result = self.PubSyncInit(publication,xml_client,subscriber=subscriber,
@@ -266,6 +259,8 @@ class PublicationSynchronization(XMLSyncUtils):
             xml_client=xml_client, subscriber=subscriber, sync_type=alert_code)
       else:
         #we log the user authenticated to do the synchronization with him
+        if self.checkMap(xml_client) :
+          self.setRidWithMap(xml_client, subscriber)
         if publication.isAuthenticationRequired():
           if subscriber.isAuthenticated():
               uf = self.getPortalObject().acl_users

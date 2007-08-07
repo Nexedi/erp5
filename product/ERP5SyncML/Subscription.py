@@ -575,6 +575,7 @@ def addSubscription( self, id, title='', REQUEST=None ):
     """
     Add a new Subscribption
     """
+    LOG('addSubscription starting...',0,'')
     o = Subscription( id ,'','','','','','')
     self._setObject( id, o )
     if REQUEST is not None:
@@ -648,7 +649,8 @@ class Subscription(Folder, SyncCode):
   def __init__(self, id, title, publication_url, subscription_url, 
       destination_path, source_uri, target_uri, query, xml_mapping, 
       conduit, gpg_key, id_generator, gid_generator, media_type, login, 
-      password, activity_enabled, alert_code):
+      password, activity_enabled, alert_code, synchronize_with_erp5_sites, 
+      sync_content_type):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
@@ -679,7 +681,8 @@ class Subscription(Folder, SyncCode):
     self.setConduit(conduit)
     Folder.__init__(self, id)
     self.title = title
-
+    self.setSyncContentType(sync_content_type)
+    self.setSynchronizeWithERP5Sites(synchronize_with_erp5_sites)
     #self.signatures = PersitentMapping()
 
   def getAlertCodeList(self):
@@ -727,7 +730,7 @@ class Subscription(Folder, SyncCode):
 
   def getSourceURI(self):
     """
-    getter for the source_uri (the local path of the subscription)
+    getter for the source_uri (the local path of the subscription data base)
     """
     return getattr(self, 'source_uri', None)
 
@@ -739,10 +742,25 @@ class Subscription(Folder, SyncCode):
 
   def getTargetURI(self):
     """
-    getter for the target_uri (the distant Publication we want to synchronize 
-    with)
+    getter for the target_uri (the distant Publication data base we want to 
+    synchronize with)
     """
     return getattr(self, 'target_uri', None)
+
+  def setSyncContentType(self, sync_content_type):
+    """
+    content type used by the subscriber
+    """
+    self.sync_content_type=sync_content_type
+    # the varible name is sync_content_type instead of content_type because
+    # content_type seems to be a function name already used
+
+
+  def getSyncContentType(self):
+    """
+    getter of the subscriber sync_content_type
+    """
+    return getattr(self, 'sync_content_type', 'application/vnd.syncml+xml')
 
   def getSynchronizationType(self, default=None):
     """
@@ -769,6 +787,21 @@ class Subscription(Folder, SyncCode):
     if value == '':
       value = None
     self.xml_mapping = value
+
+  def setSynchronizeWithERP5Sites(self, synchronize_with_erp5_sites):
+    """
+    if the synchronisation is made with another ERP5 site, 
+    synchronize_with_erp5_sites is True, False in other case
+    XXX in the future, the method used to sendHttpResponse will be the same
+    in all cases, so this method will be useless
+    """
+    self.synchronize_with_erp5_sites = synchronize_with_erp5_sites
+
+  def getSynchronizeWithERP5Sites(self):
+    """
+    return True if the synchronisation is between two erp5 sites
+    """
+    return getattr(self, 'synchronize_with_erp5_sites', None)
 
   def checkCorrectRemoteSessionId(self, session_id):
     """
@@ -886,7 +919,7 @@ class Subscription(Folder, SyncCode):
 
   def setPublicationUrl(self, publication_url):
     """
-      return the publication url
+      set the publication url
     """
     self.publication_url = publication_url
 
@@ -1057,6 +1090,30 @@ class Subscription(Folder, SyncCode):
         o = object
         break
     return o
+
+  def getObjectFromRid(self, rid):
+    """
+    return the object corresponding to the id
+    """
+    signature = self.getSignatureFromRid(rid)
+    destination = self.getDestination()
+    o = None
+    if signature is not None and signature.getPath() is not None:
+      try:
+        o = destination.getPortalObject().restrictedTraverse(signature.getPath())
+      except:
+        pass
+    return o 
+
+
+
+#  def setOneWaySyncFromServer(self,value):
+#    """
+#    If this option is enabled, then we will not 
+#    send our own modifications
+#    """
+#    self.one_way_sync_from_server = value
+#
 
   def getObjectList(self, **kw):
     """

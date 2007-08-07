@@ -75,7 +75,8 @@ class SubscriptionSynchronization(XMLSyncUtils):
 
     self.sendResponse(from_url=subscription.subscription_url,
         to_url=subscription.publication_url, sync_id=subscription.getTitle(), 
-        xml=xml_a,domain=subscription)
+        xml=xml_a,domain=subscription, 
+        content_type=subscription.getSyncContentType()) 
 
     return {'has_response':1,'xml':xml_a}
 
@@ -86,7 +87,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     response = None #check if subsync replies to this messages
     subscription = self.unrestrictedTraverse(subscription_path)
     if msg==None and (subscription.getSubscriptionUrl()).find('file')>=0:
-      msg = self.readResponse(sync_id=subscription.getSourceURI(), 
+      msg = self.readResponse(sync_id=subscription.getSubscriptionUrl(), 
           from_url=subscription.getSubscriptionUrl())
     if msg==None:
       response = self.SubSyncInit(subscription)
@@ -170,7 +171,8 @@ class SubscriptionSynchronization(XMLSyncUtils):
 
     self.sendResponse(from_url=subscription.subscription_url,
         to_url=subscription.publication_url, sync_id=subscription.getTitle(),
-        xml=xml_a,domain=subscription)
+        xml=xml_a,domain=subscription,
+        content_type=subscription.getSyncContentType())
 
     return {'has_response':1,'xml':xml_a}
 

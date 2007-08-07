@@ -55,6 +55,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <b>Query :</b> the type of objects you want to synchronize</br>
         <b>XML Mapping :</b> the page template used on each object before 
         an export</br>
+        <b>Synchronize with other ERP5 sites :</b> The method currently used 
+        to send data to erp5 and external sites is not the same (it will be 
+        improved soon)</br>
+        <b>Content Type :</b> the type of content use to exchange data
+        (could be 'application/vnd.syncml+wbxml' or 
+        'application/vnd.syncml+xml' for example)</br>
         <b>Conduit :</b> the conduit used to synchronize</br>
         <b>GPG key name :</b>a name of gpg key to use</br>
         <b>Id Generator :</b> This set the method name wich allows to 
@@ -80,6 +86,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <b>Query :</b> the type of objects you want to synchronize</br>
         <b>XML Mapping :</b> the page template used on each object before 
         an export</br>
+        <b>Synchronize with other ERP5 sites :</b> The method currently used 
+        to send data to erp5 and external sites is not the same (it will be 
+        improved soon)</br>
+        <b>Content Type :</b> the type of content use to exchange data
+        (could be 'application/vnd.syncml+wbxml' or 
+        'application/vnd.syncml+xml' for example)</br>
         <b>Conduit :</b> the conduit used to synchronize</br>
         <b>GPG key name :</b>a name of gpg key to use</br>
         <b>Id Generator :</b> This set the method name wich allows to 

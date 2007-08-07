@@ -111,6 +111,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <tr>
         <td align="left" valign="top">
         <div class="form-label">
+        Synchronize with other ERP5 sites
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+          <input type="checkbox" name="synchronize_with_erp5_sites" value="1" <dtml-if expr="getSynchronizeWithERP5Sites()">CHECKED</dtml-if>>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
+        Content Type
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+        <input type="text" name="sync_content_type" value="<dtml-var getSyncContentType>" size="40" />
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
         Conduit
         </label></div>
         </td>

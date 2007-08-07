@@ -84,16 +84,6 @@ class Subscriber(Subscription):
       Send ACK for a group of documents
     """
 
-  def getConduit(self):
-    """
-    Return the conduit of the publication
-    """
-    #LOG('Subscriber.getConduit, self.getPhysicalPath()',0,self.getPhysicalPath())
-    #LOG('Subscriber.getConduit, self.getParent().getPhysicalPath()',0,self.aq_parent.getPhysicalPath())
-    #LOG('Subscriber.getConduit, self.getParent()',0,self.getParent())
-    return self.aq_parent.getConduit()
-    #return self.conduit
-
   def SendDocuments(self):
     """
       We send all the updated documents (ie. documents not marked
@@ -155,7 +145,8 @@ class Publication(Subscription):
   def __init__(self, id, title, publication_url, destination_path,
       source_uri, query, xml_mapping, conduit, gpg_key, id_generator, 
       gid_generator, media_type, auth_required, authentication_format, 
-      authentication_type, activity_enabled):
+      authentication_type, activity_enabled, synchronize_with_erp5_sites, 
+      sync_content_type):
     """
       constructor
     """
@@ -178,6 +169,8 @@ class Publication(Subscription):
     self.auth_required = auth_required 
     self.authentication_format = authentication_format
     self.authentication_type = authentication_type
+    self.setSyncContentType(sync_content_type)
+    self.setSynchronizeWithERP5Sites(synchronize_with_erp5_sites)
 
   def getPublicationUrl(self):
     """
@@ -238,6 +231,7 @@ class Publication(Subscription):
     """
       Add a new subscriber to the publication
     """
+    LOG('addSubscriber starting ...',0,'')
     # We have to remove the subscriber if it already exist (there were probably a reset on the client)
     self.delSubscriber(subscriber.getSubscriptionUrl())
     new_id = subscriber.getId()

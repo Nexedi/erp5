@@ -176,10 +176,13 @@ class SynchronizationTool( SubscriptionSynchronization,
   security.declareProtected(Permissions.ModifyPortalContent, 
       'manage_addPublication')
   def manage_addPublication(self, title, publication_url, 
-            destination_path, source_uri, query, xml_mapping, conduit, gpg_key, 
+            destination_path, source_uri, query, xml_mapping, 
+            conduit, gpg_key, 
             synchronization_id_generator=None, gid_generator=None, 
             media_type=None, auth_required=0, authentication_format='', 
-            authentication_type='', RESPONSE=None, activity_enabled = False):
+            authentication_type='', RESPONSE=None, activity_enabled = False,
+            sync_content_type='application/vnd.syncml+xml', 
+            synchronize_with_erp5_sites=True):
     """ 
       create a new publication
     """
@@ -192,7 +195,9 @@ class SynchronizationTool( SubscriptionSynchronization,
                       destination_path, source_uri, query, xml_mapping, 
                       conduit, gpg_key, synchronization_id_generator, 
                       gid_generator, media_type, auth_required, 
-                      authentication_format, authentication_type, activity_enabled)
+                      authentication_format, authentication_type, 
+                      activity_enabled, synchronize_with_erp5_sites, 
+                      sync_content_type)
     folder._setObject( new_id, pub )
     #if len(self.list_publications) == 0:
     #  self.list_publications = PersistentMapping()
@@ -207,7 +212,10 @@ class SynchronizationTool( SubscriptionSynchronization,
                        xml_mapping, conduit, gpg_key,
                        synchronization_id_generator=None, gid_generator=None,
                        media_type=None, login=None, password=None,
-                       RESPONSE=None, activity_enabled=False, alert_code=SyncCode.TWO_WAY):
+                       RESPONSE=None, activity_enabled=False, 
+                       alert_code=SyncCode.TWO_WAY, 
+                       synchronize_with_erp5_sites = True, 
+                       sync_content_type='application/vnd.syncml+xml'):
     """
       XXX should be renamed as addSubscription
       create a new subscription
@@ -221,7 +229,8 @@ class SynchronizationTool( SubscriptionSynchronization,
                        destination_path, source_uri, target_uri, query,
                        xml_mapping, conduit, gpg_key,
                        synchronization_id_generator, gid_generator, media_type,
-                       login, password, activity_enabled, alert_code)
+                       login, password, activity_enabled, alert_code, 
+                       synchronize_with_erp5_sites, sync_content_type)
     folder._setObject( new_id, sub )
     #if len(self.list_subscriptions) == 0:
     #  self.list_subscriptions = PersistentMapping()
@@ -236,7 +245,9 @@ class SynchronizationTool( SubscriptionSynchronization,
                             conduit, gpg_key, synchronization_id_generator,
                             gid_generator,  media_type=None, auth_required=0,
                             authentication_format='', authentication_type='',
-                            RESPONSE=None, activity_enabled=False):
+                            RESPONSE=None, activity_enabled=False,
+                            sync_content_type='application/vnd.syncml+xml',
+                            synchronize_with_erp5_sites=False):
     """
       modify a publication
     """
@@ -256,6 +267,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     pub.setAuthentication(auth_required)
     pub.setAuthenticationFormat(authentication_format)
     pub.setAuthenticationType(authentication_type)
+    pub.setSyncContentType(sync_content_type)
+    pub.setSynchronizeWithERP5Sites(synchronize_with_erp5_sites)
 
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
@@ -265,7 +278,9 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_editSubscription(self, title, publication_url, subscription_url,
       destination_path, source_uri, target_uri, query, xml_mapping, conduit,
       gpg_key, synchronization_id_generator, gid_generator, media_type=None,
-      login='', password='', RESPONSE=None, activity_enabled=False, alert_code=SyncCode.TWO_WAY):
+      login='', password='', RESPONSE=None, activity_enabled=False, 
+      alert_code=SyncCode.TWO_WAY, synchronize_with_erp5_sites=False, 
+      sync_content_type='application/vnd.syncml+xml'):
     """
       modify a subscription
     """
@@ -286,6 +301,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     sub.setMediaType(media_type)
     sub.setLogin(login)
     sub.setPassword(password)
+    sub.setSyncContentType(sync_content_type)
+    sub.setSynchronizeWithERP5Sites(synchronize_with_erp5_sites)
     sub.setAlertCode(alert_code)
 
     if RESPONSE is not None:
@@ -833,7 +850,7 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   security.declarePublic('sendResponse')
   def sendResponse(self, to_url=None, from_url=None, sync_id=None,xml=None, 
-      domain=None, send=1):
+      domain=None, send=1, content_type='application/vnd.syncml+xml'):
     """
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
@@ -843,6 +860,12 @@ class SynchronizationTool( SubscriptionSynchronization,
     #LOG('sendResponse, from_url: ',0,from_url)
     #LOG('sendResponse, sync_id: ',0,sync_id)
     #LOG('sendResponse, xml: \n',0,xml)
+
+    if content_type == self.CONTENT_TYPE['SYNCML_WBXML']:
+      xml = self.xml2wbxml(xml)
+      #LOG('sendHttpResponse, xml after wbxml: \n',0,self.hexdump(xml))
+
+
     if isinstance(xml, unicode):
       xml = xml.encode('utf-8')
     if domain is not None:
@@ -878,7 +901,8 @@ class SynchronizationTool( SubscriptionSynchronization,
           self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
                                            xml=xml, 
-                                           domain_path=domain.getPath())
+                                           domain_path=domain.getPath(),
+                                           content_type=content_type)
         elif to_url.find('file://')==0:
           filename = to_url[len('file:/'):]
           stream = file(filename,'w')
@@ -895,10 +919,11 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   security.declarePrivate('sendHttpResponse')
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, 
-      domain_path=None ):
+      domain_path=None, content_type='application/vnd.syncml+xml'):
     domain = self.unrestrictedTraverse(domain_path)
     #LOG('sendHttpResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
     #LOG('sendHttpResponse, starting with domain:',0,domain)
+
     #LOG('sendHttpResponse, xml:',0,xml)
     if domain is not None:
       if domain.domain_type == self.PUB and not domain.getActivityEnabled():
@@ -920,27 +945,46 @@ class SynchronizationTool( SubscriptionSynchronization,
     urllib2.install_opener(opener)
     to_encode = {}
     head = '<?xml version="1.0" encoding="UTF-8"?>'
-    to_encode['text'] = head + xml
-    to_encode['sync_id'] = sync_id
-    headers = {'Content-type': 'application/vnd.syncml+xml'}
-    
-    #XXX bad hack for synchronization with erp5
-    if to_url.find('readResponse')<0:
-      to_url = to_url + '/portal_synchronizations/readResponse'
-    encoded = urllib.urlencode(to_encode)
-    data=encoded
-    request = urllib2.Request(url=to_url, data=data)
 
-#XXX only to synchronize with other server than erp5 (must be improved):
-#    data=head+xml
-#    request = urllib2.Request(to_url, data, headers)
+    if content_type == self.CONTENT_TYPE['SYNCML_WBXML']:
+      #because xml2wbxml add the head to the xml
+      to_encode['text'] = xml
+    else:
+      to_encode['text'] = head + xml
+    to_encode['sync_id'] = sync_id
+    headers = {'User-Agent':'ERP5SyncML', 'Content-Type':content_type}
+
+    #XXX bad hack for synchronization with erp5
+    # because at this time, when we call the readResponse method, we must
+    # encode the data with urlencode if we want the readResponse method to 
+    # receive the data's in parameters.
+    # All this should be improved to not use urlencode in all cases.
+    # to do this, perhaps use SOAP :
+    #  - http://en.wikipedia.org/wiki/SOAP
+    #  - http://www.contentmanagementsoftware.info/zope/SOAPSupport
+    #  - http://svn.zope.org/soap/trunk/
+
+    if domain.getSynchronizeWithERP5Sites():
+      LOG('Synchronization with another ERP5 instance ...',0,'')
+      if to_url.find('readResponse')<0:
+        to_url = to_url + '/portal_synchronizations/readResponse'
+      encoded = urllib.urlencode(to_encode)
+      data=encoded
+      request = urllib2.Request(url=to_url, data=data)
+    else:
+    #XXX only to synchronize with other server than erp5 (must be improved):
+      data=head+xml
+      request = urllib2.Request(to_url, data, headers)
+
     try:
-      result = urllib2.urlopen(request).read()
+      url_file = urllib2.urlopen(request)
+      result = url_file.read()
     except socket.error, msg:
       self.activate(activity='RAMQueue').sendHttpResponse(to_url=to_url, 
-          sync_id=sync_id, xml=xml, domain_path=domain.getPath())
+          sync_id=sync_id, xml=xml, domain_path=domain.getPath(), 
+          content_type=content_type)
       LOG('sendHttpResponse, socket ERROR:',0,msg)
-      LOG('sendHttpResponse, url,data',0,(url, data))
+      #LOG('sendHttpResponse, url,data',0,(url, data))
       return
     except urllib2.URLError, msg:
       LOG("sendHttpResponse, can't open url %s :" % to_url, 0, msg)
@@ -961,7 +1005,9 @@ class SynchronizationTool( SubscriptionSynchronization,
               #user = uf.getUserById('syncml').__of__(uf)
               #newSecurityManager(None, user)
               #self.activate(activity='RAMQueue').readResponse(sync_id=sync_id,text=result)
+              
               self.readResponse(sync_id=sync_id,text=result)
+    return result
 
   security.declarePublic('sync')
   def sync(self):
@@ -986,6 +1032,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     response, or just copy to a file.
     """
     #LOG('readResponse, text :', 0, text)
+    #LOG('readResponse, text :', 0, self.hexdump(text))
+
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = uf.getUserById('syncml').__of__(uf)
@@ -1001,10 +1049,12 @@ class SynchronizationTool( SubscriptionSynchronization,
       for publication in self.getPublicationList():
         if publication.getTitle()==sync_id:
           gpg_key = publication.getGPGKey()
+          domain = publication
       if gpg_key == '':
         for subscription in self.getSubscriptionList():
           if subscription.getTitle()==sync_id:
             gpg_key = subscription.getGPGKey()
+            domain = subscription
       # decrypt the message if needed
       if gpg_key not in (None,''):
         filename = str(random.randrange(1,2147483600)) + '.txt'
@@ -1025,8 +1075,10 @@ class SynchronizationTool( SubscriptionSynchronization,
       # Get the target and then find the corresponding publication or
       # Subscription
       #LOG('type(text) : ',0,type(text))
+      if domain.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
+        text = self.wbxml2xml(text)
+      #LOG('readResponse, text after wbxml :\n', 0, text)
       xml = Parse(text)
-      #XXX this function is not very optimized and should be improved
       url = self.getTarget(xml)
       for publication in self.getPublicationList():
         if publication.getPublicationUrl()==url and \
@@ -1042,6 +1094,8 @@ class SynchronizationTool( SubscriptionSynchronization,
             xml = result['xml']
             #must be commented because this method is alredy called
             #xml = self.sendResponse(xml=xml,domain=publication,send=0)
+            if publication.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
+              xml = self.xml2wbxml(xml)
             return xml
       
       for subscription in self.getSubscriptionList():
@@ -1096,4 +1150,41 @@ class SynchronizationTool( SubscriptionSynchronization,
     conduit_object = getattr(conduit_module, conduit)()
     return conduit_object.addNode(**kw)
 
+  def hexdump(self, raw=''):
+    """
+    this function is used to display the raw in a readable format :
+    it display raw in hexadecimal format and display too the printable 
+    characters (because if not printable characters are printed, it makes 
+    terminal display crash)
+    """
+    buf = ""
+    line = ""
+    start = 0
+    done = False
+    while not done:
+        end = start + 16
+        max = len(str(raw))
+        if end > max:
+            end = max
+            done = True
+        chunk = raw[start:end]
+        for i in xrange(len(chunk)):
+            if i > 0:
+                spacing = " "
+            else:
+                spacing = ""
+            buf += "%s%02x" % (spacing, ord(chunk[i]))
+        if done:
+            for i in xrange(16 - (end % 16)):
+                buf += "   "
+        buf += "  "
+        for c in chunk:
+            val = ord(c)
+            if val >= 33 and val <= 126:
+                buf += c
+            else:
+                buf += "."
+        buf += "\n"
+        start += 16
+    return buf 
 InitializeClass( SynchronizationTool )

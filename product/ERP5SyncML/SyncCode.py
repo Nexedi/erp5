@@ -37,8 +37,9 @@ class SyncCode(Persistent):
   # SyncML Alert Codes
   TWO_WAY = 200
   SLOW_SYNC = 201 # This means we get the data from the publication
-  WAITING_DATA = 214
   ONE_WAY_FROM_SERVER = 204
+  WAITING_DATA = 214
+  REFRESH_REQUIRED = 508
 
   # SyncML Status Codes
   SUCCESS = 200
@@ -121,3 +122,9 @@ class SyncCode(Persistent):
   MEDIA_TYPE = {}
   MEDIA_TYPE['TEXT_XML'] = 'text/xml'
   MEDIA_TYPE['TEXT_VCARD'] = 'text/vcard'
+  MEDIA_TYPE['TEXT_XVCARD'] = 'text/x-vcard'
+
+  #content types :
+  CONTENT_TYPE = {}
+  CONTENT_TYPE['SYNCML_XML'] = 'application/vnd.syncml+xml'
+  CONTENT_TYPE['SYNCML_WBXML'] = 'application/vnd.syncml+wbxml'
