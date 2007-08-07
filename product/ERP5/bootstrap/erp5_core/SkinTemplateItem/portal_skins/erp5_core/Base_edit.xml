@@ -107,19 +107,6 @@ except FormValidationError, validation_errors:\n
         value(request)\n
   return form(request)\n
 \n
-def editListBox(listbox_field, listbox):\n
-  """ Function called to edit a listbox\n
-  """\n
-  if listbox is not None:\n
-    gv = {}\n
-    if listbox_field.has_value(\'global_attributes\'):\n
-      hidden_attributes = map(lambda x:x[0], listbox_field.get_value(\'global_attributes\'))\n
-      for k in hidden_attributes:\n
-        gv[k] = getattr(request, k, None)\n
-    for url, v in listbox.items():\n
-      v.update(gv)\n
-      context.restrictedTraverse(url).edit(**v)\n
-\n
 def editMatrixBox(matrixbox_field, matrixbox):\n
   """ Function called to edit a Matrix box\n
   """\n
@@ -225,9 +212,7 @@ try:\n
   # then we edit them\n
   for field in form.get_fields():\n
     parseField(field)\n
-    if(field.meta_type == \'ListBox\'):\n
-      editListBox(field, request.get(field.id))\n
-    elif(field.meta_type == \'MatrixBox\'):\n
+    if(field.meta_type == \'MatrixBox\'):\n
       editMatrixBox(field, request.get(field.id))\n
 \n
   # Maybe we should build a list of objects we need\n
@@ -330,7 +315,6 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>field_id</string>
                             <string>value</string>
                             <string>callable</string>
-                            <string>editListBox</string>
                             <string>editMatrixBox</string>
                             <string>MARKER</string>
                             <string>kw</string>
