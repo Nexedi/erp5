@@ -67,6 +67,8 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+# Verbose is used when we do not want to use the user interface in order\n
+# to have a nice error message\n
 from Products.ERP5Type.Message import Message\n
 from Products.ERP5Type.Document import newTempBase\n
 \n
@@ -132,9 +134,15 @@ else:\n
                       string_index=destination_payment_reference)]\n
       if len(account_list)==0:\n
         message = \'This account number does not exist\'\n
+        if verbose:\n
+          message = Message(domain=\'ui\',message=\'$reference account number does not exist\',\n
+                            mapping={\'reference\':destination_payment_reference})\n
         generate_error(line,\'destination_payment_reference\',message)\n
       elif len(account_list)>1:\n
         message = \'This account number exist several times\'\n
+        if verbose:\n
+          message = Message(domain=\'ui\',message=\'$reference account number exist several times\',\n
+                            mapping={\'reference\':destination_payment_reference})\n
         generate_error(line,\'destination_payment_reference\',message)\n
       else:\n
         account = account_list[0]\n
@@ -186,7 +194,7 @@ for i in xrange(len(listbox), 10):\n
   listbox.append({\'quantity\':1})\n
 \n
 if batch_mode:\n
-  return error_value\n
+  return (error_value, field_error_dict)\n
 else:\n
   context.Base_updateDialogForm(listbox=listbox\n
                              , portal_type = context.getPortalType()\n
@@ -225,7 +233,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None,batch_mode=0,resource=None,previous_resource=None,**kw</string> </value>
+            <value> <string>listbox=None,batch_mode=0,resource=None,previous_resource=None,verbose=0,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -245,7 +253,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -255,6 +263,7 @@ else:\n
                             <string>batch_mode</string>
                             <string>resource</string>
                             <string>previous_resource</string>
+                            <string>verbose</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
@@ -317,6 +326,7 @@ else:\n
                 <int>0</int>
                 <none/>
                 <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>

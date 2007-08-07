@@ -82,7 +82,10 @@ if listbox is None:\n
 \n
 # get the list of movement we need to create\n
 # First call the first scripts wich check many things\n
-error_value = context.CheckDelivery_generateCheckDetailInputDialog(\n
+error_value = 0\n
+field_error_dict = {}\n
+if check:\n
+  (error_value, field_error_dict) = context.CheckDelivery_generateCheckDetailInputDialog(\n
                                      listbox=listbox,batch_mode=1,**kw)\n
 \n
 request = context.REQUEST\n
@@ -90,7 +93,7 @@ resource = request.get(\'resource\',None)\n
 previous_resource = request.get(\'previous_resource\',None)\n
 line_portal_type = "Checkbook Reception Line"\n
 \n
-if error_value or (previous_resource not in(\'\',None) and previous_resource!=resource):\n
+if (error_value or (previous_resource not in(\'\',None) and previous_resource!=resource)):\n
   return context.CheckDelivery_generateCheckDetailInputDialog(\n
                                      listbox=listbox,batch_mode=0,**kw)\n
 \n
@@ -179,7 +182,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, **kw</string> </value>
+            <value> <string>listbox=None, check=1, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -207,13 +210,14 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>listbox</string>
+                            <string>check</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -224,8 +228,10 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>redirect_url</string>
                             <string>None</string>
                             <string>_getitem_</string>
-                            <string>_apply_</string>
                             <string>error_value</string>
+                            <string>field_error_dict</string>
+                            <string>_apply_</string>
+                            <string>_getiter_</string>
                             <string>resource</string>
                             <string>previous_resource</string>
                             <string>line_portal_type</string>
@@ -234,7 +240,6 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>create_line</string>
                             <string>aggregate_data_list</string>
                             <string>number_of_line_created</string>
-                            <string>_getiter_</string>
                             <string>line</string>
                             <string>add_line</string>
                             <string>quantity</string>
@@ -250,6 +255,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>len</string>
                             <string>check_type_relative_url</string>
                             <string>check_type</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
@@ -263,6 +269,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <value>
               <tuple>
                 <none/>
+                <int>1</int>
               </tuple>
             </value>
         </item>

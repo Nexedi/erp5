@@ -214,7 +214,7 @@ else:\n
 aggregate_list = []\n
 for i in xrange(quantity):\n
   if create == 1:\n
-    item = module.newContent()\n
+    item = module.newContent(activate_kw={\'tag\': tag, \'priority\':4})\n
     item.setDestination(destination)\n
     if destination_payment_value is not None:\n
       item.setDestinationPaymentValue(destination_payment_value)\n
@@ -236,7 +236,7 @@ for i in xrange(quantity):\n
       for j in reference_list:\n
         #tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, j)\n
         #encountered_check_identifiers_dict[tag] = None\n
-        check = item.newContent(portal_type=\'Check\', title=j, activate_kw={\'tag\': tag})\n
+        check = item.newContent(portal_type=\'Check\', title=j, activate_kw={\'tag\': tag, \'priority\':4})\n
         check.setDestination(destination_section)\n
         check.setStartDate(start_date)\n
         check.setReference(j)\n
