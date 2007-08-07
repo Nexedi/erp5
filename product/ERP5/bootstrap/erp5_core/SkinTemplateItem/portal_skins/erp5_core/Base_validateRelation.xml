@@ -83,6 +83,17 @@ base_category = None\n
 \n
 o = context.restrictedTraverse(object_path)\n
 \n
+# XXX We should not use meta_type properly,\n
+# XXX We need to discuss this problem.(yusei)\n
+def checkFieldType(field, field_type):\n
+  if field.meta_type==field_type:\n
+    return True\n
+  elif field.meta_type==\'ProxyField\':\n
+    template_field = field.getRecursiveTemplateField()\n
+    if template_field.meta_type==field_type:\n
+      return True\n
+  return False\n
+\n
 def checkSameKeys(a , b):\n
   """\n
     Checks if the two lists contain\n
@@ -138,7 +149,7 @@ try:\n
     if same_type(new_value,\'a\'):\n
       new_value = [new_value]\n
     same_keys = 0\n
-    if my_field.meta_type == \'MultiRelationStringField\':\n
+    if checkFieldType(my_field, \'MultiRelationStringField\'):\n
       # The checkProperty sometimes does not provide an\n
       # acceptable value - XXXX - see vetement_id in Modele View\n
       if old_value is \'\' or old_value is None:\n
@@ -233,7 +244,7 @@ try:\n
                                 )\n
     else:\n
       request.set(\'catalog_index\', my_field.get_value(\'catalog_index\'))\n
-      if my_field.meta_type == \'MultiRelationStringField\':\n
+      if checkFieldType(my_field, \'MultiRelationStringField\'):\n
         request.set(\'relation_values\', request.get( my_field.id, None))\n
       else:\n
         request.set(\'relation_values\', [request.get( my_field.id, None)])\n
@@ -325,6 +336,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>None</string>
                             <string>base_category</string>
                             <string>o</string>
+                            <string>checkFieldType</string>
                             <string>checkSameKeys</string>
                             <string>getOrderedUids</string>
                             <string>getattr</string>
