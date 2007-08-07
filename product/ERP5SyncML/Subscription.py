@@ -298,7 +298,7 @@ class Signature(Folder,SyncCode):
     if status == self.NOT_SYNCHRONIZED:
       self.setTempXML(None)
       self.setPartialXML(None)
-    elif status in (self.PUB_CONFLICT_MERGE,self.SENT):
+    elif status in (self.PUB_CONFLICT_MERGE, self.SENT):
       # We have a solution for the conflict, don't need to keep the list
       self.resetConflictList()
 
@@ -570,27 +570,6 @@ class Signature(Folder,SyncCode):
     Returns the object corresponding to this signature
     """
     return self.getParentValue().getObjectFromGid(self.getObjectId())
-
-  def checkSynchronizationNeeded(self, object):
-    """
-    We will look at date, if there is no changes, no need to syncrhonize
-    """
-    last_modification = DateTime(object.ModificationDate())
-    # LOG('checkSynchronizationNeeded object.ModificationDate()',0,object.ModificationDate())
-    last_synchronization = self.getLastSynchronizationDate()
-    parent = object.aq_parent
-    # XXX CPS Specific
-    if parent.id == 'portal_repository': # Make sure there is no sub objects
-    #if 1:
-      if last_synchronization is not None and last_modification is not None \
-        and self.getSubscriberXupdate() is None and self.getPublisherXupdate() is None and \
-        self.getStatus()==self.NOT_SYNCHRONIZED:
-        if last_synchronization > last_modification:
-        #if 1:
-          # LOG('checkSynchronizationNeeded, no modification on: ',0,object.id)
-          self.setStatus(self.SYNCHRONIZED)
-    
-
 
 def addSubscription( self, id, title='', REQUEST=None ):
     """
@@ -864,9 +843,8 @@ class Subscription(Folder, SyncCode):
   def getConduit(self):
     """
       get the Conduit
-
     """
-    return getattr(self,'conduit',None)
+    return getattr(self, 'conduit', None)
 
   def getQuery(self):
     """
@@ -1079,15 +1057,6 @@ class Subscription(Folder, SyncCode):
         o = object
         break
     return o
-
-#  def setOneWaySyncFromServer(self,value):
-#    """
-#    If this option is enabled, then we will not 
-#    send our own modifications
-#    """
-#    self.one_way_sync_from_server = value
-#
-
 
   def getObjectList(self, **kw):
     """
@@ -1354,7 +1323,7 @@ class Subscription(Folder, SyncCode):
       Check if there's a signature with this uid
     """
     #return self.signatures.has_key(gid)
-    return gid in self.objectIds()
+    return self.getSignatureFromGid(gid) is not None
 
   def resetAllSignatures(self):
     """
