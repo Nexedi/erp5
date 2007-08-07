@@ -64,6 +64,8 @@
               <list>
                 <string>setGroup</string>
                 <string>_setGroup</string>
+                <string>setGroupValue</string>
+                <string>_setGroupValue</string>
                 <string>setGroupList</string>
                 <string>_setGroupList</string>
                 <string>setGroupValueList</string>

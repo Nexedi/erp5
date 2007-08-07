@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validate Transaction</string> </value>
+            <value> <string>Transfer Budget</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>

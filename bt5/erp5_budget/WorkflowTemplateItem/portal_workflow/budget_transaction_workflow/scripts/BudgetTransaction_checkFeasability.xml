@@ -88,12 +88,6 @@ if consistency != []:\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
             <value>
               <none/>
@@ -130,13 +124,13 @@ if consistency != []:\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>object</string>
                             <string>error_msg</string>
+                            <string>_getattr_</string>
                             <string>consistency</string>
                             <string>_getiter_</string>
                             <string>elem</string>
-                            <string>_getitem_</string>
                             <string>str</string>
                           </tuple>
                         </value>
@@ -160,27 +154,6 @@ if consistency != []:\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

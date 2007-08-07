@@ -28,7 +28,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Delivered</string> </value>
+            <value> <string>Allocated</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
