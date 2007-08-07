@@ -38,7 +38,7 @@ from Globals import InitializeClass, DTMLFile, package_home
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime.DateTime import DateTime
 from Products.CMFActivity.ActiveObject import ActiveObject
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -479,16 +479,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                                   "business template."
       if allowedRolesAndUsers:
         allowedRolesAndUsers.sort()
-        def _getSecurityUidList(allowedRolesAndUsers):
+        cache_key = tuple(allowedRolesAndUsers)
+        tv = getTransactionalVariable(self)
+        try:
+          security_uid_cache = tv['getSecurityUidListAndRoleColumnDict']
+        except KeyError:
+          security_uid_cache = tv['getSecurityUidListAndRoleColumnDict'] = {}
+        try:
+          security_uid_list = security_uid_cache[cache_key]
+        except KeyError:
           # XXX: What with this string transformation ?! Souldn't it be done in
           # dtml instead ?
           allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
           security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
-          return security_uid_list
-        _getSecurityUidList = CachingMethod(_getSecurityUidList,
-                                            id='_getSecurityUidList',
-                                            cache_factory='erp5_content_short')
-        security_uid_list = _getSecurityUidList(allowedRolesAndUsers)
+          security_uid_cache[cache_key] = security_uid_list
       else:
         security_uid_list = []
       return security_uid_list, role_column_dict
