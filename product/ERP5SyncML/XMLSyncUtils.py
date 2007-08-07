@@ -688,7 +688,7 @@ class XMLSyncUtilsMixin(SyncCode):
     if object is not None, this usually means we want to set the
     actual xupdate on the signature.
     """
-    #LOG('getSyncMLData starting...',0,'')
+    #LOG('\ngetSyncMLData starting...',0, domain.getId())
     if isinstance(conduit, str):
       conduit = self.getConduitByName(conduit)
     local_gid_list = []
@@ -705,7 +705,7 @@ class XMLSyncUtilsMixin(SyncCode):
       # Objects to remove
       #LOG('remove object to remove ...',0,'')
       for object_gid in subscriber.getGidList():
-        if not (object_gid in local_gid_list):
+        if object_gid not in local_gid_list:
           # This is an object to remove
           signature = subscriber.getSignatureFromGid(object_gid)
           if signature.getStatus()!=self.PARTIAL: # If partial, then we have a signature
@@ -719,7 +719,10 @@ class XMLSyncUtilsMixin(SyncCode):
               syncml_data += self.deleteXMLObject(xml_object=signature.getXML()\
                   or '', object_gid=object_gid,cmd_id=cmd_id)
               cmd_id += 1
-
+      #delete Signature if object does not exist anymore
+      for known_gid in subscriber.getGidList():
+        if known_gid not in local_gid_list:
+          subscriber.delSignature(known_gid)
     local_gid_list = []
     loop = 0
     for object_path in subscriber.getRemainingObjectPathList():
@@ -737,26 +740,27 @@ class XMLSyncUtilsMixin(SyncCode):
       if syncml_data.count('\n') < self.MAX_LINES and not \
           object.id.startswith('.'):
         # If not we have to cut
-        #LOG('getSyncMLData',0,'xml_mapping: %s' % str(domain.xml_mapping))
+        #LOG('getSyncMLData',0,'object_path: %s' % '/'.join(object_path))
+        #LOG('getSyncMLData',0,'xml_mapping: %s' % str(domain.getXMLMapping()))
         #LOG('getSyncMLData',0,'code: %s' % str(self.getAlertCode(remote_xml)))
         #LOG('getSyncMLData',0,'gid_list: %s' % str(local_gid_list))
         #LOG('getSyncMLData',0,'subscriber.getGidList: %s' % subscriber.getGidList())
         #LOG('getSyncMLData',0,'hasSignature: %s' % str(subscriber.hasSignature(object_gid)))
         #LOG('getSyncMLData',0,'alert_code == slowsync: %s' % str(self.getAlertCode(remote_xml)==self.SLOW_SYNC))
-        signature = subscriber.getSignatureFromGid(object_gid)
 
-        # Here we first check if the object was modified or not by looking at dates
-        if signature is not None:
-          signature.checkSynchronizationNeeded(object)
+        signature = subscriber.getSignatureFromGid(object_gid)
+        ## Here we first check if the object was modified or not by looking at dates
+        #if signature is not None:
+          #LOG('getSyncMLData',0,'signature.getStatus: %s' % signature.getStatus())
         status = self.SENT
         more_data=0
         # For the case it was never synchronized, we have to send everything
-        if signature is not None and signature.getXMLMapping()==None:
+        if signature is not None and signature.getXMLMapping() is None:
           pass
-        elif signature == None or (signature.getXML() == None and \
+        elif signature is None or (signature.getXML() is None and \
             signature.getStatus() != self.PARTIAL) or \
             self.getAlertCode(remote_xml) == self.SLOW_SYNC:
-          #LOG('PubSyncModif',0,'Current object.getPath: %s' % object.getPath())
+          #LOG('getSyncMLData',0,'Current object.getPath: %s' % object.getPath())
           xml_object = domain.getXMLFromObject(object)
           xml_string = xml_object
           if isinstance(xml_string, unicode):
@@ -783,8 +787,8 @@ class XMLSyncUtilsMixin(SyncCode):
           gid = signature.getRid()#in fisrt, we try with rid if there is one
           if gid == None:
             gid = signature.getGid()
-          syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object, 
-              gid=gid, xml_string=xml_string, 
+          syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object,
+              gid=gid, xml_string=xml_string,
               more_data=more_data, media_type=subscriber.getMediaType())
           cmd_id += 1
           signature.setStatus(status)
@@ -890,8 +894,8 @@ class XMLSyncUtilsMixin(SyncCode):
             gid = signature.getRid()#in fisrt, we try with rid if there is one
             if gid == None:
               gid = signature.getGid()
-            syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object, 
-                gid=gid, xml_string=xml_string, 
+            syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object,
+                gid=gid, xml_string=xml_string,
                 more_data=more_data, media_type=subscriber.getMediaType())
         if not more_data:
           subscriber.removeRemainingObjectPath(object_path)
@@ -929,17 +933,17 @@ class XMLSyncUtilsMixin(SyncCode):
         gid=rid
       object_id = domain.generateNewIdWithGenerator(object=destination,gid=gid)
       signature = subscriber.getSignatureFromGid(gid)
-      if signature != None and rid != gid:
+      if signature is not None and rid != gid:
         #in this case, the object was created on another subscriber than erp5
         # and we should save it's remote id
         signature.setRid(rid)
       #LOG('gid == rid ?', 0, 'gid=%s, rid=%s' % (gid, rid))
       object = subscriber.getObjectFromGid(gid)
       #LOG('applyActionList subscriber.getObjectFromGid %s' % gid,0,object)
-      if signature == None:
+      if signature is None:
         #LOG('applyActionList, signature is None',0,signature)
         if gid == rid:
-          signature = Signature(id=gid, status=self.NOT_SYNCHRONIZED, 
+          signature = Signature(id=gid, status=self.NOT_SYNCHRONIZED,
               object=object).__of__(subscriber)
         else:
           signature = Signature(rid=rid, id=gid, status=self.NOT_SYNCHRONIZED,
@@ -1047,6 +1051,7 @@ class XMLSyncUtilsMixin(SyncCode):
 
         elif action.nodeName == 'Delete':
           object_id = signature.getId()
+          #LOG('Delete on : ',0, (signature.getId(), subscriber.getObjectFromGid(object_id)))
           if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']: 
             data_subnode = self.getDataText(action)
           else:
@@ -1121,10 +1126,9 @@ class XMLSyncUtilsMixin(SyncCode):
             signature.setStatus(self.SYNCHRONIZED)
         elif status_cmd == 'Delete':
           if status_code == self.SUCCESS:
-            signature = subscriber.getSignatureFromGid(object_gid)
-            if signature == None:
-              signature = subscriber.getSignatureFromRid(object_gid)
-            subscriber.delSignature(signature.getGid())
+            signature = subscriber.getSignatureFromGid(object_gid) or           subscriber.getSignatureFromRid(object_gid)
+            if signature is not None:
+              subscriber.delSignature(signature.getGid())
     return (destination_waiting_more_data, has_status_list)
 
 
