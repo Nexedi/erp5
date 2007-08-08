@@ -85,12 +85,9 @@ transactional_variable_pool = local()
 
 def getTransactionalVariable(context):
   """Return a transactional variable."""
-  portal = context.portal_url.getPortalObject()
   try:
-    instance = transactional_variable_pool.instance
-    if getattr(portal, '_v_erp5_transactional_variable', None) is not instance:
-      portal._v_erp5_transactional_variable = instance
-    return instance
+    return transactional_variable_pool.instance
   except AttributeError:
-    transactional_variable_pool.instance = TransactionalVariable()
-    return getTransactionalVariable(context)
+    tv = TransactionalVariable()
+    transactional_variable_pool.instance = tv
+    return tv
