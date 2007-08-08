@@ -19,7 +19,7 @@
   </role>
   <role id='Assignor'>
    <property id='title'>HR people</property>
-   <property id='description'>anybody working in Administration & HRD/Human Ressources Services</property>
+   <property id='description'>anybody working in Administration or HRD/Human Ressources Services</property>
    <property id='priority'>10</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
    <multi_property id='category'>group/au/auc/odc/dahrd/hrsd</multi_property>
