@@ -72,13 +72,14 @@ from Products.ERP5Type.Message import Message\n
 \n
 ob = state_change[\'object\']    \n
 \n
+source = ob.getSource()\n
+\n
 # check we are in an opened accounting day\n
-vault = \'%s/surface/caisse_courante/encaisse_des_billets_et_monnaies\' %(ob.getSource(),)\n
+vault = \'%s/surface/caisse_courante/encaisse_des_billets_et_monnaies\' % (source, )\n
 date = ob.getStartDate()\n
 ob.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
 # check again that the counter is open\n
-source = ob.getSource()\n
 context.Baobab_checkCounterOpened(source)\n
 \n
 if len(ob.objectValues(portal_type="Outgoing Mutilated Banknote Line")) == 0:\n
@@ -147,9 +148,9 @@ elif resource <> 0 :\n
                             <string>_getitem_</string>
                             <string>ob</string>
                             <string>_getattr_</string>
+                            <string>source</string>
                             <string>vault</string>
                             <string>date</string>
-                            <string>source</string>
                             <string>context</string>
                             <string>len</string>
                             <string>msg</string>
