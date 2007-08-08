@@ -37,6 +37,7 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
 
 from zLOG import LOG
 
@@ -132,23 +133,34 @@ class Predicate(XMLObject, Folder):
           membership_criterion_category_list if x.split('/', 1)[0] in \
           tested_base_category_list]
 
-    for c in membership_criterion_category_list:
-      bc = c.split('/', 1)[0]
-      if (bc not in tested_base_category) and \
-         (bc in multimembership_criterion_base_category_list):
-        tested_base_category[bc] = 1
-      elif (bc not in tested_base_category) and \
-           (bc in membership_criterion_base_category_list):
-        tested_base_category[bc] = 0
-      if (bc in multimembership_criterion_base_category_list):
-        tested_base_category[bc] = tested_base_category[bc] and \
-                                   context.isMemberOf(c)
+    # Test category memberships. Enable the read-only transaction cache
+    # temporarily, if not enabled, because this part is strictly read-only,
+    # and context.isMemberOf is very expensive, when the category list has
+    # many items.
+    enabled = (getReadOnlyTransactionCache(self) is not None)
+    try:
+      if not enabled:
+        enableReadOnlyTransactionCache(self)
+      for c in membership_criterion_category_list:
+        bc = c.split('/', 1)[0]
+        if (bc not in tested_base_category) and \
+           (bc in multimembership_criterion_base_category_list):
+          tested_base_category[bc] = 1
+        elif (bc not in tested_base_category) and \
+             (bc in membership_criterion_base_category_list):
+          tested_base_category[bc] = 0
+        if (bc in multimembership_criterion_base_category_list):
+          tested_base_category[bc] = tested_base_category[bc] and \
+                                     context.isMemberOf(c)
 #        LOG('predicate test', 0,
 #            '%s after multi membership to %s' % \
 #            (tested_base_category[bc], c))
-      elif (bc in membership_criterion_base_category_list):
-        tested_base_category[bc] = tested_base_category[bc] or \
-                                   context.isMemberOf(c)
+        elif (bc in membership_criterion_base_category_list):
+          tested_base_category[bc] = tested_base_category[bc] or \
+                                     context.isMemberOf(c)
+    finally:
+      if not enabled:
+        disableReadOnlyTransactionCache(self)
 
 #        LOG('predicate test', 0,
 #            '%s after single membership to %s' % \
