@@ -225,9 +225,15 @@ try:\n
   # then we edit them\n
   for field in form.get_fields():\n
     parseField(field)\n
-    if(field.meta_type == \'ListBox\'):\n
+\n
+    ## XXX We need to find a way not to use meta_type.\n
+    field_meta_type = field.meta_type\n
+    if field_meta_type == \'ProxyField\':\n
+      field_meta_type = field.getRecursiveTemplateField().meta_type\n
+\n
+    if(field_meta_type == \'ListBox\'):\n
       editListBox(field, request.get(field.id))\n
-    elif(field.meta_type == \'MatrixBox\'):\n
+    elif(field_meta_type == \'MatrixBox\'):\n
       editMatrixBox(field, request.get(field.id))\n
 \n
   # Maybe we should build a list of objects we need\n
@@ -338,6 +344,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>parseField</string>
                             <string>message</string>
                             <string>field</string>
+                            <string>field_meta_type</string>
                             <string>_apply_</string>
                             <string>encapsulated_editor</string>
                             <string>e</string>
