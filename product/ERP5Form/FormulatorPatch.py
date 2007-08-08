@@ -24,10 +24,18 @@
 from Products.Formulator.Field import Field
 from Products.Formulator.Widget import Widget
 from Products.Formulator.Widget import render_element
+from Products.Formulator.FieldRegistry import FieldRegistry
 from AccessControl import ClassSecurityInfo
 from cgi import escape
 import types
 from zLOG import LOG
+
+def noop(*args, **kw):
+  pass
+
+# XXX: this is a quick fix to avoid bloating the ZODB.
+# Proper fix should only add FieldHelp when it's missing.
+FieldRegistry.registerFieldHelp = noop
 
 def Field_generate_field_key(self, validation=0, key=None):
     """Generate the key Silva uses to render the field in the form.
