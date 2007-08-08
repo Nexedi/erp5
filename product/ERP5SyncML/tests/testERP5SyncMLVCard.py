@@ -57,7 +57,10 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin, ERP5TypeTestCase):
       /person_client1 : empty
       /person_client2 : empty
     """
-    return ('erp5_base','fabien_bt')
+    return ('erp5_base','erp5_syncml')
+
+  def getTitle(self):
+    return 'testERP5SyncMLVCard'
 
   def test_01_AddVCardPublication(self, quiet=0, run=run_all_test):
     if not run: return
