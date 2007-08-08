@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -627,7 +630,9 @@ precision</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -694,7 +699,7 @@ FROM\n
 </dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
-  , catalog as node, catalog as resource, catalog as catalog\n
+  , catalog as node, catalog as resource\n
 \n
 WHERE\n
   1 = 1\n
@@ -704,7 +709,6 @@ WHERE\n
 \n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
-  AND catalog.uid = stock.uid\n
 \n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != \'Simulation Movement\'\n
@@ -779,11 +783,9 @@ ORDER BY\n
             <value>
               <object>
                 <klass>
-                  <global name="__newobj__" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="SQL" module="Shared.DC.ZRDB.DA"/>
-                </tuple>
+                </klass>
+                <none/>
                 <state>
                   <dictionary>
                     <item>
@@ -855,7 +857,7 @@ FROM\n
 </dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
-  , catalog as node, catalog as resource, catalog as catalog\n
+  , catalog as node, catalog as resource\n
 \n
 WHERE\n
   1 = 1\n
@@ -865,7 +867,6 @@ WHERE\n
 \n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
-  AND catalog.uid = stock.uid\n
 \n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != \'Simulation Movement\'\n
