@@ -28,11 +28,7 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-%(content_url)s/Base_DoWorkflowAction?action_name=disable_action&wf_id=preference_workflow
-
-]]></string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?field_my_workflow_action=disable_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
