@@ -90,10 +90,10 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     line_list = [inventory_dict_line_1,]
     self.mutilated_banknote_vault = self.paris.surface.caisse_courante.billets_mutiles
     self.maculated_banknote_vault = self.paris.surface.caisse_courante.billets_macules
-    self.usual_vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
+    self.usual_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.hq_mutilated_banknote_vault = self.siege.surface.caisse_courante.billets_mutiles
     self.hq_maculated_banknote_vault = self.siege.surface.caisse_courante.billets_macules
-    self.hq_usual_vault = self.siege.surface.caisse_courante.encaisse_des_billets_et_monnaies
+    self.hq_usual_vault = self.siege.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
     
     self.createCashInventory(source=None, destination=self.usual_vault, currency=self.currency_1,
                              line_list=line_list)
