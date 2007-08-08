@@ -887,14 +887,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # If we do not mask or append, return now if not empty
         if base_category_value.getAcquisitionMaskValue() and \
                 not base_category_value.getAcquisitionAppendValue() and \
-                len(result) > 0:
+                result:
           # If acquisition masks and we do not append values, then we must return now
           return result
         # First we look at local ids
         for object_id in base_category_value.getAcquisitionObjectIdList():
-          my_acquisition_object = None
-          if object_id in context.objectIds():
-            my_acquisition_object = getattr(context, object_id)
+          try:
+            my_acquisition_object = context[object_id]
+          except (KeyError, AttributeError):
+            my_acquisition_object = None
           if my_acquisition_object is not None:
             #my_acquisition_object_path = my_acquisition_object.getPhysicalPath()
             #if my_acquisition_object_path in acquired_object_dict:
@@ -908,10 +909,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #if base_category_value.acquisition_mask_value:
             #  # If acquisition masks, then we must return now
             #  return new_result
-            if getattr(base_category_value, 'acquisition_append_value', False):
+            if base_category_value.getAcquisitionAppendValue():
               # If acquisition appends, then we must append to the result
               result.extend(new_result)
-            elif len(new_result) > 0:
+            elif new_result:
               return new_result # Found enough information to return
         # Next we look at references
         #LOG("Get Acquired BC", 0, base_category_value.getAcquisitionBaseCategoryList())
@@ -919,7 +920,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         alt_base_category_list = base_category_value.getFallbackBaseCategoryList()
         all_acquisition_base_category_list = acquisition_base_category_list + alt_base_category_list
         acquisition_pt = base_category_value.getAcquisitionPortalTypeList(())
-        for my_base_category in base_category_value.getAcquisitionBaseCategoryList():
+        for my_base_category in acquisition_base_category_list:
           # We implement here special keywords
           if my_base_category == 'parent':
             parent = context.aq_inner.aq_parent # aq_inner is required to make sure we use containment
@@ -1070,26 +1071,18 @@ class CategoryTool( UniqueObject, Folder, Base ):
         the use of isMemberOf is required
       """
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
-      if getattr(aq_base(context), 'isCategory', 0) :
-        if context.isMemberOf(category, strict_membership = strict_membership) == 1 :
+      if getattr(aq_base(context), 'isCategory', 0):
+        if context.isMemberOf(category, strict_membership=strict_membership):
           return 1
-      base_category = category.split('/')[0] # Extract base_category for optimisation
+      base_category = category.split('/', 1)[0] # Extract base_category for optimisation
       if strict_membership:
-        for c in self.getAcquiredCategoryMembershipList(context, base_category = base_category):
+        for c in self.getAcquiredCategoryMembershipList(context, base_category=base_category):
           if c == category:
             return 1
       else:
-        for c in self.getAcquiredCategoryMembershipList(context, base_category = base_category):
-          if c.find(category) == 0:
-            # The names begin with the same string
-            c_right_split = c.split(category)[1]
-            if (len(c_right_split) > 0):
-              # Be sure that we have a sub category, and not name like this: 'europe1' in 'europe10'
-              if c_right_split[0] == '/':
-                return 1
-            else:
-              # Same category
-              return 1
+        for c in self.getAcquiredCategoryMembershipList(context, base_category=base_category):
+          if c == category or c.startswith(category + '/'):
+            return 1
       return 0
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
