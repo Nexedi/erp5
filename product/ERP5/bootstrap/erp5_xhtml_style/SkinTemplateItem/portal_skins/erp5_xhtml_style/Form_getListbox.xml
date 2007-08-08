@@ -86,7 +86,8 @@ def isListBox(field):\n
     return True\n
   elif field.meta_type==\'ProxyField\':\n
     template_field = field.getRecursiveTemplateField()\n
-    return isListBox(template_field)\n
+    if template_field.meta_type==\'ListBox\':\n
+      return True\n
   return False\n
 \n
 # we start with \'bottom\' because most of the time\n
