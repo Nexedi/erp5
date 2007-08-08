@@ -75,7 +75,7 @@ ob = state_change[\'object\']    \n
 source = ob.getSource()\n
 \n
 # check we are in an opened accounting day\n
-vault = \'%s/surface/caisse_courante/encaisse_des_billets_et_monnaies\' % (source, )\n
+vault = \'%s/encaisse_des_billets_et_monnaies/sortante\' % (source, )\n
 date = ob.getStartDate()\n
 ob.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
