@@ -75,6 +75,17 @@ Generic method called when submitting a form in dialog mode.\n
 Responsible for validating form data and redirecting to the form action.\n
 """\n
 \n
+# XXX We should not use meta_type properly,\n
+# XXX We need to discuss this problem.(yusei)\n
+def isListBox(field):\n
+  if field.meta_type==\'ListBox\':\n
+    return True\n
+  elif field.meta_type==\'ProxyField\':\n
+    template_field = field.getRecursiveTemplateField()\n
+    if template_field.meta_type==\'ListBox\':\n
+      return True\n
+  return False\n
+\n
 from Products.Formulator.Errors import FormValidationError\n
 from ZTUtils import make_query\n
 \n
@@ -175,7 +186,7 @@ for field in form.get_fields():\n
   k = field.id\n
   v = context.REQUEST.get(k, MARKER)\n
   if v is not MARKER:\n
-    if field.meta_type == \'ListBox\':\n
+    if isListBox(field):\n
       listbox_id_list.append(k)\n
     elif can_redirect and (v in (None, [], ()) or hasattr(v, \'read\')) : # If we cannot redirect, useless to test it again\n
       can_redirect = 0\n
@@ -319,6 +330,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>dialog_category</string>
                             <string>enable_pickle</string>
                             <string>kw</string>
+                            <string>isListBox</string>
                             <string>Products.Formulator.Errors</string>
                             <string>FormValidationError</string>
                             <string>ZTUtils</string>
