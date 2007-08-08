@@ -4099,8 +4099,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
         self.checkDependencies()
 
       site = self.getPortalObject()
-      from Products.ERP5.ERP5Site import ERP5Generator
-      gen = ERP5Generator()
+      custom_generator_class = getattr(site, '_generator_class', None)
+      if custom_generator_class is not None:
+        gen = custom_generator_class()
+      else:
+        from Products.ERP5.ERP5Site import ERP5Generator
+        gen = ERP5Generator()
       # update activity tool first if necessary
       if self.getTitle() == 'erp5_core' and self.getTemplateUpdateTool():
         LOG('Business Template', 0, 'Updating Activity Tool')
