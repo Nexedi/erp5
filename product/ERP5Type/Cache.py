@@ -217,10 +217,11 @@ class CachingMethod:
     cache_id = [method_id]
     key_list = kwd.keys()
     key_list.sort()
+    append = cache_id.append
     for arg in args:
-      cache_id.append((None, arg))
+      append((None, arg))
     for key in key_list:
-      cache_id.append((key, str(kwd[key])))
+      append((key, kwd[key]))
     cache_id = str(cache_id)
     # because some cache backends don't allow some chars in cached id we make
     # sure to replace them
