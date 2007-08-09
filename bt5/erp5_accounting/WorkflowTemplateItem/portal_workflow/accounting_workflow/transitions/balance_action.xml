@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=balance_action&button_title=Define+Account+Balance
+%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=balance_action&button_title=Define+Account+Balance
 
 ]]></string> </value>
         </item>
