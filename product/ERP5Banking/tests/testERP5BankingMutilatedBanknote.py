@@ -443,7 +443,8 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     # maculated banknote inventory contains no 10000 banknote
     self.checkBanknoteInventory(node_path=self.hq_maculated_banknote_vault.getRelativeUrl(), quantity=0.0)
 
-  def stepCreateHQMutilatedBanknote(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateHQMutilatedBanknote(self, sequence=None, sequence_list=None,
+      owner_assigned_counter='site/testsite/siege/surface/banque_interne/guichet_1', **kwd):
     """
     Create a mutilated banknote document and check it
     """
@@ -458,7 +459,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.stepTic()
     self.assertEqual(len(self.mutilated_banknote_module.objectValues()), 2)
     self.assertEqual(self.hq_mutilated_banknote.getPortalType(), 'Mutilated Banknote')
-    self.assertEqual(self.hq_mutilated_banknote.getSource(), 'site/testsite/siege/surface/banque_interne/guichet_1')
+    self.assertEqual(self.hq_mutilated_banknote.getSource(), owner_assigned_counter)
     self.assertEqual(self.hq_mutilated_banknote.getSourceTrade(), 'site/testsite/paris')
     self.assertEqual(self.hq_mutilated_banknote.getDestination(), self.hq_mutilated_banknote_vault.getRelativeUrl())
     # set source reference
