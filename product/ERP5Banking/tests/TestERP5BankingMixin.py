@@ -598,9 +598,9 @@ class TestERP5BankingMixin:
             for sss in ['encaisse_des_devises',]:
               sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
               for currency in ['usd']:
-                sss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(ss.getId(),))
+                currency_cat = sss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(ss.getId(),))
                 for ssss in ['entrante', 'sortante']:
-                  sss.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+                  currency_cat.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
         # create sort room
         salle_tri = surface.newContent(id='salle_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
         for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_differences']:
