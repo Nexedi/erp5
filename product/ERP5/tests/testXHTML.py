@@ -50,7 +50,8 @@ except ImportError:
 # Test Setting
 #
 INSTANCE_HOME = os.environ['INSTANCE_HOME']
-bt5_path = glob(os.path.join(INSTANCE_HOME, 'bt5', '*'))[0]
+bt5_base_path = os.path.join(INSTANCE_HOME, 'bt5')
+
 # dependency order
 target_business_templates = (
   'erp5_base',
@@ -149,13 +150,25 @@ def addTestMethodDynamically():
   from Products.ERP5.tests.utils import BusinessTemplateInfoTar
   from Products.ERP5.tests.utils import BusinessTemplateInfoDir
   for i in target_business_templates:
-    business_template = os.path.join(bt5_path, i)
+    business_template = os.path.join(bt5_base_path, i)
+
+    # Look for business templates, like in ERP5TypeTestCase, they can be:
+    #  .bt5 files in $INSTANCE_HOME/bt5/
+    #  directories in $INSTANCE_HOME/
+    #  directories in $INSTANCE_HOME/bt5/*/
+    if not ( os.path.exists(business_template) or
+        os.path.exists('%s.bt5' % business_template)):
+      # try in $INSTANCE_HOME/bt5/*/
+      business_template_glob_list = glob('%s/*/%s' % (i, business_template))
+      if business_template_glob_list:
+        business_template = business_template_glob_list[0]
+
     if os.path.isdir(business_template):
       business_template_info = BusinessTemplateInfoDir(business_template)
     elif os.path.isfile(business_template+'.bt5'):
       business_template_info = BusinessTemplateInfoTar(business_template+'.bt5')
     else:
-      raise KeyError, "Can't find the business template:%s." % i
+      raise KeyError, "Can't find the business template: %s" % i
 
     for module_id, module_portal_type in business_template_info.modules.items():
       for portal_type in business_template_info.allowed_content_types.get(
