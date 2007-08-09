@@ -87,7 +87,7 @@ specific account.\n
 \n
 The `simulation_state` parameter is a list that can be used to take into account\n
 only transactions in those states. By default it will use all but \'draft\', \n
-\'cancelled\' and \'deleted\'.\n
+, \'rejected\', \'cancelled\' and \'deleted\'.\n
 \n
 The `mirror_section_relative_url` parameter must be passed explicitly if the\n
 context invoice has multiple sections.\n
@@ -97,7 +97,8 @@ total_payable_price_per_node_section = dict()\n
 \n
 if simulation_state is None:\n
   state_list = [x[1] for x in context.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n
-  simulation_state = [x for x in state_list if x not in (\'draft\', \'cancelled\', \'deleted\', \'rejected\')]\n
+  simulation_state = [x for x in state_list\n
+                      if x not in (\'draft\', \'cancelled\', \'deleted\', \'rejected\')]\n
 \n
 if context.AccountingTransaction_isSourceView():\n
   is_source = 1\n
@@ -138,10 +139,11 @@ for line in context.getMovementList(\n
           total_payable_price_per_node_section.get(key, 0) + amount\n
     accounts_in_context.append(node_value)\n
 \n
+related_transaction_list = context.getCausalityRelatedValueList(\n
+      portal_type=context.getPortalAccountingTransactionTypeList())\n
 \n
 # substract all causalities\n
-for related_transaction in context.getCausalityRelatedValueList(\n
-      portal_type=context.getPortalAccountingTransactionTypeList()):\n
+for related_transaction in related_transaction_list:\n
   if related_transaction.getSimulationState() not in simulation_state:\n
     continue\n
   \n
@@ -149,7 +151,7 @@ for related_transaction in context.getCausalityRelatedValueList(\n
   # remaining price on those invoices.\n
   for other_invoice in [ tr for tr in related_transaction.getCausalityValueList(\n
              portal_type=context.getPortalAccountingTransactionTypeList())\n
-             if tr != context ]:\n
+             if tr not in related_transaction_list + [context]]:\n
     other_invoice_is_source = \\\n
                     other_invoice.AccountingTransaction_isSourceView()\n
     for other_line in other_invoice.getMovementList(\n
@@ -281,6 +283,7 @@ else:\n
                             <string>amount</string>
                             <string>key</string>
                             <string>_write_</string>
+                            <string>related_transaction_list</string>
                             <string>related_transaction</string>
                             <string>tr</string>
                             <string>other_invoice</string>
