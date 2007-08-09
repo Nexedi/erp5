@@ -519,7 +519,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       property_dict['quantity'] = simulation_movement.getQuantity()
       property_dict['price'] = simulation_movement.getPrice()
       # Update properties on object (quantity, price...)
-      delivery_movement._edit(**property_dict)
+      delivery_movement._edit(force_update=1, **property_dict)
       #simulation_movement.setDeliveryRatio(1)
       simulation_movement.edit(delivery_ratio=1)
 
