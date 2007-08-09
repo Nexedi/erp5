@@ -386,7 +386,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                            #subscriber_value=data)] # not needed any more
           # We will now apply the argument with the method edit
           if args != {} and (isConflict==0 or force) and (not simulate):
-            #object._edit(**args)
             self.editDocument(object=object,**args)
             # It is sometimes required to do something after an edit
             if hasattr(object,'manage_afterEdit'):
@@ -788,7 +787,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     args = self.getFormatedArgs(args=args)
     # edit the object with a dictionnary of arguments,
     # like {"telephone_number":"02-5648"}
-    #object._edit(**args)
     self.editDocument(object=object,**args)
     if hasattr(object,'manage_afterEdit'):
       object.manage_afterEdit()
@@ -1142,7 +1140,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This is the default editDocument method. This method
     can easily be overwritten.
     """
-    object._edit(**kw)
+    object.edit(**kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'getProperty')
   def getProperty(self, object, kw):
