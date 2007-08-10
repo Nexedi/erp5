@@ -12,9 +12,11 @@
 #
 ##############################################################################
 
+from Globals import DTMLFile
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.ActionInformation import ActionInformation
 from Products.CMFCore.Expression import Expression
+from Products.ERP5Type import _dtmldir
 
 def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_message=None ):
 
@@ -154,3 +156,4 @@ def ActionProviderBase_extractAction( self, properties, index ):
 ActionProviderBase.manage_editActionsForm = ActionProviderBase_manage_editActionsForm
 ActionProviderBase.addAction = ActionProviderBase_addAction
 ActionProviderBase._extractAction = ActionProviderBase_extractAction
+ActionProviderBase._actions_form = DTMLFile( 'editToolsActions', _dtmldir )
