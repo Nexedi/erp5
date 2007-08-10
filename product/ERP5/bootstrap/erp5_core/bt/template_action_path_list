@@ -3,12 +3,10 @@ Alarm Tool | print
 Alarm Tool | view
 Alarm | metadata
 Alarm | periodicity
-Alarm | print
 Alarm | print_pdf
 Alarm | view
 Applied Rule | list
 Applied Rule | metadata
-Applied Rule | print
 Applied Rule | print_pdf
 Applied Rule | view
 Base Category | history
