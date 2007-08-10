@@ -16,8 +16,17 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
                 <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -34,8 +43,17 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
                 <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -398,6 +416,14 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             </value>
         </item>
         <item>
+            <key> <string>preferred_ooodoc_server_address</string> </key>
+            <value> <string>localhost</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_ooodoc_server_port_number</string> </key>
+            <value> <int>8008</int> </value>
+        </item>
+        <item>
             <key> <string>preferred_section_category</string> </key>
             <value>
               <none/>
@@ -407,6 +433,12 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             <key> <string>preferred_subversion_user_name</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_subversion_working_copy</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -439,12 +471,6 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             <key> <string>uid</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>workflow_history</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -488,160 +514,6 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
     </pickle>
     <pickle>
       <none/>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>preference_workflow</string> </key>
-                    <value>
-                      <tuple>
-                        <dictionary>
-                          <item>
-                              <key> <string>action</string> </key>
-                              <value>
-                                <none/>
-                              </value>
-                          </item>
-                          <item>
-                              <key> <string>actor</string> </key>
-                              <value> <string>chris</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>comment</string> </key>
-                              <value> <string></string> </value>
-                          </item>
-                          <item>
-                              <key> <string>error_message</string> </key>
-                              <value> <string></string> </value>
-                          </item>
-                          <item>
-                              <key> <string>preference_state</string> </key>
-                              <value> <string>disabled</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>time</string> </key>
-                              <value>
-                                <object>
-                                  <klass>
-                                    <global name="DateTime" module="DateTime.DateTime"/>
-                                  </klass>
-                                  <tuple>
-                                    <none/>
-                                  </tuple>
-                                  <state>
-                                    <dictionary>
-                                      <item>
-                                          <key> <string>_aday</string> </key>
-                                          <value> <string>Fri</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_amon</string> </key>
-                                          <value> <string>Jun</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_d</string> </key>
-                                          <value> <float>38531.6193489</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_day</string> </key>
-                                          <value> <int>30</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_dayoffset</string> </key>
-                                          <value> <int>5</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fday</string> </key>
-                                          <value> <string>Friday</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fmon</string> </key>
-                                          <value> <string>June</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_hour</string> </key>
-                                          <value> <int>16</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_millis</string> </key>
-                                          <value> <long>1151679111743</long> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_minute</string> </key>
-                                          <value> <int>51</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_month</string> </key>
-                                          <value> <int>6</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_nearsec</string> </key>
-                                          <value> <float>51.0</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pday</string> </key>
-                                          <value> <string>Fri.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pm</string> </key>
-                                          <value> <string>pm</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmhour</string> </key>
-                                          <value> <int>4</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmon</string> </key>
-                                          <value> <string>June</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_second</string> </key>
-                                          <value> <float>51.743</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_t</string> </key>
-                                          <value> <float>1151679111.74</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_tz</string> </key>
-                                          <value> <string>GMT+2</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_year</string> </key>
-                                          <value> <int>2006</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>time</string> </key>
-                                          <value> <float>0.619348877313</float> </value>
-                                      </item>
-                                    </dictionary>
-                                  </state>
-                                </object>
-                              </value>
-                          </item>
-                        </dictionary>
-                      </tuple>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-      </dictionary>
     </pickle>
   </record>
 </ZopeData>
