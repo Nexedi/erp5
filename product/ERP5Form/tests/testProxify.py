@@ -82,6 +82,7 @@ class TestProxify(unittest.TestCase):
     person_view.my_name.values['size'] = 20
     person_view.my_default_region.values['size'] = 1
     person_view.my_default_region.tales['items'] = TALESMethod('here/portal_categories/region/getCategoryChildTranslatedLogicalPathItemList')
+    person_view.my_default_region.values['scrap_variable'] = 'obsolete'
 
     global request
     request = DummyRequest()
@@ -127,6 +128,8 @@ class TestProxify(unittest.TestCase):
     self.assertEqual(field.get_value('enabled'), 1)
     self.assertEqual(field.is_delegated('description'), True)
     self.assertEqual(field.get_value('description'), '')
+
+    self.assertEqual(field.has_value('scrap_variable'), 0)
 
     template_field = self.address_view.my_region
     template_field.values['title'] = 'Region'
