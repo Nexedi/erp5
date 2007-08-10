@@ -121,4 +121,4 @@ class InventoryCell(DeliveryCell):
       """
       Make sure to reindex the inventory
       """
-      self.getParentValue().reindexObject()
+      self.getParentValue().reindexObject(*args, **kw)

@@ -142,5 +142,5 @@ class InventoryLine(DeliveryLine):
       """
       Make sure to reindex the inventory
       """
-      self.getParentValue().recursiveReindexObject()
+      self.getParentValue().recursiveReindexObject(*args, **kw)
 
