@@ -32,7 +32,7 @@ from XMLSyncUtils import XMLSyncUtils, Parse
 import commands
 from Conduit.ERP5Conduit import ERP5Conduit
 from DateTime import DateTime
-from zLOG import LOG
+from zLOG import LOG, DEBUG, INFO
 
 class SubscriptionSynchronization(XMLSyncUtils):
 
@@ -48,8 +48,8 @@ class SubscriptionSynchronization(XMLSyncUtils):
     xml = xml_list.append
     xml('<SyncML>\n')
     # syncml header
-    xml(self.SyncMLHeader(subscription.incrementSessionId(), 
-      subscription.incrementMessageId(), subscription.getPublicationUrl(), 
+    xml(self.SyncMLHeader(subscription.incrementSessionId(),
+      subscription.incrementMessageId(), subscription.getPublicationUrl(),
       subscription.getSubscriptionUrl(), source_name=subscription.getLogin()))
 
     # syncml body
@@ -62,7 +62,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     xml(self.SyncMLAlert(cmd_id, subscription.getSynchronizationType(),
                             subscription.getTargetURI(),
                             subscription.getSourceURI(),
-                            subscription.getLastAnchor(), 
+                            subscription.getLastAnchor(),
                             subscription.getNextAnchor()))
     cmd_id += 1
     syncml_put = self.SyncMLPut(cmd_id, subscription)
@@ -74,9 +74,9 @@ class SubscriptionSynchronization(XMLSyncUtils):
     xml_a = ''.join(xml_list)
 
     self.sendResponse(from_url=subscription.subscription_url,
-        to_url=subscription.publication_url, sync_id=subscription.getTitle(), 
-        xml=xml_a,domain=subscription, 
-        content_type=subscription.getSyncContentType()) 
+        to_url=subscription.publication_url, sync_id=subscription.getTitle(),
+        xml=xml_a,domain=subscription,
+        content_type=subscription.getSyncContentType())
 
     return {'has_response':1,'xml':xml_a}
 
@@ -87,7 +87,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     response = None #check if subsync replies to this messages
     subscription = self.unrestrictedTraverse(subscription_path)
     if msg==None and (subscription.getSubscriptionUrl()).find('file')>=0:
-      msg = self.readResponse(sync_id=subscription.getSubscriptionUrl(), 
+      msg = self.readResponse(sync_id=subscription.getSubscriptionUrl(),
           from_url=subscription.getSubscriptionUrl())
     if msg==None:
       response = self.SubSyncInit(subscription)
@@ -100,11 +100,11 @@ class SubscriptionSynchronization(XMLSyncUtils):
           status_code_syncHdr = status_list[0]['code']
           if status_code_syncHdr.isdigit():
             status_code_syncHdr = int(status_code_syncHdr)
-          #LOG('readResponse status code :',0,status_code_syncHdr)
+          LOG('SubSync status code : ', DEBUG, status_code_syncHdr)
           if status_code_syncHdr == self.AUTH_REQUIRED:
             if self.checkChal(xml_client):
               authentication_format, authentication_type = self.getChal(xml_client)
-              #LOG('auth_required :',0, 'format:%s, type:%s' % (authentication_format, authentication_type))
+              LOG('SubSync auth_required :', DEBUG, 'format:%s, type:%s' % (authentication_format, authentication_type))
               if authentication_format is not None and \
                   authentication_type is not None:
                 subscription.setAuthenticationFormat(authentication_format)
@@ -113,14 +113,14 @@ class SubscriptionSynchronization(XMLSyncUtils):
               raise ValueError, "Sorry, the server chalenge for an \
                   authentication, but the authentication format is not find"
 
-            #LOG('readResponse', 0, 'Authentication required')
+            LOG('SubSync', INFO, 'Authentication required')
             response = self.SubSyncCred(subscription, xml_client)
           elif status_code_syncHdr == self.UNAUTHORIZED:
-            LOG('readResponse', 0, 'Bad authentication')
-            return {'has_response':0,'xml':xml_client}
+            LOG('SubSync', INFO, 'Bad authentication')
+            return {'has_response':0, 'xml':xml_client}
           else:
             response = self.SubSyncModif(subscription, xml_client)
-        else: 
+        else:
             response = self.SubSyncModif(subscription, xml_client)
 
     if RESPONSE is not None:
@@ -141,12 +141,12 @@ class SubscriptionSynchronization(XMLSyncUtils):
     data=subscription.encode(subscription.getAuthenticationFormat(), data)
     xml(self.SyncMLHeader(
       subscription.incrementSessionId(),
-      subscription.incrementMessageId(), 
+      subscription.incrementMessageId(),
       subscription.getPublicationUrl(),
-      subscription.getSubscriptionUrl(), 
-      source_name=subscription.getLogin(), 
+      subscription.getSubscriptionUrl(),
+      source_name=subscription.getLogin(),
       dataCred=data, 
-      authentication_format=subscription.getAuthenticationFormat(), 
+      authentication_format=subscription.getAuthenticationFormat(),
       authentication_type=subscription.getAuthenticationType()))
 
     # syncml body
@@ -174,7 +174,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
         xml=xml_a,domain=subscription,
         content_type=subscription.getSyncContentType())
 
-    return {'has_response':1,'xml':xml_a}
+    return {'has_response':1, 'xml':xml_a}
 
   def SubSyncModif(self, subscription, xml_client):
     """

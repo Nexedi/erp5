@@ -95,7 +95,7 @@ def addPublication( self, id, title='', REQUEST=None ):
         Add a new Category and generate UID by calling the
         ZSQLCatalog
     """
-    o = Publication( id ,'','','','','')
+    o = Publication( id, '', '', '', '', '')
     self._setObject( id, o )
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
@@ -143,9 +143,9 @@ class Publication(Subscription):
 
   # Constructor
   def __init__(self, id, title, publication_url, destination_path,
-      source_uri, query, xml_mapping, conduit, gpg_key, id_generator, 
-      gid_generator, media_type, auth_required, authentication_format, 
-      authentication_type, activity_enabled, synchronize_with_erp5_sites, 
+      source_uri, query, xml_mapping, conduit, gpg_key, id_generator,
+      gid_generator, media_type, auth_required, authentication_format,
+      authentication_type, activity_enabled, synchronize_with_erp5_sites,
       sync_content_type):
     """
       constructor
@@ -157,7 +157,6 @@ class Publication(Subscription):
     self.setSourceURI(source_uri)
     self.setQuery(query)
     self.xml_mapping = xml_mapping
-    #self.list_subscribers = PersistentMapping()
     self.domain_type = self.PUB
     self.gpg_key = gpg_key
     self.setGidGenerator(gid_generator)
@@ -231,26 +230,24 @@ class Publication(Subscription):
     """
       Add a new subscriber to the publication
     """
-    LOG('addSubscriber starting ...',0,'')
     # We have to remove the subscriber if it already exist (there were probably a reset on the client)
     self.delSubscriber(subscriber.getSubscriptionUrl())
     new_id = subscriber.getId()
     if new_id is None:
       new_id = str(self.generateNewId())
     subscriber.id = new_id
-    #if len(self.list_subscribers) == 0:
-    #  self.list_subscribers = []
-    #self.list_subscribers = self.list_subscribers + [subscriber]
-    self._setObject(new_id,subscriber)
+    self._setObject(new_id, subscriber)
 
   def getSubscriber(self, subscription_url):
     """
       return the subscriber corresponding the to subscription_url
     """
-    for o in self.objectValues():
-      if o.getSubscriptionUrl() == subscription_url:
-        return o
-    return None
+    o = None
+    for sub in self.getSubscriberList():
+      if sub.getSubscriptionUrl() == subscription_url:
+        o = sub
+        break
+    return o
 
   def getSubscriberList(self):
     """
@@ -263,16 +260,16 @@ class Publication(Subscription):
     """
       Delete a subscriber for this publication
     """
-    for o in self.objectValues():
+    for o in self.getSubscriberList():
       if o.getSubscriptionUrl() == subscription_url:
-        self._delObject(o.id)
+        self.activate().manage_delObjects(o.id)
 
   def resetAllSubscribers(self):
     """
       Reset all subscribers
     """
-    for o in self.objectValues():
-      self._delObject(o.id)
+    for o in self.getSubscriberList():
+      self.activate().manage_delObjects(o.id)
 
   def getConflictList(self):
     """
@@ -280,6 +277,6 @@ class Publication(Subscription):
     """
     conflict_list = []
     for subscriber in self.getSubscriberList():
-      conflict_list += subscriber.getConflictList()
+      conflict_list.extend(subscriber.getConflictList())
     return conflict_list
 

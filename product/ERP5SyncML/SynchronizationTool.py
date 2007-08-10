@@ -60,7 +60,7 @@ import string
 import commands
 import random
 from DateTime import DateTime
-from zLOG import LOG
+from zLOG import LOG, TRACE, DEBUG, INFO
 
 class TimeoutHTTPConnection(httplib.HTTPConnection):
   """
@@ -76,7 +76,7 @@ class TimeoutHTTPHandler(urllib2.HTTPHandler):
 
 
 
-class SynchronizationTool( SubscriptionSynchronization, 
+class SynchronizationTool( SubscriptionSynchronization,
     PublicationSynchronization, UniqueObject, Folder):
   """
     This tool implements the synchronization algorithm
@@ -183,7 +183,7 @@ class SynchronizationTool( SubscriptionSynchronization,
             authentication_type='', RESPONSE=None, activity_enabled = False,
             sync_content_type='application/vnd.syncml+xml', 
             synchronize_with_erp5_sites=True):
-    """ 
+    """
       create a new publication
     """
     #if not('publications' in self.objectIds()):
@@ -191,12 +191,12 @@ class SynchronizationTool( SubscriptionSynchronization,
     #  self._setObject(publications.id, publications)
     folder = self.getObjectContainer()
     new_id = self.getPublicationIdFromTitle(title)
-    pub = Publication(new_id, title, publication_url, 
-                      destination_path, source_uri, query, xml_mapping, 
-                      conduit, gpg_key, synchronization_id_generator, 
-                      gid_generator, media_type, auth_required, 
-                      authentication_format, authentication_type, 
-                      activity_enabled, synchronize_with_erp5_sites, 
+    pub = Publication(new_id, title, publication_url,
+                      destination_path, source_uri, query, xml_mapping,
+                      conduit, gpg_key, synchronization_id_generator,
+                      gid_generator, media_type, auth_required,
+                      authentication_format, authentication_type,
+                      activity_enabled, synchronize_with_erp5_sites,
                       sync_content_type)
     folder._setObject( new_id, pub )
     #if len(self.list_publications) == 0:
@@ -205,16 +205,16 @@ class SynchronizationTool( SubscriptionSynchronization,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'manage_addSubscription')
   def manage_addSubscription(self, title, publication_url, subscription_url,
                        destination_path, source_uri, target_uri, query,
                        xml_mapping, conduit, gpg_key,
                        synchronization_id_generator=None, gid_generator=None,
                        media_type=None, login=None, password=None,
-                       RESPONSE=None, activity_enabled=False, 
-                       alert_code=SyncCode.TWO_WAY, 
-                       synchronize_with_erp5_sites = True, 
+                       RESPONSE=None, activity_enabled=False,
+                       alert_code=SyncCode.TWO_WAY,
+                       synchronize_with_erp5_sites = True,
                        sync_content_type='application/vnd.syncml+xml'):
     """
       XXX should be renamed as addSubscription
@@ -308,7 +308,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'manage_deletePublication')
   def manage_deletePublication(self, title, RESPONSE=None):
     """
@@ -320,7 +320,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'manage_deleteSubscription')
   def manage_deleteSubscription(self, title, RESPONSE=None):
     """
@@ -332,7 +332,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'manage_resetPublication')
   def manage_resetPublication(self, title, RESPONSE=None):
     """
@@ -343,7 +343,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'manage_resetSubscription')
   def manage_resetSubscription(self, title, RESPONSE=None):
     """
@@ -355,7 +355,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'manage_syncSubscription')
   def manage_syncSubscription(self, title, RESPONSE=None):
     """
@@ -372,8 +372,8 @@ class SynchronizationTool( SubscriptionSynchronization,
       Return a list of publications
     """
     folder = self.getObjectContainer()
-    object_list = folder.objectValues()
-    object_list = filter(lambda x: x.id.find('pub')==0,object_list)
+    object_list = [pub for pub in folder.objectValues() if pub.getDomainType() == self.PUB]
+    #object_list = filter(lambda x: x.id.find('pub')==0,object_list)
     return object_list
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -382,10 +382,12 @@ class SynchronizationTool( SubscriptionSynchronization,
     """
       Return the  publications with this id
     """
+    pub = None
     for p in self.getPublicationList():
       if p.getTitle() == title:
-        return p
-    return None
+        pub = p
+        break
+    return pub
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'getObjectContainer')
@@ -407,18 +409,19 @@ class SynchronizationTool( SubscriptionSynchronization,
       Return a list of publications
     """
     folder = self.getObjectContainer()
-    object_list = folder.objectValues()
-    object_list = filter(lambda x: x.id.find('sub')==0,object_list)
+    object_list = [sub for sub in folder.objectValues() if sub.getDomainType() == self.SUB]
+    #object_list = filter(lambda x: x.id.find('sub')==0,object_list)
     return object_list
 
   def getSubscription(self, title):
     """
       Returns the subscription with this title
     """
+    sub = None
     for s in self.getSubscriptionList():
       if s.getTitle() == title:
-        return s
-    return None
+        sub = s
+    return sub
 
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -426,7 +429,6 @@ class SynchronizationTool( SubscriptionSynchronization,
   def getSynchronizationList(self):
     """
       Returns the list of subscriptions and publications
-
     """
     return self.getSubscriptionList() + self.getPublicationList()
 
@@ -437,9 +439,9 @@ class SynchronizationTool( SubscriptionSynchronization,
       Returns the list of subscribers and subscriptions
     """
     s_list = []
-    s_list += self.getSubscriptionList()
+    s_list.extend(self.getSubscriptionList())
     for publication in self.getPublicationList():
-      s_list += publication.getSubscriberList()
+      s_list.extend(publication.getSubscriberList())
     return s_list
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -458,27 +460,17 @@ class SynchronizationTool( SubscriptionSynchronization,
       for subscriber in publication.getSubscriberList():
         sub_conflict_list = subscriber.getConflictList()
         for conflict in sub_conflict_list:
-          #conflict.setDomain('Publication')
           conflict.setSubscriber(subscriber)
-          #conflict.setDomainId(subscriber.getId())
           if path is None or conflict.getObjectPath() == path:
             conflict_list += [conflict.__of__(subscriber)]
     for subscription in self.getSubscriptionList():
       sub_conflict_list = subscription.getConflictList()
-      #LOG('SynchronizationTool.getConflictList, sub_conflict_list',0,
-          #sub_conflict_list)
+      LOG('SynchronizationTool.getConflictList, sub_conflict_list', DEBUG,
+          sub_conflict_list)
       for conflict in sub_conflict_list:
-        #conflict.setDomain('Subscription')
         conflict.setSubscriber(subscription)
-        #conflict.setDomainId(subscription.getId())
         if path is None or conflict.getObjectPath() == path:
           conflict_list += [conflict.__of__(subscription)]
-    #if path is not None: # Retrieve only conflicts for a given path
-    #  new_list = []
-    #  for conflict in conflict_list:
-    #    if conflict.getObjectPath() == path:
-    #      new_list += [conflict.__of__(self)]
-    #  return new_list
     return conflict_list
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -511,32 +503,32 @@ class SynchronizationTool( SubscriptionSynchronization,
     path = self.resolveContext(context)
     conflict_list = self.getConflictList()
     state_list= []
-    #LOG('getSynchronizationState',0,'path: %s' % str(path))
+    LOG('getSynchronizationState', DEBUG, 'path: %s' % str(path))
     for conflict in conflict_list:
       if conflict.getObjectPath() == path:
-        #LOG('getSynchronizationState',0,'found a conflict: %s' % str(conflict))
+        LOG('getSynchronizationState', DEBUG, 'found a conflict: %s' % str(conflict))
         state_list += [[conflict.getSubscriber(),self.CONFLICT]]
     for domain in self.getSynchronizationList():
       destination = domain.getDestinationPath()
-      #LOG('getSynchronizationState',0,'destination: %s' % str(destination))
+      LOG('getSynchronizationState', TRACE, 'destination: %s' % str(destination))
       j_path = '/'.join(path)
-      #LOG('getSynchronizationState',0,'j_path: %s' % str(j_path))
+      LOG('getSynchronizationState', TRACE, 'j_path: %s' % str(j_path))
       if j_path.find(destination)==0:
         o_id = j_path[len(destination)+1:].split('/')[0]
-        #LOG('getSynchronizationState',0,'o_id: %s' % o_id)
+        LOG('getSynchronizationState', TRACE, 'o_id: %s' % o_id)
         subscriber_list = []
         if domain.domain_type==self.PUB:
           subscriber_list = domain.getSubscriberList()
         else:
           subscriber_list = [domain]
-        #LOG('getSynchronizationState, subscriber_list:',0,subscriber_list)
+        LOG('getSynchronizationState, subscriber_list:', TRACE, subscriber_list)
         for subscriber in subscriber_list:
           signature = subscriber.getSignatureFromObjectId(o_id)
           #XXX check if signature could be not None ...
           if signature is not None:
             state = signature.getStatus()
-            #LOG('getSynchronizationState:',0,'sub.dest :%s, state: %s' % \
-                                   #(subscriber.getSubscriptionUrl(),str(state)))
+            LOG('getSynchronizationState:', TRACE, 'sub.dest :%s, state: %s' % \
+                                   (subscriber.getSubscriptionUrl(),str(state)))
             found = None
             # Make sure there is not already a conflict giving the state
             for state_item in state_list:
@@ -546,7 +538,12 @@ class SynchronizationTool( SubscriptionSynchronization,
               state_list += [[subscriber,state]]
     return state_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getAlertCodeList')
+  def getAlertCodeList(self):
+    return self.CODE_LIST
+
+  security.declareProtected(Permissions.ModifyPortalContent,
       'applyPublisherValue')
   def applyPublisherValue(self, conflict):
     """
@@ -556,38 +553,37 @@ class SynchronizationTool( SubscriptionSynchronization,
     object = self.unrestrictedTraverse(conflict.getObjectPath())
     subscriber = conflict.getSubscriber()
     # get the signature:
-    #LOG('p_sync.applyPublisherValue, subscriber: ',0,subscriber)
+    LOG('p_sync.applyPublisherValue, subscriber: ', DEBUG, subscriber)
     signature = subscriber.getSignatureFromObjectId(object.getId()) # XXX may be change for rid
     copy_path = conflict.getCopyPath()
-    #LOG('p_sync.applyPublisherValue, copy_path: ',0,copy_path)
+    LOG('p_sync.applyPublisherValue, copy_path: ', TRACE, copy_path)
     signature.delConflict(conflict)
     if signature.getConflictList() == []:
       if copy_path is not None:
-        #LOG('p_sync.applyPublisherValue, conflict_list empty on : ',0,signature)
+        LOG('p_sync.applyPublisherValue, conflict_list empty on : ', TRACE, signature)
         # Delete the copy of the object if the there is one
         directory = object.aq_parent
         copy_id = copy_path[-1]
-        #LOG('p_sync.applyPublisherValue, copy_id: ',0,copy_id)
+        LOG('p_sync.applyPublisherValue, copy_id: ', TRACE, copy_id)
         if hasattr(directory.aq_base, 'hasObject'):
           # optimize the case of a BTree folder
-          #LOG('p_sync.applyPublisherValue, deleting...: ',0,copy_id)
+          LOG('p_sync.applyPublisherValue, deleting...: ', TRACE, copy_id)
           if directory.hasObject(copy_id):
             directory._delObject(copy_id)
         elif copy_id in directory.objectIds():
           directory._delObject(copy_id)
       signature.setStatus(self.PUB_CONFLICT_MERGE)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'applyPublisherDocument')
   def applyPublisherDocument(self, conflict):
     """
     apply the publisher value for all conflict of the given document
     """
     subscriber = conflict.getSubscriber()
-    #LOG('applyPublisherDocument, subscriber: ',0,subscriber)
     for c in self.getConflictList(conflict.getObjectPath()):
       if c.getSubscriber() == subscriber:
-        #LOG('applyPublisherDocument, applying on conflict: ',0,conflict)
+        LOG('applyPublisherDocument, applying on conflict: ', DEBUG, conflict)
         c.applyPublisherValue()
 
   security.declareProtected(Permissions.AccessContentsInformation, 
@@ -606,9 +602,8 @@ class SynchronizationTool( SubscriptionSynchronization,
     apply the publisher value for all conflict of the given document
     """
     publisher_object_path = self.getPublisherDocumentPath(conflict)
-    #LOG('getPublisherDocument publisher_object_path',0,publisher_object_path)
+    LOG('getPublisherDocument publisher_object_path', TRACE, publisher_object_path)
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
-    #LOG('getPublisherDocument publisher_object',0,publisher_object)
     return publisher_object
 
 
@@ -621,23 +616,23 @@ class SynchronizationTool( SubscriptionSynchronization,
     Thus, the manager will be able to open both version of the document
     before selecting which one to keep.
     """
-    
     subscriber = conflict.getSubscriber()
     publisher_object_path = conflict.getObjectPath()
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
-    publisher_xml = self.getXMLObject(object=publisher_object,xml_mapping\
-                                            = subscriber.getXMLMapping())
-
+    publisher_xml = self.getXMLObject(
+                              object=publisher_object,
+                              xml_mapping=subscriber.getXMLMapping())
     directory = publisher_object.aq_parent
     object_id = docid
     if object_id in directory.objectIds():
         directory._delObject(object_id)
         # Import the conduit and get it
         conduit_name = subscriber.getConduit()
-        conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), 
-            globals(), locals(), [''])
-        conduit = getattr(conduit_module, conduit_name)()
-        conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
+        conduit = self.getConduitByName(conduit_name)
+        conduit.addNode(
+                    xml=publisher_xml,
+                    object=directory,
+                    object_id=object_id)
         subscriber_document = directory._getOb(object_id)
         for c in self.getConflictList(conflict.getObjectPath()):
             if c.getSubscriber() == subscriber:
@@ -646,7 +641,7 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   def _getCopyId(self, object):
     directory = object.aq_inner.aq_parent
-    if directory.getId() != 'portal_repository':    
+    if directory.getId() != 'portal_repository':
       object_id = object.getId() + '_conflict_copy'
       if object_id in directory.objectIds():
         directory._delObject(object_id)
@@ -656,10 +651,9 @@ class SynchronizationTool( SubscriptionSynchronization,
       new_rev = repotool.getFreeRevision(docid) + 10 # make sure it's not gonna provoke conflicts
       object_id = repotool._getId(docid, new_rev)
     return object_id
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 
       'getSubscriberDocumentPath')
-
   def getSubscriberDocumentPath(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -672,19 +666,14 @@ class SynchronizationTool( SubscriptionSynchronization,
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
     publisher_xml = subscriber.getXMLFromObject(publisher_object)
     directory = publisher_object.aq_inner.aq_parent
-    object_id = self._getCopyId(publisher_object)    
+    object_id = self._getCopyId(publisher_object)
     # Import the conduit and get it
     conduit_name = subscriber.getConduit()
-    if conduit_name.startswith('Products'):
-      path = conduit_name
-      conduit_name = conduit_name.split('.')[-1]
-      conduit_module = __import__(path, globals(), locals(), [''])
-      conduit = getattr(conduit_module, conduit_name)()
-    else:
-      conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), 
-          globals(), locals(), ['']) 
-      conduit = getattr(conduit_module, conduit_name)()
-    conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
+    conduit = self.getConduitByName(conduit_name)
+    conduit.addNode(
+                xml=publisher_xml,
+                object=directory,
+                object_id=object_id)
     subscriber_document = directory._getOb(object_id)
     subscriber_document._conflict_resolution = 1
     for c in self.getConflictList(conflict.getObjectPath()):
@@ -693,7 +682,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     copy_path = subscriber_document.getPhysicalPath()
     conflict.setCopyPath(copy_path)
     return copy_path
-    
+
   security.declareProtected(Permissions.AccessContentsInformation, 
       'getSubscriberDocument')
   def getSubscriberDocument(self, conflict):
@@ -735,9 +724,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     signature = subscriber.getSignatureFromObjectId(object.getId()) # XXX may be change for rid
     # Import the conduit and get it
     conduit_name = subscriber.getConduit()
-    conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), 
-        globals(), locals(), [''])
-    conduit = getattr(conduit_module, conduit_name)()
+    conduit = self.getConduitByName(conduit_name)
     for xupdate in conflict.getXupdateList():
       conduit.updateNode(xml=xupdate,object=object,force=1)
     if solve_conflict:
@@ -756,9 +743,9 @@ class SynchronizationTool( SubscriptionSynchronization,
             directory._delObject(copy_id)
         signature.setStatus(self.PUB_CONFLICT_MERGE)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'managePublisherValue')
-  def managePublisherValue(self, subscription_url, property_id, object_path, 
+  def managePublisherValue(self, subscription_url, property_id, object_path,
       RESPONSE=None):
     """
     Do whatever needed in order to store the local value on
@@ -766,20 +753,18 @@ class SynchronizationTool( SubscriptionSynchronization,
 
     Suggestion (API)
       add method to view document with applied xupdate
-      of a given subscriber XX 
+      of a given subscriber XX
       (ex. viewSubscriberDocument?path=ddd&subscriber_id=dddd)
       Version=Version CPS
     """
     # Retrieve the conflict object
-    #LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
-    #                                       str(property_id),
-    #                                       str(object_path)))
+    LOG('manageLocalValue', DEBUG, '%s %s %s' % (str(subscription_url),
+                                          str(property_id),
+                                          str(object_path)))
     for conflict in self.getConflictList():
-      #LOG('manageLocalValue, conflict:',0,conflict)
       if conflict.getPropertyId() == property_id:
-        #LOG('manageLocalValue',0,'found the property_id')
-        if '/'.join(conflict.getObjectPath())==object_path:
-          if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
+        if '/'.join(conflict.getObjectPath()) == object_path:
+          if conflict.getSubscriber().getSubscriptionUrl() == subscription_url:
             conflict.applyPublisherValue()
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
@@ -792,31 +777,29 @@ class SynchronizationTool( SubscriptionSynchronization,
     Do whatever needed in order to store the remote value locally
     and confirmed that the remote box should keep it's value
     """
-    #LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
-                         #                  str(property_id),
-                         #                  str(object_path)))
+    LOG('manageLocalValue', DEBUG, '%s %s %s' % (str(subscription_url),
+                                          str(property_id),
+                                          str(object_path)))
     for conflict in self.getConflictList():
-      #LOG('manageLocalValue, conflict:',0,conflict)
       if conflict.getPropertyId() == property_id:
-        #LOG('manageLocalValue',0,'found the property_id')
-        if '/'.join(conflict.getObjectPath())==object_path:
-          if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
+        if '/'.join(conflict.getObjectPath()) == object_path:
+          if conflict.getSubscriber().getSubscriptionUrl() == subscription_url:
             conflict.applySubscriberValue()
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
-  
-  security.declareProtected(Permissions.ModifyPortalContent, 
+
+  security.declareProtected(Permissions.ModifyPortalContent,
       'manageSubscriberDocument')
   def manageSubscriberDocument(self, subscription_url, object_path):
     """
     """
     for conflict in self.getConflictList():
-      if '/'.join(conflict.getObjectPath())==object_path:
-        if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
+      if '/'.join(conflict.getObjectPath()) == object_path:
+        if conflict.getSubscriber().getSubscriptionUrl() == subscription_url:
           conflict.applySubscriberDocument()
           break
     self.managePublisherDocument(object_path)
-  
+
   security.declareProtected(Permissions.ModifyPortalContent, 
       'managePublisherDocument')
   def managePublisherDocument(self, object_path):
@@ -826,7 +809,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     while retry:
       retry = False
       for conflict in self.getConflictList():
-        if '/'.join(conflict.getObjectPath())==object_path:
+        if '/'.join(conflict.getObjectPath()) == object_path:
           conflict.applyPublisherDocument()
           retry = True
           break
@@ -855,17 +838,15 @@ class SynchronizationTool( SubscriptionSynchronization,
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    #LOG('sendResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
-    #LOG('sendResponse, to_url: ',0,to_url)
-    #LOG('sendResponse, from_url: ',0,from_url)
-    #LOG('sendResponse, sync_id: ',0,sync_id)
-    #LOG('sendResponse, xml: \n',0,xml)
+    LOG('sendResponse, self.getPhysicalPath: ', DEBUG, self.getPhysicalPath())
+    LOG('sendResponse, to_url: ', DEBUG, to_url)
+    LOG('sendResponse, from_url: ', DEBUG, from_url)
+    LOG('sendResponse, sync_id: ', DEBUG, sync_id)
+    LOG('sendResponse, xml: \n', DEBUG, xml)
 
     if content_type == self.CONTENT_TYPE['SYNCML_WBXML']:
       xml = self.xml2wbxml(xml)
-      #LOG('sendHttpResponse, xml after wbxml: \n',0,self.hexdump(xml))
-
-
+      #LOG('sendHttpResponse, xml after wbxml: \n', DEBUG, self.hexdump(xml))
     if isinstance(xml, unicode):
       xml = xml.encode('utf-8')
     if domain is not None:
@@ -879,7 +860,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         (status,output)=commands.getstatusoutput('gpg --yes --homedir \
             /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s" -se \
             /tmp/%s.gz' % (gpg_key,filename))
-        #LOG('readResponse, gpg output:',0,output)
+        #LOG('readResponse, gpg output:', DEBUG, output)
         encrypted = file('/tmp/%s.gz.gpg' % filename,'r')
         xml = encrypted.read()
         encrypted.close()
@@ -889,24 +870,20 @@ class SynchronizationTool( SubscriptionSynchronization,
       if isinstance(to_url, str):
         if to_url.find('http://')==0:
           domain = aq_base(domain)
-          #LOG('domain.domain_type',0,domain.domain_type)
-          #LOG("getattr(domain, 'getActivityEnabled', None)",0,getattr(domain, 'getActivityEnabled', None))
-          #LOG("domain.getActivityEnabled()",0,domain.getActivityEnabled())
           if domain.domain_type == self.PUB and not domain.getActivityEnabled():
             # not use activity
             # XXX Make sure this is not a problem
             return None
           #use activities to send send an http response
-          #LOG('sendResponse, will start sendHttpResponse, xml',0,'')
+          LOG('sendResponse, will start sendHttpResponse, xml', DEBUG, '')
           self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
-                                           xml=xml, 
+                                           xml=xml,
                                            domain_path=domain.getPath(),
                                            content_type=content_type)
         elif to_url.find('file://')==0:
           filename = to_url[len('file:/'):]
           stream = file(filename,'w')
-          #LOG('sendResponse, filename: ',0,filename)
           stream.write(xml)
           stream.close()
           # we have to use local files (unit testing for example
@@ -914,17 +891,14 @@ class SynchronizationTool( SubscriptionSynchronization,
           # we will send an email
           to_address = to_url[len('mailto:'):]
           from_address = from_url[len('mailto:'):]
-          self.sendMail(from_address,to_address,sync_id,xml)
+          self.sendMail(from_address, to_address, sync_id, xml)
     return xml
 
   security.declarePrivate('sendHttpResponse')
-  def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, 
+  def sendHttpResponse(self, to_url=None, sync_id=None, xml=None,
       domain_path=None, content_type='application/vnd.syncml+xml'):
     domain = self.unrestrictedTraverse(domain_path)
-    #LOG('sendHttpResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
-    #LOG('sendHttpResponse, starting with domain:',0,domain)
-
-    #LOG('sendHttpResponse, xml:',0,xml)
+    LOG('sendHttpResponse, starting with domain:', DEBUG, domain)
     if domain is not None:
       if domain.domain_type == self.PUB and not domain.getActivityEnabled():
             return xml
@@ -932,7 +906,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     proxy_url = ''
     if os.environ.has_key('http_proxy'):
       proxy_url = os.environ['http_proxy']
-    #LOG('sendHttpResponse, proxy_url:',0,proxy_url)
+    LOG('sendHttpResponse, proxy_url:', DEBUG, proxy_url)
     if proxy_url !='':
       proxy_handler = urllib2.ProxyHandler({"http" :proxy_url})
     else:
@@ -965,7 +939,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     #  - http://svn.zope.org/soap/trunk/
 
     if domain.getSynchronizeWithERP5Sites():
-      LOG('Synchronization with another ERP5 instance ...',0,'')
+      LOG('Synchronization with another ERP5 instance ...', DEBUG, '')
       if to_url.find('readResponse')<0:
         to_url = to_url + '/portal_synchronizations/readResponse'
       encoded = urllib.urlencode(to_encode)
@@ -980,33 +954,23 @@ class SynchronizationTool( SubscriptionSynchronization,
       url_file = urllib2.urlopen(request)
       result = url_file.read()
     except socket.error, msg:
-      self.activate(activity='RAMQueue').sendHttpResponse(to_url=to_url, 
-          sync_id=sync_id, xml=xml, domain_path=domain.getPath(), 
+      self.activate(activity='RAMQueue').sendHttpResponse(to_url=to_url,
+          sync_id=sync_id, xml=xml, domain_path=domain.getPath(),
           content_type=content_type)
-      LOG('sendHttpResponse, socket ERROR:',0,msg)
-      #LOG('sendHttpResponse, url,data',0,(url, data))
+      LOG('sendHttpResponse, socket ERROR:', INFO, msg)
+      LOG('sendHttpResponse, url, data', INFO, (url, data))
       return
     except urllib2.URLError, msg:
-      LOG("sendHttpResponse, can't open url %s :" % to_url, 0, msg)
-      LOG('sendHttpResponse, to_url,data',0,(to_url, data))
+      LOG("sendHttpResponse, can't open url %s :" % to_url, INFO, msg)
+      LOG('sendHttpResponse, to_url, data', INFO, (to_url, data))
       return
 
-
-    #LOG('sendHttpResponse, before result, domain:',0,domain)
     if domain is not None:
       if domain.domain_type == self.SUB and not domain.getActivityEnabled():
             #if we don't use activity :
             gpg_key = domain.getGPGKey()
-            if result not in (None,''):
-              #if gpg_key not in ('',None):
-              #  result = self.sendResponse(domain=domain,xml=result,send=0)
-              #uf = self.acl_users
-              #user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
-              #user = uf.getUserById('syncml').__of__(uf)
-              #newSecurityManager(None, user)
-              #self.activate(activity='RAMQueue').readResponse(sync_id=sync_id,text=result)
-              
-              self.readResponse(sync_id=sync_id,text=result)
+            if result not in (None, ''):
+              self.readResponse(sync_id=sync_id, text=result)
     return result
 
   security.declarePublic('sync')
@@ -1016,68 +980,68 @@ class SynchronizationTool( SubscriptionSynchronization,
     """
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
-    user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+    user = UnrestrictedUser('syncml', 'syncml', ['Manager', 'Member'], '')
     newSecurityManager(None, user)
     message_list = self.portal_activities.getMessageList()
-    #LOG('sync, message_list:',0,message_list)
+    LOG('sync, message_list:', DEBUG, message_list)
     if len(message_list) == 0:
       for subscription in self.getSubscriptionList():
-        #LOG('sync, type(subcription):',0,type(subscription))
+        LOG('sync, type(subcription):', DEBUG, type(subscription))
         self.activate(activity='RAMQueue').SubSync(subscription.getPath())
 
   security.declarePublic('readResponse')
-  def readResponse(self, text=None, sync_id=None, to_url=None, from_url=None):
+  def readResponse(self, text='', sync_id=None, to_url=None, from_url=None):
     """
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    #LOG('readResponse, text :', 0, text)
-    #LOG('readResponse, text :', 0, self.hexdump(text))
+    LOG('readResponse, text :', DEBUG, text)
+    #LOG('readResponse, hexdump(text) :', DEBUG, self.hexdump(text))
 
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = uf.getUserById('syncml').__of__(uf)
-    user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+    user = UnrestrictedUser('syncml', 'syncml', ['Manager', 'Member'], '')
     newSecurityManager(None, user)
     status_code = None
 
-    if text is not None:
+    if text not in ('', None):
       # XXX We will look everywhere for a publication/subsription with
       # the id sync_id, this is not so good, but there is no way yet
       # to know if we will call a publication or subscription XXX
       gpg_key = ''
       for publication in self.getPublicationList():
-        if publication.getTitle()==sync_id:
+        if publication.getTitle() == sync_id:
           gpg_key = publication.getGPGKey()
           domain = publication
       if gpg_key == '':
         for subscription in self.getSubscriptionList():
-          if subscription.getTitle()==sync_id:
+          if subscription.getTitle() == sync_id:
             gpg_key = subscription.getGPGKey()
             domain = subscription
       # decrypt the message if needed
       if gpg_key not in (None,''):
-        filename = str(random.randrange(1,2147483600)) + '.txt'
+        filename = str(random.randrange(1, 2147483600)) + '.txt'
         encrypted = file('/tmp/%s.gz.gpg' % filename,'w')
         encrypted.write(text)
         encrypted.close()
         (status,output)=commands.getstatusoutput('gpg --homedir \
             /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s"  --decrypt \
             /tmp/%s.gz.gpg > /tmp/%s.gz' % (gpg_key, filename, filename))
-        #LOG('readResponse, gpg output:', 0, output)
+        LOG('readResponse, gpg output:', TRACE, output)
         (status,output)=commands.getstatusoutput('gunzip /tmp/%s.gz' % filename)
         decrypted = file('/tmp/%s' % filename,'r')
         text = decrypted.read()
-        #LOG('readResponse, text:', 0, text)
+        LOG('readResponse, text:', TRACE, text)
         decrypted.close()
         commands.getstatusoutput('rm -f /tmp/%s' % filename)
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
-      #LOG('type(text) : ',0,type(text))
+      LOG('type(text) : ', TRACE, type(text))
       if domain.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
         text = self.wbxml2xml(text)
-      #LOG('readResponse, text after wbxml :\n', 0, text)
+      LOG('readResponse, text after wbxml :\n', TRACE, text)
       xml = Parse(text)
       url = self.getTarget(xml)
       for publication in self.getPublicationList():
@@ -1089,37 +1053,33 @@ class SynchronizationTool( SubscriptionSynchronization,
                                                        text)
             return ' '
           else:
-            result = self.PubSync(publication.getPath(),xml)
+            result = self.PubSync(publication.getPath(), xml)
             # Then encrypt the message
             xml = result['xml']
-            #must be commented because this method is alredy called
-            #xml = self.sendResponse(xml=xml,domain=publication,send=0)
-            if publication.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
+            if publication.getSyncContentType() ==\
+             self.CONTENT_TYPE['SYNCML_WBXML']:
               xml = self.xml2wbxml(xml)
             return xml
-      
       for subscription in self.getSubscriptionList():
-        if subscription.getSubscriptionUrl()==url and \
-            subscription.getTitle()==sync_id:
+        if subscription.getSubscriptionUrl() == url and \
+            subscription.getTitle() == sync_id:
               subscription_path = self.getSubscription(sync_id).getPath()
-              self.activate(activity='RAMQueue').SubSync(subscription_path, 
+              self.activate(activity='RAMQueue').SubSync(subscription_path,
                                                          text)
               return ' '
-              #result = self.SubSync(self.getSubscription(sync_id),xml)
 
     # we use from only if we have a file 
     elif isinstance(from_url, str):
-      if from_url.find('file://')==0:
+      if from_url.find('file://') == 0:
         try:
           filename = from_url[len('file:/'):]
-          stream = file(filename,'r')
+          stream = file(filename, 'r')
           xml = stream.read()
-          #stream.seek(0)
-          #LOG('readResponse',0,'Starting... msg: %s' % str(stream.read()))
+          LOG('readResponse', DEBUG, 'file... msg: %s' % str(stream.read()))
         except IOError:
-          LOG('readResponse, cannot read file: ',0,filename)
+          LOG('readResponse, cannot read file: ', DEBUG, filename)
           xml = None
-        if xml is not None and len(xml)==0:
+        if xml is not None and len(xml) == 0:
           xml = None
         return xml
 
@@ -1140,14 +1100,11 @@ class SynchronizationTool( SubscriptionSynchronization,
     return 'sub_' + title
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
-  def addNode(self, conduit='ERP5Conduit',**kw):
+  def addNode(self, conduit='ERP5Conduit', **kw):
     """
     """
     # Import the conduit and get it
-    from Products.ERP5SyncML import Conduit
-    conduit_module = __import__('.'.join([Conduit.__name__, conduit]), 
-        globals(), locals(), [''])
-    conduit_object = getattr(conduit_module, conduit)()
+    conduit_object = self.getConduitByName(conduit)
     return conduit_object.addNode(**kw)
 
   def hexdump(self, raw=''):
@@ -1162,29 +1119,29 @@ class SynchronizationTool( SubscriptionSynchronization,
     start = 0
     done = False
     while not done:
-        end = start + 16
-        max = len(str(raw))
-        if end > max:
-            end = max
-            done = True
-        chunk = raw[start:end]
-        for i in xrange(len(chunk)):
-            if i > 0:
-                spacing = " "
-            else:
-                spacing = ""
-            buf += "%s%02x" % (spacing, ord(chunk[i]))
-        if done:
-            for i in xrange(16 - (end % 16)):
-                buf += "   "
-        buf += "  "
-        for c in chunk:
-            val = ord(c)
-            if val >= 33 and val <= 126:
-                buf += c
-            else:
-                buf += "."
-        buf += "\n"
-        start += 16
-    return buf 
+      end = start + 16
+      max = len(str(raw))
+      if end > max:
+        end = max
+        done = True
+      chunk = raw[start:end]
+      for i in xrange(len(chunk)):
+        if i > 0:
+          spacing = " "
+        else:
+          spacing = ""
+        buf += "%s%02x" % (spacing, ord(chunk[i]))
+      if done:
+        for i in xrange(16 - (end % 16)):
+          buf += "   "
+      buf += "  "
+      for c in chunk:
+        val = ord(c)
+        if val >= 33 and val <= 126:
+          buf += c
+        else:
+          buf += "."
+      buf += "\n"
+      start += 16
+    return buf
 InitializeClass( SynchronizationTool )

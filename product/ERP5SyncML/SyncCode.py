@@ -40,6 +40,7 @@ class SyncCode(Persistent):
   ONE_WAY_FROM_SERVER = 204
   WAITING_DATA = 214
   REFRESH_REQUIRED = 508
+  CODE_LIST = ( TWO_WAY, ONE_WAY_FROM_SERVER )
 
   # SyncML Status Codes
   SUCCESS = 200

@@ -37,7 +37,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
 from DateTime import DateTime
-from zLOG import LOG
+from zLOG import LOG, DEBUG, INFO
 
 import md5
 
@@ -141,7 +141,7 @@ class Conflict(SyncCode, Base):
       after a conflict resolution, we have decided
       to keep the local version of this object
     """
-    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync = getToolByName(self, 'portal_synchronizations')
     p_sync.applyPublisherValue(self)
 
   def applyPublisherDocument(self):
@@ -149,7 +149,7 @@ class Conflict(SyncCode, Base):
       after a conflict resolution, we have decided
       to keep the local version of this object
     """
-    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync = getToolByName(self, 'portal_synchronizations')
     p_sync.applyPublisherDocument(self)
 
   def getPublisherDocument(self):
@@ -157,7 +157,7 @@ class Conflict(SyncCode, Base):
       after a conflict resolution, we have decided
       to keep the local version of this object
     """
-    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync = getToolByName(self, 'portal_synchronizations')
     return p_sync.getPublisherDocument(self)
 
   def getPublisherDocumentPath(self):
@@ -165,7 +165,7 @@ class Conflict(SyncCode, Base):
       after a conflict resolution, we have decided
       to keep the local version of this object
     """
-    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync = getToolByName(self, 'portal_synchronizations')
     return p_sync.getPublisherDocumentPath(self)
 
   def getSubscriberDocument(self):
@@ -173,7 +173,7 @@ class Conflict(SyncCode, Base):
       after a conflict resolution, we have decided
       to keep the local version of this object
     """
-    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync = getToolByName(self, 'portal_synchronizations')
     return p_sync.getSubscriberDocument(self)
 
   def getSubscriberDocumentPath(self):
@@ -181,7 +181,7 @@ class Conflict(SyncCode, Base):
       after a conflict resolution, we have decided
       to keep the local version of this object
     """
-    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync = getToolByName(self, 'portal_synchronizations')
     return p_sync.getSubscriberDocumentPath(self)
 
   def applySubscriberDocument(self):
@@ -189,14 +189,14 @@ class Conflict(SyncCode, Base):
       after a conflict resolution, we have decided
       to keep the local version of this object
     """
-    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync = getToolByName(self, 'portal_synchronizations')
     p_sync.applySubscriberDocument(self)
 
   def applySubscriberValue(self,object=None):
     """
     get the domain
     """
-    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync = getToolByName(self, 'portal_synchronizations')
     p_sync.applySubscriberValue(self,object=object)
 
   def setSubscriber(self, subscriber):
@@ -229,12 +229,11 @@ class Conflict(SyncCode, Base):
     """
     copy_path = self.copy_path
     return copy_path
-    
+
   def setCopyPath(self, path):
     """
     """
     self.copy_path = path
-    
 
 class Signature(Folder,SyncCode):
   """
@@ -249,10 +248,14 @@ class Signature(Folder,SyncCode):
   """
   isIndexable = 0
   isPortalContent = 0 # Make sure RAD generated accessors at the class level
-  
+
   # Constructor
-  def __init__(self, id=None, rid=None, status=None, xml_string=None, 
-      object=None):
+  def __init__(self,
+               id=None,
+               rid=None,
+               status=None,
+               xml_string=None,
+               object=None):
     if object is not None:
       self.setPath(object.getPhysicalPath())
       self.setObjectId(object.getId())
@@ -312,7 +315,7 @@ class Signature(Folder,SyncCode):
     """
       get the force value (if we need to force update or not)
     """
-    return getattr(self,'path',None)
+    return getattr(self, 'path', None)
 
   def setPath(self, path):
     """
@@ -337,28 +340,28 @@ class Signature(Folder,SyncCode):
       get the last modfication date, so that we don't always
       check the xml
     """
-    return getattr(self,'modification_date',None)
+    return getattr(self, 'modification_date', None)
 
   def setLastModificationDate(self,value):
     """
       set the last modfication date, so that we don't always
       check the xml
     """
-    setattr(self,'modification_date',value)
+    setattr(self, 'modification_date', value)
 
   def getLastSynchronizationDate(self):
     """
       get the last modfication date, so that we don't always
       check the xml
     """
-    return getattr(self,'synchronization_date',None)
+    return getattr(self, 'synchronization_date', None)
 
   def setLastSynchronizationDate(self,value):
     """
       set the last modfication date, so that we don't always
       check the xml
     """
-    setattr(self,'synchronization_date',value)
+    setattr(self, 'synchronization_date', value)
 
   def setXML(self, xml):
     """
@@ -373,7 +376,7 @@ class Signature(Folder,SyncCode):
     """
       get the XML corresponding to the object
     """
-    xml =  getattr(self,'xml',None)
+    xml =  getattr(self, 'xml', None)
     if xml == '':
       xml = None
     return xml
@@ -441,7 +444,7 @@ class Signature(Folder,SyncCode):
     """
       set the rid
     """
-    if rid is type(u'a'): 
+    if rid is type(u'a'):
       rid = rid.encode('utf-8')
     self.rid = rid
 
@@ -455,7 +458,7 @@ class Signature(Folder,SyncCode):
     """
       set the id
     """
-    if id is type(u'a'): 
+    if id is type(u'a'):
       id = id.encode('utf-8')
     self.id = id
 
@@ -469,7 +472,7 @@ class Signature(Folder,SyncCode):
     """
       set the gid
     """
-    if gid is type(u'a'): 
+    if gid is type(u'a'):
       gid = gid.encode('utf-8')
     self.gid = gid
 
@@ -483,7 +486,7 @@ class Signature(Folder,SyncCode):
     """
       set the id of the object associated to this signature
     """
-    if id is type(u'a'): 
+    if id is type(u'a'):
       id = id.encode('utf-8')
     self.object_id = id
 
@@ -507,7 +510,7 @@ class Signature(Folder,SyncCode):
     Set the partial string we will have to
     deliver in the future
     """
-    #LOG('Subscriber.getPartialXML',0,'partial_xml: %s' % str(self.partial_xml))
+    #LOG('Subscriber.getPartialXML', DEBUG, 'partial_xml: %s' % str(self.partial_xml))
     if self.partial_xml is not None:
       self.partial_xml = self.partial_xml.replace('@-@@-@','--') # need to put back '--'
     return self.partial_xml
@@ -544,7 +547,6 @@ class Signature(Folder,SyncCode):
     """
     Return the actual action for a partial synchronization
     """
-    # LOG('setConflictList, list',0,conflict_list)
     if conflict_list is None or conflict_list==[]:
       self.resetConflictList()
     else:
@@ -554,7 +556,7 @@ class Signature(Folder,SyncCode):
     """
     Return the actual action for a partial synchronization
     """
-    # LOG('delConflict, conflict',0,conflict)
+    LOG('delConflict, conflict', DEBUG, conflict)
     conflict_list = []
     for c in self.getConflictList():
       #LOG('delConflict, c==conflict',0,c==aq_base(conflict))
@@ -575,7 +577,6 @@ def addSubscription( self, id, title='', REQUEST=None ):
     """
     Add a new Subscribption
     """
-    LOG('addSubscription starting...',0,'')
     o = Subscription( id ,'','','','','','')
     self._setObject( id, o )
     if REQUEST is not None:
@@ -646,10 +647,10 @@ class Subscription(Folder, SyncCode):
                               )
 
   # Constructor
-  def __init__(self, id, title, publication_url, subscription_url, 
-      destination_path, source_uri, target_uri, query, xml_mapping, 
-      conduit, gpg_key, id_generator, gid_generator, media_type, login, 
-      password, activity_enabled, alert_code, synchronize_with_erp5_sites, 
+  def __init__(self, id, title, publication_url, subscription_url,
+      destination_path, source_uri, target_uri, query, xml_mapping,
+      conduit, gpg_key, id_generator, gid_generator, media_type, login,
+      password, activity_enabled, alert_code, synchronize_with_erp5_sites,
       sync_content_type):
     """
       We need to create a dictionnary of
@@ -686,8 +687,7 @@ class Subscription(Folder, SyncCode):
     #self.signatures = PersitentMapping()
 
   def getAlertCodeList(self):
-    #XXX replace by a dictionary or a list in SyncCode
-    return [self.TWO_WAY, self.ONE_WAY_FROM_SERVER]
+    return self.CODE_LIST
 
   def getAlertCode(self):
     return getattr(self, 'alert_code', 200)
@@ -721,7 +721,7 @@ class Subscription(Folder, SyncCode):
     setter for title
     """
     self.title = value
-  
+
   def setSourceURI(self, value):
     """
     setter for source_uri
@@ -751,7 +751,7 @@ class Subscription(Folder, SyncCode):
     """
     content type used by the subscriber
     """
-    self.sync_content_type=sync_content_type
+    self.sync_content_type = sync_content_type
     # the varible name is sync_content_type instead of content_type because
     # content_type seems to be a function name already used
 
@@ -768,16 +768,16 @@ class Subscription(Folder, SyncCode):
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     # XXX for debugging only, to be removed
     #dict_sign = {}
-    #for o in self.objectValues():
+    #for o in self.getSignatureList():
       #dict_sign[o.getId()] = o.getStatus()
-    # LOG('getSignature',0,'signatures_status: %s' % str(dict_sign))
+    # LOG('getSignature', DEBUG, 'signatures_status: %s' % str(dict_sign))
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     code = self.SLOW_SYNC
-    if len(self.objectValues()) > 0:
+    if len(self.getSignatureList()) > 0:
       code = self.getAlertCode()
     if default is not None:
       code = default
-    #LOG('Subscription',0,'getSynchronizationType: %s' % code)
+    #LOG('Subscription', DEBUG, 'getSynchronizationType: %s' % code)
     return code
 
   def setXMLMapping(self, value):
@@ -801,7 +801,7 @@ class Subscription(Folder, SyncCode):
     """
     return True if the synchronisation is between two erp5 sites
     """
-    return getattr(self, 'synchronize_with_erp5_sites', None)
+    return getattr(self, 'synchronize_with_erp5_sites', True)
 
   def checkCorrectRemoteSessionId(self, session_id):
     """
@@ -810,7 +810,7 @@ class Subscription(Folder, SyncCode):
 
     return True if the session id was not seen, False if already seen
     """
-    last_session_id = getattr(self,'last_session_id',None)
+    last_session_id = getattr(self, 'last_session_id', None)
     if last_session_id == session_id:
       return False 
     self.last_session_id = session_id
@@ -824,8 +824,8 @@ class Subscription(Folder, SyncCode):
     return True if the message id was not seen, False if already seen
     """
     last_message_id = getattr(self,'last_message_id',None)
-    # LOG('checkCorrectRemoteMessageId  last_message_id =',0,last_message_id)
-    # LOG('checkCorrectRemoteMessageId  message_id =',0,message_id)
+    LOG('checkCorrectRemoteMessageId  last_message_id = ', DEBUG, last_message_id)
+    LOG('checkCorrectRemoteMessageId  message_id = ', DEBUG, message_id)
     if last_message_id == message_id:
       return False
     self.last_message_id = message_id
@@ -835,13 +835,13 @@ class Subscription(Folder, SyncCode):
     """
     set the last message id to 0
     """
-    self.last_message_id=last_message_id
+    self.last_message_id = last_message_id
 
   def getLastSentMessage(self):
     """
     This is the getter for the last message we have sent
     """
-    return getattr(self,'last_sent_message','')
+    return getattr(self, 'last_sent_message', '')
 
   def setLastSentMessage(self,xml):
     """
@@ -889,7 +889,7 @@ class Subscription(Folder, SyncCode):
     """
       return the gnupg key name
     """
-    return getattr(self,'gpg_key','')
+    return getattr(self, 'gpg_key', '')
 
   def setGPGKey(self, value):
     """
@@ -971,7 +971,7 @@ class Subscription(Folder, SyncCode):
     """
     set the type of media used
     """
-    if media_type in (None,''):
+    if media_type in (None, ''):
       media_type = self.MEDIA_TYPE['TEXT_XML']
     self.media_type = media_type
 
@@ -985,7 +985,7 @@ class Subscription(Folder, SyncCode):
     """
     set the login at new_login
     """
-    self.login=new_login
+    self.login = new_login
 
   def getPassword(self):
     """
@@ -997,8 +997,7 @@ class Subscription(Folder, SyncCode):
     """
     set the password at new_password
     """
-    self.password=new_password
-  
+    self.password = new_password
 
   def setAuthentication(self, auth):
     """
@@ -1037,7 +1036,7 @@ class Subscription(Folder, SyncCode):
     o_gid = None
     gid_gen = self.getGidGenerator()
     if callable(gid_gen):
-      o_gid=gid_gen(object)
+      o_gid = gid_gen(object)
     elif getattr(o_base, gid_gen, None) is not None:
       generator = getattr(object, gid_gen)
       o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
@@ -1066,17 +1065,17 @@ class Subscription(Folder, SyncCode):
       o_id = signature.getObjectId()
       #try with id param too, because gid is not catalogged
       object_list = self.getObjectList(gid = b16decode(gid), id = o_id)
-      #LOG('getObjectFromGid :',0,'object_list=%s, gid=%s, o_id=%s' % (object_list, gid, o_id))
+      LOG('getObjectFromGid :', DEBUG, 'object_list=%s, gid=%s, o_id=%s' % (object_list, gid, o_id))
       if o is not None and o in object_list:
         return o
     #LOG('entering in the slow loop of getObjectFromGid !!!',0,'')
     object_list = self.getObjectList(gid = b16decode(gid))
-    #LOG('getObjectFromGid :', 0, 'object_list slow loop=%s, gid=%s' % (object_list, gid))
+    LOG('getObjectFromGid :', DEBUG, 'object_list slow loop=%s, gid=%s' % (object_list, gid))
     for o in object_list:
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
         return o
-    #LOG('getObjectFromGid',0,'returning None')
+    LOG('getObjectFromGid', DEBUG, 'returning None')
     return None
 
   def getObjectFromId(self, id):
@@ -1103,17 +1102,7 @@ class Subscription(Folder, SyncCode):
         o = destination.getPortalObject().restrictedTraverse(signature.getPath())
       except:
         pass
-    return o 
-
-
-
-#  def setOneWaySyncFromServer(self,value):
-#    """
-#    If this option is enabled, then we will not 
-#    send our own modifications
-#    """
-#    self.one_way_sync_from_server = value
-#
+    return o
 
   def getObjectList(self, **kw):
     """
@@ -1124,7 +1113,7 @@ class Subscription(Folder, SyncCode):
     query = self.getQuery()
     query_list = []
     if query is not None and isinstance(query, str):
-      query_method = getattr(destination,query,None)
+      query_method = getattr(destination, query, None)
       if query_method is not None:
         query_list = query_method(**kw)
     elif callable(query): # used in the test
@@ -1132,7 +1121,7 @@ class Subscription(Folder, SyncCode):
     return [x for x in query_list
               if not getattr(x,'_conflict_resolution',False)]
 
-  def generateNewIdWithGenerator(self, object=None,gid=None):
+  def generateNewIdWithGenerator(self, object=None, gid=None):
     """
     This tries to generate a new Id
     """
@@ -1141,15 +1130,15 @@ class Subscription(Folder, SyncCode):
       o_base = aq_base(object)
       new_id = None
       if callable(id_generator):
-        new_id = id_generator(object,gid=gid)
+        new_id = id_generator(object, gid=gid)
       elif getattr(o_base, id_generator, None) is not None:
         generator = getattr(object, id_generator)
         new_id = generator()
       else: 
         # This is probably a python script
         generator = getattr(object, id_generator)
-        new_id = generator(object=object,gid=gid)
-      #LOG('generateNewId, new_id: ',0,new_id)
+        new_id = generator(object=object, gid=gid)
+      LOG('generateNewId, new_id: ', DEBUG, new_id)
       return new_id
     return None
 
@@ -1158,7 +1147,7 @@ class Subscription(Folder, SyncCode):
     This set the method name wich allows to generate
     a new id
     """
-    if method in ('','None'):
+    if method in ('', 'None'):
       method = None
     self.synchronization_id_generator = method
 
@@ -1203,7 +1192,7 @@ class Subscription(Folder, SyncCode):
       return the current subscription
     """
     return self
-    
+
   def setSessionId(self, session_id):
     """
       set the session id
@@ -1229,9 +1218,6 @@ class Subscription(Folder, SyncCode):
     """
       return the message id
     """
-    #self.message_id += 1
-    #return self.message_id
-    #return 5
     value = getattr(self, 'message_id', 0)
     self.message_id = value +1
     return self.message_id
@@ -1247,7 +1233,7 @@ class Subscription(Folder, SyncCode):
       set the message id to 0
     """
     self.message_id = 0
-  
+
   def setMessageId(self, message_id):
     """
       set the message id to message_id
@@ -1298,7 +1284,7 @@ class Subscription(Folder, SyncCode):
     """
       add a Signature to the subscription
     """
-    if self.getSignatureFromGid(signature.getGid()) != None:
+    if self.getSignatureFromGid(signature.getGid()) is not None:
       self.delSignature(signature.getGid())
     self._setObject(signature.getGid(), aq_base(signature))
 
@@ -1306,12 +1292,11 @@ class Subscription(Folder, SyncCode):
     """
       del a Signature of the subscription
     """
-    #del self.signatures[gid]
     self._delObject(gid)
 
   def getSignatureFromObjectId(self, id):
     """
-    return the signature corresponding to the gid
+    return the signature corresponding to the id
     """
     o = None
     # XXX very slow
@@ -1343,35 +1328,23 @@ class Subscription(Folder, SyncCode):
     """
     Returns the list of gids from signature
     """
-    object_id_list = []
-    for signature in self.getSignatureList():
-      if signature.getObjectId() is not None:
-        object_id_list.append(signature.getObjectId())
-    return object_id_list
+    return [s for s in self.getSignatureList() if s.getObjectId() is not None]
 
   def getGidList(self):
     """
     Returns the list of gids from signature
     """
-    gid_list = []
-    for signature in self.getSignatureList():
-      if signature.getGid() is not None:
-        gid_list.append(signature.getGid())
-    return gid_list
+    return [s.getGid() for s in self.getSignatureList() if s.getGid() is not None]
 
   def getRidList(self):
     """
     Returns the list of rids from signature
     """
-    rid_list = []
-    for signature in self.getSignatureList():
-      if signature.getRid() is not None:
-        rid_list.append(signature.getRid())
-    return rid_list
+    return [s.getRid() for s in self.getSignatureList() if s.getRid() is not None]
 
   def getSignatureList(self):
     """
-      add a Signature to the subscription
+      Returns the list of Signatures
     """
     return self.objectValues()
 
@@ -1379,16 +1352,17 @@ class Subscription(Folder, SyncCode):
     """
       Check if there's a signature with this uid
     """
-    #return self.signatures.has_key(gid)
     return self.getSignatureFromGid(gid) is not None
 
   def resetAllSignatures(self):
     """
-      Reset all signatures
+      Reset all signatures in activities
     """
-    while len(self.objectIds())>0:
-      for id in self.objectIds():
-        self._delObject(id)
+    object_id_list = [id for id in self.getObjectIds()]
+    object_list_len = len(object_id_list)
+    for i in xrange(0, object_list_len, 100):
+        current_id_list = object_id_list[i:i+100]
+        self.activate().manage_delObjects(current_id_list)
 
   def getConflictList(self):
     """
@@ -1396,7 +1370,7 @@ class Subscription(Folder, SyncCode):
     """
     conflict_list = []
     for signature in self.getSignatureList():
-      conflict_list += signature.getConflictList()
+      conflict_list.extend(signature.getConflictList())
     return conflict_list
 
   def getRemainingObjectPathList(self):
@@ -1404,14 +1378,14 @@ class Subscription(Folder, SyncCode):
     We should now wich objects should still
     synchronize
     """
-    return getattr(self,'remaining_object_path_list',None)
+    return getattr(self, 'remaining_object_path_list', None)
 
   def setRemainingObjectPathList(self, value):
     """
     We should now wich objects should still
     synchronize
     """
-    setattr(self,'remaining_object_path_list',value)
+    setattr(self, 'remaining_object_path_list', value)
 
   def removeRemainingObjectPath(self, object_path):
     """
@@ -1430,13 +1404,14 @@ class Subscription(Folder, SyncCode):
     """
     Set the status of every object as NOT_SYNCHRONIZED
     """
-    for o in self.objectValues():
+    for s in self.getSignatureList():
       # Change the status only if we are not in a conflict mode
-      if not(o.getStatus() in (self.CONFLICT,self.PUB_CONFLICT_MERGE,
-                                                        self.PUB_CONFLICT_CLIENT_WIN)):
-        o.setStatus(self.NOT_SYNCHRONIZED)
-        o.setPartialXML(None)
-        o.setTempXML(None)
+      if s.getStatus() not in (self.CONFLICT,
+                               self.PUB_CONFLICT_MERGE,
+                               self.PUB_CONFLICT_CLIENT_WIN):
+        s.setStatus(self.NOT_SYNCHRONIZED)
+        s.setPartialXML(None)
+        s.setTempXML(None)
     self.setRemainingObjectPathList(None)
 
 
@@ -1445,8 +1420,8 @@ class Subscription(Folder, SyncCode):
     return True if the subscriber is authenticated for this session, False 
     in other case
     """
-    return self.is_authenticated
-    
+    return getattr(self, 'is_authenticated', None)
+
   def setAuthenticated(self, value):
     """
       set at True or False the value of is_authenticated is the subscriber
@@ -1464,7 +1439,7 @@ class Subscription(Folder, SyncCode):
       return b64encode(string_to_encode)
     #elif format is .... put here the other formats
     else:#if there is no format corresponding with format, raise an error
-      #LOG('encode : unknown or not implemented format :', 0, format)
+      LOG('encode : unknown or not implemented format : ', INFO, format)
       raise ValueError, "Sorry, the server ask for the format %s but it's unknow or not implemented" % format
 
   def decode(self, format, string_to_decode):
@@ -1478,7 +1453,7 @@ class Subscription(Folder, SyncCode):
       return b64decode(string_to_decode)
     #elif format is .... put here the other formats
     else:#if there is no format corresponding with format, raise an error
-      #LOG('decode : unknown or not implemented format :', 0, format)
+      LOG('decode : unknown or not implemented format :', INFO, format)
       raise ValueError, "Sorry, the format %s is unknow or not implemented" % format
 
   def isDecodeEncodeTheSame(self, string_encoded, string_decoded, format):
@@ -1486,20 +1461,16 @@ class Subscription(Folder, SyncCode):
       return True if the string_encoded is equal to string_decoded encoded 
       in format
     """
-    isTheSame=False
-    if self.encode(format, string_decoded) == string_encoded:
-      isTheSame=True
-    return isTheSame
-
+    return self.encode(format, string_decoded) == string_encoded
 
   def setUser(self, user):
     """
       save the user logged in to log him on each transaction
     """
-    self.user=user
+    self.user = user
 
   def getUser(self):
     """
       retrun the user logged in
     """
-    return self.user
+    return getattr(self, 'user', None)
