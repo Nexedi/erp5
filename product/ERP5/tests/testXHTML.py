@@ -159,7 +159,7 @@ def addTestMethodDynamically():
     if not ( os.path.exists(business_template) or
         os.path.exists('%s.bt5' % business_template)):
       # try in $INSTANCE_HOME/bt5/*/
-      business_template_glob_list = glob('%s/*/%s' % (i, business_template))
+      business_template_glob_list = glob('%s/*/%s' % (bt5_base_path, i))
       if business_template_glob_list:
         business_template = business_template_glob_list[0]
 
