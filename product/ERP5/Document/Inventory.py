@@ -84,35 +84,50 @@ class Inventory(Delivery):
         temp_constructor = newTempDeliveryLine
       start_date = self.getStartDate()
       node = self.getDestination()
-      current_inventory_state_list = self.getPortalCurrentInventoryStateList()
-      for movement in self.getMovementList():
-        resource =  movement.getResourceValue()
-        if resource is not None and movement.getQuantity() not in (None,''):
-          variation_text = movement.getVariationText()
-          resource_and_variation_key = (resource,variation_text)
-          if resource_and_variation_key not in resource_and_variation_dict:
-            resource_and_variation_dict[resource_and_variation_key] = None
-            current_inventory_list = resource.getInventoryList( \
+      portal_simulation = self.getPortalObject().portal_simulation
+      current_inventory_list = portal_simulation.getInventoryList( \
                                     to_date          = start_date
-                                  , variation_text   = variation_text
                                   , node             = node
-                                  , simulation_state = current_inventory_state_list
+                                  , simulation_state = self.getPortalCurrentInventoryStateList()
                                   , group_by_sub_variation = 1
                                   , group_by_variation = 1
+                                  , group_by_resource = 1
                                   )
+      current_inventory_dict = {}
+      current_inventory_key_id_list = ('resource_relative_url', 'variation_text')
+      for line in current_inventory_list:
+        current_inventory_key = tuple([line[x] for x in current_inventory_key_id_list])
+        try:
+          current_inventory_by_sub_variation = current_inventory_dict[current_inventory_key]
+        except KeyError:
+          current_inventory_by_sub_variation = current_inventory_dict[current_inventory_key] = {}
+        current_inventory_by_sub_variation[line['sub_variation_text']] = line['total_quantity']
+      def getCurrentInventoryBySubVariation(**criterion_dict):
+        current_inventory_key = tuple([criterion_dict[x] for x in current_inventory_key_id_list])
+        return current_inventory_dict.get(current_inventory_key, {})
+      for movement in self.getMovementList():
+        if movement.getResourceValue() is not None and movement.getQuantity() not in (None,''):
+          resource_path =  movement.getResource()
+          variation_text = movement.getVariationText()
+          resource_and_variation_key = (resource_path, variation_text)
+          if resource_and_variation_key not in resource_and_variation_dict:
+            resource_and_variation_dict[resource_and_variation_key] = None
             kwd = {'uid':self.getUid(),
                    'start_date': start_date}
             variation_list = variation_text.split('\n')
-            for inventory in current_inventory_list:
+            inventory_by_subvariation_dict = getCurrentInventoryBySubVariation(
+              resource_relative_url=resource_path,
+              variation_text=variation_text)
+            for sub_variation_text, total_quantity in inventory_by_subvariation_dict.iteritems():
               sub_variation_list = []
-              if inventory.sub_variation_text is not None:
-                sub_variation_list = inventory.sub_variation_text.split('\n')
+              if sub_variation_text is not None:
+                sub_variation_list = sub_variation_text.split('\n')
               category_list = self.getCategoryList()
-              if inventory.total_quantity != 0:
+              if total_quantity != 0:
                 temp_delivery_line = temp_constructor(self,
                                                       self.getId())
-                kwd['quantity'] = - inventory.total_quantity
-                category_list.append('resource/%s' % inventory.resource_relative_url)
+                kwd['quantity'] = - total_quantity
+                category_list.append('resource/%s' % resource_path)
                 category_list.extend(variation_list)
                 category_list.extend(sub_variation_list)
                 kwd['category_list'] = category_list
