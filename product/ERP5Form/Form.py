@@ -514,13 +514,17 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     manage_FTPput = PUT
 
     #Methods for Proxify tab.
-    security.declareProtected('View management screens', 'getAllFormFieldList')
-    def getAllFormFieldList(self):
-        """"""
+    security.declareProtected('View management screens', 'getFormFieldList')
+    def getFormFieldList(self):
+        """
+        find fields and forms which name ends with 'FieldLibrary' in
+        same skin folder.
+        """
         form_list = []
         def iterate(obj):
             for i in obj.objectValues():
-                if i.meta_type=='ERP5 Form':
+                if (i.meta_type=='ERP5 Form' and
+                    i.getId().endswith('FieldLibrary')):
                     form_id = i.getId()
                     form_path = '%s.%s' % (obj.getId(), form_id)
                     field_list = []
@@ -528,15 +532,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                                       'form_id':form_id,
                                       'field_list':field_list})
                     for field in i.objectValues():
-                        if field.meta_type=='ProxyField':
-                            template_field = field.getRecursiveTemplateField()
-                            template_meta_type = getattr(template_field,
-                                                         'meta_type', None)
-                            field_type = '%s(Proxy)' % template_meta_type
-                            proxy_flag = True
-                        else:
-                            field_type = field.meta_type
-                            proxy_flag = False
+                        field_type, proxy_flag = get_field_meta_type_and_proxy_flag(field)
+                        if proxy_flag:
+                            field_type = '%s(Proxy)' % field_type
                         field_list.append({'field_object':field,
                                            'field_type':field_type,
                                            'proxy_flag':proxy_flag})
@@ -548,31 +546,109 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     security.declareProtected('View management screens', 'getProxyableFieldList')
     def getProxyableFieldList(self, field, form_field_list=None):
         """"""
+        def extract_keyword(name):
+            return [i for i in name.split('_') if not i in ('my', 'default')]
+
+        def check_keyword_list(name, keyword_list):
+            count = 0
+            for i in keyword_list:
+                if i in name:
+                    count += 1
+            return count/float(len(keyword_list))
+
+        def match(field_data):
+            if not field_data['field_type'].startswith(field.meta_type):
+                return 0
+            field_object = field_data['field_object']
+            if field_object.aq_base is field.aq_base:
+                return 0
+            field_id = field_object.getId()
+            if id_.startswith('my_') and not field_id.startswith('my_'):
+                return 0
+            return check_keyword_list(field_id, extract_keyword(id_))
+
+        def make_dict_list_append_function(dic, order_list):
+            def append(key, item):
+                if not key in order_list:
+                    order_list.append(key)
+                    dic[key] = []
+                dic[key].append(item)
+            return append
+
+        def add_default_field_library():
+            portal_url = getToolByName(self, 'portal_url')
+            portal = portal_url.getPortalObject()
+            portal_skins = getToolByName(self, 'portal_skins')
+
+            default_field_library_path = portal.getProperty('erp5_default_field_library_path', None)
+            if (not default_field_library_path or
+                len(default_field_library_path.split('.'))!=2):
+                return
+
+            skinfolder_id, form_id = default_field_library_path.split('.')
+
+            skinfolder = getattr(portal_skins, skinfolder_id, None)
+            default_field_library = getattr(skinfolder, form_id, None)
+            if default_field_library is None:
+                return
+
+            if not default_field_library_path in form_order:
+                for i in default_field_library.objectValues():
+                    field_meta_type, proxy_flag = get_field_meta_type_and_proxy_flag(i)
+                    if meta_type==field_meta_type:
+                        if proxy_flag:
+                            field_meta_type = '%s(Proxy' % field_meta_type
+                        matched_item = {'form_id':form_id,
+                                        'field_type':field_meta_type,
+                                        'field_object':i,
+                                        'proxy_flag':proxy_flag,
+                                        'matched_rate':0
+                                        }
+                        matched_append(default_field_library_path,
+                                       matched_item)
+
+        id_ = field.getId()
         meta_type = field.meta_type
+
         matched = {}
         form_order = []
+        matched_append = make_dict_list_append_function(matched, form_order)
+
+        perfect_matched = {}
+        perfect_matched_form_order = []
+        perfect_matched_append = make_dict_list_append_function(perfect_matched, perfect_matched_form_order)
 
         if form_field_list is None:
-            form_field_list = self.getAllFormFieldList()
+            form_field_list = self.getFormFieldList()
 
         for i in form_field_list:
             for data in i['field_list']:
-                if data['field_type'].startswith(meta_type):
+                tmp = []
+                matched_rate = match(data)
+                if matched_rate>=0.5:
                     form_path = i['form_path']
                     form_id = i['form_id']
                     field_type = data['field_type']
                     field_object = data['field_object']
-                    if field.aq_base is field_object.aq_base:
-                        continue
                     proxy_flag = data['proxy_flag']
-                    if not form_path in form_order:
-                        form_order.append(form_path)
-                        matched[form_path] = []
-                    matched[form_path].append({'form_id':form_id,
-                                               'field_type':field_type,
-                                               'field_object':field_object,
-                                               'proxy_flag':proxy_flag})
+
+                    matched_item = {'form_id':form_id,
+                                    'field_type':field_type,
+                                    'field_object':field_object,
+                                    'proxy_flag':proxy_flag,
+                                    'matched_rate':matched_rate
+                                    }
+                    if matched_rate==1:
+                        perfect_matched_append(form_path, matched_item)
+                    elif not perfect_matched:
+                        matched_append(form_path, matched_item)
+
+        if perfect_matched:
+            perfect_matched_form_order.sort()
+            return perfect_matched_form_order, perfect_matched
+
         form_order.sort()
+        add_default_field_library()
         return form_order, matched
 
     security.declareProtected('Change Formulator Forms', 'proxifyField')
@@ -655,15 +731,29 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
             if target_field.meta_type=='ProxyField':
                 for i in new_values.keys():
-                    if (not i in target_field.delegated_list and
-                        is_equal(target_field.get_recursive_orig_value(i),
-                                 new_values[i])):
-                        del new_values[i]
+                    if not i in target_field.delegated_list:
+                        # obsolete variable check
+                        try:
+                            target_field.get_recursive_orig_value(i)
+                        except KeyError:
+                            # then `i` is obsolete!
+                            del new_values[i]
+                        else:
+                            if is_equal(target_field.get_recursive_orig_value(i),
+                                        new_values[i]):
+                                del new_values[i]
                 for i in new_tales:
-                    if (not i in target_field.delegated_list and
-                        is_equal(target_field.get_recursive_tales(i),
-                                 new_tales[i])):
-                        del new_tales[i]
+                    if not i in target_field.delegated_list:
+                        # obsolete variable check
+                        try:
+                            target_field.get_recursive_tales(i)
+                        except KeyError:
+                            # then `i` is obsolete!
+                            del new_tales[i]
+                        else:
+                            if is_equal(target_field.get_recursive_tales(i),
+                                        new_tales[i]):
+                                del new_tales[i]
 
             delegated_list = []
             for i in (new_values.keys()+new_tales.keys()):
@@ -681,6 +771,15 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     psyco.bind(__call__)
     psyco.bind(_exec)
+
+
+# utility function
+def get_field_meta_type_and_proxy_flag(field):
+    if field.meta_type=='ProxyField':
+        return field.getRecursiveTemplateField().meta_type, True
+    else:
+        return field.meta_type, False
+
 
 # More optimizations
 #psyco.bind(ERP5Field)

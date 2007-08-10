@@ -1,7 +1,7 @@
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
-<dtml-let form_field_list=getAllFormFieldList>
+<dtml-let form_field_list=getFormFieldList>
 
 <p class="form-help">
 Proxify non-proxy fields.
