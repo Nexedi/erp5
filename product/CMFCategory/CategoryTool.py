@@ -838,7 +838,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
       #LOG("Get Acquired Category acquired_object_dict: ",0,str(acquired_object_dict))
       # XXX We must use filters in the future
       # where_expression = self._buildQuery(spec, filter, kw)
-
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type # This is bad XXX - JPS - spec is for meta_type, not for portal_type - be consistent !
 
@@ -964,10 +963,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
               #  continue
               #acquired_object_dict[my_acquisition_object_path] = 1
               #if hasattr(my_acquisition_object, '_categories'): # This would be a bug since we have category acquisition
-                # We should only consider objects which define that category
                 #LOG('my_acquisition_object',0, str(getattr(my_acquisition_object, '_categories', ())))
                 #LOG('my_acquisition_object',0, str(base_category))
-                if base_category in getattr(my_acquisition_object, '_categories', ()):
+                
+                # We should only consider objects which define that category
+                if base_category in getattr(my_acquisition_object, '_categories', ()) or base_category_value.getFallbackBaseCategoryList():
                   if (not acquired_portal_type) or my_acquisition_object.portal_type in acquired_portal_type:
                     #LOG("Recursive call ",0,str((spec, my_acquisition_object.portal_type)))
                     new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
