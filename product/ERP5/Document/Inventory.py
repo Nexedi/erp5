@@ -77,29 +77,31 @@ class Inventory(Delivery):
       to have our own temp object constructor, this is usefull if we
       want to use some classes with some particular methods
       """
-      resource_and_variation_list = []
+      resource_and_variation_dict = {}
       stock_object_list = []
       if temp_constructor is None:
         from Products.ERP5Type.Document import newTempDeliveryLine
         temp_constructor = newTempDeliveryLine
       start_date = self.getStartDate()
       node = self.getDestination()
+      current_inventory_state_list = self.getPortalCurrentInventoryStateList()
       for movement in self.getMovementList():
         resource =  movement.getResourceValue()
         if resource is not None and movement.getQuantity() not in (None,''):
           variation_text = movement.getVariationText()
-          if (resource,variation_text) not in resource_and_variation_list:
-            resource_and_variation_list.append((resource,variation_text))
+          resource_and_variation_key = (resource,variation_text)
+          if resource_and_variation_key not in resource_and_variation_dict:
+            resource_and_variation_dict[resource_and_variation_key] = None
             current_inventory_list = resource.getInventoryList( \
                                     to_date          = start_date
                                   , variation_text   = variation_text
                                   , node             = node
-                                  , simulation_state = self.getPortalCurrentInventoryStateList()
+                                  , simulation_state = current_inventory_state_list
                                   , group_by_sub_variation = 1
                                   , group_by_variation = 1
                                   )
-            kwd = {'uid':self.getUid()}
-            kwd['start_date'] = start_date
+            kwd = {'uid':self.getUid(),
+                   'start_date': start_date}
             variation_list = variation_text.split('\n')
             for inventory in current_inventory_list:
               sub_variation_list = []
