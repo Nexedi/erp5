@@ -83,8 +83,6 @@ Domain | metadata
 Domain | print_pdf
 Domain | view
 Folder | foldercontents
-Folder | localroles
-Folder | syndication
 Folder | view
 Mapped Value | history
 Mapped Value | metadata
