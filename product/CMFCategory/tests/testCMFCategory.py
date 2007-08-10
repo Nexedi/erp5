@@ -89,7 +89,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.failUnless(self.getPersonModule()!=None)
     self.failUnless(self.getOrganisationModule()!=None)
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     self.login()
     portal = self.getPortal()
 
@@ -97,7 +97,11 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Organisation, so we modifiy type informations to allow anything inside
     # Person and Organisation (we'll cleanup on teardown)
     self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
-    self.getTypesTool().getTypeInfo('Organisation').filter_content_types = 0
+    organisation_ti = self.getTypesTool().getTypeInfo('Organisation')
+    organisation_ti.filter_content_types = 0
+    # we also enable 'destination' category on organisations
+    self._organisation_categories = cat = organisation_ti.base_category_list
+    organisation_ti.base_category_list = tuple(list(cat) + ['destination'])
 
     # Make persons.
     person_module = self.getPersonModule()
@@ -171,9 +175,11 @@ class TestCMFCategory(ERP5TypeTestCase):
       bc_obj.manage_delObjects()
     # type informations
     self.getTypesTool().getTypeInfo('Person').filter_content_types = 1
-    self.getTypesTool().getTypeInfo('Organisation').filter_content_types = 1
+    organisation_ti = self.getTypesTool().getTypeInfo('Organisation')
+    organisation_ti.filter_content_types = 1
+    organisation_ti = self._organisation_categories
 
-  def login(self, quiet=quiet, run=run_all_test):
+  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
