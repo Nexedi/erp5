@@ -2117,7 +2117,14 @@ class ActionTemplateItem(ObjectTemplateItem):
     p = context.getPortalObject()
     object_path = kw.get("object_path", None)
     if object_path is not None:
-      keys = [object_path]
+      if '/' in object_path:
+        # here object_path is the path of the actions, something like
+        # portal_type/Person/view
+        ti, action_id = object_path.rsplit('/', 1)
+        keys = ['%s | %s' % (ti, action_id)]
+      else:
+        # compatibility ?
+        keys = [object_path]
     else:
       keys = self._archive.keys()
     for id in keys:
