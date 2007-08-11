@@ -32,14 +32,19 @@ STATE_KEY = 'str'
 
 def DateTime__setstate__(self, state):
   if len(state) != 1 or STATE_KEY not in state:
-    # For backward compatibility
     self.__dict__.update(state)
   else:
+    # For backward compatibility
     self._parse_args(state[STATE_KEY])
 
 DateTimeKlass.__setstate__ = DateTime__setstate__
   
-def DateTime__getstate__(self):
-  return {STATE_KEY: str(self)}
-
-DateTimeKlass.__getstate__ = DateTime__getstate__
+# This below is disabled, because this loses information at
+# millisecond level, and it breaks the simulation due to
+# divergency tests. I will not disable the above for backward
+# compatibility. -yo
+# 
+# def DateTime__getstate__(self):
+#   return {STATE_KEY: str(self)}
+# 
+# DateTimeKlass.__getstate__ = DateTime__getstate__
