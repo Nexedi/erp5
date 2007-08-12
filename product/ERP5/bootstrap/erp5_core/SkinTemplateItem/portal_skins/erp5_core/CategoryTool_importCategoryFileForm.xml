@@ -73,7 +73,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_import_file</string>
+                        <string>your_import_file</string>
+                        <string>your_update_existing_property</string>
+                        <string>your_keep_existing_category</string>
+                        <string>your_detailed_report</string>
                         <string>category_import_tips</string>
                       </list>
                     </value>

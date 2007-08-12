@@ -73,6 +73,34 @@
 from Products.ERP5OOo.OOoUtils import OOoParser\n
 OOoParser = OOoParser()\n
 \n
+# Initialise some general variables\n
+detailed_report_result = []\n
+detailed_report_append = detailed_report_result.append\n
+base_category_id_list = []\n
+category_path_dict = {}\n
+try:\n
+  property_id_list = context.portal_classes.getPropertySheetPropertyIdList()\n
+except AttributeError:\n
+  # Class tool is too old - use an empty list and warn used in detailed report\n
+  property_id_list = []\n
+  detailed_report_append(\'WARNING: ERP5Type product needs to be upgraded so that portal_classes can supply getPropertySheetPropertyIdList\')\n
+\n
+def Object_hasRelation(obj):\n
+  # Check if there is some related objets.\n
+  result = 0\n
+  for o in obj.getIndexableChildValueList():\n
+    for related in obj.portal_categories.getRelatedValueList(o):\n
+      related_url = related.getRelativeUrl()\n
+      if related_url.startswith(obj.getRelativeUrl()):\n
+        continue\n
+      elif related_url.startswith(\'portal_simulation\'):\n
+        continue\n
+      elif related_url.startswith(\'portal_trash\'):\n
+        continue\n
+      else:\n
+        result = 1\n
+        break\n
+  return result\n
 \n
 \n
 def getIDFromString(string=None):\n
@@ -110,6 +138,9 @@ def getIDFromString(string=None):\n
   return clean_id\n
 \n
 \n
+def isValidID(id):\n
+  return id not in property_id_list\n
+\n
 \n
 # Extract tables from the speadsheet file\n
 OOoParser.openFile(import_file)\n
@@ -117,10 +148,12 @@ filename = OOoParser.getFilename()\n
 spreadsheets = OOoParser.getSpreadsheetsMapping()\n
 \n
 # Some statistics\n
-new_category_counter     = 0\n
+new_category_counter = 0\n
 updated_category_counter = 0\n
-total_category_counter   = 0\n
-\n
+total_category_counter = 0\n
+invalid_category_id_counter = 0\n
+deleted_category_counter = 0\n
+kept_category_counter = 0\n
 \n
 for table_name in spreadsheets.keys():\n
 \n
@@ -155,12 +188,13 @@ for table_name in spreadsheets.keys():\n
       property_map[column_index] = column_id\n
     column_index += 1\n
 \n
-  # Construct categories data (with absolut path) from table lines\n
+  # Construct categories data (with absolute path) from table lines\n
   categories = []\n
   # The first category is the Base category\n
   # 1 table = 1 base category\n
   base_category_name = table_name\n
   base_category_id = getIDFromString(base_category_name)\n
+  base_category_id_list.append(base_category_id)\n
   categories.append({ \'path\' : base_category_id\n
                     , \'title\': base_category_name\n
                     })\n
@@ -252,51 +286,102 @@ for table_name in spreadsheets.keys():\n
     if \'path\' in keys:\n
       base_path_obj = context.portal_categories\n
       is_base_category = True\n
+      is_valid_category = True\n
       for category_id in category[\'path\'].split(\'/\'):\n
         # The current category is not existing\n
-        if category_id not in base_path_obj.contentIds():\n
-\n
+        if not base_path_obj.hasContent(category_id):\n
           # Create the category\n
           if is_base_category:\n
             category_type = \'Base Category\'\n
           else:\n
             category_type = \'Category\'\n
-          base_path_obj.newContent( portal_type       = category_type\n
-                                  , id                = category_id\n
-                                  , immediate_reindex = 1\n
-                                  )\n
+          if isValidID(category_id):\n
+            base_path_obj.newContent( portal_type       = category_type\n
+                                    , id                = category_id\n
+                                    , immediate_reindex = 1\n
+                                    )\n
+            detailed_report_append(\'Created new %s with  URL %s\' % (category_type,\n
+                                  base_path_obj[category_id].getRelativeUrl()))\n
+          else:\n
+            # The ID is invalid, we must break the loop\n
+            invalid_category_id_counter += 1\n
+            is_valid_category = False\n
+            detailed_report_append(\'WARNING: found invalid ID %s\' % category_id)\n
+            break\n
           is_new_category = True\n
           new_category_counter += 1\n
         base_path_obj = base_path_obj[category_id]\n
+        category_path_dict[base_path_obj.getRelativeUrl()] = None\n
         is_base_category = False\n
-      new_category = base_path_obj\n
-\n
-      # Set the category properties\n
-      for key in keys:\n
-        if key not in [\'path\', \'id\']:\n
-          value = category[key]\n
-          if value not in (\'\', None):\n
-            # Get the current value of the attribute\n
-            previous_value = new_category.getProperty(key)\n
-            new_value = value.encode(\'UTF-8\')\n
-            # Do not update or set object attribute if the vale remain the same.\n
-            if previous_value != new_value:\n
-              new_category.setProperty(key, new_value)\n
-              # Update statistics\n
+      if is_valid_category:\n
+        # Only try to update a valid category\n
+        new_category = base_path_obj\n
+        # Set the category properties\n
+        category_update_dict = {}\n
+        for key in keys:\n
+          if key not in [\'path\', \'id\']:\n
+            value = category[key]\n
+            if update_existing_property or is_new_category:\n
+              # Always update properties if update_existing_property is set or if this a new category\n
+              category_update_dict[str(key)] = value\n
               if not is_new_category:\n
-                updated_category_counter += 1\n
+                detailed_report_append(\'Updated %s on Category %s with value %s\' % (key,\n
+                                        new_category.getRelativeUrl(), value))\n
+            elif value not in (\'\', None) and not new_category.hasProperty(key):\n
+              # Only set properties which are not already defined\n
+              category_update_dict[str(key)] = value\n
+              detailed_report_append(\'Updated %s on Category %s with value %s\' % (key,\n
+                                      new_category.getRelativeUrl(), value))\n
+        if not is_new_category and category_update_dict:\n
+          updated_category_counter += 1\n
+        new_category.edit(**category_update_dict)\n
+    else:\n
+      raise KeyError, \'path was not defined for one category, this should never happen\'\n
 \n
+# Find categories to delete\n
+category_to_delete_list = []\n
+for base_category_id in base_category_id_list:\n
+  base_category = context.portal_categories[base_category_id]\n
+  for category in base_category.getCategoryChildValueList(is_self_excluded=False):\n
+    if not category_path_dict.has_key(category.getRelativeUrl()):\n
+      if keep_existing_category or Object_hasRelation(category):\n
+        if Object_hasRelation(category):\n
+          detailed_report_append(\'WARNING: Category %s is used and can not be deleted\' % category.getRelativeUrl())\n
+        else:\n
+          detailed_report_append(\'Kept category %s\' % category.getRelativeUrl())\n
+        kept_category_counter += 1\n
+      else:\n
+        detailed_report_append(\'Deleted category %s\' % category.getRelativeUrl())\n
+        deleted_category_counter += 1\n
+        category_to_delete_list.append(category.getRelativeUrl())\n
+\n
+# Delete unused categories\n
+if not keep_existing_category:\n
+  for category in category_to_delete_list:\n
+    category = context.portal_categories.resolveCategory(category)\n
+    if category is not None:\n
+      parent = category.getParentValue()\n
+      category_id = category.getId()\n
+      parent.deleteContent(category_id)\n
+\n
+if detailed_report:\n
+  # Return a detailed report if requested\n
+  return \'\\n\'.join(detailed_report_result)\n
 \n
 # Import is a success, go back to the portal_categories tool\n
 return context.REQUEST.RESPONSE.redirect(\n
     # TODO translate\n
-  "%s/view?portal_status_message=%s+categories+found+in+%s+:+%s+created,+%s+updated,+%s+untouched."\n
+  "%s/view?portal_status_message=%s+categories+found+in+%s:+%s+created,+%s+updated,+%s+untouched,+%s+invalid+ID.+%s+existing+categories:+%s+deleted,+%skept."\n
   % ( context.portal_categories.absolute_url()\n
     , total_category_counter\n
     , filename\n
     , new_category_counter\n
     , updated_category_counter\n
     , total_category_counter - new_category_counter - updated_category_counter\n
+    , invalid_category_id_counter\n
+    , deleted_category_counter + kept_category_counter\n
+    , deleted_category_counter\n
+    , kept_category_counter\n
     )\n
 )\n
 
@@ -316,8 +401,14 @@ return context.REQUEST.RESPONSE.redirect(\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file, **kw</string> </value>
+            <value> <string>import_file, update_existing_property=False, keep_existing_category=True, detailed_report=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -337,24 +428,39 @@ return context.REQUEST.RESPONSE.redirect(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>import_file</string>
+                            <string>update_existing_property</string>
+                            <string>keep_existing_category</string>
+                            <string>detailed_report</string>
                             <string>kw</string>
                             <string>Products.ERP5OOo.OOoUtils</string>
                             <string>OOoParser</string>
+                            <string>detailed_report_result</string>
+                            <string>_getattr_</string>
+                            <string>detailed_report_append</string>
+                            <string>base_category_id_list</string>
+                            <string>category_path_dict</string>
+                            <string>context</string>
+                            <string>property_id_list</string>
+                            <string>AttributeError</string>
+                            <string>Object_hasRelation</string>
                             <string>None</string>
                             <string>getIDFromString</string>
-                            <string>_getattr_</string>
+                            <string>isValidID</string>
                             <string>filename</string>
                             <string>spreadsheets</string>
                             <string>new_category_counter</string>
                             <string>updated_category_counter</string>
                             <string>total_category_counter</string>
+                            <string>invalid_category_id_counter</string>
+                            <string>deleted_category_counter</string>
+                            <string>kept_category_counter</string>
                             <string>_getiter_</string>
                             <string>table_name</string>
                             <string>_getitem_</string>
@@ -393,17 +499,21 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>False</string>
                             <string>is_new_category</string>
                             <string>keys</string>
-                            <string>context</string>
                             <string>base_path_obj</string>
                             <string>True</string>
                             <string>is_base_category</string>
+                            <string>is_valid_category</string>
                             <string>category_id</string>
                             <string>category_type</string>
                             <string>new_category</string>
+                            <string>category_update_dict</string>
                             <string>key</string>
                             <string>value</string>
-                            <string>previous_value</string>
-                            <string>new_value</string>
+                            <string>_apply_</string>
+                            <string>KeyError</string>
+                            <string>category_to_delete_list</string>
+                            <string>base_category</string>
+                            <string>parent</string>
                           </tuple>
                         </value>
                     </item>
@@ -415,7 +525,11 @@ return context.REQUEST.RESPONSE.redirect(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+                <int>1</int>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_import_file</string> </value>
+            <value> <string>your_import_file</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
