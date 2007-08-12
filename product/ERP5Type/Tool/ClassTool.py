@@ -60,6 +60,8 @@ from Products.ERP5Type.Base import newTempDocumentationHelper
 
 from Products.ERP5Type import allowClassTool
 
+import Products
+
 from zLOG import LOG
 
 """
@@ -75,6 +77,33 @@ from zLOG import LOG
 
 COPYRIGHT = "Copyright (c) 2002-2007 Nexedi SARL and Contributors. All Rights Reserved."
 LOCAL_DIRECTORY_LIST = ('Document', 'Extensions', 'Constraint', 'tests', 'PropertySheet')
+
+
+class ClassToolMixIn:
+  """
+    Provides common methods which portal_classes should always provide
+  """
+  # Declarative Security
+  security = ClassSecurityInfo()
+
+  security.declareProtected( Permissions.ManagePortal, 'getPropertySheetPropertyIdList' )
+  def getPropertySheetPropertyIdList(self):
+    """
+    Returns the sorted list of property IDs defined in the current instance
+    in global and local property sheets
+    """
+    property_sheet_name_list = Products.ERP5Type.PropertySheet.__dict__.keys()
+    property_sheet_name_list = filter(lambda k: not k.startswith('__'),  property_sheet_name_list)
+    result_dict = {}
+    for property_sheet_name in property_sheet_name_list:
+      for property in getattr(getattr(Products.ERP5Type.PropertySheet, property_sheet_name),
+                              '_properties', ()):
+        result_dict[property['id']] = None
+        if property.has_key('storage_id'):
+          result_dict[property['storage_id']] = None
+    result = result_dict.keys()
+    result.sort()
+    return result
 
 if allowClassTool():
 
@@ -115,7 +144,7 @@ if allowClassTool():
     def _abort(self):
       shutil.rmtree(self.path, 1)
 
-  class ClassTool(BaseTool):
+  class ClassTool(BaseTool, ClassToolMixIn):
       """
         This is the full-featured version of ClassTool.
       """
@@ -832,7 +861,7 @@ def initialize( context ):
                                  'asDocumentationHelper')
       def asDocumentationHelper(self, class_id):
         """
-          This funciton generates a TempDocumentationHelper for a class of a
+          This function generates a TempDocumentationHelper for a class of a
           given name.
 
           XXX: this code is (almost) duplicated from ERP5Types/Base.py:asDocumentationHelper
@@ -922,7 +951,7 @@ def initialize( context ):
 
 else:
 
-  class ClassTool(BaseTool):
+  class ClassTool(BaseTool, ClassToolMixIn):
       """
         Dummy version of ClassTool.
       """
