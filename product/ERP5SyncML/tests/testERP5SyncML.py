@@ -85,7 +85,7 @@ class TestERP5SyncMLMixin:
   nb_subscription = 2
   nb_publication = 1
   nb_synchronization = 3
-  nb_message_first_synchronization = 6
+  nb_message_first_synchronization = 8
   subscription_url1 = 'file://tmp/sync_client1'
   subscription_url2 = 'file://tmp/sync_client2'
   publication_url = 'file://tmp/sync_server'
@@ -347,7 +347,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         conduit='ERP5Conduit',
         gpg_key='',
         gid_generator='getId',
-        activity_enabled=False)
+        activity_enabled=False,
+        authentication_format='b64',
+        authentication_type='syncml:auth-basic')
     pub = portal_sync.getPublication(self.pub_id)
     self.failUnless(pub is not None)
 
@@ -369,7 +371,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         conduit='ERP5Conduit', 
         gpg_key='',
         gid_generator='getId',
-        activity_enabled=False)
+        activity_enabled=False,
+        login='fab',
+        password='myPassword')
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
 
@@ -391,7 +395,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         conduit='ERP5Conduit', 
         gpg_key='',
         gid_generator='getId',
-        activity_enabled=False)
+        activity_enabled=False,
+        login='fab',
+        password='myPassword')
     sub = portal_sync.getSubscription(self.sub_id2)
     self.failUnless(sub is not None)
 
@@ -1338,7 +1344,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         gpg_key='',
         gid_generator='getId',
         activity_enabled=False,
-        alert_code = SyncCode.ONE_WAY_FROM_SERVER)
+        alert_code = SyncCode.ONE_WAY_FROM_SERVER,
+        login = 'fab',
+        password = 'myPassword')
     sub = portal_sync.getSubscription(self.sub_id1)
     self.assertTrue(sub.isOneWayFromServer())
     self.failUnless(sub is not None)
@@ -1458,7 +1466,6 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=='
     """
     portal_sync = self.getSynchronizationTool()
     pub = portal_sync.getPublication(publication_id)
-    pub.setAuthentication(True)
     pub.setLogin(login)
     pub.setPassword(password)
     pub.setAuthenticationFormat(auth_format)
@@ -1472,7 +1479,6 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=='
     """
     portal_sync = self.getSynchronizationTool()
     sub = portal_sync.getSubscription(subscription_id)
-    sub.setAuthentication(True)
     sub.setAuthenticated(False)
     sub.setLogin(login)
     sub.setPassword(password)
@@ -1517,7 +1523,9 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=='
     #adding authentication :
     self.addAuthenticationToPublication(self.pub_id, 'fab', 'myPassword', 'b64',
         'syncml:auth-basic')
-    # try to synchronize without authentication on the subscription, it 
+    self.addAuthenticationToSubscription(self.sub_id1, 'pouet', 'pouet', 
+        'b64', 'syncml:auth-basic')
+    # try to synchronize with a wrong authentication on the subscription, it 
     # should failed
     kw = {'first_name':self.first_name2,'last_name':self.last_name2}
     person1_c.edit(**kw)

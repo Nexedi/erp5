@@ -140,10 +140,13 @@ class VCardConduit(ERP5Conduit, SyncCode):
     """
     vcard_dict = self.vcard2Dict(vcard)
     gid_from_vcard = []
-    gid_from_vcard.append(vcard_dict['first_name'])
-    gid_from_vcard.append(' ')
-    gid_from_vcard.append(vcard_dict['last_name'])
+    if vcard_dict.has_key('first_name'):
+      gid_from_vcard.append(vcard_dict['first_name'])
+      gid_from_vcard.append(' ')
+    if vcard_dict.has_key('last_name'):
+      gid_from_vcard.append(vcard_dict['last_name'])
     gid_from_vcard = ''.join(gid_from_vcard)
+    LOG('gid_from_vcard', 0, gid_from_vcard)
     return gid_from_vcard
   
   def changePropertyEncoding(self, property_parameters_list, 

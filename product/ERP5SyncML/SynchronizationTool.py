@@ -179,7 +179,7 @@ class SynchronizationTool( SubscriptionSynchronization,
             destination_path, source_uri, query, xml_mapping, 
             conduit, gpg_key, 
             synchronization_id_generator=None, gid_generator=None, 
-            media_type=None, auth_required=0, authentication_format='', 
+            media_type=None, authentication_format='', 
             authentication_type='', RESPONSE=None, activity_enabled = False,
             sync_content_type='application/vnd.syncml+xml', 
             synchronize_with_erp5_sites=True):
@@ -194,7 +194,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     pub = Publication(new_id, title, publication_url,
                       destination_path, source_uri, query, xml_mapping,
                       conduit, gpg_key, synchronization_id_generator,
-                      gid_generator, media_type, auth_required,
+                      gid_generator, media_type, 
                       authentication_format, authentication_type,
                       activity_enabled, synchronize_with_erp5_sites,
                       sync_content_type)
@@ -243,7 +243,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_editPublication(self, title, publication_url,
                             destination_path, source_uri, query, xml_mapping,
                             conduit, gpg_key, synchronization_id_generator,
-                            gid_generator,  media_type=None, auth_required=0,
+                            gid_generator,  media_type=None,
                             authentication_format='', authentication_type='',
                             RESPONSE=None, activity_enabled=False,
                             sync_content_type='application/vnd.syncml+xml',
@@ -264,7 +264,6 @@ class SynchronizationTool( SubscriptionSynchronization,
     pub.setSynchronizationIdGenerator(synchronization_id_generator)
     pub.setGidGenerator(gid_generator)
     pub.setMediaType(media_type)
-    pub.setAuthentication(auth_required)
     pub.setAuthenticationFormat(authentication_format)
     pub.setAuthenticationType(authentication_type)
     pub.setSyncContentType(sync_content_type)

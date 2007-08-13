@@ -110,78 +110,66 @@ class PublicationSynchronization(XMLSyncUtils):
       xml(' <SyncBody>\n')
 
 
-      if publication.isAuthenticationRequired():
-        #at the begining, the code is initialised at UNAUTHORIZED
-        auth_code=self.UNAUTHORIZED
-        LOG('PubSyncInit', INFO, 'authentication required')
-        if not cred:
-          auth_code=self.AUTH_REQUIRED
-          LOG("PubSyncInit there's no credential !!!", INFO,'')
-	        # Prepare the xml message for the Sync initialization package
+      #at the begining, the code is initialised at UNAUTHORIZED
+      auth_code=self.UNAUTHORIZED
+      if not cred:
+        auth_code=self.AUTH_REQUIRED
+        LOG("PubSyncInit there's no credential !!!", INFO,'')
+        # Prepare the xml message for the Sync initialization package
+        xml(self.SyncMLChal(cmd_id, "SyncHdr",
+          publication.getPublicationUrl(), subscriber.getSubscriptionUrl(),
+          publication.getAuthenticationFormat(),
+          publication.getAuthenticationType(), auth_code))
+        cmd_id += 1
+        # chal message
+        xml_status, cmd_id = self.SyncMLStatus(xml_client, auth_code,
+            cmd_id, next_anchor, subscription=subscriber).values()
+        xml(xml_status)
+      else:
+        (authentication_format, authentication_type, data) = \
+            self.getCred(xml_client)
+        if authentication_type == publication.getAuthenticationType():
+          authentication_format = publication.getAuthenticationFormat()
+          decoded = subscriber.decode(authentication_format, data)
+          if decoded not in ('', None) and ':' in decoded:
+            (login, password) = decoded.split(':')
+            uf = self.getPortalObject().acl_users
+            for plugin_name, plugin in uf._getOb('plugins').listPlugins(
+                                      IAuthenticationPlugin ):
+              if plugin.authenticateCredentials(
+                        {'login':login, 'password':password}) is not None:
+                subscriber.setAuthenticated(True)
+                auth_code=self.AUTH_ACCEPTED
+                #here we must log in with the user authenticated :
+                user = uf.getUserById(login).__of__(uf)
+                newSecurityManager(None, user)
+                subscriber.setUser(login)
+                break
+              else:
+                auth_code=self.UNAUTHORIZED
+        #in all others cases, the auth_code is set to UNAUTHORIZED
+
+        # Prepare the xml message for the Sync initialization package
+        if auth_code == self.AUTH_ACCEPTED:
+          xml_status, cmd_id = self.SyncMLStatus(xml_client, auth_code,
+              cmd_id, next_anchor, subscription=subscriber).values()
+          xml(xml_status)
+          # alert message
+          xml(self.SyncMLAlert(cmd_id, sync_type, subscriber.getTargetURI(),
+            subscriber.getSourceURI(), subscriber.getLastAnchor(),
+            next_anchor))
+          cmd_id += 1
+        else:
+          # chal message
           xml(self.SyncMLChal(cmd_id, "SyncHdr",
             publication.getPublicationUrl(), subscriber.getSubscriptionUrl(),
             publication.getAuthenticationFormat(),
             publication.getAuthenticationType(), auth_code))
           cmd_id += 1
-	        # chal message
-          xml_status, cmd_id = self.SyncMLStatus(xml_client, auth_code,
-              cmd_id, next_anchor, subscription=subscriber).values()
+          xml_status, cmd_id = self.SyncMLStatus(xml_client,
+              self.AUTH_REQUIRED, cmd_id, next_anchor,
+              subscription=subscriber).values()
           xml(xml_status)
-        else:
-          (authentication_format, authentication_type, data) = \
-              self.getCred(xml_client)
-          if authentication_type == publication.getAuthenticationType():
-            authentication_format = publication.getAuthenticationFormat()
-            decoded = subscriber.decode(authentication_format, data)
-            if decoded not in ('', None) and ':' in decoded:
-              (login, password) = decoded.split(':')
-              uf = self.getPortalObject().acl_users
-              for plugin_name, plugin in uf._getOb('plugins').listPlugins(
-                                        IAuthenticationPlugin ):
-                if plugin.authenticateCredentials(
-                          {'login':login, 'password':password}) is not None:
-                  subscriber.setAuthenticated(True)
-                  auth_code=self.AUTH_ACCEPTED
-                  #here we must log in with the user authenticated :
-                  user = uf.getUserById(login).__of__(uf)
-                  newSecurityManager(None, user)
-                  subscriber.setUser(login)
-                  break
-                else:
-                  auth_code=self.UNAUTHORIZED
-          #in all others cases, the auth_code is set to UNAUTHORIZED
-
-          # Prepare the xml message for the Sync initialization package
-          if auth_code == self.AUTH_ACCEPTED:
-            xml_status, cmd_id = self.SyncMLStatus(xml_client, auth_code,
-                cmd_id, next_anchor, subscription=subscriber).values()
-            xml(xml_status)
-            # alert message
-            xml(self.SyncMLAlert(cmd_id, sync_type, subscriber.getTargetURI(),
-              subscriber.getSourceURI(), subscriber.getLastAnchor(),
-              next_anchor))
-            cmd_id += 1
-          else:
-	          # chal message
-            xml(self.SyncMLChal(cmd_id, "SyncHdr",
-              publication.getPublicationUrl(), subscriber.getSubscriptionUrl(),
-              publication.getAuthenticationFormat(),
-              publication.getAuthenticationType(), auth_code))
-            cmd_id += 1
-            xml_status, cmd_id = self.SyncMLStatus(xml_client,
-                self.AUTH_REQUIRED, cmd_id, next_anchor,
-                subscription=subscriber).values()
-            xml(xml_status)
-
-      elif alert is not None: #if no identification is required :
-        # syncml header
-        xml_status, cmd_id = self.SyncMLStatus(xml_client, self.AUTH_ACCEPTED,
-            cmd_id, next_anchor, subscription=subscriber).values()
-        xml(xml_status)
-        # alert message
-        xml(self.SyncMLAlert(cmd_id, sync_type, subscriber.getTargetURI(),
-          subscriber.getSourceURI(), subscriber.getLastAnchor(), next_anchor))
-        cmd_id += 1
 
       # We have to set every object as NOT_SYNCHRONIZED
       subscriber.startSynchronization()
@@ -253,12 +241,11 @@ class PublicationSynchronization(XMLSyncUtils):
         #we log the user authenticated to do the synchronization with him
         if self.checkMap(xml_client) :
           self.setRidWithMap(xml_client, subscriber)
-        if publication.isAuthenticationRequired():
-          if subscriber.isAuthenticated():
-              uf = self.getPortalObject().acl_users
-              user = uf.getUserById(subscriber.getUser()).__of__(uf)
-              newSecurityManager(None, user)
-              result = self.PubSyncModif(publication, xml_client)
+        if subscriber.isAuthenticated():
+            uf = self.getPortalObject().acl_users
+            user = uf.getUserById(subscriber.getUser()).__of__(uf)
+            newSecurityManager(None, user)
+            result = self.PubSyncModif(publication, xml_client)
         else:
           result = self.PubSyncModif(publication, xml_client)
     elif subscriber is not None:

@@ -144,7 +144,7 @@ class Publication(Subscription):
   # Constructor
   def __init__(self, id, title, publication_url, destination_path,
       source_uri, query, xml_mapping, conduit, gpg_key, id_generator,
-      gid_generator, media_type, auth_required, authentication_format,
+      gid_generator, media_type, authentication_format,
       authentication_type, activity_enabled, synchronize_with_erp5_sites,
       sync_content_type):
     """
@@ -165,7 +165,6 @@ class Publication(Subscription):
     self.setConduit(conduit)
     Folder.__init__(self, id)
     self.title = title
-    self.auth_required = auth_required 
     self.authentication_format = authentication_format
     self.authentication_type = authentication_type
     self.setSyncContentType(sync_content_type)
@@ -189,18 +188,6 @@ class Publication(Subscription):
       return the publication url
     """
     self.publication_url = publication_url
-
-  def isAuthenticationRequired(self):
-    """
-      return False if authentication not required, True else
-    """
-    return getattr(self, 'auth_required', False)
-
-  def setAuthentication(self, auth):
-    """
-      set the value of the authentication requirement
-    """
-    self.auth_required = auth
 
   def getAuthenticationFormat(self):
     """

@@ -999,12 +999,6 @@ class Subscription(Folder, SyncCode):
     """
     self.password = new_password
 
-  def setAuthentication(self, auth):
-    """
-      set the value of the authentication requirement
-    """
-    self.auth_required = auth
-
   def getAuthenticationFormat(self):
     """
       return the format of authentication
