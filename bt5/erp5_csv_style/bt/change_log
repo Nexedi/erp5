@@ -1,3 +1,6 @@
+2007-08-13 jerome
+* Add csv_export & csv_import global actions
+
 2006-03-14 jerome
 * Don't display empty lines
 
