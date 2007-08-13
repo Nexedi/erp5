@@ -107,7 +107,7 @@ be a problem).</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Trash Folder</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -91,6 +91,10 @@ be a problem).</string> </value>
               <tuple/>
             </value>
         </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
