@@ -117,7 +117,7 @@ class XMLObject( Folder ):
       """
       from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
       conduit = ERP5Conduit()
-      self.getParentValue().addNode(object=self, xml=xml, object_id=self.getId())
+      conduit.addNode(object=self, xml=xml)
 
     # Hash method
     def __hash__(self):
