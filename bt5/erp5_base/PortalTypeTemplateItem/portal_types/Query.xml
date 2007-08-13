@@ -31,6 +31,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_roles</string> </key>
             <value>
               <list/>
@@ -104,7 +110,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Query</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

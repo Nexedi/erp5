@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5Type.ERP5Type</string>
+          <string>ERP5TypeInformation</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -106,7 +109,7 @@ a manufactured product, like a pen, a bicycle...</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Purchase Order Line</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

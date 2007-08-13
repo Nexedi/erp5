@@ -109,7 +109,7 @@ a manufactured product, like a pen, a bicycle...</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Service</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
