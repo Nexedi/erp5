@@ -1,47 +1,14 @@
-Event Module | csv_export
-Event Module | csv_import
-Event Module | list_ui
-Event Module | print_pdf
-Event Module | search
-Event Module | sort_on
 Event Module | view
 Event Module | workflow_report
 Incoming Fax | document_view
-Incoming Fax | history
-Incoming Fax | metadata
-Incoming Fax | print
 Incoming Fax | view
 Incoming Letter | document_view
-Incoming Letter | history
-Incoming Letter | metadata
-Incoming Letter | print
 Incoming Letter | view
-Mail Message | history
-Mail Message | metadata
-Mail Message | print
 Mail Message | view
 Note | document_view
-Note | history
-Note | metadata
-Note | print
 Note | view
-Person | jump_to_opportunity
-Person | jump_to_support_request
-Phone Call | history
-Phone Call | metadata
-Phone Call | print
 Phone Call | view
-Sale Opportunity Module | print
-Sale Opportunity Module | search
 Sale Opportunity Module | view
-Sale Opportunity | history
-Sale Opportunity | metadata
-Sale Opportunity | print
 Sale Opportunity | view
-Support Request Module | print
-Support Request Module | search
 Support Request Module | view
-Support Request | history
-Support Request | metadata
-Support Request | print
 Support Request | view

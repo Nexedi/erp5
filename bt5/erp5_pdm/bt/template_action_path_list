@@ -1,74 +1,29 @@
-Component Module | csv_export
-Component Module | csv_import
-Component Module | list_ui
-Component Module | print
-Component Module | search
-Component Module | sort_on
 Component Module | view
 Component Module | workflow_report
-Component | history
-Component | metadata
 Component | price_view
-Component | print
 Component | view
 Component | view_flow_capacity
-Product Module | csv_export
-Product Module | csv_import
-Product Module | list_ui
-Product Module | print
-Product Module | search
-Product Module | sort_on
 Product Module | view
 Product Module | workflow_report
-Product | history
-Product | metadata
 Product | price_view
-Product | print
 Product | view
 Product | view_stock
-Service Module | csv_export
-Service Module | csv_import
-Service Module | list_ui
-Service Module | print
-Service Module | search
-Service Module | sort_on
 Service Module | view
 Service Module | workflow_report
-Service | history
-Service | metadata
-Service | print
 Service | view
-Transformation Module | csv_export
-Transformation Module | csv_import
-Transformation Module | list_ui
-Transformation Module | print
-Transformation Module | search
-Transformation Module | sort_on
 Transformation Module | view
 Transformation Operation | complete_quantity_matrix
-Transformation Operation | history
-Transformation Operation | metadata
-Transformation Operation | print
 Transformation Operation | view
 Transformation Operation | view_quantity
-Transformation Optional Resource | history
-Transformation Optional Resource | metadata
-Transformation Optional Resource | print
 Transformation Optional Resource | view
 Transformation Transformed Resource | complete_quantity_matrix
 Transformation Transformed Resource | complete_variation_matrix
-Transformation Transformed Resource | history
-Transformation Transformed Resource | metadata
-Transformation Transformed Resource | print
 Transformation Transformed Resource | view
 Transformation Transformed Resource | view_quantity
 Transformation Transformed Resource | view_variation
 Transformation | expanded_view
-Transformation | history
 Transformation | jump_to_related_apparel_transformation
-Transformation | metadata
 Transformation | optional_resource_view
-Transformation | print
 Transformation | update_variation_list
 Transformation | view
 Transformation | view_transformation_assorted_component

@@ -1,3 +1,6 @@
+2007-08-13 Jerome
+* Remove portal type actions that are now defined as global actions
+
 2006-08-29 jerome
 * set resource editable on accounting transaction lines.
 

@@ -1,119 +1,45 @@
-Address | history
-Address | metadata
-Address | print
-Address | print_pdf
 Address | view
-Agent Privilege | history
-Agent Privilege | metadata
-Agent Privilege | print
 Agent Privilege | view
 Agent | download
-Agent | history
 Agent | import
-Agent | metadata
 Agent | signature
 Agent | view
-Assignment | history
-Assignment | metadata
-Assignment | print_pdf
 Assignment | view
-Bank Account | history
-Bank Account | metadata
-Bank Account | print_pdf
 Bank Account | view
-Career | history
-Career | metadata
-Career | print_pdf
 Career | view
-ChatAddress | history
-ChatAddress | metadata
-ChatAddress | print
 ChatAddress | view
-Credit Card | history
-Credit Card | metadata
-Credit Card | print_pdf
 Credit Card | view
-Currency Exchange Line | history
-Currency Exchange Line | metadata
-Currency Exchange Line | print
 Currency Exchange Line | view
-Currency Module | csv_export
-Currency Module | csv_import
-Currency Module | print
-Currency Module | search
 Currency Module | view
-Currency | history
-Currency | metadata
-Currency | print
 Currency | view
-Email | history
-Email | metadata
-Email | print
 Email | view
-Fax | history
-Fax | metadata
-Fax | print
 Fax | view
 File | download
-File | history
-File | metadata
-File | print
 File | view
 Image | download
 Image | fullsize_view
-Image | history
-Image | metadata
-Image | print
 Image | view
-Link | history
-Link | metadata
 Link | view
-Organisation Module | csv_export
-Organisation Module | csv_import
-Organisation Module | list_ui
-Organisation Module | print
-Organisation Module | search
-Organisation Module | sort_on
 Organisation Module | view
 Organisation | details
 Organisation | document_view
 Organisation | financial_view
-Organisation | history
 Organisation | jump_to_persons
-Organisation | metadata
 Organisation | person_list
-Organisation | print
 Organisation | view
-Person Module | csv_export
-Person Module | csv_import
-Person Module | list_ui
 Person Module | ooo_import
-Person Module | print
-Person Module | search
-Person Module | sort_on
 Person Module | view
 Person | assignment
 Person | career
 Person | details
 Person | document_view
 Person | financial_view
-Person | history
-Person | metadata
-Person | print
 Person | profile
 Person | report
 Person | terminate_career
 Person | view
-Query Module | list_ui
-Query Module | search
-Query Module | sort_on
 Query Module | view
-Query | history
-Query | metadata
 Query | view
-Telephone | history
-Telephone | metadata
-Telephone | print
 Telephone | view
 portal_actions | jump_query
 portal_actions | post_query

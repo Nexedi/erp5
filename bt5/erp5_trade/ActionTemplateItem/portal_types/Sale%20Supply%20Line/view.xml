@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
-        <tuple/>
+        <tuple>
+          <string>Products.CMFCore.ActionInformation</string>
+          <string>ActionInformation</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -67,8 +70,11 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

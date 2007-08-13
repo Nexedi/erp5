@@ -1,3 +1,6 @@
+2007-08-13 Jerome
+* Remove portal type actions that are now defined as global actions
+
 2007-08-02 Romain
 * Add InventoryConstraint
 

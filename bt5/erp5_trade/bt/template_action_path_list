@@ -1,309 +1,139 @@
-Container Cell | metadata
-Container Cell | print
 Container Cell | view
-Container Line | metadata
-Container Line | print
 Container Line | view
 Container Line | view_history
 Container Line | view_quantity
-Container | history_view
-Container | metadata
-Container | print
 Container | view
-Delivery Cell | history_view
-Delivery Cell | metadata
-Delivery Cell | print
 Delivery Cell | view
-Delivery Rule | history
-Delivery Rule | metadata
-Delivery Rule | print
 Delivery Rule | view
-Discount | history
-Discount | metadata
-Discount | print
 Discount | view
-Internal Packing List Cell | history
-Internal Packing List Cell | metadata
-Internal Packing List Cell | print
 Internal Packing List Cell | view
-Internal Packing List Line | history
-Internal Packing List Line | metadata
-Internal Packing List Line | print
 Internal Packing List Line | quantity_view
 Internal Packing List Line | view
 Internal Packing List Line | view_price
-Internal Packing List Module | csv_export
-Internal Packing List Module | csv_import
-Internal Packing List Module | list_ui
-Internal Packing List Module | print
-Internal Packing List Module | search
-Internal Packing List Module | sort_on
 Internal Packing List Module | view
 Internal Packing List Module | workflow_report
-Internal Packing List | history
-Internal Packing List | metadata
-Internal Packing List | print
 Internal Packing List | view
-Inventory Cell | history_view
-Inventory Cell | metadata
-Inventory Cell | print
 Inventory Cell | view
-Inventory Line | history
 Inventory Line | inventory_view
-Inventory Line | metadata
 Inventory Line | price_view
-Inventory Line | print
 Inventory Line | view
-Inventory Module | csv_export
-Inventory Module | csv_import
-Inventory Module | list_ui
-Inventory Module | print
-Inventory Module | search
-Inventory Module | sort_on
 Inventory Module | view
-Inventory | history
-Inventory | metadata
-Inventory | print
 Inventory | view
-Order Rule | history
-Order Rule | metadata
-Order Rule | print
 Order Rule | view
 Organisation | jump_to_purchase_order
 Organisation | jump_to_purchase_packing_list
 Organisation | jump_to_sale_order
 Organisation | jump_to_sale_packing_list
-Payment Condition | history
-Payment Condition | metadata
-Payment Condition | print
 Payment Condition | view
 Person | jump_to_purchase_order
 Person | jump_to_purchase_packing_list
 Person | jump_to_sale_order
 Person | jump_to_sale_packing_list
-Purchase Order Cell | history
-Purchase Order Cell | metadata
-Purchase Order Cell | print
 Purchase Order Cell | view
-Purchase Order Line | history
-Purchase Order Line | metadata
 Purchase Order Line | price_view
-Purchase Order Line | print
 Purchase Order Line | quantity_view
 Purchase Order Line | view
-Purchase Order Module | csv_export
-Purchase Order Module | csv_import
-Purchase Order Module | list_ui
-Purchase Order Module | print
-Purchase Order Module | search
-Purchase Order Module | sort_on
 Purchase Order Module | view
 Purchase Order Module | workflow_report
 Purchase Order | apply_trade_condition
-Purchase Order | history
 Purchase Order | jump_to_related_purchase_packing_list
-Purchase Order | metadata
 Purchase Order | payment_condition
-Purchase Order | print
 Purchase Order | profile_view
 Purchase Order | view
 Purchase Order | view_discount
 Purchase Packing List Cell | apparel_fabric_item_fast_input
-Purchase Packing List Cell | history_view
-Purchase Packing List Cell | metadata
-Purchase Packing List Cell | print
 Purchase Packing List Cell | view
 Purchase Packing List Line | apparel_fabric_item_fast_input
-Purchase Packing List Line | history
-Purchase Packing List Line | metadata
-Purchase Packing List Line | print
 Purchase Packing List Line | quantity_view
 Purchase Packing List Line | view
 Purchase Packing List Line | view_price
-Purchase Packing List Module | csv_export
-Purchase Packing List Module | csv_import
-Purchase Packing List Module | list_ui
-Purchase Packing List Module | print
-Purchase Packing List Module | search
-Purchase Packing List Module | sort_on
 Purchase Packing List Module | view
 Purchase Packing List Module | workflow_report
 Purchase Packing List | choose_solve_actions
-Purchase Packing List | history
 Purchase Packing List | jump_related_purchase_invoice
 Purchase Packing List | jump_related_purchase_order
-Purchase Packing List | metadata
-Purchase Packing List | print
 Purchase Packing List | view
-Purchase Supply Cell | history_view
-Purchase Supply Cell | metadata
-Purchase Supply Cell | print
 Purchase Supply Cell | view
 Purchase Supply Line | additional_price
 Purchase Supply Line | base_price
 Purchase Supply Line | discount_ratio
 Purchase Supply Line | exclusive_discount_ratio
-Purchase Supply Line | history_view
 Purchase Supply Line | metadata_view
 Purchase Supply Line | non_discountable__additional_price
-Purchase Supply Line | print
 Purchase Supply Line | surcharge_ratio
 Purchase Supply Line | variable_additional_price
 Purchase Supply Line | view
-Purchase Supply Module | csv_export
-Purchase Supply Module | list_ui
-Purchase Supply Module | print
-Purchase Supply Module | search
-Purchase Supply Module | sort_on
 Purchase Supply Module | view
-Purchase Supply | history
-Purchase Supply | metadata
-Purchase Supply | print
 Purchase Supply | view
-Purchase Trade Condition Module | csv_import
 Purchase Trade Condition Module | cvs_export
-Purchase Trade Condition Module | list_ui
-Purchase Trade Condition Module | search
-Purchase Trade Condition Module | sort_on
 Purchase Trade Condition Module | view
 Purchase Trade Condition Module | workflow_report
-Purchase Trade Condition | metadata
-Purchase Trade Condition | print
 Purchase Trade Condition | view
 Purchase Trade Condition | view_discount
 Purchase Trade Condition | view_history
 Purchase Trade Condition | view_payment
 Purchase Trade Condition | view_profile
-Returned Sale Packing List Cell | history_view
-Returned Sale Packing List Cell | metadata
-Returned Sale Packing List Cell | print
 Returned Sale Packing List Cell | view
-Returned Sale Packing List Line | history
-Returned Sale Packing List Line | metadata
 Returned Sale Packing List Line | price_view
-Returned Sale Packing List Line | print
 Returned Sale Packing List Line | quantity_view
 Returned Sale Packing List Line | view
-Returned Sale Packing List Module | csv_export
-Returned Sale Packing List Module | csv_import
-Returned Sale Packing List Module | list_ui
-Returned Sale Packing List Module | print
-Returned Sale Packing List Module | search
-Returned Sale Packing List Module | sort_on
 Returned Sale Packing List Module | view
 Returned Sale Packing List Module | workflow_report
 Returned Sale Packing List | choose_solve_actions
-Returned Sale Packing List | history
 Returned Sale Packing List | jump_related_sale_invoice
-Returned Sale Packing List | metadata
-Returned Sale Packing List | print
 Returned Sale Packing List | view
-Sale Order Cell | history
-Sale Order Cell | metadata
-Sale Order Cell | print
 Sale Order Cell | view
-Sale Order Line | history
-Sale Order Line | metadata
 Sale Order Line | price_view
-Sale Order Line | print
 Sale Order Line | quantity_view
 Sale Order Line | view
-Sale Order Module | csv_export
-Sale Order Module | csv_import
-Sale Order Module | list_ui
-Sale Order Module | print
-Sale Order Module | search
-Sale Order Module | sort_on
 Sale Order Module | view
 Sale Order Module | workflow_report
 Sale Order | apply_trade_condition
-Sale Order | history
 Sale Order | jump_to_related_sale_packing_list
-Sale Order | metadata
 Sale Order | payment_condition
-Sale Order | print
 Sale Order | profile_view
 Sale Order | view
 Sale Order | view_discount
 Sale Order | view_stock
-Sale Packing List Cell | history_view
-Sale Packing List Cell | metadata
-Sale Packing List Cell | print
 Sale Packing List Cell | view
-Sale Packing List Line | history
-Sale Packing List Line | metadata
 Sale Packing List Line | price_view
-Sale Packing List Line | print
 Sale Packing List Line | quantity_view
 Sale Packing List Line | view
-Sale Packing List Module | csv_export
-Sale Packing List Module | csv_import
-Sale Packing List Module | list_ui
-Sale Packing List Module | print
-Sale Packing List Module | search
-Sale Packing List Module | sort_on
 Sale Packing List Module | view
 Sale Packing List Module | workflow_report
 Sale Packing List | choose_solve_actions
 Sale Packing List | container_fast_input
-Sale Packing List | history
 Sale Packing List | jump_related_sale_invoice
-Sale Packing List | metadata
-Sale Packing List | print
 Sale Packing List | view
 Sale Packing List | view_container_list
-Sale Supply Cell | history_view
-Sale Supply Cell | metadata
-Sale Supply Cell | print
 Sale Supply Cell | view
 Sale Supply Line | additional_price
 Sale Supply Line | base_price
 Sale Supply Line | discount_ratio
 Sale Supply Line | exclusive_discount_ratio
-Sale Supply Line | history_view
 Sale Supply Line | metadata_view
 Sale Supply Line | non_discountable__additional_price
-Sale Supply Line | print
 Sale Supply Line | surcharge_ratio
 Sale Supply Line | variable_additional_price
 Sale Supply Line | view
-Sale Supply Module | csv_export
-Sale Supply Module | list_ui
-Sale Supply Module | print
-Sale Supply Module | search
-Sale Supply Module | sort_on
 Sale Supply Module | view
-Sale Supply | history
-Sale Supply | metadata
-Sale Supply | print
 Sale Supply | view
-Sale Trade Condition Module | csv_import
 Sale Trade Condition Module | cvs_export
-Sale Trade Condition Module | list_ui
-Sale Trade Condition Module | print
-Sale Trade Condition Module | search
-Sale Trade Condition Module | sort_on
 Sale Trade Condition Module | view
 Sale Trade Condition Module | workflow_report
-Sale Trade Condition | metadata
-Sale Trade Condition | print
 Sale Trade Condition | view
 Sale Trade Condition | view_discount
 Sale Trade Condition | view_history
 Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
 Supply Cell | list
-Supply Cell | metadata
-Supply Cell | print
 Supply Cell | view
 Supply Line | additional_price
 Supply Line | base_price
 Supply Line | discount_ratio
 Supply Line | exclusive_discount_ratio
-Supply Line | history_view
 Supply Line | metadata_view
 Supply Line | non_discountable__additional_price
-Supply Line | print
 Supply Line | surcharge_ratio
 Supply Line | variable_additional_price
 Supply Line | view
