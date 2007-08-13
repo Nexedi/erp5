@@ -288,6 +288,7 @@ for table_name in spreadsheets.keys():\n
       is_base_category = True\n
       is_valid_category = True\n
       for category_id in category[\'path\'].split(\'/\'):\n
+        category_id = str(category_id)\n
         # The current category is not existing\n
         if not base_path_obj.hasContent(category_id):\n
           # Create the category\n
@@ -319,24 +320,27 @@ for table_name in spreadsheets.keys():\n
         # Set the category properties\n
         category_update_dict = {}\n
         for key in keys:\n
+          key = str(key)\n
           if key not in [\'path\', \'id\']:\n
             value = category[key]\n
+            if value is not None:\n
+              value = str(value.encode(\'UTF-8\'))\n
             if update_existing_property or is_new_category:\n
               # Always update properties if update_existing_property is set or if this a new category\n
-              category_update_dict[str(key)] = value\n
+              category_update_dict[key] = value\n
               if not is_new_category:\n
                 detailed_report_append(\'Updated %s on Category %s with value %s\' % (key,\n
                                         new_category.getRelativeUrl(), value))\n
             elif value not in (\'\', None) and not new_category.hasProperty(key):\n
               # Only set properties which are not already defined\n
-              category_update_dict[str(key)] = value\n
+              category_update_dict[key] = value\n
               detailed_report_append(\'Updated %s on Category %s with value %s\' % (key,\n
                                       new_category.getRelativeUrl(), value))\n
         if not is_new_category and category_update_dict:\n
           updated_category_counter += 1\n
         new_category.edit(**category_update_dict)\n
     else:\n
-      raise KeyError, \'path was not defined for one category, this should never happen\'\n
+      raise KeyError, \'path was not defined for a category, this should never happen.\'\n
 \n
 # Find categories to delete\n
 category_to_delete_list = []\n
@@ -366,6 +370,7 @@ if not keep_existing_category:\n
 \n
 if detailed_report:\n
   # Return a detailed report if requested\n
+  # return repr(detailed_report_result)\n
   return \'\\n\'.join(detailed_report_result)\n
 \n
 # Import is a success, go back to the portal_categories tool\n
