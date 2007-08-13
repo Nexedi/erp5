@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_function</string> </value>
+            <value> <string>my_career_activity</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -251,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Function</string> </value>
+                    <value> <string>Career Activity</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(here.getSubordination() and here.getSubordinationValue().getFunction() and here.getSubordinationValue().getFunctionValue()).getCategoryChildLogicalPathItemList(filter_node=1) + here.portal_categories.function.getCategoryChildLogicalPathItemList(filter_node=1)</string> </value>
+            <value> <string>here/portal_categories/activity/getCategoryChildCompactLogicalPathItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

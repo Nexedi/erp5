@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_career_function</string> </value>
         </item>
@@ -281,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/function/getCategoryChildCompactLogicalPathItemList</string> </value>
+            <value> <string>here/Career_getFunctionItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
