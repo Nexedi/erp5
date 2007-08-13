@@ -1,3 +1,6 @@
+2007-08-13 jerome
+* Add some global actions for history, metadata, search, sort_on and list_ui
+
 2007-07-30 yo
 * Add Movement_getPriceCalculationOperandDict.
 

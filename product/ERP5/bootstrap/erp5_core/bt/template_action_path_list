@@ -158,3 +158,8 @@ portal_actions | bt_tool
 portal_actions | category_tool
 portal_actions | create_module
 portal_membership | manage_members
+portal_properties | history
+portal_properties | list_ui
+portal_properties | metadata
+portal_properties | search
+portal_properties | sort_on
