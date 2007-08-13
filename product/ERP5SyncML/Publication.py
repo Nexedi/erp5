@@ -165,8 +165,8 @@ class Publication(Subscription):
     self.setConduit(conduit)
     Folder.__init__(self, id)
     self.title = title
-    self.authentication_format = authentication_format
-    self.authentication_type = authentication_type
+    self.setAuthenticationFormat(authentication_format)
+    self.setAuthenticationType(authentication_type)
     self.setSyncContentType(sync_content_type)
     self.setSynchronizeWithERP5Sites(synchronize_with_erp5_sites)
 
@@ -188,30 +188,6 @@ class Publication(Subscription):
       return the publication url
     """
     self.publication_url = publication_url
-
-  def getAuthenticationFormat(self):
-    """
-      return the format of authentication
-    """
-    return getattr(self, 'authentication_format', '')
-
-  def getAuthenticationType(self):
-    """
-      return the type of authentication
-    """
-    return getattr(self, 'authentication_type', '')
-
-  def setAuthenticationFormat(self, authentication_format):
-    """
-      set the format of authentication
-    """
-    self.authentication_format = authentication_format
-
-  def setAuthenticationType(self, authentication_type):
-    """
-      set the type of authentication
-    """
-    self.authentication_type = authentication_type
 
   def addSubscriber(self, subscriber):
     """

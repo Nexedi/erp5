@@ -1015,13 +1015,19 @@ class Subscription(Folder, SyncCode):
     """
       set the format of authentication
     """
-    self.authentication_format = authentication_format
+    if authentication_format in (None, ''):
+      self.authentication_format = 'b64'
+    else:
+      self.authentication_format=authentication_format
 
   def setAuthenticationType(self, authentication_type):
     """
       set the type of authentication
     """
-    self.authentication_type = authentication_type
+    if authentication_type in (None, ''):
+      self.authentication_type = 'syncml:auth-basic'
+    else:
+      self.authentication_type = authentication_type
 
   def getGidFromObject(self, object):
     """
