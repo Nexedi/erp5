@@ -109,7 +109,7 @@ an event.</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Incoming FAX</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
