@@ -92,10 +92,14 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ChatAddress</string> </value>
+            <value> <string>Chat Address</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>

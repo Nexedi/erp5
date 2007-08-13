@@ -6,7 +6,7 @@ Currency | Currency Exchange Line
 Organisation Module | Organisation
 Organisation | Address
 Organisation | Bank Account
-Organisation | ChatAddress
+Organisation | Chat Address
 Organisation | Credit Card
 Organisation | Document
 Organisation | Email
@@ -20,7 +20,7 @@ Person | Address
 Person | Assignment
 Person | Bank Account
 Person | Career
-Person | ChatAddress
+Person | Chat Address
 Person | Credit Card
 Person | Email
 Person | Fax

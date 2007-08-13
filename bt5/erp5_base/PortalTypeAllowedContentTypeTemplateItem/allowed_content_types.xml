@@ -16,7 +16,7 @@
  </portal_type>
  <portal_type id="Organisation">
   <item>Address</item>
-  <item>ChatAddress</item>
+  <item>Chat Address</item>
   <item>Bank Account</item>
   <item>Link</item>
   <item>Telephone</item>
@@ -33,8 +33,8 @@
  <portal_type id="Person">
   <item>Address</item>
   <item>Assignment</item>
-  <item>ChatAddress</item>
   <item>Telephone</item>
+  <item>Chat Address</item>
   <item>Credit Card</item>
   <item>Email</item>
   <item>File</item>

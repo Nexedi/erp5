@@ -5,7 +5,7 @@ Assignment | edit_workflow
 Bank Account | edit_workflow
 Bank Account | validation_workflow
 Career | career_workflow
-ChatAddress | edit_workflow
+Chat Address | edit_workflow
 Credit Card | edit_workflow
 Currency Exchange Line | currency_exchange_line_interaction_workflow
 Currency Exchange Line | edit_workflow
