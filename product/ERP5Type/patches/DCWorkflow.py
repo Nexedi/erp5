@@ -37,6 +37,8 @@ from zLOG import LOG
 from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
 from Products.DCWorkflow.Guard import Guard, _checkPermission, createExprContext, StateChangeInfo
 
+ACTIVITY_GROUPING_COUNT = 100
+
 def WorkflowUIMixin_setProperties( self, title
                                  , description='' # the only addition to WorkflowUIMixin.setProperties
                                  , manager_bypass=0, props=None, REQUEST=None):
@@ -513,10 +515,10 @@ def updateRoleMappings(self, REQUEST=None):
   object_list_len = len(object_list)
   portal_activities = self.portal_activities
   object_path_list = [x.path for x in object_list]
-  for i in xrange(0, object_list_len, 100):
-    current_path_list = object_path_list[i:i+100]
+  for i in xrange(0, object_list_len, ACTIVITY_GROUPING_COUNT):
+    current_path_list = object_path_list[i:i+ACTIVITY_GROUPING_COUNT]
     portal_activities.activate(activity='SQLQueue',
-                                priority=5)\
+                                priority=3)\
           .callMethodOnObjectList(current_path_list,
                                   'updateRoleMappingsFor',
                                   wf_id = self.getId())
