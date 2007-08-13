@@ -658,9 +658,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         from Products.Formulator.MethodField import Method
         from Products.Formulator.TALESField import TALESMethod
 
-        def copy(dict):
+        def copy(_dict):
             new_dict = {}
-            for key, value in dict.items():
+            for key, value in _dict.items():
                 if value=='':
                     continue
                 if type(value) is Method:
@@ -669,7 +669,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                     value = TALESMethod(value._text)
                 elif not isinstance(value, (str, unicode, int, long, bool,
                                             list, tuple, dict)):
-                    raise ValueError, str(value)
+                    raise ValueError, repr(value)
                 new_dict[key] = value
             return new_dict
 
