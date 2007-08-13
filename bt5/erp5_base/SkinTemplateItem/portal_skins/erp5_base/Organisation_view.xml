@@ -103,6 +103,7 @@
                         <string>my_group</string>
                         <string>my_role_list</string>
                         <string>my_activity</string>
+                        <string>my_function</string>
                         <string>my_site</string>
                       </list>
                     </value>
