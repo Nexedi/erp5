@@ -977,10 +977,6 @@ class SynchronizationTool( SubscriptionSynchronization,
     """
     This will try to synchronize every subscription
     """
-    # Login as a manager to make sure we can create objects
-    uf = self.acl_users
-    user = UnrestrictedUser('syncml', 'syncml', ['Manager', 'Member'], '')
-    newSecurityManager(None, user)
     message_list = self.portal_activities.getMessageList()
     LOG('sync, message_list:', DEBUG, message_list)
     if len(message_list) == 0:
@@ -996,14 +992,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     """
     LOG('readResponse, text :', DEBUG, text)
     #LOG('readResponse, hexdump(text) :', DEBUG, self.hexdump(text))
-
-    # Login as a manager to make sure we can create objects
-    uf = self.acl_users
-    user = uf.getUserById('syncml').__of__(uf)
-    user = UnrestrictedUser('syncml', 'syncml', ['Manager', 'Member'], '')
-    newSecurityManager(None, user)
     status_code = None
-
     if text not in ('', None):
       # XXX We will look everywhere for a publication/subsription with
       # the id sync_id, this is not so good, but there is no way yet
