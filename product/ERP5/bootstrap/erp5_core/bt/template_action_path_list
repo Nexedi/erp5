@@ -1,143 +1,71 @@
-Alarm Tool | metadata
-Alarm Tool | print
 Alarm Tool | view
-Alarm | metadata
 Alarm | periodicity
-Alarm | print_pdf
 Alarm | view
 Applied Rule | list
-Applied Rule | metadata
-Applied Rule | print_pdf
 Applied Rule | view
-Base Category | history
 Base Category | list
-Base Category | metadata
 Base Category | view
-Base Domain | history
 Base Domain | list
-Base Domain | metadata
-Base Domain | print_pdf
 Base Domain | view
 Business Template | export
 Business Template | get_portal_type_properties
 Business Template | guess_portal_types
-Business Template | history
 Business Template | jump_trash_bin
-Business Template | metadata
 Business Template | save
 Business Template | unittest_run
 Business Template | view
 Business Template | view_catalog
 Business Template | view_detail
 Business Template | view_portal_types
-Cache Factory | history
-Cache Factory | metadata
 Cache Factory | view
-Cache Tool | metadata
 Cache Tool | view
-Category Divergence Tester | history
-Category Divergence Tester | metadata
-Category Divergence Tester | print
 Category Divergence Tester | view
 Category Tool | fast_input
 Category Tool | list
 Category Tool | localroles
-Category Tool | metadata
 Category Tool | syndication
 Category Tool | view
-Category | history
 Category | list
-Category | metadata
 Category | view
-Delivery Builder | history_view
-Delivery Builder | metadata
-Delivery Builder | print
 Delivery Builder | view
 Delivery Builder | view_predicate_group
 Delivery Builder | view_profile
-Delivery Tool | csv_export
-Delivery Tool | list_ui
-Delivery Tool | print
-Delivery Tool | sort_on
 Delivery Tool | view
-Distributed Ram Cache | history
-Distributed Ram Cache | metadata
 Distributed Ram Cache | view
-Document | history
-Document | metadata
-Document | print
 Document | view
-Domain Generator | history
 Domain Generator | list
-Domain Generator | metadata
-Domain Generator | print_pdf
 Domain Generator | view
 Domain Tool | list
 Domain Tool | localroles
-Domain Tool | metadata
 Domain Tool | syndication
 Domain Tool | view
-Domain | history
 Domain | list
-Domain | metadata
-Domain | print_pdf
 Domain | view
 Folder | foldercontents
 Folder | view
-Mapped Value | history
-Mapped Value | metadata
-Mapped Value | print
 Mapped Value | view
-Order Builder | history_view
-Order Builder | metadata
-Order Builder | print
 Order Builder | view
 Order Builder | view_predicate_group
 Order Builder | view_profile
-Order Tool | csv_export
-Order Tool | list_ui
-Order Tool | print
-Order Tool | sort_on
 Order Tool | view
-Predicate | print_pdf
 Predicate | view
 Preference Tool | advanced
-Preference Tool | list_ui
-Preference Tool | sort_on
 Preference Tool | view
-Preference | history
 Preference | html_style_preferences
-Preference | metadata
-Preference | print
 Preference | view
-Property Divergence Tester | history
-Property Divergence Tester | metadata
-Property Divergence Tester | print
 Property Divergence Tester | view
-Quantity Divergence Tester | history
-Quantity Divergence Tester | metadata
-Quantity Divergence Tester | print
 Quantity Divergence Tester | view
-Ram Cache | history
-Ram Cache | metadata
 Ram Cache | view
 Route Tool | list
 Route Tool | localroles
-Route Tool | metadata
 Route Tool | syndication
 Route Tool | view
 Rule Tool | list
 Rule Tool | localroles
-Rule Tool | metadata
 Rule Tool | syndication
 Rule Tool | view
-SQL Cache | history
-SQL Cache | metadata
 SQL Cache | view
-Simulation Movement | metadata
-Simulation Movement | print
 Simulation Movement | view
-Simulation Tool | csv_export
 Simulation Tool | view
 Template Tool | diff
 Template Tool | download
@@ -149,7 +77,6 @@ Template Tool | update
 Template Tool | upgrade_from_repository
 Template Tool | view
 Trash Bin | jump_bt5
-Trash Bin | metadata
 Trash Bin | view
 Trash Folder | list
 Trash Folder | view
