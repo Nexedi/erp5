@@ -115,8 +115,9 @@ object.Event_createSaleOpportunity()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>object</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

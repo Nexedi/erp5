@@ -121,8 +121,8 @@ state_change[\'object\'].MailHost.send(message, mto=email_list, mfrom="info@nexe
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
-                            <string>string_subject</string>
                             <string>_getitem_</string>
+                            <string>string_subject</string>
                             <string>message</string>
                             <string>context</string>
                             <string>PersonModule_viewPersonList</string>
