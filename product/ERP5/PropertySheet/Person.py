@@ -200,6 +200,7 @@ class Person:
                               , 'grade', 'grade_id', 'grade_title', 'grade_value'
                               , 'role', 'role_id', 'role_title', 'role_value'
                               , 'function', 'function_id', 'function_title', 'function_value'
+                              , 'activity', 'activity_id', 'activity_title', 'activity_value'
                               )
     , 'mode'                : 'w'
     },
@@ -211,7 +212,7 @@ class Person:
                    # acquired from address
                   'region',
                    # acquired from career
-                  'group', 'subordination', 'role', 'function',
+                  'group', 'subordination', 'role', 'function', 'activity',
                   'salary_level', 'grade', 'skill',
                  )
 
