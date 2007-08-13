@@ -708,7 +708,7 @@ class XMLSyncUtilsMixin(SyncCode):
       return comment_list[0].childNodes[0].data.encode('utf-8')
     return None
 
-  def getActionId(self, action, action_name):
+  def getActionId(self, action):
     """
       Return the rid of the object described by the action
     """
@@ -1032,7 +1032,7 @@ class XMLSyncUtilsMixin(SyncCode):
       status_code = self.SUCCESS
       # Thirst we have to check the kind of action it is
       partial_data = self.getPartialData(action)
-      rid = self.getActionId(action, action.nodeName)
+      rid = self.getActionId(action)
       if action.nodeName != 'Delete':
         if hasattr(conduit, 'getGidFromXML'):
           gid = b16encode(conduit.getGidFromXML(self.getDataText(action)))
