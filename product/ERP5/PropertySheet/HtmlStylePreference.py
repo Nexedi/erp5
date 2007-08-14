@@ -39,7 +39,8 @@ class HtmlStylePreference:
       'preference'  : 1,
       'mode'        : 'w' },
     { 'id'          : 'preferred_html_style_translator_mode',
-      'description' : 'When true, links to translation system will be displayed.',
+      'description' : 'When true, links to translation system will be '\
+                      'displayed.',
       'type'        : 'boolean',
       'preference'  : 1,
       'mode'        : 'w' },
@@ -49,7 +50,8 @@ class HtmlStylePreference:
       'preference'  : 1,
       'mode'        : 'w' },
     { 'id'          : 'preferred_html_style_documentation_base_url',
-      'description' : 'Defines the base URL where portal type action documentation will be searched for.',
+      'description' : 'Defines the base URL where portal type action '\
+                      'documentation will be searched for.',
       'type'        : 'string',
       'preference'  : 1,
       'default'     : 'http://www.erp5.com/erp5_help/',
