@@ -56,15 +56,16 @@
 
 <tal:block metal:define-macro="header_definitions">\n
   <tal:block tal:define="\n
-    global portal_path         here/portal_url/getPortalPath;\n
+    global portal              here/portal_url/getPortalObject;\n
+    global portal_path         portal/portal_url/getPortalPath;\n
            local_parameter_list  local_parameter_list | python: {};\n
 \n
-    global actions          python: here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n
+    global actions          python: portal.portal_actions.listFilteredActionsFor(here);\n
     global url              here/absolute_url;\n
     global current_form_id  python: local_parameter_list.get(\'dialog_id\', local_parameter_list.get(\'form_id\', \'view\'));\n
            dummy            python: request.set(\'current_form_id\', current_form_id);\n
     global current_url      python: \'%s/%s\' % (url, current_form_id);\n
-    global current_action   python: here.ERP5Site_getCurrentAction(current_url, actions);\n
+    global current_action   python: portal.ERP5Site_getCurrentAction(current_url, actions);\n
            cancel_url       request/cancel_url | current_url;\n
            dummy            python: local_parameter_list.update({\'cancel_url\': cancel_url});\n
 \n
@@ -76,40 +77,27 @@
            dummy     python: css_list.extend(css_list_template);\n
     global js_list   js_list | python: [\'%s/erp5_xhtml_appearance.js\' % portal_path,];\n
     global js_list   python:[\'%s/MochiKit/MochiKit.js\' % portal_path,\n
-                             \'%s/erp5.js\' % portal_path,\n
-] + js_list;\n
+                             \'%s/erp5.js\' % portal_path, ] + js_list;\n
 \n
-    global http_parameter_list  python: here.ERP5Site_filterParameterList(request.form);\n
+    global http_parameter_list  python: portal.ERP5Site_filterParameterList(request.form);\n
            dummy                python: http_parameter_list.update(local_parameter_list);\n
-    global http_parameters      python: here.ERP5Site_renderHTTPParameterList(http_parameter_list);\n
+    global http_parameters      python: portal.ERP5Site_renderHTTPParameterList(http_parameter_list);\n
     global form                 nocall:form | nothing;\n
-           portal_preferences   python: here.getPortalObject().portal_preferences;\n
+           portal_preferences   python: portal.portal_preferences;\n
     global preferred_html_style_developper_mode   portal_preferences/getPreferredHtmlStyleDevelopperMode;\n
     global preferred_html_style_translator_mode   portal_preferences/getPreferredHtmlStyleTranslatorMode;\n
     global preferred_html_style_contextual_help   portal_preferences/getPreferredHtmlStyleContextualHelp;\n
-    global developper_shortcut_render             python: (preferred_html_style_developper_mode or preferred_html_style_translator_mode) and here.developper_shortcut_render;\n
-    global selected_language    here/Localizer/get_selected_language;\n
+    global developper_shortcut_render             python: (preferred_html_style_developper_mode or preferred_html_style_translator_mode) and portal.developper_shortcut_render;\n
+    global selected_language    portal/Localizer/get_selected_language;\n
   "/>\n
 </tal:block>\n
 \n
 <!-- ============================================================== -->\n
 \n
 <tal:block metal:define-macro="http_definitions">\n
-  <tal:block tal:repeat="parameter http_parameter_list/items">\n
-    <tal:block tal:condition="python: same_type(parameter[1], [])">\n
-      <tal:block tal:repeat="list_item python: parameter[1]">\n
-        <input type="hidden"\n
-               tal:condition="python: list_item is not None"\n
-               tal:attributes="name  python: \'%s:list\' % (parameter[0], );\n
-                               value python: list_item;"/>\n
-      </tal:block>\n
-    </tal:block>\n
-    <input type="hidden"\n
-           tal:condition="python: not same_type(parameter[1], []) and parameter[1] is not None"\n
-           tal:attributes="name  python: parameter[0];\n
-                           value python: parameter[1];"/>\n
-  </tal:block>\n
-</tal:block>
+  <tal:block tal:replace="structure python: modules[\'ZTUtils\'].make_hidden_input(**http_parameter_list)"/>\n
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
