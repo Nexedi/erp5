@@ -70,21 +70,47 @@ class IConduit(Interface):
     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   """
 
-  def __init__(self):
-    self.args = {}
-
-  def addNode():
+  def addNode(self, xml=None, object=None, previous_xml=None,
+              object_id=None, sub_object=None, force=0, simulate=0, **kw):
     """
     A node is added
+
+    xml : the xml wich contains what we want to add
+
+    object : from where we want to add something
+
+    previous_xml : the previous xml of the object, if any
+
+    force : apply updates even if there's a conflict
+
+    This fucntion returns conflict_list, wich is of the form,
+    [conflict1,conflict2,...] where conclict1 is of the form :
+    [object.getPath(),keyword,local_and_actual_value,subscriber_value]
     """
 
-  def deleteNode():
+  def deleteNode(self, xml=None, object=None, object_id=None, force=None,
+                 simulate=0, **kw):
     """
     A node is deleted
     """
 
-  def updateNode():
+  def updateNode(self, xml=None, object=None, previous_xml=None, force=0,
+                 simulate=0,  **kw):
     """
     A node is updated with some xupdate
+      - xml : the xml corresponding to the update, it should be xupdate
+      - object : the object on wich we want to apply the xupdate
+      - [previous_xml] : the previous xml of the object, it is mandatory
+                         when we have sub objects
+
     """
 
+  def getGidFromObject(self, object):
+    """
+    return the Gid composed with the object informations
+    """
+
+  def getGidFromXML(self, xml):
+    """
+    return the Gid composed with xml informations
+    """
