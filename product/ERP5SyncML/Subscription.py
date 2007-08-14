@@ -1064,9 +1064,10 @@ class Subscription(Folder, SyncCode):
     This tries to get the object with the given gid
     This uses the query if it exist
     """
-    #if len(gid)%2 != 0:
+    if len(gid)%2 != 0:
     #something encode in base 16 is always a even number of number
-    #  return None
+    #if not, b16decode will failed
+      return None
     signature = self.getSignatureFromGid(gid)
     # First look if we do already have the mapping between
     # the id and the gid
