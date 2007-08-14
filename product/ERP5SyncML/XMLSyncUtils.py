@@ -1241,6 +1241,7 @@ class XMLSyncUtilsMixin(SyncCode):
           elif status_code in (self.SUCCESS, self.ITEM_ADDED):
             signature.setStatus(self.SYNCHRONIZED)
         elif status_cmd == 'Delete':
+          has_status_list = 1
           if status_code == self.SUCCESS:
             signature = subscriber.getSignatureFromGid(object_gid) or \
             subscriber.getSignatureFromRid(object_gid)
@@ -1494,11 +1495,14 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                 xml=xml_a,
                 domain=domain,
                 content_type=domain.getSyncContentType())
+      if syncml_data == '':
+        LOG('this is the end of the synchronisation session !!!', DEBUG, '')
+        subscriber.setAuthenticated(False)
+        domain.setAuthenticated(False)
       has_response = 1
     elif domain.domain_type == self.SUB:
       if self.checkAlert(remote_xml) or \
-          (xml_confirmation,syncml_data) != ('','') or \
-          has_status_list:
+          (xml_confirmation,syncml_data) != ('',''):
         subscriber.setLastSentMessage(xml_a)
         self.sendResponse(
                   from_url=domain.subscription_url,
@@ -1507,6 +1511,9 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                   xml=xml_a,domain=domain,
                   content_type=domain.getSyncContentType())
         has_response = 1
+      else:
+        LOG('this is the end of the synchronisation session !!!', DEBUG, '')
+        domain.setAuthenticated(False)
     return {'has_response':has_response,'xml':xml_a}
 
   def xml2wbxml(self, xml):

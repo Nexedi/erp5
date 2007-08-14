@@ -44,6 +44,13 @@ class SubscriptionSynchronization(XMLSyncUtils):
     cmd_id = 1 # specifies a SyncML message-unique command identifier
     subscription.NewAnchor()
     subscription.initLastMessageId()
+
+    #save the actual user to use it in all the session:
+    user = self.portal_membership.getAuthenticatedMember().getUserName()
+    LOG('SubSyncInit, user saved :',DEBUG, user)
+    subscription.setZopeUser(user)
+    subscription.setAuthenticated(True)
+
     xml_list = []
     xml = xml_list.append
     xml('<SyncML>\n')

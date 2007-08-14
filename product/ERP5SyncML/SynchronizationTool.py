@@ -984,6 +984,9 @@ class SynchronizationTool( SubscriptionSynchronization,
     LOG('sync, message_list:', DEBUG, message_list)
     if len(message_list) == 0:
       for subscription in self.getSubscriptionList():
+        user = subscription.getZopeUser()
+        LOG('sync, user :',DEBUG, user)
+        newSecurityManager(None, user)
         LOG('sync, type(subcription):', DEBUG, type(subscription))
         self.activate(activity='RAMQueue').SubSync(subscription.getPath())
 
@@ -1001,6 +1004,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       # the id sync_id, this is not so good, but there is no way yet
       # to know if we will call a publication or subscription XXX
       gpg_key = ''
+      LOG('readResponse, sync_id :', DEBUG, sync_id)
       for publication in self.getPublicationList():
         if publication.getTitle() == sync_id:
           gpg_key = publication.getGPGKey()
@@ -1010,6 +1014,9 @@ class SynchronizationTool( SubscriptionSynchronization,
           if subscription.getTitle() == sync_id:
             gpg_key = subscription.getGPGKey()
             domain = subscription
+            user = domain.getZopeUser()
+            LOG('readResponse, user :', DEBUG, user)
+            newSecurityManager(None, user)
       # decrypt the message if needed
       if gpg_key not in (None,''):
         filename = str(random.randrange(1, 2147483600)) + '.txt'

@@ -999,6 +999,18 @@ class Subscription(Folder, SyncCode):
     """
     self.password = new_password
 
+  def getZopeUser(self):
+    """
+    This method return the zope user who begin the synchronization session
+    """
+    return getattr(self, 'zope_user_name', None)
+
+  def setZopeUser(self, user_name):
+    """
+    This method set the zope user_name
+    """
+    self.zope_user_name = user_name
+
   def getAuthenticationFormat(self):
     """
       return the format of authentication
@@ -1052,6 +1064,9 @@ class Subscription(Folder, SyncCode):
     This tries to get the object with the given gid
     This uses the query if it exist
     """
+    #if len(gid)%2 != 0:
+    #something encode in base 16 is always a even number of number
+    #  return None
     signature = self.getSignatureFromGid(gid)
     # First look if we do already have the mapping between
     # the id and the gid
