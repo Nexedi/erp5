@@ -26,28 +26,21 @@
 #
 ##############################################################################
 
-from Products.ERP5SyncML.SyncCode import SyncCode
 from Products.ERP5SyncML.XMLSyncUtils import XMLSyncUtilsMixin
 from Products.ERP5SyncML.Subscription import Conflict
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5SyncML.XupdateUtils import XupdateUtils
-from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5SyncML.XMLSyncUtils import Parse
 from DateTime.DateTime import DateTime
 from email.MIMEBase import MIMEBase
 from email import Encoders
 from AccessControl import ClassSecurityInfo
-from AccessControl.PermissionMapping import setPermissionMapping
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, Interface
 from Globals import PersistentMapping
 import pickle
-import string
 from cStringIO import StringIO
 from xml.sax.saxutils import escape, unescape
-import re, copy
+import re
 import cStringIO
-
 from zLOG import LOG, INFO, DEBUG
 try:
   from Ft.Xml.Domlette import Print, PrettyPrint
@@ -60,6 +53,7 @@ except ImportError:
   class PrettyPrint:
     def __init__(self, *args, **kw):
       raise ImportError, "Sorry, it was not possible to import Ft library"
+
 
 class ERP5Conduit(XMLSyncUtilsMixin):
   """
@@ -96,9 +90,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     the response of the client, so that we are not sure if it take into account,
     we may have CONFLICT_NOT_SYNCHRONIZED AND CONFLICT_SYNCHRONIZED
     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
   """
+
+  # Declarative interfaces
+  __implements__ = ( Interface.IConduit, )
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -344,10 +339,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           # This is the place where we should look for conflicts
           # For that we need :
           #   - data : the data from the remote box
-          #   - old_data : the data from this box but at the time of the last synchronization
+          #   - old_data : the data from this box but at the time of the i
+          #last synchronization
           #   - current_data : the data actually on this box
           isConflict = 0
-          if (previous_xml is not None) and (not force): # if no previous_xml, no conflict
+          if (previous_xml is not None) and (not force): 
+          # if no previous_xml, no conflict
             old_data = self.getObjectProperty(keyword, previous_xml, 
                 data_type=data_type)
             #current_data = object.getProperty(keyword)

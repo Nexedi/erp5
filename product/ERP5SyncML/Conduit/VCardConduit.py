@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
 #          Fabien Morin <fabien.morin@gmail.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -55,7 +55,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
     self.args = {}
 
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'addVCard')
+  security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
   def addNode(self, xml=None, object=None, previous_xml=None, 
       object_id=None, sub_object=None, force=0, simulate=0, **kw):
     """
@@ -80,6 +80,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
     #in a first time, conflict are not used
     return {'conflict_list':None, 'object': new_object}
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
   def deleteNode(self, xml=None, object=None, object_id=None, force=None, 
       simulate=0, **kw):
     """
@@ -93,6 +94,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
       LOG('VCardConduit',0,'deleteNode, Unable to delete: %s' % str(object_id))
     return conflict_list
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
   def updateNode(self, xml=None, object=None, previous_xml=None, force=0, 
       simulate=0,  **kw):
     """
@@ -118,7 +120,6 @@ class VCardConduit(ERP5Conduit, SyncCode):
     verCTTypeList[self.MEDIA_TYPE['TEXT_VCARD']]=('3.0',)
     verCTTypeList[self.MEDIA_TYPE['TEXT_XVCARD']]=('2.1',)
     return verCTTypeList[capabilities_ct_type]
-
 
   def getPreferedCapabilitieVerCT(self):
     """
