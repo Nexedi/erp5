@@ -3,4 +3,8 @@
   <type>Bug</type>
   <workflow>bug_workflow, edit_workflow</workflow>
  </chain>
+ <chain>
+  <type>Glossary Term</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
 </workflow_chain>

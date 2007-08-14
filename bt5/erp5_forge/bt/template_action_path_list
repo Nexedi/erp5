@@ -17,6 +17,15 @@ External Folder | history
 External Folder | metadata
 External Folder | print
 External Folder | view
+Glossary Module | find_terms_from_property_sheet
+Glossary Module | list_ui
+Glossary Module | print_pdf
+Glossary Module | sort_on
+Glossary Module | view
+Glossary Term | history
+Glossary Term | metadata
+Glossary Term | print_pdf
+Glossary Term | view
 Preference | subversion
 Template Tool | bt_svn_history
 Template Tool | search_portal_type

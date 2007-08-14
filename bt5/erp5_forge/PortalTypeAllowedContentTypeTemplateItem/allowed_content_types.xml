@@ -8,6 +8,9 @@
  <portal_type id="External Folder">
   <item>External Folder</item>
  </portal_type>
+ <portal_type id="Glossary Module">
+  <item>Glossary Term</item>
+ </portal_type>
  <portal_type id="Upload Module">
   <item>External Folder</item>
  </portal_type>
