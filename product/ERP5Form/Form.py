@@ -667,8 +667,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                     value = Method(value.method_name)
                 elif type(value) is TALESMethod:
                     value = TALESMethod(value._text)
-                elif not isinstance(value, (str, unicode, int, long, bool,
-                                            list, tuple, dict)):
+                elif value is not None and not isinstance(value,
+                        (str, unicode, int, long, bool, list, tuple, dict)):
                     raise ValueError, repr(value)
                 new_dict[key] = value
             return new_dict
@@ -742,7 +742,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                             if is_equal(target_field.get_recursive_orig_value(i),
                                         new_values[i]):
                                 del new_values[i]
-                for i in new_tales:
+                for i in new_tales.keys():
                     if not i in target_field.delegated_list:
                         # obsolete variable check
                         try:
