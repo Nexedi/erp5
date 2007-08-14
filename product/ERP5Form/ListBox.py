@@ -28,7 +28,7 @@
 
 import sys
 from OFS.Traversable import NotFound
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
@@ -1888,7 +1888,7 @@ class ListBoxRendererLine:
               except AttributeError:
                 original_value = getattr(obj, property_id, None)
                 processed_value = original_value
-            except (AttributeError, KeyError):
+            except (AttributeError, KeyError, Unauthorized):
               original_value = None
               processed_value = 'Could not evaluate %s' % property_id
           else:
