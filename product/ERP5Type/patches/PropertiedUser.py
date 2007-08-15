@@ -63,8 +63,9 @@ def getRolesInContext( self, object ):
                     local[ role ] = 1
                     
         # patch by Klaus for LocalRole blocking
-        if hasattr(object, '_getAcquireLocalRoles'):
-            if not object._getAcquireLocalRoles():
+        _getAcquireLocalRoles = getattr(object, '_getAcquireLocalRoles', None)
+        if _getAcquireLocalRoles is not None:
+            if not _getAcquireLocalRoles():
                 break
 
         inner = aq_inner( object )
@@ -164,8 +165,9 @@ def allowed( self, object, object_roles=None ):
                         return 0
                     
         # patch by Klaus for LocalRole blocking
-        if hasattr(object, '_getAcquireLocalRoles'):
-            if not object._getAcquireLocalRoles():
+        _getAcquireLocalRoles = getattr(object, '_getAcquireLocalRoles', None)
+        if _getAcquireLocalRoles is not None:
+            if not _getAcquireLocalRoles():
                 break
 
         inner = aq_inner( inner_obj )
