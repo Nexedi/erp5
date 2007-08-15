@@ -232,7 +232,7 @@ allow_class(CachingMethod)
 
 # TransactionCache is a cache per transaction. The purpose of this cache is
 # to accelerate some heavy read-only operations. Note that this must not be
-# enabled when a trasaction may modify ZODB objects.
+# enabled when a transaction may modify ZODB objects.
 def getReadOnlyTransactionCache(context):
   """Get the transaction cache.
   """

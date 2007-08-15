@@ -39,7 +39,7 @@ except NameError:
 class PropertyTypeValidity(Constraint):
   """
     This constraint class allows to check / fix type of each
-    attributes define in the PropertySheets.
+    attributes defined in the PropertySheets.
     This Constraint is always created in ERP5Type/Utils.py
   """
 
