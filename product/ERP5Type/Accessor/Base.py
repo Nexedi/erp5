@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import warnings
+
 from ZPublisher.HTTPRequest import FileUpload
 from TypeDefinition import type_definition, list_types, ATTRIBUTE_PREFIX
 from Accessor import Accessor as Method
@@ -91,6 +93,9 @@ class Setter(Method):
           setattr(instance, self._storage_id, self._cast(args[0]))
       else:
         # Call the private setter
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
       if self._reindex: instance.reindexObject() # XXX Should the Setter check
@@ -108,13 +113,13 @@ evaluateTales = CachingMethod(_evaluateTales, id = 'evaluateTales', cache_factor
 
 class Getter(Method):
     """
-      Gets an attribute value. A default value can be provided if needed.
+    Gets an attribute value. A default value can be provided if needed.
 
     Note that 'default' argument is the first positional argument, this is
     important if you want to override a Getter in a class,  overloaded
     accessors have to respect this::
 
-      getSomething(self, [default], [name=value, [name=value], ])
+    getSomething(self, [default], [name=value, [name=value], ])
 
     """
     _need__name__=1

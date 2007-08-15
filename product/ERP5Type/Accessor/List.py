@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import warnings
+
 from Base import func_code, type_definition, list_types,\
                  ATTRIBUTE_PREFIX, Method, evaluateTales
 from TypeDefinition import asList, identity
@@ -90,6 +92,9 @@ class DefaultSetter(Method):
           setattr(instance, self._storage_id, tuple(value))
       else:
         # Call the private setter
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
       if self._reindex: instance.reindexObject()
@@ -111,6 +116,9 @@ class ListSetter(DefaultSetter):
           setattr(instance, self._storage_id, tuple(value))
       else:
         # Call the private setter
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
 
@@ -182,6 +190,9 @@ class SetSetter(Method):
           setattr(instance, self._storage_id, tuple(new_list_value))
       else:
         # Call the private setter
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
       if self._reindex: instance.reindexObject()

@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import warnings
+
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
 from Products.ERP5Type.PsycoWrapper import psyco
 from zLOG import LOG
@@ -160,6 +162,9 @@ class Setter(Method):
             portal_type=self._portal_type[0])
         instance._v_accessor_created_object = 1
       if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
         o.setProperty(self._acquired_property, value, *args, **kw)
       else:
         o._setProperty(self._acquired_property, value, *args, **kw)

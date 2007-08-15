@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import warnings
+
 from Base import func_code, type_definition, ATTRIBUTE_PREFIX, Method
 import Base
 from Products.ERP5Type.PsycoWrapper import psyco
@@ -212,6 +214,9 @@ class Setter(Method):
         if o is None: available_id = k
         if o is not None and o.portal_type in self._portal_type:
           if self._reindex:
+            warnings.warn("The reindexing accessors are deprecated.\n"
+                          "Please use Alias.Reindex instead.",
+                          DeprecationWarning)
             o.setProperty(self._acquired_property, *args, **kw)
           else:
             o._setProperty(self._acquired_property, *args, **kw)
@@ -222,6 +227,9 @@ class Setter(Method):
                                 portal_type=self._portal_type[0])
         instance._v_accessor_created_object = 1
         if self._reindex:
+          warnings.warn("The reindexing accessors are deprecated.\n"
+                        "Please use Alias.Reindex instead.",
+                        DeprecationWarning)
           o.setProperty(self._acquired_property, *args, **kw)
         else:
           o._setProperty(self._acquired_property, *args, **kw)

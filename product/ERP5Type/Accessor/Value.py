@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import warnings
+
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
@@ -53,7 +55,11 @@ class SetSetter(Method):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
                                                  keep_default=1)
-      if self._reindex: instance.reindexObject()
+      if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
+        instance.reindexObject()
 
     psyco.bind(__call__)
 
@@ -71,7 +77,11 @@ class ListSetter(SetSetter):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
                                                  keep_default=0)
-      if self._reindex: instance.reindexObject()
+      if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
+        instance.reindexObject()
 
     psyco.bind(__call__)
 
@@ -90,7 +100,11 @@ class DefaultSetter(SetSetter):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
-      if self._reindex: instance.reindexObject()
+      if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
+        instance.reindexObject()
 
     psyco.bind(__call__)
 
@@ -447,7 +461,11 @@ class UidSetSetter(Method):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
                                                  keep_default=1)
-      if self._reindex: instance.reindexObject()
+      if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
+        instance.reindexObject()
 
 class UidListSetter(UidSetSetter):
     """
@@ -463,7 +481,11 @@ class UidListSetter(UidSetSetter):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
                                                  keep_default=0)
-      if self._reindex: instance.reindexObject()
+      if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
+        instance.reindexObject()
 
 UidSetter = UidListSetter
 
@@ -480,7 +502,11 @@ class UidDefaultSetter(UidSetSetter):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
-      if self._reindex: instance.reindexObject()
+      if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
+        instance.reindexObject()
 
 class DefaultIdGetter(Method):
     """

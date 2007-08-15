@@ -1397,7 +1397,8 @@ except (ImportError, AttributeError):
 
 from Base import Base as BaseClass
 from Accessor import Base, List, Acquired, Content,\
-                     AcquiredProperty, ContentProperty
+                     AcquiredProperty, ContentProperty, \
+                     Alias
 import types
 
 # Compile accessors
@@ -1589,7 +1590,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
                 reindex = 1
                 )
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-            setattr(property_holder, accessor_name, base_accessor)
+            setattr(property_holder, accessor_name, Alias.Reindex(accessor_name, '_' + accessor_name))
             property_holder.security.declareProtected( write_permission, accessor_name )
           accessor_name = '_set' + UpperCase(composed_id)
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
@@ -1617,7 +1618,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
                 reindex = 1
                 )
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-            setattr(property_holder, accessor_name, base_accessor)
+            setattr(property_holder, accessor_name, Alias.Reindex(accessor_name, '_' + accessor_name))
             property_holder.security.declareProtected( write_permission, accessor_name )
           accessor_name = '_setDefault' + UpperCase(composed_id)
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
@@ -1780,16 +1781,12 @@ def createDefaultAccessors(property_holder, id, prop = None,
             setattr(property_holder, accessor_name, base_accessor)
             property_holder.security.declareProtected( write_permission, accessor_name )
           accessor_name = 'set' + UpperCase(composed_id)
-          base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id,
-                  portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-            setattr(property_holder, accessor_name, base_accessor)
+            setattr(property_holder, accessor_name, Alias.Reindex(accessor_name, '_' + accessor_name))
             property_holder.security.declareProtected( write_permission, accessor_name )
           accessor_name = 'set' + UpperCase(composed_id) + 'List'
-          base_accessor = ContentProperty.Setter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
-                  portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-            setattr(property_holder, accessor_name, base_accessor)
+            setattr(property_holder, accessor_name, Alias.Reindex(accessor_name, '_' + accessor_name))
             property_holder.security.declareProtected( write_permission, accessor_name )
           # No default getter YET XXXXXXXXXXXXXX
           # No list getter YET XXXXXXXXXXXXXX
@@ -1809,40 +1806,22 @@ def createDefaultAccessors(property_holder, id, prop = None,
   ######################################################
   # Create Setters
   if prop['type'] in list_types or prop.get('multivalued', 0):
-    # Create setters for a list property (reindexing)
-    # The base accessor sets the list to a singleton
-    # and allows simulates a simple property
-    setter_name = 'set' + UpperCase(id)
-    base_setter = List.Setter(setter_name, id, prop['type'], reindex=1,
-                                                 storage_id = prop.get('storage_id'))
-    # The default setter sets the first item of a list without changing other items
-    setter_name = 'setDefault' + UpperCase(id)
-    default_setter = List.DefaultSetter(setter_name, id, prop['type'], reindex=1,
-                                                 storage_id = prop.get('storage_id'))
-    # The list setter sets the whole list
-    setter_name = 'set' + UpperCase(id) + 'List'
-    list_setter = List.ListSetter(setter_name, id, prop['type'], reindex=1,
-                                                 storage_id = prop.get('storage_id'))
-    # The list setter sets the whole list
-    setter_name = 'set' + UpperCase(id) + 'Set'
-    set_setter = List.SetSetter(setter_name, id, prop['type'], reindex=1,
-                                                 storage_id = prop.get('storage_id'))
-    # Create setters for a list property
+    # Create setters for a list property by aliasing
     setter_name = 'set' + UpperCase(id)
     if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, base_setter)
+      setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
       property_holder.security.declareProtected(write_permission, setter_name)
     setter_name = 'setDefault' + UpperCase(id)
     if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, default_setter)
+      setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
       property_holder.security.declareProtected(write_permission, setter_name)
     setter_name = 'set' + UpperCase(id) + 'List'
     if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, list_setter)
+      setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
       property_holder.security.declareProtected(write_permission, setter_name)
     setter_name = 'set' + UpperCase(id) + 'Set'
     if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, set_setter)
+      setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
       property_holder.security.declareProtected(write_permission, setter_name)
     # Create setters for a list property (no reindexing)
     # The base accessor sets the list to a singleton
@@ -1892,29 +1871,25 @@ def createDefaultAccessors(property_holder, id, prop = None,
     # Create setters for a list property (reindexing)
     # The base accessor sets the list to a singleton
     # and allows simulates a simple property
-    setter_name = 'set' + UpperCase(id)
-    base_setter = Content.Setter(setter_name, id, prop['type'], reindex=1,
-             storage_id = prop.get('storage_id'))
+    base_setter_name = 'set' + UpperCase(id)
     # The default setter sets the first item of a list without changing other items
-    setter_name = 'setDefault' + UpperCase(id)
-    default_setter =  Content.DefaultSetter(setter_name, id, prop['type'], reindex=1,
-             storage_id = prop.get('storage_id'))
+    default_setter_name = 'setDefault' + UpperCase(id)
     # Create setters for an object property
     setter_name = 'set' + UpperCase(id)
     if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, base_setter.dummy_copy(setter_name))
+      setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + base_setter_name))
       property_holder.security.declareProtected(write_permission, setter_name)
     setter_name = 'setDefault' + UpperCase(id)
     if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, default_setter.dummy_copy(setter_name))
+      setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + default_setter_name))
       property_holder.security.declareProtected(write_permission, setter_name)
     setter_name = 'set' + UpperCase(id) + 'Value'
     if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, base_setter.dummy_copy(setter_name))
+      setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + base_setter_name))
       property_holder.security.declareProtected(write_permission, setter_name)
     setter_name = 'setDefault' + UpperCase(id) + 'Value'
     if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, default_setter.dummy_copy(setter_name))
+      setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + default_setter_name))
       property_holder.security.declareProtected(write_permission, setter_name)
     # Create setters for a list property (no reindexing)
     # The base accessor sets the list to a singleton
@@ -1954,10 +1929,8 @@ def createDefaultAccessors(property_holder, id, prop = None,
   else:
     # Create setters for a simple property
     setter_name = 'set' + UpperCase(id)
-    setter = Base.Setter(setter_name, id, prop['type'], reindex=1,
-                                                 storage_id = prop.get('storage_id'))
     if not hasattr(property_holder, setter_name):
-      setattr(property_holder, setter_name, setter)
+      setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
       property_holder.security.declareProtected(write_permission, setter_name)
     setter_name = '_set' + UpperCase(id)
     setter = Base.Setter(setter_name, id, prop['type'], reindex=0,
@@ -2070,21 +2043,18 @@ def createCategoryAccessors(property_holder, id,
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
 
   setter_name = 'set' + UpperCase(id)
-  setter = Category.Setter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'set' + UpperCase(id) + 'List'
-  setter = Category.ListSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'setDefault' + UpperCase(id)
-  setter = Category.DefaultSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = '_set' + UpperCase(id)
@@ -2112,7 +2082,7 @@ def createCategoryAccessors(property_holder, id,
     setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
   setter_name = 'set' + UpperCase(id) + 'Set'
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = '_setDefault' + UpperCase(id)
@@ -2434,27 +2404,23 @@ def createValueAccessors(property_holder, id,
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
 
   setter_name = 'set' + UpperCase(id) + 'Value'
-  setter = Value.Setter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'set' + UpperCase(id) + 'ValueList'
-  setter = Value.ListSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'set' + UpperCase(id) + 'ValueSet'
-  setter = Value.SetSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'setDefault' + UpperCase(id) + 'Value'
-  setter = Value.DefaultSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = '_set' + UpperCase(id) + 'Value'
@@ -2499,27 +2465,23 @@ def createValueAccessors(property_holder, id,
 
   # Uid setters
   setter_name = 'set' + UpperCase(id) + 'Uid'
-  setter = Value.UidSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'setDefault' + UpperCase(id) + 'Uid'
-  setter = Value.UidDefaultSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'set' + UpperCase(id) + 'UidList'
-  setter = Value.UidListSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = 'set' + UpperCase(id) + 'UidSet'
-  setter = Value.UidSetSetter(setter_name, id, reindex=1)
   if not hasattr(property_holder, setter_name):
-    setattr(property_holder, setter_name, setter)
+    setattr(property_holder, setter_name, Alias.Reindex(setter_name, '_' + setter_name))
     property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = '_set' + UpperCase(id) + 'Uid'

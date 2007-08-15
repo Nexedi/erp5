@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import warnings
+
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
@@ -56,7 +58,11 @@ class ListSetter(Method):
                                       portal_type=kw.get('portal_type',()),
                                       base=kw.get('base', 0),
                                       keep_default=0)
-      if self._reindex: instance.reindexObject()
+      if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
+        instance.reindexObject()
 
 Setter = ListSetter
 
@@ -85,7 +91,11 @@ class DefaultSetter(Method):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
                                                  base=kw.get('base', 0))
-      if self._reindex: instance.reindexObject()
+      if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
+        instance.reindexObject()
 
 class SetSetter(Method):
     """
@@ -124,7 +134,11 @@ class SetSetter(Method):
                                       portal_type=kw.get('portal_type',()),
                                       base=kw.get('base', 0),
                                       keep_default=1)
-      if self._reindex: instance.reindexObject()
+      if self._reindex:
+        warnings.warn("The reindexing accessors are deprecated.\n"
+                      "Please use Alias.Reindex instead.",
+                      DeprecationWarning)
+        instance.reindexObject()
 
 
 class DefaultGetter(Method):
