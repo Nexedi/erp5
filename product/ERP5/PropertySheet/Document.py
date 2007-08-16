@@ -43,6 +43,11 @@ class Document:
       'type'            : 'string',
       'read_permission' : 'Manage properties',
       'mode'            : 'w' },
+    { 'id'              : 'content_md5',
+      'description'     : 'A string which represents the md5 of the file',
+      'type'            : 'string',
+      'read_permission' : 'Manage properties',
+      'mode'            : 'w' },
   )
 
   _categories = ('similar', 'predecessor', 'successor', 'contributor', 'classification',
@@ -50,6 +55,8 @@ class Document:
                  'source_project',
                  # Source is defined in DMS documentation
                  'source',
+                 # Update frequency in case this document must be crawled regularly
+                 'update_frequency',
                  # XXX-JPS where are these defined in documentation. Why ?
                  'destination',
                  # XXX-JPS all the following properties should be configured on portal type
