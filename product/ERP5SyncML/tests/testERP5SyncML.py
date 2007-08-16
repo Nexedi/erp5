@@ -346,7 +346,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         xml_mapping=self.xml_mapping, 
         conduit='ERP5Conduit',
         gpg_key='',
-        gid_generator='getId',
         activity_enabled=False,
         authentication_format='b64',
         authentication_type='syncml:auth-basic')
@@ -370,7 +369,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         xml_mapping=self.xml_mapping, 
         conduit='ERP5Conduit', 
         gpg_key='',
-        gid_generator='getId',
         activity_enabled=False,
         login='fab',
         password='myPassword')
@@ -394,7 +392,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         xml_mapping=self.xml_mapping, 
         conduit='ERP5Conduit', 
         gpg_key='',
-        gid_generator='getId',
         activity_enabled=False,
         login='fab',
         password='myPassword')
@@ -408,15 +405,13 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       
   def setupPublicationAndSubscriptionAndGid(self, quiet=0, run=run_all_test):
     self.setupPublicationAndSubscription(quiet=1,run=1)
-    def getGid(object):
-      return object.getTitle()
     portal_sync = self.getSynchronizationTool()
     sub1 = portal_sync.getSubscription(self.sub_id1)
     sub2 = portal_sync.getSubscription(self.sub_id2)
     pub = portal_sync.getPublication(self.pub_id)
-    pub.setGidGenerator(getGid)
-    sub1.setGidGenerator(getGid)
-    sub2.setGidGenerator(getGid)
+    sub1.setConduit('ERP5ConduitTitleGid')
+    sub2.setConduit('ERP5ConduitTitleGid')
+    pub.setConduit('ERP5ConduitTitleGid')
     pub.setSynchronizationIdGenerator('_generateNextId')
     sub1.setSynchronizationIdGenerator('_generateNextId')
     sub2.setSynchronizationIdGenerator('_generateNextId')
@@ -1342,7 +1337,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         xml_mapping=self.xml_mapping,
         conduit='ERP5Conduit',
         gpg_key='',
-        gid_generator='getId',
         activity_enabled=False,
         alert_code = SyncCode.ONE_WAY_FROM_SERVER,
         login = 'fab',

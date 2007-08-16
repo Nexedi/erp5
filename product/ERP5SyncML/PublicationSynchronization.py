@@ -234,7 +234,10 @@ class PublicationSynchronization(XMLSyncUtils):
         result = self.PubSyncInit(publication,xml_client,subscriber=subscriber,
             sync_type=self.SLOW_SYNC)
       elif self.checkAlert(xml_client) and \
-          alert_code in (self.TWO_WAY, self.SLOW_SYNC, self.ONE_WAY_FROM_SERVER):
+          alert_code in (self.TWO_WAY, self.SLOW_SYNC, \
+          self.ONE_WAY_FROM_SERVER):
+        subscriber.setXMLMapping(publication.getXMLMapping())
+        subscriber.setConduit(publication.getConduit())
         result = self.PubSyncInit(publication=publication, 
             xml_client=xml_client, subscriber=subscriber, sync_type=alert_code)
       else:

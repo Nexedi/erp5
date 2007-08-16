@@ -66,13 +66,22 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin, ERP5TypeTestCase):
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Add a VCard Publication ')
-      LOG('Testing... ',0,'test_36_AddVCardPublication')
+      LOG('Testing... ',0,'test_01_AddVCardPublication')
     portal_id = self.getPortalName()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addPublication(self.pub_id, self.publication_url, 
-        '/%s/person_server' % portal_id, 'Person', 'objectValues', 
-        'Person_exportAsVCard', 'VCardConduit', '', 'generateNewId', 
-        'getId', SyncCode.MEDIA_TYPE['TEXT_VCARD'])
+    portal_sync.manage_addPublication(title=self.pub_id,
+        publication_url=self.publication_url, 
+        destination_path='/%s/person_server' % portal_id,
+        source_uri='Person', 
+        query='objectValues',
+        xml_mapping='Person_exportAsVCard',
+        conduit='SharedVCardConduit',
+        gpg_key='',
+        synchronization_id_generator='generateNewId',
+        media_type='text/vcard',
+        activity_enabled=False,
+        authentication_format='b64',
+        authentication_type='syncml:auth-basic')
     pub = portal_sync.getPublication(self.pub_id)
     self.failUnless(pub is not None)
 
@@ -83,11 +92,21 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin, ERP5TypeTestCase):
       LOG('Testing... ',0,'test_02_AddVCardSubscription1')
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id1, self.publication_url, 
-        self.subscription_url1, '/%s/person_client1' % portal_id,
-        'Person', 'Person', 'objectValues', 'Person_exportAsVCard', 
-        'VCardConduit', '', 'generateNewId', 'getId', 
-        SyncCode.MEDIA_TYPE['TEXT_VCARD'])
+    portal_sync.manage_addSubscription(title=self.sub_id1,
+        publication_url=self.publication_url,
+        subscription_url=self.subscription_url1,
+        destination_path='/%s/person_client1' % portal_id,
+        source_uri='Person',
+        target_uri='Person',
+        query='objectValues',
+        xml_mapping='Person_exportAsVCard',
+        conduit='SharedVCardConduit',
+        gpg_key='',
+        synchronization_id_generator='generateNewId',
+        media_type='text/vcard',
+        activity_enabled=False,
+        login='fab',
+        password='myPassword')
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
 
@@ -98,11 +117,21 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin, ERP5TypeTestCase):
       LOG('Testing... ',0,'test_03_AddVCardSubscription2')
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id2, self.publication_url,
-        self.subscription_url2, '/%s/person_client2' % portal_id,
-        'Person', 'Person', 'objectValues', 'Person_exportAsVCard', 
-        'VCardConduit', '', 'generateNewId', 'getId', 
-        SyncCode.MEDIA_TYPE['TEXT_VCARD'])
+    portal_sync.manage_addSubscription(title=self.sub_id2,
+        publication_url=self.publication_url,
+        subscription_url=self.subscription_url2,
+        destination_path='/%s/person_client2' % portal_id,
+        source_uri='Person',
+        target_uri='Person',
+        query='objectValues',
+        xml_mapping='Person_exportAsVCard',
+        conduit='SharedVCardConduit',
+        gpg_key='',
+        synchronization_id_generator='generateNewId',
+        media_type='text/vcard',
+        activity_enabled=False,
+        login='fab',
+        password='myPassword')
     sub = portal_sync.getSubscription(self.sub_id2)
     self.failUnless(sub is not None)
 
@@ -143,7 +172,7 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin, ERP5TypeTestCase):
 
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Basic VCard Synchronization')
+      ZopeTestCase._print('\nTest Basic VCard Synchronization ')
       LOG('Testing... ',0,'test_05_basicVCardSynchronization')
 
     self.test_04_FirstVCardSynchronization(quiet=True, run=True)
@@ -179,7 +208,7 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin, ERP5TypeTestCase):
     """
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest No Duplicate Data When Adding')
+      ZopeTestCase._print('\nTest No Duplicate Data When Adding ')
       LOG('Testing... ',0,'test_05_verifyNoDuplicateDataWhenAdding')
     self.test_04_FirstVCardSynchronization(quiet=True, run=True)
     portal_sync = self.getSynchronizationTool()

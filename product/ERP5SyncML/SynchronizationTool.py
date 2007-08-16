@@ -178,7 +178,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_addPublication(self, title, publication_url, 
             destination_path, source_uri, query, xml_mapping, 
             conduit, gpg_key, 
-            synchronization_id_generator=None, gid_generator=None, 
+            synchronization_id_generator=None, 
             media_type=None, authentication_format='b64', 
             authentication_type='syncml:auth-basic', 
             RESPONSE=None, activity_enabled = False,
@@ -195,7 +195,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     pub = Publication(new_id, title, publication_url,
                       destination_path, source_uri, query, xml_mapping,
                       conduit, gpg_key, synchronization_id_generator,
-                      gid_generator, media_type, 
+                      media_type, 
                       authentication_format, 
                       authentication_type,
                       activity_enabled, synchronize_with_erp5_sites,
@@ -212,7 +212,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_addSubscription(self, title, publication_url, subscription_url,
                        destination_path, source_uri, target_uri, query,
                        xml_mapping, conduit, gpg_key,
-                       synchronization_id_generator=None, gid_generator=None,
+                       synchronization_id_generator=None,
                        media_type=None, login=None, password=None,
                        RESPONSE=None, activity_enabled=False,
                        alert_code=SyncCode.TWO_WAY,
@@ -230,7 +230,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     sub = Subscription(new_id, title, publication_url, subscription_url,
                        destination_path, source_uri, target_uri, query,
                        xml_mapping, conduit, gpg_key,
-                       synchronization_id_generator, gid_generator, media_type,
+                       synchronization_id_generator, media_type,
                        login, password, activity_enabled, alert_code, 
                        synchronize_with_erp5_sites, sync_content_type)
     folder._setObject( new_id, sub )
@@ -245,7 +245,7 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_editPublication(self, title, publication_url,
                             destination_path, source_uri, query, xml_mapping,
                             conduit, gpg_key, synchronization_id_generator,
-                            gid_generator,  media_type=None,
+                            media_type=None,
                             authentication_format='b64', 
                             authentication_type='syncml:auth-basic',
                             RESPONSE=None, activity_enabled=False,
@@ -265,7 +265,6 @@ class SynchronizationTool( SubscriptionSynchronization,
     pub.setXMLMapping(xml_mapping)
     pub.setGPGKey(gpg_key)
     pub.setSynchronizationIdGenerator(synchronization_id_generator)
-    pub.setGidGenerator(gid_generator)
     pub.setMediaType(media_type)
     pub.setAuthenticationFormat(authentication_format)
     pub.setAuthenticationType(authentication_type)
@@ -279,7 +278,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       'manage_editSubscription')
   def manage_editSubscription(self, title, publication_url, subscription_url,
       destination_path, source_uri, target_uri, query, xml_mapping, conduit,
-      gpg_key, synchronization_id_generator, gid_generator, media_type=None,
+      gpg_key, synchronization_id_generator, media_type=None,
       login='', password='', RESPONSE=None, activity_enabled=False, 
       alert_code=SyncCode.TWO_WAY, synchronize_with_erp5_sites=False, 
       sync_content_type='application/vnd.syncml+xml'):
@@ -299,7 +298,6 @@ class SynchronizationTool( SubscriptionSynchronization,
     sub.setGPGKey(gpg_key)
     sub.setSubscriptionUrl(subscription_url)
     sub.setSynchronizationIdGenerator(synchronization_id_generator)
-    sub.setGidGenerator(gid_generator)
     sub.setMediaType(media_type)
     sub.setLogin(login)
     sub.setPassword(password)

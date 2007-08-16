@@ -193,16 +193,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
-    Gid Generator
-    </label></div>
-    </td>
-    <td align="left" valign="top">
-    <input type="text" name="gid_generator" size="40" />
-    </td>
-  </tr>
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
     Media Type
     </label></div>
     </td>

@@ -72,7 +72,7 @@ class SyncCode(Persistent):
   PUB_CONFLICT_CLIENT_WIN = 8
 
   MAX_LINES = 5000
-  MAX_OBJECTS = 100
+  MAX_OBJECTS = 300
 
   action_tag = 'workflow_action'
   #NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:element',action_tag,

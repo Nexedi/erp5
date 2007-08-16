@@ -1166,3 +1166,16 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     xml_string = buf.getvalue()
     buf.close() 
     return xml_string
+
+  def getGidFromObject(self, object):
+    """
+    return the Gid composed with the object informations
+    """
+    return object.getId()
+
+  def getGidFromXML(self, xml, gid_from_xml_list):
+    """
+    return the Gid composed with xml informations
+    """
+    return None
+

@@ -649,7 +649,7 @@ class Subscription(Folder, SyncCode):
   # Constructor
   def __init__(self, id, title, publication_url, subscription_url,
       destination_path, source_uri, target_uri, query, xml_mapping,
-      conduit, gpg_key, id_generator, gid_generator, media_type, login,
+      conduit, gpg_key, id_generator, media_type, login,
       password, activity_enabled, alert_code, synchronize_with_erp5_sites,
       sync_content_type):
     """
@@ -677,7 +677,6 @@ class Subscription(Folder, SyncCode):
     self.password=password
     self.domain_type = self.SUB
     self.gpg_key = gpg_key
-    self.setGidGenerator(gid_generator)
     self.setSynchronizationIdGenerator(id_generator)
     self.setConduit(conduit)
     Folder.__init__(self, id)
@@ -944,22 +943,6 @@ class Subscription(Folder, SyncCode):
         xml = func()
     return xml
 
-  def setGidGenerator(self, method):
-    """
-    This set the method name wich allows to find a gid
-    from any object
-    """
-    if method in (None, '', 'None'):
-      method = 'getId'
-    self.gid_generator = method
-
-  def getGidGenerator(self):
-    """
-    This get the method name wich allows to find a gid
-    from any object
-    """
-    return self.gid_generator
-
   def getMediaType(self):
     """
     This method return the type of media used in this session,
@@ -1046,17 +1029,25 @@ class Subscription(Folder, SyncCode):
     """
     o_base = aq_base(object)
     o_gid = None
-    gid_gen = self.getGidGenerator()
+    conduit_name = self.getConduit()
+    conduit = self.getConduitByName(conduit_name)
+    gid_gen = getattr(conduit, 'getGidFromObject', None)
+    LOG('getGidFromObject, Conduit :', DEBUG, conduit_name)
+    LOG('getGidFromObject, gid_gen:', DEBUG, gid_gen)
     if callable(gid_gen):
       o_gid = gid_gen(object)
-    elif getattr(o_base, gid_gen, None) is not None:
-      generator = getattr(object, gid_gen)
-      o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
-    elif gid_gen is not None:
-      # It might be a script python
-      generator = getattr(object,gid_gen)
-      o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
+    else:
+      raise ValueError, "The conduit "+conduit_name+"seems to no have a \
+          getGidFromObject method and it must"
+#    elif getattr(o_base, gid_gen, None) is not None:
+#      generator = getattr(object, gid_gen)
+#      o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
+#    elif gid_gen is not None:
+#      # It might be a script python
+#      generator = getattr(object,gid_gen)
+#      o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
     o_gid = b16encode(o_gid)
+    LOG('getGidFromObject returning', DEBUG, o_gid)
     return o_gid
 
   def getObjectFromGid(self, gid):
@@ -1490,3 +1481,23 @@ class Subscription(Folder, SyncCode):
       retrun the user logged in
     """
     return getattr(self, 'user', None)
+
+  def getConduitByName(self, conduit_name):
+    """
+    Get Conduit Object by given name.
+    The Conduit can be located in Any Products according to naming Convention
+    Products.<Product Name>.Conduit.<Conduit Module> ,if conduit_name equal module's name.
+    By default Conduit must be defined in Products.ERP5SyncML.Conduit.<Conduit Module>
+    """
+    from Products.ERP5SyncML import Conduit
+    if conduit_name.startswith('Products'):
+      path = conduit_name
+      conduit_name = conduit_name.split('.')[-1]
+      conduit_module = __import__(path, globals(), locals(), [''])
+      conduit = getattr(conduit_module, conduit_name)()
+    else:
+      conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]),
+                                  globals(), locals(), [''])
+      conduit = getattr(conduit_module, conduit_name)()
+    return conduit
+

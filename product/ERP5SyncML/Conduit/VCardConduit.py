@@ -64,6 +64,8 @@ class VCardConduit(ERP5Conduit, SyncCode):
     """
     LOG('VCardConduit',0,'addNode, object=%s, object_id=%s, sub_object:%s, \
         xml:\n%s' % (str(object), str(object_id), str(sub_object), xml))
+    if not isinstance(xml, str):
+      xml = self.nodeToString(xml)
     portal_type = 'Person' #the VCard can just use Person
     if sub_object is None: 
 
@@ -134,21 +136,6 @@ class VCardConduit(ERP5Conduit, SyncCode):
     """
     prefered_type = self.MEDIA_TYPE['TEXT_XVCARD']
     return prefered_type
-  
-  def getGidFromXML(self, vcard):
-    """
-    return the Gid composed of FirstName and LastName
-    """
-    vcard_dict = self.vcard2Dict(vcard)
-    gid_from_vcard = []
-    if vcard_dict.has_key('first_name'):
-      gid_from_vcard.append(vcard_dict['first_name'])
-      gid_from_vcard.append(' ')
-    if vcard_dict.has_key('last_name'):
-      gid_from_vcard.append(vcard_dict['last_name'])
-    gid_from_vcard = ''.join(gid_from_vcard)
-    LOG('gid_from_vcard', 0, gid_from_vcard)
-    return gid_from_vcard
   
   def changePropertyEncoding(self, property_parameters_list, 
       property_value_list):

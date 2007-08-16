@@ -144,7 +144,7 @@ class Publication(Subscription):
   # Constructor
   def __init__(self, id, title, publication_url, destination_path,
       source_uri, query, xml_mapping, conduit, gpg_key, id_generator,
-      gid_generator, media_type, authentication_format,
+      media_type, authentication_format,
       authentication_type, activity_enabled, synchronize_with_erp5_sites,
       sync_content_type):
     """
@@ -159,7 +159,6 @@ class Publication(Subscription):
     self.xml_mapping = xml_mapping
     self.domain_type = self.PUB
     self.gpg_key = gpg_key
-    self.setGidGenerator(gid_generator)
     self.setMediaType(media_type)
     self.setSynchronizationIdGenerator(id_generator)
     self.setConduit(conduit)

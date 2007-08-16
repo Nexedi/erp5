@@ -778,10 +778,28 @@ class XMLSyncUtilsMixin(SyncCode):
       object_list = domain.getObjectList()
       object_path_list = map(lambda x: x.getPhysicalPath(),object_list)
       subscriber.setRemainingObjectPathList(object_path_list)
+    
+      if subscriber.getMediaType() == self.MEDIA_TYPE['TEXT_VCARD']:
+        #here the method getGidFromObject don't return the good gid because
+        #the conduit use the catalog to determine it and object are not yet
+        #cataloged so if there is many times the same gid, we must count it
+        gid_not_encoded_list = []
+        for object in object_list:
+          LOG('getSyncMLData :', DEBUG, 'object:%s, object_list:%s, objectTitle:%s, local_gid_list:%s' % (object, object_list, object.getTitle(), local_gid_list))
+          gid = b16decode(domain.getGidFromObject(object))
+          if gid in gid_not_encoded_list:
+            number = len([item for item in gid_not_encoded_list if item.startswith(gid)])
+            if number > 0:
+              gid = gid+'__'+str(number+1)
+          gid_not_encoded_list.append(gid)
+          local_gid_list.append(b16encode(gid))
+          LOG('getSyncMLData :', DEBUG,'gid_not_encoded_list:%s, local_gid_list:%s, gid:%s' % (gid_not_encoded_list, local_gid_list, gid))
+      else:
+        local_gid_list = map(lambda x: domain.getGidFromObject(x),object_list)
 
-      local_gid_list = map(lambda x: domain.getGidFromObject(x),object_list)
       # Objects to remove
       LOG('remove object to remove ...', DEBUG, '')
+      object_gid_deleted = []
       for object_gid in subscriber.getGidList():
         if object_gid not in local_gid_list:
           # This is an object to remove
@@ -792,6 +810,7 @@ class XMLSyncUtilsMixin(SyncCode):
             if xml_object is not None: # This prevent to delete an object that
                                        # we were not able to create
               rid = signature.getRid()
+              object_gid_deleted.append(object_gid)
               syncml_data += self.deleteXMLObject(
                                       xml_object=signature.getXML() or '',
                                       object_gid=object_gid,
@@ -1022,6 +1041,7 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     xml_confirmation = ''
     has_next_action = 0
+    gid_from_xml_list = []
     destination = self.unrestrictedTraverse(domain.getDestinationPath())
     LOG('applyActionList args', DEBUG, 'domain : %s\n subscriber : %s\n cmd_id : %s' % (domain.getPath(), subscriber.getPath(), cmd_id))
     LOG('applyActionList', DEBUG, self.getSyncActionList(remote_xml))
@@ -1034,8 +1054,13 @@ class XMLSyncUtilsMixin(SyncCode):
       partial_data = self.getPartialData(action)
       rid = self.getActionId(action)
       if action.nodeName != 'Delete':
-        if hasattr(conduit, 'getGidFromXML'):
-          gid = b16encode(conduit.getGidFromXML(self.getDataText(action)))
+        if hasattr(conduit, 'getGidFromXML') and \
+            conduit.getGidFromXML(self.getDataText(action),
+            gid_from_xml_list) not in ('', None):
+          gid = conduit.getGidFromXML(self.getDataText(action), 
+              gid_from_xml_list)
+          gid_from_xml_list.append(gid)
+          gid = b16encode(gid)
         else:
           gid=rid
       else:
