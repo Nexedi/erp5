@@ -672,6 +672,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('my_document')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalCrawlerIndexTypeList')
+  def getPortalCrawlerIndexTypeList(self):
+    """
+      Return web page types.
+    """
+    return self._getPortalGroupedTypeList('crawler_index')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalSupplyPathTypeList')
   def getPortalSupplyPathTypeList(self):
     """
