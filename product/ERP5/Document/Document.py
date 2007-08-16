@@ -37,8 +37,7 @@ from Globals import PersistentMapping
 from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.WebDAVSupport import TextContent
-from Products.ERP5Type.Message import Message
+from Products.ERP5Type.DateUtils import convertDateToHour, number_of_hours_in_day, number_of_hours_in_year
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
@@ -477,11 +476,11 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       if val is None:
         val = self.getProperty(property)
         if val is not None and val != '':
-          val = [val]
+          val = [str(val)]
         else:
           val = []
       else:
-        val = list(val)
+        val = [str(v) for v in list(val) if v is not None]
       return val
 
     searchable_text = reduce(add, map(lambda x: getPropertyListOrValue(x),
@@ -1240,6 +1239,22 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     """
     self.portal_contributions.crawlContent(self)
 
+  security.declareProtected(Permissions.View, 'isIndexContent')
+  def isIndexContent(self, container=None):
+    """
+      Ask container if we are and index, or a content.
+      In the vast majority of cases we are content.
+      This method is required in a crawling process to make
+      a difference between URLs which return an index (ex. the 
+      list of files in remote server which is accessed through HTTP)
+      and the files themselves.
+    """
+    if container is None:
+      container = self.getParentValue()
+    if hasattr(aq_base(container), 'isIndexContent'):
+      return container.isIndexContent(self)
+    return False
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
   def getContentBaseURL(self):
     """
@@ -1255,12 +1270,46 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
         base_url = '/'.join(base_url_list[:-1])
     return base_url
 
-  # Alarm date calculation - this method should be moved out ASAP
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNextAlarmDate')
-  def getNextAlarmDate(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFrequencyIndex')
+  def getFrequencyIndex(self):
     """
-    This method is only there to have something to test.
-    Serious refactoring of Alarm, Periodicity and CalendarPeriod
-    classes is needed.
+      Returns the document update frequency as an integer
+      which is used by alamrs to decide which documents
+      must be updates at which time. The index represents
+      a time slot (ex. all days in a month, all hours in a week).
     """
-    return DateTime() + 10
+    try:
+      return self.getUpdateFrequencyValue().getIntIndex()
+    except AttributeError:
+      # Catch Attribute error or Key error - XXX not beautiful
+      return 0
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDateIndex')
+  def getCreationDateIndex(self, at_date = None):
+    """
+    Returns the document Creation Date Index which is the creation 
+    date converted into hours modulo the Frequency Index.
+    """
+    frequency_index = self.getFrequencyIndex()
+    if not frequency_index: return -1 # If not update frequency is provided, make sure we never update
+    hour = convertDateToHour(date=self.getCreationDate())
+    creation_date_index = hour % frequency_index
+    # in the case of bisextile year, we substract 24 hours from the creation date,
+    # otherwise updating documents (frequency=yearly update) created the last
+    # 24 hours of bissextile year will be launched once every 4 years.
+    if creation_date_index >= number_of_hours_in_year:
+      creation_date_index = creation_date_index - number_of_hours_in_day
+
+    return creation_date_index
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isUpdatable')
+  def isUpdatable(self):
+    """
+      This method is used to decide which document can be updated
+      in the crawling process. This can depend for example on
+      workflow states (publication state,
+      validation state) or on roles on the document.
+    """
+    method = self._getTypeBasedMethod('isUpdatable', 
+        fallback_script_id = 'Document_isUpdatable')
+    return method()
