@@ -139,6 +139,24 @@ class ExternalSource(XMLObject, UrlMixIn):
     """
     return None
 
+  security.declareProtected(Permissions.View, 'isIndexContent')
+  def isIndexContent(self, content=None):
+    """
+      This method is able to answer a content object if it is an index or a
+      "real" content.  Sometimes (though not often) we want to define a content
+      as index (e.g. if it is only a list of mailing list messages), so that we
+      do not index it for searching etc).  Default implementation returns
+      False.
+    """
+    if content is None: 
+      # this means that we are called directly, and external source 
+      # is an index by definition
+      return True
+    method = self._getTypeBasedMethod('isIndexContent')
+    if method is None:
+      return False
+    return method(content)
+
   # Search API
   security.declareProtected(Permissions.SearchCatalog, 'searchResults')
   def searchResults(self, **kw):
