@@ -82,7 +82,12 @@ class TrashTool(BaseTool):
           # object doesn't exist any longer
           pass
         else:
-          copy = obj._p_jar.exportFile(obj._p_oid)
+          connection = obj._p_jar
+          o = obj
+          while connection is None:
+            o = o.aq_parent
+            connection=o._p_jar
+          copy = connection.exportFile(obj._p_oid)
           # import object in trash
           connection = backup_object_container._p_jar
           o = backup_object_container
@@ -91,8 +96,8 @@ class TrashTool(BaseTool):
             connection=o._p_jar
           copy.seek(0)
           backup = connection.importFile(copy)
-          backup.isIndexable = 0
           try:
+            backup.isIndexable = 0
             backup_object_container._setObject(object_id, backup)
           except AttributeError:
             # XXX we can go here due to formulator because attribute field_added
@@ -103,7 +108,7 @@ class TrashTool(BaseTool):
       # in case of portal types, export properties instead of subobjects
       if obj is None:
         object_path = container_path + [object_id]
-        obj = self.unrestrictedTraverse(object_path)
+        obj = self.unrestrictedTraverse(object_path, None)
       if obj is None:
         pass
       elif getattr(obj, 'meta_type', None) == 'ERP5 Type Information':
