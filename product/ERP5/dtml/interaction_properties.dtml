@@ -44,28 +44,13 @@
 </tr>
 
 <tr>
-<th align="left">Trigger type</th>
-<td>
-<dtml-let checked="trigger_type==0 and 'checked' or ' '">
-<input type="radio" name="trigger_type" value="0" &dtml-checked; />
-Automatic
-</dtml-let>
-</td>
-</tr>
-
-<tr>
-<th></th>
-<td>
-<dtml-let checked="trigger_type==2 and 'checked' or ' '">
-<input type="radio" name="trigger_type" value="2" &dtml-checked; />
-Initiated by WorkflowMethod
-</dtml-let>
-</td>
-</tr>
-
-<tr>
 <th align="left">Trigger Method Id(s)</th>
 <td><input type="text" name="method_id" value="<dtml-var "' '.join(method_id)">" size="50" /></td>
+</tr>
+
+<tr>
+<th align="left">Trigger once per transaction</th>
+<td><input type="checkbox" name="once_per_transaction:int" value="1" <dtml-if once_per_transaction>checked</dtml-if>/></td>
 </tr>
 
 <tr>
