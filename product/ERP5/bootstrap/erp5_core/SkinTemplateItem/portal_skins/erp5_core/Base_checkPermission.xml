@@ -127,7 +127,7 @@ return 0\n
                             <string>path</string>
                             <string>permission</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>None</string>
                             <string>ob</string>

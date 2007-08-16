@@ -226,7 +226,7 @@ else:\n
                             <string>None</string>
                             <string>null_value_list</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>portal_catalog</string>
                             <string>property_override_dict</string>
                             <string>getattr</string>

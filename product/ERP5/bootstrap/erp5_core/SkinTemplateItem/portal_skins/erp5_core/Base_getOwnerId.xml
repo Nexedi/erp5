@@ -117,7 +117,7 @@ raise ValueError, \'Context (%s) has no owner (see local roles).\' % (repr(conte
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>local_role_list</string>
                             <string>_getiter_</string>
                             <string>group</string>

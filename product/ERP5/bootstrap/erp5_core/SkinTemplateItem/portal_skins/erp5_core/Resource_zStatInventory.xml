@@ -158,22 +158,22 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>query</string>
-<string>resource_uid</string>
-<string>from_date</string>
-<string>at_date</string>
-<string>to_date</string>
-<string>omit_simulation</string>
-<string>omit_input</string>
-<string>omit_output</string>
-<string>simulation_state</string>
-<string>section_category</string>
-<string>selection_domain</string>
-<string>selection_report</string>
-<string>closed_summary</string>
-<string>where_expression</string>
-<string>from_table_list</string>
-<string>selection_uids</string>
+                            <string>query</string>
+                            <string>resource_uid</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>to_date</string>
+                            <string>omit_simulation</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                            <string>simulation_state</string>
+                            <string>section_category</string>
+                            <string>selection_domain</string>
+                            <string>selection_report</string>
+                            <string>closed_summary</string>
+                            <string>where_expression</string>
+                            <string>from_table_list</string>
+                            <string>selection_uids</string>
                           </list>
                         </value>
                     </item>

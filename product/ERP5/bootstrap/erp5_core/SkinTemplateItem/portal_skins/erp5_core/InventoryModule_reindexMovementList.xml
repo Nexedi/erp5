@@ -80,7 +80,7 @@ for o in [ x.getObject() for x in context.portal_catalog(\n
                                    , sort_on     = [(\'movement.start_date\',\'ascending\')]\n
                                    , sql_catalog_id = sql_catalog_id\n
                                    )\n
-         ]:\n
+]:\n
   o.reindexObject( after_tag = \'inventory_%i\' % count\n
                  , tag       = \'inventory_%i\' % (count+1)\n
                  , sql_catalog_id = sql_catalog_id\n

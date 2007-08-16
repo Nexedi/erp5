@@ -79,13 +79,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
                         <string>my_template_portal_type_id_list</string>
@@ -105,7 +105,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list/>
                     </value>

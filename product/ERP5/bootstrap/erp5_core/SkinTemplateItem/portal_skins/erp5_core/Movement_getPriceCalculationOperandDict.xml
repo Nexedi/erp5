@@ -124,7 +124,7 @@ else:\n
                             <string>default</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>resource</string>
                             <string>None</string>
                             <string>_apply_</string>

@@ -122,7 +122,7 @@ return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentatio
                             <string>current_form_id</string>
                             <string>workflow_action</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>help</string>
                             <string>None</string>
                             <string>_getitem_</string>

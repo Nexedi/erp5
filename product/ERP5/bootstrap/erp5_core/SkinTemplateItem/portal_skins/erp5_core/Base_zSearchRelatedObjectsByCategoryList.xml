@@ -69,11 +69,11 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>category_list</string>
-<string>portal_type</string>
-<string>strict_membership</string>
-<string>where_expression</string>
-<string>order_by_expression</string>
+                            <string>category_list</string>
+                            <string>portal_type</string>
+                            <string>strict_membership</string>
+                            <string>where_expression</string>
+                            <string>order_by_expression</string>
                           </list>
                         </value>
                     </item>

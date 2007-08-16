@@ -120,7 +120,7 @@ return None\n
                             <string>workflow_id</string>
                             <string>transition_id</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>workflow_item_list</string>
                             <string>_getiter_</string>
                             <string>workflow_item</string>

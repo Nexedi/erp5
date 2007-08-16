@@ -51,8 +51,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>alarm_date</string>
+                            <string>uid</string>
+                            <string>alarm_date</string>
                           </list>
                         </value>
                     </item>
