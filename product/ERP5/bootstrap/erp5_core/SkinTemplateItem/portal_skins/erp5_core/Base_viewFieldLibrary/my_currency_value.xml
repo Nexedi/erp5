@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/precision</string> </value>
+            <value> <string>request/precision | python: 2</string> </value>
         </item>
       </dictionary>
     </pickle>
