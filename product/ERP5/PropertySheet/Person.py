@@ -198,6 +198,7 @@ class Person:
                               , 'skill', 'skill_list', 'skill_id_list', 'skill_title_list', 'skill_value_list'
                               , 'salary_level', 'salary_level_id', 'salary_level_title', 'salary_level_value'
                               , 'grade', 'grade_id', 'grade_title', 'grade_value'
+                              , 'activity', 'activity_id', 'activity_title', 'activity_value'
                               , 'role', 'role_id', 'role_title', 'role_value'
                               , 'function', 'function_id', 'function_title', 'function_value'
                               , 'activity', 'activity_id', 'activity_title', 'activity_value'

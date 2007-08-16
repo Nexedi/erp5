@@ -511,10 +511,12 @@ class TestHR(ERP5TypeTestCase):
     person.setCareerStartDate(dummy_date1)
     person.setCareerSalaryCoefficient(1)
     person.setCareerCollectiveAgreementTitle('SYNTEC convention')
+    person.setCareerActivity('software')
     self.assertEquals(person.getCareerStopDate()                , dummy_date2)
     self.assertEquals(person.getCareerStartDate()               , dummy_date1)
     self.assertEquals(person.getCareerSalaryCoefficient()       , 1)
     self.assertEquals(person.getCareerCollectiveAgreementTitle(), 'SYNTEC convention')
+    self.assertEquals(person.getCareerActivityTitle(), 'Software')
 
     # Set & Check function
     function_categories = self.getCategoryList(base_category='function')
@@ -628,6 +630,13 @@ class TestHR(ERP5TypeTestCase):
     self.assertEquals(person.getCareerGrade()     , default_career.getGrade())
     self.assertEquals(person.getCareerGradeTitle(), default_career.getGradeTitle())
     self.assertEquals(person.getCareerGradeValue(), default_career.getGradeValue())
+    
+    self.assertEquals(person.getCareerActivity(),
+                      default_career.getActivity())
+    self.assertEquals(person.getCareerActivityTitle(),
+                      default_career.getActivityTitle())
+    self.assertEquals(person.getCareerActivityValue(),
+                      default_career.getActivityValue())
 
     self.assertEquals(person.getCareerSalaryLevel()     , default_career.getSalaryLevel())
     self.assertEquals(person.getCareerSalaryLevelTitle(), default_career.getSalaryLevelTitle())
