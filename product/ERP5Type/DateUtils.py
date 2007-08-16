@@ -30,6 +30,7 @@ import warnings
 
 from AccessControl import ModuleSecurityInfo
 from DateTime import DateTime
+from datetime import datetime
 from zLOG import LOG
 
 security = ModuleSecurityInfo('Products.ERP5Type.DateUtils')
@@ -39,7 +40,7 @@ security.declarePublic('addToDate', 'getClosestDate',
     'getMonthFraction', 'getYearFraction', 'getAccountableYearFraction',
     'getBissextilCompliantYearFraction',
     'getDecimalNumberOfYearsBetween','roundMonthToGreaterEntireYear',
-    'roundDate')
+    'roundDate', 'convertDateToHour')
 
 millis = DateTime('2000/01/01 12:00:00.001') - DateTime('2000/01/01 12:00:00')
 centis = millis * 10
@@ -52,7 +53,8 @@ hour = 1/24.
 same_movement_interval = hour
   
 accountable_days_in_month = 30.
-accountable_months_in_year = 12.
+accountable_months_in_year = 12
+number_of_hours_in_year  = 8760
 
 def addToDate(date, to_add=None, **kw):
   """
@@ -337,3 +339,26 @@ def roundDate(date):
   warnings.warn('ERP5Type.DateUtils.roundDate is deprecated, use'
                 ' DateTime.earliestTime instead', DeprecationWarning)
   return date.earliestTime()
+
+def convertDateToHour(date=None):
+  """
+  converts the date passed as parameter into hours
+  """
+  if date is None:
+    date = DateTime()
+  # The Zope DateTime object passed as parameter must be transformed into 
+  # python datetime object, to use toordinal method in conversion to hours
+  creation_date_dict = {}
+  for key in ('year', 'month', 'day'):
+    method = getattr(date, key)
+    creation_date_dict[key] = method()
+  # formating the date from Zope DateTime format to python datetime format
+  # and this provides the use of toordinal method.
+  formatted_creation_date = datetime(creation_date_dict['year'],creation_date_dict['month'],creation_date_dict['day'])
+  # reference date which is the first day of creation date year
+  reference_date = datetime(creation_date_dict['year'], 01, 1)
+  # calculate the ordinal date of the creation date and the reference date
+  ordinal_date = datetime.toordinal(formatted_creation_date)
+  ordinal_reference_date = datetime.toordinal(reference_date)
+  hour = (ordinal_date - ordinal_reference_date) * number_of_hours_in_day + number_of_hours_in_day + date.hour()
+  return int(hour)
