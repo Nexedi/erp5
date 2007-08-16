@@ -112,6 +112,7 @@
                         <string>my_collective_agreement_title</string>
                         <string>my_salary_coefficient</string>
                         <string>my_salary_level</string>
+                        <string>my_activity</string>
                       </list>
                     </value>
                 </item>
