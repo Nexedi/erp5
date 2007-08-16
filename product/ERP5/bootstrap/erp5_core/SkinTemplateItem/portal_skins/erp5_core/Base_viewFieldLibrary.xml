@@ -68,6 +68,10 @@
             <value>
               <list>
                 <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -76,12 +80,47 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>date</string>
-                        <string>money_quantity</string>
+                        <string>my_date</string>
+                        <string>my_category</string>
+                        <string>my_email</string>
+                        <string>my_string_field</string>
+                        <string>my_relation_field</string>
+                        <string>my_list_mode_listbox</string>
+                        <string>my_view_mode_listbox</string>
+                        <string>my_description</string>
+                        <string>my_translated_workflow_state_title</string>
+                        <string>my_currency_value</string>
+                        <string>my_integer_value</string>
+                        <string>my_category_list</string>
+                        <string>my_password</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -89,7 +128,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_FieldLibrary</string> </value>
+            <value> <string>Base_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -97,11 +136,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_FieldLibrary</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>Base_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -113,15 +148,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Deprecated, use Base_viewFieldLibrary instead</string> </value>
+            <value> <string>Default Field Library</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
