@@ -51,7 +51,7 @@ urllib2.install_opener(opener)
 
 # A temporary hack until urllib2 supports timeout setting - XXX
 import socket
-socket.setdefaulttimeout(60) # 1 minute timeout
+socket.setdefaulttimeout(600) # 1 minute timeout
 
 # Global parameters
 TEMP_NEW_OBJECT_KEY = '_v_new_object'
@@ -98,7 +98,7 @@ class ContributionTool(BaseTool):
   manage_overview = DTMLFile( 'explainContributionTool', _dtmldir )
 
   security.declarePrivate('findTypeName')
-  def findTypeName(self, file_name, document):
+  def findTypeName(self, file_name, document, container=None):
     """
       Finds the appropriate portal type based on the file name
       or if necessary the content of the document.
@@ -140,6 +140,30 @@ class ContributionTool(BaseTool):
       return document.portal_type
 
     valid_portal_type_list = [document.portal_type] + extra_valid_portal_type_list
+    # LOG('valid_portal_type_list', 0, str(valid_portal_type_list))
+
+    # If a container is defined, filter valid portal types with allowedContentTypes
+    if container is not None:
+      allowed_type_list = map(lambda x: x.id, container.allowedContentTypes())
+      # LOG('allowed_type_list', 0, str(allowed_type_list))
+      valid_portal_type_list = filter(lambda x: x in allowed_type_list, valid_portal_type_list)
+      # LOG('filtered valid_portal_type_list', 0, str(valid_portal_type_list))
+
+    # Check if there is any intersection with index portal types
+    # If not, we do not need to even check if content is an index
+    is_index_candidate = False
+    for index_type in self.getPortalCrawlerIndexTypeList():
+      if index_type in valid_portal_type_list:
+        is_index_candidate = True
+        candidate_index_type = index_type
+
+    if is_index_candidate and document.isIndexContent(container=container):
+      # If this document has to be created inside an External Source (container)
+      # we need to analyse its content to determine whether it is or not
+      # an index document. Index documents should not be searchable as documents
+      # and should not be considered in the depth calculation of the crawling 
+      # process
+      return candidate_index_type # We suppose that there is only one index type in allowed content types
 
     # Check if the filename tells which portal_type this is
     portal_type_list = self.getPropertyDictFromFileName(file_name).get('portal_type', [])
@@ -151,7 +175,7 @@ class ContributionTool(BaseTool):
       # if we have only one, then this is it
       # LOG('findTypeName single portal_type_list', 0, portal_type_list[0])
       return portal_type_list[0]
-      
+
     # If it is still None, we need to read the document
     # to check which of the candidates is suitable
     # Let us give a chance to getPropertyDictFromContent to
@@ -207,7 +231,7 @@ class ContributionTool(BaseTool):
     # Try to find the file_name
     file_name = None
     mime_type = None
-    if url is None:
+    if not url:
       # check if file was provided
       file = kw.get('file', None)
       if file is not None:
@@ -238,7 +262,7 @@ class ContributionTool(BaseTool):
       file_name = urllib.quote(file_name, safe='')
       file_name = file_name.replace('%', '')
       # For URLs, we want an id by default equal to the encoded URL 
-      if id is None: id = self._encodeURL(url)
+      if id is None: id = self.encodeURL(url)
       if hasattr(url_file, 'headers'):
         headers = url_file.headers
         if hasattr(headers, 'type'):
@@ -260,7 +284,7 @@ class ContributionTool(BaseTool):
       #return document
       pass # XXX - This needs to be implemented once the rest is stable
 
-    # From here, there is no hope unless a file was provided    
+    # From here, there is no hope unless a file was provided
     if file is None:
       raise ValueError, "could not determine portal type"
 
@@ -274,6 +298,9 @@ class ContributionTool(BaseTool):
     if ob is None:
       raise ValueError, "Could not determine the document type"
 
+    # Prevent any reindexing operations
+    ob.isIndexable = 0
+
     # Then put the file inside ourselves for a short while
     BaseTool._setObject(self, file_name, ob)
     document = BaseTool._getOb(self, file_name)
@@ -281,7 +308,8 @@ class ContributionTool(BaseTool):
     try:
       # Then edit the document contents (so that upload can happen)
       document._edit(**kw)
-      if url: document.fromURL(url)
+      if url:
+        document.fromURL(url)
     finally:
       # Remove the object from ourselves
       BaseTool._delObject(self, file_name)
@@ -297,7 +325,8 @@ class ContributionTool(BaseTool):
     # Notify workflows
     #document.notifyWorkflowCreated()
 
-    # Reindex it and return the document
+    # Allow reindexing, reindex it and return the document
+    delattr(document, 'isIndexable')
     document.reindexObject()
     return document
 
@@ -380,7 +409,7 @@ class ContributionTool(BaseTool):
       # portal_type based on the document content
       # (ex. a Memo is a kind of Text which can be identified
       # by the fact it includes some specific content)
-      portal_type = self.findTypeName(name, ob.__of__(self))
+      portal_type = self.findTypeName(name, ob.__of__(self), container=container)
       if portal_type is None: portal_type = ob.portal_type
       ob._setPortalTypeName(portal_type) # This is redundant with finishConstruction
                                        # but necessary to move objects to appropriate
@@ -413,9 +442,9 @@ class ContributionTool(BaseTool):
           document.activate().discoverMetadata(file_name=name, user_login=user_login)
       else:
         if document.isExternalDocument():
-          document = existing_document 
+          document = existing_document
           # If this is an external document, update its content
-          document.activate().updateContentFromURL()
+          # document.activate().updateContentFromURL() # XXX I think this is no longer useful with alarms
           # XXX - Make sure this does not increase ZODB
           # XXX - what to do also with parameters (put again edit_kw) ?
           # Providing some information to the use about the fact
@@ -423,7 +452,7 @@ class ContributionTool(BaseTool):
         else:
           # We may have to implement additional revision support
           # to support in place contribution (ie. for a given ID)
-          # but is this really useful ? 
+          # but is this really useful ?
           raise NotImplementedError
 
       # Keep the document close to us - this is only useful for
@@ -448,17 +477,31 @@ class ContributionTool(BaseTool):
         del self._v_document_cache[id]
         return self.getPortalObject().unrestrictedTraverse(document_url)
 
-    # Try first to return an object listed by listDAVObjects
+    # Try first to return the real object inside
+    # This is much safer than trying to access objects displayed by listDAVObjects
+    # because the behaviour of catalog is unpredicatble if a string is passed
+    # for a UID. For example 
+    #   select path from catalog where uid = "001193.html";
+    # will return the same as
+    #   select path from catalog where uid = 1193;
+    # This was the source of an error in which the contribution tool
+    # was creating a web page and was returning a Base Category
+    # when
+    #   o = folder._getOb(id)
+    # was called in DocumentConstructor
+    result = BaseTool._getOb(self, id, default=default)
+    if result is not _marker:
+      return result
+
+    # Return an object listed by listDAVObjects
     uid = str(id).split('-')[-1]
     object = self.getPortalObject().portal_catalog.unrestrictedGetResultValue(uid=uid)
     if object is not None:
       return object.getObject() # Make sure this does not break security. XXX
 
-    # Fallback to default method
-    if default is _marker:
-      return BaseTool._getOb(self, id)
-    else:
-      return BaseTool._getOb(self, id, default=default)
+    # Raise an AttributeError the same way as in OFS.ObjectManager._getOb
+    raise AttributeError, id
+
 
   def listDAVObjects(self):
     """
@@ -487,7 +530,8 @@ class ContributionTool(BaseTool):
     return wrapper(object_list)
 
   # Crawling methods
-  def _normaliseURL(self, url, base_url=None):
+  security.declareProtected(Permissions.View, 'normaliseURL')
+  def normaliseURL(self, url, base_url=None):
     """
       Returns a normalised version of the url so
       that we do not download twice the same content.
@@ -506,7 +550,8 @@ class ContributionTool(BaseTool):
       url = '%s/%s' % (base_url, url)
     return url
 
-  def _encodeURL(self, url):
+  security.declareProtected(Permissions.View, 'encodeURL')
+  def encodeURL(self, url):
     """
     Returns the URL as an ID. ID should be chosen in such
     way that it is optimal with HBTreeFolder (ie. so that
@@ -520,7 +565,7 @@ class ContributionTool(BaseTool):
     # Produce an MD5 from the URL
     hex_md5 = md5.md5(url).hexdigest()
     # Take the first part in the URL which is not empty
-    # LOG("_encodeURL", 0, url)
+    # LOG("encodeURL", 0, url)
     url_segment = url.split(':')[1]
     url_segment_list = url_segment.split('/')
     url_domain = None
@@ -548,11 +593,18 @@ class ContributionTool(BaseTool):
       valid.
     """
     depth = content.getCrawlingDepth()
-    if depth <= 0:
+    if depth < 0:
+      # Do nothing if crawling depth is reached
+      # (this is not a duplicate code but a way to prevent
+      # calling isIndexContent unnecessarily)
+      return
+    if not content.isIndexContent(): # Decrement depth only if it is a content document
+      depth = depth - 1
+    if depth < 0:
       # Do nothing if crawling depth is reached
       return
     base_url = content.getContentBaseURL()
-    url_list = map(lambda url: self._normaliseURL(url, base_url), set(content.getContentURLList()))
+    url_list = map(lambda url: self.normaliseURL(url, base_url), set(content.getContentURLList()))
     for url in set(url_list):
       # LOG('trying to crawl', 0, url)
       # Some url protocols should not be crawled
@@ -563,7 +615,7 @@ class ContributionTool(BaseTool):
         # in place of not ?
         container = content.getParentValue()
       # Calculate the id under which content will be stored
-      id = self._encodeURL(url)
+      id = self.encodeURL(url)
       # Try to access the document if it already exists
       document = container.get(id, None)
       if document is None:
@@ -572,50 +624,65 @@ class ContributionTool(BaseTool):
         # (the same URL is created multiple times)
         # LOG('activate newContentFromURL', 0, url)
         self.activate(activity="SQLQueue").newContentFromURL(container_path=container.getRelativeUrl(),
-                                                      id=id, url=url, crawling_depth=depth - 1)
-      else:
-        # Update depth to the max. of the two values
-        new_depth = max(depth - 1, document.getCrawlingDepth())
-        document._setCrawlingDepth(new_depth)
-        # And activate updateContentFromURL on existing document
-        next_date = document.getNextAlarmDate() # This should prevent doing the update too often
-        # LOG('activate updateContentFromURL', 0, url)
-        document.activate(at_date=next_date).updateContentFromURL(crawling_depth=depth - 1)
+                                                      id=id, url=url, crawling_depth=depth)
+      elif depth and document.getCrawlingDepth() < depth:
+        # Update the crawling depth if necessary
+        document._setCrawlingDepth(depth)
+        document.activate().crawlContent()
 
   security.declareProtected(Permissions.AddPortalContent, 'updateContentFromURL')
   def updateContentFromURL(self, content, repeat=MAX_REPEAT, crawling_depth=0):
     """
       Updates an existing content.
     """
-    # Step 0: update crawling_depth if required
-    if crawling_depth > content.getCrawlingDepth():
-      content._setCrawlingDepth(crawling_depth)
-    # Step 1: download new content
-    try:
-      url = content.asURL()
-      data = urllib2.urlopen(url).read()
-      file = cStringIO.StringIO()
-      file.write(data)
-      file.seek(0)
-    except socket.error, msg: # repeat multiple times in case of socket error
-      content.updateContentFromURL(repeat=repeat - 1)
-    # Step 2: compare and update if necessary (md5)
-    # do here some md5 stuff to compare contents...
-    if 1:
-      # content._edit(file=file) # Commented for testing
+    # First, test if the document is updatable according to
+    # its workflow states (if it has a workflow associated with)
+    if content.isUpdatable():
+      # Step 0: update crawling_depth if required
+      if crawling_depth > content.getCrawlingDepth():
+        content._setCrawlingDepth(crawling_depth)
+      # Step 1: download new content
+      try:
+        url = content.asURL()
+        data = urllib2.urlopen(url).read()
+        file = cStringIO.StringIO()
+        file.write(data)
+        file.seek(0)
+      except urllib2.HTTPError, error:
+        if repeat == 0:
+          # XXX - Call the extendBadURLList method,--NOT Implemented--
+          # IDEA : ajouter l'url en question dans une list "bad_url_list"  puis lors du crawling au lieu que de boucler sur 
+          #        la liste des url extraites de la page web on fait un test supplementaire qui verifie que l'url n'est pas 
+          #        dans la liste  bad_url_lis
+          raise urllib2.HTTPError
+        content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
+        return
+      except urllib2.URLError, error:
+        if repeat == 0:
+          # XXX - Call the extendBadURLList method,--NOT Implemented--
+          raise urllib2.URLError
+        content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
+        return
+
+      # Step 2: compare and update if necessary (md5)
+      # md5 stuff to compare contents
+      new_content_md5 = md5.md5(data).hexdigest()
+      content_md5 = content.getContentMd5()
+      if content_md5 is new_content_md5:
+        return
+      content._edit(file=file)# Please make sure that if content is the same
+                              # we do not update it
+                              # This feature must be implemented by Base or File
+                              # not here (look at _edit in Base)
       # Step 3: convert to base format
-      # content.convertToBaseFormat() # Commented for testing
+      content.convertToBaseFormat()
       # Step 4: activate populate (unless interaction workflow does it)
-      # content.activate().populateContent() # Commented for testing
+      content.activate().populateContent()
       # Step 5: activate crawlContent
-      content.activate().crawlContent()
-    else:
-      # XXX
-      # We must handle the case for which content type has changed in between
-      pass
-    # Step 6: activate updateContentFromURL at next period
-    next_date = content.getNextAlarmDate()
-    content.activate(at_date=next_date).updateContentFromURL()
+      depth = content.getCrawlingDepth()
+      if depth > 0:
+        content.activate().crawlContent()
+      content.setContentMd5(new_content_md5)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
   def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT, **kw):
@@ -638,25 +705,33 @@ class ContributionTool(BaseTool):
         return
     try:
       document = self.newContent(container_path=container_path, id=id, **kw)
-      if document.getCrawlingDepth() > 0: document.activate().crawlContent()
-      document.activate(at_date=document.getNextAlarmDate()).updateContentFromURL()
+      if document.isIndexContent() and document.getCrawlingDepth() >= 0:
+        # If this is an index document, keep on crawling even if crawling_depth is 0
+        document.activate().crawlContent()
+      elif document.getCrawlingDepth() > 0:
+        # If this is an index document, stop crawling if crawling_depth is 0
+        document.activate().crawlContent()
     except urllib2.HTTPError, error:
+      if repeat == 0:
+        # here we must call the extendBadURLList method,--NOT Implemented--
+        # which had to add this url to bad URL list, so next time we avoid
+        # crawling bad URL
+        raise urllib2.HTTPError
       # Catch any HTTP error
       self.activate(at_date=DateTime() + 1).newContentFromURL(
                         container_path=container_path, id=id,
                         repeat=repeat - 1, **kw)
     except urllib2.URLError, error:
-      if error.reason.args[0] == -3:
-        # Temporary failure in name resolution - try again in 1 day
-        self.activate(at_date=DateTime() + 1,
-                      activity="SQLQueue").newContentFromURL(
-                        container_path=container_path, id=id,
-                        repeat=repeat - 1, **kw)
-      else:
-        # Unknown errror - to be extended
-        raise
-    except:
-      # Pass exception to Zope (ex. conflict errors)
-      raise
+      if repeat == 0:
+        # XXX - Call the extendBadURLList method, --NOT Implemented--
+        raise urllib2.URLError
+      print error.reason
+      #if getattr(error.reason,'args',None):
+        #if error.reason.args[0] == socket.EAI_AGAIN:
+          ## Temporary failure in name resolution - try again in 1 day
+      self.activate(at_date=DateTime() + 1,
+                    activity="SQLQueue").newContentFromURL(
+                      container_path=container_path, id=id,
+                      repeat=repeat - 1, **kw)
 
 InitializeClass(ContributionTool)
