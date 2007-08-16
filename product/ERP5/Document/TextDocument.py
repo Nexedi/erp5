@@ -107,15 +107,18 @@ class TextDocument(Document, TextContent):
         kw.setdefault('text_format', format)
         kw.setdefault('text_content', text_content)
         del kw['file']
-      # check if it's safe to save HTML content
-      # By default FCKEditor used to edit Web Pages wouldn't allow inserting
-      # HTML tags (will replace them accordingly) so this is the last possible 
-      # step where we can check if any other scripts wouldn't try to set manually
-      # bad HTML content.
-      if isHTMLSafe(kw.get('text_content', '')):
-        Document._edit(self, **kw)
-      else:
-        raise ValueError, "HTML contains illegal tags."
+      # The following has been commented because a TextDocument
+      # instance may contain something else than HTML
+      ## Check if it's safe to save HTML content
+      ## By default FCKEditor used to edit Web Pages wouldn't allow inserting
+      ## HTML tags (will replace them accordingly) so this is the last possible 
+      ## step where we can check if any other scripts wouldn't try to set manually
+      ## bad HTML content.
+      # if isHTMLSafe(kw.get('text_content', '')):
+      #  Document._edit(self, **kw)
+      # else:
+      #  raise ValueError, "HTML contains illegal tags."
+      Document._edit(self, **kw)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
     edit = WorkflowMethod( _edit )
