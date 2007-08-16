@@ -206,6 +206,10 @@ class TestPreferences(ERP5TypeTestCase):
       'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
 
+    self.assertEquals('default', pref_tool.getPreference(
+                                        'this_does_not_exists', 'default'))
+
+
   def test_GetAttr(self, quiet=quiet, run=run_all_tests) :
     """ checks that preference methods can be called directly
       on portal_preferences """

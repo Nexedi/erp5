@@ -175,8 +175,10 @@ class PreferenceTool(BaseTool):
   security.declareProtected(Permissions.View, "getPreference")
   def getPreference(self, pref_name, default=None) :
     """ get the preference on the most appopriate Preference object. """
-    return getattr(self, 'get%s' %
-        convertToUpperCase(pref_name))(default=default)
+    method = getattr(self, 'get%s' % convertToUpperCase(pref_name), None)
+    if method:
+      return method(default=default)
+    return default
 
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
   def setPreference(self, pref_name, value) :
