@@ -139,7 +139,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(context.portal_categories.function, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))()</string> </value>
+            <value> <string>python: getattr(context.portal_categories.function, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(filter_node=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

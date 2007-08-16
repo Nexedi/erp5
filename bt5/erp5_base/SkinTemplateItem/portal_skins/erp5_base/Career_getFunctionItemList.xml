@@ -73,16 +73,22 @@
   and extend it with all possible functions.\n
 """\n
 \n
+portal = context.getPortalObject()\n
+category_child_item_list_method_id = portal.portal_preferences.getPreference(\n
+                        \'preferred_category_child_item_list_method_id\',\n
+                        \'getCategoryChildCompactLogicalPathItemList\')\n
 result = []\n
+\n
 if context.getSubordination():\n
   subordination_value = context.getSubordinationValue()\n
   if subordination_value is not None:\n
-    if subordination_value.getFunction():\n
-      function_value = subordination_value.getFunctionValue()\n
-      if function_value is not None:\n
-        result.extend(function_value.getCategoryChildCompactLogicalPathItemList(filter_node=1))\n
+    function_value = subordination_value.getFunctionValue()\n
+    if function_value is not None:\n
+      result.extend(getattr(function_value, category_child_item_list_method_id)(filter_node=1))\n
 \n
-result.extend(context.portal_categories.function.getCategoryChildCompactLogicalPathItemList(filter_node=1))\n
+result.extend(getattr(\n
+         portal.portal_categories.function,\n
+         category_child_item_list_method_id)(filter_node=1))\n
 \n
 return result\n
 </string> </value>
@@ -127,12 +133,15 @@ return result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>result</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>category_child_item_list_method_id</string>
+                            <string>result</string>
                             <string>subordination_value</string>
                             <string>None</string>
                             <string>function_value</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
