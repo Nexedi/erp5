@@ -92,14 +92,14 @@ def get_value(self, id, **kw):
         # This allows to pass some pointer to the local object
         # through the REQUEST parameter. Not very clean.
         # Used by ListBox to render different items in a list
-        if kw.has_key('REQUEST') and kw.get('cell',None) is None:
-          if getattr(kw['REQUEST'],'cell',None) is not None:
+        if kw.has_key('REQUEST') and kw.get('cell', None) is None:
+          if getattr(kw['REQUEST'],'cell', None) is not None:
             kw['cell'] = getattr(kw['REQUEST'],'cell')
           else:
             kw['cell'] = kw['REQUEST']
-        elif kw.get('cell',None) is None:
-          if getattr(REQUEST,'cell',None) is not None:
-            kw['cell'] = getattr(REQUEST,'cell')
+        elif kw.get('cell', None) is None:
+          if getattr(REQUEST, 'cell', None) is not None:
+            kw['cell'] = getattr(REQUEST, 'cell')
         try:
             value = tales_expr.__of__(self)(**kw)
         except (ConflictError, RuntimeError):
@@ -277,6 +277,10 @@ def create_settings_form():
                                title="Title",
                                required=0,
                                default="")
+    description = fields.TextAreaField('description',
+                               title="Description",
+                               required=0,
+                               default="")
     row_length = fields.IntegerField('row_length',
                                      title='Number of groups in row (in order tab)',
                                      required=1,
@@ -327,7 +331,7 @@ def create_settings_form():
                                         default=0,
                                         required=1)
 
-    form.add_fields([title, row_length, name, pt, action, update_action, method,
+    form.add_fields([title, description, row_length, name, pt, action, update_action, method,
                      enctype, encoding, stored_encoding, unicode_mode])
     return form
 
