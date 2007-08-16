@@ -53,7 +53,7 @@ hour = 1/24.
 same_movement_interval = hour
   
 accountable_days_in_month = 30.
-accountable_months_in_year = 12
+accountable_months_in_year = 12.
 number_of_hours_in_year  = 8760
 
 def addToDate(date, to_add=None, **kw):
