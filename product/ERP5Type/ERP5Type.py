@@ -179,6 +179,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
       # DMS
       'document', 'web_document', 'file_document',
       'recent_document', 'my_document', 'template_document',
+      'crawler_index',
       # MRP
       'divergence_tester', 'calendar_period'
       # Project
@@ -275,6 +276,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
         """
             Return list of content types.
             XXX I (seb) think the name is bad
+                (jp) yes, the name is bad, it should be getAvailablePropertySheetList
         """
         result = Products.ERP5Type.PropertySheet.__dict__.keys()
         result = filter(lambda k: not k.startswith('__'),  result)
@@ -523,6 +525,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
             if isinstance(category_result, dict):
               # category_result is a dict (which provide group IDs directly)
               # which represents of mapping of roles, security group IDs
+              # XXX explain that this is for providing user IDs mostly
               role_category_list_dict.setdefault(role, category_result)
             else:
               # category_result is a list of dicts that represents the resolved
@@ -552,7 +555,10 @@ class ERP5TypeInformation( FactoryTypeInformation,
           continue
         role_group_dict = {}
         for category_dict in value_list:
-          group_id = group_id_generator(**category_dict)
+          group_id = group_id_generator(**category_dict) # category_order is passed in the dict
+                                                         # apparently, python can handle it
+                                                         # even though category_order is not a named variable
+                                                         # of the script
           # If group_id is not defined, do not use it
           if group_id not in (None, ''):
             if isinstance(group_id, str):
