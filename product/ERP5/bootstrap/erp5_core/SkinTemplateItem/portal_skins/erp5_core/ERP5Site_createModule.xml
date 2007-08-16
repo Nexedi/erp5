@@ -77,7 +77,6 @@ request=context.REQUEST\n
 # TODO\n
 #   - handle an optionnal "description" parameter\n
 #   - set the form action to "Base_edit"\n
-#   - print : pdf\n
 #   - export : xml\n
 #   - report : last modified\n
 #   - security : 5A\n
@@ -102,36 +101,14 @@ action_list = module_portal_type_value.listActions()\n
 module_portal_type_value.deleteActions(selections=range(0,len(action_list)))\n
 module_portal_type_value.addAction( "view"\n
                                   , "View"\n
+                                  # FIXME: isn\'t it better to create a form for the module?\n
                                   , "string:${object_url}/Folder_viewContentList"\n
                                   , ""\n
                                   , "View"\n
                                   , "object_view"\n
                                   , priority=1.0\n
                                   )\n
-module_portal_type_value.addAction( "sort_on"\n
-                                  , "Sort"\n
-                                  , "string:${object_url}/Folder_viewSortOnDialog"\n
-                                  , ""\n
-                                  , "View"\n
-                                  , "object_sort"\n
-                                  , priority=2.0\n
-                                  )\n
-module_portal_type_value.addAction( "list_ui"\n
-                                  , "Modify UI"\n
-                                  , "string:${object_url}/Base_viewUIDialog"\n
-                                  , ""\n
-                                  , "View"\n
-                                  , "object_ui"\n
-                                  , priority=3.0\n
-                                  )\n
-module_portal_type_value.addAction( "print_pdf"\n
-                                  , "Print"\n
-                                  , "string:${object_url}/Base_printPdf"\n
-                                  , ""\n
-                                  , "View"\n
-                                  , "object_print"\n
-                                  , priority=4.0\n
-                                  )\n
+\n
 # Create the skin directory if does not exist yet\n
 portal_skins_folder_name = portal_skins_folder\n
 portal_skins = portal.portal_skins\n
@@ -188,29 +165,7 @@ object_portal_type_value.addAction( "view"\n
                                   , "object_view"\n
                                   , priority = 1\n
                                   )\n
-object_portal_type_value.addAction( "history"\n
-                                  , "History"\n
-                                  , "string:${object_url}/Base_viewHistory"\n
-                                  , ""\n
-                                  , "View"\n
-                                  , "object_view"\n
-                                  , priority = 2\n
-                                  )\n
-object_portal_type_value.addAction( "metadata"\n
-                                  , "Metadata"\n
-                                  , "string:${object_url}/Base_viewMetadata"\n
-                                  , ""\n
-                                  , "Manage properties"\n
-                                  , "object_view"\n
-                                  , priority = 3\n
-                                  )\n
-object_portal_type_value.addAction( "print_pdf"\n
-                                  , "Print"\n
-                                  , "string:${object_url}/Base_printPdf"\n
-                                  , ""\n
-                                  , "View"\n
-                                  , "object_print"\n
-                                  )\n
+\n
 # Finally add the module to the site\n
 module_object = portal.newContent( portal_type = module_portal_type\n
                                    , id          = module_id\n
