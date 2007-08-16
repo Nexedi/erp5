@@ -104,7 +104,7 @@
                     <value>
                       <list>
                         <string>my_social_code</string>
-                        <string>my_birthday</string>
+                        <string>my_start_date</string>
                         <string>my_marital_status</string>
                         <string>my_child_count</string>
                         <string>my_partner_count</string>
