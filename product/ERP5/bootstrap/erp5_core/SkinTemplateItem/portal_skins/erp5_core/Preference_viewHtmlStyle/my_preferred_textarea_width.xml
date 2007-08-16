@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_html_style_documentation_base_url</string> </value>
+            <value> <string>my_preferred_textarea_width</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -79,7 +79,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_integer_value</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -91,7 +91,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Documentation URL</string> </value>
+                    <value> <string>TextArea Field Width</string> </value>
                 </item>
               </dictionary>
             </value>

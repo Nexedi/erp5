@@ -68,6 +68,7 @@
             <value>
               <list>
                 <string>left</string>
+                <string>right</string>
               </list>
             </value>
         </item>
@@ -83,6 +84,19 @@
                         <string>my_preferred_html_style_contextual_help</string>
                         <string>my_preferred_html_style_translator_mode</string>
                         <string>my_preferred_html_style_documentation_base_url</string>
+                        <string>my_preferred_category_child_item_list_method_id</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>my_preferred_string_field_width</string>
+                        <string>my_preferred_textarea_width</string>
+                        <string>my_preferred_textarea_height</string>
+                        <string>my_preferred_listbox_view_mode_line_count</string>
+                        <string>my_preferred_listbox_list_mode_line_count</string>
                       </list>
                     </value>
                 </item>

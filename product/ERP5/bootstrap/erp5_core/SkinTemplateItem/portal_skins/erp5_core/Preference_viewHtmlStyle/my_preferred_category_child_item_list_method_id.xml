@@ -17,12 +17,13 @@
             <value>
               <list>
                 <string>title</string>
+                <string>enabled</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_html_style_documentation_base_url</string> </value>
+            <value> <string>my_preferred_category_child_item_list_method_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -59,6 +60,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -78,6 +85,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_string_field</string> </value>
                 </item>
@@ -91,10 +102,29 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Documentation URL</string> </value>
+                    <value> <string>Category Item List Method</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.getPortalObject().portal_membership.checkPermission("Manage portal", here)</string> </value>
         </item>
       </dictionary>
     </pickle>

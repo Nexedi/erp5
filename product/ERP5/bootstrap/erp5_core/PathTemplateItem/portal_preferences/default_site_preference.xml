@@ -416,6 +416,30 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             </value>
         </item>
         <item>
+            <key> <string>preferred_category_child_item_list_method_id</string> </key>
+            <value> <string>getCategoryChildTranslatedLogicalPathItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_html_style_contextual_help</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_html_style_developper_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_html_style_translator_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_listbox_list_mode_line_count</string> </key>
+            <value> <int>40</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_listbox_view_mode_line_count</string> </key>
+            <value> <int>15</int> </value>
+        </item>
+        <item>
             <key> <string>preferred_ooodoc_server_address</string> </key>
             <value> <string>localhost</string> </value>
         </item>
@@ -430,6 +454,10 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             </value>
         </item>
         <item>
+            <key> <string>preferred_string_field_width</string> </key>
+            <value> <string>30</string> </value>
+        </item>
+        <item>
             <key> <string>preferred_subversion_user_name</string> </key>
             <value>
               <none/>
@@ -440,6 +468,14 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>preferred_textarea_height</string> </key>
+            <value> <string>4</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_textarea_width</string> </key>
+            <value> <string>80</string> </value>
         </item>
         <item>
             <key> <string>preferred_visible_module</string> </key>
