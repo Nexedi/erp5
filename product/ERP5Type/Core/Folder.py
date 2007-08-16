@@ -41,6 +41,7 @@ from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Type.XMLExportImport import Folder_asXML
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import sortValueList
+from Products.ERP5Type.WebDAVSupport import Folder as WebDAVFolder
 
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
@@ -294,7 +295,7 @@ class FolderMixIn(ExtensionClass.Base):
     """
     return self.countFolder(**kw)[0][0]
 
-class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
+class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
   """
   A Folder is a subclass of Base but not of XMLObject.
   Folders are not considered as documents and are therefore
@@ -353,6 +354,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   _edit = Base._edit
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
+  PUT_factory = WebDAVFolder.PUT_factory
   # XXX Prevent inheritance from PortalFolderBase
   description = None
 

@@ -13,9 +13,11 @@
 ##############################################################################
 
 import re
+from Acquisition import aq_parent, aq_inner, aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.CMFCore.PortalContent import NoWL, ResourceLockedError
+from Products.CMFCore.utils import getToolByName
 from Products.CMFDefault.utils import parseHeadersBody
 from Products.CMFDefault.utils import html_headcheck
 from Products.CMFDefault.utils import bodyfinder
@@ -190,3 +192,42 @@ class TextContent:
   def get_size( self ):
     """ Used for FTP and apparently the ZMI now too """
     return len(self.manage_FTPget())
+
+
+class Folder:
+  """
+  Taken from CMFCore.PortalFolder
+  """
+  def PUT_factory( self, name, typ, body ):
+    """ Factory for PUT requests to objects which do not yet exist.
+
+    Used by NullResource.PUT.
+
+    Returns -- Bare and empty object of the appropriate type (or None, if
+    we don't know what to do)
+    """
+    registry = getToolByName(self, 'content_type_registry', None)
+    if registry is None:
+      return None
+
+    portal_type = registry.findTypeName( name, typ, body )
+    if portal_type is None:
+      return None
+
+    # The code bellow is inspired from ERP5Type.Core.Folder.newContent
+    pt = self._getTypesTool()
+    myType = pt.getTypeInfo(self)
+    if myType is not None and not myType.allowType( portal_type ) and \
+       'portal_trash' not in self.getPhysicalPath():
+      raise ValueError('Disallowed subobject type: %s' % portal_type)
+    pt.constructContent( type_name=portal_type,
+                         container=self,
+                         id=name,
+                         is_indexable=0
+                         ) # **kw) removed due to CMF bug
+
+    # constructContent does too much, so the object has to be removed again
+    obj = aq_base( self._getOb( name ) )
+    self._delObject( name ) # _delObject will not invoke the catalog since is_indexable was set to 0
+    delattr(obj, 'isIndexable') # Allow indexing again (standard case)
+    return obj
