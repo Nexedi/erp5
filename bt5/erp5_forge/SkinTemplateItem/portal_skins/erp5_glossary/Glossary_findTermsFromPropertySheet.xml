@@ -127,7 +127,7 @@ else:\n
                        reference=i[\'reference\'], language=i[\'language\'], business_field=i[\'business_field\'],\n
                        title=i[\'title\'], description=i[\'description\'])\n
 \n
-REQUEST.RESPONSE.redirect(context.absolute_url())\n
+context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
 </string> </value>
         </item>
         <item>
