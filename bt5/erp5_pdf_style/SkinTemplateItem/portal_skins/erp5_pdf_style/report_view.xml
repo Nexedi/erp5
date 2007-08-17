@@ -64,9 +64,7 @@
   <title>List Print</title>\n
   <author>ERP5</author>\n
   <subject>Print Example</subject>\n
-  <content tal:define="group_list python: form.get_groups(include_empty=1);\n
-                       report_item_list python:report_method();\n
-                       field_errors python: request.get(\'field_errors\',{});\n
+  <content tal:define="report_item_list python:report_method();\n
                        dummy python: request.set(\'here\',here); ">\n
 \n
    <action name="nextPageTemplate">\n
