@@ -50,12 +50,17 @@ import re
 from xml.dom.minidom import parse
 import struct
 import cPickle
+import posixpath
 try:
   from base64 import b64encode, b64decode
 except ImportError:
   from base64 import encodestring as b64encode, decodestring as b64decode
 from Products.ERP5Type.Message import Message
 N_ = lambda msgid, **kw: Message('ui', msgid, **kw)
+
+WIN = False
+if os.name == 'nt':
+  WIN = True
 
 class BusinessTemplateUnknownError(Exception):
   """ Exception raised when the business template
@@ -250,7 +255,7 @@ class TemplateTool (BaseTool):
       """
         Import template from a temp file (as uploaded by the user)
       """
-      file = open(path, 'r')
+      file = open(path, 'rb')
       try:
         # read magic key to determine wich kind of bt we use
         file.seek(0)
@@ -274,7 +279,7 @@ class TemplateTool (BaseTool):
           for prop in bt.propertyMap():
             prop_type = prop['type']
             pid = prop['id']
-            prop_path = os.path.join(tar.members[0].name, 'bt', pid)
+            prop_path = posixpath.join(tar.members[0].name, 'bt', pid)
             try:
               info = tar.getmember(prop_path)
             except KeyError:
@@ -284,11 +289,11 @@ class TemplateTool (BaseTool):
                                    or prop_type == 'int':
               prop_dict[pid] = value
             elif prop_type == 'lines' or prop_type == 'tokens':
-              prop_dict[pid[:-5]] = value.split(str(os.linesep))
+              prop_dict[pid[:-5]] = value.splitlines()
           prop_dict.pop('id', '')
           bt.edit(**prop_dict)
           # import all other files from bt
-          fobj = open(path, 'r')
+          fobj = open(path, 'rb')
           try:
             bt.importFile(file=fobj)
           finally:
@@ -326,8 +331,16 @@ class TemplateTool (BaseTool):
         id = self.generateNewId()
 
       urltype, name = splittype(url)
-      if os.path.isdir(name): # new version of business template in plain
-                              # format (folder)
+      # Windows compatibility
+      if WIN:
+        if os.path.isdir(os.path.normpath(url)):
+          name = os.path.normpath(url)
+        elif os.path.isfile(os.path.normpath(url)):
+          url = 'file:///%s' %os.path.normpath(url)
+    
+      # new version of business template in plain format (folder)
+      if os.path.isdir(os.path.normpath(name)):
+        name = os.path.normpath(name)
         file_list = []
         def callback(arg, directory, files):
           if 'CVS' not in directory and '.svn' not in directory: # XXX:
@@ -350,11 +363,11 @@ class TemplateTool (BaseTool):
           prop_path = os.path.join('.', bt_path, pid)
           if not os.path.exists(prop_path):
             continue          
-          value = open(prop_path, 'r').read()
+          value = open(prop_path, 'rb').read()
           if prop_type in ('text', 'string', 'int', 'boolean'):
             prop_dict[pid] = value
           elif prop_type in ('lines', 'tokens'):
-            prop_dict[pid[:-5]] = value.split(str(os.linesep))
+            prop_dict[pid[:-5]] = value.splitlines()
         prop_dict.pop('id', '')
         bt.edit(**prop_dict)
         # import all others objects
@@ -397,7 +410,7 @@ class TemplateTool (BaseTool):
       tempid, temppath = mkstemp()
       try:
         os.close(tempid) # Close the opened fd as soon as possible
-        tempfile = open(temppath, 'w')
+        tempfile = open(temppath, 'wb')
         try:
           tempfile.write(import_file.read())
         finally:

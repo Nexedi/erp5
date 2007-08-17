@@ -74,10 +74,10 @@ from gzip import GzipFile
 from xml.dom.minidom import parse
 from Products.CMFCore.Expression import Expression
 import tarfile
-from urllib import pathname2url, url2pathname
+from urllib import quote, unquote
 from difflib import unified_diff
-
-
+import posixpath
+    
 # those attributes from CatalogMethodTemplateItem are kept for
 # backward compatibility
 catalog_method_list = ('_is_catalog_list_method_archive',
@@ -226,20 +226,26 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
 
   def addFolder(self, name=''):
      if name !='':
+      name = os.path.normpath(name)
       path = os.path.join(self.path, name)
       if not os.path.exists(path):
         os.makedirs(path)
       return path
 
   def addObject(self, obj, name, path=None, ext='.xml'):
-    name = pathname2url(name)
+    name = name.replace('\\', '/')
+    name = quote(name)
+    name = os.path.normpath(name)
     if path is None:
       object_path = os.path.join(self.path, name)
     else:
       if '%' not in path:
-        path = pathname2url(path)
+        tail, path = os.path.splitdrive(path)
+        path = path.replace('\\', '/')
+        path = tail + quote(path)
+      path = os.path.normpath(path)
       object_path = os.path.join(path, name)
-    f = open(object_path+ext, 'wt')
+    f = open(object_path+ext, 'wb')
     f.write(str(obj))
     f.close()
 
@@ -258,12 +264,12 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     for file_path in self.file_list:
       if class_name in file_path.split(os.sep):
         if os.path.isfile(file_path):
-          file = open(file_path, 'r')
+          file = open(file_path, 'rb')
           # get object id
           folders = file_path.split(os.sep)
-          file_name = string.join(folders[self.root_path_len:], os.sep)
+          file_name = string.join(folders[self.root_path_len:], '/')
           if '%' in file_name:
-            file_name = url2pathname(file_name)
+            file_name = unquote(file_name)
           klass._importFile(file_name, file)
           # close file
           file.close()
@@ -287,18 +293,24 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     self.tar = tarfile.open('', 'w:gz', self.fobj)
 
   def addFolder(self, name=''):
+    name = os.path.normpath(name)
     if not os.path.exists(name):
       os.makedirs(name)
 
   def addObject(self, obj, name, path=None, ext='.xml'):
-    name = pathname2url(name)
+    name = name.replace('\\', '/')
+    name = quote(name)
+    name = os.path.normpath(name)
     if path is None:
       object_path = os.path.join(self.path, name)
     else:
       if '%' not in path:
-        path = pathname2url(path)
+        tail, path = os.path.splitdrive(path)
+        path = path.replace('\\', '/')
+        path = tail + quote(path)
+      path = os.path.normpath(path)
       object_path = os.path.join(path, name)
-    f = open(object_path+ext, 'wt')
+    f = open(object_path+ext, 'wb')
     f.write(str(obj))
     f.close()
 
@@ -330,10 +342,10 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
           file = tar.extractfile(info)
           tar_file_name = info.name.startswith('./') and info.name[2:] or \
               info.name
-          folders = string.split(tar_file_name, os.sep)
-          file_name = (os.sep).join(folders[2:])
+          folders = string.split(tar_file_name, '/')
+          file_name = ('/').join(folders[2:])
           if '%' in file_name:
-            file_name = url2pathname(file_name)
+            file_name = unquote(file_name)
           klass._importFile(file_name, file)
           file.close()
     tar.close()
@@ -471,11 +483,11 @@ class ObjectTemplateItem(BaseTemplateItem):
     for key in self._objects.keys():
       obj = self._objects[key]
       # create folder and subfolders
-      folders, id = os.path.split(key)
+      folders, id = posixpath.split(key)
       encode_folders = []
       for folder in folders.split('/'):
         if '%' not in folder:
-          encode_folders.append(pathname2url(folder))
+          encode_folders.append(quote(folder))
         else:
           encode_folders.append(folder)
       path = os.path.join(root_path, (os.sep).join(encode_folders))
@@ -1403,11 +1415,11 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       # XXX Not always a list
       if isinstance(workflow_list, str):
         workflow_list = [workflow_list]
-      xml_data += os.linesep+' <chain>'
-      xml_data += os.linesep+'  <type>%s</type>' %(key,)
-      xml_data += os.linesep+'  <workflow>%s</workflow>' %(', '.join(workflow_list))
-      xml_data += os.linesep+' </chain>'
-    xml_data += os.linesep+'</workflow_chain>'
+      xml_data += '\n <chain>'
+      xml_data += '\n  <type>%s</type>' %(key,)
+      xml_data += '\n  <workflow>%s</workflow>' %(', '.join(workflow_list))
+      xml_data += '\n </chain>'
+    xml_data += '\n</workflow_chain>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -1547,11 +1559,11 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     keys.sort()
     for key in keys:
       allowed_list = dictio[key]
-      xml_data += os.linesep+' <portal_type id="%s">' %(key,)
+      xml_data += '\n <portal_type id="%s">' %(key,)
       for allowed_item in allowed_list:
-        xml_data += os.linesep+'  <item>%s</item>' %(allowed_item,)
-      xml_data += os.linesep+' </portal_type>'
-    xml_data += os.linesep+'</%s>' %(self.xml_tag,)
+        xml_data += '\n  <item>%s</item>' %(allowed_item,)
+      xml_data += '\n </portal_type>'
+    xml_data += '\n</%s>' %(self.xml_tag,)
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -1592,7 +1604,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     return modified_object_list
 
   def _importFile(self, file_name, file):
-    path, name = os.path.split(file_name)
+    path, name = posixpath.split(file_name)
     id = string.split(name, '.')[0]
     xml = parse(file)
     portal_type_list = xml.getElementsByTagName('portal_type')
@@ -1753,7 +1765,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     for key in self._objects.keys():
       obj = self._objects[key]
       # create folder and subfolders
-      folders, id = os.path.split(key)
+      folders, id = posixpath.split(key)
       path = os.path.join(root_path, folders)
       bta.addFolder(name=path)
       # export object in xml
@@ -1764,32 +1776,32 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       method_id = obj.id
       object_path = os.path.join(path, method_id+'.catalog_keys.xml')
 
-      f = open(object_path, 'wt')
+      f = open(object_path, 'wb')
       xml_data = '<catalog_method>'
 
       for method_property, value in self._method_properties[method_id].items():
-        xml_data += os.linesep+' <item key="%s" type="int">' %(method_property,)
-        xml_data += os.linesep+'  <value>%s</value>' %(value,)
-        xml_data += os.linesep+' </item>'
+        xml_data += '\n <item key="%s" type="int">' %(method_property,)
+        xml_data += '\n  <value>%s</value>' %(value,)
+        xml_data += '\n </item>'
 
       if catalog.filter_dict.has_key(method_id):
         if catalog.filter_dict[method_id]['filtered']:
-          xml_data += os.linesep+' <item key="_is_filtered_archive" type="int">'
-          xml_data += os.linesep+'  <value>1</value>'
-          xml_data += os.linesep+' </item>'
+          xml_data += '\n <item key="_is_filtered_archive" type="int">'
+          xml_data += '\n  <value>1</value>'
+          xml_data += '\n </item>'
           for method in catalog_method_filter_list:
             value = getattr(self, method, '')[method_id]
             if method != '_filter_expression_instance_archive':
               if type(value) in (type(''), type(u'')):
-                xml_data += os.linesep+' <item key="%s" type="str">' %(method,)
-                xml_data += os.linesep+'  <value>%s</value>' %(str(value))
-                xml_data += os.linesep+' </item>'
+                xml_data += '\n <item key="%s" type="str">' %(method,)
+                xml_data += '\n  <value>%s</value>' %(str(value))
+                xml_data += '\n </item>'
               elif type(value) in (type(()), type([])):
-                xml_data += os.linesep+' <item key="%s" type="tuple">'%(method)
+                xml_data += '\n <item key="%s" type="tuple">'%(method)
                 for item in value:
-                  xml_data += os.linesep+'  <value>%s</value>' %(str(item))
-                xml_data += os.linesep+' </item>'
-      xml_data += os.linesep+'</catalog_method>'
+                  xml_data += '\n  <value>%s</value>' %(str(item))
+                xml_data += '\n </item>'
+      xml_data += '\n</catalog_method>'
       f.write(xml_data)
       f.close()
 
@@ -1799,8 +1811,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     xml_data = '<key_list>'
     obj.sort()
     for key in obj:
-      xml_data += os.linesep+' <key>%s</key>' %(key)
-    xml_data += os.linesep+'</key_list>'
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
     return xml_data
 
   def install(self, context, trashbin, **kw):
@@ -1956,7 +1968,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       self._objects[file_name[:-4]] = obj
     else:
       # recreate data mapping specific to catalog method
-      path, name = os.path.split(file_name)
+      path, name = posixpath.split(file_name)
       id = string.split(name, '.')[0]
       xml = parse(file)
       method_list = xml.getElementsByTagName('item')
@@ -2026,8 +2038,8 @@ class ActionTemplateItem(ObjectTemplateItem):
       obj = p.unrestrictedTraverse(relative_url)
       for ai in obj.listActions():
         if getattr(ai, 'id') == value:
-          url = os.path.split(relative_url)
-          key = os.path.join(url[-2], url[-1], value)
+          url = posixpath.split(relative_url)
+          key = posixpath.join(url[-2], url[-1], value)
           action = ai._getCopy(context)
           action = self.removeProperties(action)
           self._objects[key] = action
@@ -2047,7 +2059,7 @@ class ActionTemplateItem(ObjectTemplateItem):
             action = update_dict[id]
             if action == 'nothing':
               continue
-          path = id.split(os.sep)
+          path = id.split('/')
           obj = p.unrestrictedTraverse(path[:-1])
           action_list = obj.listActions()
           for index in range(len(action_list)):
@@ -2184,21 +2196,21 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     type_role_list = self._objects[path]
     xml_data = '<type_roles>'
     for role in type_role_list:
-      xml_data += os.linesep+"  <role id='%s'>" % role['id']
+      xml_data += "\n  <role id='%s'>" % role['id']
       # uniq
       for property in ('title', 'description', 'condition', 'priority',
           'base_category_script'):
         prop_value = role.get(property)
         if prop_value:
-          xml_data += os.linesep+"   <property id='%s'>%s</property>" % \
+          xml_data += "\n   <property id='%s'>%s</property>" % \
               (property, prop_value)
       # multi
       for property in ('category', 'base_category'):
         for prop_value in role.get(property, []):
-          xml_data += os.linesep+"   <multi_property "\
+          xml_data += "\n   <multi_property "\
           "id='%s'>%s</multi_property>" % (property, prop_value)
-      xml_data += os.linesep+"  </role>"
-    xml_data += os.linesep+'</type_roles>'
+      xml_data += "\n  </role>"
+    xml_data += '\n</type_roles>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -2318,7 +2330,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
             action = update_dict[path]
             if action == 'nothing':
               continue
-          dir, id = os.path.split(path)
+          dir, id = posixpath.split(path)
           if p.hasProperty(id):
             continue
           prop_type, property = self._objects[path]
@@ -2350,18 +2362,18 @@ class SitePropertyTemplateItem(BaseTemplateItem):
   def generateXml(self, path=None):
     xml_data = ''
     prop_type, obj = self._objects[path]
-    xml_data += os.linesep+' <property>'
-    xml_data += os.linesep+'  <id>%s</id>' %(path,)
-    xml_data += os.linesep+'  <type>%s</type>' %(prop_type,)
+    xml_data += '\n <property>'
+    xml_data += '\n  <id>%s</id>' %(path,)
+    xml_data += '\n  <type>%s</type>' %(prop_type,)
     if prop_type in ('lines', 'tokens'):
-      xml_data += os.linesep+'  <value>'
+      xml_data += '\n  <value>'
       for item in obj:
         if item != '':
-          xml_data += os.linesep+'   <item>%s</item>' %(item,)
-      xml_data += os.linesep+'  </value>'
+          xml_data += '\n   <item>%s</item>' %(item,)
+      xml_data += '\n  </value>'
     else:
-      xml_data += os.linesep+'  <value>%r</value>' %((os.linesep).join(obj),)
-    xml_data += os.linesep+' </property>'
+      xml_data += '\n  <value>%r</value>' %(('\n').join(obj),)
+    xml_data += '\n </property>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -2374,7 +2386,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     keys.sort()
     for path in keys:
       xml_data += self.generateXml(path)
-    xml_data += os.linesep+'</site_property>'
+    xml_data += '\n</site_property>'
     bta.addObject(obj=xml_data, name='properties', path=root_path)
 
 class ModuleTemplateItem(BaseTemplateItem):
@@ -2403,7 +2415,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     for key in keys:
       if key =='permission_list':
         # separe permission dict into xml
-        xml_data += os.linesep+' <%s>' %(key,)
+        xml_data += '\n <%s>' %(key,)
         permission_list = dict[key]
         for perm in permission_list:
           # the type of the permission defined if we use acquired or not
@@ -2411,17 +2423,17 @@ class ModuleTemplateItem(BaseTemplateItem):
             ptype = "list"
           else:
             ptype = "tuple"
-          xml_data += os.linesep+"  <permission type='%s'>" %(ptype,)
-          xml_data += os.linesep+'   <name>%s</name>' %(perm[0])
+          xml_data += "\n  <permission type='%s'>" %(ptype,)
+          xml_data += '\n   <name>%s</name>' %(perm[0])
           role_list = list(perm[1])
           role_list.sort()
           for role in role_list:
-            xml_data += os.linesep+'   <role>%s</role>' %(role)
-          xml_data += os.linesep+'  </permission>'
-        xml_data += os.linesep+' </%s>' %(key,)
+            xml_data += '\n   <role>%s</role>' %(role)
+          xml_data += '\n  </permission>'
+        xml_data += '\n </%s>' %(key,)
       else:
-        xml_data += os.linesep+' <%s>%s</%s>' %(key, dict[key], key)
-    xml_data += os.linesep+'</module>'
+        xml_data += '\n <%s>%s</%s>' %(key, dict[key], key)
+    xml_data += '\n</module>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -2452,7 +2464,7 @@ class ModuleTemplateItem(BaseTemplateItem):
           if action == 'nothing':
             continue
         mapping = items[id]
-        path, id = os.path.split(id)
+        path, id = posixpath.split(id)
         if id in portal.objectIds():
           module = portal._getOb(id)
           module.portal_type = str(mapping['portal_type'])
@@ -2537,7 +2549,7 @@ class DocumentTemplateItem(BaseTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     for id in self._archive.keys():
-      self._objects[self.__class__.__name__+os.sep+id] = globals()[self.local_file_reader_name](id)
+      self._objects[self.__class__.__name__+'/'+id] = globals()[self.local_file_reader_name](id)
 
   def preinstall(self, context, installed_bt, **kw):
     modified_object_list = {}
@@ -2570,7 +2582,7 @@ class DocumentTemplateItem(BaseTemplateItem):
             if action == 'nothing':
               continue
           text = self._objects[id]
-          path, name = os.path.split(id)
+          path, name = posixpath.split(id)
           # This raises an exception if the file already exists.
           try:
             globals()[self.local_file_writer_name](name, text, create=0)
@@ -2651,7 +2663,7 @@ class RoleTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       role_list.append(key)
     if len(role_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'role_list'] = role_list
+      self._objects[self.__class__.__name__+'/'+'role_list'] = role_list
 
   def preinstall(self, context, installed_bt, **kw):
     modified_object_list = {}
@@ -2739,8 +2751,8 @@ class RoleTemplateItem(BaseTemplateItem):
     xml_data = '<role_list>'
     obj.sort()
     for role in obj:
-      xml_data += os.linesep+' <role>%s</role>' %(role)
-    xml_data += os.linesep+'</role_list>'
+      xml_data += '\n <role>%s</role>' %(role)
+    xml_data += '\n</role_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -2767,7 +2779,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'Result key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'result_key_list'] = key_list
+      self._objects[self.__class__.__name__+'/'+'result_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -2830,8 +2842,8 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     xml_data = '<key_list>'
     obj.sort()
     for key in obj:
-      xml_data += os.linesep+' <key>%s</key>' %(key)
-    xml_data += os.linesep+'</key_list>'
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -2858,7 +2870,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'Related key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'related_key_list'] = key_list
+      self._objects[self.__class__.__name__+'/'+'related_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -2924,8 +2936,8 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     xml_data = '<key_list>'
     obj.sort()
     for key in obj:
-      xml_data += os.linesep+' <key>%s</key>' %(key)
-    xml_data += os.linesep+'</key_list>'
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -2952,7 +2964,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'Result table "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'result_table_list'] = key_list
+      self._objects[self.__class__.__name__+'/'+'result_table_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -3015,8 +3027,8 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     xml_data = '<key_list>'
     obj.sort()
     for key in obj:
-      xml_data += os.linesep+' <key>%s</key>' %(key)
-    xml_data += os.linesep+'</key_list>'
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -3044,7 +3056,7 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'Keyword key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'keyword_key_list'] = key_list
+      self._objects[self.__class__.__name__+'/'+'keyword_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -3107,8 +3119,8 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
     xml_data = '<key_list>'
     obj.sort()
     for key in obj:
-      xml_data += os.linesep+' <key>%s</key>' %(key)
-    xml_data += os.linesep+'</key_list>'
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -3136,7 +3148,7 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'Fulltext key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'full_text_key_list'] = key_list
+      self._objects[self.__class__.__name__+'/'+'full_text_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -3199,8 +3211,8 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
     xml_data = '<key_list>'
     obj.sort()
     for key in obj:
-      xml_data += os.linesep+' <key>%s</key>' %(key)
-    xml_data += os.linesep+'</key_list>'
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -3229,7 +3241,7 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'Request key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'request_key_list'] = key_list
+      self._objects[self.__class__.__name__+'/'+'request_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -3292,8 +3304,8 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
     xml_data = '<key_list>'
     obj.sort()
     for key in obj:
-      xml_data += os.linesep+' <key>%s</key>' %(key)
-    xml_data += os.linesep+'</key_list>'
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -3321,7 +3333,7 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'Multivalue key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'multivalue_key_list'] = key_list
+      self._objects[self.__class__.__name__+'/'+'multivalue_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -3383,8 +3395,8 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
     xml_data = '<key_list>'
     obj.sort()
     for key in obj:
-      xml_data += os.linesep+' <key>%s</key>' %(key)
-    xml_data += os.linesep+'</key_list>'
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -3412,7 +3424,7 @@ class CatalogTopicKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'Topic key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'topic_key_list'] = key_list
+      self._objects[self.__class__.__name__+'/'+'topic_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -3475,8 +3487,8 @@ class CatalogTopicKeyTemplateItem(BaseTemplateItem):
     xml_data = '<key_list>'
     obj.sort()
     for key in obj:
-      xml_data += os.linesep+' <key>%s</key>' %(key)
-    xml_data += os.linesep+'</key_list>'
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -3498,7 +3510,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       else: # XXX backward compatibilty
         lang = lang_key
         catalog = 'erp5_ui'
-      path = os.path.join(lang, catalog)
+      path = posixpath.join(lang, catalog)
       mc = localizer._getOb(catalog)
       self._objects[path] = mc.manage_export(lang)
 
@@ -3562,12 +3574,12 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       obj = self._objects[key]
       path = os.path.join(root_path, key)
       bta.addFolder(name=path)
-      f = open(path+os.sep+'translation.po', 'wt')
+      f = open(path+os.sep+'translation.po', 'wb')
       f.write(str(obj))
       f.close()
 
   def _importFile(self, file_name, file):
-    if os.path.split(file_name)[1] == 'translation.po':
+    if posixpath.split(file_name)[1] == 'translation.po':
       text = file.read()
       self._objects[file_name[:-3]] = text
 
@@ -3596,24 +3608,24 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     group_local_roles_keys.sort()
     # local roles
     xml_data = '<local_roles_item>'
-    xml_data += os.linesep+' <local_roles>'
+    xml_data += '\n <local_roles>'
     for key in local_roles_keys:
-      xml_data += os.linesep+"  <role id='%s'>" %(key,)
+      xml_data += "\n  <role id='%s'>" %(key,)
       tuple = local_roles_dict[key]
       for item in tuple:
-        xml_data += os.linesep+"   <item>%s</item>" %(item,)
-      xml_data += os.linesep+"  </role>"
-    xml_data += os.linesep+' </local_roles>'
+        xml_data += "\n   <item>%s</item>" %(item,)
+      xml_data += '\n  </role>'
+    xml_data += '\n </local_roles>'
     # group local roles
-    xml_data += os.linesep+' <group_local_roles>'
+    xml_data += '\n <group_local_roles>'
     for key in group_local_roles_keys:
-      xml_data += os.linesep+"  <role id='%s'>" %(key,)
+      xml_data += "\n  <role id='%s'>" %(key,)
       tuple = group_local_roles_dict[key]
       for item in tuple:
-        xml_data += os.linesep+"   <item>%s</item>" %(item,)
-      xml_data += os.linesep+"  </role>"
-    xml_data += os.linesep+' </group_local_roles>'
-    xml_data += os.linesep+'</local_roles_item>'
+        xml_data += '\n   <item>%s</item>' %(item,)
+      xml_data += '\n  </role>'
+    xml_data += '\n </group_local_roles>'
+    xml_data += '\n</local_roles_item>'
     return xml_data
 
   def export(self, context, bta, **kw):
@@ -3624,11 +3636,11 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     for key in self._objects.keys():
       xml_data = self.generateXml(key)
 
-      folders, id = os.path.split(key)
+      folders, id = posixpath.split(key)
       encode_folders = []
       for folder in folders.split('/')[1:]:
         if '%' not in folder:
-          encode_folders.append(pathname2url(folder))
+          encode_folders.append(quote(folder))
         else:
           encode_folders.append(folder)
       path = os.path.join(root_path, (os.sep).join(encode_folders))
@@ -4480,7 +4492,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if prop_type in ('text', 'string', 'int', 'boolean'):
           bta.addObject(obj=value, name=id, path=path+os.sep+'bt', ext='')
         elif prop_type in ('lines', 'tokens'):
-          bta.addObject(obj=str(os.linesep).join(value), name=id,
+          bta.addObject(obj=str('\n').join(value), name=id,
                         path=path+os.sep+'bt', ext='')
 
       # Export each part
