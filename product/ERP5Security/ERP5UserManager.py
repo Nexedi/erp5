@@ -179,7 +179,7 @@ class ERP5UserManager(BasePlugin):
           # because we aren't logged in, we have to create our own
           # SecurityManager to be able to access the Catalog
           sm = getSecurityManager()
-          if sm.getUser() != SUPER_USER:
+          if sm.getUser().getId() != SUPER_USER:
             newSecurityManager(self, self.getUser(SUPER_USER))
   
           try:
@@ -190,7 +190,7 @@ class ERP5UserManager(BasePlugin):
               raise
             except:
               LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=sys.exc_info())
-              # Here we must raise an exception to prevent calers from caching
+              # Here we must raise an exception to prevent callers from caching
               # a result of a degraded situation.
               # The kind of exception does not matter as long as it's catched by
               # PAS and causes a lookup using another plugin or user folder.
