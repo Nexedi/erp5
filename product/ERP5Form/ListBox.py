@@ -3013,8 +3013,15 @@ class ListBox(ZMIField):
   def get_value(self, id, **kw):
     if (id == 'default'):
       if (kw.get('render_format') in ('list', )):
-        return self.widget.render(self, self.generate_field_key(), None,
-                                  kw.get('REQUEST'),
+        request = kw.get('REQUEST', None)
+        if request is None:
+          request = get_request()
+        # here the field can be a a proxyfield target, in this case just find
+        # back the original proxy field so that renderer's calls to .get_value
+        # are called on the proxyfield.
+        field = request.get('field__proxyfield_%s_%s' % (self.id, id), self)
+        return self.widget.render(field, self.generate_field_key(), None,
+                                  request,
                                   render_format=kw.get('render_format'))
       else:
         return None

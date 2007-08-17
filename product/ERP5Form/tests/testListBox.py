@@ -40,6 +40,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from ZPublisher.HTTPRequest import FileUpload
 from StringIO import StringIO
 from Products.ERP5Form.Selection import Selection
+from Products.ERP5Form.Form import ERP5Form
 
 
 class DummyFieldStorage:
@@ -330,6 +331,44 @@ return []
     self.assertEquals('Object Title', line_list[0].getColumnProperty('title'))
     html = listbox.render(REQUEST=request)
     self.failUnless('Object Title' in html, html)
+
+  def test_ProxyFieldRenderFormatLines(self):
+    # tests that listbox default value in render_format=list mode is
+    # compatible with proxy field.
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+    form = portal.FooModule_viewFooList
+    listbox = form.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method='contentValues',
+      field_columns=['listbox_value | Title',],)
+    
+    # create a form, to store our proxy field inside
+    portal._setObject('Test_view',
+                      ERP5Form('Test_view', 'View'))
+    portal.Test_view.manage_addField('listbox', 'listbox', 'ProxyField')
+    proxy_field = portal.Test_view.listbox
+    proxy_field.manage_edit_xmlrpc(dict(
+            form_id=form.getId(), field_id='listbox',
+            columns=[('proxy_value', 'Proxy')]))
+
+    # this proxy field will not delegate its "columns" value
+    proxy_field._surcharged_edit(dict(columns=[('proxy_value', 'Proxy')]),
+                                ['columns'])
+    
+    request = get_request()
+    request['here'] = portal.foo_module
+    line_list = proxy_field.get_value('default',
+                      render_format='list', REQUEST=request)
+    self.failUnless(isinstance(line_list, list))
+
+    title_line = line_list[0]
+    self.failUnless(title_line.isTitleLine())
+
+    # title of columns is the value overloaded by the proxy field.
+    self.assertEquals([('proxy_value', 'Proxy')],
+                      title_line.getColumnItemList())
+
 
 if __name__ == '__main__':
   framework()
