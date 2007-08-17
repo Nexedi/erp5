@@ -213,7 +213,7 @@ class DiffFile:
     # Getting file path in header
     self.path = self.header.split('====')[0][:-1].strip()
     # Getting revisions in header
-    for line in self.header.split(os.linesep):
+    for line in self.header.splitlines():
       if line.startswith('--- '):
         tmp = re.search('\\([^)]+\\)$', line)
         self.old_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
@@ -221,12 +221,12 @@ class DiffFile:
         tmp = re.search('\\([^)]+\\)$', line)
         self.new_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
     # Splitting the body from the header
-    self.body = os.linesep.join(raw_diff.strip().split(os.linesep)[4:])
+    self.body = os.linesep.join(raw_diff.strip().splitlines()[4:])
     # Now splitting modifications
     self.children = []
     first = True
     tmp = []
-    for line in self.body.split(os.linesep):
+    for line in self.body.splitlines():
       if line:
         if line.startswith('@@') and not first:
           self.children.append(CodeBlock(os.linesep.join(tmp)))
@@ -301,8 +301,8 @@ class CodeBlock:
 
   def __init__(self, raw_diff):
     # Splitting body and header
-    self.body = os.linesep.join(raw_diff.split(os.linesep)[1:])
-    self.header = raw_diff.split(os.linesep)[0]
+    self.body = os.linesep.join(raw_diff.splitlines()[1:])
+    self.header = raw_diff.splitlines()[0]
     # Getting modifications lines
     tmp = re.search('^@@ -\d+', self.header)
     self.old_line = tmp.string[tmp.start():tmp.end()][4:]
@@ -312,7 +312,7 @@ class CodeBlock:
     in_modif = False
     self.children = []
     tmp = []
-    for line in self.body.split(os.linesep):
+    for line in self.body.splitlines():
       if line:
         if (line.startswith('+') or line.startswith('-')):
           if in_modif:
@@ -370,7 +370,7 @@ class SubCodeBlock:
     """
     nb_plus = 0
     nb_minus = 0
-    for line in self.body.split(os.linesep):
+    for line in self.body.splitlines():
       if line.startswith("-"):
         nb_minus -= 1
       elif line.startswith("+"):
@@ -387,7 +387,7 @@ class SubCodeBlock:
     """ Private function to return old code length
     """
     nb_lines = 0
-    for line in self.body.split(os.linesep):
+    for line in self.body.splitlines():
       if not line.startswith("+"):
         nb_lines += 1
     return nb_lines
@@ -396,7 +396,7 @@ class SubCodeBlock:
     """ Private function to return new code length
     """
     nb_lines = 0
-    for line in self.body.split(os.linesep):
+    for line in self.body.splitlines():
       if not line.startswith("-"):
         nb_lines += 1
     return nb_lines
@@ -405,9 +405,9 @@ class SubCodeBlock:
     """ Return code before modification
     """
     if self.modification == 'none':
-      old_code = [(x, 'white') for x in self.body.split(os.linesep)]
+      old_code = [(x, 'white') for x in self.body.splitlines()]
     elif self.modification == 'change':
-      old_code = [self._getOldCodeList(x) for x in self.body.split(os.linesep) \
+      old_code = [self._getOldCodeList(x) for x in self.body.splitlines() \
       if self._getOldCodeList(x)[0]]
       # we want old_code_list and new_code_list to have the same length
       if(self.old_code_length < self.new_code_length):
@@ -415,7 +415,7 @@ class SubCodeBlock:
         self.old_code_length)
         old_code.extend(filling)
     else: # deletion or addition
-      old_code = [self._getOldCodeList(x) for x in self.body.split(os.linesep)]
+      old_code = [self._getOldCodeList(x) for x in self.body.splitlines()]
     return old_code
   
   def _getOldCodeList(self, line):
@@ -431,9 +431,9 @@ class SubCodeBlock:
     """ Return code after modification
     """
     if self.modification == 'none':
-      new_code = [(x, 'white') for x in self.body.split(os.linesep)]
+      new_code = [(x, 'white') for x in self.body.splitlines()]
     elif self.modification == 'change':
-      new_code = [self._getNewCodeList(x) for x in self.body.split(os.linesep) \
+      new_code = [self._getNewCodeList(x) for x in self.body.splitlines() \
       if self._getNewCodeList(x)[0]]
       # we want old_code_list and new_code_list to have the same length
       if(self.new_code_length < self.old_code_length):
@@ -441,7 +441,7 @@ class SubCodeBlock:
         self.new_code_length)
         new_code.extend(filling)
     else: # deletion or addition
-      new_code = [self._getNewCodeList(x) for x in self.body.split(os.linesep)]
+      new_code = [self._getNewCodeList(x) for x in self.body.splitlines()]
     return new_code
   
   def _getNewCodeList(self, line):
@@ -626,7 +626,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         text = "<span style='font-weight: bold; color: black;'>"+file_path+"</span><hr/>"
         text += file_path +" is a folder!"
       else:
-        input_file = open(file_path, 'r')
+        input_file = open(file_path, 'rU')
         head = "<span style='font-weight: bold; color: black;'>"+file_path+'</span>  <a href="' + \
         self.editPath(business_template, file_path) + \
         '"><img src="ERP5Subversion_imgs/edit.png" style="border: 0" alt="edit" /></a><hr/>'
@@ -641,7 +641,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       tmp_path = os.path.join(tmp_path, '.svn', 'text-base', \
       filename+'.svn-base')
       if os.path.exists(tmp_path):
-        input_file = open(tmp_path, 'r')
+        input_file = open(tmp_path, 'rU')
         head = "<span style='font-weight: bold'>"+tmp_path+"</span> (svn temporary file)<hr/>"
         text = head + colorize(input_file.read())
         input_file.close()
