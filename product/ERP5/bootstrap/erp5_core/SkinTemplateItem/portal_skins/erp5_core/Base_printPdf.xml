@@ -68,10 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request  = context.REQUEST\n
-\n
-redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+form_id, \'portal_skin=Print\')\n
-return request[ \'RESPONSE\' ].redirect( redirect_url )\n
+            <value> <string>context.getPortalObject().changeSkin(\'Print\')\n
+return getattr(context, form_id)(REQUEST=container.REQUEST)\n
 </string> </value>
         </item>
         <item>
@@ -117,9 +115,8 @@ return request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>form_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>redirect_url</string>
-                            <string>_getitem_</string>
+                            <string>getattr</string>
+                            <string>container</string>
                           </tuple>
                         </value>
                     </item>
