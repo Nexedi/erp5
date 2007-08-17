@@ -4,6 +4,12 @@ import sys
 import getopt
 import unittest
 
+WIN = False
+if os.name == 'nt':
+  import shutil
+  WIN = True
+
+
 __doc__ = """%(program)s: unit test runner for the ERP5 Project
 
 usage: %(program)s [options] [UnitTest1[.TestClass1[.testMethod]] [UnitTest2]]
@@ -18,6 +24,8 @@ Options:
   --data_fs_path=STRING      Path to the original Data.fs to run tests on an
                              existing environment. The Data.fs is opened read
                              only
+  --bt5_path                 Path to the Business Templates. Default is
+                             INSTANCE_HOME/bt5.
   --recreate_catalog=0 or 1  recreate the content of the sql catalog. Default
                              is to recreate, unless using --data_fs_path
   --save                     add erp5 sites and business templates in Data.fs
@@ -66,13 +74,22 @@ def initializeInstanceHome(tests_framework_home,
     if not os.path.exists(dst):
       if os.path.islink(dst):
         os.unlink(dst)
-      os.symlink(src, dst)
+      if WIN:
+        if d in ('Products', 'bt5', 'svn'):
+          os.mkdir(dst)
+        else:
+          shutil.copytree(src, dst)
+      else:
+        os.symlink(src, dst)
   src = os.path.join(tests_framework_home, 'custom_zodb.py')
   dst = os.path.join(instance_home, 'custom_zodb.py')
   if not os.path.exists(dst):
     if os.path.islink(dst):
       os.unlink(dst)
-    os.symlink(src, dst)
+    if WIN:
+      shutil.copy(src, dst)
+    else:
+      os.symlink(src, dst)
   sys.path.append(os.path.join(zope_home, "bin"))
   import copyzopeskel
   kw = {
@@ -85,17 +102,26 @@ def initializeInstanceHome(tests_framework_home,
   copyzopeskel.copyskel(skelsrc, instance_home, None, None, **kw)
 
 # site specific variables
-# handle 64bit architecture
-if os.path.isdir('/usr/lib64/zope/lib/python'):
+
+tests_framework_home = os.path.dirname(os.path.abspath(__file__))
+
+# handle 64bit architecture and windows
+if WIN:
+  erp5_home = os.path.sep.join(
+      tests_framework_home.split(os.path.sep)[:-4])
+  zope_home = os.path.join(erp5_home, 'Zope')
+  software_home = os.path.join(zope_home, 'lib', 'python')
+elif os.path.isdir('/usr/lib64/zope/lib/python'):
   software_home = '/usr/lib64/zope/lib/python'
   zope_home = '/usr/lib64/zope'
 else:
   software_home = '/usr/lib/zope/lib/python'
   zope_home = '/usr/lib/zope'
 
-tests_framework_home = os.path.dirname(os.path.abspath(__file__))
-# handle 'system global' instance
-if tests_framework_home.startswith('/usr/lib'):
+# handle 'system global' instance and windows
+if WIN:
+  real_instance_home = os.path.join(erp5_home, 'ERP5Instance')
+elif tests_framework_home.startswith('/usr/lib'):
   real_instance_home = '/var/lib/zope'
 else:
   real_instance_home = os.path.sep.join(
@@ -143,6 +169,13 @@ def runUnitTestList(test_list) :
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
   execfile(os.path.join(tests_framework_home, 'framework.py'))
+  
+  if WIN:
+    products_home = os.path.join(real_instance_home, 'Products')
+    import Products
+    Products.__path__.insert(0, products_home)
+  else:
+    products_home = os.path.join(instance_home, 'Products')
 
   from Testing import ZopeTestCase
 
@@ -173,7 +206,6 @@ def runUnitTestList(test_list) :
   os.chdir(tests_home)
 
   # allow unit tests of our Products to be reached.
-  products_home = os.path.join(instance_home, 'Products')
   from glob import glob
   product_test_list = glob(products_home + os.sep + '*' + os.sep + 'tests')
   sys.path.extend(product_test_list)
@@ -213,6 +245,7 @@ def main():
   try:
     opts, args = getopt.getopt(sys.argv[1:],
         "hpv", ["help", "verbose", "profile", "portal_id=", "data_fs_path=",
+        "bt5_path=",
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
         "erp5_sql_deferred_connection_string=",
@@ -224,8 +257,11 @@ def main():
     usage(sys.stderr, msg)
     sys.exit(2)
   
-  os.environ["erp5_tests_recreate_catalog"] = "0"
+  if WIN:
+    os.environ["erp5_tests_bt5_path"] = os.path.join(real_instance_home, 'bt5')
 
+  os.environ["erp5_tests_recreate_catalog"] = "0"
+  
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
       os.environ['VERBOSE'] = "1"
@@ -245,6 +281,8 @@ def main():
     elif opt == '--data_fs_path':
       os.environ["erp5_tests_data_fs_path"] = arg
       os.environ["erp5_tests_recreate_catalog"] = "1"
+    elif opt ==  '--bt5_path':
+      os.environ["erp5_tests_bt5_path"] = arg
     elif opt == '--recreate_catalog':
       os.environ["erp5_tests_recreate_catalog"] = arg
     elif opt == "--erp5_sql_connection_string":

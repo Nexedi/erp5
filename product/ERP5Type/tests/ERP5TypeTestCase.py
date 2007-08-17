@@ -295,6 +295,8 @@ class ERP5TypeTestCase(PortalTestCase):
         cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
         App.config.setConfiguration(cfg)
       INSTANCE_HOME = os.environ['INSTANCE_HOME']
+      bt5_path = os.environ.get('erp5_tests_bt5_path',
+                            os.path.join(INSTANCE_HOME, 'bt5'))
 
       template_list = self.getBusinessTemplateList()
       new_template_list = []
@@ -305,7 +307,7 @@ class ERP5TypeTestCase(PortalTestCase):
           file, headers = urlretrieve(template)
         except IOError :
           # First, try the bt5 directory itself.
-          path = os.path.join(INSTANCE_HOME, 'bt5', template)
+          path = os.path.join(bt5_path, template)
           if os.path.exists(path):
             template = path
           else:
