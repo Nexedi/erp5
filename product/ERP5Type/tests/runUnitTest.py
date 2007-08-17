@@ -2,10 +2,11 @@
 import os
 import sys
 import getopt
+import unittest
 
 __doc__ = """%(program)s: unit test runner for the ERP5 Project
 
-usage: %(program)s [options] [UnitTest1[:TestClass1[:TestClass2]] [UnitTest2]]
+usage: %(program)s [options] [UnitTest1[.TestClass1[.testMethod]] [UnitTest2]]
 
 Options:
   -v, --verbose              produce verbose output
@@ -109,6 +110,27 @@ initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
 if '__INSTANCE_HOME' not in globals().keys() :
   __INSTANCE_HOME = instance_home
 
+class ERP5TypeTestLoader(unittest.TestLoader):
+  """Load test cases from the name passed on the command line.
+  """
+  def loadTestsFromName(self, name, module=None):
+    """This method is here for compatibility with old style arguments.
+    - It is possible to have the .py prefix for the test file
+    - It is possible to separate test classes with : instead of .
+    """
+    # backward compatibility 
+    if name.endswith('.py'):
+      name = name[:-3]
+    name = name.replace(':', '.')
+    return unittest.TestLoader.loadTestsFromName(self, name, module)
+
+  def loadTestsFromModule(self, module):
+    """ERP5Type test loader supports a function named 'test_suite'
+    """
+    if hasattr(module, 'test_suite'):
+      return module.test_suite()
+    return unittest.TestLoader.loadTestsFromModule(self, module)
+
 def runUnitTestList(test_list) :
   if len(test_list) == 0 :
     print "No test to run, exiting immediately."
@@ -122,7 +144,6 @@ def runUnitTestList(test_list) :
 
   execfile(os.path.join(tests_framework_home, 'framework.py'))
 
-  import unittest
   from Testing import ZopeTestCase
 
   try:
@@ -178,32 +199,7 @@ def runUnitTestList(test_list) :
     PortalTestCase.setUp = dummy_setUp
     PortalTestCase.tearDown = dummy_tearDown
 
-  filtered_tests_class_names = 0
-  for test in test_list:
-    if ':' in test:
-      test_module = test.split(':')[0]
-      if test_module.endswith('.py'):
-        test_module = test_module[:-3]
-      test_class_list = test.split(':')[1:]
-      filtered_tests_class_names = 1
-    else:
-      if test.endswith('.py'):
-        test = test[:-3]
-      test_module = test
-      test_class_list = None
-    m = __import__(test_module)
-    if not filtered_tests_class_names and hasattr(m, 'test_suite'):
-      suite.addTest(m.test_suite())
-    else:
-      # dynamically create the test suite using class names passed on the
-      # command line.
-      for attr_name in dir(m):
-        attr = getattr(m, attr_name)
-        if (type(attr) == type(type)) and (hasattr(attr, '__module__')) and \
-            (attr.__module__ == test_module) :
-          if test_class_list is None or attr.__name__ in test_class_list:
-            suite.addTest(unittest.makeSuite(attr))
-
+  suite = ERP5TypeTestLoader().loadTestsFromNames(test_list)
   return TestRunner().run(suite)
 
 def usage(stream, msg=None):
