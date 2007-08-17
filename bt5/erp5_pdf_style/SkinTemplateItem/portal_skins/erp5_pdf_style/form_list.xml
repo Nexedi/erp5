@@ -59,13 +59,10 @@
   <subject>Print Example</subject>\n
   <content>\n
   <tal:block metal:define-macro="form_layout"\n
-     tal:define="groups python: form.get_groups(include_empty=1);\n
-                 field_errors python: request.get(\'field_errors\',{});\n
-                 dummy python: request.set(\'here\',here);\n
-                 listbox python:form.get_fields_in_group(groups[0])[0];">\n
+     tal:define="dummy python: request.set(\'here\',here);\n
+                 listbox form/listbox | nothing;">\n
 \n
-\n
-    <tal:block tal:condition="python: listbox.meta_type == \'ListBox\'">\n
+    <tal:block tal:condition="listbox">\n
       <div metal:use-macro="here/listbox_pdf_macro/macros/listbox" />\n
     </tal:block>\n
 \n

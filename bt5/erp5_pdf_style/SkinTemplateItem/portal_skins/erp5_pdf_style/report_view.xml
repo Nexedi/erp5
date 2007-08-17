@@ -77,9 +77,9 @@
 \n
    <spacer height="100" tal:condition="form/get_fields"/>\n
 \n
-    <tal:block tal:repeat="group python: group_list[:3]">\n
+    <tal:block tal:repeat="group python: [\'Default\', \'left\', \'right\', \'center\']">\n
       <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
-        <tal:block tal:condition="python: field_list not in [None, []]">\n
+        <tal:block tal:condition="field_list">\n
 \n
           <table splitbyrow="1" repeatrows="0" repeatcols="0"  style="AttributesTable" >\n
             <tal:block tal:repeat="field field_list">\n
@@ -110,36 +110,28 @@
 \n
         </tal:block>\n
       </tal:block>\n
-\n
-\n
     </tal:block>\n
 \n
-    <tal:block tal:condition="python: len(group_list) > 3">\n
-      <tal:block tal:define="field_list python: form.get_fields_in_group(group_list[3])">\n
-        <tal:block tal:condition="python: field_list not in [None, []]">\n
+      <tal:block tal:define="field_list python: form.get_fields_in_group(\'bottom\')">\n
+        <tal:block tal:condition="field_list">\n
           <tal:block tal:repeat="field field_list">\n
-\n
+        \n
             <tal:block tal:condition="python: field.meta_type == \'MatrixBox\'">\n
               <tal:block  tal:define="matrixbox python:field;">\n
                 <div metal:use-macro="here/matrixbox_pdf_macro/macros/matrixbox" />\n
               </tal:block>\n
             </tal:block>\n
 \n
-\n
-\n
             <tal:block tal:condition="python: field.meta_type == \'ListBox\'">\n
-\n
               <tal:block  tal:define="listbox python:field;" >\n
                 <div metal:use-macro="here/listbox_pdf_macro/macros/listbox" />\n
               </tal:block>\n
-\n
               <table><tr><td tal:content="python: \' \'"></td></tr></table>\n
 \n
             </tal:block>\n
           </tal:block>\n
         </tal:block>\n
       </tal:block>\n
-    </tal:block>\n
 \n
 \n
    <spacer height="100"/>\n
