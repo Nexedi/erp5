@@ -146,6 +146,23 @@ class TestProxyField(unittest.TestCase):
     self.assert_(proxy_field.is_delegated('title'))
     self.assertEquals('Title', proxy_field.get_value('title'))
 
+  def test_simple_not_surcharge(self):
+    self.container.Base_viewProxyFieldLibrary.manage_addField(
+                        'my_title', 'Title', 'StringField')
+    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+    self.assertEquals('Title', original_field.get_value('title'))
+
+    self.container.Base_view.manage_addField(
+                      'my_title', 'Proxy Title', 'ProxyField')
+    proxy_field = self.container.Base_view.my_title
+    proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                        field_id='my_title',))
+    # XXX no API for this ?
+    proxy_field._surcharged_edit(dict(title='Proxy Title'), ['title'])
+
+    self.failIf(proxy_field.is_delegated('title'))
+    self.assertEquals('Proxy Title', proxy_field.get_value('title'))
+
   def test_get_value_default(self):
     # If the proxy field is named 'my_id', it will get 'id'
     # property on the context, regardless of the id of the proxified field
