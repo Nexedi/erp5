@@ -50,7 +50,8 @@ except ImportError:
 # Test Setting
 #
 INSTANCE_HOME = os.environ['INSTANCE_HOME']
-bt5_base_path = os.path.join(INSTANCE_HOME, 'bt5')
+bt5_base_path = os.environ.get('erp5_tests_bt5_path',
+                               os.path.join(INSTANCE_HOME, 'bt5'))
 
 # dependency order
 target_business_templates = (
