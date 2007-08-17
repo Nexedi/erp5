@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:replace="nothing">\n
+Users of this page template must define \'field\' name.\n
+It will dispatch to the good macro, and supports proxy fields (in a quite ad-hoc way).\n
+</tal:block><tal:block metal:define-macro="field">\n
+\n
+ <tal:block tal:condition="python: field.meta_type == \'MatrixBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'MatrixBox\')">\n
+  <tal:block  tal:define="matrixbox python:field;">\n
+   <div metal:use-macro="here/matrixbox_pdf_macro/macros/matrixbox" />\n
+  </tal:block>\n
+ </tal:block>\n
+\n
+ <tal:block tal:condition="python: field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
+  <tal:block  tal:define="listbox python:field;" >\n
+   <div metal:use-macro="here/listbox_pdf_macro/macros/listbox" />\n
+  </tal:block>\n
+  <table><tr><td tal:content="python: \' \'"></td></tr></table>\n
+ </tal:block>\n
+\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>field_pdf_macro</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,3 +1,6 @@
+2007-08-17 jerome
+* Add support for cases where matrixbox or listbox is a proxyfield
+
 2007-08-13 jerome
 * Add a global print action
 

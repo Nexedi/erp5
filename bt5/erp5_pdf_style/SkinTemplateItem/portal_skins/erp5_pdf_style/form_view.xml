@@ -116,24 +116,11 @@
 \n
       <tal:block tal:define="field_list python: form.get_fields_in_group(\'bottom\')">\n
         <tal:block tal:repeat="field field_list">\n
-\n
-          <tal:block tal:condition="python: field.meta_type == \'MatrixBox\'">\n
-            <tal:block  tal:define="matrixbox python:field;">\n
-              <div metal:use-macro="here/matrixbox_pdf_macro/macros/matrixbox" />\n
-            </tal:block>\n
-          </tal:block>\n
-\n
-          <tal:block tal:condition="python: field.meta_type == \'ListBox\'">\n
-            <tal:block  tal:define="listbox python:field;" >\n
-              <div metal:use-macro="here/listbox_pdf_macro/macros/listbox" />\n
-            </tal:block>\n
-            <table><tr><td tal:content="python: \' \'"></td></tr></table>\n
-          </tal:block>\n
+          <tal:block metal:use-macro="here/field_pdf_macro/macros/field" />\n
         </tal:block>\n
       </tal:block>\n
 \n
-\n
-  </tal:block>\n
+   </tal:block>\n
   </content>\n
 </document>\n
 \n
