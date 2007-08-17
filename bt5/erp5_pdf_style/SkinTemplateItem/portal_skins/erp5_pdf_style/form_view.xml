@@ -68,7 +68,7 @@
              tal:define="dummy python: request.set(\'here\',here); ">\n
 \n
 \n
-    <tal:block tal:repeat="group python: [\'Default\', \'left\', \'right\', \'center\']">\n
+    <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
       <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
         <tal:block tal:condition="field_list">\n
           <table splitbyrow="1" repeatrows="0" repeatcols="0"  style="AttributesTable" >\n

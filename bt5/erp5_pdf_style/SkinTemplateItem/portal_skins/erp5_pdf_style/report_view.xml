@@ -75,7 +75,7 @@
 \n
    <spacer height="100" tal:condition="form/get_fields"/>\n
 \n
-    <tal:block tal:repeat="group python: [\'Default\', \'left\', \'right\', \'center\']">\n
+    <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
       <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
         <tal:block tal:condition="field_list">\n
 \n
