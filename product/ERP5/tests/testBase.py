@@ -72,6 +72,8 @@ class TestBase(ERP5TypeTestCase):
   defined_property_value = "a_wonderful_title"
   not_related_to_temp_object_property_id = "string_index"
   not_related_to_temp_object_property_value = "a_great_index"
+  
+  username = 'rc'
 
   def getTitle(self):
     return "Base"
@@ -83,8 +85,8 @@ class TestBase(ERP5TypeTestCase):
 
   def login(self):
     uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager'], [])
-    user = uf.getUserById('rc').__of__(uf)
+    uf._doAddUser(self.username, '', ['Manager'], [])
+    user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
 
   def afterSetUp(self):
@@ -960,6 +962,26 @@ class TestBase(ERP5TypeTestCase):
                     if wf_id != dummy_worlflow_id]
         props['chain_%s' % id] = ','.join(wf_ids)
       pw.manage_changeWorkflows('', props = props)
+
+  def test_getViewPermissionOwnerDefault(self):
+    """Test getViewPermissionOwner method behaviour"""
+    portal = self.getPortal()
+    obj = portal.organisation_module.newContent(portal_type='Organisation')
+    self.assertEquals(self.username, obj.getViewPermissionOwner())
+
+  def test_getViewPermissionOwnerNoOwnerLocalRole(self):
+    # the actual owner doesn't have Owner local role
+    portal = self.getPortal()
+    obj = portal.organisation_module.newContent(portal_type='Organisation')
+    obj.manage_delLocalRoles(self.username)
+    self.assertEquals(self.username, obj.getViewPermissionOwner())
+
+  def test_getViewPermissionOwnerNoViewPermission(self):
+    # the owner cannot view the object
+    portal = self.getPortal()
+    obj = portal.organisation_module.newContent(portal_type='Organisation')
+    obj.manage_permission('View', [], 0)
+    self.assertEquals(None, obj.getViewPermissionOwner())
 
 
 class TestERP5PropertyManager(unittest.TestCase):

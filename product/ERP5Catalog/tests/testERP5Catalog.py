@@ -68,6 +68,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   # Different variables used for this test
   run_all_test = 1
   quiet = 0
+  username = 'seb'
 
   def afterSetUp(self):
     self.login()
@@ -85,8 +86,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def login(self):
     uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
+    uf._doAddUser(self.username, '', ['Manager'], [])
+    user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
 
   def getSQLPathList(self,connection_id=None):
@@ -1801,6 +1802,23 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                'type':'float'}}
     sql_src = self.getCatalogTool()(src__=1,**catalog_kw)
     self.failUnless('TRUNCATE(catalog.uid,2) = 2567.54' in sql_src)
+
+  def test_SearchOnOwner(self):
+    # owner= can be used a search key in the catalog to have all documents for
+    # a specific owner and on which he have the View permission.
+    obj = self._makeOrganisation(title='The Document')
+    obj2 = self._makeOrganisation(title='The Document')
+    obj2.manage_permission('View', [], 0)
+    obj2.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    ctool = self.getCatalogTool()
+    self.assertEquals([obj], [x.getObject() for x in
+                                   ctool(title='The Document',
+                                         owner=self.username)])
+    self.assertEquals([], [x.getObject() for x in
+                                   ctool(title='The Document',
+                                         owner='somebody else')])
 
 if __name__ == '__main__':
     framework()
