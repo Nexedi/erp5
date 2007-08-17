@@ -945,12 +945,12 @@ class Base( CopyContainer,
     # We must use aq_self
     # since we will change the value on self
     # rather than through implicit aquisition
-    if hasattr(aq_self, accessor_name):
+    if getattr(aq_self, accessor_name, None) is not None:
       method = getattr(self, accessor_name)
       method(value, **kw)
       return
     public_accessor_name = 'set' + UpperCase(key)
-    if hasattr(aq_self, public_accessor_name):
+    if getattr(aq_self, public_accessor_name, None) is not None:
       method = getattr(self, public_accessor_name)
       method(value, **kw)
       return
