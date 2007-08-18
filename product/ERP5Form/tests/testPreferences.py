@@ -376,13 +376,24 @@ class TestPreferences(ERP5TypeTestCase):
     state = method('default')
     self.assertEquals(state, 'default')
 
+    method = lambda *args: pref_tool.getPreference('preferred_accounting_transaction_simulation_state', *args)
+    state = method()
+    self.assertEquals(state, None)
+    state = method('default')
+    self.assertEquals(state, 'default')
+
     method = pref_tool.getPreferredAccountingTransactionSimulationStateList
     state_list = method()
     self.assertEquals(state_list, None)
     state_list = method(('default',))
     self.assertEquals(state_list, ('default',))
  
-    
+    method = lambda *args: pref_tool.getPreference('preferred_accounting_transaction_simulation_state_list', *args)
+    state_list = method()
+    self.assertEquals(state_list, None)
+    state_list = method(('default',))
+    self.assertEquals(state_list, ('default',))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPreferences))
