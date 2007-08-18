@@ -109,8 +109,9 @@ hasDuplicateActions = CachingMethod(\n
                           cache_factory=\'erp5_ui_long\')\n
 \n
 user_name = str(container.REQUEST.AUTHENTICATED_USER)\n
-if hasDuplicateActions(context.getPortalType(), user_name):\n
-  return filterDuplicateActions(actions)\n
+if getattr(context, \'getPortalType\', None) is not None:\n
+  if hasDuplicateActions(context.getPortalType(), user_name):\n
+    return filterDuplicateActions(actions)\n
 return actions\n
 </string> </value>
         </item>
@@ -169,7 +170,9 @@ return actions\n
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>user_name</string>
+                            <string>getattr</string>
                             <string>context</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
