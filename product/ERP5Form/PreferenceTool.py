@@ -29,13 +29,12 @@
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from MethodObject import Method
 from Globals import InitializeClass, DTMLFile
-from zLOG import LOG, INFO, PROBLEM
+from zLOG import LOG, PROBLEM
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Form import _dtmldir
@@ -110,7 +109,7 @@ def createPreferenceToolAccessorList(portal) :
 
 class func_code: pass
 
-class PreferenceMethod(Method) :
+class PreferenceMethod(Method):
   """ A method object that lookup the attribute on preferences. """
   # This is required to call the method form the Web
   func_code = func_code()
@@ -118,32 +117,36 @@ class PreferenceMethod(Method) :
   func_code.co_argcount = 1
   func_defaults = ()
 
-  def __init__(self, attribute) :
+  def __init__(self, attribute):
     self._preference_name = attribute
+    self._preference_cache_id = 'PreferenceTool.CachingMethod.%s' % attribute
+    self._null = (None, '', (), [])
 
-  def __call__(self, instance, *args, **kw) :
-    # FIXME: Preference method doesn't support default parameter
-    def _getPreference(user_name="") :
-      found = 0
+  def __call__(self, instance, *args, **kw):
+    def _getPreference(user_name=None):
       MARKER = []
-      for pref in instance._getSortedPreferenceList(*args, **kw):
-        attr = getattr(pref, self._preference_name, MARKER)
-        if attr is not MARKER :
-          found = 1
-          # test the attr is set
-          if callable(attr) :
-            value = attr()
-          else :
-            value = attr
-          if value not in (None, '', (), []) :
-            return value
-      if found :
-        return value
-    _getPreference = CachingMethod( _getPreference,
-            id='PreferenceTool.CachingMethod.%s' % self._preference_name,
-                                    cache_factory='erp5_ui_short')
+      value = None
+      for pref in instance._getSortedPreferenceList():
+        value = getattr(pref, self._preference_name, MARKER)
+        if value is not MARKER:
+          # If callable, store the return value.
+          if callable(value):
+            value = value()
+          if value not in self._null:
+            break
+      return value
+    _getPreference = CachingMethod(_getPreference,
+            id=self._preference_cache_id,
+            cache_factory='erp5_ui_short')
     user_name = getSecurityManager().getUser().getId()
-    return _getPreference(user_name=user_name)
+    value = _getPreference(user_name=user_name)
+    # XXX Preference Tool has a strange assumption that, even if
+    # all values are null values, one of them must be returned.
+    # Therefore, return a default value, only if explicitly specified,
+    # instead of returning None.
+    if value in self._null and args:
+      return args[0]
+    return value
 
 class PreferenceTool(BaseTool):
   """
@@ -176,7 +179,7 @@ class PreferenceTool(BaseTool):
   def getPreference(self, pref_name, default=None) :
     """ get the preference on the most appopriate Preference object. """
     method = getattr(self, 'get%s' % convertToUpperCase(pref_name), None)
-    if method:
+    if method is not None:
       return method(default=default)
     return default
 

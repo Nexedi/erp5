@@ -361,6 +361,26 @@ class TestPreferences(ERP5TypeTestCase):
     noSecurityManager()
     self.assertEquals(['this_is_visible_by_anonymous'],
         ptool.getPreferredAccountingTransactionSimulationStateList())
+
+  def test_GetDefault(self):
+    portal_workflow = self.getWorkflowTool()
+    pref_tool = self.getPreferenceTool()
+    site = self.getPreferenceTool()['site']
+    portal_workflow.doActionFor(
+       site, 'enable_action', wf_id='preference_workflow')
+    self.assertEquals(site.getPreferenceState(),    'global')
+
+    method = pref_tool.getPreferredAccountingTransactionSimulationState
+    state = method()
+    self.assertEquals(state, None)
+    state = method('default')
+    self.assertEquals(state, 'default')
+
+    method = pref_tool.getPreferredAccountingTransactionSimulationStateList
+    state_list = method()
+    self.assertEquals(state_list, None)
+    state_list = method(('default',))
+    self.assertEquals(state_list, ('default',))
  
     
 def test_suite():
