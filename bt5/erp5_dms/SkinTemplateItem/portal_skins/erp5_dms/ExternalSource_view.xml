@@ -69,8 +69,6 @@
               <list>
                 <string>left (Document Reference)</string>
                 <string>right (Publication Information)</string>
-                <string>left</string>
-                <string>right</string>
                 <string>center</string>
                 <string>bottom (Preview)</string>
                 <string>hidden</string>
@@ -84,7 +82,9 @@
                 <item>
                     <key> <string>bottom (Preview)</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -102,14 +102,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
-                    <value>
-                      <list>
-                        <string>my_contributor_title_list</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left (Document Reference)</string> </key>
                     <value>
                       <list>
@@ -120,14 +112,8 @@
                         <string>my_url_string</string>
                         <string>my_crawling_scope</string>
                         <string>my_crawling_depth</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list>
-                        <string>my_subject_list</string>
+                        <string>my_update_frequency</string>
+                        <string>my_contributor_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -142,6 +128,7 @@
                         <string>my_source_project_title</string>
                         <string>my_publication_section_list</string>
                         <string>my_translated_validation_state_title</string>
+                        <string>my_subject_list</string>
                       </list>
                     </value>
                 </item>
