@@ -1144,6 +1144,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
             CreateProductionOrganisation1 \
             CreateProductionSC \
             CreateEmptySC \
+            Tic \
             CutPasteSupplyNodeInAnotherContainer \
             Tic \
             CheckPastedSupplyNode \
