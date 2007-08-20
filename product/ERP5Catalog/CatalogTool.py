@@ -454,10 +454,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # which was not indexed
         if 'owner' in column_map:
           if not user_is_superuser:
-            role_column_dict['owner'] = user_str
-            # XXX this is inconsistent withe "check for proxy role in stack"
-            # in _listAllowedRolesAndUsers. We should use the proxy user
-            # to be consistent
+            try:
+              # if called by an executable with proxy roles, we don't use
+              # owner, but only roles from the proxy.
+              eo = getSecurityManager()._context.stack[-1]
+              proxy_roles = getattr(eo, '_proxy_roles',None)
+            except IndexError:
+              role_column_dict['owner'] = user_str
 
       return allowedRolesAndUsers, role_column_dict
 
