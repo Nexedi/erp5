@@ -318,10 +318,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>portal_type</string>
                           <string>Type</string>
                         </tuple>
@@ -374,10 +370,6 @@
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                         <tuple>
                           <string>portal_type</string>
                           <string>Type</string>
