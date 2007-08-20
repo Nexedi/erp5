@@ -75,7 +75,8 @@ In case of duplicate, only the first action will be kept.\n
 `actions` is the mapping returned by ActionsTool.listFilteredActionsFor\n
 The script must be called on the context of the document.\n
 """\n
-\n
+from Products.ERP5Type.Cache import CachingMethod\n
+from AccessControl import getSecurityManager\n
 def filterDuplicateActions(actions):\n
   new_actions = dict()\n
 \n
@@ -102,13 +103,12 @@ def hasDuplicateActions(portal_type, user_name):\n
   return len_actions != len_filtered_actions\n
 \n
 \n
-from Products.ERP5Type.Cache import CachingMethod\n
 hasDuplicateActions = CachingMethod(\n
                           hasDuplicateActions,\n
                           id=\'Base_filterDuplicateActions.hasDuplicateActions\',\n
                           cache_factory=\'erp5_ui_long\')\n
 \n
-user_name = str(container.REQUEST.AUTHENTICATED_USER)\n
+user_name = str(getSecurityManager().getUser())\n
 if getattr(context, \'getPortalType\', None) is not None:\n
   if hasDuplicateActions(context.getPortalType(), user_name):\n
     return filterDuplicateActions(actions)\n
@@ -162,13 +162,14 @@ return actions\n
                         <value>
                           <tuple>
                             <string>actions</string>
-                            <string>filterDuplicateActions</string>
-                            <string>hasDuplicateActions</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>filterDuplicateActions</string>
+                            <string>hasDuplicateActions</string>
                             <string>str</string>
                             <string>_getattr_</string>
-                            <string>container</string>
                             <string>user_name</string>
                             <string>getattr</string>
                             <string>context</string>
