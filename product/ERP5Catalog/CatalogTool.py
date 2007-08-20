@@ -415,8 +415,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         getSecurityQuery instead
       """
       user = _getAuthenticatedUser(self)
-      user_is_superuser = (user == SUPER_USER)
       user_str = str(user)
+      user_is_superuser = (user_str == SUPER_USER)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
       column_map = self.getSQLCatalog().getColumnMap()
