@@ -26,14 +26,7 @@
 #
 ##############################################################################
 
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
+import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
 from AccessControl.SecurityManagement import newSecurityManager
@@ -42,6 +35,7 @@ class TestERP5Category(ERP5TypeTestCase):
 
   # Different variables used for this test
   run_all_test = 1
+  quiet = 1
   portal_type = 'Organisation'
   base_cat = 'abc'
   base_cat2 = 'efg'
@@ -92,10 +86,13 @@ class TestERP5Category(ERP5TypeTestCase):
       self.cat2.newContent(id='1', portal_type='Category')
     self.deep_cat2 = self.cat2['1']
 
+    # associate base categories on Organisation portal type
     portal_type = self.getTypeTool()[self.portal_type]
     portal_type.base_category_list = [self.base_cat, self.base_cat2]
+
     # Reset aq dynamic
     _aq_reset()
+
     organisation_module = self.getOrganisationModule()
     if not organisation_module.has_key('1'):
       organisation_module.newContent(id='1', portal_type=self.portal_type)
@@ -162,7 +159,7 @@ class TestERP5Category(ERP5TypeTestCase):
 
     self.commitAndTic()
 
-  def login(self, quiet=0):
+  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
@@ -174,7 +171,7 @@ class TestERP5Category(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
 
-  def test_01_RenameCategory(self, quiet=0, run=run_all_test):
+  def test_01_RenameCategory(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Rename Category')
@@ -187,7 +184,7 @@ class TestERP5Category(ERP5TypeTestCase):
     self.commitAndTic()
     self.failIfDifferentSet(organisation.getCategoryList(),self.new_cat_list)
 
-  def test_02_RenameCategoryTree(self, quiet=0, run=run_all_test):
+  def test_02_RenameCategoryTree(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Rename Category Tree')
@@ -200,7 +197,7 @@ class TestERP5Category(ERP5TypeTestCase):
     self.commitAndTic()
     self.failIfDifferentSet(organisation.getCategoryList(),self.new_deep_cat_list)
 
-  def test_03_RenameRelatedObject(self, quiet=0, run=run_all_test):
+  def test_03_RenameRelatedObject(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Rename Related Object')
@@ -215,7 +212,8 @@ class TestERP5Category(ERP5TypeTestCase):
     self.assertEquals(organisation.getAbcValueList(),[organisation2])
     self.assertEquals(organisation.getAbcIdList(),['new_id'])
 
-  def test_04_RenameObjectWithRelatedSubObject(self, quiet=0, run=run_all_test):
+  def test_04_RenameObjectWithRelatedSubObject(
+                            self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Rename Object With a related Sub Object')
@@ -231,7 +229,8 @@ class TestERP5Category(ERP5TypeTestCase):
     self.assertEquals(organisation.getAbcValueList(),[telephone2])
     self.assertEquals(organisation.getAbcList(),[telephone2.getRelativeUrl()])
 
-  def test_05_RenameMembershipCriterionCategory(self, quiet=0, run=run_all_test):
+  def test_05_RenameMembershipCriterionCategory(
+                            self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Rename Membership Criterion Category')
@@ -245,7 +244,8 @@ class TestERP5Category(ERP5TypeTestCase):
     self.commitAndTic()
     self.failIfDifferentSet(predicate.getMembershipCriterionCategoryList(),self.new_cat_list)
 
-  def test_06_RenameModuleWithObjectOuterRelated(self, quiet=0, run=run_all_test):
+  def test_06_RenameModuleWithObjectOuterRelated(
+                                self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Rename Module With an Object Related to an Object it Contains')
@@ -259,7 +259,8 @@ class TestERP5Category(ERP5TypeTestCase):
     self.commitAndTic()
     self.assertEquals(person.getSubordinationValue(),organisation)
 
-  def test_07_RenameBaseCategoryWithPersonRelatedToSubSubSubCategory(self, quiet=0, run=run_all_test):
+  def test_07_RenameBaseCategoryWithPersonRelatedToSubSubSubCategory(
+                                  self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Rename a Base Category with a Person Related to a Sub-Sub-Sub-Category')
@@ -271,7 +272,8 @@ class TestERP5Category(ERP5TypeTestCase):
     self.commitAndTic()
     self.failIfDifferentSet(o.getEfgList(base=1),[self.base_cat2+'/new_id/11/111/1111'])
 
-  def test_08_RenameModuleWithObjectsInnerRelated(self, quiet=0, run=run_all_test):
+  def test_08_RenameModuleWithObjectsInnerRelated(
+                        self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Rename a Module with Contained Objects Refering to Other Objects inside the Same Module')
@@ -286,11 +288,12 @@ class TestERP5Category(ERP5TypeTestCase):
     self.commitAndTic()
     om = self.getPortal()['new_id']
     self.assertEquals(original_uid, om['2'].getUid())
+    self.assertEquals(om['1'].getAbc(),om['2'].getRelativeUrl())
     self.assertEquals(len(om['2'].getRelatedValueList('abc')), 1)
     self.assertEquals(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)
-    self.assertEquals(om['1'].getAbc(),om['2'].getRelativeUrl())
 
-  def test_09_Base_viewDictWithCategoryWithSubCategory(self, quiet=0, run=run_all_test):
+  def test_09_Base_viewDictWithCategoryWithSubCategory(
+                        self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Make sure Base_viewDict is working for categories with sub categories')
@@ -300,12 +303,8 @@ class TestERP5Category(ERP5TypeTestCase):
     base_category.newContent(id='toto',title='Toto')
     self.assertTrue(len(base_category.Base_viewDict())>0)
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestERP5Category))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestERP5Category))
+  return suite
 
