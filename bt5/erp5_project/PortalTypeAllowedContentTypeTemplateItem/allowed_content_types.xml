@@ -1,21 +1,17 @@
 <allowed_content_type_list>
  <portal_type id="Project">
-  <item>Project Milestone</item>
-  <item>File</item>
   <item>Project Line</item>
+  <item>File</item>
   <item>Image</item>
+  <item>Project Milestone</item>
  </portal_type>
  <portal_type id="Project Line">
+  <item>Project Line</item>
+  <item>Image</item>
   <item>Project Cell</item>
   <item>Folder</item>
-  <item>Illustration</item>
-  <item>Document</item>
-  <item>Mail Message</item>
-  <item>Text</item>
   <item>File</item>
-  <item>Project Line</item>
-  <item>Presentation</item>
-  <item>Image</item>
+  <item>Document</item>
  </portal_type>
  <portal_type id="Project Module">
   <item>Project</item>
