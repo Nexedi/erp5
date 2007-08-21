@@ -152,7 +152,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
       subscription.getPublicationUrl(),
       subscription.getSubscriptionUrl(),
       source_name=subscription.getLogin(),
-      dataCred=data, 
+      dataCred=data,
       authentication_format=subscription.getAuthenticationFormat(),
       authentication_type=subscription.getAuthenticationType()))
 
@@ -178,7 +178,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
 
     self.sendResponse(from_url=subscription.subscription_url,
         to_url=subscription.publication_url, sync_id=subscription.getTitle(),
-        xml=xml_a,domain=subscription,
+        xml=xml_a, domain=subscription,
         content_type=subscription.getSyncContentType())
 
     return {'has_response':1, 'xml':xml_a}

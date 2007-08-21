@@ -52,7 +52,7 @@ class PublicationSynchronization(XMLSyncUtils):
       Read the client xml message
       Send the first XML message from the server
     """
-    LOG('PubSyncInit', DEBUG, 'Starting... publication: %s' % (publication.getPath()))
+    LOG('PubSyncInit', INFO, 'Starting... publication: %s' % (publication.getPath()))
     #the session id is set at the same value of those of the client
     subscriber.setSessionId(self.getSessionId(xml_client))
     #same for the message id
@@ -103,17 +103,17 @@ class PublicationSynchronization(XMLSyncUtils):
       xml('<SyncML>\n')
       # syncml header
       xml(self.SyncMLHeader(subscriber.getSessionId(),
-        subscriber.getMessageId(), 
-        subscriber.getSubscriptionUrl(), 
+        subscriber.getMessageId(),
+        subscriber.getSubscriptionUrl(),
         publication.getPublicationUrl()))
       # syncml body
       xml(' <SyncBody>\n')
 
 
       #at the begining, the code is initialised at UNAUTHORIZED
-      auth_code=self.UNAUTHORIZED
+      auth_code = self.UNAUTHORIZED
       if not cred:
-        auth_code=self.AUTH_REQUIRED
+        auth_code = self.AUTH_REQUIRED
         LOG("PubSyncInit there's no credential !!!", INFO,'')
         # Prepare the xml message for the Sync initialization package
         xml(self.SyncMLChal(cmd_id, "SyncHdr",
@@ -122,8 +122,12 @@ class PublicationSynchronization(XMLSyncUtils):
           publication.getAuthenticationType(), auth_code))
         cmd_id += 1
         # chal message
-        xml_status, cmd_id = self.SyncMLStatus(xml_client, auth_code,
-            cmd_id, next_anchor, subscription=subscriber).values()
+        xml_status, cmd_id = self.SyncMLStatus(
+                                      xml_client,
+                                      auth_code,
+                                      cmd_id,
+                                      next_anchor,
+                                      subscription=subscriber).values()
         xml(xml_status)
       else:
         (authentication_format, authentication_type, data) = \
@@ -139,14 +143,16 @@ class PublicationSynchronization(XMLSyncUtils):
               if plugin.authenticateCredentials(
                         {'login':login, 'password':password}) is not None:
                 subscriber.setAuthenticated(True)
-                auth_code=self.AUTH_ACCEPTED
+                auth_code = self.AUTH_ACCEPTED
+                LOG("PubSyncInit Authentication Accepted", INFO, '')
                 #here we must log in with the user authenticated :
                 user = uf.getUserById(login).__of__(uf)
                 newSecurityManager(None, user)
-                subscriber.setUser(login)
+                subscriber.setUser(user)
                 break
               else:
-                auth_code=self.UNAUTHORIZED
+                LOG("PubSyncInit Authentication Failed !! with login :", INFO, login)
+                auth_code = self.UNAUTHORIZED
         #in all others cases, the auth_code is set to UNAUTHORIZED
 
         # Prepare the xml message for the Sync initialization package
@@ -246,7 +252,7 @@ class PublicationSynchronization(XMLSyncUtils):
           self.setRidWithMap(xml_client, subscriber)
         if subscriber.isAuthenticated():
             uf = self.getPortalObject().acl_users
-            user = uf.getUserById(subscriber.getUser()).__of__(uf)
+            user = subscriber.getUser().__of__(uf)
             newSecurityManager(None, user)
             result = self.PubSyncModif(publication, xml_client)
         else:

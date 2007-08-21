@@ -222,21 +222,15 @@ class SynchronizationTool( SubscriptionSynchronization,
       XXX should be renamed as addSubscription
       create a new subscription
     """
-    #if not('subscriptions' in self.objectIds()):
-    #  subscriptions = Folder('subscriptions')
-    #  self._setObject(subscriptions.id, subscriptions)
     folder = self.getObjectContainer()
     new_id = self.getSubscriptionIdFromTitle(title)
     sub = Subscription(new_id, title, publication_url, subscription_url,
                        destination_path, source_uri, target_uri, query,
                        xml_mapping, conduit, gpg_key,
                        synchronization_id_generator, media_type,
-                       login, password, activity_enabled, alert_code, 
+                       login, password, activity_enabled, alert_code,
                        synchronize_with_erp5_sites, sync_content_type)
     folder._setObject( new_id, sub )
-    #if len(self.list_subscriptions) == 0:
-    #  self.list_subscriptions = PersistentMapping()
-    #self.list_subscriptions[id] = sub
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
@@ -246,7 +240,7 @@ class SynchronizationTool( SubscriptionSynchronization,
                             destination_path, source_uri, query, xml_mapping,
                             conduit, gpg_key, synchronization_id_generator,
                             media_type=None,
-                            authentication_format='b64', 
+                            authentication_format='b64',
                             authentication_type='syncml:auth-basic',
                             RESPONSE=None, activity_enabled=False,
                             sync_content_type='application/vnd.syncml+xml',
@@ -279,8 +273,8 @@ class SynchronizationTool( SubscriptionSynchronization,
   def manage_editSubscription(self, title, publication_url, subscription_url,
       destination_path, source_uri, target_uri, query, xml_mapping, conduit,
       gpg_key, synchronization_id_generator, media_type=None,
-      login='', password='', RESPONSE=None, activity_enabled=False, 
-      alert_code=SyncCode.TWO_WAY, synchronize_with_erp5_sites=False, 
+      login='', password='', RESPONSE=None, activity_enabled=False,
+      alert_code=SyncCode.TWO_WAY, synchronize_with_erp5_sites=False,
       sync_content_type='application/vnd.syncml+xml'):
     """
       modify a subscription
@@ -372,9 +366,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       Return a list of publications
     """
     folder = self.getObjectContainer()
-    object_list = [pub for pub in folder.objectValues() if pub.getDomainType() == self.PUB]
-    #object_list = filter(lambda x: x.id.find('pub')==0,object_list)
-    return object_list
+    return [pub for pub in folder.objectValues() if pub.getDomainType() == self.PUB]
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'getPublication')
@@ -409,9 +401,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       Return a list of publications
     """
     folder = self.getObjectContainer()
-    object_list = [sub for sub in folder.objectValues() if sub.getDomainType() == self.SUB]
-    #object_list = filter(lambda x: x.id.find('sub')==0,object_list)
-    return object_list
+    return [sub for sub in folder.objectValues() if sub.getDomainType() == self.SUB]
 
   def getSubscription(self, title):
     """

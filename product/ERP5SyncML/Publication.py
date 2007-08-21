@@ -217,7 +217,6 @@ class Publication(Subscription):
     """
     return self.objectValues()
 
-
   def delSubscriber(self, subscription_url):
     """
       Delete a subscriber for this publication

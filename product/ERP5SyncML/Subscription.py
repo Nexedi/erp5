@@ -192,12 +192,12 @@ class Conflict(SyncCode, Base):
     p_sync = getToolByName(self, 'portal_synchronizations')
     p_sync.applySubscriberDocument(self)
 
-  def applySubscriberValue(self,object=None):
+  def applySubscriberValue(self, object=None):
     """
     get the domain
     """
     p_sync = getToolByName(self, 'portal_synchronizations')
-    p_sync.applySubscriberValue(self,object=object)
+    p_sync.applySubscriberValue(self, object=object)
 
   def setSubscriber(self, subscriber):
     """
@@ -235,7 +235,7 @@ class Conflict(SyncCode, Base):
     """
     self.copy_path = path
 
-class Signature(Folder,SyncCode):
+class Signature(Folder, SyncCode):
   """
     status -- SENT, CONFLICT...
     md5_object -- An MD5 value of a given document
@@ -1125,6 +1125,8 @@ class Subscription(Folder, SyncCode):
         query_list = query_method(**kw)
     elif callable(query): # used in the test
       query_list = query(destination)
+    else:
+      LOG('This Subscriber %s provide no Query with id :' % (self.getTitle()), INFO, query)
     return [x for x in query_list
               if not getattr(x,'_conflict_resolution',False)]
 
