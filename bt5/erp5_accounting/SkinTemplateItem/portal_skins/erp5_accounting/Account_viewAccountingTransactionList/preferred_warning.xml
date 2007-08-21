@@ -183,7 +183,7 @@ python: here.Localizer.translate(\'erp5_ui\', "The values above are the paramete
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not( request.get(\'is_accounting_report\', 0) or request.get(\'portal_skin\', \'\') != \'View\')</string> </value>
+            <value> <string>python: not( request.get(\'is_accounting_report\', 0) or request.get(\'portal_skin\', \'View\') != \'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
