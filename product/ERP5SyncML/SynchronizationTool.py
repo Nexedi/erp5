@@ -972,7 +972,9 @@ class SynchronizationTool( SubscriptionSynchronization,
     LOG('sync, len(message_list):', DEBUG, len(message_list))
     if len(message_list) == 0:
       for subscription in self.getSubscriptionList():
-        user = subscription.getZopeUser()
+        user_id = subscription.getZopeUser()
+        uf = self.getPortalObject().acl_users
+        user = uf.getUserById(user_id).__of__(uf)
         newSecurityManager(None, user)
         self.activate(activity='RAMQueue').SubSync(subscription.getPath())
 

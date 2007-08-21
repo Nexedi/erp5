@@ -148,7 +148,7 @@ class PublicationSynchronization(XMLSyncUtils):
                 #here we must log in with the user authenticated :
                 user = uf.getUserById(login).__of__(uf)
                 newSecurityManager(None, user)
-                subscriber.setUser(user)
+                subscriber.setUser(login)
                 break
               else:
                 LOG("PubSyncInit Authentication Failed !! with login :", INFO, login)
@@ -252,7 +252,7 @@ class PublicationSynchronization(XMLSyncUtils):
           self.setRidWithMap(xml_client, subscriber)
         if subscriber.isAuthenticated():
             uf = self.getPortalObject().acl_users
-            user = subscriber.getUser().__of__(uf)
+            user = uf.getUserById(subscriber.getUser()).__of__(uf)
             newSecurityManager(None, user)
             result = self.PubSyncModif(publication, xml_client)
         else:
