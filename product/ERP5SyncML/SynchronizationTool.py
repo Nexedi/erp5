@@ -979,13 +979,11 @@ class SynchronizationTool( SubscriptionSynchronization,
     This will try to synchronize every subscription
     """
     message_list = self.portal_activities.getMessageList()
-    LOG('sync, message_list:', DEBUG, message_list)
+    LOG('sync, len(message_list):', DEBUG, len(message_list))
     if len(message_list) == 0:
       for subscription in self.getSubscriptionList():
         user = subscription.getZopeUser()
-        LOG('sync, user :',DEBUG, user)
         newSecurityManager(None, user)
-        LOG('sync, type(subcription):', DEBUG, type(subscription))
         self.activate(activity='RAMQueue').SubSync(subscription.getPath())
 
   security.declarePublic('readResponse')

@@ -31,6 +31,7 @@ from Subscription import Subscription,Signature
 from XMLSyncUtils import XMLSyncUtils, Parse
 import commands
 from Conduit.ERP5Conduit import ERP5Conduit
+from AccessControl import getSecurityManager
 from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO
 
@@ -46,8 +47,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     subscription.initLastMessageId()
 
     #save the actual user to use it in all the session:
-    user = self.portal_membership.getAuthenticatedMember().getUserName()
-    LOG('SubSyncInit, user saved :',DEBUG, user)
+    user = getSecurityManager().getUser()
     subscription.setZopeUser(user)
     subscription.setAuthenticated(True)
 

@@ -798,7 +798,7 @@ class XMLSyncUtilsMixin(SyncCode):
         local_gid_list = map(lambda x: domain.getGidFromObject(x),object_list)
 
       # Objects to remove
-      LOG('remove object to remove ...', DEBUG, '')
+      LOG('getSyncMLData remove object to remove ...', DEBUG, '')
       object_gid_deleted = []
       for object_gid in subscriber.getGidList():
         if object_gid not in local_gid_list:
@@ -827,6 +827,7 @@ class XMLSyncUtilsMixin(SyncCode):
       if max is not None and loop >= max:
         result['finished'] = 0
         break
+      LOG('getSyncMLData object_path', DEBUG, object_path)
       object = self.unrestrictedTraverse(object_path)
       status = self.SENT
       object_gid = domain.getGidFromObject(object)
@@ -1449,7 +1450,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       cmd_id = result['cmd_id']
       return self.sendSyncModif(syncml_data, cmd_id_before_getsyncmldata,
                                 subscriber, domain, xml_confirmation,
-                                remote_xml, xml_list, has_status_list, 
+                                remote_xml, xml_list, has_status_list,
                                 has_response)
 
   def SyncModifActivity(self, **kw):
@@ -1521,7 +1522,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                 domain=domain,
                 content_type=domain.getSyncContentType())
       if syncml_data == '':
-        LOG('this is the end of the synchronisation session !!!', DEBUG, '')
+        LOG('this is the end of the synchronisation session !!!', INFO, '')
         subscriber.setAuthenticated(False)
         domain.setAuthenticated(False)
       has_response = 1

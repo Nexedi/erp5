@@ -1037,7 +1037,7 @@ class Subscription(Folder, SyncCode):
     if callable(gid_gen):
       o_gid = gid_gen(object)
     else:
-      raise ValueError, "The conduit "+conduit_name+"seems to no have a \
+      raise ValueError, "The conduit "+conduit_name+"seems to not have a \
           getGidFromObject method and it must"
 #    elif getattr(o_base, gid_gen, None) is not None:
 #      generator = getattr(object, gid_gen)
