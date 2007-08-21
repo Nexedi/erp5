@@ -72,6 +72,8 @@ Sale Order Milestone | metadata
 Sale Order Milestone | print
 Sale Order Milestone | project
 Sale Order Milestone | view
+Sale Order | detailed_report
+Sale Order | milestone_view
 Sale Packing List Line | line_profile
 Sale Packing List Line | project
 Task Line | history
