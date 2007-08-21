@@ -68,8 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getPortalObject().changeSkin(\'Print\')\n
-return getattr(context, form_id)(REQUEST=container.REQUEST)\n
+            <value> <string>portal = context.getPortalObject()\n
+request = container.REQUEST\n
+\n
+portal.changeSkin(\'Print\')\n
+# also sets the request variable, because some skins uses it\n
+request.set(portal.portal_skins.getRequestVarname(), \'Print\')\n
+\n
+return getattr(context, form_id)(REQUEST=request)\n
 </string> </value>
         </item>
         <item>
@@ -115,8 +121,10 @@ return getattr(context, form_id)(REQUEST=container.REQUEST)\n
                             <string>form_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>getattr</string>
+                            <string>portal</string>
                             <string>container</string>
+                            <string>request</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
