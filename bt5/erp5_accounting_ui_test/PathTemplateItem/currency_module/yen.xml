@@ -44,7 +44,7 @@
         </item>
         <item>
             <key> <string>base_unit_quantity</string> </key>
-            <value> <float>0.01</float> </value>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
