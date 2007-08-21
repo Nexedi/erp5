@@ -301,7 +301,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredTextareaHeight | python:5</string> </value>
+            <value> <string>preferences.getPreference(\'preferred_textarea_height\', 5)</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -320,7 +320,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredTextareaWidth | python:80</string> </value>
+            <value> <string>preferences.getPreference(\'preferred_textarea_width\', 80)</string> </value>
         </item>
       </dictionary>
     </pickle>

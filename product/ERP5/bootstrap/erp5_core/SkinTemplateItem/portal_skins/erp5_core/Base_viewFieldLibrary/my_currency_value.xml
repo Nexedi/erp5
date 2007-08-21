@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredStringFieldWidth | python: 30</string> </value>
+            <value> <string>python: preferences.getPreference(\'preferred_string_field_width\', 30)</string> </value>
         </item>
       </dictionary>
     </pickle>
