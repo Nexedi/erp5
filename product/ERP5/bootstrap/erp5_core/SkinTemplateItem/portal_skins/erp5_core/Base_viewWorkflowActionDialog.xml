@@ -73,8 +73,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
-                        <string>my_workflow_action</string>
+                        <string>your_comment</string>
+                        <string>your_workflow_action</string>
                       </list>
                     </value>
                 </item>
