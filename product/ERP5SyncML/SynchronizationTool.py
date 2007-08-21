@@ -173,23 +173,20 @@ class SynchronizationTool( SubscriptionSynchronization,
                     + '?manage_tabs_message=Tool+updated.'
                     )
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
       'manage_addPublication')
-  def manage_addPublication(self, title, publication_url, 
-            destination_path, source_uri, query, xml_mapping, 
-            conduit, gpg_key, 
+  def manage_addPublication(self, title, publication_url,
+            destination_path, source_uri, query, xml_mapping,
+            conduit, gpg_key,
             synchronization_id_generator=None, 
-            media_type=None, authentication_format='b64', 
-            authentication_type='syncml:auth-basic', 
+            media_type=None, authentication_format='b64',
+            authentication_type='syncml:auth-basic',
             RESPONSE=None, activity_enabled = False,
-            sync_content_type='application/vnd.syncml+xml', 
+            sync_content_type='application/vnd.syncml+xml',
             synchronize_with_erp5_sites=True):
     """
       create a new publication
     """
-    #if not('publications' in self.objectIds()):
-    #  publications = Folder('publications')
-    #  self._setObject(publications.id, publications)
     folder = self.getObjectContainer()
     new_id = self.getPublicationIdFromTitle(title)
     pub = Publication(new_id, title, publication_url,
@@ -201,9 +198,6 @@ class SynchronizationTool( SubscriptionSynchronization,
                       activity_enabled, synchronize_with_erp5_sites,
                       sync_content_type)
     folder._setObject( new_id, pub )
-    #if len(self.list_publications) == 0:
-    #  self.list_publications = PersistentMapping()
-    #self.list_publications[id] = pub
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 

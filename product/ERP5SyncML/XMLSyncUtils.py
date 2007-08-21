@@ -57,8 +57,8 @@ except ImportError:
 
 class XMLSyncUtilsMixin(SyncCode):
 
-  def SyncMLHeader(self, session_id, msg_id, target, source, target_name=None, 
-      source_name=None, dataCred=None, authentication_format='b64', 
+  def SyncMLHeader(self, session_id, msg_id, target, source, target_name=None,
+      source_name=None, dataCred=None, authentication_format='b64',
       authentication_type='syncml:auth-basic'):
     """
       Since the Header is always almost the same, this is the
@@ -630,7 +630,7 @@ class XMLSyncUtilsMixin(SyncCode):
       rid = map_item.xpath('string(.//Source/LocURI)').encode('utf-8')
       signature.setRid(rid)
 
-  def getAlertCode(self, xml_stream):
+  def getAlertCodeFromXML(self, xml_stream):
     """
       Return the value of the alert code inside the full syncml message
     """
@@ -840,11 +840,11 @@ class XMLSyncUtilsMixin(SyncCode):
         # If not we have to cut
         LOG('getSyncMLData', DEBUG, 'object_path: %s' % '/'.join(object_path))
         LOG('getSyncMLData', DEBUG, 'xml_mapping: %s' % str(domain.getXMLMapping()))
-        LOG('getSyncMLData', DEBUG, 'code: %s' % str(self.getAlertCode(remote_xml)))
+        LOG('getSyncMLData', DEBUG, 'code: %s' % str(self.getAlertCodeFromXML(remote_xml)))
         LOG('getSyncMLData', DEBUG, 'gid_list: %s' % str(local_gid_list))
         LOG('getSyncMLData', DEBUG, 'subscriber.getGidList: %s' % subscriber.getGidList())
         LOG('getSyncMLData', DEBUG, 'hasSignature: %s' % str(subscriber.hasSignature(object_gid)))
-        LOG('getSyncMLData', DEBUG, 'alert_code == slowsync: %s' % str(self.getAlertCode(remote_xml) == self.SLOW_SYNC))
+        LOG('getSyncMLData', DEBUG, 'alert_code == slowsync: %s' % str(self.getAlertCodeFromXML(remote_xml) == self.SLOW_SYNC))
 
         signature = subscriber.getSignatureFromGid(object_gid)
         ## Here we first check if the object was modified or not by looking at dates
@@ -857,7 +857,7 @@ class XMLSyncUtilsMixin(SyncCode):
           pass
         elif signature is None or (signature.getXML() is None and \
             signature.getStatus() != self.PARTIAL) or \
-            self.getAlertCode(remote_xml) == self.SLOW_SYNC:
+            self.getAlertCodeFromXML(remote_xml) == self.SLOW_SYNC:
           LOG('getSyncMLData', DEBUG, 'Current object.getPath: %s' % object.getPath())
           xml_object = domain.getXMLFromObject(object)
           xml_string = xml_object
@@ -1367,7 +1367,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                                       subscriber=subscriber,
                                                       remote_xml=remote_xml)
 
-    alert_code = self.getAlertCode(remote_xml)
+    alert_code = self.getAlertCodeFromXML(remote_xml)
     # Import the conduit and get it
     conduit = self.getConduitByName(subscriber.getConduit())
     # Then apply the list of actions
@@ -1426,7 +1426,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
         string_io = StringIO()
         PrettyPrint(remote_xml,stream=string_io)
         remote_xml = string_io.getvalue()
-      self.activate(activity='SQLQueue').SyncModifActivity(
+      domain.activate(activity='SQLQueue').SyncModifActivity(
                       domain_relative_url = domain.getRelativeUrl(),
                       remote_xml = remote_xml,
                       subscriber_relative_url = subscriber.getRelativeUrl(),
@@ -1469,7 +1469,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     kw['cmd_id'] = cmd_id
     finished = result['finished']
     if not finished:
-      self.activate(activity='SQLQueue').SyncModifActivity(**kw)
+      domain.activate(activity='SQLQueue').SyncModifActivity(**kw)
     else:
       xml_confirmation = result['xml_confirmation']
       cmd_id = result['cmd_id']

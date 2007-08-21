@@ -36,6 +36,7 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
+from XMLSyncUtils import XMLSyncUtils
 from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO
 
@@ -585,7 +586,7 @@ def addSubscription( self, id, title='', REQUEST=None ):
 
 #class Subscription(SyncCode, Implicit):
 #class Subscription(Folder, SyncCode, Implicit, Folder, Impli):
-class Subscription(Folder, SyncCode):
+class Subscription(Folder, XMLSyncUtils):
   """
     Subscription hold the definition of a master ODB
     from/to which a selection of objects will be synchronised

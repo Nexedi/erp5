@@ -69,7 +69,7 @@ class PublicationSynchronization(XMLSyncUtils):
       last_anchor = self.getAlertLastAnchor(xml_client)
       next_anchor = self.getAlertNextAnchor(xml_client)
       alert = self.checkAlert(xml_client)
-      alert_code = self.getAlertCode(xml_client)
+      alert_code = self.getAlertCodeFromXML(xml_client)
       cred = self.checkCred(xml_client)
 
       #the source and the target of the subscriber are reversed compared 
@@ -222,7 +222,7 @@ class PublicationSynchronization(XMLSyncUtils):
       if first_node.nodeName != "SyncML":
         LOG('PubSync', INFO, 'This is not a SyncML Message')
         raise ValueError, "Sorry, This is not a SyncML Message"
-      alert_code = self.getAlertCode(xml_client)
+      alert_code = self.getAlertCodeFromXML(xml_client)
       # Get informations from the header
       client_header = first_node.childNodes[1]
       if client_header.nodeName != "SyncHdr":
