@@ -95,6 +95,7 @@
                       <list>
                         <string>listbox_sub_requirement_count</string>
                         <string>listbox_int_index</string>
+                        <string>listbox_reference</string>
                       </list>
                     </value>
                 </item>

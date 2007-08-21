@@ -330,24 +330,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
-                        </tuple>
-                        <tuple>
                           <string>stop_date</string>
                           <string>End</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Estimated Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
                         </tuple>
                       </list>
                     </value>
@@ -396,28 +380,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
-                        </tuple>
-                        <tuple>
                           <string>stop_date</string>
                           <string>End</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Estimated Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
                         </tuple>
                       </list>
                     </value>
@@ -469,10 +433,6 @@
                         <tuple>
                           <string>quantity</string>
                           <string>Estimated Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
@@ -530,6 +490,10 @@
                         <tuple>
                           <string>Project Milestone</string>
                           <string>Project Milestone</string>
+                        </tuple>
+                        <tuple>
+                          <string>Sale Order Milestone</string>
+                          <string>Sale Order Milestone</string>
                         </tuple>
                       </list>
                     </value>

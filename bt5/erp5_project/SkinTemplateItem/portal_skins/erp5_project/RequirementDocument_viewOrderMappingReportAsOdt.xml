@@ -14,13 +14,13 @@
       <dictionary>
         <item>
             <key> <string>OLE_documents_zipstring</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAAIAFC2mDQ1Ytc5PgEAAEoHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
+            <value> <string encoding="base64">UEsDBBQAAAAIAFxPmTQ1Ytc5PgEAAEoHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
 EED3PYXR3lbbVTFxAi30BOkBJvLYEeiHZhSS21cO5NM2lKZYOwmk90YjzWix2ltT7TCS9q4TT82j
 qNAp32s3duJj/V6/iNXyYWHB6QGJ29OgyvscnaedSNG1HkhT68AitaxaH9D1XiWLjtuv69vJtHyo
 LuBBG6zzwnioLjLsNdR8CNgJCMFoBZzjlDvXN0dXc61oGPcsLruHZEwdgLedkELeJbtNefNu0GOK
 xyDoWRIDJ9pALIMHpdBgnvooVYpxOmLOYnFXEcFgPDAWggcfUshPIBXCRz9GpHI3PYVeDM7em2Jw
 bWFEkq+aLQQq6riT/b1fUHJT9TRJN+pa8LcY7pRPnUhOtXoTnv38v2L+nUt8MEizYy0yzNZ41ttk
-Nw60IcmnYRPcODd83sQic/4Qz6ldyB//4fITUEsBAhQAFAAAAAgAULaYNDVi1zk+AQAASgcAABUA
+Nw60IcmnYRPcODd83sQic/4Qz6ldyB//4fITUEsBAhQAFAAAAAgAXE+ZNDVi1zk+AQAASgcAABUA
 AAAAAAAAAAAAAAAAAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAABxAQAA
 AAA=</string> </value>
         </item>
@@ -57,6 +57,12 @@ AAA=</string> </value>
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -81,104 +87,95 @@ AAA=</string> </value>
       <style:table-properties table:align=\'margins\' style:width=\'16.999cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-column\' style:name=\'RequirementList.A\'>\n
-      <style:table-column-properties style:rel-column-width=\'1617*\' style:column-width=\'2.852cm\'/>\n
+      <style:table-column-properties style:rel-column-width=\'1297*\' style:column-width=\'2.288cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-column\' style:name=\'RequirementList.B\'>\n
-      <style:table-column-properties style:rel-column-width=\'2560*\' style:column-width=\'4.516cm\'/>\n
+      <style:table-column-properties style:rel-column-width=\'2880*\' style:column-width=\'5.08cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-column\' style:name=\'RequirementList.C\'>\n
-      <style:table-column-properties style:rel-column-width=\'5459*\' style:column-width=\'9.629cm\'/>\n
+      <style:table-column-properties style:rel-column-width=\'1712*\' style:column-width=\'3.02cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'RequirementList.D\'>\n
+      <style:table-column-properties style:rel-column-width=\'2446*\' style:column-width=\'4.314cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'RequirementList.E\'>\n
+      <style:table-column-properties style:rel-column-width=\'1300*\' style:column-width=\'2.293cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'RequirementList.A1\'>\n
       <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-right=\'none\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-top=\'0.002cm solid #000000\'/>\n
     </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'RequirementList.C1\'>\n
+    <style:style style:family=\'table-cell\' style:name=\'RequirementList.E1\'>\n
       <style:table-cell-properties fo:padding=\'0.097cm\' fo:border=\'0.002cm solid #000000\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'RequirementList.A2\'>\n
       <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-right=\'none\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-top=\'none\'/>\n
     </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'RequirementList.C2\'>\n
+    <style:style style:family=\'table-cell\' style:name=\'RequirementList.E2\'>\n
       <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-right=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Table_20_Heading\' style:family=\'paragraph\' style:name=\'P1\'>\n
+      <style:text-properties style:font-size-asian=\'9pt\' style:font-size-complex=\'9pt\' fo:font-size=\'9pt\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Table_20_Contents\' style:family=\'paragraph\' style:name=\'P2\'>\n
+      <style:text-properties style:font-size-asian=\'9pt\' style:font-size-complex=\'9pt\' fo:font-size=\'9pt\'/>\n
     </style:style>\n
   </office:automatic-styles>\n
   <office:body>\n
     <office:text>\n
+      <office:forms form:apply-design-mode=\'false\' form:automatic-focus=\'false\'/>\n
       <text:sequence-decls>\n
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Illustration\'/>\n
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Table\'/>\n
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Text\'/>\n
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Drawing\'/>\n
       </text:sequence-decls>\n
-      <!-- Init state variables as globals -->\n
-      <tal:block tal:define="global current_requirement python:here;\n
-                             global depth python:request.get(\'depth\', 1);\n
-                             global reference_list python:[here.getReference(\'R\')]">\n
-      <tal:block metal:define-macro="line"\n
-                 tal:define="requirement_base python:\'-\'.join(reference_list)">\n
-        <text:h text:outline-level=\'1\' text:style-name=\'Heading_20_1\' tal:content="python:\'%s %s\' % (current_requirement.getReference(requirement_base), current_requirement.getTitle())"\n
-                tal:attributes="text:outline-level python:\'%s\' % depth;\n
-\t\t\t\ttext:style-name python:\'Heading_20_%s\' % depth"><tal:trans i18n:domain="erp5_ui" i18n:translate="Project Line" /></text:h>\n
-        <text:p text:style-name=\'Text_20_body\' tal:content="current_requirement/getDescription"\n
-                tal:condition="current_requirement/getDescription">Description of project line.</text:p>\n
-        <tal:block tal:define="requirement_list python:current_requirement.contentValues(portal_type = \'Requirement\', sort_on = ((\'int_index\',\'ascending\', \'int\'),))">\n
-      <!-- make sure there are some lines to display in the table -->\n
-      <tal:block tal:define="global has_content python:0"/>\n
-      <tal:block tal:repeat="requirement requirement_list">\n
-        <tal:block tal:condition="python:not requirement.contentValues(portal_type = \'Requirement\')">\n
-          <tal:block tal:define="global has_content python:1"/>\n
-        </tal:block>\n
-      </tal:block>\n
-      <!-- Display table -->\n
-      <table:table table:style-name=\'RequirementList\' table:name=\'RequirementList\'\n
-                   tal:condition="has_content">\n
+\t  <text:h text:outline-level=\'1\' text:style-name=\'Heading_20_1\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Project Line" /></text:h>\n
+\t  <text:p text:style-name=\'Text_20_body\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Description of project line." /></text:p>\n
+      <table:table table:style-name=\'RequirementList\' table:name=\'RequirementList\'>\n
         <table:table-column table:style-name=\'RequirementList.A\'/>\n
         <table:table-column table:style-name=\'RequirementList.B\'/>\n
         <table:table-column table:style-name=\'RequirementList.C\'/>\n
+        <table:table-column table:style-name=\'RequirementList.D\'/>\n
+        <table:table-column table:style-name=\'RequirementList.E\'/>\n
         <table:table-header-rows>\n
           <table:table-row>\n
             <table:table-cell table:style-name=\'RequirementList.A1\' office:value-type=\'string\'>\n
-\t\t\t\t<text:p text:style-name=\'Table_20_Heading\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Reference" /></text:p>\n
+\t\t\t\t<text:p text:style-name=\'P1\' ><tal:trans i18n:domain="erp5_ui" i18n:translate="Req. ID" /></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'RequirementList.A1\' office:value-type=\'string\'>\n
-\t\t\t\t<text:p text:style-name=\'Table_20_Heading\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Title" /></text:p>\n
+\t\t\t\t<text:p text:style-name=\'P1\' i18n:domain="erp5_ui" i18n:translate="Requirement"></text:p>\n
             </table:table-cell>\n
-            <table:table-cell table:style-name=\'RequirementList.C1\' office:value-type=\'string\'>\n
-\t\t\t\t<text:p text:style-name=\'Table_20_Heading\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Description" /></text:p>\n
+            <table:table-cell table:style-name=\'RequirementList.A1\' office:value-type=\'string\'>\n
+\t\t\t\t<text:p text:style-name=\'P1\' ><tal:trans i18n:domain="erp5_ui" i18n:translate="Project ID" /></text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'RequirementList.A1\' office:value-type=\'string\'>\n
+\t\t\t\t<text:p text:style-name=\'P1\' ><tal:trans i18n:domain="erp5_ui" i18n:translate="Project Title" /></text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'RequirementList.E1\' office:value-type=\'string\'>\n
+\t\t\t\t<text:p text:style-name=\'P1\' ><tal:trans i18n:domain="erp5_ui" i18n:translate="Stop Date" /></text:p>\n
             </table:table-cell>\n
           </table:table-row>\n
         </table:table-header-rows>\n
-        <tal:block tal:repeat="requirement requirement_list">\n
-          <!-- Display row is this is a leaf -->\n
-          <table:table-row tal:condition="python:not requirement.contentValues(portal_type = \'Requirement\')">\n
+        <tal:block tal:repeat="mapping_item here/RequirementDocument_getProjectCoverageList">\n
+        <table:table-row>\n
           <table:table-cell table:style-name=\'RequirementList.A2\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content="python:requirement.getReference(\'%s-%s\' % (requirement_base, requirement.getIntIndex(requirement.getId())))">Reference here</text:p>\n
+            <text:p text:style-name=\'P2\' tal:content="mapping_item/requirement_reference">Reference here</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'RequirementList.A2\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content="requirement/getTitle">Title here</text:p>\n
+            <text:p text:style-name=\'P2\' tal:content="mapping_item/requirement_title">Title here</text:p>\n
           </table:table-cell>\n
-          <table:table-cell table:style-name=\'RequirementList.C2\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\'  tal:content="requirement/getDescription">Description here</text:p>\n
+          <table:table-cell table:style-name=\'RequirementList.A2\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P2\' tal:content="mapping_item/project_reference">Description here</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'RequirementList.A2\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P2\' tal:content="mapping_item/project_title"/>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'RequirementList.E2\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P2\' tal:content="mapping_item/stop_date | string:"/>\n
           </table:table-cell>\n
         </table:table-row>\n
-        </tal:block>\n
+      </tal:block>\n
       </table:table>\n
-      <!-- Recursively display non leaf requirements -->\n
-      <tal:block tal:repeat="requirement requirement_list">\n
-        <tal:block tal:condition="python:requirement.contentValues(portal_type = \'Requirement\')">\n
-        <!-- Update globals - use reference or int_index or id as default reference -->\n
-        <tal:block tal:define="global depth python:depth + 1;\n
-                   global dummy python:reference_list.append(\n
-                   str(requirement.getProperty(\'int_index\', \'\')) or current_requirement.getId());\n
-                   global current_requirement python:requirement"/>\n
-        <tal:block metal:use-macro="here/RequirementDocument_viewDetailedReportAsOdt/macros/line"/>\n
-        <tal:block tal:define="global depth python:depth - 1;\n
-                   global reference_list python:reference_list[:-1]"/>\n
-        </tal:block>\n
-      </tal:block>\n
-      </tal:block>\n
-    </tal:block>\n
-  </tal:block>\n
     </office:text>\n
   </office:body>\n
 </office:document-content>\n
@@ -196,11 +193,11 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>RequirementDocument_viewDetailedReportAsOdt</string> </value>
+            <value> <string>RequirementDocument_viewOrderMappingReportAsOdt</string> </value>
         </item>
         <item>
             <key> <string>ooo_stylesheet</string> </key>
-            <value> <string>RequirementDocument_viewDetailedReportOdtContainer</string> </value>
+            <value> <string>RequirementDocument_viewOrderMappingReportOdtContainer</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

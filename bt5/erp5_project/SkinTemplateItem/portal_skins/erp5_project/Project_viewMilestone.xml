@@ -95,7 +95,6 @@
                       <list>
                         <string>listbox_int_index</string>
                         <string>listbox_quantity</string>
-                        <string>listbox_start_date</string>
                         <string>listbox_stop_date</string>
                       </list>
                     </value>
