@@ -46,8 +46,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -84,7 +94,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -92,7 +104,9 @@
                     <value>
                       <list>
                         <string>listbox_int_index</string>
+                        <string>listbox_start_date</string>
                         <string>listbox_stop_date</string>
+                        <string>listbox_title</string>
                         <string>listbox_reference</string>
                         <string>listbox_quantity</string>
                         <string>listbox_quantity_unit</string>
@@ -104,17 +118,11 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_section_title</string>
-                        <string>my_order</string>
-                        <string>my_received_date</string>
-                        <string>my_origin</string>
-                        <string>my_source_administration_title</string>
-                        <string>my_source_decision_title</string>
-                        <string>my_errand_ratio</string>
-                        <string>my_price_currency</string>
-                        <string>my_incoterm</string>
-                        <string>my_delivery_mode</string>
-                        <string>my_segmentation</string>
+                        <string>my_reference</string>
+                        <string>my_resource_title</string>
+                        <string>my_variation_category_list</string>
+                        <string>my_amortisation_method</string>
+                        <string>my_source_trade_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -122,15 +130,14 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_reference</string>
-                        <string>my_destination_title</string>
-                        <string>my_destination_decision_title</string>
+                        <string>my_quantity</string>
+                        <string>my_quantity_unit</string>
+                        <string>my_price</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_trade_condition_title</string>
-                        <string>my_comment</string>
+                        <string>my_destination_title</string>
+                        <string>total_quantity</string>
                         <string>total_price</string>
-                        <string>simulation_state</string>
                       </list>
                     </value>
                 </item>
@@ -139,7 +146,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_view</string> </value>
+            <value> <string>OrderLine_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -147,7 +154,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SaleOrder_view</string> </value>
+            <value> <string>DeliveryLine_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -163,7 +170,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sale Order</string> </value>
+            <value> <string>Order Line</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

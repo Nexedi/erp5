@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
+          <string>Products.ERP5Form.MultiRelationField</string>
+          <string>MultiRelationStringField</string>
         </tuple>
         <none/>
       </tuple>
@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_source_trade_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -24,6 +24,34 @@
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
+                <item>
+                    <key> <string>line_too_long</string> </key>
+                    <value> <string>A line was too long.</string> </value>
+                </item>
+                <item>
+                    <key> <string>relation_result_ambiguous</string> </key>
+                    <value> <string>Select appropriate document in the list.</string> </value>
+                </item>
+                <item>
+                    <key> <string>relation_result_empty</string> </key>
+                    <value> <string>No such document was found.</string> </value>
+                </item>
+                <item>
+                    <key> <string>relation_result_too_long</string> </key>
+                    <value> <string>Too many documents were found.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>You entered too many characters.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_many_lines</string> </key>
+                    <value> <string>You entered too many lines.</string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -32,15 +60,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -56,7 +84,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
+                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -64,19 +92,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>domain_root_list</string> </key>
+                    <key> <string>display_maxwidth</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>domain_tree</string> </key>
+                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -88,7 +112,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -96,11 +132,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
+                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>list_action</string> </key>
+                    <key> <string>jump_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -108,35 +144,35 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>meta_types</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>max_linelength</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
+                    <key> <string>max_lines</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>report_tree</string> </key>
+                    <key> <string>parameter_list</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>search</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
+                    <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>select</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key> <string>size</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -144,23 +180,27 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>stat_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>stat_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>url_columns</string> </key>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>update_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -171,15 +211,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -195,7 +235,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
+                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -203,19 +243,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>domain_root_list</string> </key>
+                    <key> <string>display_maxwidth</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>domain_tree</string> </key>
+                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -227,7 +263,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -235,11 +283,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
+                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>list_action</string> </key>
+                    <key> <string>jump_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -247,35 +295,35 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>meta_types</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>max_linelength</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
+                    <key> <string>max_lines</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>report_tree</string> </key>
+                    <key> <string>parameter_list</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>search</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
+                    <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>select</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key> <string>size</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -283,23 +331,27 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>stat_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>stat_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>url_columns</string> </key>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>update_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -310,103 +362,33 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>getTotalQuantity</string>
-                          <string>Total Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>getTotalPrice</string>
-                          <string>Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>allow_creation</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>allow_jump</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>source_trade</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>title</string> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>getTotalQuantity</string>
-                          <string>Total Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>getPrice</string>
-                          <string>Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>getTotalPrice</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
+                    <key> <string>container_getter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -415,58 +397,29 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>default_module</string> </key>
+                    <value> <string>person</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>domain_root_list</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>domain_tree</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>End</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -477,136 +430,116 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>meta_types</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>page_template</string> </key>
+                    <key> <string>jump_method</string> </key>
+                    <value> <string>Base_jumpToRelatedDocument</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Sale Order Line</string>
-                          <string>Sale Order Line</string>
+                          <string>Person</string>
+                          <string>Person</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>relation_setter_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>report_tree</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>search</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>search_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>select</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>sale_order_line_selection</string> </value>
+                    <key> <string>size</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value>
                       <list/>
                     </value>
-                </item>
-                <item>
-                    <key> <string>stat_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>stat_method</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Sale Order Lines</string> </value>
+                    <value> <string>Supplier / Worker</string> </value>
                 </item>
                 <item>
-                    <key> <string>url_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>update_method</string> </key>
+                    <value> <string>Base_validateRelation</string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

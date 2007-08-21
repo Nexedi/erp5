@@ -187,6 +187,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -220,7 +224,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -251,8 +257,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>report_root_list</string> </key>
@@ -276,7 +288,9 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -310,6 +324,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>all_columns</string> </key>
                     <value>
                       <list>
@@ -318,11 +336,15 @@
                           <string>Index</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>source_title</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
@@ -330,20 +352,24 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalQuantity</string>
-                          <string>Total Quantity</string>
-                        </tuple>
-                        <tuple>
                           <string>quantity_unit</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
+                          <string>price</string>
                           <string>Price</string>
                         </tuple>
                         <tuple>
+                          <string>getTotalPrice</string>
+                          <string>Total Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin</string>
+                        </tuple>
+                        <tuple>
                           <string>stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>End</string>
                         </tuple>
                       </list>
                     </value>
@@ -375,7 +401,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>source_title</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
@@ -383,15 +409,11 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalQuantity</string>
-                          <string>Total Quantity</string>
-                        </tuple>
-                        <tuple>
                           <string>quantity_unit</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
-                          <string>getPrice</string>
+                          <string>price</string>
                           <string>Price</string>
                         </tuple>
                         <tuple>
@@ -399,8 +421,12 @@
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
+                          <string>start_date</string>
+                          <string>Begin</string>
+                        </tuple>
+                        <tuple>
                           <string>stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>End</string>
                         </tuple>
                       </list>
                     </value>
@@ -450,20 +476,24 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
                           <string>End</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
+                          <string>int_index</string>
+                          <string>Index</string>
                         </tuple>
                       </list>
                     </value>
@@ -492,12 +522,12 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
+                    <value> <string>list</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -513,18 +543,18 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Sale Order Line</string>
-                          <string>Sale Order Line</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>report_root_list</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>parent</string>
+                          <string>Document Tree</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -547,12 +577,16 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>sale_order_line_selection</string> </value>
+                    <value> <string>project_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>int_index</string>
+                        </tuple>
                         <tuple>
                           <string>id</string>
                           <string>id</string>
@@ -578,7 +612,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Sale Order Lines</string> </value>
+                    <value> <string>Order Lines</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -593,6 +627,63 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/hasLineContent</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:((here.getPortalType(), here.getPortalType()),)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:\'order_line_selection_%s\' % len(here.getPhysicalPath())</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <tuple>
         <tuple>
