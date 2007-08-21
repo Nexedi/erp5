@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>SaleOrder_viewDetailedReportAsOdt</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -68,10 +68,6 @@
             <value>
               <list>
                 <string>left</string>
-                <string>right</string>
-                <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -80,42 +76,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list>
-                        <string>my_description</string>
-                        <string>my_requirement_logical_path_list</string>
-                        <string>my_outcome_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_source_project_title</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list>
-                        <string>my_predecessor_title_list</string>
-                        <string>my_destination_project_title</string>
+                        <string>your_depth</string>
                       </list>
                     </value>
                 </item>
@@ -124,7 +88,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TradeLine_viewProject</string> </value>
+            <value> <string>SaleOrder_viewDetailedReportDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -132,11 +96,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TradeLine_view</string> </value>
+            <value> <string>Project_viewDetailedReport</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -148,7 +112,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Trade Line</string> </value>
+            <value> <string>Detailed Report</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

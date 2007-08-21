@@ -56,12 +56,16 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -82,7 +86,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -90,15 +96,17 @@
                     <value>
                       <list>
                         <string>my_description</string>
-                        <string>my_requirement_logical_path_list</string>
-                        <string>my_outcome_description</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_int_index</string>
+                        <string>listbox_quantity</string>
+                        <string>listbox_stop_date</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -106,7 +114,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_project_title</string>
+                        <string>my_reference</string>
+                        <string>my_requirement_title</string>
                       </list>
                     </value>
                 </item>
@@ -114,8 +123,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_predecessor_title_list</string>
-                        <string>my_destination_project_title</string>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -124,7 +134,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TradeLine_viewProject</string> </value>
+            <value> <string>SaleOrder_viewMilestone</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -132,7 +142,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TradeLine_view</string> </value>
+            <value> <string>Project_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -148,7 +158,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Trade Line</string> </value>
+            <value> <string>Milestones</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

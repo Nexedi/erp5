@@ -90,8 +90,6 @@
                     <value>
                       <list>
                         <string>my_description</string>
-                        <string>my_requirement_logical_path_list</string>
-                        <string>my_outcome_description</string>
                       </list>
                     </value>
                 </item>
@@ -106,7 +104,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_project_title</string>
                       </list>
                     </value>
                 </item>
@@ -114,8 +111,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_predecessor_title_list</string>
-                        <string>my_destination_project_title</string>
+                        <string>my_price</string>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
+                        <string>my_destination_title</string>
                       </list>
                     </value>
                 </item>
@@ -124,7 +123,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TradeLine_viewProject</string> </value>
+            <value> <string>OrderMilestone_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -132,7 +131,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TradeLine_view</string> </value>
+            <value> <string>DeliveryLine_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -148,7 +147,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Trade Line</string> </value>
+            <value> <string>Order Milestone</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
