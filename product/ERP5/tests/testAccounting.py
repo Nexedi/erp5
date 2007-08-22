@@ -191,7 +191,7 @@ class AccountingTestCase(ERP5TypeTestCase):
             'client_1', 'client_2', 'client_3')])
     self.organisation_module.my_organisation.manage_delObjects([x.getId()
         for x in self.organisation_module.my_organisation.objectValues(
-                                   portal_type='Accounting Period')])
+                   portal_type=('Accounting Period', 'Bank Account'))])
     self.person_module.manage_delObjects([x for x in 
           self.person_module.objectIds() if x not in ('john_smith',)])
     self.account_module.manage_delObjects([x for x in 
@@ -213,6 +213,627 @@ class AccountingTestCase(ERP5TypeTestCase):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
             'erp5_accounting_ui_test')
 
+
+class TestClosingPeriod(AccountingTestCase):
+  """Various tests for closing the period.
+  """
+  def test_createBalanceOnNode(self):
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStartDate(DateTime(2006, 12, 31))
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Accounting Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.equity,
+                    source_debit=500),
+               dict(source_value=self.account_module.stocks,
+                    source_credit=500)))
+
+    transaction2 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Accounting Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.stocks,
+                    source_debit=100),
+               dict(source_value=self.account_module.goods_purchase,
+                    source_credit=100)))
+
+    period.AccountingPeriod_createBalanceTransaction()
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEquals(3, len(accounting_transaction_list))
+    balance_transaction_list = self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+    self.assertEquals(1, len(balance_transaction_list))
+    balance_transaction = balance_transaction_list[0]
+
+    # this should create a balance with 3 lines,
+    #   equity = 500 D
+    #   stocks =     400 C
+    #   pl     =     100 C 
+    self.assertEquals(self.section,
+                      balance_transaction.getDestinationSectionValue())
+    self.assertEquals(None,
+                      balance_transaction.getSourceSection())
+    self.assertEquals([period], balance_transaction.getCausalityValueList())
+    self.assertEquals(DateTime(2007, 1, 1),
+                      balance_transaction.getStartDate())
+    self.assertEquals('currency_module/euro',
+                      balance_transaction.getResource())
+    self.assertEquals('delivered', balance_transaction.getSimulationState())
+    movement_list = balance_transaction.getMovementList()
+    self.assertEquals(3, len(movement_list))
+
+    equity_movement_list = [m for m in movement_list
+          if m.getDestinationValue() == self.account_module.equity]
+    self.assertEquals(1, len(equity_movement_list))
+    equity_movement = equity_movement_list[0]
+    self.assertEquals([], equity_movement.getValueList('resource'))
+    self.assertEquals([], equity_movement.getValueList('destination_section'))
+    self.assertEquals(None, equity_movement.getSource())
+    self.assertEquals(None, equity_movement.getSourceSection())
+    self.assertEquals(None, equity_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, equity_movement.getSourceTotalAssetPrice())
+    self.assertEquals(500., equity_movement.getDestinationDebit())
+
+    stock_movement_list = [m for m in movement_list
+          if m.getDestinationValue() == self.account_module.stocks]
+    self.assertEquals(1, len(stock_movement_list))
+    stock_movement = stock_movement_list[0]
+    self.assertEquals([], stock_movement.getValueList('resource'))
+    self.assertEquals([], stock_movement.getValueList('destination_section'))
+    self.assertEquals(None, stock_movement.getSource())
+    self.assertEquals(None, stock_movement.getSourceSection())
+    self.assertEquals(None, stock_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, stock_movement.getSourceTotalAssetPrice())
+    self.assertEquals(400., stock_movement.getDestinationCredit())
+
+    pl_movement_list = [m for m in movement_list
+                        if m.getDestinationValue() is None]
+    self.assertEquals(1, len(pl_movement_list))
+    pl_movement = pl_movement_list[0]
+    self.assertEquals([], pl_movement.getValueList('resource'))
+    self.assertEquals([], pl_movement.getValueList('destination_section'))
+    self.assertEquals(None, pl_movement.getSource())
+    self.assertEquals(None, pl_movement.getSourceSection())
+    self.assertEquals(None, pl_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, pl_movement.getSourceTotalAssetPrice())
+    self.assertEquals(100., pl_movement.getDestinationCredit())
+
+
+  def test_createBalanceOnMirrorSection(self):
+    organisation_module = self.organisation_module
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStartDate(DateTime(2006, 12, 31))
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        destination_section_value=organisation_module.client_1,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=100),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=100)))
+
+    transaction2 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        destination_section_value=organisation_module.client_2,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=200),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=200)))
+
+    period.AccountingPeriod_createBalanceTransaction()
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEquals(3, len(accounting_transaction_list))
+    balance_transaction_list = self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+    self.assertEquals(1, len(balance_transaction_list))
+    balance_transaction = balance_transaction_list[0]
+
+    # this should create a balance with 3 lines,
+    #   pl                 = 300 D
+    #   receivable/client1 =     200 C
+    #   receivable/client2 =     100 C
+    self.assertEquals(self.section,
+                      balance_transaction.getDestinationSectionValue())
+    self.assertEquals(None, balance_transaction.getSourceSection())
+    self.assertEquals(DateTime(2007, 1, 1),
+                      balance_transaction.getStartDate())
+    self.assertEquals('currency_module/euro',
+                      balance_transaction.getResource())
+    self.assertEquals('delivered', balance_transaction.getSimulationState())
+    movement_list = balance_transaction.getMovementList()
+    self.assertEquals(3, len(movement_list))
+
+    client1_movement_list = [m for m in movement_list
+     if m.getSourceSectionValue() == organisation_module.client_1]
+    self.assertEquals(1, len(client1_movement_list))
+    client1_movement = client1_movement_list[0]
+    self.assertEquals([], client1_movement.getValueList('resource'))
+    self.assertEquals([], client1_movement.getValueList('destination_section'))
+    self.assertEquals(None, client1_movement.getSource())
+    self.assertEquals(self.account_module.receivable,
+                      client1_movement.getDestinationValue())
+    self.assertEquals(organisation_module.client_1,
+                      client1_movement.getSourceSectionValue())
+    self.assertEquals(None, client1_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, client1_movement.getSourceTotalAssetPrice())
+    self.assertEquals(100., client1_movement.getDestinationCredit())
+
+    client2_movement_list = [m for m in movement_list
+     if m.getSourceSectionValue() == organisation_module.client_2]
+    self.assertEquals(1, len(client2_movement_list))
+    client2_movement = client2_movement_list[0]
+    self.assertEquals([], client2_movement.getValueList('resource'))
+    self.assertEquals([], client2_movement.getValueList('destination_section'))
+    self.assertEquals(None, client2_movement.getSource())
+    self.assertEquals(self.account_module.receivable,
+                      client2_movement.getDestinationValue())
+    self.assertEquals(organisation_module.client_2,
+                      client2_movement.getSourceSectionValue())
+    self.assertEquals(None, client2_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, client2_movement.getSourceTotalAssetPrice())
+    self.assertEquals(200., client2_movement.getDestinationCredit())
+
+    pl_movement_list = [m for m in movement_list
+                         if m.getDestination() is None]
+    self.assertEquals(1, len(pl_movement_list))
+    pl_movement = pl_movement_list[0]
+    self.assertEquals([], pl_movement.getValueList('resource'))
+    self.assertEquals(None, pl_movement.getSource())
+    self.assertEquals(None,
+                      pl_movement.getDestinationValue())
+    self.assertEquals(None,
+                      pl_movement.getSourceSection())
+    self.assertEquals(None, pl_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, pl_movement.getSourceTotalAssetPrice())
+    self.assertEquals(300., pl_movement.getDestinationDebit())
+
+
+  def test_createBalanceOnPayment(self):
+    organisation_module = self.organisation_module
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStartDate(DateTime(2006, 12, 31))
+
+    bank1 = self.section.newContent(
+                    id='bank1', reference='bank1',
+                    portal_type='Bank Account')
+    bank2 = self.section.newContent(
+                    id='bank2', reference='bank2',
+                    portal_type='Bank Account')
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        destination_section_value=organisation_module.client_1,
+        source_payment_value=bank1,
+        title='bank 1',
+        portal_type='Payment Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.receivable,
+                    source_debit=100),
+               dict(source_value=self.account_module.bank,
+                    source_credit=100)))
+    
+    # we are destination on this one
+    transaction2 = self._makeOne(
+        stop_date=DateTime(2006, 1, 2),
+        destination_section_value=self.section,
+        destination_payment_value=bank2,
+        source_section_value=organisation_module.client_2,
+        title='bank 2',
+        portal_type='Payment Transaction',
+        simulation_state='delivered',
+        lines=(dict(destination_value=self.account_module.bank,
+                    destination_debit=200),
+               dict(destination_value=self.account_module.goods_purchase,
+                    destination_credit=200)))
+
+    period.AccountingPeriod_createBalanceTransaction()
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEquals(3, len(accounting_transaction_list))
+    balance_transaction_list = self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+    self.assertEquals(1, len(balance_transaction_list))
+    balance_transaction = balance_transaction_list[0]
+
+    # this should create a balance with 4 lines,
+    #   receivable/client_1 = 100 D
+    #   bank/bank1          =     100 C
+    #   bank/bank2          = 200 D
+    #   pl                  =     200 C
+
+    self.assertEquals(self.section,
+                      balance_transaction.getDestinationSectionValue())
+    self.assertEquals(None,
+                      balance_transaction.getSourceSection())
+    self.assertEquals([period], balance_transaction.getCausalityValueList())
+    self.assertEquals(DateTime(2007, 1, 1),
+                      balance_transaction.getStartDate())
+    self.assertEquals('currency_module/euro',
+                      balance_transaction.getResource())
+    self.assertEquals('delivered', balance_transaction.getSimulationState())
+    movement_list = balance_transaction.getMovementList()
+    self.assertEquals(4, len(movement_list))
+    
+    receivable_movement_list = [m for m in movement_list
+        if m.getDestinationValue() == self.account_module.receivable]
+    self.assertEquals(1, len(receivable_movement_list))
+    receivable_movement = receivable_movement_list[0]
+    self.assertEquals([], receivable_movement.getValueList('resource'))
+    self.assertEquals(None, receivable_movement.getSource())
+    self.assertEquals(self.account_module.receivable,
+                      receivable_movement.getDestinationValue())
+    self.assertEquals(self.organisation_module.client_1,
+                      receivable_movement.getSourceSectionValue())
+    self.assertEquals(None, receivable_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, receivable_movement.getSourceTotalAssetPrice())
+    self.assertEquals(100., receivable_movement.getDestinationDebit())
+
+    bank1_movement_list = [m for m in movement_list
+                       if m.getDestinationPaymentValue() == bank1]
+    self.assertEquals(1, len(bank1_movement_list))
+    bank1_movement = bank1_movement_list[0]
+    self.assertEquals([], bank1_movement.getValueList('resource'))
+    self.assertEquals(None, bank1_movement.getSource())
+    self.assertEquals(self.account_module.bank,
+                      bank1_movement.getDestinationValue())
+    self.assertEquals(bank1,
+                      bank1_movement.getDestinationPaymentValue())
+    self.assertEquals(None,
+                      bank1_movement.getSourceSectionValue())
+    self.assertEquals(None, bank1_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, bank1_movement.getSourceTotalAssetPrice())
+    self.assertEquals(100., bank1_movement.getDestinationCredit())
+
+    bank2_movement_list = [m for m in movement_list
+                         if m.getDestinationPaymentValue() == bank2]
+    self.assertEquals(1, len(bank2_movement_list))
+    bank2_movement = bank2_movement_list[0]
+    self.assertEquals([], bank2_movement.getValueList('resource'))
+    self.assertEquals(None, bank2_movement.getSource())
+    self.assertEquals(self.account_module.bank,
+                      bank2_movement.getDestinationValue())
+    self.assertEquals(bank2,
+                      bank2_movement.getDestinationPaymentValue())
+    self.assertEquals(None,
+                      bank2_movement.getSourceSectionValue())
+    self.assertEquals(None, bank2_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, bank2_movement.getSourceTotalAssetPrice())
+    self.assertEquals(200., bank2_movement.getDestinationDebit())
+
+    pl_movement_list = [m for m in movement_list
+                         if m.getDestination() is None]
+    self.assertEquals(1, len(pl_movement_list))
+    pl_movement = pl_movement_list[0]
+    self.assertEquals([], pl_movement.getValueList('resource'))
+    self.assertEquals(None, pl_movement.getSource())
+    self.assertEquals(None, pl_movement.getDestination())
+    self.assertEquals(None, pl_movement.getDestinationPaymentValue())
+    self.assertEquals(None, pl_movement.getSourceSectionValue())
+    self.assertEquals(None, pl_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, pl_movement.getSourceTotalAssetPrice())
+    self.assertEquals(200., pl_movement.getDestinationCredit())
+
+
+  def test_createBalanceOnMirrorSectionMultiCurrency(self):
+    organisation_module = self.organisation_module
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStartDate(DateTime(2006, 12, 31))
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        title='Yen',
+        resource='currency_module/yen',
+        destination_section_value=organisation_module.client_1,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_asset_debit=1.1,
+                    source_debit=100),
+               dict(source_value=self.account_module.receivable,
+                    source_asset_credit=1.1,
+                    source_credit=100)))
+
+    transaction2 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        title='Dollar',
+        resource='currency_module/usd',
+        destination_section_value=organisation_module.client_2,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_asset_debit=2.2,
+                    source_debit=200),
+               dict(source_value=self.account_module.receivable,
+                    source_asset_credit=2.2,
+                    source_credit=200)))
+
+    period.AccountingPeriod_createBalanceTransaction()
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEquals(3, len(accounting_transaction_list))
+    balance_transaction_list = self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+    self.assertEquals(1, len(balance_transaction_list))
+    balance_transaction = balance_transaction_list[0]
+
+    self.assertEquals(self.section,
+                      balance_transaction.getDestinationSectionValue())
+    self.assertEquals(None, balance_transaction.getSourceSection())
+    self.assertEquals(DateTime(2007, 1, 1),
+                      balance_transaction.getStartDate())
+    self.assertEquals('currency_module/euro',
+                      balance_transaction.getResource())
+
+    # this should create a balance with 3 lines,
+    #   pl                 = 3.3 D     ( resource acquired )
+    #   receivable/client1 =     1.1 C ( resource yen ) qty=100
+    #   receivable/client2 =     2.2 C ( resource usd ) qyt=200
+    
+    accounting_currency_precision = \
+        self.portal.currency_module.euro.getQuantityPrecision()
+    self.assertEquals(accounting_currency_precision, 2)
+
+    movement_list = balance_transaction.getMovementList()
+    self.assertEquals(3, len(movement_list))
+    client1_movement_list = [m for m in movement_list
+     if m.getSourceSectionValue() == organisation_module.client_1]
+    self.assertEquals(1, len(client1_movement_list))
+    client1_movement = client1_movement_list[0]
+    self.assertEquals('currency_module/yen',
+                      client1_movement.getResource())
+    self.assertEquals([], client1_movement.getValueList('destination_section'))
+    self.assertEquals(None, client1_movement.getSource())
+    self.assertEquals(self.account_module.receivable,
+                      client1_movement.getDestinationValue())
+    self.assertEquals(organisation_module.client_1,
+                      client1_movement.getSourceSectionValue())
+    self.assertAlmostEquals(1.1,
+          client1_movement.getDestinationInventoriatedTotalAssetCredit(),
+          accounting_currency_precision)
+    self.assertEquals(None, client1_movement.getSourceTotalAssetPrice())
+    self.assertEquals(100, client1_movement.getDestinationCredit())
+
+    client2_movement_list = [m for m in movement_list
+     if m.getSourceSectionValue() == organisation_module.client_2]
+    self.assertEquals(1, len(client2_movement_list))
+    client2_movement = client2_movement_list[0]
+    self.assertEquals('currency_module/usd',
+                      client2_movement.getResource())
+    self.assertEquals([], client2_movement.getValueList('destination_section'))
+    self.assertEquals(None, client2_movement.getSource())
+    self.assertEquals(self.account_module.receivable,
+                      client2_movement.getDestinationValue())
+    self.assertEquals(organisation_module.client_2,
+                      client2_movement.getSourceSectionValue())
+    self.assertAlmostEquals(2.2,
+        client2_movement.getDestinationInventoriatedTotalAssetCredit(),
+        accounting_currency_precision)
+    self.assertEquals(None, client2_movement.getSourceTotalAssetPrice())
+    self.assertEquals(200., client2_movement.getDestinationCredit())
+
+    pl_movement_list = [m for m in movement_list
+                         if m.getDestination() is None]
+    self.assertEquals(1, len(pl_movement_list))
+    pl_movement = pl_movement_list[0]
+    self.assertEquals([], pl_movement.getValueList('resource'))
+    self.assertEquals(None, pl_movement.getSource())
+    self.assertEquals(None,
+                      pl_movement.getDestinationValue())
+    self.assertEquals(None,
+                      pl_movement.getSourceSection())
+    self.assertEquals(None, pl_movement.getDestinationTotalAssetPrice())
+    self.assertEquals(None, pl_movement.getSourceTotalAssetPrice())
+    self.assertAlmostEquals(3.3,
+                  pl_movement.getDestinationDebit(),
+                  accounting_currency_precision)
+
+
+  def test_AccountingPeriodWorkflow(self):
+    """Tests that accounting_period_workflow creates a balance transaction.
+    """
+    # open a period for our section
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStartDate(DateTime(2006, 12, 31))
+    self.assertEquals('draft', period.getSimulationState())
+    self.portal.portal_workflow.doActionFor(period, 'start_action')
+    self.assertEquals('started', period.getSimulationState())
+
+    # create a simple transaction in the period
+    transaction = self._makeOne(
+        start_date=DateTime(2006, 6, 30),
+        portal_type='Sale Invoice Transaction',
+        destination_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.receivable,
+                    source_credit=100),
+               dict(source_value=self.account_module.goods_purchase,
+                    source_debit=100)))
+    self.assertEquals(1, len(self.accounting_module))
+
+    # close the period
+    self.portal.portal_workflow.doActionFor(period, 'stop_action')
+    self.assertEquals('stopped', period.getSimulationState())
+    # reopen it, then close it got real
+    self.portal.portal_workflow.doActionFor(period, 'restart_action')
+    self.assertEquals('started', period.getSimulationState())
+    self.portal.portal_workflow.doActionFor(period, 'stop_action')
+    self.assertEquals('stopped', period.getSimulationState())
+    
+    pl_account = self.portal.account_module.newContent(
+                    portal_type='Account',
+                    account_type='equity',
+                    gap='my_country/my_accounting_standards/1',
+                    title='Profit & Loss')
+    pl_account.validate()
+    self.portal.portal_workflow.doActionFor(
+            period, 'deliver_action',
+            profit_and_loss_account=pl_account.getRelativeUrl())
+
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals('delivered', period.getSimulationState())
+    
+    # this created a balance transaction
+    balance_transaction_list = self.accounting_module.contentValues(
+                                  portal_type='Balance Transaction')
+    self.assertEquals(1, len(balance_transaction_list))
+    balance_transaction = balance_transaction_list[0]
+
+    # and this transaction must use the account we used in the workflow action.
+    self.assertEquals(1, len([m for m in
+                              balance_transaction.getMovementList()
+                              if m.getDestinationValue() == pl_account]))
+
+
+  def test_SecondAccountingPeriod(self):
+    """Tests having two accounting periods.
+    """
+    period1 = self.section.newContent(portal_type='Accounting Period')
+    period1.setStartDate(DateTime(2006, 1, 1))
+    period1.setStartDate(DateTime(2006, 12, 31))
+    period1.start()
+    
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Purchase Invoice Transaction',
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=100),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=100)))
+    period1.stop()
+    # deliver the period1 using workflow, so that we have 
+    pl_account = self.portal.account_module.newContent(
+                    portal_type='Account',
+                    account_type='equity',
+                    gap='my_country/my_accounting_standards/1',
+                    title='Profit & Loss')
+    pl_account.validate()
+    self.portal.portal_workflow.doActionFor(
+            period1, 'deliver_action',
+            profit_and_loss_account=pl_account.getRelativeUrl())
+    
+    balance_transaction_list = self.accounting_module.contentValues(
+                                  portal_type='Balance Transaction')
+    self.assertEquals(1, len(balance_transaction_list))
+    balance_transaction1 = balance_transaction_list[0]
+    
+    period2 = self.section.newContent(portal_type='Accounting Period')
+    period2.setStartDate(DateTime(2007, 1, 1))
+    period2.setStartDate(DateTime(2007, 12, 31))
+    period2.start()
+
+    transaction2 = self._makeOne(
+        start_date=DateTime(2007, 1, 2),
+        portal_type='Accounting Transaction',
+        simulation_state='delivered',
+        lines=(dict(destination_value=self.account_module.equity,
+                    destination_debit=100),
+               dict(destination_value=pl_account,
+                    destination_credit=100)))
+    transaction3 = self._makeOne(
+        start_date=DateTime(2007, 1, 3),
+        portal_type='Purchase Invoice Transaction',
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=300),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=300)))
+    period2.stop()
+    period2.AccountingPeriod_createBalanceTransaction(
+                profit_and_loss_account=pl_account.getRelativeUrl())
+    balance_transaction_list = [tr for tr in 
+                          self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+                          if tr != balance_transaction1]
+    self.assertEquals(1, len(balance_transaction_list))
+    balance_transaction2 = balance_transaction_list[0]
+    
+    self.assertEquals(DateTime(2008, 1, 1),
+                      balance_transaction2.getStartDate())
+    # this should create a balance with 3 lines,
+    #   equity          = 100 D
+    #   payable/client1 =       100 + 300 C
+    #   pl              = 300 D    
+    movement_list = balance_transaction2.getMovementList()
+    self.assertEquals(3, len(movement_list))
+
+    equity_movement_list = [m for m in movement_list
+          if m.getDestinationValue() == self.account_module.equity]
+    self.assertEquals(1, len(equity_movement_list))
+    equity_movement = equity_movement_list[0]
+    self.assertEquals(100., equity_movement.getDestinationDebit())
+    
+    payable_movement_list = [m for m in movement_list
+          if m.getDestinationValue() == self.account_module.payable]
+    self.assertEquals(1, len(payable_movement_list))
+    payable_movement = payable_movement_list[0]
+    self.assertEquals(400., payable_movement.getDestinationCredit())
+    
+    pl_movement_list = [m for m in movement_list
+          if m.getDestinationValue() == pl_account]
+    self.assertEquals(1, len(pl_movement_list))
+    pl_movement = pl_movement_list[0]
+    self.assertEquals(300., pl_movement.getDestinationDebit())
+
+
+  def test_ProfitAndLossUsedInPeriod(self):
+    """When the profit and loss account has a non zero balance at the end of
+    the period, AccountingPeriod_createBalanceTransaction script should add
+    this balance and the new calculated profit and loss to have only one line.
+    """
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStartDate(DateTime(2006, 12, 31))
+    pl_account = self.portal.account_module.newContent(
+                    portal_type='Account',
+                    account_type='equity',
+                    gap='my_country/my_accounting_standards/1',
+                    title='Profit & Loss')
+    pl_account.validate()
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Accounting Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_purchase,
+                    source_debit=400),
+               dict(source_value=pl_account,
+                    source_debit=100),
+               dict(source_value=self.account_module.stocks,
+                    source_credit=500)))
+
+    period.AccountingPeriod_createBalanceTransaction(
+                  profit_and_loss_account=pl_account.getRelativeUrl())
+    
+    balance_transaction_list = self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+    self.assertEquals(1, len(balance_transaction_list))
+    balance_transaction = balance_transaction_list[0]
+    movement_list = balance_transaction.getMovementList()
+    self.assertEquals(2, len(movement_list))
+
+    pl_movement_list = [m for m in movement_list
+                      if m.getDestinationValue() == pl_account]
+    self.assertEquals(1, len(pl_movement_list))
+    self.assertEquals(500, pl_movement_list[0].getDestinationDebit())
+    
+    stock_movement_list = [m for m in movement_list
+          if m.getDestinationValue() == self.account_module.stocks]
+    self.assertEquals(1, len(stock_movement_list))
+    self.assertEquals(500, stock_movement_list[0].getDestinationCredit())
+    
 
 class TestAccounting(ERP5TypeTestCase):
   """The first test for Accounting
@@ -385,34 +1006,34 @@ class TestAccounting(ERP5TypeTestCase):
     accounting_period = sequence.get('accounting_period')
     self.getPortal().portal_workflow.doActionFor(
                         accounting_period,
-                        'plan_action' )
+                        'start_action' )
     self.assertEquals(accounting_period.getSimulationState(),
-                      'planned')
+                      'started')
                       
   def stepConfirmAccountingPeriod(self, sequence, **kw):
     """Confirm the Accounting Period."""
     accounting_period = sequence.get('accounting_period')
     self.getPortal().portal_workflow.doActionFor(
                         accounting_period,
-                        'confirm_action' )
+                        'stop_action' )
     self.assertEquals(accounting_period.getSimulationState(),
-                      'confirmed')
+                      'stopped')
 
   def stepCheckAccountingPeriodRefusesClosing(self, sequence, **kw):
     """Checks the Accounting Period refuses closing."""
     accounting_period = sequence.get('accounting_period')
     self.assertRaises(ValidationFailed,
           self.getPortal().portal_workflow.doActionFor,
-          accounting_period, 'confirm_action' )
+          accounting_period, 'stop_action' )
 
   def stepDeliverAccountingPeriod(self, sequence, **kw):
     """Deliver the Accounting Period."""
     accounting_period = sequence.get('accounting_period')
     self.getPortal().portal_workflow.doActionFor(
                         accounting_period,
-                        'close_action' )
+                        'deliver_action' )
     self.assertEquals(accounting_period.getSimulationState(),
-                      'closing')
+                      'delivered')
     
   def stepCheckAccountingPeriodDelivered(self, sequence, **kw):
     """Check the Accounting Period is delivered."""
@@ -716,12 +1337,6 @@ class TestAccounting(ERP5TypeTestCase):
     for invoice in invoice_list:
       self.assertEquals(invoice.getSimulationState(), 'stopped')
       
-  def stepCheckInvoicesAreDelivered(self, sequence, **kw) :
-    """Checks invoices are in delivered state."""
-    invoice_list = sequence.get('invoice_list')
-    for invoice in invoice_list:
-      self.assertEquals(invoice.getSimulationState(), 'delivered')
-      
   def checkAccountBalanceInCurrency(self, section, currency,
                                           sequence, **kw) :
     """ Checks accounts balances in a given currency."""
@@ -791,17 +1406,6 @@ class TestAccounting(ERP5TypeTestCase):
     currency."""
     for section in (sequence.get('vendor'), sequence.get('client')) :
       self.checkAccountBalanceInConvertedCurrency(section, sequence)
-  
-  def stepCheckAccountingTransactionDelivered(self, sequence, **kw):
-    """Checks all accounting transaction related to `organisation`
-      are in delivered state. """
-    organisation = sequence.get('organisation').getRelativeUrl()
-    accounting_module = self.getPortal().accounting_module
-    for transaction in accounting_module.objectValues() :
-      if transaction.getSourceSection() == organisation \
-          or transaction.getDestinationSection() == organisation :
-        if self.start_date <= transaction.getStartDate() <= self.stop_date :
-          self.assertEquals(transaction.getSimulationState(), 'delivered')
   
   def stepCheckAcquisition(self, sequence, **kw):
     """Checks acquisition and portal types configuration. """
@@ -1317,31 +1921,6 @@ class TestAccounting(ERP5TypeTestCase):
       stepCheckAccountBalanceConvertedCurrency
     """, quiet=quiet)
 
-  def test_AccountingPeriod(self, quiet=QUIET, run=RUN_ALL_TESTS):
-    """Basic test for Accounting Periods"""
-    if not run : return
-    self.playSequence("""
-      stepCreateCurrencies
-      stepCreateEntities
-      stepCreateAccounts
-      stepCreateAccountingPeriod
-      stepOpenAccountingPeriod
-      stepTic
-      stepUseValidDates
-      stepCreateInvoices
-      stepStopInvoices
-      stepCheckInvoicesAreStopped
-      stepTic
-      stepConfirmAccountingPeriod
-      stepTic
-      stepDeliverAccountingPeriod
-      stepTic
-      stepCheckAccountingPeriodDelivered
-      stepCheckInvoicesAreDelivered
-      stepTic
-      stepCheckAccountingTransactionDelivered
-    """, quiet=quiet)
-  
   def test_AccountingPeriodRefusesWrongDateTransactionValidation(
         self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Accounting Periods prevents transactions to be validated
@@ -1703,5 +2282,6 @@ class TestAccounting(ERP5TypeTestCase):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccounting))
+  suite.addTest(unittest.makeSuite(TestClosingPeriod))
   return suite
 
