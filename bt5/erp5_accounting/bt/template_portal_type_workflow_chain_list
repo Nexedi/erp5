@@ -9,10 +9,6 @@ Accounting Transaction | edit_workflow
 Balance Transaction Line | edit_workflow
 Balance Transaction | accounting_workflow
 Balance Transaction | edit_workflow
-Closing Transaction Line | delivery_edit_workflow
-Closing Transaction Line | edit_workflow
-Closing Transaction | accounting_workflow
-Closing Transaction | edit_workflow
 Invoice Cell | delivery_edit_workflow
 Invoice Cell | edit_workflow
 Invoice Line | delivery_edit_workflow

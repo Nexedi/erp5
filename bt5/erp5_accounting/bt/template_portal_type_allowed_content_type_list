@@ -2,13 +2,11 @@ Account Module | Account
 Accounting Rule Cell | Accounting Transaction Line
 Accounting Transaction Module | Accounting Transaction
 Accounting Transaction Module | Balance Transaction
-Accounting Transaction Module | Closing Transaction
 Accounting Transaction Module | Payment Transaction
 Accounting Transaction Module | Purchase Invoice Transaction
 Accounting Transaction Module | Sale Invoice Transaction
 Accounting Transaction | Accounting Transaction Line
 Balance Transaction | Balance Transaction Line
-Closing Transaction | Closing Transaction Line
 Invoice Line | Discount
 Invoice Line | Invoice Cell
 Invoice Rule | Category Divergence Tester

@@ -10,7 +10,6 @@
  </portal_type>
  <portal_type id="Accounting Transaction Module">
   <item>Purchase Invoice Transaction</item>
-  <item>Closing Transaction</item>
   <item>Accounting Transaction</item>
   <item>Sale Invoice Transaction</item>
   <item>Payment Transaction</item>
@@ -18,9 +17,6 @@
  </portal_type>
  <portal_type id="Balance Transaction">
   <item>Balance Transaction Line</item>
- </portal_type>
- <portal_type id="Closing Transaction">
-  <item>Closing Transaction Line</item>
  </portal_type>
  <portal_type id="Invoice Line">
   <item>Discount</item>
@@ -39,9 +35,9 @@
   <item>Accounting Rule Cell</item>
  </portal_type>
  <portal_type id="Invoicing Rule">
-  <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
   <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
  </portal_type>
  <portal_type id="Organisation">
   <item>Accounting Period</item>

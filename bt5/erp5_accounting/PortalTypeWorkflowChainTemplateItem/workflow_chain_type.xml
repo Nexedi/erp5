@@ -24,14 +24,6 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Closing Transaction</type>
-  <workflow>edit_workflow, accounting_workflow</workflow>
- </chain>
- <chain>
-  <type>Closing Transaction Line</type>
-  <workflow>edit_workflow, delivery_edit_workflow</workflow>
- </chain>
- <chain>
   <type>Invoice Cell</type>
   <workflow>delivery_edit_workflow, edit_workflow</workflow>
  </chain>
