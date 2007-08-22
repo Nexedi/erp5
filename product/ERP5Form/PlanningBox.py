@@ -1287,11 +1287,11 @@ class BasicStructure:
     index_line=0
     blocks_object={}
     select_expression = ''
-
+    self.sec_layer_uid_list = []
     # now iterating through report_tree_list
-#     LOG('PlanningBox, build', 0, 'report_tree_list %s' % len(report_tree_list))
+    # LOG('PlanningBox, build', 0, 'report_tree_list %s' % len(report_tree_list))
     for object_tree_line in report_tree_list:
-#       LOG('PlanningBox, build', 0, 'object_tree_line %s' % str(object_tree_line))
+      # LOG('PlanningBox, build', 0, 'object_tree_line %s' % str(object_tree_line))
       # prepare query by defining selection report object
       # defining info_dict, holding all information about the current object.
       info_dict = None
@@ -1318,7 +1318,7 @@ class BasicStructure:
           del kw['select_expression']
         else:
           kw['select_expression'] = original_select_expression
-
+        
         # adding current line to report_section where
         # line is pure Summary
         self.report_groups += [(object_tree_line,stat_list,info_dict)]
@@ -1329,7 +1329,6 @@ class BasicStructure:
 
         # processing all cases
         self.selection.edit(params = kw)
-
         # recovering object list
         if self.list_method not in (None,''):
           # valid list_method has been found
@@ -1338,10 +1337,12 @@ class BasicStructure:
           object_list = self.selection(method = self.list_method,
                         context=self.context, REQUEST=self.REQUEST)
         else:
+          # Reset Object List if ther is no List Method
+          object_list = []
           # no list_method found
           raise PlanningBoxError, "No list method found on %s" % \
               self.field.absolute_url()
-
+        
         # Defining the Secondary Layer Object List
         if self.sec_layer_list_method not in (None,''):
           sec_layer_object_list = self.selection(
@@ -1350,6 +1351,7 @@ class BasicStructure:
                           REQUEST=self.REQUEST)          
         else:
           sec_layer_object_list = []
+
         # recovering exeption_uid_list
         exception_uid_list = object_tree_line.getExceptionUidList()
 
@@ -1363,7 +1365,6 @@ class BasicStructure:
               category_value = category_obj.getRelativeUrl()
               new_object_list.extend([ s_obj for s_obj in object_list \
                    if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_value])
- 
               sec_new_object_list.extend([ s_obj for s_obj in sec_layer_object_list \
                    if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_value])
 
@@ -1382,7 +1383,7 @@ class BasicStructure:
           sec_layer_object_list = sec_new_object_list
           object_list = new_object_list
 
-        self.sec_layer_uid_list = [obj.getUid() for obj in sec_layer_object_list]
+        self.sec_layer_uid_list.extend([obj.getUid() for obj in sec_layer_object_list])
         # The order is important 
         sec_layer_object_list.extend(object_list)
         object_list = sec_layer_object_list
@@ -1786,7 +1787,8 @@ class BasicStructure:
                                 sec_layer_uid_list=self.sec_layer_uid_list)
 
         if object_list not in [None, []]:
-          child_group.setBasicActivities(object_list,self.list_error,
+          child_group.setBasicActivities(object_list,
+                                         self.list_error,
                                          secondary_axis_bounds)
 
         try:
@@ -1836,7 +1838,7 @@ class BasicGroup:
     self.property_dict = property_dict
     self.sec_layer_uid_list = sec_layer_uid_list
 
-  def setBasicActivities(self,activity_list, list_error,secondary_axis_info):
+  def setBasicActivities(self, activity_list, list_error, secondary_axis_info):
     """
     Link a list of activities to the current object.
     *Recover group properties. Used in case activity is built from Group
@@ -2993,7 +2995,7 @@ class AxisGroup:
     self.tooltip = info_title.info
 
 
-  def addActivity(self, activity=None, axis_element_already_insered= 0,
+  def addActivity(self, activity=None, axis_element_already_insered=0,
                   basic_structure=None):
     """
     Procedure that permits to add activity to the corresponding AxisElement in
