@@ -180,7 +180,7 @@ class PreferenceTool(BaseTool):
           ['Member', 'Auditor', 'Manager'])
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
-  security.declareProtected(Permissions.View, "getPreference")
+  security.declarePublic('getPreference')
   def getPreference(self, pref_name, default=_marker) :
     """ get the preference on the most appopriate Preference object. """
     method = getattr(self, 'get%s' % convertToUpperCase(pref_name), None)
