@@ -42,11 +42,28 @@ from Products.PythonScripts.Utility import allow_class
 from Products.PythonScripts.standard import url_quote_plus
 
 from AccessControl import ClassSecurityInfo
-import string
+from MethodObject import Method
 
 from zLOG import LOG, WARNING, DEBUG
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 from Globals import DTMLFile
+
+
+class WidgetDelegatedMethod(Method):
+  """Method delegated to the proxied field's widget.
+  """
+  def __init__(self, method_id, default=''):
+    self._method_id = method_id
+    self._default = default
+
+  def __call__(self, instance, *args, **kw):
+    field = instance
+    proxied_field = field.getRecursiveTemplateField()
+    if proxied_field:
+      proxied_method = getattr(proxied_field.widget, self._method_id)
+      return proxied_method(field, *args, **kw)
+    return self._default
+
 
 class ProxyWidget(Widget.Widget):
   """
@@ -86,55 +103,15 @@ class ProxyWidget(Widget.Widget):
                                 href='manage_edit_target',
                                 required=0)
 
-  def render(self, field, key, value, REQUEST):
-    """
-    Render proxy field
-    """
-    result = ''
-    proxy_field = field.getRecursiveTemplateField()
-    if proxy_field is not None:
-      result = proxy_field.widget.render(field, key, value, REQUEST)
-    return result
+  # Field API Methods, delegated to the template field widget
+  render = WidgetDelegatedMethod('render', default='')
+  render_htmlgrid = WidgetDelegatedMethod('render_htmlgrid', default='')
+  render_view = WidgetDelegatedMethod('render_view', default='')
+  render_pdf = WidgetDelegatedMethod('render_pdf', default='')
+  render_css = WidgetDelegatedMethod('render_css', default='')
+  get_javascript_list = WidgetDelegatedMethod(
+                            'get_javascript_list', default=[])
 
-  def render_htmlgrid(self, field, key, value, REQUEST):
-    """
-    Render proxy field
-    """
-    result = ''
-    proxy_field = field.getRecursiveTemplateField()
-    if proxy_field is not None:
-      result = proxy_field.widget.render_htmlgrid(field, key, value, REQUEST)
-    return result
-
-  def render_view(self, field, value):
-    """
-      Display proxy field
-    """
-    result = ''
-    proxy_field = field.getRecursiveTemplateField()
-    if proxy_field is not None:
-      result = proxy_field.widget.render_view(field, value)
-    return result
-
-  def render_css(self, field, REQUEST):
-    """
-    Render proxy field
-    """
-    result = ''
-    proxy_field = field.getRecursiveTemplateField()
-    if proxy_field is not None:
-      result = proxy_field.widget.render_css(field, REQUEST)
-    return result
-
-  def get_javascript_list(self, field, REQUEST):
-    """
-    Render proxy field
-    """
-    result = []
-    proxy_field = field.getRecursiveTemplateField()
-    if proxy_field is not None:
-      result = proxy_field.widget.get_javascript_list(field, REQUEST)
-    return result
 
 class ProxyValidator(Validator.Validator):
   """
