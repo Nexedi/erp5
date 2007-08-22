@@ -440,14 +440,8 @@ class ComplexQuery(QueryMixin):
   """
   Used in order to concatenate many queries
   """
-  def __init__(self, *args, **kw):
+  def __init__(self, operator='AND', *args, **kw):
     self.query_list = args
-    operator = None
-    if kw.has_key('operator'):
-      operator = kw['operator']
-      del kw['operator']
-    if operator is None:
-      operator = 'AND'
     self.operator = operator
     self.__dict__.update(kw)
 
