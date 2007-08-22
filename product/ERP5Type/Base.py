@@ -2924,23 +2924,39 @@ class Base( CopyContainer,
             dynamic_accessor_list.append(subdochelper)
             if getattr(documented_item, property['id'], None) is not None:
               dynamic_property_list.append(subdochelper)
-        if getattr(property_sheet, '_categories', None) is not None:
-          for category in property_sheet._categories:
-            if category in seen_categories:
-              continue
-            seen_categories.append(category)
-            subdochelper = newTempDocumentationHelper(dochelper, category, title=category,
-                      content=pformat(documented_item.getCategoryMembershipList(category)))
-            subdochelper_dynamic_accessor_list = []
-            for accessor_name in generateCategoryAccessorNameList(category):
-              accessor = getattr(item_class, accessor_name, getattr(documented_item, accessor_name, None))
-              # First get it on the class, and if not on the instance, thereby among dynamic accessors.
-              if accessor is not None:
-                subdochelper_dynamic_accessor_list.append(accessorAsDocumentationHelper(accessor))
-            subdochelper_dynamic_accessor_list.sort()
-            subdochelper.setDynamicAccessorList(subdochelper_dynamic_accessor_list)
-            dynamic_accessor_list.append(subdochelper)
-            dynamic_category_list.append(subdochelper)
+        
+        def visitCategory(category):
+          if category in seen_categories:
+            return
+          seen_categories.append(category)
+          subdochelper = newTempDocumentationHelper(dochelper, category, title=category,
+                    content=pformat(documented_item.getCategoryMembershipList(category)))
+          subdochelper_dynamic_accessor_list = []
+          for accessor_name in generateCategoryAccessorNameList(category):
+            accessor = getattr(item_class, accessor_name, getattr(documented_item, accessor_name, None))
+            # First get it on the class, and if not on the instance, thereby among dynamic accessors.
+            if accessor is not None:
+              subdochelper_dynamic_accessor_list.append(accessorAsDocumentationHelper(accessor))
+          subdochelper_dynamic_accessor_list.sort()
+          subdochelper.setDynamicAccessorList(subdochelper_dynamic_accessor_list)
+          dynamic_accessor_list.append(subdochelper)
+          dynamic_category_list.append(subdochelper)
+
+        category_list = getattr(property_sheet, '_categories', [])
+        # some categories are defined by expressions, so we have to do 2
+        # passes, a first one to treat regular category list and collect
+        # categories defined by expression, a second one to treat thoses
+        # new categories from expressions.
+        expression_category_list = []
+        for category in category_list:
+          if isinstance(category, Expression):
+            econtext = createExpressionContext(self)
+            expression_category_list.extend(category(econtext))
+            continue
+          visitCategory(category)
+        
+        for category in expression_category_list:
+          visitCategory(category)
 
 # KEEPME: usefull to track the differences between accessors defined on
 # PortalType and the one detected on the documented item.

@@ -128,6 +128,28 @@ class TestClassTool(ERP5TypeTestCase):
     self.assertEquals(0, len(portal.portal_activities.getMessageList()))
    
 
+  def test_DocumentationHelperExpressionCategory(self):
+    # This tests checks that Documentation Helper works with propertysheets
+    # that define their categories using expressions.
+    from Products.ERP5Type.Document.Movement import Movement
+    from Products.CMFCore.Expression import Expression
+    movement = Movement('testing_id').__of__(self.getPortal())
+    # This test relies on the fact that Movement class has categories defined
+    # by an expression. 
+    category_list = []
+    found_one = 0
+    for ps in movement.property_sheets:
+      for category in getattr(ps, '_categories', []):
+        if isinstance(category, Expression):
+          found_one = 1
+      if found_one:
+        break
+    else:
+      self.fail("Movement _categories doesn't include expressions; "
+                "this test is outdated")
+    self.assertNotEquals(None, movement.asDocumentationHelper())
+
+
 import unittest
 def test_suite():
     suite = unittest.TestSuite()
