@@ -80,9 +80,6 @@ class AccountingTransactionLine(DeliveryLine):
         mirror_list = []
       if len(mirror_list) > 0 and destination not in mirror_list:
         self._setCategoryMembership('destination', mirror_list[0], base=0)
-    else:
-      # Force to set the destination to None.
-      self._setCategoryMembership('destination', None, base=0)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setSource')
   def setSource(self, value):
@@ -99,10 +96,10 @@ class AccountingTransactionLine(DeliveryLine):
       Set the destination Account and implicitely the source Account
     using the source's mirror account.
     """
+    self._setCategoryMembership('destination', value, base=0)
     if self.getPortalType() not in \
             self.getPortalBalanceTransactionLineTypeList()\
             and value not in (None, ''):
-      self._setCategoryMembership('destination', value, base=0)
       destination = self.getPortalObject().\
                         portal_categories.resolveCategory(value)
       source = self.getSource()
@@ -112,9 +109,6 @@ class AccountingTransactionLine(DeliveryLine):
         mirror_list = []
       if len(mirror_list) > 0 and source not in mirror_list:
         self._setCategoryMembership('source', mirror_list[0], base=0)
-    else:
-      # Force to set the destination to None.
-      self._setCategoryMembership('destination', None, base=0)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setDestination')
   def setDestination(self, value):
