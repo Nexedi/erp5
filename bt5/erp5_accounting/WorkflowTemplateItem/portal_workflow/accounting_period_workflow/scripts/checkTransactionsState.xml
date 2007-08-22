@@ -68,46 +68,41 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
 \n
-closing_period = state_change[\'object\']\n
-portal = closing_period.getPortalObject()\n
-N_ = portal.Base_translateString\n
-accounting_module = portal.accounting_module\n
-valid_states = [\'cancelled\', \'stopped\', \'delivered\']\n
+period = state_change[\'object\']\n
+portal = period.getPortalObject()\n
+N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
-start_date = closing_period.getStartDate()\n
-stop_date = closing_period.getStopDate()\n
 \n
-search_params = { \'delivery.start_date\': \'>= %s\' % start_date\n
-                , \'delivery.stop_date\' : \'<= %s\' % stop_date\n
-                , \'simulation_state\'   : [\'draft\', \'planned\', \'confirmed\'] \n
-                }\n
-transaction_list = accounting_module.searchFolder( **search_params )\n
+valid_simulation_state_list = [\'cancelled\', \'delivered\', \'delivered\']\n
+all_state_list = [x[1] for x in\n
+  portal.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n
+invalid_simulation_state_list = [state for state in all_state_list\n
+                                 if state not in valid_simulation_state_list]\n
 \n
-organisation_section = closing_period.getParentValue()\n
-for transaction in transaction_list:\n
-  transaction = transaction.getObject()\n
-  # we only take into account transaction that are related to this\n
-  # organisation. \n
-  # FIXME: this approach is not compatible with categories as section.\n
-  # FIXME: and not compatible with 100 000 transactions, but as we only search\n
-  # for draft, planned or confirmed transactions, it should be ok.\n
-  if organisation_section.getUid() in [ transaction.getSourceSectionUid()\n
-                                      , transaction.getDestinationSectionUid()]:\n
-    if transaction.getSimulationState() not in valid_states:\n
-      raise ValidationFailed, N_(\n
-           "Transaction <a href=\'${url}\'>${path}</a> is in invalid state (${state})",\n
-           mapping = { \'url\'  : transaction.absolute_url()\n
-                     , \'path\' : transaction.getPath()\n
-                     , \'state\': unicode(transaction.getTranslatedSimulationStateTitle(), \'utf8\')\n
-                     }\n
-          )\n
-
-
-]]></string> </value>
+section_uid = period.getParentUid()\n
+search_params = {\n
+  \'delivery.start_date\': dict(query=period.getStartDate(),\n
+                              range=\'min\'),\n
+  \'delivery.stop_date\': dict(query=period.getStopDate(),\n
+                             range=\'ngt\'),\n
+  \'simulation_state\': invalid_simulation_state_list,\n
+  \'portal_type\': portal.getPortalAccountingTransactionTypeList(),\n
+  \'query\': ComplexQuery(Query(source_section_uid=section_uid),\n
+                        Query(destination_section_uid=section_uid),\n
+                        operator=\'OR\')\n
+}\n
+\n
+transaction_list = portal.portal_catalog.searchResults(**search_params)\n
+if transaction_list:\n
+  raise ValidationFailed, N_(\n
+    "All Accounting Transactions for this organisation during the period have"\n
+    " to be closed first")\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -152,22 +147,29 @@ for transaction in transaction_list:\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>ComplexQuery</string>
                             <string>_getitem_</string>
-                            <string>closing_period</string>
+                            <string>period</string>
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>N_</string>
-                            <string>accounting_module</string>
-                            <string>valid_states</string>
-                            <string>start_date</string>
-                            <string>stop_date</string>
+                            <string>valid_simulation_state_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>all_state_list</string>
+                            <string>state</string>
+                            <string>invalid_simulation_state_list</string>
+                            <string>section_uid</string>
+                            <string>dict</string>
                             <string>search_params</string>
                             <string>_apply_</string>
                             <string>transaction_list</string>
-                            <string>organisation_section</string>
-                            <string>_getiter_</string>
-                            <string>transaction</string>
-                            <string>unicode</string>
                           </tuple>
                         </value>
                     </item>
@@ -184,7 +186,7 @@ for transaction in transaction_list:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingPeriod_CheckTransactionsState</string> </value>
+            <value> <string>checkTransactionsState</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

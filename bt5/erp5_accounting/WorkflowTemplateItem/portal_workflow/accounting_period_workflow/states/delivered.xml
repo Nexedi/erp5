@@ -20,7 +20,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The Accounting Period is closed.\r\n
+\r\n
+It is no longer possible to add accounting transactions in this period. A balance transaction has been created.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

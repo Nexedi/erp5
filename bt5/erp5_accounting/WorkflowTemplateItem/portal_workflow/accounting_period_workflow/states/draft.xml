@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The Accounting Period is not openned yet.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -42,9 +42,15 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>plan</string>
-                <string>plan_action</string>
+                <string>start</string>
+                <string>start_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>

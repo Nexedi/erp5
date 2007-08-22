@@ -68,25 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Deliver the transaction and \'notify\' the closing_period on failure."""\n
+            <value> <string>"""Create a balance transaction\n
+"""\n
+from DateTime import DateTime\n
 \n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-N_ = context.Base_translateString\n
+accounting_period = sci[\'object\']\n
+portal = accounting_period.getPortalObject()\n
+profit_and_loss_account = portal.portal_workflow.getInfoFor(\n
+                            accounting_period, \'profit_and_loss_account\')\n
 \n
-try : \n
-  context.portal_workflow.doActionFor( context,\n
-                     \'deliver_action\', \n
-                     skip_period_validation = 1,\n
-                     comment=comment )\n
-except ValidationFailed, message :\n
-  closing_period = context.getPortalObject().restrictedTraverse(closing_period_path)\n
-  if closing_period.getSimulationState() != \'confirmed\' :\n
-    closing_period.failClosing()\n
-    closing_period.portal_workflow.doActionFor( closing_period,\n
-                     \'edit_action\', \n
-                     comment=N_(\'unable to deliver ${transaction_path} : ${error_message}\',\n
-                       mapping={\'transaction_path\':context.getPath(),\n
-                                          \'error_message\': unicode(str(message), \'utf8\') } ))\n
+accounting_period.AccountingPeriod_createBalanceTransaction(\n
+                       profit_and_loss_account=profit_and_loss_account)\n
 </string> </value>
         </item>
         <item>
@@ -102,8 +94,14 @@ except ValidationFailed, message :\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>comment, closing_period_path, **kw</string> </value>
+            <value> <string>sci</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,24 +121,19 @@ except ValidationFailed, message :\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>comment</string>
-                            <string>closing_period_path</string>
-                            <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
+                            <string>sci</string>
+                            <string>DateTime</string>
+                            <string>_getitem_</string>
+                            <string>accounting_period</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>N_</string>
-                            <string>message</string>
-                            <string>closing_period</string>
-                            <string>unicode</string>
-                            <string>str</string>
+                            <string>portal</string>
+                            <string>profit_and_loss_account</string>
                           </tuple>
                         </value>
                     </item>
@@ -157,7 +150,7 @@ except ValidationFailed, message :\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransaction_closeByAccountingPeriod</string> </value>
+            <value> <string>createBalanceTransaction</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -338,15 +338,15 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>source</string>
+                          <string>destination</string>
                           <string>Account</string>
                         </tuple>
                         <tuple>
-                          <string>source_payment</string>
+                          <string>destination_payment</string>
                           <string>Bank Account</string>
                         </tuple>
                         <tuple>
-                          <string>getDestinationSectionTitle</string>
+                          <string>source_section_title</string>
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
@@ -354,11 +354,11 @@
                           <string>Currency</string>
                         </tuple>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>destination_debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>destination_credit</string>
                           <string>Credit</string>
                         </tuple>
                       </list>
@@ -405,11 +405,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>source</string>
+                          <string>destination</string>
                           <string>Account</string>
                         </tuple>
                         <tuple>
-                          <string>source_payment</string>
+                          <string>destination_payment</string>
                           <string>Bank Account</string>
                         </tuple>
                         <tuple>
@@ -417,11 +417,11 @@
                           <string>Currency</string>
                         </tuple>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>destination_debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>destination_credit</string>
                           <string>Credit</string>
                         </tuple>
                       </list>
@@ -454,12 +454,7 @@
                 <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>source_section</string>
-                          <string>source_section</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -468,7 +463,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>30</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -552,12 +547,23 @@
                 <item>
                     <key> <string>stat_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>destination_debit</string>
+                          <string>AccountingTransactionLine_statSourceCredit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_credit</string>
+                          <string>AccountingTransactionLine_statSourceDebit</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -592,6 +598,25 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>AccountingTransaction_getInvoiceTransactionLineList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>

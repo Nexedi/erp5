@@ -79,7 +79,7 @@ from Products.ERP5Type.Message import Message\n
 transaction = state_change[\'object\']\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
-# do we have to check transaction is in openned periods ?\n
+# do we have to check transaction is in openned periods ? \n
 skip_period_validation = state_change[\'kwargs\'].get(\n
                               \'skip_period_validation\', 0)\n
 transition = state_change[\'transition\']\n
@@ -94,36 +94,34 @@ check_destination = (transaction.getPortalType() in\n
 source_section = transaction.getSourceSectionValue(\n
                        portal_type=[\'Organisation\', \'Person\'])\n
 if source_section is None:\n
-  raise ValidationFailed(\'Source Section is not Defined.\')\n
+  raise ValidationFailed(N_(\'Source Section is not Defined.\'))\n
 \n
 destination_section = transaction.getDestinationSectionValue(\n
                 portal_type=[\'Organisation\', \'Person\'])\n
 # if it\'s not an invoice, then we can validate without destination\n
 if destination_section is None and check_destination :\n
-  raise ValidationFailed(\'Destination Section is not Defined.\')\n
+  raise ValidationFailed(N_(\'Destination Section is not Defined.\'))\n
 \n
 currency = transaction.getResource(portal_type = \'Currency\')\n
 if not currency :\n
-  raise ValidationFailed(\'Currency is not Defined.\')\n
+  raise ValidationFailed(N_(\'Currency is not Defined.\'))\n
 \n
 # XXX manually default start date to stop date\n
 if not transaction.getStartDate() and transaction.getStopDate():\n
   transaction.setStartDate(transaction.getStopDate())\n
 \n
 if not transaction.getStartDate() :\n
-  raise ValidationFailed(\'Date is not Defined\')\n
+  raise ValidationFailed(N_(\'Date is not Defined\'))\n
 else:\n
   if not skip_period_validation :\n
     valid_date = False\n
     # check the date is in an opened period\n
-    transaction_date = DateTime( transaction.getStartDate().year(),\n
-                                 transaction.getStartDate().month(),\n
-                                 transaction.getStartDate().day(),\n
-                                 # we don\'t care about hour:minutes\n
-                               )\n
+    transaction_date = transaction.getStartDate().earliestTime()\n
+\n
     openned_accounting_period_list = source_section.searchFolder(\n
-                               portal_type = "Accounting Period",\n
-                               simulation_state = "planned")\n
+                               portal_type="Accounting Period",\n
+                               # planned is for b/w compatibility\n
+                               simulation_state=("planned", \'started\'))\n
     if len(openned_accounting_period_list) == 0 :\n
       # if the entity doesn\'t have any accounting period, we can\n
       # consider that they do not want to use accounting periods or\n
@@ -134,19 +132,15 @@ else:\n
       if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
         valid_date = True\n
     if not valid_date :\n
-      raise ValidationFailed("Date is not in an openned Accounting Period "\n
-                             "for source section")\n
+      raise ValidationFailed(N_("Date is not in an opened Accounting Period "\n
+                                "for source section"))\n
     # do the same for destination section \n
     if check_destination :\n
       valid_date = False\n
-      transaction_date = DateTime( transaction.getStopDate().year(),\n
-                                   transaction.getStopDate().month(),\n
-                                   transaction.getStopDate().day(),\n
-                                   # we don\'t care about hour:minutes\n
-                                 )\n
+      transaction_date = transaction.getStopDate().earliestTime()\n
       openned_accounting_period_list = destination_section.searchFolder(\n
                                  portal_type = "Accounting Period",\n
-                                 simulation_state = "planned")\n
+                                 simulation_state = (\'planned\', \'started\'))\n
       if len(openned_accounting_period_list) == 0:\n
         valid_date = True\n
       for apd in openned_accounting_period_list:\n
@@ -154,8 +148,8 @@ else:\n
         if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
           valid_date = True\n
       if not valid_date :\n
-        raise ValidationFailed("Date is not in an openned Accounting Period "\n
-                               "for destination section")\n
+        raise ValidationFailed(N_("Date is not in an opened Accounting Period "\n
+                                  "for destination section"))\n
 
 
 ]]></string> </value>
@@ -236,7 +230,6 @@ else:\n
                             <string>currency</string>
                             <string>False</string>
                             <string>valid_date</string>
-                            <string>DateTime</string>
                             <string>transaction_date</string>
                             <string>openned_accounting_period_list</string>
                             <string>len</string>

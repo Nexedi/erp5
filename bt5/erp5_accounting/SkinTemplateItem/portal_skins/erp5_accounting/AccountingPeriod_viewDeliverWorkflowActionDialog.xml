@@ -46,8 +46,14 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Workflow_statusModify</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -62,10 +68,6 @@
             <value>
               <list>
                 <string>left</string>
-                <string>right</string>
-                <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -74,51 +76,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox_resource</string>
-                        <string>listbox_source_section_title</string>
-                        <string>listbox_destination</string>
-                        <string>listbox_destination_credit</string>
-                        <string>listbox_destination_debit</string>
-                        <string>listbox_destination_payment</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_section</string>
-                        <string>my_destination_reference</string>
-                        <string>my_title</string>
-                        <string>my_resource</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list>
-                        <string>my_start_date</string>
-                        <string>my_description</string>
-                        <string>my_translated_portal_type</string>
-                        <string>my_translated_simulation_state_title</string>
+                        <string>my_comment</string>
+                        <string>my_workflow_action</string>
+                        <string>your_profit_and_loss_account</string>
                       </list>
                     </value>
                 </item>
@@ -127,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BalanceTransaction_view</string> </value>
+            <value> <string>AccountingPeriod_viewDeliverWorkflowActionDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -135,11 +98,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BalanceTransaction_view</string> </value>
+            <value> <string>Base_viewWorkflowActionDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_view_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -151,7 +114,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Balance Transaction</string> </value>
+            <value> <string>Validate Workflow Action</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

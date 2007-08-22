@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -28,25 +34,25 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=close_action</string> </value>
+            <value> <string>%(content_url)s/AccountingPeriod_viewDeliverWorkflowActionDialog?workflow_action=deliver_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>close</string> </value>
+            <value> <string>deliver</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Closing accounting period is made in an activity. if it fails, the Accounting Period object remains in confirmed state, otherwise it goes to delivered state, depending on the result of passing workflow transitions.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>close_action</string> </value>
+            <value> <string>deliver_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -54,7 +60,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>checkTransactionsState</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -64,6 +70,12 @@
             <key> <string>trigger_type</string> </key>
             <value> <int>1</int> </value>
         </item>
+        <item>
+            <key> <string>var_exprs</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
@@ -71,8 +83,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
         </tuple>
         <none/>
       </tuple>
@@ -80,13 +92,36 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>roles</string> </key>
+            <key> <string>_container</string> </key>
             <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
+              <dictionary>
+                <item>
+                    <key> <string>profit_and_loss_account</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>kwargs/profit_and_loss_account | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>

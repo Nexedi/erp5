@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>simulation_state</string> </value>
+            <value> <string>my_workflow_action</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -217,23 +217,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>editable_expression</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable_permission</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_role</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -249,27 +233,19 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>not_viewable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>read_only</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>State</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -278,22 +254,6 @@
                 <item>
                     <key> <string>unicode</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>viewable_expression</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>viewable_permission</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>viewable_role</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -319,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_workflow.getInfoFor(here, \'simulation_state\')</string> </value>
+            <value> <string>request/workflow_action | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>

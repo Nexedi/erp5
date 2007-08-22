@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_source</string> </value>
+            <value> <string>your_profit_and_loss_account</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -251,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox_source</string> </value>
+                    <value> <string>Profit And Loss Account</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getObject().AccountingTransactionLine_getNodeItemList()</string> </value>
+            <value> <string>here/AccountingTransactionLine_getNodeItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

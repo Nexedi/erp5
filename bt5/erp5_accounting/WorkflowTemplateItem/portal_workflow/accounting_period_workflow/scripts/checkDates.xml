@@ -71,37 +71,43 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
 \n
 closing_period = state_change[\'object\']\n
 portal = closing_period.getPortalObject()\n
-N_ = portal.Base_translateString\n
-accounting_module = portal.accounting_module\n
-valid_states = [\'cancelled\', \'stopped\']\n
+N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
+valid_state_list = [\'started\', \'stopped\', \'delivered\']\n
 \n
 start_date = closing_period.getStartDate()\n
 stop_date = closing_period.getStopDate()\n
 \n
-search_params = { \'delivery.start_date\' : \'>= %s\' % start_date,\n
-                                \'delivery.stop_date\'  : \'<= %s\' % stop_date,\n
-                                \'simulation_state\' : \'stopped\' }\n
-transaction_list = accounting_module.searchFolder( **search_params )\n
+if start_date > stop_date:\n
+  raise ValidationFailed, N_("Start Date is After Stop Date")\n
 \n
-comment=N_("Closing period ${period_title}",\n
-                    mapping={\'period_title\': unicode(closing_period.getTitle(), \'utf8\')})\n
+period_list = closing_period.getParentValue().searchFolder(\n
+                              simulation_state=valid_state_list,\n
+                              sort_on=[(\'delivery.start_date\', \'asc\')],\n
+                              portal_type=\'Accounting Period\')\n
 \n
-section_uid = closing_period.getParentValue().getUid()\n
-for transaction in transaction_list :\n
-  transaction = transaction.getObject()\n
-  # FIXME: this approach is not compatible with categories as sections.\n
-  if transaction.getSourceSectionUid() == section_uid or \\\n
-             transaction.getDestinationSectionUid() == section_uid :\n
-    transaction.activate().AccountingTransaction_closeByAccountingPeriod(\n
-               comment = comment, closing_period_path = closing_period.getPath() )\n
-\n
-# if a transaction validation fails, it puts the Closing Period object back to confirmed state\n
-closing_period.activate( \n
-         after_method_id = [\'AccountingTransaction_closeByAccountingPeriod\']\n
-    ).deliver()\n
+for period in period_list:\n
+  period = period.getObject()\n
+  if period.getSimulationState() in valid_state_list:\n
+    if start_date <= period.getStopDate():\n
+      raise ValidationFailed, N_(\n
+          "${date} is already in an opened accounting period",\n
+          mapping={\'date\': start_date})\n
+          \n
+if len(period_list) > 1:\n
+  last_period  = period_list[-1].getObject()\n
+  if last_period.getId() == closing_period.getId():\n
+    last_period  = period_list[-2].getObject()\n
+  if (start_date - last_period.getStopDate()) > 1:\n
+    raise ValidationFailed, N_(\n
+        "Last opened period ends on ${last_openned_date},"+\n
+        " this period starts on ${this_period_start_date}."+\n
+        " Accounting Periods must be consecutive.",\n
+          mapping = { \'last_openned_date\': last_period.getStopDate(),\n
+                      \'this_period_start_date\': start_date } )\n
 
 
 ]]></string> </value>
@@ -149,23 +155,21 @@ closing_period.activate( \n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getitem_</string>
                             <string>closing_period</string>
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>N_</string>
-                            <string>accounting_module</string>
-                            <string>valid_states</string>
+                            <string>valid_state_list</string>
                             <string>start_date</string>
                             <string>stop_date</string>
-                            <string>search_params</string>
-                            <string>_apply_</string>
-                            <string>transaction_list</string>
-                            <string>unicode</string>
-                            <string>comment</string>
-                            <string>section_uid</string>
+                            <string>period_list</string>
                             <string>_getiter_</string>
-                            <string>transaction</string>
+                            <string>period</string>
+                            <string>len</string>
+                            <string>last_period</string>
                           </tuple>
                         </value>
                     </item>
@@ -182,7 +186,7 @@ closing_period.activate( \n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingPeriod_DeliverTransactions</string> </value>
+            <value> <string>checkDates</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

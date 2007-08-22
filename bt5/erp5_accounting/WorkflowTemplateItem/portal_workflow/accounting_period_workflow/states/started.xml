@@ -19,12 +19,20 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The Accounting Period is openned.\r\n
+\r\n
+It is therefore possible to post accounting accounting transactions with dates during this period.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirmed</string> </value>
+            <value> <string>started</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -34,16 +42,14 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Temporally Closed Accounting Period</string> </value>
+            <value> <string>Openned</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>close</string>
-                <string>close_action</string>
-                <string>plan</string>
-                <string>reopen_action</string>
+                <string>stop</string>
+                <string>stop_action</string>
               </tuple>
             </value>
         </item>
@@ -80,7 +86,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -99,9 +104,7 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Member</string>
                       </tuple>
                     </value>
                 </item>

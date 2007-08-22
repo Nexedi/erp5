@@ -1,0 +1,351 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Creates a balance transaction to open the next period.\n
+\n
+"""\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
+precision_cache = dict()\n
+def roundCurrency(value, resource_relative_url):\n
+  if resource_relative_url not in precision_cache:\n
+    qty_precision = portal.restrictedTraverse(\n
+                        resource_relative_url).getQuantityPrecision()\n
+    precision_cache[resource_relative_url] = qty_precision\n
+  qty_precision = precision_cache[resource_relative_url]\n
+  return round(value, qty_precision)\n
+\n
+at_date = context.getStopDate()\n
+assert at_date\n
+\n
+section = context.getParentValue()\n
+section_uid = context.getParentUid()\n
+section_currency = section.getPriceCurrency()\n
+\n
+balance_transaction = portal.accounting_module.newContent(\n
+                        portal_type=\'Balance Transaction\',\n
+                        start_date=(at_date + 1).earliestTime(),\n
+                        title=context.getTitle() or N_(\'Balance Transaction\'),\n
+                        destination_section_value=section,\n
+                        resource=section_currency,\n
+                        causality_value=context)\n
+\n
+group_by_node_node_category_list = []\n
+group_by_mirror_section_node_category_list = []\n
+group_by_payment_node_category_list = []\n
+profit_and_loss_node_category_list = []\n
+\n
+node_category_list = portal.portal_categories\\\n
+            .account_type.getCategoryChildValueList()\n
+for node_category in node_category_list:\n
+  node_category_url = node_category.getRelativeUrl()\n
+  if node_category_url in (\n
+      \'account_type/asset/cash/bank\',):\n
+    group_by_payment_node_category_list.append(node_category_url)\n
+  elif node_category_url in (\n
+      \'account_type/asset/receivable\',\n
+      \'account_type/liability/payable\'):\n
+    group_by_mirror_section_node_category_list.append(node_category_url)\n
+  elif node_category_url in (\'account_type/income\', \'account_type/expense\'):\n
+    profit_and_loss_node_category_list.append(node_category_url)\n
+  else:\n
+    group_by_node_node_category_list.append(node_category_url)\n
+\n
+getInventoryList = portal.portal_simulation.getInventoryList\n
+\n
+inventory_param_dict = dict(section_uid=section_uid,\n
+                            simulation_state=(\'delivered\',),\n
+                            portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                            at_date=at_date.latestTime(),)\n
+                            \n
+section_currency_uid = context.getParentValue().getPriceCurrencyUid()\n
+\n
+profit_and_loss_quantity = 0\n
+\n
+for inventory in getInventoryList(\n
+        node_category_strict_membership=group_by_node_node_category_list,\n
+        group_by_node=1,\n
+        group_by_resource=1,\n
+        **inventory_param_dict):\n
+  \n
+  total_price = roundCurrency(inventory.total_price, section_currency)\n
+  quantity = roundCurrency(inventory.total_quantity,\n
+                           inventory.resource_relative_url)\n
+\n
+  if inventory.resource_uid != section_currency_uid:\n
+    if inventory.node_relative_url == profit_and_loss_account:\n
+      raise ValueError(\'Using multiple currencies on profit and loss account \'\n
+                       \'is not supported\')\n
+    profit_and_loss_quantity += total_price\n
+    balance_transaction.newContent(\n
+        portal_type=\'Balance Transaction Line\',\n
+        destination=inventory.node_relative_url,\n
+        resource=inventory.resource_relative_url,\n
+        quantity=quantity,\n
+        destination_total_asset_price=total_price)\n
+  else:\n
+    if total_price != quantity:\n
+      # If this fail for you, your accounting doesn\'t use currencies with\n
+      # consistency\n
+      raise ValueError(\'Different price: %s != %s \' % (\n
+                        total_price, quantity))\n
+    \n
+    if inventory.node_relative_url != profit_and_loss_account:\n
+      profit_and_loss_quantity += total_price\n
+      balance_transaction.newContent(\n
+        portal_type=\'Balance Transaction Line\',\n
+        destination=inventory.node_relative_url,\n
+        quantity=total_price)\n
+\n
+    \n
+for inventory in getInventoryList(\n
+        node_category_strict_membership=group_by_mirror_section_node_category_list,\n
+        group_by_node=1,\n
+        group_by_mirror_section=1,\n
+        group_by_resource=1,\n
+        **inventory_param_dict):\n
+\n
+  total_price = roundCurrency(inventory.total_price, section_currency)\n
+  quantity = roundCurrency(inventory.total_quantity,\n
+                           inventory.resource_relative_url)\n
+  profit_and_loss_quantity += total_price\n
+\n
+  if inventory.resource_uid != section_currency_uid:\n
+    balance_transaction.newContent(\n
+      portal_type=\'Balance Transaction Line\',\n
+      destination=inventory.node_relative_url,\n
+      source_section_uid=inventory.mirror_section_uid,\n
+      resource=inventory.resource_relative_url,\n
+      quantity=quantity,\n
+      destination_total_asset_price=total_price)\n
+  else:\n
+    if total_price != quantity:\n
+      raise ValueError(\'Different price: %s != %s \' % (\n
+                        total_price, quantity))\n
+    balance_transaction.newContent(\n
+      portal_type=\'Balance Transaction Line\',\n
+      destination=inventory.node_relative_url,\n
+      source_section_uid=inventory.mirror_section_uid,\n
+      quantity=total_price)\n
+\n
+\n
+for inventory in getInventoryList(\n
+        node_category_strict_membership=group_by_payment_node_category_list,\n
+        group_by_node=1,\n
+        group_by_payment=1,\n
+        group_by_resource=1,\n
+        **inventory_param_dict):\n
+\n
+  total_price = roundCurrency(inventory.total_price, section_currency)\n
+  quantity = roundCurrency(inventory.total_quantity,\n
+                           inventory.resource_relative_url)\n
+  profit_and_loss_quantity += total_price\n
+\n
+  if inventory.resource_uid != section_currency_uid:\n
+    balance_transaction.newContent(\n
+      portal_type=\'Balance Transaction Line\',\n
+      destination=inventory.node_relative_url,\n
+      resource=inventory.resource_relative_url,\n
+      quantity=quantity,\n
+      destination_payment_uid=inventory.payment_uid,\n
+      destination_total_asset_price=total_price)\n
+  else:\n
+    if total_price != quantity:\n
+      raise ValueError(\'Different price: %s != %s \' % (\n
+                        total_price, quantity))\n
+    balance_transaction.newContent(\n
+      portal_type=\'Balance Transaction Line\',\n
+      destination=inventory.node_relative_url,\n
+      destination_payment_uid=inventory.payment_uid,\n
+      quantity=total_price)\n
+\n
+# add a final line for p&l\n
+balance_transaction.newContent(\n
+          portal_type=\'Balance Transaction Line\',\n
+          destination=profit_and_loss_account,\n
+          quantity=-profit_and_loss_quantity)\n
+\n
+# and go to delivered state directly (the user is not supposed to edit this document)\n
+balance_transaction.stop()\n
+balance_transaction.deliver()\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>profit_and_loss_account=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>profit_and_loss_account</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>dict</string>
+                            <string>precision_cache</string>
+                            <string>roundCurrency</string>
+                            <string>at_date</string>
+                            <string>AssertionError</string>
+                            <string>section</string>
+                            <string>section_uid</string>
+                            <string>section_currency</string>
+                            <string>balance_transaction</string>
+                            <string>group_by_node_node_category_list</string>
+                            <string>group_by_mirror_section_node_category_list</string>
+                            <string>group_by_payment_node_category_list</string>
+                            <string>profit_and_loss_node_category_list</string>
+                            <string>node_category_list</string>
+                            <string>_getiter_</string>
+                            <string>node_category</string>
+                            <string>node_category_url</string>
+                            <string>getInventoryList</string>
+                            <string>inventory_param_dict</string>
+                            <string>section_currency_uid</string>
+                            <string>profit_and_loss_quantity</string>
+                            <string>_apply_</string>
+                            <string>inventory</string>
+                            <string>total_price</string>
+                            <string>quantity</string>
+                            <string>ValueError</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingPeriod_createBalanceTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
