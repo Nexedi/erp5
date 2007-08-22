@@ -36,8 +36,8 @@ class ResourceBackpropagation(CopyToTarget):
   """
   def _generateValueDeltaDict(self, simulation_movement):
     """
-    Get interesting values
-    XXX: better description is possible. But is it needed ?
+      Get interesting values
+      XXX: better description is possible. But is it needed ?
     """
     # Get interesting value
     old_quantity = simulation_movement.getQuantity()
@@ -51,16 +51,16 @@ class ResourceBackpropagation(CopyToTarget):
     quantity_ratio = 0
     if old_quantity not in (None,0.0): # XXX: What if quantity happens to be an integer ?
       quantity_ratio = new_quantity / old_quantity
-    start_date = None
-    stop_date = None
+    start_date_delta = 0
+    stop_date_delta = 0
     if new_start_date is not None and old_start_date is not None:
-      start_date = new_start_date
+      start_date_delta = new_start_date - old_start_date
     if new_stop_date is not None and old_stop_date is not None:
-      stop_date = new_stop_date
+      stop_date_delta = new_stop_date - old_stop_date
     return {
       'quantity_ratio': quantity_ratio,
-      'start_date': start_date,
-      'stop_date': stop_date,
+      'start_date_delta': start_date_delta,
+      'stop_date_delta': stop_date_delta,
       'resource_list' :
           simulation_movement.getDeliveryValue().getResourceList(),
       'variation_category_list':
@@ -70,7 +70,7 @@ class ResourceBackpropagation(CopyToTarget):
     }
 
   def _generateValueDict(self, simulation_movement, quantity_ratio=1, 
-                         start_date=None, stop_date=None,
+                         start_date_delta=0, stop_date_delta=0,
                          resource_list=[],
                          variation_category_list=[],
                          variation_property_dict={},
@@ -80,10 +80,12 @@ class ResourceBackpropagation(CopyToTarget):
     """
     value_dict = {}
     # Modify quantity, start_date, stop_date
+    start_date = simulation_movement.getStartDate()
     if start_date is not None:
-      value_dict['start_date'] = start_date
+      value_dict['start_date'] = start_date + start_date_delta
+    stop_date = simulation_movement.getStopDate()
     if stop_date is not None:
-      value_dict['stop_date'] = stop_date
+      value_dict['stop_date'] = stop_date + stop_date_delta
     value_dict['quantity'] = simulation_movement.getQuantity() * quantity_ratio
     if resource_list:
       value_dict['resource_list'] = resource_list
