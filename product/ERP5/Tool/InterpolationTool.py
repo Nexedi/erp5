@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Products.CMFCore import CMFCorePermissions
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
 from Globals import InitializeClass

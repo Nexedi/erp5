@@ -33,11 +33,10 @@ import ExtensionClass
 
 from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
-from Products.CMFCore import CMFCorePermissions
 
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.CopySupport import CopyContainer
-from Products.ERP5Type import PropertySheet, Permissions
+from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.XMLExportImport import Folder_asXML
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import sortValueList
@@ -954,7 +953,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
     object.manage_beforeDelete(object, self)
     self._delOb(id)
 
-  security.declareProtected( CMFCorePermissions.ManagePortal, 'callMethodOnObjectList' )
+  security.declareProtected( Permissions.ManagePortal, 'callMethodOnObjectList' )
   def callMethodOnObjectList(self, object_path_list, method_id, *args, **kw):
     """
     Very usefull if we want to activate the call of a method

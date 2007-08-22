@@ -28,9 +28,9 @@
 
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import Permissions
 from Products.ERP5.PropertySheet.SortIndex import SortIndex
 from Products.ERP5Type.PropertySheet.BaseCache import BaseCache
 
@@ -46,7 +46,7 @@ class RamCache(XMLObject):
   allowed_types = ()
     
   security = ClassSecurityInfo()
-  security.declareProtected(CMFCorePermissions.ManagePortal,
+  security.declareProtected(Permissions.ManagePortal,
                             'manage_editProperties',
                             'manage_changeProperties',
                             'manage_propertiesForm',

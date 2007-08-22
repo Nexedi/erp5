@@ -27,7 +27,7 @@ from Acquisition import aq_inner, aq_parent
 import Globals
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFCore.CMFCorePermissions import ManagePortal
+from Products.ERP5Type.Permissions import ManagePortal
 
 from Products.DCWorkflow.ContainerTab import ContainerTab
 from Products.DCWorkflow.Guard import Guard

@@ -29,7 +29,7 @@
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
-from Products.CMFCore import CMFCorePermissions
+from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
@@ -200,7 +200,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     __url = CMFCoreCatalogTool.__url
     manage_catalogFind = CMFCoreCatalogTool.manage_catalogFind
 
-    security.declareProtected( CMFCorePermissions.ManagePortal
+    security.declareProtected( Permissions.ManagePortal
                 , 'manage_schema' )
     manage_schema = DTMLFile( 'dtml/manageSchema', globals() )
 
@@ -552,7 +552,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         limit the results to what the user is allowed to see.
         """
         if not _checkPermission(
-            CMFCorePermissions.AccessInactivePortalContent, self ):
+            Permissions.AccessInactivePortalContent, self ):
             now = DateTime()
             kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
             kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
@@ -604,7 +604,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         """
         # XXX This needs to be set again
         #if not _checkPermission(
-        #    CMFCorePermissions.AccessInactivePortalContent, self ):
+        #    Permissions.AccessInactivePortalContent, self ):
         #    base = aq_base( self )
         #    now = DateTime()
         #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
