@@ -117,6 +117,17 @@ class TestClassTool(ERP5TypeTestCase):
     self.assertNotEquals([], class_doc_helper.getStaticPropertyList())
 
 
+  def test_DocumentationHelperActivities(self):
+    # Using documentation helpers should not create any activity
+    portal = self.getPortal()
+    folder = portal.newContent(portal_type='Folder', id='test_folder')
+    get_transaction().commit()
+    self.tic()
+    doc_helper = folder.asDocumentationHelper()
+    get_transaction().commit()
+    self.assertEquals(0, len(portal.portal_activities.getMessageList()))
+   
+
 import unittest
 def test_suite():
     suite = unittest.TestSuite()

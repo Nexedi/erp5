@@ -3045,6 +3045,7 @@ class DocumentationHelper(Base):
     if my_title > his_title:
       return 1
     return 0
+  
 
 class TempDocumentationHelper(DocumentationHelper, TempBase):
   """Temporary version of Documentation Helper.
@@ -3054,5 +3055,8 @@ class TempDocumentationHelper(DocumentationHelper, TempBase):
   required that all temp objects have a corresponding "real" class as
   klass.__bases__[0]
   """
- 
+  # inheritence fixes
+  reindexObject = TempBase.reindexObject
+  recursiveReindexObject = TempBase.recursiveReindexObject
+
 
