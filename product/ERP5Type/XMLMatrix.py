@@ -372,7 +372,7 @@ class XMLMatrix(Folder):
       new_index = PersistentMapping() # new_index defines the relation
                                       # between keys and ids of cells
 
-      if not hasattr(self, 'index'):
+      if getattr(self, 'index', None) is None:
         self.index = PersistentMapping()
 
       # Return if previous range is the same
@@ -406,6 +406,7 @@ class XMLMatrix(Folder):
           if index_list[i] >= size_list[i]:
             removed_cell_id_list.append(cell_id)
             break
+
       for cell_id in removed_cell_id_list:
         self._delObject(cell_id)
         cell_id_list.remove(cell_id)
