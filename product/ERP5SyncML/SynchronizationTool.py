@@ -37,9 +37,9 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5SyncML import _dtmldir
 from Products.ERP5SyncML import Conduit
-from Publication import Publication,Subscriber
+from Publication import Publication, Subscriber
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
-from Subscription import Subscription,Signature
+from Subscription import Subscription, Signature
 from XMLSyncUtils import Parse
 #from Ft.Xml import Parse
 from Products.ERP5Type import Permissions
@@ -449,8 +449,8 @@ class SynchronizationTool( SubscriptionSynchronization,
             conflict_list += [conflict.__of__(subscriber)]
     for subscription in self.getSubscriptionList():
       sub_conflict_list = subscription.getConflictList()
-      LOG('SynchronizationTool.getConflictList, sub_conflict_list', DEBUG,
-          sub_conflict_list)
+      #LOG('SynchronizationTool.getConflictList, sub_conflict_list', DEBUG,
+          #sub_conflict_list)
       for conflict in sub_conflict_list:
         conflict.setSubscriber(subscription)
         if path is None or conflict.getObjectPath() == path:
@@ -487,32 +487,32 @@ class SynchronizationTool( SubscriptionSynchronization,
     path = self.resolveContext(context)
     conflict_list = self.getConflictList()
     state_list= []
-    LOG('getSynchronizationState', DEBUG, 'path: %s' % str(path))
+    #LOG('getSynchronizationState', DEBUG, 'path: %s' % str(path))
     for conflict in conflict_list:
       if conflict.getObjectPath() == path:
-        LOG('getSynchronizationState', DEBUG, 'found a conflict: %s' % str(conflict))
+        #LOG('getSynchronizationState', DEBUG, 'found a conflict: %s' % str(conflict))
         state_list += [[conflict.getSubscriber(),self.CONFLICT]]
     for domain in self.getSynchronizationList():
       destination = domain.getDestinationPath()
-      LOG('getSynchronizationState', TRACE, 'destination: %s' % str(destination))
+      #LOG('getSynchronizationState', TRACE, 'destination: %s' % str(destination))
       j_path = '/'.join(path)
-      LOG('getSynchronizationState', TRACE, 'j_path: %s' % str(j_path))
+      #LOG('getSynchronizationState', TRACE, 'j_path: %s' % str(j_path))
       if j_path.find(destination)==0:
         o_id = j_path[len(destination)+1:].split('/')[0]
-        LOG('getSynchronizationState', TRACE, 'o_id: %s' % o_id)
+        #LOG('getSynchronizationState', TRACE, 'o_id: %s' % o_id)
         subscriber_list = []
         if domain.domain_type==self.PUB:
           subscriber_list = domain.getSubscriberList()
         else:
           subscriber_list = [domain]
-        LOG('getSynchronizationState, subscriber_list:', TRACE, subscriber_list)
+        #LOG('getSynchronizationState, subscriber_list:', TRACE, subscriber_list)
         for subscriber in subscriber_list:
           signature = subscriber.getSignatureFromObjectId(o_id)
           #XXX check if signature could be not None ...
           if signature is not None:
             state = signature.getStatus()
-            LOG('getSynchronizationState:', TRACE, 'sub.dest :%s, state: %s' % \
-                                   (subscriber.getSubscriptionUrl(),str(state)))
+            #LOG('getSynchronizationState:', TRACE, 'sub.dest :%s, state: %s' % \
+                                   #(subscriber.getSubscriptionUrl(),str(state)))
             found = None
             # Make sure there is not already a conflict giving the state
             for state_item in state_list:
@@ -537,21 +537,20 @@ class SynchronizationTool( SubscriptionSynchronization,
     object = self.unrestrictedTraverse(conflict.getObjectPath())
     subscriber = conflict.getSubscriber()
     # get the signature:
-    LOG('p_sync.applyPublisherValue, subscriber: ', DEBUG, subscriber)
+    #LOG('p_sync.applyPublisherValue, subscriber: ', DEBUG, subscriber)
     signature = subscriber.getSignatureFromObjectId(object.getId()) # XXX may be change for rid
     copy_path = conflict.getCopyPath()
-    LOG('p_sync.applyPublisherValue, copy_path: ', TRACE, copy_path)
     signature.delConflict(conflict)
-    if signature.getConflictList() == []:
+    if len(signature.getConflictList()) == 0:
       if copy_path is not None:
-        LOG('p_sync.applyPublisherValue, conflict_list empty on : ', TRACE, signature)
+        #LOG('p_sync.applyPublisherValue, conflict_list empty on : ', TRACE, signature)
         # Delete the copy of the object if the there is one
         directory = object.aq_parent
         copy_id = copy_path[-1]
-        LOG('p_sync.applyPublisherValue, copy_id: ', TRACE, copy_id)
+        #LOG('p_sync.applyPublisherValue, copy_id: ', TRACE, copy_id)
         if hasattr(directory.aq_base, 'hasObject'):
           # optimize the case of a BTree folder
-          LOG('p_sync.applyPublisherValue, deleting...: ', TRACE, copy_id)
+          #LOG('p_sync.applyPublisherValue, deleting...: ', TRACE, copy_id)
           if directory.hasObject(copy_id):
             directory._delObject(copy_id)
         elif copy_id in directory.objectIds():
@@ -567,7 +566,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     subscriber = conflict.getSubscriber()
     for c in self.getConflictList(conflict.getObjectPath()):
       if c.getSubscriber() == subscriber:
-        LOG('applyPublisherDocument, applying on conflict: ', DEBUG, conflict)
+        #LOG('applyPublisherDocument, applying on conflict: ', DEBUG, conflict)
         c.applyPublisherValue()
 
   security.declareProtected(Permissions.AccessContentsInformation, 
@@ -586,7 +585,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     apply the publisher value for all conflict of the given document
     """
     publisher_object_path = self.getPublisherDocumentPath(conflict)
-    LOG('getPublisherDocument publisher_object_path', TRACE, publisher_object_path)
+    #LOG('getPublisherDocument publisher_object_path', TRACE, publisher_object_path)
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
     return publisher_object
 
@@ -704,13 +703,12 @@ class SynchronizationTool( SubscriptionSynchronization,
       solve_conflict=0
     subscriber = conflict.getSubscriber()
     # get the signature:
-    #LOG('p_sync.setRemoteObject, subscriber: ',0,subscriber)
     signature = subscriber.getSignatureFromObjectId(object.getId()) # XXX may be change for rid
     # Import the conduit and get it
     conduit_name = subscriber.getConduit()
     conduit = self.getConduitByName(conduit_name)
     for xupdate in conflict.getXupdateList():
-      conduit.updateNode(xml=xupdate,object=object,force=1)
+      conduit.updateNode(xml=xupdate, object=object, force=1)
     if solve_conflict:
       copy_path = conflict.getCopyPath()
       signature.delConflict(conflict)
@@ -742,9 +740,9 @@ class SynchronizationTool( SubscriptionSynchronization,
       Version=Version CPS
     """
     # Retrieve the conflict object
-    LOG('manageLocalValue', DEBUG, '%s %s %s' % (str(subscription_url),
-                                          str(property_id),
-                                          str(object_path)))
+    #LOG('manageLocalValue', DEBUG, '%s %s %s' % (str(subscription_url),
+                                          #str(property_id),
+                                          #str(object_path)))
     for conflict in self.getConflictList():
       if conflict.getPropertyId() == property_id:
         if '/'.join(conflict.getObjectPath()) == object_path:
@@ -761,9 +759,9 @@ class SynchronizationTool( SubscriptionSynchronization,
     Do whatever needed in order to store the remote value locally
     and confirmed that the remote box should keep it's value
     """
-    LOG('manageLocalValue', DEBUG, '%s %s %s' % (str(subscription_url),
-                                          str(property_id),
-                                          str(object_path)))
+    #LOG('manageLocalValue', DEBUG, '%s %s %s' % (str(subscription_url),
+                                          #str(property_id),
+                                          #str(object_path)))
     for conflict in self.getConflictList():
       if conflict.getPropertyId() == property_id:
         if '/'.join(conflict.getObjectPath()) == object_path:
@@ -816,17 +814,17 @@ class SynchronizationTool( SubscriptionSynchronization,
       return context.getPhysicalPath()
 
   security.declarePublic('sendResponse')
-  def sendResponse(self, to_url=None, from_url=None, sync_id=None,xml=None, 
+  def sendResponse(self, to_url=None, from_url=None, sync_id=None, xml=None,
       domain=None, send=1, content_type='application/vnd.syncml+xml'):
     """
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    LOG('sendResponse, self.getPhysicalPath: ', DEBUG, self.getPhysicalPath())
-    LOG('sendResponse, to_url: ', DEBUG, to_url)
-    LOG('sendResponse, from_url: ', DEBUG, from_url)
-    LOG('sendResponse, sync_id: ', DEBUG, sync_id)
-    LOG('sendResponse, xml: \n', DEBUG, xml)
+    #LOG('sendResponse, self.getPhysicalPath: ', DEBUG, self.getPhysicalPath())
+    #LOG('sendResponse, to_url: ', DEBUG, to_url)
+    #LOG('sendResponse, from_url: ', DEBUG, from_url)
+    #LOG('sendResponse, sync_id: ', DEBUG, sync_id)
+    #LOG('sendResponse, xml: \n', DEBUG, xml)
 
     if content_type == self.CONTENT_TYPE['SYNCML_WBXML']:
       xml = self.xml2wbxml(xml)
@@ -852,26 +850,27 @@ class SynchronizationTool( SubscriptionSynchronization,
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
     if send:
       if isinstance(to_url, str):
-        if to_url.find('http://')==0:
+        if to_url.find('http://') == 0:
           domain = aq_base(domain)
           if domain.domain_type == self.PUB and not domain.getActivityEnabled():
             # not use activity
             # XXX Make sure this is not a problem
             return None
           #use activities to send send an http response
-          LOG('sendResponse, will start sendHttpResponse, xml', DEBUG, '')
-          self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
+          #LOG('sendResponse, will start sendHttpResponse, xml', DEBUG, '')
+          activity = self.getActivityType(domain=domain)
+          self.activate(activity=activity).sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
                                            xml=xml,
                                            domain_path=domain.getPath(),
                                            content_type=content_type)
-        elif to_url.find('file://')==0:
+        elif to_url.find('file://') == 0:
           filename = to_url[len('file:/'):]
           stream = file(filename,'w')
           stream.write(xml)
           stream.close()
           # we have to use local files (unit testing for example
-        elif to_url.find('mailto:')==0:
+        elif to_url.find('mailto:') == 0:
           # we will send an email
           to_address = to_url[len('mailto:'):]
           from_address = from_url[len('mailto:'):]
@@ -882,15 +881,15 @@ class SynchronizationTool( SubscriptionSynchronization,
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None,
       domain_path=None, content_type='application/vnd.syncml+xml'):
     domain = self.unrestrictedTraverse(domain_path)
-    LOG('sendHttpResponse, starting with domain:', DEBUG, domain)
+    #LOG('sendHttpResponse, starting with domain:', DEBUG, domain)
     if domain is not None:
       if domain.domain_type == self.PUB and not domain.getActivityEnabled():
-            return xml
+        return xml
     # Retrieve the proxy from os variables
     proxy_url = ''
     if os.environ.has_key('http_proxy'):
       proxy_url = os.environ['http_proxy']
-    LOG('sendHttpResponse, proxy_url:', DEBUG, proxy_url)
+    #LOG('sendHttpResponse, proxy_url:', DEBUG, proxy_url)
     if proxy_url !='':
       proxy_handler = urllib2.ProxyHandler({"http" :proxy_url})
     else:
@@ -923,11 +922,11 @@ class SynchronizationTool( SubscriptionSynchronization,
     #  - http://svn.zope.org/soap/trunk/
 
     if domain.getSynchronizeWithERP5Sites():
-      LOG('Synchronization with another ERP5 instance ...', DEBUG, '')
+      #LOG('Synchronization with another ERP5 instance ...', DEBUG, '')
       if to_url.find('readResponse')<0:
         to_url = to_url + '/portal_synchronizations/readResponse'
       encoded = urllib.urlencode(to_encode)
-      data=encoded
+      data = encoded
       request = urllib2.Request(url=to_url, data=data)
     else:
     #XXX only to synchronize with other server than erp5 (must be improved):
@@ -938,9 +937,13 @@ class SynchronizationTool( SubscriptionSynchronization,
       url_file = urllib2.urlopen(request)
       result = url_file.read()
     except socket.error, msg:
-      self.activate(activity='RAMQueue').sendHttpResponse(to_url=to_url,
-          sync_id=sync_id, xml=xml, domain_path=domain.getPath(),
-          content_type=content_type)
+      activity = self.getActivityType(domain=domain)
+      self.activate(activity=activity).sendHttpResponse(
+                                              to_url=to_url,
+                                              sync_id=sync_id,
+                                              xml=xml,
+                                              domain_path=domain.getPath(),
+                                              content_type=content_type)
       LOG('sendHttpResponse, socket ERROR:', INFO, msg)
       LOG('sendHttpResponse, url, data', INFO, (url, data))
       return
@@ -951,10 +954,10 @@ class SynchronizationTool( SubscriptionSynchronization,
 
     if domain is not None:
       if domain.domain_type == self.SUB and not domain.getActivityEnabled():
-            #if we don't use activity :
-            gpg_key = domain.getGPGKey()
-            if result not in (None, ''):
-              self.readResponse(sync_id=sync_id, text=result)
+        #if we don't use activity :
+        gpg_key = domain.getGPGKey()
+        if result not in (None, ''):
+          self.readResponse(sync_id=sync_id, text=result)
     return result
 
   security.declarePublic('sync')
@@ -963,14 +966,15 @@ class SynchronizationTool( SubscriptionSynchronization,
     This will try to synchronize every subscription
     """
     message_list = self.portal_activities.getMessageList()
-    LOG('sync, len(message_list):', DEBUG, len(message_list))
+    #LOG('sync, len(message_list):', DEBUG, len(message_list))
     if len(message_list) == 0:
       for subscription in self.getSubscriptionList():
         user_id = subscription.getZopeUser()
         uf = self.getPortalObject().acl_users
         user = uf.getUserById(user_id).__of__(uf)
         newSecurityManager(None, user)
-        self.activate(activity='RAMQueue').SubSync(subscription.getPath())
+        activity = self.getActivityType(domain=subscription)
+        subscription.activate(activity=activity).SubSync(subscription.getPath())
 
   security.declarePublic('readResponse')
   def readResponse(self, text='', sync_id=None, to_url=None, from_url=None):
@@ -978,7 +982,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    LOG('readResponse, text :', DEBUG, text)
+    #LOG('readResponse, text :', DEBUG, text)
     #LOG('readResponse, hexdump(text) :', DEBUG, self.hexdump(text))
     status_code = None
     if text not in ('', None):
@@ -986,7 +990,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       # the id sync_id, this is not so good, but there is no way yet
       # to know if we will call a publication or subscription XXX
       gpg_key = ''
-      LOG('readResponse, sync_id :', DEBUG, sync_id)
+      #LOG('readResponse, sync_id :', DEBUG, sync_id)
       for publication in self.getPublicationList():
         if publication.getTitle() == sync_id:
           gpg_key = publication.getGPGKey()
@@ -997,7 +1001,7 @@ class SynchronizationTool( SubscriptionSynchronization,
             gpg_key = subscription.getGPGKey()
             domain = subscription
             user = domain.getZopeUser()
-            LOG('readResponse, user :', DEBUG, user)
+            #LOG('readResponse, user :', DEBUG, user)
             newSecurityManager(None, user)
       # decrypt the message if needed
       if gpg_key not in (None,''):
@@ -1021,7 +1025,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       LOG('type(text) : ', TRACE, type(text))
       if domain.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
         text = self.wbxml2xml(text)
-      LOG('readResponse, text after wbxml :\n', TRACE, text)
+      #LOG('readResponse, text after wbxml :\n', TRACE, text)
       xml = Parse(text)
       url = self.getTarget(xml)
       for publication in self.getPublicationList():
@@ -1029,8 +1033,9 @@ class SynchronizationTool( SubscriptionSynchronization,
         publication.getTitle()==sync_id:
           if publication.getActivityEnabled():
             #use activities to send SyncML data.
-            self.activate(activity='RAMQueue').PubSync(publication.getPath(),
-                                                       text)
+            publication.activate(activity='SQLDict').PubSync(
+                                                        publication.getPath(),
+                                                        text)
             return ' '
           else:
             result = self.PubSync(publication.getPath(), xml)
@@ -1043,21 +1048,22 @@ class SynchronizationTool( SubscriptionSynchronization,
       for subscription in self.getSubscriptionList():
         if subscription.getSubscriptionUrl() == url and \
             subscription.getTitle() == sync_id:
-              subscription_path = self.getSubscription(sync_id).getPath()
-              self.activate(activity='RAMQueue').SubSync(subscription_path,
+              subscription_path = subscription.getPath()
+              activity = self.getActivityType(domain=subscription)
+              self.activate(activity=activity).SubSync(subscription_path,
                                                          text)
               return ' '
 
-    # we use from only if we have a file 
+    # we use from only if we have a file
     elif isinstance(from_url, str):
       if from_url.find('file://') == 0:
         try:
           filename = from_url[len('file:/'):]
           stream = file(filename, 'r')
           xml = stream.read()
-          LOG('readResponse', DEBUG, 'file... msg: %s' % str(stream.read()))
+          #LOG('readResponse', DEBUG, 'file... msg: %s' % str(stream.read()))
         except IOError:
-          LOG('readResponse, cannot read file: ', DEBUG, filename)
+          LOG('readResponse, cannot read file: ', INFO, filename)
           xml = None
         if xml is not None and len(xml) == 0:
           xml = None

@@ -177,7 +177,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if previous_xml is not None and sub_object_id is not None:
         # Find the previous xml corresponding to this subobject
         sub_previous_xml = self.getSubObjectXml(sub_object_id, previous_xml)
-        LOG('addNode', DEBUG,'isSubObjectModification sub_previous_xml: %s' % str(sub_previous_xml))
+        #LOG('addNode', DEBUG,'isSubObjectModification sub_previous_xml: %s' % str(sub_previous_xml))
         if sub_previous_xml is not None:
           sub_object = None
           try:
@@ -185,11 +185,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           except (AttributeError, KeyError, TypeError):
             pass
           if sub_object is not None:
-            LOG('addNode', DEBUG, 'subobject.id: %s' % sub_object.id)
+            #LOG('addNode', DEBUG, 'subobject.id: %s' % sub_object.id)
             # Change the xml in order to directly apply
             # modifications to the subobject
             sub_xml = self.getSubObjectXupdate(xml)
-            LOG('addNode', DEBUG, 'sub_xml: %s' % str(sub_xml))
+            #LOG('addNode', DEBUG, 'sub_xml: %s' % str(sub_xml))
             # Then do the udpate
             conflict_list += self.addNode(xml=sub_xml,object=sub_object,
                             previous_xml=sub_previous_xml, force=force,
@@ -214,12 +214,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     A node is deleted
     """
     # In the case where we have to delete an object
-    LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, object path: %s' % repr(object.getPhysicalPath()))
+    #LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, object path: %s' % repr(object.getPhysicalPath()))
     conflict_list = []
     if xml is not None:
       xml = self.convertToXml(xml)
     if object_id is None:
-      LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, SubObjectDepth: %i' % self.getSubObjectDepth(xml))
+      #LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, SubObjectDepth: %i' % self.getSubObjectDepth(xml))
       if xml.nodeName == self.xml_object_tag:
         object_id = self.getAttribute(xml,'id')
       elif self.getSubObjectDepth(xml)==1:
@@ -233,7 +233,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           conflict_list += self.deleteNode(xml=sub_xml,object=sub_object,
                                        force=force, simulate=simulate, **kw)
         except (KeyError, AttributeError, TypeError):
-          LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, Unable to delete SubObject: %s' % str(sub_object_id))
+          #LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, Unable to delete SubObject: %s' % str(sub_object_id))
           pass
     if object_id is not None: # We do have an object_id
       self.deleteObject(object, object_id)
@@ -244,7 +244,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if xml.nodeName in self.local_role_list and not simulate:
         # We want to del a local role
         user = self.getAttribute(xml,'id')
-        LOG('ERP5Conduit.deleteNode local_role: ', DEBUG, 'user: %s' % repr(user))
+        #LOG('ERP5Conduit.deleteNode local_role: ', DEBUG, 'user: %s' % repr(user))
         if xml.nodeName.find(self.local_role_tag)>=0:
           object.manage_delLocalRoles([user])
         elif xml.nodeName.find(self.local_group_tag)>=0:
@@ -259,7 +259,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     try:
       object._delObject(object_id)
     except (AttributeError, KeyError):
-      LOG('ERP5Conduit.deleteObject', DEBUG, 'Unable to delete: %s' % str(object_id))
+      #LOG('ERP5Conduit.deleteObject', DEBUG, 'Unable to delete: %s' % str(object_id))
       pass
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
@@ -274,8 +274,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     conflict_list = []
     xml = self.convertToXml(xml)
-    LOG('ERP5Conduit.updateNode', DEBUG, 'xml.nodeName: %s' % xml.nodeName)
-    LOG('ERP5Conduit.updateNode, force: ', DEBUG, force)
+    #LOG('ERP5Conduit.updateNode', DEBUG, 'xml.nodeName: %s' % xml.nodeName)
+    #LOG('ERP5Conduit.updateNode, force: ', DEBUG, force)
     # we have an xupdate xml
     if xml.nodeName == 'xupdate:modifications':
       conflict_list += self.applyXupdate(object=object, xupdate=xml, 
@@ -332,7 +332,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if not (keyword in self.NOT_EDITABLE_PROPERTY):
           # We will look for the data to enter
           data_type = object.getPropertyType(keyword)
-          LOG('ERP5Conduit.updateNode', DEBUG, 'data_type: %s for keyword: %s' % (str(data_type), keyword))
+          #LOG('ERP5Conduit.updateNode', DEBUG, 'data_type: %s for keyword: %s' % (str(data_type), keyword))
           data = self.convertXmlValue(data,data_type=data_type)
           args[keyword] = data
           args = self.getFormatedArgs(args=args)
@@ -349,12 +349,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                 data_type=data_type)
             #current_data = object.getProperty(keyword)
             current_data = self.getProperty(object, keyword)
-            LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict data: %s' % str(data))
-            LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict old_data: %s' % str(old_data))
-            LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict current_data: %s' % str(current_data))
+            #LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict data: %s' % str(data))
+            #LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict old_data: %s' % str(old_data))
+            #LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict current_data: %s' % str(current_data))
             if (old_data != current_data) and (data != current_data) \
                 and keyword not in self.force_conflict_list:
-              LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict on : %s' % keyword)
+              #LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict on : %s' % keyword)
               # Hack in order to get the synchronization working for demo
               # XXX this have to be removed after
               #if not (data_type in self.binary_type_list):
@@ -398,10 +398,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         # We should find the object corresponding to
         # this update, so we have to look in the previous_xml
         sub_object_id = self.getSubObjectId(xml)
-        LOG('ERP5Conduit.updateNode', DEBUG,'isSubObjectModification sub_object_id: %s' % sub_object_id)
+        #LOG('ERP5Conduit.updateNode', DEBUG,'isSubObjectModification sub_object_id: %s' % sub_object_id)
         if previous_xml is not None and sub_object_id is not None:
           sub_previous_xml = self.getSubObjectXml(sub_object_id,previous_xml)
-          LOG('ERP5Conduit.updateNode', DEBUG, 'isSubObjectModification sub_previous_xml: %s' % str(sub_previous_xml))
+          #LOG('ERP5Conduit.updateNode', DEBUG, 'isSubObjectModification sub_previous_xml: %s' % str(sub_previous_xml))
           if sub_previous_xml is not None:
             sub_object = None
             try:
@@ -409,11 +409,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             except KeyError:
               pass
             if sub_object is not None:
-              LOG('ERP5Conduit.updateNode', DEBUG, 'subobject.id: %s' % sub_object.id)
+              #LOG('ERP5Conduit.updateNode', DEBUG, 'subobject.id: %s' % sub_object.id)
               # Change the xml in order to directly apply
               # modifications to the subobject
               sub_xml = self.getSubObjectXupdate(xml)
-              LOG('ERP5Conduit.updateNode', DEBUG, 'sub_xml: %s' % str(sub_xml))
+              #LOG('ERP5Conduit.updateNode', DEBUG, 'sub_xml: %s' % str(sub_xml))
               # Then do the udpate
               conflict_list += self.updateNode(xml=sub_xml, object=sub_object, 
                   force=force, previous_xml=sub_previous_xml, 
@@ -470,7 +470,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         data = data.encode(self.getEncoding())
         data = data.replace('@@@','\n')
       if keyword == 'binary_data':
-        LOG('ERP5Conduit.getFormatedArgs', DEBUG, 'binary_data keyword: %s' % str(keyword))
+        #LOG('ERP5Conduit.getFormatedArgs', DEBUG, 'binary_data keyword: %s' % str(keyword))
         msg = MIMEBase('application','octet-stream')
         Encoders.encode_base64(msg)
         msg.set_payload(data)
@@ -1173,9 +1173,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return object.getId()
 
-  def getGidFromXML(self, xml, gid_from_xml_list):
-    """
-    return the Gid composed with xml informations
-    """
-    return None
+  #def getGidFromXML(self, xml, gid_from_xml_list):
+    #"""
+    #return the Gid composed with xml informations
+    #"""
+    #return None
 

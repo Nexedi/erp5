@@ -230,7 +230,7 @@ class Publication(Subscription):
       Reset all subscribers
     """
     for o in self.getSubscriberList():
-      self.activate().manage_delObjects(o.id)
+      self.activate(activity='SQLQueue').manage_delObjects(o.id)
 
   def getConflictList(self):
     """

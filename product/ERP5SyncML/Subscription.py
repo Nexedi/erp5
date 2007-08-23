@@ -262,7 +262,6 @@ class Signature(Folder, SyncCode):
     else:
       self.setPath(None)
     self.setId(id)
-    self.setGid(id)
     self.setRid(rid)
     self.status = status
     self.setXML(xml_string)
@@ -468,19 +467,11 @@ class Signature(Folder, SyncCode):
     """
     return self.id
 
-  def setGid(self, gid):
-    """
-      set the gid
-    """
-    if gid is type(u'a'):
-      gid = gid.encode('utf-8')
-    self.gid = gid
-
   def getGid(self):
     """
       get the gid
     """
-    return self.gid
+    return self.getId()
 
   def setObjectId(self, id):
     """
@@ -503,6 +494,8 @@ class Signature(Folder, SyncCode):
     """
     if type(xml) is type(u'a'):
       xml = xml.encode('utf-8')
+    if xml is not None:
+      xml = self.xml.replace('@-@@-@','--') # need to put back '--'
     self.partial_xml = xml
 
   def getPartialXML(self):
@@ -510,9 +503,6 @@ class Signature(Folder, SyncCode):
     Set the partial string we will have to
     deliver in the future
     """
-    #LOG('Subscriber.getPartialXML', DEBUG, 'partial_xml: %s' % str(self.partial_xml))
-    if self.partial_xml is not None:
-      self.partial_xml = self.partial_xml.replace('@-@@-@','--') # need to put back '--'
     return self.partial_xml
 
   def getAction(self):
@@ -531,11 +521,10 @@ class Signature(Folder, SyncCode):
     """
     Return the actual action for a partial synchronization
     """
-    conflict_list = []
+    returned_conflict_list = []
     if len(self.conflict_list)>0:
-      for conflict in self.conflict_list:
-        conflict_list += [conflict]
-    return conflict_list
+      returned_conflict_list.extend(self.conflict_list)
+    return returned_conflict_list
 
   def resetConflictList(self):
     """
@@ -547,7 +536,7 @@ class Signature(Folder, SyncCode):
     """
     Return the actual action for a partial synchronization
     """
-    if conflict_list is None or conflict_list==[]:
+    if conflict_list is None or conflict_list == []:
       self.resetConflictList()
     else:
       self.conflict_list = conflict_list
@@ -556,7 +545,6 @@ class Signature(Folder, SyncCode):
     """
     Return the actual action for a partial synchronization
     """
-    LOG('delConflict, conflict', DEBUG, conflict)
     conflict_list = []
     for c in self.getConflictList():
       #LOG('delConflict, c==conflict',0,c==aq_base(conflict))
@@ -774,7 +762,7 @@ class Subscription(Folder, XMLSyncUtils):
     # LOG('getSignature', DEBUG, 'signatures_status: %s' % str(dict_sign))
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     code = self.SLOW_SYNC
-    if len(self.getSignatureList()) > 0:
+    if len(self.getSignatureList()[:1]) > 0:
       code = self.getAlertCode()
     if default is not None:
       code = default
@@ -825,8 +813,8 @@ class Subscription(Folder, XMLSyncUtils):
     return True if the message id was not seen, False if already seen
     """
     last_message_id = getattr(self,'last_message_id',None)
-    LOG('checkCorrectRemoteMessageId  last_message_id = ', DEBUG, last_message_id)
-    LOG('checkCorrectRemoteMessageId  message_id = ', DEBUG, message_id)
+    #LOG('checkCorrectRemoteMessageId  last_message_id = ', DEBUG, last_message_id)
+    #LOG('checkCorrectRemoteMessageId  message_id = ', DEBUG, message_id)
     if last_message_id == message_id:
       return False
     self.last_message_id = message_id
@@ -1015,7 +1003,7 @@ class Subscription(Folder, XMLSyncUtils):
     if authentication_format in (None, ''):
       self.authentication_format = 'b64'
     else:
-      self.authentication_format=authentication_format
+      self.authentication_format = authentication_format
 
   def setAuthenticationType(self, authentication_type):
     """
@@ -1034,22 +1022,13 @@ class Subscription(Folder, XMLSyncUtils):
     conduit_name = self.getConduit()
     conduit = self.getConduitByName(conduit_name)
     gid_gen = getattr(conduit, 'getGidFromObject', None)
-    LOG('getGidFromObject, Conduit :', DEBUG, conduit_name)
-    LOG('getGidFromObject, gid_gen:', DEBUG, gid_gen)
     if callable(gid_gen):
       o_gid = gid_gen(object)
     else:
       raise ValueError, "The conduit "+conduit_name+"seems to not have a \
           getGidFromObject method and it must"
-#    elif getattr(o_base, gid_gen, None) is not None:
-#      generator = getattr(object, gid_gen)
-#      o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
-#    elif gid_gen is not None:
-#      # It might be a script python
-#      generator = getattr(object,gid_gen)
-#      o_gid = generator() # XXX - used to be o_gid = generator(object=object) which is redundant
     o_gid = b16encode(o_gid)
-    LOG('getGidFromObject returning', DEBUG, o_gid)
+    #LOG('getGidFromObject returning', DEBUG, o_gid)
     return o_gid
 
   def getObjectFromGid(self, gid):
@@ -1074,17 +1053,17 @@ class Subscription(Folder, XMLSyncUtils):
       o_id = signature.getObjectId()
       #try with id param too, because gid is not catalogged
       object_list = self.getObjectList(gid = b16decode(gid), id = o_id)
-      LOG('getObjectFromGid :', DEBUG, 'object_list=%s, gid=%s, o_id=%s' % (object_list, gid, o_id))
+      #LOG('getObjectFromGid :', DEBUG, 'object_list=%s, gid=%s, o_id=%s' % (object_list, gid, o_id))
       if o is not None and o in object_list:
         return o
     #LOG('entering in the slow loop of getObjectFromGid !!!',0,'')
     object_list = self.getObjectList(gid = b16decode(gid))
-    LOG('getObjectFromGid :', DEBUG, 'object_list slow loop=%s, gid=%s' % (object_list, gid))
+    #LOG('getObjectFromGid :', DEBUG, 'object_list slow loop=%s, gid=%s' % (object_list, gid))
     for o in object_list:
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
         return o
-    LOG('getObjectFromGid', DEBUG, 'returning None')
+    #LOG('getObjectFromGid', DEBUG, 'returning None')
     return None
 
   def getObjectFromId(self, id):
@@ -1149,7 +1128,7 @@ class Subscription(Folder, XMLSyncUtils):
         # This is probably a python script
         generator = getattr(object, id_generator)
         new_id = generator(object=object, gid=gid)
-      LOG('generateNewId, new_id: ', DEBUG, new_id)
+      #LOG('generateNewId, new_id: ', DEBUG, new_id)
       return new_id
     return None
 
@@ -1335,23 +1314,11 @@ class Subscription(Folder, XMLSyncUtils):
         break
     return o
 
-  def getObjectIdList(self):
-    """
-    Returns the list of gids from signature
-    """
-    return [s for s in self.getSignatureList() if s.getObjectId() is not None]
-
   def getGidList(self):
     """
     Returns the list of gids from signature
     """
-    return [s.getGid() for s in self.getSignatureList() if s.getGid() is not None]
-
-  def getRidList(self):
-    """
-    Returns the list of rids from signature
-    """
-    return [s.getRid() for s in self.getSignatureList() if s.getRid() is not None]
+    return [id for id in self.getObjectIds()]
 
   def getSignatureList(self):
     """
@@ -1372,8 +1339,8 @@ class Subscription(Folder, XMLSyncUtils):
     object_id_list = [id for id in self.getObjectIds()]
     object_list_len = len(object_id_list)
     for i in xrange(0, object_list_len, 100):
-        current_id_list = object_id_list[i:i+100]
-        self.activate().manage_delObjects(current_id_list)
+      current_id_list = object_id_list[i:i+100]
+      self.activate(activity='SQLQueue').manage_delObjects(current_id_list)
 
   def getConflictList(self):
     """

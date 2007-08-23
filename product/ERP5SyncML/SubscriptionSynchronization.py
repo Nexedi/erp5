@@ -87,54 +87,6 @@ class SubscriptionSynchronization(XMLSyncUtils):
 
     return {'has_response':1,'xml':xml_a}
 
-  def SubSync(self, subscription_path, msg=None, RESPONSE=None):
-    """
-      This is the synchronization method for the client
-    """
-    response = None #check if subsync replies to this messages
-    subscription = self.unrestrictedTraverse(subscription_path)
-    if msg==None and (subscription.getSubscriptionUrl()).find('file')>=0:
-      msg = self.readResponse(sync_id=subscription.getSubscriptionUrl(),
-          from_url=subscription.getSubscriptionUrl())
-    if msg==None:
-      response = self.SubSyncInit(subscription)
-    else:
-      xml_client = msg
-      if isinstance(xml_client, str) or isinstance(xml_client, unicode):
-        xml_client = Parse(xml_client)
-        status_list = self.getSyncBodyStatusList(xml_client)
-        if status_list not in (None, []):
-          status_code_syncHdr = status_list[0]['code']
-          if status_code_syncHdr.isdigit():
-            status_code_syncHdr = int(status_code_syncHdr)
-          LOG('SubSync status code : ', DEBUG, status_code_syncHdr)
-          if status_code_syncHdr == self.AUTH_REQUIRED:
-            if self.checkChal(xml_client):
-              authentication_format, authentication_type = self.getChal(xml_client)
-              LOG('SubSync auth_required :', DEBUG, 'format:%s, type:%s' % (authentication_format, authentication_type))
-              if authentication_format is not None and \
-                  authentication_type is not None:
-                subscription.setAuthenticationFormat(authentication_format)
-                subscription.setAuthenticationType(authentication_type)
-            else:
-              raise ValueError, "Sorry, the server chalenge for an \
-                  authentication, but the authentication format is not find"
-
-            LOG('SubSync', INFO, 'Authentication required')
-            response = self.SubSyncCred(subscription, xml_client)
-          elif status_code_syncHdr == self.UNAUTHORIZED:
-            LOG('SubSync', INFO, 'Bad authentication')
-            return {'has_response':0, 'xml':xml_client}
-          else:
-            response = self.SubSyncModif(subscription, xml_client)
-        else:
-            response = self.SubSyncModif(subscription, xml_client)
-
-    if RESPONSE is not None:
-      RESPONSE.redirect('manageSubscriptions')
-    else:
-      return response
-
   def SubSyncCred (self, subscription, msg=None, RESPONSE=None):
     """
       This method send crendentials

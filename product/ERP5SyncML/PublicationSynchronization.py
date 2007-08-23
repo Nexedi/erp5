@@ -90,7 +90,7 @@ class PublicationSynchronization(XMLSyncUtils):
         next_anchor)
       if subscriber.getNextAnchor() != last_anchor:
         if last_anchor in (None, ''):
-          LOG('PubSyncInit', DEBUG, 'anchor null')
+          LOG('PubSyncInit', INFO, 'anchor null')
         else:
           message = "bad anchors in PubSyncInit! " + \
               subscriber.getNextAnchor() + " and " + last_anchor
@@ -199,74 +199,6 @@ class PublicationSynchronization(XMLSyncUtils):
       content_type=publication.getSyncContentType())
 
     return {'has_response':1, 'xml':xml_a}
-
-
-  def PubSync(self, publication_path, msg=None, RESPONSE=None, subscriber=None):
-    """
-      This is the synchronization method for the server
-    """
-    LOG('PubSync', DEBUG, 'Starting... publication: %s' % (publication_path))
-    # Read the request from the client
-    publication = self.unrestrictedTraverse(publication_path)
-    xml_client = msg
-    if xml_client is None:
-      xml_client = self.readResponse(from_url=publication.getPublicationUrl())
-    LOG('PubSync', DEBUG, 'Starting... msg: %s' % str(xml_client))
-    result = None
-
-    if xml_client is not None:
-      if isinstance(xml_client, str) or isinstance(xml_client, unicode):
-        xml_client = Parse(xml_client)
-      first_node = xml_client.childNodes[0]
-
-      if first_node.nodeName != "SyncML":
-        LOG('PubSync', INFO, 'This is not a SyncML Message')
-        raise ValueError, "Sorry, This is not a SyncML Message"
-      alert_code = self.getAlertCodeFromXML(xml_client)
-      # Get informations from the header
-      client_header = first_node.childNodes[1]
-      if client_header.nodeName != "SyncHdr":
-        LOG('PubSync', INFO, 'This is not a SyncML Header')
-        raise ValueError, "Sorry, This is not a SyncML Header"
-      subscription_url = self.getSubscriptionUrl(client_header)
-      # Get the subscriber or create it if not already in the list
-      subscriber = publication.getSubscriber(subscription_url)
-      if subscriber == None:
-        subscriber = Subscriber(publication.generateNewId(),subscription_url)
-        subscriber.setXMLMapping(publication.getXMLMapping())
-        subscriber.setConduit(publication.getConduit())
-        publication.addSubscriber(subscriber)
-        # first synchronization
-        result = self.PubSyncInit(publication,xml_client,subscriber=subscriber,
-            sync_type=self.SLOW_SYNC)
-      elif self.checkAlert(xml_client) and \
-          alert_code in (self.TWO_WAY, self.SLOW_SYNC, \
-          self.ONE_WAY_FROM_SERVER):
-        subscriber.setXMLMapping(publication.getXMLMapping())
-        subscriber.setConduit(publication.getConduit())
-        result = self.PubSyncInit(publication=publication, 
-            xml_client=xml_client, subscriber=subscriber, sync_type=alert_code)
-      else:
-        #we log the user authenticated to do the synchronization with him
-        if self.checkMap(xml_client) :
-          self.setRidWithMap(xml_client, subscriber)
-        if subscriber.isAuthenticated():
-            uf = self.getPortalObject().acl_users
-            user = uf.getUserById(subscriber.getUser()).__of__(uf)
-            newSecurityManager(None, user)
-            result = self.PubSyncModif(publication, xml_client)
-        else:
-          result = self.PubSyncModif(publication, xml_client)
-    elif subscriber is not None:
-      # This looks like we are starting a synchronization after
-      # a conflict resolution by the user
-      result = self.PubSyncInit(publication=publication, xml_client=None,
-          subscriber=subscriber, sync_type=self.TWO_WAY)
-
-    if RESPONSE is not None:
-      RESPONSE.redirect('managePublications')
-    elif result is not None:
-      return result
 
   def PubSyncModif(self, publication, xml_client):
     """
