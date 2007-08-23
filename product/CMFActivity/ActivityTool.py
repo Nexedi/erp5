@@ -505,7 +505,7 @@ class ActivityTool (Folder, UniqueObject):
           currentNode = self.getCurrentNode()
 
           # only distribute when we are the distributingNode or if it's empty
-          if (self.distributingNode == self.getCurrentNode()):
+          if (self.distributingNode == currentNode):
             self.distribute(len(self._nodes))
 
           elif not self.distributingNode:
