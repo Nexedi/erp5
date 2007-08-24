@@ -108,7 +108,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: \'externe\'  in here.getSource() or not here.isDematerialization()</string> </value>
+            <value> <string>python: \'externe\'  in here.getSource() and not here.isDematerialization()</string> </value>
         </item>
       </dictionary>
     </pickle>
