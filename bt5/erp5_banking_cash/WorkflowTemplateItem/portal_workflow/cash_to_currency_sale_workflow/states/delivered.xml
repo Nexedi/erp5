@@ -37,7 +37,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Terminate the operation</string> </value>
+            <value> <string>Delivered</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
