@@ -912,11 +912,9 @@ class XMLSyncUtilsMixin(SyncCode):
             set_synchronized = 0
             # This object has changed on this side, we have to generate some xmldiff
             if subscriber.getMediaType() == self.MEDIA_TYPE['TEXT_XML']:
-              xml_string = self.getXupdateObject(
-                                      domain.getXMLFromObject(object),
-                                      signature.getXML())
+              xml_string = self.getXupdateObject(xml_object, signature.getXML())
             else: #if there is no xml, we re-send all the object
-              xml_string=domain.getXMLFromObject(object)
+              xml_string = xml_object
             if xml_string.count('\n') > self.MAX_LINES:
               # This make comment fails, so we need to replace
               if xml_string.find('--') >= 0:
@@ -936,7 +934,7 @@ class XMLSyncUtilsMixin(SyncCode):
               xml_string = '<!--' + ''.join(short_string_list) + '-->'
             signature.setStatus(status)
             if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
-              xml_string = domain.getXMLFromObject(object)
+              xml_string = xml_object
             rid = signature.getRid()#in fisrt, we try with rid if there is one
             gid = signature.getGid()
             syncml_data += self.replaceXMLObject(
@@ -1446,7 +1444,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                              subscriber=subscriber,
                              cmd_id=cmd_id,xml_confirmation=xml_confirmation,
                              conduit=conduit,
-                             max=self.MAX_OBJECTS)
+                             max=None)
       syncml_data = result['syncml_data']
       xml_confirmation = result['xml_confirmation']
       cmd_id = result['cmd_id']
