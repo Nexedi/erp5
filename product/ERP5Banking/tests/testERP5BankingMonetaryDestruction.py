@@ -853,9 +853,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'CheckInitialInventoryForDematerialization ' \
                     + 'SetMonetaryDestructionSourceTotalAssetPriceForDematerialization ' \
                     + 'PlanMonetaryDestruction ' \
-                    + 'OrderMonetaryDestruction ' \
-                    + 'ConfirmMonetaryDestruction ' \
-                    + 'ConfirmToDeliverMonetaryDestruction ' \
+                    + 'ValidateMonetaryDestruction ' \
                     + 'CheckFinalInventoryForDematerialization '		    
 		    
     sequence_list.addSequenceString(another_sequence_string)
