@@ -462,7 +462,7 @@ class XMLSyncUtilsMixin(SyncCode):
     attr_version.value = '1.0'
     xupdate_doc.documentElement.setAttributeNode(attr_ns)
     xupdate_doc.documentElement.setAttributeNode(attr_version)
-    xupdate = xupdate_doc.toxml()
+    xupdate = xupdate_doc.toxml('utf-8')
     #omit xml declaration
     xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
     return xupdate
