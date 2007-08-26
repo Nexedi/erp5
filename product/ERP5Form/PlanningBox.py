@@ -1109,7 +1109,7 @@ class BasicStructure:
     self.selection_name = selection_name
     self.report_root_list = report_root_list
     self.portal_types = portal_types
-    self.basic_group_list = None
+    self.basic_group_list = []
     # needed to generate groups
     self.report_groups= ''
     self.list_error = list_error
@@ -1261,9 +1261,9 @@ class BasicStructure:
                                     sort_on=self.selection.sort_on,
                                     form_id=self.form.id)
 
-    if report_tree_list == []:
-      raise PlanningBoxError, "Report tree list is empty on %s" % \
-        self.field.absolute_url()
+    #if report_tree_list == []:
+      #raise PlanningBoxError, "Report tree list is empty on %s" % \
+      #  self.field.absolute_url()
 
 
     ##################################################
@@ -1460,11 +1460,12 @@ class BasicStructure:
       self.report_groups=self.report_groups[self.main_axis_info['bound_start']:
                                             self.main_axis_info['bound_stop']]
     else:
+      pass
       # no group is available so the Y and X axis will be empty...
-      raise PlanningBoxError, \
-          'selection method returned empty list of objects : please check' \
-          'list_method and report_root of %s' % \
-          self.field.absolute_url()
+      #raise PlanningBoxError, \
+      #    'selection method returned empty list of objects : please check' \
+      #    'list_method and report_root of %s' % \
+      #    self.field.absolute_url()
 
     ##################################################
     ############ GETTING SEC AXIS BOUNDS #############
@@ -1820,7 +1821,7 @@ class BasicGroup:
     self.title = title
     self.name = name
     self.url = url
-    self.basic_group_list = None # used with ReportTree
+    self.basic_group_list = [] # used with ReportTree
     self.basic_activity_list = None # bloc activities
     self.constraints = constraints# global contraints applying to all group
     self.depth = depth # depth of the actual group (report_tree mode)
