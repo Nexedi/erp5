@@ -91,7 +91,7 @@ IDEAS:\n
     <meta name="generator" content="ERP5"/>\n
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n
     <title tal:define="title title | string:ERP5"\n
-           tal:content="python: \'%s | %s\' % (title, here.getPortalObject().getTitle() or here.getPortalObject().getId())"/>\n
+           tal:content="python: \'%s | %s\' % (getattr(here, \'getTranslatedTitle\', None) is not None and here.getTranslatedTitle() or title, here.getPortalObject().getTitle() or here.getPortalObject().getId())"/>\n
     <tal:block tal:repeat="css css_list">\n
       <link tal:attributes="href css" type="text/css" rel="stylesheet"/>\n
     </tal:block>\n
