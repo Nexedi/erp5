@@ -30,8 +30,11 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
+
+from zLOG import LOG
 
 class OrderLine(DeliveryLine):
     """
@@ -61,6 +64,22 @@ class OrderLine(DeliveryLine):
 
     # Declarative interfaces
     __implements__ = ( Interface.Variated, )
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'hasLineContent')
+    def hasLineContent(self):
+      """Return true if the object contains lines.
+         We cache results in a volatile variable.
+      """
+      acquisition_key = ('hasLineContent', self.getPath())
+      transactional_variable = getTransactionalVariable(acquisition_key)
+      try:
+        result = transactional_variable['hasLineContent']
+      except KeyError:
+        result = (len(self.contentValues(meta_type=self.meta_type)) > 0)
+        transactional_variable['hasLineContent'] = result
+      LOG('hasLineContent', 0, '%s %s' % (acquisition_key, result))
+      return result
 
     def applyToOrderLineRelatedMovement(self, portal_type='Simulation Movement', 
                                         method_id = 'expand'):
