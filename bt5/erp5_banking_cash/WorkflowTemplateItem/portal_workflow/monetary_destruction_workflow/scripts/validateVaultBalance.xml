@@ -109,7 +109,10 @@ if transaction.isDematerialization():\n
   if not \'encaisse_des_billets_retires_de_la_circulation\' in vault:\n
     msg = Message(domain="ui", message="Invalid source.")\n
     raise ValidationFailed, (msg,)\n
-\n
+  if source_section in source_object.getPath():\n
+    msg = Message(domain="ui", message="You can\'t used this site.")\n
+    raise ValidationFailed, (msg,)\n
+    \n
 \n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
