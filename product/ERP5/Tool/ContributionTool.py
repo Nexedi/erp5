@@ -199,7 +199,7 @@ class ContributionTool(BaseTool):
   def newContent(self, id=None, portal_type=None, url=None, container=None,
                        container_path=None,
                        discover_metadata=1, temp_object=0,
-                       user_login=None, **kw):
+                       user_login=None, data=None, file_name=None, **kw):
     """
       The newContent method is overriden to implement smart content
       creation by detecting the portal type based on whatever information
@@ -223,6 +223,10 @@ class ContributionTool(BaseTool):
         We always generate ID. So, we must prevent using the one
         which we were provided.
     """
+    if file_name is not None: kw['file_name'] = file_name
+    if data is not None: kw['data'] = data # This is only used to make sure
+                                           # we can pass file as parameter to ZPublisher
+                                           # whenever we ingest email
     # Temp objects use the standard newContent from Folder
     if temp_object:
       # For temp_object creation, use the standard method
