@@ -318,7 +318,7 @@ class Image(File, OFSImage):
       _setCacheHeaders(self, dict(display=display, format=format, quality=quality, resolution=resolution))
 
       # display may be set from a cookie (?)
-      if (display is not None or resolution is not None or quality!=75 or format!='')\
+      if (display is not None or resolution is not None or quality!=75 or format != '')\
                                                and defaultdisplays.has_key(display):
           if not self.hasConversion(display=display, format=format,
                                     quality=quality,resolution=resolution):
