@@ -358,6 +358,9 @@ class SimulationTool(BaseTool):
         group_by = new_kw.pop('group_by', [])
         if len(group_by):
           new_kw['group_by_expression'] = ', '.join(['%s.%s' % (table, x) for x in group_by])
+        column_value_dict = new_kw.pop('column_value_dict', {})
+        for key, value in column_value_dict.iteritems():
+          new_kw['%s.%s' % (table, key)] = value
         sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
         return sql_kw
 
@@ -449,48 +452,51 @@ class SimulationTool(BaseTool):
           operator='AND'))
 
       # Some columns exists on multiple tables, we have to clear ambiguities
+      column_value_dict = {}
       if resource_uid is not None :
-        new_kw[table + '.resource_uid'] = resource_uid
+        column_value_dict['resource_uid'] = resource_uid
       if section_uid is not None :
-        new_kw[table + '.section_uid'] = section_uid
+        column_value_dict['section_uid'] = section_uid
         sql_kw['section_filtered'] = 1
       if node_uid is not None :
-        new_kw[table + '.node_uid'] = node_uid
+        column_value_dict['node_uid'] = node_uid
 
       resource_uid_list = self._generatePropertyUidList(resource)
       if resource_uid_list:
-        new_kw[table + '.resource_uid'] = resource_uid_list
+        column_value_dict['resource_uid'] = resource_uid_list
 
       item_uid_list = self._generatePropertyUidList(item)
       if item_uid_list:
-        new_kw[table + '.aggregate_uid'] = item_uid_list
+        column_value_dict['aggregate_uid'] = item_uid_list
 
       node_uid_list = self._generatePropertyUidList(node)
       if node_uid_list:
-        new_kw[table + '.node_uid'] = node_uid_list
+        column_value_dict['node_uid'] = node_uid_list
 
       payment_uid_list = self._generatePropertyUidList(payment)
       if payment_uid_list:
-        new_kw[table + '.payment_uid'] = payment_uid_list
+        column_value_dict['payment_uid'] = payment_uid_list
 
       section_uid_list = self._generatePropertyUidList(section)
       if section_uid_list:
-        new_kw[table + '.section_uid'] = section_uid_list
+        column_value_dict['section_uid'] = section_uid_list
         sql_kw['section_filtered'] = 1
 
       mirror_section_uid_list = self._generatePropertyUidList(mirror_section)
       if mirror_section_uid_list:
-        new_kw[table + '.mirror_section_uid'] = mirror_section_uid_list
+        column_value_dict['mirror_section_uid'] = mirror_section_uid_list
 
       variation_text_list = self._generatePropertyUidList(variation_text,
                                                           as_text=1)
       if variation_text_list:
-        new_kw[table + '.variation_text'] = variation_text_list
+        column_value_dict['variation_text'] = variation_text_list
 
       sub_variation_text_list = self._generatePropertyUidList(
                                               sub_variation_text, as_text=1)
       if sub_variation_text_list:
-        new_kw[table + '.sub_variation_text'] = sub_variation_text_list
+        column_value_dict['sub_variation_text'] = sub_variation_text_list
+
+      new_kw['column_value_dict'] = column_value_dict
 
       # category membership
       resource_category_uid_list = self._generatePropertyUidList(
