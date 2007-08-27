@@ -350,7 +350,18 @@ class SimulationTool(BaseTool):
 
       return omit_query
 
-    def _generateSQLKeywordDict(self, table='stock',
+    def _generateSQLKeywordDict(self, table='stock', **kw):
+        sql_kw, new_kw = self._generateKeywordDict(table=table, **kw)
+        return self._generateSQLKeywordDictFromKeywordDict(table=table, sql_kw=sql_kw, new_kw=new_kw)
+
+    def _generateSQLKeywordDictFromKeywordDict(self, table, sql_kw, new_kw):
+        group_by = new_kw.pop('group_by', [])
+        if len(group_by):
+          new_kw['group_by_expression'] = ', '.join(['%s.%s' % (table, x) for x in group_by])
+        sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
+        return sql_kw
+
+    def _generateKeywordDict(self, table='stock',
         # dates
         from_date=None, to_date=None, at_date=None,
         omit_mirror_date=1,
@@ -610,29 +621,27 @@ class SimulationTool(BaseTool):
       # build the group by expression
       group_by_expression_list = []
       if group_by_node:
-        group_by_expression_list.append('%s.node_uid' % table)
+        group_by_expression_list.append('node_uid')
       if group_by_mirror_node:
-        group_by_expression_list.append('%s.mirror_node_uid' % table)
+        group_by_expression_list.append('mirror_node_uid')
       if group_by_section:
-        group_by_expression_list.append('%s.section_uid' % table)
+        group_by_expression_list.append('section_uid')
       if group_by_mirror_section:
-        group_by_expression_list.append('%s.mirror_section_uid' % table)
+        group_by_expression_list.append('mirror_section_uid')
       if group_by_payment:
-        group_by_expression_list.append('%s.payment_uid' % table)
+        group_by_expression_list.append('payment_uid')
       if group_by_sub_variation:
-        group_by_expression_list.append('%s.sub_variation_text' % table)
+        group_by_expression_list.append('sub_variation_text')
       if group_by_variation:
-        group_by_expression_list.append('%s.variation_text' % table)
+        group_by_expression_list.append('variation_text')
       if group_by_movement:
-        group_by_expression_list.append('%s.uid' % table)
+        group_by_expression_list.append('uid')
       if group_by_expression_list:
         # by default, we group by resource
         if group_by_resource:
-          group_by_expression_list.append('%s.resource_uid' % table)
-        new_kw['group_by_expression'] = ', '.join(group_by_expression_list)
-      
-      sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
-      return sql_kw
+          group_by_expression_list.append('resource_uid')
+        new_kw['group_by'] = group_by_expression_list
+      return sql_kw, new_kw 
 
     #######################################################
     # Inventory management
