@@ -21,7 +21,7 @@ import App
 from AccessControl import getSecurityManager, ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
-from Products.DCWorkflow.Transitions import TRIGGER_AUTOMATIC, TRIGGER_WORKFLOW_METHOD
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 from Products.DCWorkflow.Expression import StateChangeInfo, createExprContext
 from Products.CMFCore.WorkflowTool import addWorkflowFactory
 from Products.CMFActivity.ActiveObject import ActiveObject
@@ -168,21 +168,23 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
             value = vdef.default_value
 
         return value
-    
+
     security.declarePrivate('isWorkflowMethodSupported')
     def isWorkflowMethodSupported(self, ob, method_id):
         '''
         Returns a true value if the given workflow is 
         automatic with the propper method_id
+
+        NOTE: this method is not used in ERP5 because
+        of transition_list approach
         '''
-        #return 0 # Why this line ??? # I guess it should be used
         for t in self.interactions.values():
             if t.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 if method_id in t.method_id:
                     if ((t.portal_type_filter is None or ob.getPortalType() in t.portal_type_filter)
                       and self._checkTransitionGuard(t, ob)):
                         return 1
-        return 0                
+        return 0
 
 
     security.declarePrivate('wrapWorkflowMethod')
@@ -193,104 +195,111 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         '''
         return
 
+    security.declarePrivate('notifyWorkflowMethod')
+    def notifyWorkflowMethod(self, ob, action, args=None, kw=None, transition_list=None):
+      """
+      InteractionWorkflow is stateless. Thus, this function should do nothing.
+      """
+      return
+
     security.declarePrivate('notifyBefore')
-    def notifyBefore(self, ob, action, args=None, kw=None):
+    def notifyBefore(self, ob, action, args=None, kw=None, transition_list=None):
         '''
         Notifies this workflow of an action before it happens,
         allowing veto by exception.  Unless an exception is thrown, either
         a notifySuccess() or notifyException() can be expected later on.
         The action usually corresponds to a method name.
         '''
-        for t in self.interactions.values():
-            tdef = None
-            if t.trigger_type == TRIGGER_AUTOMATIC:
-                if t.portal_type_filter is None:
-                  tdef = t
-                elif ob.getPortalType() in t.portal_type_filter:
-                  tdef = t
-            elif t.trigger_type == TRIGGER_WORKFLOW_METHOD:
-                if action in t.method_id:
-                    if t.portal_type_filter is None:
-                      tdef = t
-                    elif ob.getPortalType() in t.portal_type_filter:
-                      tdef = t
-            if tdef is not None:
-                former_status = self._getStatusOf(ob)
-                # Execute the "before" script.
-                for script_name in tdef.script_name:
-                    script = self.scripts[script_name]
-                    # Pass lots of info to the script in a single parameter.
-                    sci = StateChangeInfo(
-                        ob, self, former_status, tdef, None, None, kwargs=kw)
-                    script(sci)  # May throw an exception.
+        if not transition_list: return
+        # Wrap args into kw since this is the only way
+        # to be compatible with DCWorkflow
+        # A better approach consists in extending DCWorkflow
+        kw = kw.copy()
+        kw['workflow_method_args'] = args
+        filtered_transition_list = []
+
+        for t_id in transition_list:
+          tdef = self.interactions[t_id]
+          if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+            if (tdef.portal_type_filter is None or \
+                ob.getPortalType() in tdef.portal_type_filter) and \
+                self._checkTransitionGuard(tdef, ob, **kw):
+              filtered_transition_list.append(tdef.id)
+              former_status = self._getStatusOf(ob)
+              # Execute the "before" script.
+              for script_name in tdef.script_name:
+                script = self.scripts[script_name]
+                # Pass lots of info to the script in a single parameter.
+                sci = StateChangeInfo(
+                    ob, self, former_status, tdef, None, None, kwargs=kw)
+                script(sci)  # May throw an exception
+
+        return filtered_transition_list
 
     security.declarePrivate('notifySuccess')
-    def notifySuccess(self, ob, action, result, args=None, kw=None):
+    def notifySuccess(self, ob, action, result, args=None, kw=None, transition_list=None):
         '''
         Notifies this workflow that an action has taken place.
         '''
-        # initialize variables
-        econtext = None
-        sci = None
-        for t in self.interactions.values():
-            tdef = None
-            if t.trigger_type == TRIGGER_AUTOMATIC:
-                if t.portal_type_filter is None:
-                  tdef = t
-                elif ob.getPortalType() in t.portal_type_filter:
-                  tdef = t
-            elif t.trigger_type == TRIGGER_WORKFLOW_METHOD:
-                if action in t.method_id:
-                    if t.portal_type_filter is None:
-                      tdef = t
-                    elif ob.getPortalType() in t.portal_type_filter:
-                      tdef = t
-            if tdef is not None:
-                # Update variables.
-                former_status = self._getStatusOf(ob)
-                tdef_exprs = tdef.var_exprs
-                if tdef_exprs is None: tdef_exprs = {}
-                status = {}
-                for id, vdef in self.variables.items():
-                    if not vdef.for_status:
-                        continue
-                    expr = None
-                    if tdef_exprs.has_key(id):
-                        expr = tdef_exprs[id]
-                    elif not vdef.update_always and former_status.has_key(id):
-                        # Preserve former value
-                        value = former_status[id]
-                    else:
-                        if vdef.default_expr is not None:
-                            expr = vdef.default_expr
-                        else:
-                            value = vdef.default_value
-                    if expr is not None:
-                        # Evaluate an expression.
-                        if econtext is None:
-                            # Lazily create the expression context.
-                            if sci is None:
-                                sci = StateChangeInfo(
-                                    ob, self, former_status, tdef,
-                                    None, None, None)
-                            econtext = createExprContext(sci)
-                        value = expr(econtext)
-                    status[id] = value
-        
-                # Execute "after" scripts
-                for script_name in tdef.after_script_name:
-                    script = self.scripts[script_name]
-                    # Pass lots of info to the script in a single parameter.
-                    sci = StateChangeInfo(
-                        ob, self, status, tdef, None, None, kwargs=kw)
-                    script(sci)  # May throw an exception.
+        if not transition_list: return
 
-                # Execute "activity" scripts
-                for script_name in tdef.activate_script_name:
-                    self.activate(activity='SQLQueue')\
-                        .activeScript(script_name, ob.getRelativeUrl(), status, tdef.id)
-                
-    
+        kw = kw.copy()
+        kw['workflow_method_args'] = args
+        kw['workflow_method_result'] = result
+
+        for t_id in transition_list:
+          tdef = self.interactions[t_id]
+          if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+            if (tdef.portal_type_filter is None or \
+                ob.getPortalType() in tdef.portal_type_filter):
+              # Initialize variables
+              former_status = self._getStatusOf(ob)
+              econtext = None
+              sci = None
+
+              # Update variables.
+              tdef_exprs = tdef.var_exprs
+              if tdef_exprs is None: tdef_exprs = {}
+              status = {}
+              for id, vdef in self.variables.items():
+                if not vdef.for_status:
+                  continue
+                expr = None
+                if tdef_exprs.has_key(id):
+                  expr = tdef_exprs[id]
+                elif not vdef.update_always and former_status.has_key(id):
+                  # Preserve former value
+                  value = former_status[id]
+                else:
+                  if vdef.default_expr is not None:
+                    expr = vdef.default_expr
+                  else:
+                    value = vdef.default_value
+                if expr is not None:
+                  # Evaluate an expression.
+                  if econtext is None:
+                    # Lazily create the expression context.
+                    if sci is None:
+                      sci = StateChangeInfo(
+                          ob, self, former_status, tdef,
+                          None, None, None)
+                    econtext = createExprContext(sci)
+                  value = expr(econtext)
+                status[id] = value
+
+              # Execute the "after" script.
+              for script_name in tdef.after_script_name:
+                script = self.scripts[script_name]
+                # Pass lots of info to the script in a single parameter.
+                sci = StateChangeInfo(
+                    ob, self, former_status, tdef, None, None, kwargs=kw)
+                script(sci)  # May throw an exception
+
+              # Execute "activity" scripts
+              for script_name in tdef.activate_script_name:
+                self.activate(activity='SQLQueue')\
+                    .activeScript(script_name, ob.getRelativeUrl(), status, tdef.id)
+
     security.declarePrivate('activeScript')
     def activeScript(self, script_name, ob_url, status, tdef_id):
           script = self.scripts[script_name]
@@ -302,7 +311,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   
     def _getWorkflowStateOf(self, ob, id_only=0):
           return None
-          
+
 Globals.InitializeClass(InteractionWorkflowDefinition)
 
 addWorkflowFactory(InteractionWorkflowDefinition, id='interaction_workflow',

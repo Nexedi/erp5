@@ -32,7 +32,7 @@ from Products.ERP5Type.Permissions import ManagePortal
 from Products.DCWorkflow.ContainerTab import ContainerTab
 from Products.DCWorkflow.Guard import Guard
 from Products.DCWorkflow.Expression import Expression
-from Products.DCWorkflow.Transitions import TRIGGER_AUTOMATIC, TRIGGER_WORKFLOW_METHOD
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
 from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Base import _aq_reset
@@ -57,6 +57,7 @@ class InteractionDefinition (SimpleItem):
     activate_script_name = ()  # Executed as activity
     method_id = ()
     portal_type_filter = None
+    once_per_transaction = False
 
     manage_options = (
         {'label': 'Properties', 'action': 'manage_properties'},
@@ -116,6 +117,7 @@ class InteractionDefinition (SimpleItem):
     def setProperties(self, title,
                       portal_type_filter=None,
                       trigger_type=TRIGGER_WORKFLOW_METHOD,
+                      once_per_transaction=False,
                       script_name=(),
                       after_script_name=(),
                       activate_script_name=(),
@@ -144,6 +146,7 @@ class InteractionDefinition (SimpleItem):
         self.title = str(title)
         self.description = str(description)
         self.trigger_type = int(trigger_type)
+        self.once_per_transaction = bool(once_per_transaction)
         self.script_name = script_name
         self.after_script_name = after_script_name
         self.activate_script_name = activate_script_name
