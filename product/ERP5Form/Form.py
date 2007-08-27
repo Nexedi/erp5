@@ -68,7 +68,7 @@ def get_value(self, id, **kw):
           field = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id), self)
         else:
           field = self
-        
+
         kw['field'] = field
 
         form = field.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check

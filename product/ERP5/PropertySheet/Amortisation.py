@@ -109,7 +109,6 @@ class Amortisation:
             'acquisition_portal_type'       : Expression('python:[]'),
             'acquisition_depends'           : None,
             'mode'        : 'w' },
-            
         # Properties specific to each amortisation method
         {   'id'          : 'degressive_coefficient',
             'description' : 'The fiscal coefficient to use in degressive amortisation',
