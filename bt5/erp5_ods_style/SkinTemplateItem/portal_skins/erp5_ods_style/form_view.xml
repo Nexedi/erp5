@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5OOo.OOoTemplate</string>
+          <string>OOoTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAAIAOeI4zbMBk1mQgEAAFEHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
+EED3PYXR3lbbVTFxAi30BOkBJvLYEeiHZhSS21cO5NM2lKZYOw1I741GGmmx2ltT7TCS9q4TT82j
+qNAp32s3duJj/V6/iNXyYWHB6QGJ29OgyuscncNOpOhaD6SpdWCRWlatD+h6r5JFx+3X+e1kWj5U
+F/CgDdZ5YjxUFxn2Gmo+BOwEhGC0As55yp3rm6OruVY0FCJCT1tEFhfIkIypA/C2E1LIu5y3KW/e
+DXpM8ZgLPUti4EQbiGXwoBQazKGPUqUYp53mYhZ3FREMxgNjIXjwIYV8E1IhfPRjRCp30lPqxeDs
+vSkG1xZGJPmq2UKgoo472d+fDUpu6p4m6UZdC/6Ww51yxj3LqVdvwrOf/9fMv3OJDwZpdqxFhtke
+nvU22Y0DbUjyadgEN84Nn7ewyJz/xXNpF/LHt7j8BFBLAQIUABQAAAAIAOeI4zbMBk1mQgEAAFEH
+AAAVAAAAAAAAAAAAAAAAAAAAAABNRVRBLUlORi9tYW5pZmVzdC54bWxQSwUGAAAAAAEAAQBDAAAA
+dQEAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<office:document-content xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' xmlns:tal=\'http://xml.zope.org/namespaces/tal\' xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\' xmlns:metal=\'http://xml.zope.org/namespaces/metal\' tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\' office:version=\'1.0\' tal:define="global frame_width python:25.8;global column_len form/listBox_getColumnNum" metal:define-macro="master">\n
+  <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
+<office:body>\n
+  <office:spreadsheet>\n
+    <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name python: form.get_field(\'my_title\').get_value(\'default\')">\n
+      <tal:block  metal:define-macro="form_layout"  tal:define="field_errors python: request.get(\'field_errors,{}\'); dummy python: request.set(\'here\', here)">\n
+\n
+        <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
+          <tal:block tal:define="field_list python: form.get_fields_in_group(group);">\n
+            <tal:block tal:condition="python: field_list not in [None, []]">\n
+              <tal:block tal:repeat="field field_list">\n
+                <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
+                  <table:table-column table:style-name="co2"/>\n
+                  <table:table-row table:style-name=\'ro2\'>\n
+                    <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\'>\n
+                      <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value (\'title\')).encode(\'utf-8\')"></text:p>\n
+                    </table:table-cell>\n
+                    <tal:block tal:define="item_list python:field.has_value(\'items\') and field.get_value(\'items\') or None" tal:condition="python:field.get_value(\'title\')">\n
+                    <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-content-heading2-with-lines\' tal:attributes="table:number-columns-spanned python: column_len-1" office:value-type=\'string\' tal:define="value python: field.get_value(\'default\')">\n
+                      <tal:block tal:condition="python: same_type(value, []) or same_type(value, ())">\n
+                        <tal:block tal:repeat="item value">\n
+                          <text:p tal:condition="not:item_list" tal:content="python: str(item)"></text:p>\n
+                          <text:p tal:condition="item_list" tal:content="python: [i[0] for i in item_list if i[1] == item][0]"></text:p>\n
+                        </tal:block>\n
+                      </tal:block>\n
+                      <tal:block tal:condition="python: (not (same_type(value, []) or same_type(value, ()))) and value != None">\n
+                        <text:p tal:condition="not:item_list" tal:content="python: str(value)">\n
+                        </text:p>\n
+                        <tal:block tal:condition="python:value != \'\'">\n
+                          <text:p tal:condition="item_list" disable-output-escapint="yes" tal:content="python: [i[0].replace(\'&amp;nbsp;\', \'\') for i in item_list if i[1] == value][0]">\n
+                          </text:p>\n
+                        </tal:block>\n
+                        <tal:block tal:condition="python: value == None">\n
+                          <text:p  table:style="Default" tal:content="python: \' \'" />\n
+                        </tal:block>\n
+                      </tal:block>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
+                </table:table-row>\n
+              </tal:block>\n
+            </tal:block>\n
+            <table:table-row>\n
+              <table:table-cell table:style-name=\'Default\'/>\n
+            </table:table-row>\n
+          </tal:block>\n
+        </tal:block>\n
+      </tal:block>\n
+      <tal:block tal:define="field_list python: form.get_fields_in_group(\'bottom\')">\n
+        <tal:block tal:repeat="field field_list">\n
+          <tal:block metal:use-macro="here/field_ods_macro/macros/field" />\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+  </table:table>\n
+</office:spreadsheet>\n
+</office:body>\n
+</office:document-content>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>form_view</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>OooTemplate_getStyleSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

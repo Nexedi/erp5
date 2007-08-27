@@ -45,176 +45,161 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\'\n
-           xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\'\n
-           xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\'\n
-           xmlns:ooo=\'http://openoffice.org/2004/office\'\n
-           xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\'\n
-           xmlns:dc=\'http://purl.org/dc/elements/1.1/\'\n
-           xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\'\n
-           xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\'\n
-           xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\'\n
-           xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\'\n
-           xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\'\n
-           xmlns:xforms=\'http://www.w3.org/2002/xforms\'\n
-           xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\'\n
-           xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\'\n
-           xmlns:ooow=\'http://openoffice.org/2004/writer\'\n
-           xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\'\n
-           xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\'\n
-           xmlns:dom=\'http://www.w3.org/2001/xml-events\'\n
-           xmlns:xlink=\'http://www.w3.org/1999/xlink\'\n
-           xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\'\n
-           xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\'\n
-           xmlns:oooc=\'http://openoffice.org/2004/calc\'\n
-           xmlns:math=\'http://www.w3.org/1998/Math/MathML\'\n
-           xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
-           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
-           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
-           office:version=\'1.0\'\n
-           tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
-           metal:define-macro="listbox">\n
-  <tal:block tal:define="listboxline_list python:listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
-                         selection_name python:listbox.get_value(\'selection_name\', REQUEST=request);\n
-                         editable_columns python:listbox.get_value(\'editable_columns\', REQUEST=request);\n
-                         editable_field_list python:dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
-                         selection python:here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
-                         is_domain_tree_mode selection/domain_tree_mode | nothing;\n
-                         is_report_tree_mode selection/report_tree_mode | nothing;"\n
-             i18n:domain="ui">\n
+<tal:block xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+          xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
+          xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
+          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;;\n
+          charset=utf-8")\'\n
+          office:version=\'1.0\' metal:define-macro="master">\n
+  <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
+  <office:scripts/>\n
 \n
+  <office:body metal:define-macro="form_layout">\n
+  <office:spreadsheet>\n
 \n
-      <tal:block tal:define="global column_width python:here.ListBox_getColumnWithDict(listboxline_list, is_domain_tree_mode, is_report_tree_mode, frame_width=21, listbox=listbox)"/>\n
+    ** ##### listbox: must define the field listbox before calling this macro ! ##### **\n
 \n
-      <!--\n
-        <table:table table:style-name=\'ta1\' \n
-                     table:print=\'false\'\n
-                     table:name=\'Sheet1\'\n
-                     tal:attributes=\'table:name python:listbox.get_value("title")\'>\n
-                     -->\n
-            <table:table-column table:style-name=\'co3\' table:default-cell-style-name=\'Default\'/>\n
-\n
-\n
-\n
-\n
+    <tal:block metal:define-macro="listbox">\n
+      <tal:block tal:define="listboxline_list python: listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
+               selection_name python: listbox.get_value(\'selection_name\', REQUEST=request);\n
+               editable_columns python: listbox.get_value(\'editable_columns\', REQUEST=request);\n
+               editable_fields python: dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
+               selection python: here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
+               is_domain_tree_mode selection/domain_tree_mode | nothing;\n
+               is_report_tree_mode selection/report_tree_mode | nothing;" i18n:domain="ui">\n
+        \n
+        <tal:block tal:condition="python: len(listboxline_list) > 1">\n
+          <tal:block tal:condition="python: is_domain_tree_mode">\n
+            <tal:block tal:define="domain_list python: selection.getDomainList()" tal:condition="python: len(domain_list) > 0" >\n
+              <table:table-column table:style-name="co2"/>\n
+              <table:table-row>\n
+                <table:table-cell office:value-type=\'string\'>\n
+                  <text:p tal:content="python: domain_list[-1]" />\n
+                </table:table-cell>\n
+              </table:table-row>\n
+            </tal:block>\n
+          </tal:block>\n
+          \n
           <tal:block tal:repeat="listboxline python: listboxline_list">\n
-            <table:table-row table:style-name=\'ro1\'>\n
+            <table:table-column table:style-name=\'co2\' />\n
+            <tal:block metal:define-slot="for_form_list" tal:condition="listboxline/isTitleLine | python: is_report_tree_mode">\n
+              <tal:block metal:define-slot="list_header">\n
+                <table:table-row table:style-name=\'ro4\'>\n
+                  <tal:block tal:condition="python: is_report_tree_mode">\n
+                    <table:table-cell table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
+                      <tal:block tal:condition="listboxline/getSectionName">\n
+                        <text:p  tal:content="python: here.Localozer.erp5_ui.gettext(listboxline/getSectionName).encode(\'utf-8\')" tal:attributes="style python:\'Section%s\' % listboxline.getSectionDepth()"/>\n
+                      </tal:block>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
 \n
+                  <table:table-column table:style-name="co2"/>\n
+                  <tal:block tal:condition="listboxline/isTitleLine">\n
+                    <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
+                      <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
+                        <tal:block tal:condition="python: column_property is not None" >\n
+                          <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
+                            <text:p tal:content="python: column_property">\n
+                            </text:p>\n
+                          </table:table-cell>\n
+                        </tal:block>\n
+                        <tal:block tal:condition="python: column_property is None">\n
+                          <table:table-cell  table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-colwithdrawnumns-spanned=\'1\' office:value-type=\'string\'>\n
+                            <text:p tal:content="python: \'\'">\n
+                            </text:p>\n
+                          </table:table-cell>\n
+                        </tal:block>\n
+                      </tal:block>\n
+                    </tal:block>\n
+                  </tal:block>\n
+                </table:table-row>\n
+              </tal:block>\n
+            </tal:block>\n
               \n
-            <!-- title {{{ -->\n
-            <tal:block tal:condition="listboxline/isTitleLine">\n
-              <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
-                <tal:block tal:define="column_property python: column_item[1];\n
-                                       column_id python: column_item[0]">\n
-                  <tal:block tal:condition="column_property">\n
-                    <table:table-cell table:style-name=\'report-column-title\' office:value-type=\'string\'>\n
-                      <text:p i18n:translate="" tal:content="column_property"/>\n
-                    </table:table-cell>\n
-                  </tal:block>\n
-                  <tal:block tal:condition="not:column_property">\n
-                    <table:table-cell table:style-name=\'report-column-title\' office:value-type=\'string\'>\n
-                      <text:p/>\n
-                    </table:table-cell>\n
-                  </tal:block>\n
-                </tal:block>\n
-              </tal:block>\n
-            </tal:block>\n
-            <!-- }}} -->\n
-\n
-            <!-- DataLine {{{ -->\n
-            <tal:block tal:condition="listboxline/isDataLine">\n
-              <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
-                <tal:block tal:define="column_property python: column_item[1];\n
-                                       column_id python: column_item[0];\n
-                                       is_list python:same_type(column_property, []) or same_type(column_property, ())">\n
-                  <tal:block tal:condition="python: is_list">\n
-                    <table:table-cell table:style-name=\'report-column-content\' office:value-type=\'string\'>\n
-                      <text:p>XXX list not supported TODO</text:p>\n
-                    </table:table-cell>\n
-                  </tal:block>\n
-\n
-                  <tal:block tal:condition="python: column_property is not None and not is_list"\n
-                             tal:define="field python: None # XXX editable_field_list.get(column_id, None)" >\n
-                    <tal:block tal:condition="field"\n
-                               tal:content="structure python:field.render_ods(column_property)">\n
-                    </tal:block>\n
-                    <tal:block tal:condition="not: field">\n
-                      <table:table-cell\n
-                                  table:style-name=\'report-column-content\'\n
-                                  tal:attributes="table:style-name python:isinstance(column_property, (int, long, float)) and \'report-content-currency3\' or \'report-content-heading3\';\n
-                                                  office:value-type python:isinstance(column_property, (int, long, float)) and \'float\' or \'string\';\n
-                                                  office:value python:isinstance(column_property, str) and unicode(column_property, \'utf8\') or column_property;"\n
-                                  office:value-type=\'string\'>\n
-                                  <text:p tal:content="column_property"/>\n
-                      </table:table-cell>\n
+            <tal:block tal:condition="not:listboxline/isTitleLine">\n
+              <table:table-column table:style-name="co2"/>\n
+              <table:table-row>\n
+                <tal:block tal:condition="listboxline/isDataLine | python: listboxline.isSummaryLine()">\n
+                  <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
+                    <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]; is_list python:same_type(column_property, []) or same_type(column_property, ())">\n
+                      <tal:block tal:condition="python: is_list">\n
+                        <table:table-cell  table:style-name=\'report-content-heading2\'>\n
+                          <tal:block tal:repeat="item column_property">\n
+                            <text:p tal:content="python: here.Localizer.erp5_ui.gettext(item).encode(\'utf-8\')">\n
+                            </text:p>\n
+                          </tal:block>\n
+                        </table:table-cell>\n
+                      </tal:block>\n
+                      <tal:block tal:condition="python: column_property is not None and not is_list">\n
+                        <table:table-cell tal:define="field python: editable_fields.get(column_id, None)" tal:attributes="table:style-name python:isinstance(column_property, (int, long, float)) and \'report-stat2-sans-bold\' or \'report-content-heading2\'">\n
+                          <text:p tal:condition="python: field is None" tal:content="python: column_property" >\n
+                          </text:p>\n
+                          <text:p tal:condition="python: field is not None"\n
+                                tal:content="python: here.Localizer.erp5_ui.gettext(field.render_pdf(column_property)).encode(\'utf-8\')" >\n
+                          </text:p>\n
+                        </table:table-cell>\n
+                      </tal:block>\n
+                      <tal:block tal:condition="python: column_property is None">\n
+                        <table:table-cell office:value-type=\'string\' table:style-name=\'report-content-heading2\' table:number-columns-spanned=\'1\' >\n
+                          <text:p tal:content="python: \'\'" >\n
+                          </text:p>\n
+                        </table:table-cell>\n
+                      </tal:block>\n
                     </tal:block>\n
                   </tal:block>\n
-\n
-                  <tal:block tal:condition="python: column_property is None">\n
-                    <table:table-cell table:style-name=\'report-content-heading3\' office:value-type=\'string\'>\n
-                      <text:p/>\n
-                    </table:table-cell>\n
-                  <tal:block>\n
-\n
+                </tal:block>\n
+                <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()" >\n
+                  <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
+                    <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
+                      <tal:block tal:condition="python: column_property is not None">\n
+                        <table:table-cell table:style-name="report-stat2-sans-bold"  table:number-columns-spanned=\'1\'  tal:define="field python: editable_fields.get(column_id, None)" >\n
+                          <text:p  tal:condition="python: field is None" tal:content="python: column_property">\n
+                          </text:p>\n
+                          <text:p  tal:condition="python: field is not None" tal:content="python:here.Localizer.erp5_ui.gettext(field.render_pdf(column_property)).encode(\'utf-8\')">\n
+                          </text:p>\n
+                        </table:table-cell>\n
+                      </tal:block>\n
+                      <tal:block tal:condition="python: column_property is None">\n
+                        <table:table-cell table:style-name="report-stat2-sans-bold"  table:number-columns-spanned=\'1\' >\n
+                        </table:table-cell>\n
+                      </tal:block>\n
+                    </tal:block>\n
+                  </tal:block>\n
+                </tal:block>\n
+              </table:table-row>\n
+            </tal:block>\n
+          </tal:block>\n
+            \n
+          <table:table-column table:style-name="co2"/>\n
+          <table:table-row metal:define-slot="table_bottom_line">\n
+            <tal:block tal:repeat="listboxline python: listboxline_list">\n
+              <tal:block tal:condition="listboxline/isTitleLine">\n
+                <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
+                  <tal:block tal:define="column_property python: column_item[1]; ">\n
+                    <tal:block tal:condition="python: column_property is not None">\n
+                      <table:table-cell table:style-name=\'table-bottom-line\' table:number-columns-repeated=\'repeat/column_item/number\'/>\n
+                    </tal:block>\n
+                  </tal:block>\n
                 </tal:block>\n
               </tal:block>\n
             </tal:block>\n
-            <!-- }}} -->\n
-\n
-            <!--\n
-            <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()">\n
-              <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
-                <tal:block tal:define="column_property python: column_item[1];\n
-                                       column_id python: column_item[0]">\n
-                  <tal:block tal:condition="python: column_property is not None">\n
-                    <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])"\n
-                        tal:define="field python: editable_field_list.get(column_id, None)">\n
-                      <para  tal:condition="python: field is None"\n
-                             style="TableLastLine" tal:content="string:${column_property}"\n
-                             tal:attributes="style python:isinstance(column_property, (int, long, float)) and \'TableLastLineRightAligned\' or \'TableLastLineLeftAligned\'" />\n
-                      <para  tal:condition="python: field is not None"\n
-                             style="TableLastLine" tal:content="python: field.render_pdf(column_property)"\n
-                             tal:attributes="style python:isinstance(column_property, (int, long, float)) and \'TableLastLineRightAligned\' or \'TableLastLineLeftAligned\'" />\n
-                    </td>\n
-                  </tal:block>\n
-                  <tal:block tal:condition="python: column_property is None">\n
-                    <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
-                      <para style="TableLastLine"> </para>\n
-                    </td>\n
-                  </tal:block>\n
-                </tal:block>\n
-              </tal:block>\n
-            </tal:block>\n
-\n
-          </tr>\n
+          </table:table-row>\n
         </tal:block>\n
-\n
-        -->\n
-\n
+      </tal:block>\n
     </tal:block>\n
-    </tal:block>\n
-      </table:table-row>\n
-    </tal:block>\n
-    <!--      </table:table> -->\n
-    </tal:block>\n
-    </tal:block><!-- vim: tw=1000 filetype=xml\n
-    -->\n
+  </office:spreadsheet>\n
+</office:body>\n
+</tal:block>\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/xml</string> </value>
+            <value> <string>application/vnd.oasis.opendocument.text</string> </value>
         </item>
         <item>
             <key> <string>expand</string> </key>

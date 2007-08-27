@@ -52,16 +52,10 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>business_template_registered_skin_selections</string> </key>
             <value>
               <tuple>
-                <string>CSV</string>
+                <string>ODS</string>
               </tuple>
             </value>
         </item>
