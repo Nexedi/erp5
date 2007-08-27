@@ -40,6 +40,7 @@ import OFS.History
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName, _getViewFor
+from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
 
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TRIGGER_USER_ACTION
 
@@ -49,11 +50,11 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils import createExpressionContext
+from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
-from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -67,7 +68,7 @@ from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Accessor.TypeDefinition import asDate
 
 from string import join
-import sys
+import sys, re
 from Products.ERP5Type.PsycoWrapper import psyco
 
 from cStringIO import StringIO
@@ -82,13 +83,29 @@ from zLOG import LOG, INFO, ERROR, WARNING
 
 _MARKER=[]
 
+wildcard_interaction_method_id_matcher = re.compile(".*[\+\*].*")
+
 class WorkflowMethod(Method):
 
-  def __init__(self, method, id=None, reindex=1):
+  def __init__(self, method, id=None, reindex=1, interaction_id=None):
     self._m = method
     if id is None:
       id = method.__name__
     self._id = id
+    self._interaction_id = interaction_id
+    # Only publishable methods can be published as interactions
+    # A pure private method (ex. _doNothing) can not be published
+    # This is intentional to prevent methods such as submit, share to 
+    # be called from a URL. If someone can show that this way
+    # is wrong (ex. for remote operation of a site), let us know.
+    if not method.__name__.startswith('_'):
+      self.__name__ = id
+      for func_id in ['func_code', 'func_defaults', 'func_dict', 'func_doc', 'func_globals', 'func_name']:
+        setattr(self, func_id, getattr(method, func_id, None))
+    self._invoke_once = {}
+    self._invoke_always = {} # Store in a dict all workflow IDs which require to
+                                # invoke wrapWorkflowMethod at every call
+                                # during the same transaction
 
   def _setId(self, id) :
     self._id = id
@@ -97,20 +114,78 @@ class WorkflowMethod(Method):
     """
       Invoke the wrapped method, and deal with the results.
     """
-    wf = getToolByName(instance, 'portal_workflow', None)
-    if wf is None or not hasattr(wf, 'wrapWorkflowMethod'):
-      # No workflow tool found.
+    if self._id in ('getPhysicalPath', 'getId'):
+      # To prevent infinite recursion, 2 methods must have special treatment
+      # this is clearly not the best way to implement this but it is 
+      # already better than what we had. I (JPS) would prefer to use
+      # critical sections in this part of the code and a
+      # thread variable which tells in which semantic context the code
+      # should ne executed. - XXX
+      return apply(self._m, (instance,) + args, kw) 
+
+    call_method = 0 # By default, this method was never called
+    if self._invoke_once:
+      # Check if this method has already been called in this transaction
+      # (only check this if we use once only workflow methods)
+      call_method_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__', self._id, instance.getPhysicalPath())
+      transactional_variable = getTransactionalVariable(call_method_key)
       try:
-        res = apply(self._m, (instance,) + args, kw)
-      except ObjectDeleted, ex:
-        res = ex.getResult()
-      else:
-        if getattr(aq_base(instance), 'reindexObject', None) is not None:
-          instance.reindexObject()
+        call_method = transactional_variable['call_method_key']
+      except KeyError:
+        transactional_variable['call_method_dict'] = 1
+
+    if call_method and not self._invoke_always:
+      # Try to return immediately if there are no invoke always workflow methods
+      return apply(self.__dict__['_m'], (instance,) + args, kw)
+
+    # Invoke transitions on appropriate workflow
+    if call_method:
+      candidate_transition_item_list = self._invoke_always.items()
     else:
-      res = wf.wrapWorkflowMethod(instance, self._id, self.__dict__['_m'],
-                                  (instance,) + args, kw)
-    return res
+      candidate_transition_item_list = self._invoke_always.items() + self._invoke_once.items()
+
+    # New implementation does not use any longer wrapWorkflowMethod
+    wf = getToolByName(instance, 'portal_workflow', None)
+
+    # Call whatever must be called before changing states
+    after_invoke_once = {}
+    for wf_id, transition_list in candidate_transition_item_list:
+      after_invoke_once[wf_id] = wf[wf_id].notifyBefore(instance, self._id,
+                          args=args, kw=kw, transition_list=transition_list)
+
+    # Compute expected result
+    result = apply(self.__dict__['_m'], (instance,) + args, kw)
+
+    # Change the state of statefull workflows
+    for wf_id, transition_list in candidate_transition_item_list:
+      try:
+        wf[wf_id].notifyWorkflowMethod(instance, self._id, args=args, kw=kw, transition_list=transition_list)
+      except ObjectDeleted:
+        # Re-raise with a different result.
+        raise ObjectDeleted(result)
+      except ObjectMoved, ex:
+        # Re-raise with a different result.
+        raise ObjectMoved(ex.getNewObject(), result)
+
+    # Call whatever must be called after changing states
+    for wf_id, transition_list in candidate_transition_item_list:
+      wf[wf_id].notifySuccess(instance, self._id, result, args=args, kw=kw, transition_list=transition_list)
+
+    # Return result finally
+    return result
+
+  def registerTransitionAlways(self, workflow_id, transition_id):
+    """
+      Transitions registered as always will be invoked always
+    """
+    self._invoke_always.setdefault(workflow_id, []).append(transition_id)
+
+  def registerTransitionOncePerTransaction(self, workflow_id, transition_id):
+    """
+      Transitions registered as one per transactions will be invoked 
+      only once per transaction
+    """
+    self._invoke_once.setdefault(workflow_id, []).append(transition_id)
 
 class ActionMethod(Method):
 
@@ -137,8 +212,94 @@ def _aq_reset():
 
 class PropertyHolder:
   isRADContent = 1
+
   def __init__(self):
     self.__name__ = 'PropertyHolder'
+
+  def _getItemList(self):
+    return self.__dict__.items()
+
+  def getAccessorMethodItemList(self):
+    """
+    Return a list of tuple (id, method) for every accessor
+    """
+    return filter(lambda x: isinstance(x[1], Accessor), self._getItemList())
+
+  def getAccessorMethodIdList(self):
+    """
+    Return the list of accessor IDs
+    """
+    return map(lambda x: x[0], self.getAccessorMethodItemList())
+
+  def getWorkflowMethodItemList(self):
+    """
+    Return a list of tuple (id, method) for every workflow method
+    """
+    return filter(lambda x: isinstance(x[1], WorkflowMethod), self._getItemList())
+
+  def getWorkflowMethodIdList(self):
+    """
+    Return the list of workflow method IDs
+    """
+    return map(lambda x: x[0], self.getWorkflowMethodItemList())
+
+  def getActionMethodItemList(self):
+    """
+    Return a list of tuple (id, method) for every workflow action method
+    """
+    return filter(lambda x: isinstance(x[1], ActionMethod), self._getItemList())
+
+  def getActionMethodIdList(self):
+    """
+    Return the list of workflow action method IDs
+    """
+    return map(lambda x: x[0], self.getActionMethodItemList())
+
+  def _getClassDict(self, klass, inherited=1, local=1):
+    """
+    Return a dict for every property of a class
+    """
+    result = {}
+    if inherited:
+      base_list = list(klass.__bases__)
+      base_list.reverse()
+      for klass in base_list:
+        result.update(self._getClassDict(klass, inherited=1, local=1))
+    if local:
+      result.update(klass.__dict__)
+    return result
+
+  def _getClassItemList(self, klass, inherited=1, local=1):
+    """
+    Return a list of tuple (id, method) for every property of a class
+    """
+    return self._getClassDict(klass, inherited=inherited, local=local).items()
+
+  def getClassMethodItemList(self, klass, inherited=1, local=1):
+    """
+    Return a list of tuple (id, method) for every class method
+    """
+    return filter(lambda x: callable(x[1]) and not isinstance(x[1], Method), 
+                  self._getClassItemList(klass, inherited=inherited, local=local))
+
+  def getClassMethodIdList(self, klass, inherited=1, local=1):
+    """
+    Return the list of class method IDs
+    """
+    return map(lambda x: x[0], self.getClassMethodItemList(klass, inherited=inherited, local=local))
+
+  def getClassPropertyItemList(self, klass, inherited=1, local=1):
+    """
+    Return a list of tuple (id, method) for every class method
+    """
+    return filter(lambda x: not callable(x[1]), 
+                  self._getClassItemList(klass, inherited=inherited, local=local))
+
+  def getClassPropertyIdList(self, klass, inherited=1, local=1):
+    """
+    Return the list of class method IDs
+    """
+    return map(lambda x: repr(x[0]), self.getClassPropertyItemList(klass, inherited=inherited, local=local))
 
 def getClassPropertyList(klass):
   ps_list = getattr(klass, 'property_sheets', ())
@@ -291,8 +452,8 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
             else:
               work_method_holder = klass
             LOG('initializePortalTypeDynamicWorkflowMethods', 100,
-                  'WARNING! Can not initialize %s on %s' % \
-                    (method_id, str(work_method_holder)))
+                  'WARNING! Can not initialize %s on %s due to existing %s' % \
+                    (method_id, str(work_method_holder), method))
         elif tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
           method_id = convertToMixedCase(tr_id)
           # We have to make a difference between a method which is on
@@ -301,6 +462,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
           if (not hasattr(prop_holder, method_id)) and \
              (not hasattr(klass, method_id)):
             method = WorkflowMethod(klass._doNothing, tr_id)
+            method.registerTransitionAlways(wf_id, tr_id)
             # Attach to portal_type
             setattr(prop_holder, method_id, method)
             prop_holder.security.declareProtected(
@@ -318,10 +480,11 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
             # Wrap method
             if callable(method):
               if not isinstance(method, WorkflowMethod):
-                setattr(work_method_holder, method_id,
-                        WorkflowMethod(method, method_id))
+                method = WorkflowMethod(method, method_id)
+                method.registerTransitionAlways(wf_id, tr_id)
+                setattr(work_method_holder, method_id, method)
               else :
-                # some methods (eg. set_ready) doesn't have the same name
+                # some methods (eg. set_ready) don't have the same name
                 # (setReady) as the workflow transition (set_ready).
                 # If they are associated with both an InteractionWorkflow
                 # and a DCWorkflow, and the WorkflowMethod is created for
@@ -329,42 +492,79 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
                 # a wrong transition name (setReady).
                 # Here we force it's id to be the transition name (set_ready).
                 method._setId(tr_id)
+                method.registerTransitionAlways(wf_id, tr_id)
             else:
               LOG('initializePortalTypeDynamicWorkflowMethods', 100,
                   'WARNING! Can not initialize %s on %s' % \
                     (method_id, str(work_method_holder)))
-    # XXX This part is (more or less...) a copy and paste
-    elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
+  # XXX This part is (more or less...) a copy and paste
+  # We need to run this part twice in order to handle interactions of interactions
+  for wf in portal_workflow.getWorkflowsFor(self) * 2:
+    wf_id = wf.id
+    if wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
       for tr_id in wf.interactions.objectIds():
         tdef = wf.interactions.get(tr_id, None)
         if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+          # XXX Prefiltering per portal type would be more efficient
           for imethod_id in tdef.method_id:
-            method_id = imethod_id
-            if (not hasattr(prop_holder, method_id)) and \
-               (not hasattr(klass,method_id)):
-              method = WorkflowMethod(klass._doNothing, imethod_id)
-              # Attach to portal_type
-              setattr(prop_holder, method_id, method)
-              prop_holder.security.declareProtected(
-                                      Permissions.AccessContentsInformation,
-                                      method_id)
+            if bool(wildcard_interaction_method_id_matcher.match(imethod_id)):
+              # Interactions workflows can use regexp based wildcard methods
+              method_id_matcher = re.compile(imethod_id) # XXX What happens if exception ?
+              method_id_list = prop_holder.getAccessorMethodIdList() + prop_holder.getWorkflowMethodIdList()\
+                             + prop_holder.getClassMethodIdList(klass)
+                # XXX - class stuff is missing here
+              method_id_list = filter(lambda x: method_id_matcher.match(x), method_id_list)
             else:
-              # Wrap method into WorkflowMethod is needed
-              if getattr(klass, method_id, None) is not None:
-                method = getattr(klass, method_id)
-                if callable(method):
-                  if not isinstance(method, WorkflowMethod):
-                    method = WorkflowMethod(method, method_id)
-                    # We must set the method on the klass
-                    # because klass has priority in lookup over
-                    # _ac_dynamic
-                    setattr(klass, method_id, method)
+              # Single method
+              method_id_list = [imethod_id]
+            for method_id in method_id_list:
+              if (not hasattr(prop_holder, method_id)) and \
+                (not hasattr(klass,method_id)):
+                method = WorkflowMethod(klass._doNothing, imethod_id)
+                if not tdef.once_per_transaction:
+                  method.registerTransitionAlways(wf_id, tr_id)
+                else:
+                  method.registerTransitionOncePerTransaction(wf_id, tr_id)
+                # Attach to portal_type
+                setattr(prop_holder, method_id, method)
+                prop_holder.security.declareProtected(
+                                        Permissions.AccessContentsInformation,
+                                        method_id)
               else:
-                method = getattr(prop_holder, method_id)
-                if callable(method):
-                  if not isinstance(method, WorkflowMethod):
-                    method = WorkflowMethod(method, method_id)
-                    setattr(prop_holder, method_id, method)
+                # Wrap method into WorkflowMethod is needed
+                if getattr(klass, method_id, None) is not None:
+                  method = getattr(klass, method_id)
+                  if callable(method):
+                    if not isinstance(method, WorkflowMethod):
+                      method = WorkflowMethod(method, method_id)
+                      if not tdef.once_per_transaction:
+                        method.registerTransitionAlways(wf_id, tr_id)
+                      else:
+                        method.registerTransitionOncePerTransaction(wf_id, tr_id)
+                      # We must set the method on the klass
+                      # because klass has priority in lookup over
+                      # _ac_dynamic
+                      setattr(klass, method_id, method)
+                    else:
+                      if not tdef.once_per_transaction:
+                        method.registerTransitionAlways(wf_id, tr_id)
+                      else:
+                        method.registerTransitionOncePerTransaction(wf_id, tr_id)
+                else:
+                  method = getattr(prop_holder, method_id)
+                  if callable(method):
+                    if not isinstance(method, WorkflowMethod):
+                      method = WorkflowMethod(method, method_id)
+                      if not tdef.once_per_transaction:
+                        method.registerTransitionAlways(wf_id, tr_id)
+                      else:
+                        method.registerTransitionOncePerTransaction(wf_id, tr_id)
+                      setattr(prop_holder, method_id, method)
+                    else:
+                      if not tdef.once_per_transaction:
+                        method.registerTransitionAlways(wf_id, tr_id)
+                      else:
+                        method.registerTransitionOncePerTransaction(wf_id, tr_id)
 
 class Base( CopyContainer,
             PortalContent,
@@ -470,6 +670,9 @@ class Base( CopyContainer,
               pformat(rev2.__dict__)))
 
   def _aq_dynamic(self, id):
+    # _aq_dynamic has been created so that callable objects
+    # and default properties can be associated per portal type
+    # and per class. Other uses are possible (ex. WebSection).
     ptype = self.portal_type
 
     #LOG('_aq_dynamic', 0, 'self = %r, id = %r, ptype = %r' % (self, id, ptype))
@@ -2115,7 +2318,7 @@ class Base( CopyContainer,
         context = klass(self.getId())
       except TypeError:
         # If __init__ does not take the id argument, the class is probably
-        # a tool, and the id is fixed.
+        # a tool, and the id is predifined and immutable.
         context = klass()
       context.__dict__.update(self.__dict__)
       # Copy REQUEST properties to self
@@ -2131,7 +2334,7 @@ class Base( CopyContainer,
       # Make it a temp content
       temp_object = TempBase(self.getId())
       for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):
-        setattr(context, k, getattr(temp_object,k))
+        setattr(context, k, getattr(temp_object, k))
       # Return result
       return context.__of__(self.aq_parent)
     else:
@@ -2164,12 +2367,6 @@ class Base( CopyContainer,
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'objectCount')
-  def objectCount(self):
-    """
-      Returns number of objects
-    """
-    return len(self.objectIds())
-
   # Hide Acquisition to prevent loops (ex. in cells)
   # Another approach is to use XMLObject everywhere
   # DIRTY TRICK XXX
@@ -2184,7 +2381,6 @@ class Base( CopyContainer,
 #
 #   def contentIds(self, *args, **kw):
 #     return []
-
 
   security.declarePublic('immediateReindexObject')
   def immediateReindexObject(self, *args, **kw):
@@ -2573,14 +2769,20 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
   def getApplicableLayout(self):
     """
-      The application layout of a standard document in the content layout.
+      The applicable layout of a standard document in the content layout.
 
       However, if we are displaying a Web Section as its default document,
       we should use the container layout.
     """
     try:
+      # Default documents should be displayed in the layout of the container
       if self.REQUEST.get('is_web_section_default_document', None):
         return self.REQUEST.get('current_web_section').getContainerLayout()
+      # ERP5 Modules should be displayed as containers
+      # XXX - this shows that what is probably needed is a more sophisticated
+      # mapping system between contents and layouts.
+      if self.getParentValue().meta_type == 'ERP5 Site':
+        return self.getContainerLayout()
       return self.getContentLayout() or self.getContainerLayout()
     except AttributeError:
       return None
@@ -2745,6 +2947,10 @@ class Base( CopyContainer,
          PortalType, and are browsed a second time to be able to group them
          by property or category.
     """
+    # New implementation of DocumentationHelper (ongoing work)
+    #from DocumentationHelper import PortalTypeInstanceDocumentationHelper
+    #return PortalTypeInstanceDocumentationHelper(self.getRelativeUrl()).__of__(self)
+
     if item_id is None:
       documented_item = self
       item_id = documented_item.getTitle()
