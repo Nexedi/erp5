@@ -30,12 +30,22 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Movement import Movement
+from Products.ERP5.Document.Project import Project
 
-class Ticket(Movement):
+class Ticket(Movement, Project):
     """
     A Ticket allows to track a sales process involving
     multilple Person and Organisations. It is a placeholder for
     documents, events, etc.
+
+    Tickets behave both a movements and as projects:
+
+    - as movements because they relate to an amount
+      of resource exchanged between multiple parties
+
+    - as a project because it acts as a reporting
+      node for other movements (ex. accounting,
+      task reports)
     """
 
     meta_type = 'ERP5 Ticket'
@@ -57,10 +67,11 @@ class Ticket(Movement):
                       , PropertySheet.Arrow
                       , PropertySheet.Price
                       , PropertySheet.Movement
+                      , PropertySheet.Amount
+                      , PropertySheet.Ticket
                       )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
-                              'isAccountable')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
       """
         Returns 1 if this needs to be accounted
