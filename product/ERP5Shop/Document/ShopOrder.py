@@ -45,7 +45,7 @@ from Products.MMMShop.ShopOrder import ShopOrder as MMMShopOrder
 from Products.MMMShop.ShopOrder import OrderLine as MMMOrderLine
 from Products.MMMShop.utils import getUniqueID
 
-from Products.CMFCore.WorkflowCore import WorkflowMethod
+from Products.ERP5Type.Base import WorkflowMethod
 
 from cStringIO import StringIO
 

@@ -40,7 +40,6 @@ from Products.ERP5Type.DateUtils import getMonthFraction, getYearFraction, getBi
 from Products.ERP5Type.DateUtils import same_movement_interval, number_of_months_in_year, centis, millis
 from Products.ERP5Type.DateUtils import getAccountableYearFraction, roundDate
 from Products.ERP5.Document.Amount import Amount
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD, AMORTISATION_METHOD_PREFIX

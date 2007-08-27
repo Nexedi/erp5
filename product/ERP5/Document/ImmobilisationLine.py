@@ -31,7 +31,6 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Base, Permissions, PropertySheet, Constraint, Interface
 #from Products.ERP5.Core import MetaNode, MetaResource
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Amount import Amount

@@ -32,7 +32,7 @@ from Acquisition import Implicit, aq_base
 from AccessControl.Permission import Permission
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowMethod
+from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Utils import readLocalDocument, \
                                     writeLocalDocument, \

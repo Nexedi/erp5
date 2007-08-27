@@ -39,7 +39,7 @@ from Products.ERP5Type.DateUtils import getMonthAndDaysBetween, getRoundedMonthB
 from Products.ERP5Type.DateUtils import getMonthFraction, getYearFraction, getBissextilCompliantYearFraction
 from Products.ERP5Type.DateUtils import same_movement_interval, number_of_months_in_year, centis, millis
 from Products.ERP5.Document.Amount import Amount
-from Products.CMFCore.WorkflowCore import WorkflowMethod
+from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.ImmobilisableItem import ImmobilisationValidityError
 
