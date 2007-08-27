@@ -31,8 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5.Document.Item import Item
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
-from Products.CMFCore.WorkflowCore import WorkflowMethod
-
 class WPNNode(Item):
     """
       A node of WPN

@@ -27,7 +27,6 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Delivery import Delivery
 from Products.ERP5Type.Document.DeliveryCell import DeliveryCell
