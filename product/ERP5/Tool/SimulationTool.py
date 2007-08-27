@@ -355,6 +355,7 @@ class SimulationTool(BaseTool):
         return self._generateSQLKeywordDictFromKeywordDict(table=table, sql_kw=sql_kw, new_kw=new_kw)
 
     def _generateSQLKeywordDictFromKeywordDict(self, table, sql_kw, new_kw):
+        # Some columns cannot be found automatically, prepend table name to avoid ambiguities.
         group_by = new_kw.pop('group_by', [])
         if len(group_by):
           new_kw['group_by_expression'] = ', '.join(['%s.%s' % (table, x) for x in group_by])
@@ -451,7 +452,6 @@ class SimulationTool(BaseTool):
                 **{'%s.mirror_date' % table: [from_date]}),
           operator='AND'))
 
-      # Some columns exists on multiple tables, we have to clear ambiguities
       column_value_dict = {}
       if resource_uid is not None :
         column_value_dict['resource_uid'] = resource_uid
