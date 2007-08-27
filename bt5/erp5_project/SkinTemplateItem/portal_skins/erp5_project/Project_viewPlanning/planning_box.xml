@@ -450,6 +450,10 @@
                     <value> <string>getTitle</string> </value>
                 </item>
                 <item>
+                    <key> <string>info_tooltip</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>info_topleft</string> </key>
                     <value> <string>getStartDate</string> </value>
                 </item>
@@ -505,6 +509,10 @@
                     <value> <string>Planning_generateAxis</string> </value>
                 </item>
                 <item>
+                    <key> <string>second_layer_list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>planning_0</string> </value>
                 </item>
@@ -557,7 +565,7 @@
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
-                    <value> <string>Planning_commonStats</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -568,12 +576,16 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>use_date_zoom</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>x_axis_position</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>x_start_bloc</string> </key>
@@ -585,7 +597,7 @@
                 </item>
                 <item>
                     <key> <string>y_axis_position</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>y_size_block</string> </key>
