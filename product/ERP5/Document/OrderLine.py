@@ -71,13 +71,13 @@ class OrderLine(DeliveryLine):
       """Return true if the object contains lines.
          We cache results in a volatile variable.
       """
-      acquisition_key = ('hasLineContent', self.getPath())
-      transactional_variable = getTransactionalVariable(acquisition_key)
+      transactional_variable = getTransactionalVariable(self)
+      call_method_key = ('Products.ERP5.Document.OrderLine.hasLineContent', self.getPhysicalPath())
       try:
-        result = transactional_variable['hasLineContent']
+        result = transactional_variable[call_method_key]
       except KeyError:
-        result = (len(self.contentValues(meta_type=self.meta_type)) > 0)
-        transactional_variable['hasLineContent'] = result
+        result = len(self.contentValues(meta_type=self.meta_type)) > 0
+        transactional_variable[call_method_key] = result
       return result
 
     def applyToOrderLineRelatedMovement(self, portal_type='Simulation Movement', 

@@ -128,11 +128,11 @@ class WorkflowMethod(Method):
       # Check if this method has already been called in this transaction
       # (only check this if we use once only workflow methods)
       call_method_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__', self._id, instance.getPhysicalPath())
-      transactional_variable = getTransactionalVariable(call_method_key)
+      transactional_variable = getTransactionalVariable(instance)
       try:
-        call_method = transactional_variable['call_method_key']
+        call_method = transactional_variable[call_method_key]
       except KeyError:
-        transactional_variable['call_method_dict'] = 1
+        transactional_variable[call_method_key] = 1
 
     if call_method and not self._invoke_always:
       # Try to return immediately if there are no invoke always workflow methods
