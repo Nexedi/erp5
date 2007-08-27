@@ -29,11 +29,11 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Movement import Movement
+from Products.ERP5.Document.EmailDocument import EmailDocument
 from Products.CMFCore.utils import getToolByName
 
-class Event(XMLObject, Movement):
+class Event(EmailDocument, Movement):
     """
       Event is the base class for all events in ERP5.
 
@@ -61,13 +61,20 @@ class Event(XMLObject, Movement):
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
+                      , PropertySheet.Document
                       , PropertySheet.DublinCore
+                      , PropertySheet.Snapshot
                       , PropertySheet.Task
+                      , PropertySheet.Url
+                      , PropertySheet.TextDocument
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
                       , PropertySheet.Event
-                      )
+                      , PropertySheet.ItemAggregation
+                     )
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isAccountable')
     def isAccountable(self):
       """
         Returns 1 if this needs to be accounted
@@ -75,3 +82,11 @@ class Event(XMLObject, Movement):
         Whenever delivery is there, delivery has priority
       """
       return 1
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'defQuantity')
+    def defQuantity(self):
+      """
+        Quantity is set automatically on Events.
+      """
+      return 1 # Provide opportunity to script this
+
