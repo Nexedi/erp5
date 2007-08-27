@@ -2059,22 +2059,29 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           # the REQUEST into the brain. In addition, the define a
           # cell property on the request itself so that forms may
           # use the 'cell' value (refer to get_value method in Form.py)
-          cell_html = editable_field.render( \
-                            value   = display_value
-                          , REQUEST = brain.asContext( \
-                                               REQUEST = self.renderer.request
-                                             , form    = self.renderer.request.form
-                                             , cell    = self.getObject()
-                                             )
-                          , key     = key
-                          )
+          cell_request = brain.asContext( REQUEST = self.renderer.request
+                                        , form    = self.renderer.request.form
+                                        , cell    = self.getObject()
+                                        )
+          if editable_field.get_value('enabled', REQUEST=cell_request):
+            cell_html = editable_field.render( \
+                              value   = display_value
+                            , REQUEST = cell_request
+                            , key     = key
+                            )
+          else:
+            cell_html = ''
         else:
           # If the brain does not support asContext (eg. it is None), no way
           self.renderer.request.cell = self.getObject()
-          cell_html = editable_field.render( value   = display_value
-                                           , REQUEST = brain
-                                           , key     = key
-                                           )
+          cell_request = brain
+          if editable_field.get_value('enabled', REQUEST=cell_request):
+            cell_html = editable_field.render( value   = display_value
+                                             , REQUEST = cell_request
+                                             , key     = key
+                                             )
+          else:
+            cell_html = ''
 
         if isinstance(cell_html, str):
           cell_html = unicode(cell_html, encoding)
@@ -2082,7 +2089,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if url is None:
           html = cell_html + error_message
         else:
-          if editable_field.get_value('editable'):
+          if editable_field.get_value('editable', REQUEST=cell_request):
             html = u'%s' % cell_html
           else:
             html = u'<a href="%s">%s</a>' % (url, cell_html)

@@ -25,6 +25,7 @@ from Products.Formulator.Field import Field
 from Products.Formulator.Widget import Widget
 from Products.Formulator.Widget import render_element
 from Products.Formulator.FieldRegistry import FieldRegistry
+from ProxyField import ProxyField
 from AccessControl import ClassSecurityInfo
 from cgi import escape
 import types
@@ -92,9 +93,9 @@ def Field_validate_sub_field(self, id, REQUEST, key=None):
 def Field_render_helper(self, key, value, REQUEST):
     value = self._get_default(key, value, REQUEST)
     __traceback_info__ = ('key=%s value=%r' % (key, value))
-    if self.get_value('hidden'):
+    if self.get_value('hidden', REQUEST=REQUEST):
         return self.widget.render_hidden(self, key, value, REQUEST)
-    elif (not self.get_value('editable',REQUEST=REQUEST)):
+    elif (not self.get_value('editable', REQUEST=REQUEST)):
         return self.widget.render_view(self, value)
     else:
         return self.widget.render(self, key, value, REQUEST)
@@ -112,6 +113,8 @@ Field.generate_subfield_key = Field_generate_subfield_key
 Field.validate_sub_field = Field_validate_sub_field
 Field._render_helper = Field_render_helper
 Field._get_user_input_value = Field_get_user_input_value
+
+ProxyField._render_helper = Field_render_helper
 
 from Products.Formulator.Validator import SelectionValidator
 from Products.Formulator.Validator import StringBaseValidator
