@@ -58,24 +58,31 @@ class EditorWidget(Widget.TextAreaWidget):
   """
 
   property_names = Widget.TextAreaWidget.property_names + [
+   'text_editor'
   ]
 
-#   default = fields.StringField(
-#                                 'default',
-#                                 title='Default',
-#                                 description=(
-#     "A default value (whatever it means)."),
-#                                 default="",
-#                                 required=0)
+  text_editor = fields.ListField('text_editor',
+                                   title='Text Editor',
+                                   description=(
+        "The text editor widget to use."
+        ""),
+                                   default="text_area",
+                                   required=1,
+                                   size=1,
+                                   items=[('Standard Text Area', 'text_area'),
+                                          ('FCK Editor', 'fck_editor')])
 
- 
   def render(self, field, key, value, REQUEST):
     """
       Render editor
     """
     here = REQUEST['here']
-    return here.fckeditor_wysiwyg_support.pt_render(
-         extra_context= {
+    text_editor = field.get_value('text_editor')
+    if text_editor == 'text_area':
+      return Widget.TextAreaWidget.render(self, field, key, value, REQUEST)
+    else:
+      return here.fckeditor_wysiwyg_support.pt_render(
+           extra_context= {
                           'inputvalue' : value,
                           'inputname'  : key
                         })
