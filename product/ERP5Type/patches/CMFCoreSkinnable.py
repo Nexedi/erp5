@@ -51,6 +51,7 @@ def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
             'but does not exist.' % (skin_folder_id, ))
     skin_selection_mapping[selection_name] = skin_list
   portal_skins._v_skin_location_list = skin_selection_mapping
+  return skin_selection_mapping
 
 Skinnable.SkinnableObjectManager.initializeCache = CMFCoreSkinnableSkinnableObjectManager_initializeCache
 
@@ -73,8 +74,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
             skin_selection_mapping = portal_skins._v_skin_location_list
           except AttributeError:
             LOG('Skinnable Monkeypatch __getattr__', 0, 'Initial skin cache fill. This should not happen often. Current thread id:%X' % (get_ident(), ))
-            self.initializeCache()
-            skin_selection_mapping = portal_skins._v_skin_location_list
+            skin_selection_mapping = self.initializeCache()
           try:
             skin_folder_id = skin_selection_mapping[skin_selection_name][name]
           except KeyError:
