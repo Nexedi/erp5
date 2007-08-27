@@ -112,8 +112,8 @@
                     <value>
                       <list>
                         <string>my_start_date</string>
-                        <string>my_requirement_title</string>
                         <string>my_stop_date</string>
+                        <string>my_requirement_title</string>
                         <string>my_source_title_list</string>
                       </list>
                     </value>
