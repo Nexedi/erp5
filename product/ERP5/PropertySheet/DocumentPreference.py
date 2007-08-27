@@ -60,19 +60,19 @@ class DocumentPreference:
     { 'id'              : 'preferred_document_ingestion_email_notification',
       'description'     : 'None - always, "always", "problem (only if problem), "never"', # XXX-JPS this is not a description
       'type'            : 'selection',
-      'select_variable' : 'getDocumentIngestionEmailNotificationSelectionList',
+      'select_variable' : 'getPreferredDocumentIngestionEmailNotificationSelectionList',
       'preference'      : 1,
       'mode'            : '' },
     { 'id'          : 'preferred_document_email_ingestion_address',
       'description' : 'Email ingestion address',
       'type'        : 'string',
       'preference'  : 1,
-      'mode'        : '' },    
+      'mode'        : '' },
     # XXX-JPS. This is not a real property - it is somehow a hack.
     # BG: I was advised by somebody from Nexedi (I think it was Jerome)
-    { 'id'              : 'document_ingestion_email_notification_selection',
+    { 'id'              : 'preferred_document_ingestion_email_notification_selection',
       'description'     : 'List of possible values for preferred_document_ingestion_email_notification',
-      'type'            : 'lines',
+      'type'            : 'tokens',
       'default'         : ['always','problem','never'],
       'mode'            : 'w'},
     )
