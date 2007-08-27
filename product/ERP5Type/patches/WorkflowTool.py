@@ -16,80 +16,38 @@ from zLOG import LOG, WARNING
 
 # Make sure Interaction Workflows are called even if method not wrapped
 
+from AccessControl import Unauthorized
 from Products.CMFCore.WorkflowTool import WorkflowTool
+from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
+
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.ERP5Type.Cache import CachingMethod
 
-def WorkflowTool_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
+def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, method_id, args=None, kw=None, transition_list=None):
+    '''
+    Allows the system to request a workflow action.  This method
+    must perform its own security checks.
+    '''
+    sdef = self._getWorkflowStateOf(ob)
+    if sdef is None:
+        raise WorkflowException, 'Object is in an undefined state'
+    if method_id not in sdef.transitions:
+        raise Unauthorized(method_id)
+    tdef = self.transitions.get(method_id, None)
+    if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
+        raise WorkflowException, (
+            'Transition %s is not triggered by a workflow method'
+            % method_id)
+    if not self._checkTransitionGuard(tdef, ob):
+        raise Unauthorized(method_id)
+    self._changeStateOf(ob, tdef)
 
-    """ To be invoked only by WorkflowCore.
-        Allows a workflow definition to wrap a WorkflowMethod.
-
-        By default, the workflow tool takes the first workflow wich
-        support the method_id. In ERP5, with Interaction Worfklows, we
-        may have many workflows wich can support a worfklow method,
-        that's why we need this patch.
-
-        Current implementation supports:
-        - at most 1 DCWorkflow per portal type per method_id
-        - as many Interaction workflows as needed per portal type
-
-        NOTE: automatic transitions are invoked through
-        _findAutomaticTransition in DC Workflows.
-
-        TODO: make it possible to have multiple DC Workflow
-        per portal type per method_id (XXX). This could be useful
-        for example to make the edit WorkflowMethod trigger
-        multiple automatic actions in different workflows.
-        More discussion needed on this.
-    """
-    # Check workflow containing the workflow method
-    wf_list = []
-    wfs = self.getWorkflowsFor(ob)
-    if wfs:
-      for w in wfs:
-        if (hasattr(w, 'isWorkflowMethodSupported')
-            and w.isWorkflowMethodSupported(ob, method_id)):
-          wf_list.append(w)
-    else:
-      wfs = ()
-    # If no transition matched, simply call the method    
-    # And return
-    if len(wf_list)==0:
-      return apply(func, args, kw)
-    # Call notifyBefore on each workflow
-    for w in wfs:
-      w.notifyBefore(ob, method_id, args=args, kw=kw)
-    # Call the method on matching workflows
-    only_interaction_defined = 1
-    for w in wf_list:
-      if w.__class__.__name__ != 'InteractionWorkflowDefinition':
-        only_interaction_defined = 0
-        # XXX - There is a problem here if the same workflow method
-        # is used by multiple workflows. Function "func" will be
-        # called multiple times. Patch or changes required to mak
-        # sure func is only called once.
-        # Solution consists in reimplementing _invokeWithNotification
-        # at the level of each workflow without notification
-        # (ex. _invokeWithoutNotification)
-        result = self._invokeWithNotification(
-            [], ob, method_id, w.wrapWorkflowMethod,
-            (ob, method_id, func, args, kw), {})
-    # If only interaction workflows are defined, we need to call the method
-    # manually
-    if only_interaction_defined:
-      result = apply(func, args, kw)
-    # Call notifySuccess on each workflow
-    for w in wfs:
-      w.notifySuccess(ob, method_id, result, args=args, kw=kw)
-    return result
-    
-WorkflowTool.wrapWorkflowMethod = WorkflowTool_wrapWorkflowMethod
-
-def DCWorkflowDefinition_notifyBefore(self, ob, action, args=None, kw=None):
+def DCWorkflowDefinition_notifyBefore(self, ob, action, args=None, kw=None, transition_list=None):
     '''
     Notifies this workflow of an action before it happens,
     allowing veto by exception.  Unless an exception is thrown, either
@@ -98,12 +56,13 @@ def DCWorkflowDefinition_notifyBefore(self, ob, action, args=None, kw=None):
     '''
     pass
 
-def DCWorkflowDefinition_notifySuccess(self, ob, action, result, args=None, kw=None):
+def DCWorkflowDefinition_notifySuccess(self, ob, action, result, args=None, kw=None, transition_list=None):
     '''
     Notifies this workflow that an action has taken place.
     '''
     pass
 
+DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
 DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
 DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
 
