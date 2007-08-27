@@ -78,7 +78,6 @@ class OrderLine(DeliveryLine):
       except KeyError:
         result = (len(self.contentValues(meta_type=self.meta_type)) > 0)
         transactional_variable['hasLineContent'] = result
-      LOG('hasLineContent', 0, '%s %s' % (acquisition_key, result))
       return result
 
     def applyToOrderLineRelatedMovement(self, portal_type='Simulation Movement', 
