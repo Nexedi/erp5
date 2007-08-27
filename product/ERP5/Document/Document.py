@@ -447,7 +447,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       - implement guards API so that conversion to certain
         formats require certain permission
     """
-    pass
+    raise NotImplementedError
 
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
@@ -1039,8 +1039,8 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     mime, data = self.convert(format='txt')
     return data
 
-  security.declareProtected(Permissions.View, 'asHTML')
-  def asHTML(self):
+  security.declareProtected(Permissions.View, 'asEntireHTML')
+  def asEntireHTML(self):
     """
       Returns a complete HTML representation of the document
       (with body tags, etc.). Adds if necessary a base
