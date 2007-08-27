@@ -198,7 +198,43 @@ class SimulationTool(BaseTool):
           property_uid_list['query'] = tmp_uid_list
       return property_uid_list
 
-    def _getSimulationStateQuery(self, simulation_state=None, omit_transit=0,
+    def _getSimulationStateQuery(self, **kw):
+      simulation_state_dict = self._getSimulationStateDict(**kw)
+      return self._buildSimulationStateQuery(simulation_state_dict)
+      
+    def _buildSimulationStateQuery(self, simulation_state_dict):
+      input_simulation_state = simulation_state_dict.get(
+                                 'input_simulation_state')
+      output_simulation_state = simulation_state_dict.get(
+                                 'output_simulation_state')
+      simulation_state = simulation_state_dict.get('simulation_state')
+      if simulation_state is not None:
+        simulation_query = Query(operator='IN',
+                                 **{'stock.simulation_state':
+                                    simulation_state})
+      elif input_simulation_state is not None:
+        input_quantity_query = Query(**{'stock.quantity': '>0'})
+        input_simulation_query = Query(operator='IN',
+                                       **{'stock.simulation_state':
+                                          input_simulation_state})
+        simulation_query = ComplexQuery(input_quantity_query,
+                                        input_simulation_query,
+                                        operator='AND')
+        if output_simulation_state is not None:
+          output_quantity_query = Query(**{'stock.quantity': '<0'})
+          output_simulation_query = Query(operator='IN',
+                                          **{'stock.simulation_state':
+                                             output_simulation_state})
+          output_query = ComplexQuery(output_quantity_query,
+                                      output_simulation_query,
+                                      operator='AND')
+          simulation_query = ComplexQuery(simulation_query, output_query,
+                                          operator='OR')
+      else:
+        simulation_query = '1'
+      return simulation_query
+
+    def _getSimulationStateDict(self, simulation_state=None, omit_transit=0,
                                 input_simulation_state=None,
                                 output_simulation_state=None,
                                 transit_simulation_state=None,
@@ -211,7 +247,7 @@ class SimulationTool(BaseTool):
       string_or_list = (str, list, tuple)
       # Simulation States
       # If strict_simulation_state is set, we directly put it into the dictionary
-      simulation_query = None
+      simulation_dict = {}
       if strict_simulation_state:
         if isinstance(simulation_state, string_or_list)\
                 and simulation_state:
@@ -272,44 +308,15 @@ class SimulationTool(BaseTool):
         if input_simulation_state is not None:
           if output_simulation_state is not None:
             if input_simulation_state == output_simulation_state:
-              simulation_query = Query(
-                         **{'stock.simulation_state': input_simulation_state,
-                         'operator':'OR'})
+              simulation_dict['simulation_state'] = input_simulation_state
             else:
-              input_quantity_query = Query(**{'stock.quantity': '>0'})
-              input_simulation_query = Query(
-                         **{'stock.simulation_state': input_simulation_state,
-                         'operator':'OR'})
-              input_query = ComplexQuery(input_quantity_query, 
-                                         input_simulation_query,
-                                         operator='AND')
-              output_quantity_query = Query(**{'stock.quantity': '<0'})
-              output_simulation_query = Query(
-                        **{'stock.simulation_state': output_simulation_state,
-                        'operator':'OR'})
-              output_query = ComplexQuery(output_quantity_query, 
-                                          output_simulation_query,
-                                         operator='AND')
-              simulation_query = ComplexQuery(input_query, output_query, operator='OR')
+              simulation_dict['input_simulation_state'] = input_simulation_state
+              simulation_dict['output_simulation_state'] = output_simulation_state
           else:
-            input_quantity_query = Query(**{'stock.quantity': '>0'})
-            input_simulation_query_kw = {
-                       'stock.simulation_state': input_simulation_state,
-                       'operator':'OR'}
-            input_simulation_query = Query(**input_simulation_query_kw)
-            simulation_query = ComplexQuery(input_quantity_query, 
-                                            input_simulation_query,
-                                            operator = 'AND')
+            simulation_dict['input_simulation_state'] = input_simulation_state
         elif output_simulation_state is not None:
-          output_quantity_query = Query(**{'stock.quantity': '<0'})
-          output_simulation_query_kw = {
-                  'stock.simulation_state': output_simulation_state,
-                  'operator':'OR'}
-          output_simulation_query = Query(**output_simulation_query_kw)
-          simulation_query = ComplexQuery(output_quantity_query, 
-                                          output_simulation_query,
-                                          operator = 'AND')
-      return simulation_query
+          simulation_dict['simulation_state'] = output_simulation_state
+      return simulation_dict
 
     def _getOmitQuery(self, query_table=None, omit_input=0, omit_output=0, **kw):
       """
