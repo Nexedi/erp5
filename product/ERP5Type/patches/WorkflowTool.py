@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-from zLOG import LOG, WARNING, BLATHER, TRACE
+from zLOG import LOG, WARNING
 
 # Make sure Interaction Workflows are called even if method not wrapped
 
@@ -414,22 +414,17 @@ def WorkflowTool_listActions(self, info=None, object=None):
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible conditions
       worklist_list_grouped_by_condition = groupWorklistListByCondition(worklist_dict=worklist_dict, acceptable_key_dict=acceptable_key_dict)
-      LOG('WorklistGeneration', BLATHER, 'Will grab worklists in %s passes.' % (len(worklist_list_grouped_by_condition), ))
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
-        LOG('WorklistGeneration', BLATHER, 'Grabbing %s worklists...' % (len(grouped_worklist_dict), ))
         # Generate the query for this worklist_list
         (select_expression, group_by_expression, query) = getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict, securityQueryHook=securityQueryHook)
         search_result = portal_catalog.unrestrictedSearchResults
         search_result_kw = {'select_expression': select_expression,
                             'group_by_expression': group_by_expression,
                             'query': query}
-        LOG('WorklistGeneration', TRACE, 'Using query: %s' % (search_result(src__=1, **search_result_kw), ))
+        #LOG('WorklistGeneration', INFO, 'Using query: %s' % (search_result(src__=1, **search_result_kw), ))
         catalog_brain_result = search_result(**search_result_kw)
-        LOG('WorklistGeneration', BLATHER, '%s results' % (len(catalog_brain_result), ))
         worklist_result_dict = sumCatalogResultByWorklist(grouped_worklist_dict=grouped_worklist_dict, catalog_result=catalog_brain_result)
-        LOG('WorklistGeneration', BLATHER, 'Distributed into %s worklists.'% (len(worklist_result_dict), ))
         group_action_list = generateActionList(grouped_worklist_dict=grouped_worklist_dict, worklist_result=worklist_result_dict, portal_url=portal_url)
-        LOG('WorklistGeneration', BLATHER, 'Creating %s actions.' % (len(group_action_list), ))
         action_list.extend(group_action_list)
       def get_action_ident(action):
         return '/'.join((action['workflow_id'], action['worklist_id']))
