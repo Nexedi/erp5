@@ -181,7 +181,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
       'recent_document', 'my_document', 'template_document',
       'crawler_index',
       # MRP
-      'divergence_tester', 'calendar_period'
+      'divergence_tester', 'calendar_period',
       # Project
       'project',
     )
