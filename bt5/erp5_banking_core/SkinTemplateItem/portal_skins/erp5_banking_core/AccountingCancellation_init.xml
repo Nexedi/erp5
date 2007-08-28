@@ -65,9 +65,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX it might be better to set resource according to source_payment.\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# XXX it might be better to set resource according to source_payment.\n
 context.setResource(\'currency_module/\' + context.Baobab_getPortalReferenceCurrencyID())\n
-</string> </value>
+user_site_list = context.Baobab_getUserAssignedSiteList()\n
+if len(user_site_list)>0:\n
+  site = context.Baobab_getVaultSite(user_site_list[0])\n
+  site_url = site.getRelativeUrl()\n
+  context.setSite(site_url)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -118,6 +127,11 @@ context.setResource(\'currency_module/\' + context.Baobab_getPortalReferenceCurr
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>user_site_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>site</string>
+                            <string>site_url</string>
                           </tuple>
                         </value>
                     </item>
