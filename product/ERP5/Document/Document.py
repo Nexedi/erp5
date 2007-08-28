@@ -1110,7 +1110,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     the document title.
     """
     result = {}
-    html = self.asHTML()
+    html = self.asEntireHTML()
     if not html: return result
     title_list = re.findall(self.title_parser, str(html))
     if title_list:
