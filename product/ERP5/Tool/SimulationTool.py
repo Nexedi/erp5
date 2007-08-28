@@ -364,7 +364,9 @@ class SimulationTool(BaseTool):
         return self._generateSQLKeywordDictFromKeywordDict(table=table,
                  sql_kw=sql_kw, new_kw=new_kw)
 
-    def _generateSQLKeywordDictFromKeywordDict(self, table, sql_kw, new_kw):
+    def _generateSQLKeywordDictFromKeywordDict(self, table='stock', sql_kw={}, new_kw={}):
+        sql_kw = sql_kw.copy()
+        new_kw = new_kw.copy()
         # Some columns cannot be found automatically, prepend table name to
         # avoid ambiguities.
         # Group-by expression
