@@ -868,8 +868,8 @@ class SimulationTool(BaseTool):
         the kind of inventory statistics we want to display (ex. sum,
         average, cost, etc.)
       """
-      kw = self._getDefaultGroupByParameters(**kw)
       # If no group at all, give a default sort group by
+      kw = self._getDefaultGroupByParameters(**kw)
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetInventoryList(
                     src__=src__, ignore_variation=ignore_variation,
