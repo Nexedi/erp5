@@ -200,7 +200,7 @@ class SimulationTool(BaseTool):
 
     def _getSimulationStateQuery(self, **kw):
       simulation_state_dict = self._getSimulationStateDict(**kw)
-      return self._buildSimulationStateQuery(simulation_state_dict)
+      return self._buildSimulationStateQuery(simulation_state_dict=simulation_state_dict)
       
     def _buildSimulationStateQuery(self, simulation_state_dict):
       input_simulation_state = simulation_state_dict.get(
