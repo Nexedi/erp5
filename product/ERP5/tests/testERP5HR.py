@@ -27,24 +27,13 @@
 ##############################################################################
 
 
-import os
-from zLOG import LOG
-from Testing import ZopeTestCase
+import unittest
+
 from DateTime import DateTime
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from AccessControl.SecurityManagement import newSecurityManager
-
-
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
 
 
 class TestHR(ERP5TypeTestCase):
@@ -95,9 +84,8 @@ class TestHR(ERP5TypeTestCase):
   ##  Usefull methods
   ##################################
 
-  def login(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Create a new manager user and login.
+  def login(self):
+    """Create a new manager user and login.
     """
     user_name = 'kevin'
     user_folder = self.getPortal().acl_users
@@ -877,11 +865,15 @@ class TestHR(ERP5TypeTestCase):
     self.assertEquals('', pers.newContent(portal_type='Fax').asText())
 
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestHR))
-    return suite
+  def test_EmailAsURL(self):
+    # asURL method works on email
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    pers.setDefaultEmailText('nobody@example.com')
+    email = per.getDefaultEmailValue()
+    self.assertEquals('mailto:nobody@example.com', email.asURL())
+    
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestHR))
+  return suite
