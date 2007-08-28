@@ -360,7 +360,7 @@ class SimulationTool(BaseTool):
       return {'input': omit_input, 'output': omit_output}
 
     def _generateSQLKeywordDict(self, table='stock', **kw):
-        sql_kw, new_kw = self._generateKeywordDict(table=table, **kw)
+        sql_kw, new_kw = self._generateKeywordDict(**kw)
         return self._generateSQLKeywordDictFromKeywordDict(table=table,
                  sql_kw=sql_kw, new_kw=new_kw)
 
@@ -376,6 +376,10 @@ class SimulationTool(BaseTool):
         column_value_dict = new_kw.pop('column_value_dict', {})
         for key, value in column_value_dict.iteritems():
           new_kw['%s.%s' % (table, key)] = value
+        # Related keys
+        related_key_dict = new_kw.pop('related_key_dict', {})
+        for key, value in related_key_dict.iteritems():
+          new_kw['%s_%s' % (table, key)] = value
         # Simulation states matched with input and output omission
         def joinQueriesIfNeeded(query_a, query_b, operator):
           if None not in (query_a, query_b):
@@ -407,7 +411,7 @@ class SimulationTool(BaseTool):
         sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
         return sql_kw
 
-    def _generateKeywordDict(self, table='stock',
+    def _generateKeywordDict(self,
         # dates
         from_date=None, to_date=None, at_date=None,
         omit_mirror_date=1,
@@ -534,54 +538,56 @@ class SimulationTool(BaseTool):
 
       new_kw['column_value_dict'] = column_value_dict
 
+      related_key_dict = {}
+
       # category membership
       resource_category_uid_list = self._generatePropertyUidList(
                                               resource_category)
       if resource_category_uid_list:
-        new_kw[table + '_resource_category_uid'] = resource_category_uid_list
+        related_key_dict['resource_category_uid'] = resource_category_uid_list
 
       node_category_uid_list = self._generatePropertyUidList(node_category)
       if node_category_uid_list:
-        new_kw[table + '_node_category_uid'] = node_category_uid_list
+        related_key_dict['node_category_uid'] = node_category_uid_list
 
       payment_category_uid_list = self._generatePropertyUidList(payment_category)
       if payment_category_uid_list:
-        new_kw[table + '_payment_category_uid'] = payment_category_uid_list
+        related_key_dict['payment_category_uid'] = payment_category_uid_list
 
       section_category_uid_list = self._generatePropertyUidList(section_category)
       if section_category_uid_list:
-        new_kw[table + '_section_category_uid'] = section_category_uid_list
+        related_key_dict['section_category_uid'] = section_category_uid_list
         sql_kw['section_filtered'] = 1
 
       mirror_section_category_uid_list = self._generatePropertyUidList(
                                               mirror_section_category)
       if mirror_section_category_uid_list:
-        new_kw[table + '_mirror_section_category_uid'] =\
+        related_key_dict['mirror_section_category_uid'] =\
                                               mirror_section_category_uid_list
 
       # category strict membership
       resource_category_strict_membership_uid_list =\
             self._generatePropertyUidList(resource_category_strict_membership)
       if resource_category_strict_membership_uid_list:
-        new_kw[table + '_resource_category_strict_membership_uid'] =\
+        related_key_dict['resource_category_strict_membership_uid'] =\
             resource_category_strict_membership_uid_list
 
       node_category_strict_membership_uid_list =\
             self._generatePropertyUidList(node_category_strict_membership)
       if node_category_strict_membership_uid_list:
-        new_kw[table + '_node_category_strict_membership_uid'] =\
+        related_key_dict['node_category_strict_membership_uid'] =\
             node_category_strict_membership_uid_list
 
       payment_category_strict_membership_uid_list =\
             self._generatePropertyUidList(payment_category_strict_membership)
       if payment_category_strict_membership_uid_list:
-        new_kw[table + '_payment_category_strict_membership_uid'] =\
+        related_key_dict['payment_category_strict_membership_uid'] =\
             payment_category_strict_membership_uid_list
 
       section_category_strict_membership_uid_list =\
             self._generatePropertyUidList(section_category_strict_membership)
       if section_category_strict_membership_uid_list:
-        new_kw[table + '_section_category_strict_membership_uid'] =\
+        related_key_dict['section_category_strict_membership_uid'] =\
             section_category_strict_membership_uid_list
         sql_kw['section_filtered'] = 1
 
@@ -589,8 +595,10 @@ class SimulationTool(BaseTool):
             self._generatePropertyUidList(
                                   mirror_section_category_strict_membership)
       if mirror_section_category_strict_membership_uid_list:
-        new_kw[table + '_mirror_section_category_strict_membership_uid'] =\
+        related_key_dict['mirror_section_category_strict_membership_uid'] =\
             mirror_section_category_strict_membership_uid_list
+
+      new_kw['related_key_dict'] = related_key_dict
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
