@@ -67,9 +67,6 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
   def getInventoryModule(self):
     return getattr(self.getPortal(), 'inventory_module',None)
 
-  def stepCommit(self,**kw):
-    get_transaction().commit()
-
   def stepCreateInitialMovements(self, sequence=None, **kw):
     """Create movements before this inventory.
     """
