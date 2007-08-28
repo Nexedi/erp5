@@ -367,10 +367,12 @@ class SimulationTool(BaseTool):
     def _generateSQLKeywordDictFromKeywordDict(self, table, sql_kw, new_kw):
         # Some columns cannot be found automatically, prepend table name to
         # avoid ambiguities.
+        # Group-by expression
         group_by = new_kw.pop('group_by', [])
         if len(group_by):
           new_kw['group_by_expression'] = ', '.join(['%s.%s' % (table, x) \
                                                      for x in group_by])
+        # Column values
         column_value_dict = new_kw.pop('column_value_dict', {})
         for key, value in column_value_dict.iteritems():
           new_kw['%s.%s' % (table, key)] = value
