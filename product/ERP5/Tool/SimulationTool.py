@@ -434,7 +434,7 @@ class SimulationTool(BaseTool):
       sql_kw['input'] = input
       sql_kw['output'] = output
 
-      query_list = []
+      column_value_dict = {}
 
       if omit_mirror_date:
         date_dict = {'query':[], 'operator':'and'}
@@ -454,17 +454,11 @@ class SimulationTool(BaseTool):
           date_dict['query'].append(at_date)
           date_dict['range'] = 'ngt'
         if len(date_dict) :
-          new_kw[table + '.date'] = date_dict
+          column_value_dict['date'] = date_dict
       else:
-        date_query_list = []
-        query_list.append(ComplexQuery(
-          Query(range='ngt', 
-                **{'%s.date' % table: [to_date]}),
-          Query(range='nlt', 
-                **{'%s.mirror_date' % table: [from_date]}),
-          operator='AND'))
+        column_value_dict['date'] = {'query': [to_date], 'range': 'ngt'}
+        column_value_dict['mirror_date'] = {'query': [from_date], 'range': 'nlt'}
 
-      column_value_dict = {}
       if resource_uid is not None :
         column_value_dict['resource_uid'] = resource_uid
       if section_uid is not None :
@@ -607,11 +601,7 @@ class SimulationTool(BaseTool):
         else:
           simulation_query = reserved_query
       if simulation_query is not None:
-        query_list.append(simulation_query)
-
-      if query_list:
-        new_kw['query'] = ComplexQuery(*query_list)
-
+        new_kw['query'] = simulation_query
 
       # It is necessary to use here another SQL query (or at least a subquery)
       # to get _DISTINCT_ uid from predicate_category table.
