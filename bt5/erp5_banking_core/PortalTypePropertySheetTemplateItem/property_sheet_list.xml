@@ -1,4 +1,17 @@
 <property_sheet_list>
+ <portal_type id="Accounting Cancellation">
+  <item>SortIndex</item>
+  <item>Amount</item>
+  <item>Price</item>
+  <item>ItemAggregation</item>
+  <item>AccountingEvent</item>
+ </portal_type>
+ <portal_type id="Accounting Cancellation Line">
+  <item>Amount</item>
+  <item>Arrow</item>
+  <item>Task</item>
+  <item>Price</item>
+ </portal_type>
  <portal_type id="Accounting Date">
   <item>Task</item>
   <item>Reference</item>

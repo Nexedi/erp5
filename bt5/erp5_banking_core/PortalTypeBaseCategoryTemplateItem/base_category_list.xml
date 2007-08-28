@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Accounting Cancellation">
+  <item>site</item>
+ </portal_type>
  <portal_type id="Accounting Date">
   <item>site</item>
  </portal_type>

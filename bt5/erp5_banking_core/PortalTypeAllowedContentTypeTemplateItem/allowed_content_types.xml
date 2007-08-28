@@ -1,4 +1,10 @@
 <allowed_content_type_list>
+ <portal_type id="Accounting Cancellation">
+  <item>Accounting Cancellation Line</item>
+ </portal_type>
+ <portal_type id="Accounting Cancellation Module">
+  <item>Accounting Cancellation</item>
+ </portal_type>
  <portal_type id="Accounting Date Module">
   <item>Accounting Date</item>
  </portal_type>

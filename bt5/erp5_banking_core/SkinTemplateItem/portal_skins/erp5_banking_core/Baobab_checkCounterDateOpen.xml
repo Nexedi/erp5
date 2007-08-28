@@ -69,7 +69,7 @@
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-return\n
+\n
 \n
 if date is None:\n
   # get current date\n
