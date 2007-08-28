@@ -273,18 +273,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Delivery_getVaultItemList(all=1,user_site=0,base_site=here.Baobab_getUserAssignedRootSiteList()[0],vault_type=\'site\')</string> </value>
+            <value> <string>python: here.Delivery_getVaultItemList(all=1,user_site=0,base_site=here.Baobab_getUserAssignedRootSiteList()[0],vault_type=\'site\',leaf_node=0)</string> </value>
         </item>
       </dictionary>
     </pickle>
