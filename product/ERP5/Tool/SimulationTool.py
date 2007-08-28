@@ -376,6 +376,34 @@ class SimulationTool(BaseTool):
         column_value_dict = new_kw.pop('column_value_dict', {})
         for key, value in column_value_dict.iteritems():
           new_kw['%s.%s' % (table, key)] = value
+        # Simulation states matched with input and output omission
+        def joinQueriesIfNeeded(query_a, query_b, operator):
+          if None not in (query_a, query_b):
+            return ComplexQuery(query_a, query_b, operator=operator)
+          elif query_a is not None:
+            return query_a
+          return query_b
+        def getSimulationQuery(simulation_dict, omit_dict):
+          simulation_query = self._buildSimulationStateQuery(
+                               simulation_state_dict=simulation_dict)
+          omit_query = self._buildOmitQuery(query_table=table,
+                                            omit_dict=omit_dict)
+          return joinQueriesIfNeeded(query_a=simulation_query,
+                                     query_b=omit_query, operator='AND')
+        regular_query = getSimulationQuery(new_kw.pop('simulation_dict', {}),
+                                           new_kw.pop('omit_dict', {}))
+        reserved_kw = new_kw.pop('reserved_kw', None)
+        if reserved_kw is not None:
+          reserved_query = getSimulationQuery(
+            reserved_kw.pop('simulation_dict', {}),
+            reserved_kw.pop('omit_dict', {}))
+          simulation_query = joinQueriesIfNeeded(query_a=regular_query,
+                                                 query_b=reserved_query,
+                                                 operator='OR')
+        else:
+          simulation_query = regular_query
+        if simulation_query is not None:
+          new_kw['query'] = simulation_query
         sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
         return sql_kw
 
@@ -568,43 +596,30 @@ class SimulationTool(BaseTool):
       #if len(variation_category_uid_list) :
       #  new_kw['variationCategory'] = variation_category_uid_list
       
-      simulation_query =  self._getSimulationStateQuery(
+      simulation_dict =  self._getSimulationStateDict(
                                 simulation_state=simulation_state, 
                                 omit_transit=omit_transit,
                                 input_simulation_state=input_simulation_state,
                                 output_simulation_state=output_simulation_state,
                                 transit_simulation_state=transit_simulation_state,
                                 strict_simulation_state=strict_simulation_state)
-      if omit_input or omit_output:
-        omit_query = self._getOmitQuery(omit_input=omit_input,
-                                        omit_output=omit_output,
-                                        query_table=table)
-        if simulation_query is not None:
-          simulation_query = ComplexQuery(simulation_query, omit_query, operator='AND')
-        else:
-          simulation_query = omit_query
+      new_kw['simulation_dict'] = simulation_dict
+      omit_dict = self._getOmitDict(omit_input=omit_input,
+                                    omit_output=omit_output)
+      new_kw['omit_dict'] = omit_dict
       if reserved_kw is not None:
         if not isinstance(reserved_kw, dict):
           # Not a dict when taken from URL, so, cast is needed 
           # to make pop method available
           reserved_kw = dict(reserved_kw)
+        new_reserved_kw = {}
         reserved_omit_input = reserved_kw.pop('omit_input',0)
         reserved_omit_output = reserved_kw.pop('omit_output',0)
-        reserved_omit_query = self._getOmitQuery(query_table=table,
-                                                 omit_input=reserved_omit_input,
-                                                 omit_output=reserved_omit_output)
-        reserved_query = self._getSimulationStateQuery(**reserved_kw)
-        if reserved_omit_query is not None:
-          reserved_query = ComplexQuery(reserved_omit_query,reserved_query,
-                                        operator='AND')
-        if simulation_query is not None:
-          simulation_query = ComplexQuery(simulation_query, reserved_query,
-                                          operator='OR')
-        else:
-          simulation_query = reserved_query
-      if simulation_query is not None:
-        new_kw['query'] = simulation_query
-
+        new_reserved_kw['omit_dict'] = self._getOmitDict(
+                                         omit_input=reserved_omit_input,
+                                         omit_output=reserved_omit_output)
+        new_reserved_kw['simulation_dict'] = self._getSimulationStateDict(**reserved_kw)
+        new_kw['reserved_kw'] = new_reserved_kw
       # It is necessary to use here another SQL query (or at least a subquery)
       # to get _DISTINCT_ uid from predicate_category table.
       # Otherwise, by using a where_expression, cells which fit conditions
