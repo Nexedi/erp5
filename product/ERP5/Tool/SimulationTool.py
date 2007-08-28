@@ -319,12 +319,18 @@ class SimulationTool(BaseTool):
       return simulation_dict
 
     def _getOmitQuery(self, query_table=None, omit_input=0, omit_output=0, **kw):
+      omit_dict = self._getOmitDict(omit_input=omit_input, omit_output=omit_output)
+      return self._buildOmitQuery(query_table=query_table, omit_dict=omit_dict)
+      
+    def _buildOmitQuery(self, query_table, omit_dict):
       """
       Build a specific query in order to take:
       - negatives quantity values if omit_input
       - postives quantity values if omit_output
       """
       omit_query = None
+      omit_input = omit_dict.get('input', False)
+      omit_output = omit_dict.get('output', False)
       if omit_input or omit_output:
         # Make sure to check some conditions
         condition_expression = \
@@ -349,6 +355,9 @@ class SimulationTool(BaseTool):
             omit_query = ComplexQuery(omit_query, output_query, operator='AND')
 
       return omit_query
+
+    def _getOmitDict(self, omit_input=False, omit_output=False):
+      return {'input': omit_input, 'output': omit_output}
 
     def _generateSQLKeywordDict(self, table='stock', **kw):
         sql_kw, new_kw = self._generateKeywordDict(table=table, **kw)
