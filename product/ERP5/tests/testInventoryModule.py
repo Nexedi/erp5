@@ -26,30 +26,15 @@
 #
 ##############################################################################
 
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from zLOG import LOG
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from Products.ERP5Type.tests.Sequence import SequenceList
 from testOrder import TestOrderMixin
 
 class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
   """
-    Test business template erp5_trade 
+    Test inventory module
   """
   run_all_test = 1
   inventory_portal_type = 'Inventory'
