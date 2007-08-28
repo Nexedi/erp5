@@ -91,6 +91,10 @@ class Amount:
       'acquisition_accessor_id'       : 'getQuantity',
       'acquisition_depends'           : None,
       'mode'        : 'w' },
+    { 'id'          : 'cancellation_amount',
+      'description' : 'defines if this quantity is used in order to cancel another one',
+      'type'        : 'boolean',
+      'mode'        : 'w' },
     # quantity_sign is used by QuantitySignMovementGroup
     # When comparing a delivery to a property_dict coming from a MovementGroup,
     # the DeliveryBuilder needs to have at least a specific property for each MovementGroup

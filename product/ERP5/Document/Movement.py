@@ -734,7 +734,9 @@ class Movement(XMLObject, Amount):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0:
+    if (quantity < 0 and not self.isCancellationAmount()):
+      return - quantity
+    elif quantity > 0 and self.isCancellationAmount():
       return - quantity
     else:
       return 0.0
@@ -750,7 +752,8 @@ class Movement(XMLObject, Amount):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0:
+    if quantity < 0 and not self.isCancellationAmount() \
+      or quantity > 0 and self.isCancellationAmount():
       return 0.0
     else:
       return quantity
