@@ -142,7 +142,7 @@ class Url(Coordinate, Base, UrlMixIn):
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
   def send(self, from_url=None, to_url=None, msg=None,
-           subject=None,  attachment_list=None):
+           subject=None, attachment_list=None, extra_headers=None):
     """
     This method was previously named 'SendMail' and is used to send email
 
@@ -150,6 +150,8 @@ class Url(Coordinate, Base, UrlMixIn):
      - name : name of the attachment,
      - content: data of the attachment
      - mime_type: mime-type corresponding to the attachment
+    * extra_headers is a dictionnary of custom headers to add to the email.
+      "X-" prefix is automatically added to those headers.
     """
     # get the mailhost object
     mailhost = getattr(self.getPortalObject(), 'MailHost', None)
@@ -172,13 +174,17 @@ class Url(Coordinate, Base, UrlMixIn):
         message = MIMEMultipart()
         message.preamble = "If you can read this, your mailreader\n" \
                            "can not handle multi-part messages!\n"
-        message.attach(MIMEText(msg, _charset='utf-8')) 
+        message.attach(MIMEText(msg, _charset='utf-8'))
+      
+      if extra_headers:
+        for k, v in extra_headers.items():
+          message.add_header('X-%s' % k, v)
 
-      message.add_header('Subject', 
+      message.add_header('Subject',
                          make_header([(subject, 'utf-8')]).encode())
       message.add_header('From', from_url)
       message.add_header('To', to_url)
-
+      
       for attachment in attachment_list:
         if attachment.has_key('name'):
           attachment_name = attachment['name']
@@ -201,7 +207,7 @@ class Url(Coordinate, Base, UrlMixIn):
           part.set_payload(attachment['content'])
           Encoders.encode_base64(part)
 
-        part.add_header('Content-Disposition', 
+        part.add_header('Content-Disposition',
                         'attachment; filename=%s' % attachment_name)
         message.attach(part)
 
