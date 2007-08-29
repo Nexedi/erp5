@@ -141,20 +141,20 @@ class Url(Coordinate, Base, UrlMixIn):
     return ("http://www.erp5.org", "mailto:info@erp5.org")
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
-  def send(self, from_url=None, to_url=None, msg=None, 
+  def send(self, from_url=None, to_url=None, msg=None,
            subject=None,  attachment_list=None):
     """
     This method was previously named 'SendMail' and is used to send email
-    attachment_list is a list of dictionnary wich has keys :
+
+    * attachment_list is a list of dictionnaries with those keys:
      - name : name of the attachment,
      - content: data of the attachment
-     - mime_type: mime-type corresponding to the attachment     
+     - mime_type: mime-type corresponding to the attachment
     """
     # get the mailhost object
-    try:
-      mailhost=self.getPortalObject().MailHost
-    except:
-      raise AttributeError, "Cannot find a Mail Host object"
+    mailhost = getattr(self.getPortalObject(), 'MailHost', None)
+    if mailhost is None:
+      raise AttributeError, "Cannot find a MailHost object"
     else:
       if from_url is None:
         from_url = self.getUrlString(None)
@@ -194,13 +194,13 @@ class Url(Coordinate, Base, UrlMixIn):
 
         # attach it
         if attachment['mime_type'] == 'text/plain':
-          part = MIMEText(attachment['content'], 'utf-8')
+          part = MIMEText(attachment['content'], _charset='utf-8')
         else:
           #  encode non-plaintext attachment in base64
           part = MIMEBase(*attachment['mime_type'].split('/', 1))
           part.set_payload(attachment['content'])
+          Encoders.encode_base64(part)
 
-        Encoders.encode_base64(part)
         part.add_header('Content-Disposition', 
                         'attachment; filename=%s' % attachment_name)
         message.attach(part)
