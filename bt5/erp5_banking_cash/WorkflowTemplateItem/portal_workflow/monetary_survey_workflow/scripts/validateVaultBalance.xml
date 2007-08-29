@@ -75,6 +75,10 @@ date = transaction.getStartDate()\n
 vault = transaction.getSource()\n
 destination = transaction.getDestination()\n
 \n
+if vault is None or destination is None:\n
+   msg = Message(domain="ui", message="You must define source and destination.")\n
+   raise ValidationFailed, (msg,)\n
+   \n
 \n
 # check we are in an opened accounting day\n
 transaction.Baobab_checkCounterDateOpen(site=vault, date=date)\n
@@ -170,6 +174,7 @@ elif resource <> 0 :\n
                             <string>date</string>
                             <string>vault</string>
                             <string>destination</string>
+                            <string>None</string>
                             <string>msg</string>
                             <string>resource</string>
                             <string>amount</string>
