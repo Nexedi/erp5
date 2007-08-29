@@ -1,3 +1,6 @@
+2007-08-22 JPS
+* Slight refactoring
+
 2007-08-13 Jerome
 * Remove portal type actions that are now defined as global actions
 

@@ -1,25 +1,12 @@
-Event Module | Incoming Fax
-Event Module | Incoming Letter
+Campaign Module | Campaign
+Event Module | Fax Message
+Event Module | Letter
 Event Module | Mail Message
 Event Module | Note
 Event Module | Phone Call
-Incoming Fax | File
-Incoming Fax | Image
-Incoming Letter | File
-Incoming Letter | Image
-Mail Message | Document
-Mail Message | File
-Mail Message | Image
-Mail Message | Link
-Note | File
-Note | Image
+Meeting Module | Meeting
+Meeting | Role Definition
 Sale Opportunity Module | Sale Opportunity
-Sale Opportunity | Document
-Sale Opportunity | File
-Sale Opportunity | Image
-Sale Opportunity | Link
+Sale Opportunity | Role Definition
 Support Request Module | Support Request
-Support Request | Document
-Support Request | File
-Support Request | Image
-Support Request | Link
+Support Request | Role Definition

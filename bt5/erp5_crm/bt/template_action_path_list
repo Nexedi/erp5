@@ -1,13 +1,26 @@
+Campaign Module | view
+Campaign | new_event
+Campaign | view
 Event Module | view
 Event Module | workflow_report
-Incoming Fax | document_view
-Incoming Fax | view
-Incoming Letter | document_view
-Incoming Letter | view
+Fax Message | assessment
+Fax Message | preview
+Fax Message | view
+Letter | assessment
+Letter | preview
+Letter | view
+Mail Message | assessment
+Mail Message | preview
 Mail Message | view
-Note | document_view
+Meeting Module | view
+Meeting | view
+Note | assessment
+Note | preview
 Note | view
+Phone Call | assessment
+Phone Call | preview
 Phone Call | view
+Preference | crm_preference
 Sale Opportunity Module | view
 Sale Opportunity | view
 Support Request Module | view

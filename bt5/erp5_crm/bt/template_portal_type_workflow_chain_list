@@ -1,9 +1,13 @@
-Incoming Fax | edit_workflow
-Incoming Fax | event_workflow
-Incoming Letter | edit_workflow
-Incoming Letter | event_workflow
+Campaign | edit_workflow
+Campaign | ticket_workflow
+Fax Message | edit_workflow
+Fax Message | event_workflow
+Letter | edit_workflow
+Letter | event_workflow
 Mail Message | edit_workflow
 Mail Message | event_workflow
+Meeting | edit_workflow
+Meeting | ticket_workflow
 Note | edit_workflow
 Note | event_workflow
 Phone Call | edit_workflow
