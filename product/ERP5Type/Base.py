@@ -66,6 +66,7 @@ from Errors import DeferredCatalogError
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Accessor.TypeDefinition import asDate
+from Products.ERP5Type.Message import Message
 
 from string import join
 import sys, re
@@ -2125,6 +2126,43 @@ class Base( CopyContainer,
       else:
         return title
     return self.getId()
+
+  security.declarePublic('getIdTranslationDict')
+  def getIdTranslationDict(self):
+    """Returns the mapping which is used to translate IDs.
+    """
+    return {
+        'Address': dict(default_address='Default Address'),
+        'Telephone': dict(default_telephone='Default Telephone',
+                          mobile_telephone='Mobile Telephone',),
+        'Fax': dict(default_fax='Default Fax'),
+        'Email': dict(default_email='Default Email',
+                      alternate_email='Alternate Email'),
+        'Career': dict(default_career='Default Career'),
+        'Payment Condition': dict(default_payment_condition=
+                                    'Default Payment Condition'),
+        'Image': dict(default_image='Default Image'),
+        'Purchase Supply Line': dict(purchase_supply_line=
+                                    'Default Purchase Supply Line'),
+        'Sale Supply Line': dict(sale_supply_line=
+                                 'Default Sale Supply Line'),
+    }
+
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTranslatedId')
+  def getTranslatedId(self):
+    """Returns the translated ID, if the ID of the current document has a
+    special meaning, otherwise returns None.
+    """
+    global_translation_dict = self.getIdTranslationDict()
+    ptype_translation_dict = global_translation_dict.get(
+                                  self.portal_type, None)
+    if ptype_translation_dict is not None:
+      id_ = self.getId()
+      if id_ in ptype_translation_dict:
+        return Message('erp5_ui', ptype_translation_dict[id_])
+
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getCompactTitle')

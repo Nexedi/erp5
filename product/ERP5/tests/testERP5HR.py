@@ -869,8 +869,17 @@ class TestHR(ERP5TypeTestCase):
     # asURL method works on email
     pers = self.getPersonModule().newContent(portal_type='Person')
     pers.setDefaultEmailText('nobody@example.com')
-    email = per.getDefaultEmailValue()
+    email = pers.getDefaultEmailValue()
     self.assertEquals('mailto:nobody@example.com', email.asURL())
+    
+
+  def test_getTranslatedId(self):
+    pers = self.getPersonModule().newContent(
+                portal_type='Person', id='default_email')
+    self.assertEquals(None, pers.getTranslatedId())
+    pers.setDefaultEmailText('nobody@example.com')
+    email = pers.getDefaultEmailValue()
+    self.assertEquals('Default Email', str(email.getTranslatedId()))
     
 
 def test_suite():
