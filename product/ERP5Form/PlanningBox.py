@@ -650,6 +650,7 @@ class PlanningBoxWidget(Widget.Widget):
      'size_border_width_left', 'size_planning_width', 'size_y_axis_space',
      'size_y_axis_width',
      # height properties
+     'use_date_zoom',
      'size_header_height', 'size_planning_height', 'size_x_axis_space',
      'size_x_axis_height',
      # axis position
@@ -677,13 +678,17 @@ class PlanningBoxWidget(Widget.Widget):
 
   # Planning properties (accessed through Zope Management Interface)
 
-  # kind of representation to render :
-  # Planning or Calendar
   js_enabled = fields.CheckBoxField('js_enabled',
       title='enable on the fly edition (based on java script)',
       description='define if javascript is enabled or not on the current Planning',
       default=1,
       required=1)
+
+  use_date_zoom = fields.CheckBoxField('use_date_zoom',
+      title='Use Date Zoom (instead use Numerical Zoom)',
+      description='Use Date Zoom instead use Numerical Zoom',
+      default=0,
+      required=0)
 
   # kind of representation to render :
   # Planning or Calendar
@@ -1135,7 +1140,7 @@ class BasicStructure:
     #params = self.selection.getParams()
 
     #recovering selection if necessary
-    # XXX Use seclection tool API
+    # XXX Use selection tool API
     if self.selection is None:
       self.selection = Selection(params=default_params,
                                  default_sort_on=self.sort)
@@ -1161,11 +1166,6 @@ class BasicStructure:
     portal_categories = getattr(self.form,'portal_categories',None)
     portal_domains = getattr(self.form,'portal_domains',None)
 
-    if getattr(self.sec_layer_list_method, 'method_name', None) is not None:
-       self.sec_layer_list_method = getattr(
-                                      self.context,
-                                      self.sec_layer_list_method.method_name)
-
     ##################################################
     ############### BUILDING QUERY ###################
     ##################################################
@@ -1178,6 +1178,11 @@ class BasicStructure:
     # names.
     if 'select_expression' in kw:
       del kw['select_expression']
+
+    if getattr(self.sec_layer_list_method, 'method_name', None) is not None:
+       self.sec_layer_list_method = getattr(
+                                      self.context,
+                                      self.sec_layer_list_method.method_name)
     if getattr(self.list_method, 'method_name', None) is not None:
       if self.list_method.method_name == 'ObjectValues':
         # list_method is available
@@ -1236,16 +1241,17 @@ class BasicStructure:
     self.selection_report_path = self.selection.getReportPath(
                                   default=default_selection_report_path)
 
-    if self.selection_report_path in (None, ()):
-      raise PlanningBoxError, 'report path is empty or not valid on %s' % \
-        self.field.absolute_url()
+    # XXX use LOG instead Raise
+    #if self.selection_report_path in (None, ()):
+    #  raise PlanningBoxError, 'report path is empty or not valid on %s' % \
+    #    self.field.absolute_url()
 
     # testing report_depth value
     if report_depth is not None:
       selection_report_current = ()
     else:
       selection_report_current = self.selection.getReportList()
-
+    
     # building report_tree_list
     report_tree_list = makeTreeList(here=self.context, form=self.form,
                                     root_dict=None,
@@ -1289,18 +1295,14 @@ class BasicStructure:
     select_expression = ''
     self.sec_layer_uid_list = []
     # now iterating through report_tree_list
-    # LOG('PlanningBox, build', 0, 'report_tree_list %s' % len(report_tree_list))
     for object_tree_line in report_tree_list:
-      # LOG('PlanningBox, build', 0, 'object_tree_line %s' % str(object_tree_line))
       # prepare query by defining selection report object
       # defining info_dict, holding all information about the current object.
       info_dict = None
       info_dict = {}
 
       if object_tree_line.getIsPureSummary() and show_stat:
-
         info_dict['stat'] = 1
-
         # push new select_expression
         original_select_expression = kw.get('select_expression')
         kw['select_expression'] = select_expression
@@ -1339,10 +1341,10 @@ class BasicStructure:
         else:
           # Reset Object List if ther is no List Method
           object_list = []
-          # no list_method found
-          raise PlanningBoxError, "No list method found on %s" % \
-              self.field.absolute_url()
-        
+
+        if self.selection_report_path == 'parent':
+          object_list = [object_tree_line.getObject()]
+
         # Defining the Secondary Layer Object List
         if self.sec_layer_list_method not in (None,''):
           sec_layer_object_list = self.selection(
@@ -1371,7 +1373,7 @@ class BasicStructure:
           object_list = new_object_list
           sec_layer_object_list = sec_new_object_list
 
-        if exception_uid_list not in ([],None) :
+        if exception_uid_list not in ([], None, ()) :
           # Filter folders if parent tree :
           # build new object_list for current line
           # (list of relative elements)
@@ -1409,7 +1411,7 @@ class BasicStructure:
             self.report_groups += [(object_tree_line, object_list, info_dict)]
             self.nbr_groups += 1
           else:
-            if exception_uid_list is not None:
+            if exception_uid_list not in [None, [], ()]:
               # case of parent tree mode (first/unique object).
               # beware object_list is not null in case folded sons exists so
               # do not export voluntary object_list to prevent bad
@@ -1442,7 +1444,7 @@ class BasicStructure:
     ##################################################
     ############## CHECKING CONSTRAINTS ##############
     ##################################################
-    # XXX Constraints checking chould be called here
+    # XXX Constraints checking should be called here
     # and results saved in a list (list of url corresponding to objects not
     # validated)
 
@@ -1459,13 +1461,6 @@ class BasicStructure:
     if self.report_groups != []:
       self.report_groups=self.report_groups[self.main_axis_info['bound_start']:
                                             self.main_axis_info['bound_stop']]
-    else:
-      pass
-      # no group is available so the Y and X axis will be empty...
-      #raise PlanningBoxError, \
-      #    'selection method returned empty list of objects : please check' \
-      #    'list_method and report_root of %s' % \
-      #    self.field.absolute_url()
 
     ##################################################
     ############ GETTING SEC AXIS BOUNDS #############
@@ -1481,11 +1476,7 @@ class BasicStructure:
 
     # now getting start & stop bounds (getting relative size to the current
     # rendering)
-    status = self.getSecondaryAxisInfo(self.secondary_axis_info)
-    if status != 1:
-      # ERROR
-      # Found error while setting secondary axis bounds
-      return status
+    self.getSecondaryAxisInfo(self.secondary_axis_info)
 
     ##################################################
     ####### SAVING NEW PROPERTIES INTO REQUEST #######
@@ -1571,7 +1562,6 @@ class BasicStructure:
         if calendar_range < (group_stop - group_start):
           calendar_range = (group_stop - group_start)
 
-
       # recovering item properties
       if object_list not in (None, [], {}) :
         for object_request in object_list:
@@ -1603,7 +1593,8 @@ class BasicStructure:
     # saving resulting values.
     self.calendar_mode  = calendar_mode
     self.calendar_range = calendar_range
-    self.secondary_axis_occurence =  secondary_axis_occurence
+    self.secondary_axis_occurence = secondary_axis_occurence
+
 
   def getSecondaryAxisInfo(self, axis_dict):
     """
@@ -1612,64 +1603,98 @@ class BasicStructure:
     it is now possible to recover begin and end value of the planning and then
     apply selection informations to get start and stop.
     """
+    use_dz = self.field.get_value('use_date_zoom')
     # recovering zoom properties
     axis_dict['zoom_start'] = int(self.params.get('zoom_start',0))
     axis_dict['zoom_level'] = float(self.params.get('zoom_level',1))
+  
+    if not use_dz:
+      if len(self.secondary_axis_occurence) != 0:
+        axis_dict['bound_begin'] = self.secondary_axis_occurence[0][0]
+        axis_dict['bound_end'] = axis_dict['bound_begin']
+        # recovering min and max bounds to get absolute bounds
+        for occurence in self.secondary_axis_occurence:
+          if (occurence[0] < axis_dict['bound_begin'] or \
+              axis_dict['bound_begin'] is None) and occurence[0] is not None:
+            axis_dict['bound_begin'] = occurence[0]
+          if (occurence[1] > axis_dict['bound_end'] or  \
+              axis_dict['bound_end'] is None) and occurence[1] is not None:
+            axis_dict['bound_end'] = occurence[1]
 
-    # recovering min and max bounds to get absolute bounds
-    axis_dict['bound_begin'] = self.secondary_axis_occurence[0][0]
-    axis_dict['bound_end'] = axis_dict['bound_begin']
-    for occurence in self.secondary_axis_occurence:
-      if (occurence[0] < axis_dict['bound_begin'] or \
-          axis_dict['bound_begin'] is None) and occurence[0] is not None:
-        axis_dict['bound_begin'] = occurence[0]
-      if (occurence[1] > axis_dict['bound_end'] or  \
-          axis_dict['bound_end'] is None) and occurence[1] is not None:
-        axis_dict['bound_end'] = occurence[1]
+      else:
+        axis_dict['bound_end'] = axis_dict['bound_begin'] = None
 
-    if axis_dict['bound_end']is None or axis_dict['bound_begin'] is None:
-      # ERROR
-      # no bounds over the secondary axis have been defined
-      # can append if bad property has been selected
-      message = 'can not find secondary axis bounds for planning view :\
-      No object has good start & stop properties, please check your objects \
-      and their corresponding properties'
-      #axis_dict['bound_begin'] = 0
-      #axis_dict['bound_end'] = 1
-      return [(Message(domain='erp5_ui', message=message,mapping=None))]
-
-    axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
-    # now start and stop have the extreme values of the second axis bound.
-    # this represents in fact the size of the Planning's secondary axis
-
-    # can now get selection informations ( float range 0..1)
-    axis_dict['bound_start'] = 0
-    axis_dict['bound_stop'] = 1
-    if self.selection is not None:
-      # selection is not None, trying to recover previously saved values about
-      # secondary axis (axis start and stop bounds)
-      try:
-        axis_dict['bound_start'] = self.selection.getSecondaryAxisStart()
-        axis_dict['bound_stop'] = self.selection.getSecondaryAxisStop()
-      except AttributeError:
-        # bounds were not defined, escaping test
-        pass
-
-    # getting secondary axis page step
-    axis_zoom_step = axis_dict['bound_range'] / axis_dict['zoom_level']
-
-    # now setting bound_start
-    axis_dict['bound_start'] = axis_dict['zoom_start'] * axis_zoom_step + \
-                               axis_dict['bound_begin']
-    # for bound_stop just add page step
-    axis_dict['bound_stop'] = axis_dict['bound_start'] + axis_zoom_step
-
-    # saving current zoom values
-    self.params['zoom_level'] = axis_dict['zoom_level']
-    self.params['zoom_start'] = axis_dict['zoom_start']
-
+      if axis_dict['bound_end'] is None or axis_dict['bound_begin'] is None:
+        # Has Nothing to show, so Force show an Empty Planning Box.
+        # XXX This axis is not always a Date axe!
+        axis_dict['bound_begin'] = DateTime() - 5
+        axis_dict['bound_start'] = axis_dict['bound_begin']
+        axis_dict['bound_end'] = DateTime() + 5
+        axis_dict['bound_stop'] = axis_dict['bound_end']
+        axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
+        # This is to prevent that show one Block with None dates.
+        if len(self.secondary_axis_occurence) == 1:
+           self.secondary_axis_occurence = []
+        return 1
+  
+      axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
+      # now start and stop have the extreme values of the second axis bound.
+      # this represents in fact the size of the Planning's secondary axis
+  
+      # can now get selection informations ( float range 0..1)
+      axis_dict['bound_start'] = 0
+      axis_dict['bound_stop'] = 1
+      if self.selection is not None:
+        # selection is not None, trying to recover previously saved values about
+        # secondary axis (axis start and stop bounds)
+        try:
+          axis_dict['bound_start'] = self.selection.getSecondaryAxisStart()
+          axis_dict['bound_stop'] = self.selection.getSecondaryAxisStop()
+        except AttributeError:
+          # bounds were not defined, escaping test
+          pass
+  
+      # getting secondary axis page step
+      axis_zoom_step = axis_dict['bound_range'] / axis_dict['zoom_level']
+  
+      # now setting bound_start
+      axis_dict['bound_start'] = axis_dict['zoom_start'] * axis_zoom_step + \
+                                 axis_dict['bound_begin']
+      # for bound_stop just add page step
+      axis_dict['bound_stop'] = axis_dict['bound_start'] + axis_zoom_step
+  
+      # saving current zoom values
+      self.params['zoom_level'] = axis_dict['zoom_level']
+      self.params['zoom_start'] = axis_dict['zoom_start']
+  
+    else:
+      # Use dz_zoom feature
+      axis_dict['zoom_begin'] = self.params.get('zoom_begin',None)
+      axis_dict['zoom_end']  = self.params.get('zoom_end',None)
+      if axis_dict['zoom_begin'] not in [None, '', []]:
+        axis_dict['bound_start'] = DateTime(axis_dict['zoom_begin'])
+      else:
+        axis_dict['bound_start'] =  None #min([i[0] for i in self.secondary_axis_occurence])
+      if axis_dict['zoom_end'] not in [None, '', []]:
+        axis_dict['bound_stop'] = DateTime(axis_dict['zoom_end'])
+      else:
+        axis_dict['bound_stop'] =  None #max([i[1] for i in self.secondary_axis_occurence])
+      if axis_dict['bound_start'] is None:
+        validate_method = getattr(self.context, 'planning_validate_date_list', None)
+        axis_dict['bound_start'], axis_dict['bound_stop'] = \
+                            validate_method( DateTime(), axis_dict['zoom_level'])
+  
+      # For Keep compatibility
+      axis_dict['zoom_begin'] = axis_dict['bound_start']
+      axis_dict['zoom_end'] = axis_dict['bound_stop']
+      axis_dict['bound_end'] =  axis_dict['bound_stop']
+      axis_dict['bound_begin'] = axis_dict['bound_start']
+      axis_dict['bound_range'] = axis_dict['bound_end'] - \
+                                  axis_dict['bound_begin']
+      self.params['zoom_level'] = axis_dict['zoom_level']
     # everything is OK, returning 'true' flag
     return 1
+
 
   def getMainAxisInfo(self, axis_dict):
     """
@@ -1812,7 +1837,6 @@ class BasicGroup:
   *BasicGroup instance itself can hold other BasicGroups in case of
   ReportTree mode to handle child groups.
   """
-
   def __init__ (self, title='', name='',url='', constraints='', depth=0,
                 position=0, field = None, object = None, is_open=0,
                 is_pure_summary=1, secondary_axis_start=None,
@@ -1890,9 +1914,7 @@ class BasicGroup:
       for activity_content in activity_list:
         # interpreting results and getting begin and end values from
         # previously recovered method
-        block_begin = None
-        block_end = None
-
+        block_begin = block_end = None
         obj = activity_content.getObject()
         _marker = []
 
@@ -2035,7 +2057,6 @@ class BasicGroup:
                                    color=current_color, info_dict=info,
                                    error=error,
                                    property_dict=self.property_dict)
-
 
           # adding new activity to personal group activity list
           try:
@@ -2251,32 +2272,26 @@ class PlanningStructure:
       axis_stop = self.secondary_axis.stop
       axis_start = self.secondary_axis.start
 
-    axis_script=getattr(basic_structure.context,
-                        field.get_value('sec_axis_script'),None)
-    if axis_script is None:
-      # ERROR
-      # XXX Shouldn't planning box failed in this case, because of bad config ?
-      message = 'unable to find secondary axis generation script : "%s" does \
-             not exist' % field.get_value('sec_axis_script')
-      return [(Message(domain='erp5_ui', message=message, mapping=None))]
-
     # calling script to get list of delimiters to implement
     # just need to pass start, stop, and the minimum number of delimiter
     # wanted. a structure is returned : list of delimiters, each delimiter
     # defined by a dictionary
-    try:
+    axis_script=getattr(basic_structure.context,
+                        field.get_value('sec_axis_script'),None)
+    if axis_script is None:
+      delimiter_list = [ ]
+    else:
       delimiter_list = axis_script(axis_start=axis_start,
                                  axis_stop=axis_stop,
                                  delimiter_min_number=delimiter_min_number,
                                  form_id = basic_structure.form.id,
                                  selection_name = basic_structure.selection_name)
-    except (ArithmeticError, LookupError, AttributeError, TypeError):
+    #except (ArithmeticError, LookupError, AttributeError, TypeError):
       # XXX Seems that too many error are catched
       # XXX Shouldn't planning box failed in this case, because of bad config ?
-      message =  'error raised in secondary axis generation script : please \
-            check "%s"'% field.get_value('sec_axis_script')
-      return [(Message(domain='erp5_ui', message=message,mapping=None))]
-
+    #  message =  'error raised in secondary axis generation script : please \
+    #        check "%s"'% field.get_value('sec_axis_script')
+    #  return [(Message(domain='erp5_ui', message=message,mapping=None))]
     axis_stop = int(axis_stop)
     axis_start = int(axis_start)
     axis_range = axis_stop - axis_start
@@ -2465,6 +2480,8 @@ class PlanningStructure:
       except AttributeError:
         self.main_axis.axis_group = []
         self.main_axis.axis_group.append(axis_group)
+    if axis_element_already_present == 0:
+      return 1
     return axis_element_already_present
 
 

@@ -647,27 +647,53 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
 
     # PlanningBox related methods
     security.declareProtected(ERP5Permissions.View, 'setZoomLevel')
-    def setZoomLevel(self, uids=None, REQUEST=None, form_id=None, query_string=None):
+    def setZoomLevel(self, uids=None, REQUEST=None, form_id=None,
+                     query_string=None):
       """
       Set graphic zoom level in PlanningBox
       """
-      if uids is None: uids = []
+      if uids is None:
+        uids = []
       request = REQUEST
-      #zoom_level=request.get('zoom_level')
       selection_name=request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
-        zoom_level = request.form.get('zoom_level',1)
+        zoom_level = request.form.get('zoom_level', None)
+        if zoom_level is None:
+          # If zoom_level is not defined try to 
+          # use the last one from params
+          zoom_level =  params.get('zoom_level', 1)
+
+        # for keep compatibility with the old zoom        
         zoom_start = request.form.get('zoom_start',0)
-        params['zoom_level'] = zoom_level
         if zoom_level <= zoom_start:
           zoom_start = max(int(float(zoom_level)),1) - 1
-          params['zoom_start'] = zoom_start
-        selection.edit(params= params)
+          params['zoom_start'] = zoom_start   
+
+        # XXX URL currently pass string parameter and not int
+        # This is a dirty fix!
+        # It should be fixed by cleaning the date zoom level
+        # in a generic way
+        zoom_level = int(zoom_level)
+        zoom_begin = request.form.get('zoom_begin', None)
+        #zoom_end = request.form.get('zoom_end', None)
+        zoom_date_start = request.form.get('zoom_date_start', None)
+        if zoom_date_start is not None:
+          zoom_begin = zoom_date_start
+        if zoom_begin is None:
+          zoom_begin = params.get('zoom_begin', None)
+        params['zoom_level'] = zoom_level
+        # Calculating New zoom Dates Range.
+        validate_method = getattr(self, 'planning_validate_date_list', None)
+        date_range = validate_method(zoom_begin,zoom_level)
+        params['from_date'] = params['zoom_begin'] = date_range[0]
+        params['to_date'] = params['zoom_end'] = date_range[1]
+        selection.edit(params=params)
       if REQUEST is not None:
-        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
-                                           query_string=query_string)
+        return self._redirectToOriginalForm(REQUEST=REQUEST,
+                                            form_id=form_id,
+                                            query_string=query_string)
 
     security.declareProtected(ERP5Permissions.View, 'setZoom')
     def setZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
@@ -692,37 +718,65 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
       Set next graphic zoom start in PlanningBox
       """
-      if uids is None: uids = []
+      if uids is None:
+        uids = []
       request = REQUEST
       selection_name=request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
+        zoom_level =  params.get('zoom_level', 1)
+        zoom_variation = + 1
+        zoom_begin = request.form.get('zoom_begin', None)
+        
+        # for keep the compatibility
         zoom_start = params.get('zoom_start',0)
         params['zoom_start'] = int(zoom_start) + 1
-        selection.edit(params= params)
+
+        if zoom_begin is None:
+          zoom_begin = params.get('zoom_begin', None)
+        validate_method = getattr(self, 'planning_validate_date_list', None)
+        date_range = validate_method(zoom_begin,zoom_level,zoom_variation)
+        params['zoom_begin'] = params['from_date'] = date_range[0]
+        params['zoom_end'] = params['to_date'] = date_range[1]
+        selection.edit(params=params)
       if REQUEST is not None:
-        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
-                                           query_string=query_string)
+        return self._redirectToOriginalForm(REQUEST=REQUEST,
+                                            form_id=form_id,
+                                             query_string=query_string)
 
     security.declareProtected(ERP5Permissions.View, 'previousZoom')
     def previousZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set previous graphic zoom in PlanningBox
       """
-      if uids is None: uids = []
+      if uids is None:
+        uids = []
       request = REQUEST
       selection_name=request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
+        zoom_level =  params.get('zoom_level', 1)
+        zoom_variation = -1
+        zoom_begin = request.form.get('zoom_begin', None)
+
+        # for keep the compatibility
         zoom_start = params.get('zoom_start',0)
         params['zoom_start'] = int(zoom_start) - 1
-        selection.edit(params= params)
-      if REQUEST is not None:
-        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
-			                   query_string=query_string)
 
+        if zoom_begin is None:
+          zoom_begin = params.get('zoom_begin', None)
+        validate_method = getattr(self, 'planning_validate_date_list', None)
+        date_range = validate_method(zoom_begin,zoom_level,zoom_variation)
+        params['zoom_begin'] = params['from_date'] = date_range[0]
+        params['zoom_end'] = params['to_date'] = date_range[1]
+        selection.edit(params=params)
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST,
+                                            form_id=form_id,
+                                             query_string=query_string)
+    
     security.declareProtected(ERP5Permissions.View, 'setDomainRoot')
     def setDomainRoot(self, REQUEST, form_id=None, query_string=None):
       """
@@ -1455,8 +1509,6 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
         object_list = list_method(portal_type=filtered_portal_types)
       else:
         object_list = list_method()
-      if len(object_list) == 0:
-        object_list = [root]
     for zo in object_list:
       o = zo.getObject()
       if o is not None:
