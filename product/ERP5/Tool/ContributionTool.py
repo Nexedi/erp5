@@ -672,7 +672,7 @@ class ContributionTool(BaseTool):
       # md5 stuff to compare contents
       new_content_md5 = md5.md5(data).hexdigest()
       content_md5 = content.getContentMd5()
-      if content_md5 is new_content_md5:
+      if content_md5 == new_content_md5:
         return
       content._edit(file=file)# Please make sure that if content is the same
                               # we do not update it
