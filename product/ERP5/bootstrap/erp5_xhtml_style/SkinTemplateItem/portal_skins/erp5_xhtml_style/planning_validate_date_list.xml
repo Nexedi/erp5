@@ -70,39 +70,60 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-"""\n
-Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.\n
-            Thomas Bernard   <thomas@nexedi.com>\n
+#  Define the Two dates (Start date and stop date ) that will be \n
+#  used by Planning Box at secondary axis and also used as SQL params\n
+#  at list method.\n
+#\n
+#  Returned a list with 2 dates which is normalized as;\n
+#\n
+#  - Days always starts at 0H and finish at 0h of the next day.\n
+#  \n
+#  - Weeks always starts at 0H of the last Sunday and finish at 0h of\n
+#  the next sunday.\n
+#\n
+#  - Months always starts at 0h of the current month\'s first day  and \n
+#  finish 0h of the next month\'s first day.\n
+#\n
+#  - Years always starts at 0h of the current year\'s first day  and \n
+#    finish 0h of the next year\'s first day.\n
+#  \n
 \n
-This program is Free Software; you can redistribute it and/or\n
-modify it under the terms of the GNU General Public License\n
-as published by the Free Software Foundation; either version 2\n
-of the License, or (at your option) any later version.\n
+# Normalize Day.\n
+bound_start = DateTime(DateTime(bound_begin).strftime("%Y/%m/%d"))\n
+bound_stop = bound_start\n
+if int(zoom_level) == 1:\n
+  bound_start = bound_start + zoom_variation\n
+  bound_stop = bound_start + 1\n
 \n
-This program is distributed in the hope that it will be useful,\n
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
-GNU General Public License for more details.\n
+if int(zoom_level) == 7:\n
+  # Normalize Week.\n
+  while bound_start.Day() is not \'Sunday\':\n
+    bound_start = bound_start - 1\n
+  bound_start = bound_start + 7 * zoom_variation\n
+  bound_stop = bound_start + 7\n
+ \n
+if int(zoom_level) == 30:\n
+  # Normalize Month.\n
+  month = bound_start.month() + zoom_variation\n
+  year = bound_start.year() + (month - 1) / 12\n
+  month = month % 12\n
+  if month == 0:\n
+    month = 12\n
+  bound_start = DateTime(year, month, 1)\n
+  if month >= 12:\n
+    year = year + 1\n
+    month = 1\n
+  else:\n
+    month = month + 1\n
+  bound_stop = DateTime(year, month, 1)\n
 \n
-You should have received a copy of the GNU General Public License\n
-along with this program; if not, write to the Free Software\n
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
-"""\n
+if int(zoom_level) == 365:\n
+  # Normalize Year.\n
+  year = bound_start.year() + zoom_variation\n
+  bound_start = DateTime(year, 1, 1)\n
+  bound_stop = DateTime(year+1, 1, 1)\n
 \n
-"""\n
-This script builds a string with all necessary data to allow block\n
-moving and resizing\n
-"""\n
-\n
-block_string = \',\'.join([\'"%s"\' % block.name for block in planning.content if \\\n
-                                not context.PlanningBox_isFrozenBlock(block=block)])\n
-\n
-return \'<script type="text/javascript">SET_DHTML(%s,\' \\\n
-       \'"top"+CURSOR_N_RESIZE+VERTICAL, \' \\\n
-       \'"right"+CURSOR_E_RESIZE+HORIZONTAL, \' \\\n
-       \'"bottom"+CURSOR_S_RESIZE+VERTICAL, \' \\\n
-       \'"left"+CURSOR_W_RESIZE+HORIZONTAL\' \\\n
-       \');</script>\' % block_string\n
+return [bound_start , bound_stop]\n
 
 
 ]]></string> </value>
@@ -127,7 +148,7 @@ return \'<script type="text/javascript">SET_DHTML(%s,\' \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>planning</string> </value>
+            <value> <string>bound_begin=None, zoom_level=1,zoom_variation=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -147,20 +168,22 @@ return \'<script type="text/javascript">SET_DHTML(%s,\' \\\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>planning</string>
+                            <string>bound_begin</string>
+                            <string>zoom_level</string>
+                            <string>zoom_variation</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>block</string>
-                            <string>context</string>
-                            <string>block_string</string>
+                            <string>bound_start</string>
+                            <string>bound_stop</string>
+                            <string>int</string>
+                            <string>month</string>
+                            <string>year</string>
                           </tuple>
                         </value>
                     </item>
@@ -172,12 +195,16 @@ return \'<script type="text/javascript">SET_DHTML(%s,\' \\\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <int>1</int>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>planning_dhtml</string> </value>
+            <value> <string>planning_validate_date_list</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

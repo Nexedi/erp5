@@ -166,7 +166,7 @@ else:\n
 planning_dict= {\n
   \'position\': \'relative\',\n
   \'border-style\': \'solid\',\n
-  \'border-color\': \'#000000\',\n
+  \'border-color\': \'#d5e6de\',\n
   \'border-width\': 0,\n
   \'background\': \'#d5e6de\',\n
   \'width\': size_planning_width + size_border_width_left + size_y_axis_width + size_y_axis_space + 20,\n
@@ -583,9 +583,10 @@ for block_object in planning.content:\n
   block_dict = {\n
     \'position\': \'absolute\',\n
     \'border-style\': \'solid\',\n
-    \'border-color\': \'#53676e\',\n
+    \'border-color\':  \'#53676e\',\n
     \'border-width\': 1,\n
   }\n
+\n
   if block_object.error == 1:      # task has error (not validated)\n
     block_dict[\'background\'] = \'#e4c4da\'\n
   elif block_object.warning == 1:  # other bloc in the same task has error\n
@@ -598,7 +599,10 @@ for block_object in planning.content:\n
   else:                            # default color\n
     block_dict[\'background\'] = \'#bdd2e7\'\n
 \n
-\n
+  # XXX Define the frozen Blocs\n
+  if context.PlanningBox_isFrozenBlock(block=block_object):\n
+    block_dict[\'border-width\'] = 0\n
+  \n
   block_dict[\'width\'] = block_object.position_x.relative_range * size_planning_width\n
   block_dict[\'height\'] = block_object.position_y.relative_range * size_planning_height\n
   block_dict[\'margin-left\'] = block_object.position_x.relative_begin * size_planning_width\n
@@ -608,10 +612,11 @@ for block_object in planning.content:\n
     # the whole following process is aimed to take care of the non-stat blocks\n
 \n
     if planning.main_axis == planning.Y and block_object.parent_activity.property_dict[\'stat\'] == 0:\n
-      # Y axis is main axis\n
-      # adapt Y block size\n
-      block_dict[\'height\'] = block_dict[\'height\'] - 10\n
-      block_dict[\'margin-top\'] = block_dict[\'margin-top\'] + 5\n
+      if block_object.parent_activity.object.getUid() not in basic.sec_layer_uid_list:\n
+        # Y axis is main axis\n
+        # adapt Y block size\n
+        block_dict[\'height\'] = block_dict[\'height\'] - 10\n
+        block_dict[\'margin-top\'] = block_dict[\'margin-top\'] + 5\n
     elif block_object.parent_activity.property_dict[\'stat\'] == 0:\n
       # X axis is main axis\n
       # adapt X block size\n
@@ -831,6 +836,7 @@ return properties_structure\n
                             <string>content_dict</string>
                             <string>block_object</string>
                             <string>block_dict</string>
+                            <string>context</string>
                             <string>top_string</string>
                             <string>top_list</string>
                             <string>bot_string</string>

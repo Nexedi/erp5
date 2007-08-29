@@ -70,39 +70,20 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-"""\n
-Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.\n
-            Thomas Bernard   <thomas@nexedi.com>\n
+# Define the condition for the bloc is frozen or not.\n
+# The Bloc is frozen when:\n
+# - it\'s a Simulation Movement\n
+# - The user is not allowed to edit it\n
+# - it\'s a part of a block \n
+# - the object is one Calendar Period\n
 \n
-This program is Free Software; you can redistribute it and/or\n
-modify it under the terms of the GNU General Public License\n
-as published by the Free Software Foundation; either version 2\n
-of the License, or (at your option) any later version.\n
+frozen_portal_type_list = context.getPortalCalendarPeriodTypeList() + (\'Simulation Movement\',\'Presence Request Period\')\n
 \n
-This program is distributed in the hope that it will be useful,\n
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
-GNU General Public License for more details.\n
-\n
-You should have received a copy of the GNU General Public License\n
-along with this program; if not, write to the Free Software\n
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
-"""\n
-\n
-"""\n
-This script builds a string with all necessary data to allow block\n
-moving and resizing\n
-"""\n
-\n
-block_string = \',\'.join([\'"%s"\' % block.name for block in planning.content if \\\n
-                                not context.PlanningBox_isFrozenBlock(block=block)])\n
-\n
-return \'<script type="text/javascript">SET_DHTML(%s,\' \\\n
-       \'"top"+CURSOR_N_RESIZE+VERTICAL, \' \\\n
-       \'"right"+CURSOR_E_RESIZE+HORIZONTAL, \' \\\n
-       \'"bottom"+CURSOR_S_RESIZE+VERTICAL, \' \\\n
-       \'"left"+CURSOR_W_RESIZE+HORIZONTAL\' \\\n
-       \');</script>\' % block_string\n
+return (not context.portal_membership.checkPermission(\'Modify portal content\', block.parent_activity.object)) or \\\n
+           (block.parent_activity.object.getPortalType() in frozen_portal_type_list ) or \\\n
+           (not ((block.position_x.relative_begin > 0) and \\\n
+                   (block.position_x.relative_end < 1) and \\\n
+                   (block.property_dict[\'stat\'] == 0)))\n
 
 
 ]]></string> </value>
@@ -127,7 +108,7 @@ return \'<script type="text/javascript">SET_DHTML(%s,\' \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>planning</string> </value>
+            <value> <string>block</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -153,14 +134,11 @@ return \'<script type="text/javascript">SET_DHTML(%s,\' \\\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>planning</string>
-                            <string>_getattr_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
                             <string>block</string>
+                            <string>_getattr_</string>
                             <string>context</string>
-                            <string>block_string</string>
+                            <string>frozen_portal_type_list</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -177,7 +155,7 @@ return \'<script type="text/javascript">SET_DHTML(%s,\' \\\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>planning_dhtml</string> </value>
+            <value> <string>PlanningBox_isFrozenBlock</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
