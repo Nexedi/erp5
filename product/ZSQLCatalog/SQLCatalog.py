@@ -1900,7 +1900,6 @@ class Catalog( Folder,
       kw = REQUEST
 
     acceptable_key_map = self.getColumnMap()
-    acceptable_keys = acceptable_key_map.keys()
     full_text_search_keys = list(self.sql_catalog_full_text_search_keys)
     keyword_search_keys = list(self.sql_catalog_keyword_search_keys)
     topic_search_keys = self.sql_catalog_topic_search_keys
@@ -2008,7 +2007,7 @@ class Catalog( Folder,
     # Define related maps
     # each tuple from `related_tuples` has the form (key,
     # 'table1,table2,table3/column/where_expression')
-    related_keys = []
+    related_keys = {}
     related_method = {}
     related_table_map = {}
     related_column = {}
@@ -2020,7 +2019,7 @@ class Catalog( Folder,
       key = t_tuple[0].strip()
       if key in key_list:
         join_tuple = t_tuple[1].strip().split('/')
-        related_keys.append(key)
+        related_keys[key] = None
         method_id = join_tuple[2]
         table_list = tuple(join_tuple[0].split(','))
         related_method[key] = method_id
@@ -2041,14 +2040,14 @@ class Catalog( Folder,
     # We take additional parameters from the REQUEST
     # and give priority to the REQUEST
     if REQUEST is not None:
-      for key in acceptable_keys:
+      for key in acceptable_key_map.iterkeys():
         if REQUEST.has_key(key):
           # Only copy a few keys from the REQUEST
           if key in self.sql_catalog_request_keys:
             kw[key] = REQUEST[key]
 
     def getNewKeyAndUpdateVariables(key):
-      key_is_acceptable = key in acceptable_keys # Only calculate once
+      key_is_acceptable = key in acceptable_key_map # Only calculate once
       key_is_related = key in related_keys
       new_key = None
       if key_is_acceptable or key_is_related:
@@ -2068,7 +2067,7 @@ class Catalog( Folder,
               new_key = '%s.%s' % (acceptable_key_map[key][0], key)
             # query_table specifies what table name should be used by default
             elif query_table and \
-                '%s.%s' % (query_table, key) in acceptable_keys:
+                '%s.%s' % (query_table, key) in acceptable_key_map:
               new_key = '%s.%s' % (query_table, key)
             elif key == 'uid':
               # uid is always ambiguous so we can only change it here
