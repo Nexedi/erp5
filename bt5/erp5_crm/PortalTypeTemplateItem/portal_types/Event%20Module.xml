@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Holds organisation objects</string> </value>
+            <value> <string>Event module keeps all events of the organisation which either related to CRM tickets or to projects.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

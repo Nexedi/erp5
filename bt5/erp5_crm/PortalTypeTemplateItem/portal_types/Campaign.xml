@@ -60,19 +60,19 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>event_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Event</string> </value>
+            <value> <string>ERP5 Ticket</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Mail Message is an event which can be used to keep track of incoming emails (ex. support requests) or to create outgoing emails (for example in a campaign).</string> </value>
+            <value> <string>A Campaign is a marketing mini-project which keeps track of all events associated to a given marketing action. Use it for example to manage press relation campaigns, assessment campaigns, product presentation campaigns which involve contacting many customers through email, phone, etc.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addEvent</string> </value>
+            <value> <string>addTicket</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -82,7 +82,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>event</string>
+                <string>ticket</string>
+                <string>project</string>
               </tuple>
             </value>
         </item>
@@ -94,11 +95,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Mail Message</string> </value>
+            <value> <string>Campaign</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>Event_init</string> </value>
+            <value> <string>Ticket_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
