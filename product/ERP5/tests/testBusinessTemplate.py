@@ -4198,6 +4198,30 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  
+  def test_CompareVersions(self):
+    """Tests compare version on template tool. """
+    compareVersions = self.getPortal().portal_templates.compareVersions
+    self.assertEquals(0, compareVersions('1', '1'))
+    self.assertEquals(0, compareVersions('1.2', '1.2'))
+    self.assertEquals(0, compareVersions('1.2rc3', '1.2rc3'))
+    self.assertEquals(0, compareVersions('1.0.0', '1.0'))
+
+    self.assertEquals(-1, compareVersions('1.0', '1.0.1'))
+    self.assertEquals(-1, compareVersions('1.0rc1', '1.0'))
+    self.assertEquals(-1, compareVersions('1.0a', '1.0.1'))
+    self.assertEquals(-1, compareVersions('1.1', '2.0'))
+
+
+  def test_CompareVersionStrings(self):
+    """Test compareVersionStrings on template tool"""
+    compareVersionStrings = \
+        self.getPortal().portal_templates.compareVersionStrings
+    self.assertTrue(compareVersionStrings('1.1', '> 1.0'))
+    self.assertFalse(compareVersionStrings('1.1rc1', '= 1.0'))
+    self.assertFalse(compareVersionStrings('1.0rc1', '> 1.0'))
+    
+
 if __name__ == '__main__':
   framework()
 else:
