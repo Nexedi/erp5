@@ -1,43 +1,28 @@
 <allowed_content_type_list>
+ <portal_type id="Campaign Module">
+  <item>Campaign</item>
+ </portal_type>
  <portal_type id="Event Module">
+  <item>Letter</item>
   <item>Note</item>
-  <item>Mail Message</item>
   <item>Phone Call</item>
-  <item>Incoming Letter</item>
-  <item>Incoming Fax</item>
+  <item>Mail Message</item>
+  <item>Fax Message</item>
  </portal_type>
- <portal_type id="Incoming Fax">
-  <item>Image</item>
-  <item>File</item>
+ <portal_type id="Meeting">
+  <item>Role Definition</item>
  </portal_type>
- <portal_type id="Incoming Letter">
-  <item>Image</item>
-  <item>File</item>
- </portal_type>
- <portal_type id="Mail Message">
-  <item>Document</item>
-  <item>Link</item>
-  <item>File</item>
-  <item>Image</item>
- </portal_type>
- <portal_type id="Note">
-  <item>Image</item>
-  <item>File</item>
+ <portal_type id="Meeting Module">
+  <item>Meeting</item>
  </portal_type>
  <portal_type id="Sale Opportunity">
-  <item>Link</item>
-  <item>Image</item>
-  <item>File</item>
-  <item>Document</item>
+  <item>Role Definition</item>
  </portal_type>
  <portal_type id="Sale Opportunity Module">
   <item>Sale Opportunity</item>
  </portal_type>
  <portal_type id="Support Request">
-  <item>File</item>
-  <item>Image</item>
-  <item>Link</item>
-  <item>Document</item>
+  <item>Role Definition</item>
  </portal_type>
  <portal_type id="Support Request Module">
   <item>Support Request</item>
