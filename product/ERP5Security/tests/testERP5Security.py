@@ -95,12 +95,15 @@ class TestUserManagement(ERP5TypeTestCase):
     self.failUnless(isinstance(self.getUserFolder(),
         PluggableAuthService.PluggableAuthService))
 
-  def _makePerson(self, **kw):
+  def _makePerson(self, open_assignment=1, **kw):
     """Creates a person in person module, and returns the object, after
     indexing is done. """
     person_module = self.getPersonModule()
     new_person = person_module.newContent(
                      portal_type='Person', **kw)
+    assignment = new_person.newContent(portal_type = 'Assignment')
+    if open_assignment:
+      assignment.open()
     get_transaction().commit()
     self.tic()
     return new_person
@@ -139,35 +142,36 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def test_PersonWithLoginPasswordAreUsers(self):
     """Tests a person with a login & password is a valid user."""
-    p = self._makePerson(reference='the_user', password='secret',
-                        career_role='internal')
+    p = self._makePerson(reference='the_user', password='secret',)
     self._assertUserExists('the_user', 'secret')
     
   def test_PersonLoginCaseSensitive(self):
     """Login/password are case sensitive."""
-    p = self._makePerson(reference='the_user', password='secret',
-                        career_role='internal')
+    p = self._makePerson(reference='the_user', password='secret',)
     self._assertUserDoesNotExists('the_User', 'secret')
   
   def test_PersonLoginNonAscii(self):
     """Login can contain non ascii chars."""
-    p = self._makePerson(reference='j\xc3\xa9', password='secret',
-                        career_role='internal')
+    p = self._makePerson(reference='j\xc3\xa9', password='secret',)
     self._assertUserExists('j\xc3\xa9', 'secret')
 
   def test_PersonWithLoginWithEmptyPasswordAreNotUsers(self):
     """Tests a person with a login but no password is not a valid user."""
-    self._makePerson(reference='the_user', career_role='internal')
+    self._makePerson(reference='the_user')
     self._assertUserDoesNotExists('the_user', None)
-    self._makePerson(reference='another_user', password='',
-                     career_role='internal')
+    self._makePerson(reference='another_user', password='',)
     self._assertUserDoesNotExists('another_user', '')
   
   def test_PersonWithEmptyLoginAreNotUsers(self):
     """Tests a person with a login & password is a valid user."""
-    self._makePerson(reference='', password='secret', career_role='internal')
+    self._makePerson(reference='', password='secret')
     self._assertUserDoesNotExists('', 'secret')
   
+  def test_PersonWithLoginWithNotAssignmentAreNotUsers(self):
+    """Tests a person with a login & password and no assignment open is not a valid user."""
+    self._makePerson(reference='the_user', open_assignment=0)
+    self._assertUserDoesNotExists('the_user', None)
+
   def test_PersonWithSuperUserLoginCannotBeCreated(self):
     """Tests one cannot create person with the "super user" special login."""
     from Products.ERP5Security.ERP5UserManager import SUPER_USER
@@ -221,7 +225,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.username = 'username'
     # create a user and open an assignement
     pers = self.getPersonModule().newContent(portal_type='Person',
-                                             career_role='internal',
                                              reference=self.username,
                                              password=self.username)
     assignment = pers.newContent( portal_type='Assignment',

@@ -99,8 +99,10 @@ class ERP5UserManager(BasePlugin):
             if sm.getUser().getId() != SUPER_USER:
               newSecurityManager(self, self.getUser(SUPER_USER))
             try:
-              if pw_validate(user.getPassword(), password) and\
-                  user.getCareerRole() == 'internal':
+              # get assignment
+              assignment_list = [x for x in user.contentValues(portal_type="Assignment") if x.getValidationState() == "open"]
+              if pw_validate(user.getPassword(), password) and \
+                     len(assignment_list): #user.getCareerRole() == 'internal':
                 return login, login # use same for user_id and login
             finally:
               setSecurityManager(sm)
