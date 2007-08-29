@@ -68,6 +68,12 @@
    <name>Add CMFMailIn Tools</name>
   </permission>
   <permission type='list'>
+   <name>Add ChartObject</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ChartTemplate</name>
+  </permission>
+  <permission type='list'>
    <name>Add Configured CMF Sites</name>
   </permission>
   <permission type='list'>
@@ -146,6 +152,15 @@
    <name>Add Formulator Forms</name>
   </permission>
   <permission type='list'>
+   <name>Add KZMailmans</name>
+  </permission>
+  <permission type='list'>
+   <name>Add LDAP Connections</name>
+  </permission>
+  <permission type='list'>
+   <name>Add LDAP Filters</name>
+  </permission>
+  <permission type='list'>
    <name>Add LocalContents</name>
   </permission>
   <permission type='list'>
@@ -158,7 +173,13 @@
    <name>Add MailHost objects</name>
   </permission>
   <permission type='list'>
+   <name>Add Mailman List Member</name>
+  </permission>
+  <permission type='list'>
    <name>Add MessageCatalogs</name>
+  </permission>
+  <permission type='list'>
+   <name>Add MimetypesRegistry Tools</name>
   </permission>
   <permission type='list'>
    <name>Add Page Templates</name>
@@ -176,6 +197,9 @@
    <name>Add Plugin Registrys</name>
   </permission>
   <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
+  </permission>
+  <permission type='list'>
    <name>Add Python Scripts</name>
   </permission>
   <permission type='list'>
@@ -183,6 +207,9 @@
   </permission>
   <permission type='list'>
    <name>Add ReStructuredText Documents</name>
+  </permission>
+  <permission type='list'>
+   <name>Add RenderableObject</name>
   </permission>
   <permission type='list'>
    <name>Add Session Data Manager</name>
@@ -209,13 +236,22 @@
    <name>Add Vocabularies</name>
   </permission>
   <permission type='list'>
+   <name>Add WSDLObject</name>
+  </permission>
+  <permission type='list'>
+   <name>Add XML Method Cache Managers</name>
+  </permission>
+  <permission type='list'>
+   <name>Add XSLT Methods</name>
+  </permission>
+  <permission type='list'>
    <name>Add Z Gadfly Database Connections</name>
   </permission>
   <permission type='list'>
    <name>Add Z MySQL Database Connections</name>
   </permission>
   <permission type='list'>
-   <name>Add Z MySQL Database Deferred Connections</name>
+   <name>Add Z MySQL Deferred Database Connections</name>
   </permission>
   <permission type='list'>
    <name>Add ZCatalogs</name>
@@ -248,6 +284,12 @@
    <name>Add portal topics</name>
   </permission>
   <permission type='list'>
+   <name>Admin KZMailman</name>
+  </permission>
+  <permission type='list'>
+   <name>Browse Connection Entries</name>
+  </permission>
+  <permission type='list'>
    <name>Change Browser Id Manager</name>
   </permission>
   <permission type='list'>
@@ -278,7 +320,13 @@
    <name>Change Images and Files</name>
   </permission>
   <permission type='list'>
+   <name>Change LDAP Methods</name>
+  </permission>
+  <permission type='list'>
    <name>Change Lock Information</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Mailman List Options</name>
   </permission>
   <permission type='list'>
    <name>Change Page Templates</name>
@@ -335,6 +383,9 @@
    <name>Copy or Move</name>
   </permission>
   <permission type='list'>
+   <name>Create New Entry Objects</name>
+  </permission>
+  <permission type='list'>
    <name>Create Transient Objects</name>
   </permission>
   <permission type='list'>
@@ -344,10 +395,16 @@
    <name>Define permissions</name>
   </permission>
   <permission type='list'>
+   <name>Delete Entry Objects</name>
+  </permission>
+  <permission type='list'>
    <name>Delete objects</name>
   </permission>
   <permission type='list'>
    <name>Download ExtFile/ExtImage</name>
+  </permission>
+  <permission type='list'>
+   <name>Edit</name>
   </permission>
   <permission type='list'>
    <name>Edit Factories</name>
@@ -356,10 +413,16 @@
    <name>Edit ReStructuredText</name>
   </permission>
   <permission type='list'>
+   <name>Edit connection</name>
+  </permission>
+  <permission type='list'>
    <name>Edit target</name>
   </permission>
   <permission type='list'>
    <name>FTP access</name>
+  </permission>
+  <permission type='list'>
+   <name>Get Mailman List Members</name>
   </permission>
   <permission type='list'>
    <name>Import/Export objects</name>
@@ -389,7 +452,13 @@
    <name>Manage Access Rules</name>
   </permission>
   <permission type='list'>
+   <name>Manage Entry information</name>
+  </permission>
+  <permission type='list'>
    <name>Manage Groups</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage Selenium test cases</name>
   </permission>
   <permission type='list'>
    <name>Manage Transient Object Container</name>
@@ -401,6 +470,12 @@
    <name>Manage WebDAV Locks</name>
   </permission>
   <permission type='list'>
+   <name>Manage XML Method Cache</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage XML Methods</name>
+  </permission>
+  <permission type='list'>
    <name>Manage Z Classes</name>
   </permission>
   <permission type='list'>
@@ -408,6 +483,9 @@
   </permission>
   <permission type='list'>
    <name>Manage ZCatalogIndex Entries</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
   </permission>
   <permission type='list'>
    <name>Manage languages</name>
@@ -431,6 +509,9 @@
    <name>Modify portal content</name>
   </permission>
   <permission type='list'>
+   <name>Open/Close Connection</name>
+  </permission>
+  <permission type='list'>
    <name>Open/Close Database Connection</name>
   </permission>
   <permission type='list'>
@@ -441,6 +522,9 @@
   </permission>
   <permission type='list'>
    <name>Query Vocabulary</name>
+  </permission>
+  <permission type='list'>
+   <name>Remove Mailman List Member</name>
   </permission>
   <permission type='list'>
    <name>Reply to item</name>
@@ -485,6 +569,9 @@
    <name>Use Factories</name>
   </permission>
   <permission type='list'>
+   <name>Use LDAP Methods</name>
+  </permission>
+  <permission type='list'>
    <name>Use mailhost services</name>
   </permission>
   <permission type='list'>
@@ -492,6 +579,9 @@
   </permission>
   <permission type='list'>
    <name>View History</name>
+  </permission>
+  <permission type='list'>
+   <name>View KZMailman</name>
   </permission>
   <permission type='list'>
    <name>View ZMailMessage</name>
