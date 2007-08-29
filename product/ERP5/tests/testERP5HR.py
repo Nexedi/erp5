@@ -871,7 +871,8 @@ class TestHR(ERP5TypeTestCase):
     pers.setDefaultEmailText('nobody@example.com')
     email = pers.getDefaultEmailValue()
     self.assertEquals('mailto:nobody@example.com', email.asURL())
-    
+    self.assertEquals('mailto:nobody@example.com',
+                      pers.Entity_getDefaultEmailAsURL())
 
   def test_getTranslatedId(self):
     pers = self.getPersonModule().newContent(
