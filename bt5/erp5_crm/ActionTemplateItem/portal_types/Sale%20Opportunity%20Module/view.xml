@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/SaleOpportunityModule_viewSaleOpportunityList</string> </value>
+            <value> <string>string:${object_url}/Folder_viewTicketList</string> </value>
         </item>
       </dictionary>
     </pickle>

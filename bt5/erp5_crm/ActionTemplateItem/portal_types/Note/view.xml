@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Note_view</string> </value>
+            <value> <string>string:${object_url}/Event_view</string> </value>
         </item>
       </dictionary>
     </pickle>

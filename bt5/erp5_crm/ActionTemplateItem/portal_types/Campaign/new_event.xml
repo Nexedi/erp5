@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
+            <value> <string>object_action</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view</string> </value>
+            <value> <string>new_event</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -54,11 +54,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>1.0</float> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>View</string> </value>
+            <value> <string>New Event</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Ticket_view</string> </value>
+            <value> <string>string:${object_url}/Ticket_viewNewEventDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
