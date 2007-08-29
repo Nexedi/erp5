@@ -1,15 +1,23 @@
 <workflow_chain>
  <chain>
-  <type>Incoming Fax</type>
-  <workflow>edit_workflow, event_workflow</workflow>
+  <type>Campaign</type>
+  <workflow>edit_workflow, ticket_workflow</workflow>
  </chain>
  <chain>
-  <type>Incoming Letter</type>
-  <workflow>edit_workflow, event_workflow</workflow>
+  <type>Fax Message</type>
+  <workflow>event_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Letter</type>
+  <workflow>event_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Mail Message</type>
   <workflow>edit_workflow, event_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Meeting</type>
+  <workflow>edit_workflow, ticket_workflow</workflow>
  </chain>
  <chain>
   <type>Note</type>
