@@ -166,11 +166,14 @@ class WorkflowMethod(Method):
       except ObjectMoved, ex:
         # Re-raise with a different result.
         raise ObjectMoved(ex.getNewObject(), result)
-
+      else:
+        if getattr(aq_base(instance), 'reindexObject', None) is not None:
+          instance.reindexObject()
+        
     # Call whatever must be called after changing states
     for wf_id, transition_list in candidate_transition_item_list:
       wf[wf_id].notifySuccess(instance, self._id, result, args=args, kw=kw, transition_list=transition_list)
-
+      
     # Return result finally
     return result
 
