@@ -6,6 +6,15 @@ from Globals import InitializeClass
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Base import WorkflowMethod
 
+class DocumentationSection(Implicit):
+
+  def __init__(self, id, title, class_name, uri):
+    self.id = id
+    self.title = title
+    self.class_name = class_name
+    self.uri uri
+
+
 class DocumentationHelper(Implicit):
   """
     Example URIs
@@ -97,18 +106,18 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     Returns a list of documentation sections
     """
     return [
-      {
-        'id'      :   'instance_property',
-        'title'   :   'Instance Properties',
-        'class'   :   'InstancePropertyDocumentationHelper',
-        'uri'     :    self.getClassPropertyURIList(),
-      }
-      {
-        'id'      :   'accessor',
-        'title'   :   'Accessors',
-        'class'   :   'AccessorDocumentationHelper',
-        'uri'     :    self.getClassPropertyURIList(),
-      }
+      DocumentationSection(
+        id='instance_property',
+        title='Instance Properties',
+        class_name='InstancePropertyDocumentationHelper',
+        uri=self.getClassPropertyURIList(),
+      ),
+      DocumentationSection(
+        id='accessor',
+        title='Accessors',
+        class_name='AccessorDocumentationHelper',
+        uri=self.getClassPropertyURIList(),
+      ),
     ]
 
   # Specific methods
