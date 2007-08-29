@@ -1,5 +1,11 @@
+2007-08-29 Yusei
+* Add module_view action in context box.
+
 2007-08-29 Rafael
 * Updated Planning Box related stuff
+
+2007-08-18 yo
+* ERP5Site does not have getPortalType, so avoid calling getPortalType if not present.
 
 2007-07-02 Yusei
 * Fixed a invalid xhtml template.

@@ -158,6 +158,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 tal:attributes="value python: \'object %s\' % (action[\'url\'], )"\n
                 i18n:translate="" i18n:domain="ui"/>\n
       </tal:block>\n
+      <tal:block tal:define="object_view_list actions/object_view|nothing;\n
+                             module_view_list python:[i for i in object_view_list if i[\'id\']==\'module_view\']"\n
+                 tal:condition="module_view_list">\n
+        <tal:block tal:repeat="action module_view_list">\n
+        <option tal:content="action/name"\n
+                tal:attributes="value python: \'object %s\' % (action[\'url\'],)"\n
+                i18n:translate="" i18n:domain="ui"/>\n
+        </tal:block>\n
+      </tal:block>\n
       <tal:block tal:replace=\'nothing\'>\n
         <!-- XXX folder actions is inherited from CMF, but not used in ERP5 (for now) -->\n
         <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">folder</tal:block> --</option>\n
