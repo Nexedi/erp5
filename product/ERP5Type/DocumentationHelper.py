@@ -14,6 +14,7 @@ class DocumentationSection(Implicit):
     self.class_name = class_name
     self.uri uri
 
+  # more API needed XXX
 
 class DocumentationHelper(Implicit):
   """
