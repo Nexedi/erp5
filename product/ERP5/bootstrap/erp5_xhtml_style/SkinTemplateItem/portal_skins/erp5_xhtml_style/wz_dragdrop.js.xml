@@ -23,6 +23,12 @@
             <value> <string>wz_dragdrop.js</string> </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_vars</string> </key>
             <value>
               <dictionary/>
@@ -40,15 +46,15 @@
 
 /* This notice must be untouched at all times.\n
 \n
-wz_dragdrop.js    v. 4.56\n
+wz_dragdrop.js\tv. 4.88\n
 The latest version is available at\n
 http://www.walterzorn.com\n
 or http://www.devira.com\n
 or http://www.walterzorn.de\n
 \n
-Copyright (c) 2002-2003 Walter Zorn. All rights reserved.\n
+Copyright (c) 2002-2007 Walter Zorn. All rights reserved.\n
 Created 26. 8. 2002 by Walter Zorn (Web: http://www.walterzorn.com )\n
-Last modified: 20. 10. 2004\n
+Last modified: 31. 1. 2007\n
 \n
 This DHTML & Drag&Drop Library adds Drag&Drop functionality\n
 to the following types of html-elements:\n
@@ -73,9 +79,6 @@ see http://www.gnu.org/copyleft/lesser.html\n
 */\n
 \n
 \n
-\n
-\n
-\n
 // PATH TO THE TRANSPARENT 1*1 PX IMAGE (required by NS 4 as spacer)\n
 var spacer = \'transparentpixel.gif\';\n
 \n
@@ -90,26 +93,26 @@ var rb;\n
 var lb;\n
 var grips;\n
 // Optional commands passed to SET_DHTML() on the html-page (g: may be applied globally, i: individually)\n
-var CLONE            = \'C10nE\';   // i  img      clone image\n
-var COPY             = \'C0pY\';    // i  img      create copies\n
-var DETACH_CHILDREN  = \'d37aCH\';  // i  lyr      detach images\n
-var HORIZONTAL       = \'H0r1Z\';   // i  img,lyr  horizontally draggable only\n
-var MAXHEIGHT        = \'m7x8I\';   // i  img,lyr  maximum height limit, "\n
-var MAXOFFBOTTOM     = \'m7xd0wN\'; // i  img,lyr  downward offset limit\n
-var MAXOFFLEFT       = \'m7x23Ft\'; // i  img,lyr  leftward offset limit\n
-var MAXOFFRIGHT      = \'m7x0Ff8\'; // i  img,lyr  rightward offset limit\n
-var MAXOFFTOP        = \'m7xu9\';   // i  img,lyr  upward offset limit\n
-var MAXWIDTH         = \'m7xW1\';   // i  img,lyr  maximum width limit, use with resizable or scalable\n
-var MINWIDTH         = \'m1nw1\';   // i  img,lyr  minimum width limit, " \n
-var MINHEIGHT        = \'m1n8I\';   // i  img,lyr  minimum height limit, "\n
-var NO_ALT           = \'no81T\';   // gi img      disable alt and title attributes\n
-var NO_DRAG          = \'N0d4Ag\';  // i  img,lyr  disable draggability\n
-var RESET_Z          = \'r35E7z\';  // gi img,lyr  reset z-index when dropped\n
-var RESIZABLE        = \'r5IZbl\';  // gi img,lyr  resizable if <ctrl> or <shift> pressed\n
-var SCALABLE         = \'SCLbl\';   // gi img,lyr  scalable           "\n
-var SCROLL           = \'sC8lL\';   // gi img,lyr  enable auto scroll functionality\n
-var VERTICAL         = \'V3Rt1C\';  // i  img,lyr  vertically draggable only\n
-\n
+var CLONE\t\t\t= \'C10nE\';   // i  img\t  clone image\n
+var COPY\t\t\t= \'C0pY\';\t// i  img\t  create copies\n
+var DETACH_CHILDREN = \'d37aCH\';  // i  lyr\t  detach images\n
+var HORIZONTAL\t\t= \'H0r1Z\';   // i  img,lyr  horizontally draggable only\n
+var MAXHEIGHT\t\t= \'m7x8I\';   // i  img,lyr  maximum height limit, "\n
+var MAXOFFBOTTOM\t= \'m7xd0wN\'; // i  img,lyr  downward offset limit\n
+var MAXOFFLEFT\t\t= \'m7x23Ft\'; // i  img,lyr  leftward offset limit\n
+var MAXOFFRIGHT\t\t= \'m7x0Ff8\'; // i  img,lyr  rightward offset limit\n
+var MAXOFFTOP\t\t= \'m7xu9\';   // i  img,lyr  upward offset limit\n
+var MAXWIDTH\t\t= \'m7xW1\';   // i  img,lyr  maximum width limit, use with resizable or scalable\n
+var MINWIDTH\t\t= \'m1nw1\';   // i  img,lyr  minimum width limit, "\n
+var MINHEIGHT\t\t= \'m1n8I\';   // i  img,lyr  minimum height limit, "\n
+var NO_ALT\t\t\t= \'no81T\';   // gi img\t  disable alt and title attributes\n
+var NO_DRAG\t\t\t= \'N0d4Ag\';  // i  img,lyr  disable draggability\n
+var RESET_Z\t\t\t= \'r35E7z\';  // gi img,lyr  reset z-index when dropped\n
+var RESIZABLE\t\t= \'r5IZbl\';  // gi img,lyr  resizable if <ctrl> or <shift> pressed\n
+var SCALABLE\t\t= \'SCLbl\';   // gi img,lyr  scalable\t\t   "\n
+var SCROLL\t\t\t= \'sC8lL\';   // gi img,lyr  enable auto scroll functionality\n
+var TRANSPARENT\t\t= \'dIApHAn\'; // gi img,lyr  translucent while dragged\n
+var VERTICAL\t\t= \'V3Rt1C\';  // i  img,lyr  vertically draggable only\n
 var dd_cursors = new Array(\n
 \t\'c:default\',\n
 \t\'c:crosshair\',\n
@@ -127,29 +130,33 @@ var dd_cursors = new Array(\n
 \t\'c:w-resize\',\n
 \t\'c:wait\'\n
 );\n
-var dd_i = dd_cursors.length; while(dd_i--)\n
+for(var dd_i = dd_cursors.length; dd_i;)\n
+{--dd_i;\n
 \teval(\'var CURSOR_\' + (dd_cursors[dd_i].substring(2).toUpperCase().replace(\'-\', \'_\')) + \' = "\' + dd_cursors[dd_i] + \'";\');\n
-\n
-\n
-\n
+}\n
+var dd_u = "undefined";\n
 function WZDD()\n
 {\n
+\tthis.elements = new Array(0);\n
+\tthis.moved_list = new Array(0);\n
+\tthis.obj = null;\n
 \tthis.n = navigator.userAgent.toLowerCase();\n
 \tthis.db = (document.compatMode && document.compatMode.toLowerCase() != "backcompat")?\n
 \t\tdocument.documentElement\n
 \t\t: (document.body || null);\n
 \tthis.op = !!(window.opera && document.getElementById);\n
 \tthis.op6 = !!(this.op && !(this.db && this.db.innerHTML));\n
-\tif (this.op && !this.op6) document.onmousedown = new Function(\'e\',\n
-\t\t\'if (((e = e || window.event).target || e.srcElement).tagName == "IMAGE") return false;\');\n
+\tif(this.op && !this.op6) document.onmousedown = new Function(\'e\',\n
+\t\t\'if(((e = e || window.event).target || e.srcElement).tagName == "IMAGE") return false;\');\n
 \tthis.ie = !!(this.n.indexOf("msie") >= 0 && document.all && this.db && !this.op);\n
 \tthis.iemac = !!(this.ie && this.n.indexOf("mac") >= 0);\n
 \tthis.ie4 = !!(this.ie && !document.getElementById);\n
-\tthis.n4 = !!(document.layers && typeof document.classes != "undefined");\n
-\tthis.n6 = !!(typeof window.getComputedStyle != "undefined" && typeof document.createRange != "undefined");\n
+\tthis.n4 = !!(document.layers && typeof document.classes != dd_u);\n
+\tthis.n6 = !!(typeof window.getComputedStyle != dd_u && typeof document.createRange != dd_u);\n
 \tthis.w3c = !!(!this.op && !this.ie && !this.n6 && document.getElementById);\n
 \tthis.ce = !!(document.captureEvents && document.releaseEvents);\n
 \tthis.px = (this.n4 || this.op6)? \'\' : \'px\';\n
+\tthis.tiv = this.w3c? 40 : 10;\n
 }\n
 var dd = new WZDD();\n
 \n
@@ -157,7 +164,6 @@ dd.Int = function(d_x, d_y)\n
 {\n
 \treturn isNaN(d_y = parseInt(d_x))? 0 : d_y;\n
 };\n
-\n
 dd.getWndW = function()\n
 {\n
 \treturn dd.Int(\n
@@ -165,7 +171,6 @@ dd.getWndW = function()\n
 \t\t: (window.innerWidth || 0)\n
 \t);\n
 };\n
-\n
 dd.getWndH = function()\n
 {\n
 \treturn dd.Int(\n
@@ -173,20 +178,17 @@ dd.getWndH = function()\n
 \t\t: (window.innerHeight || 0)\n
 \t);\n
 };\n
-\n
 dd.getScrollX = function()\n
 {\n
 \treturn dd.Int(window.pageXOffset || (dd.db? dd.db.scrollLeft : 0));\n
 };\n
-\n
 dd.getScrollY = function()\n
 {\n
 \treturn dd.Int(window.pageYOffset || (dd.db? dd.db.scrollTop : 0));\n
 };\n
-\n
 dd.getPageXY = function(d_o)\n
 {\n
-\tif (dd.n4 && d_o)\n
+\tif(dd.n4 && d_o)\n
 \t{\n
 \t\tdd.x = d_o.pageX || 0;\n
 \t\tdd.y = d_o.pageY || 0;\n
@@ -194,7 +196,7 @@ dd.getPageXY = function(d_o)\n
 \telse\n
 \t{\n
 \t\tdd.x = dd.y = 0; //global helper vars\n
-\t\twhile (d_o)\n
+\t\twhile(d_o)\n
 \t\t{\n
 \t\t\tdd.x += dd.Int(d_o.offsetLeft);\n
 \t\t\tdd.y += dd.Int(d_o.offsetTop);\n
@@ -202,17 +204,16 @@ dd.getPageXY = function(d_o)\n
 \t\t}\n
 \t}\n
 };\n
-\n
 dd.getCssXY = function(d_o)\n
 {\n
-\tif (d_o.div)\n
+\tif(d_o.div)\n
 \t{\n
-\t\tif (dd.n4)\n
+\t\tif(dd.n4)\n
 \t\t{\n
 \t\t\td_o.cssx = d_o.div.x;\n
 \t\t\td_o.cssy = d_o.div.y;\n
 \t\t}\n
-\t\telse if (dd.ie4)\n
+\t\telse if(dd.ie4)\n
 \t\t{\n
 \t\t\td_o.cssx = d_o.css.pixelLeft;\n
 \t\t\td_o.cssy = d_o.css.pixelTop;\n
@@ -233,17 +234,14 @@ dd.getCssXY = function(d_o)\n
 \t\td_o.cssy = 0;\n
 \t}\n
 };\n
-\n
 dd.getImgW = function(d_o)\n
 {\n
 \treturn d_o? dd.Int(d_o.width) : 0;\n
 };\n
-\n
 dd.getImgH = function(d_o)\n
 {\n
 \treturn d_o? dd.Int(d_o.height) : 0;\n
 };\n
-\n
 dd.getDivW = function(d_o)\n
 {\n
 \treturn dd.Int(\n
@@ -252,7 +250,6 @@ dd.getDivW = function(d_o)\n
 \t\t: 0\n
 \t);\n
 };\n
-\n
 dd.getDivH = function(d_o)\n
 {\n
 \treturn dd.Int(\n
@@ -261,12 +258,11 @@ dd.getDivH = function(d_o)\n
 \t\t: 0\n
 \t);\n
 };\n
-\n
 dd.getWH = function(d_o)\n
 {\n
 \td_o.w = dd.getDivW(d_o);\n
 \td_o.h = dd.getDivH(d_o);\n
-\tif (d_o.css)\n
+\tif(d_o.css)\n
 \t{\n
 \t\td_o.css.width = d_o.w + dd.px;\n
 \t\td_o.css.height = d_o.h + dd.px;\n
@@ -277,42 +273,39 @@ dd.getWH = function(d_o)\n
 \t}\n
 \telse d_o.dw = d_o.dh = 0;\n
 };\n
-\n
 dd.getCssProp = function(d_o, d_pn6, d_pstyle, d_pn4)\n
 {\n
-\tif (d_o && dd.n6) return \'\'+window.getComputedStyle(d_o, null).getPropertyValue(d_pn6);\n
-\tif (d_o && d_o.currentStyle) return \'\'+eval(\'d_o.currentStyle.\'+d_pstyle);\n
-\tif (d_o && d_o.style) return \'\'+eval(\'d_o.style.\'+d_pstyle);\n
-\tif (d_o && dd.n4) return \'\'+eval(\'d_o.\'+d_pn4);\n
+\tif(d_o && dd.n6) return \'\'+window.getComputedStyle(d_o, null).getPropertyValue(d_pn6);\n
+\tif(d_o && d_o.currentStyle) return \'\'+eval(\'d_o.currentStyle.\'+d_pstyle);\n
+\tif(d_o && d_o.style) return \'\'+eval(\'d_o.style.\'+d_pstyle);\n
+\tif(d_o && dd.n4) return \'\'+eval(\'d_o.\'+d_pn4);\n
 \treturn \'\';\n
 };\n
-\n
 dd.getDiv = function(d_x, d_d)\n
 {\n
 \td_d = d_d || document;\n
-\tif (dd.n4)\n
+\tif(dd.n4)\n
 \t{\n
-\t\tif (d_d.layers[d_x]) return d_d.layers[d_x];\n
-\t\tfor (var d_i = d_d.layers.length; d_i--;)\n
+\t\tif(d_d.layers[d_x]) return d_d.layers[d_x];\n
+\t\tfor(var d_i = d_d.layers.length; d_i;)\n
 \t\t{\n
-\t\t\tvar d_y = dd.getDiv(d_x, d_d.layers[d_i].document);\n
-\t\t\tif (d_y) return d_y;\n
+\t\t\tvar d_y = dd.getDiv(d_x, d_d.layers[--d_i].document);\n
+\t\t\tif(d_y) return d_y;\n
 \t\t}\n
 \t}\n
-\tif (dd.ie) return d_d.all[d_x] || null;\n
-\tif (d_d.getElementById) return d_d.getElementById(d_x) || null;\n
+\tif(dd.ie) return d_d.all[d_x] || null;\n
+\tif(d_d.getElementById) return d_d.getElementById(d_x) || null;\n
 \treturn null;\n
 };\n
-\n
 dd.getImg = function(d_o, d_nm, d_xy, d_w)\n
 {\n
 \td_w = d_w || window;\n
 \tvar d_img;\n
-\tif ((d_img = d_w.document.images[d_nm]) && d_img.name == d_nm)\n
+\tif(document.images && (d_img = d_w.document.images[d_nm]))\n
 \t{\n
-\t\tif (d_xy)\n
+\t\tif(d_xy)\n
 \t\t{\n
-\t\t\tif (dd.n4)\n
+\t\t\tif(dd.n4)\n
 \t\t\t{\n
 \t\t\t\tdd.getPageXY(d_w);\n
 \t\t\t\td_o.defx = d_img.x + dd.x;\n
@@ -327,30 +320,29 @@ dd.getImg = function(d_o, d_nm, d_xy, d_w)\n
 \t\t}\n
 \t\treturn d_img;\n
 \t}\n
-\tif (dd.n4) for (var d_i = d_w.document.layers.length; d_i--;)\n
+\tif(dd.n4) for(var d_i = d_w.document.layers.length; d_i;)\n
 \t{\n
-\t\tvar d_y = dd.getImg(d_o, d_nm, d_xy, d_w.document.layers[d_i]);\n
-\t\tif (d_y) return d_y;\n
+\t\tvar d_y = dd.getImg(d_o, d_nm, d_xy, d_w.document.layers[--d_i]);\n
+\t\tif(d_y) return d_y;\n
 \t}\n
 \treturn null;\n
 };\n
-\n
-dd.getParent = function(d_o)\n
+dd.getParent = function(d_o, d_p)\n
 {\n
-\tif (dd.n4)\n
+\tif(dd.n4)\n
 \t{\n
-\t\tfor (var d_p, d_i = dd.elements.length; d_i--;)\n
+\t\tfor(var d_i = dd.elements.length; d_i;)\n
 \t\t{\n
-\t\t\tif (!((d_p = dd.elements[d_i]).is_image) && d_p.div && (d_p.div.document.layers[d_o.name] || d_o.oimg && d_p.div.document.images[d_o.oimg.name]))\n
+\t\t\tif(!((d_p = dd.elements[--d_i]).is_image) && d_p.div && (d_p.div.document.layers[d_o.name] || d_o.oimg && d_p.div.document.images[d_o.oimg.name]))\n
 \t\t\t\td_p.addChild(d_o, d_p.detach, 1);\n
-\t\t} \n
+\t\t}\n
 \t}\n
 \telse\n
 \t{\n
-\t\tvar d_p = d_o.is_image? dd.getImg(d_o, d_o.oimg.name) : (d_o.div || null);\n
-\t\twhile (d_p && !!(d_p = d_p.offsetParent || d_p.parentNode || null))\n
+\t\td_p = d_o.is_image? dd.getImg(d_o, d_o.oimg.name) : (d_o.div || null);\n
+\t\twhile(d_p && !!(d_p = d_p.offsetParent || d_p.parentNode || null))\n
 \t\t{\n
-\t\t\tif (d_p.ddObj)\n
+\t\t\tif(d_p.ddObj)\n
 \t\t\t{\n
 \t\t\t\td_p.ddObj.addChild(d_o, d_p.ddObj.detach, 1);\n
 \t\t\t\tbreak;\n
@@ -358,135 +350,144 @@ dd.getParent = function(d_o)\n
 \t\t}\n
 \t}\n
 };\n
-\n
 dd.getCmd = function(d_o, d_cmd, d_cmdStr)\n
 {\n
 \tvar d_i = d_o.id.indexOf(d_cmd), d_j,\n
 \td_y = (d_i >= 0)*1;\n
-\tif (d_y)\n
+\tif(d_y)\n
 \t{\n
 \t\td_j = d_i+d_cmd.length;\n
-\t\tif (d_cmdStr) d_o.cmd += d_o.id.substring(d_i, d_j);\n
+\t\tif(d_cmdStr) d_o.cmd += d_o.id.substring(d_i, d_j);\n
 \t\td_o.id = d_o.id.substring(0, d_i) + d_o.id.substring(d_j);\n
 \t}\n
 \treturn d_y;\n
 };\n
-\n
 dd.getCmdVal = function(d_o, d_cmd, d_cmdStr, int0)\n
 {\n
 \tvar d_i = d_o.id.indexOf(d_cmd), d_j,\n
 \td_y = (d_o.id.indexOf(d_cmd) >= 0)? dd.Int(d_o.id.substring(d_o.id.indexOf(d_cmd)+d_cmd.length)) : int0? -1 : 0;\n
-\tif (!int0 && d_y || int0 && d_y >= 0)\n
+\tif(!int0 && d_y || int0 && d_y >= 0)\n
 \t{\n
 \t\td_j = d_i+d_cmd.length+(""+d_y).length;\n
-\t\tif (d_cmdStr) d_o.cmd += d_o.id.substring(d_i, d_j);\n
+\t\tif(d_cmdStr) d_o.cmd += d_o.id.substring(d_i, d_j);\n
 \t\td_o.id = d_o.id.substring(0, d_i) + d_o.id.substring(d_j);\n
 \t}\n
 \treturn d_y;\n
 };\n
-\n
+dd.addMovedElt = function(d_o)\n
+{\n
+\tdd.moved_list[d_o.name] = d_o;\n
+};\n
 dd.addElt = function(d_o, d_p)\n
 {\n
-\tdd.elements[dd.elements.length] = dd.elements[d_o.name] = d_o;\n
-\tif (d_p) d_p.copies[d_p.copies.length] = d_p.copies[d_o.name] = d_o;\n
+\tdd.elements[d_o.name] = dd.elements[d_o.index = dd.elements.length] = d_o;\n
+\tif(d_p) d_p.copies[d_o.name] = d_p.copies[d_p.copies.length] = d_o;\n
 };\n
-\n
 dd.mkWzDom = function()\n
 {\n
-\tvar d_i = dd.elements.length; while(d_i--) dd.getParent(dd.elements[d_i]);\n
-\td_i = dd.elements.length; while(d_i--)\n
-\t\td_o = dd.elements[d_i];\n
-\t\tif (d_o.children && !d_o.parent)\n
+\tvar d_o, d_l = dd.elements.length, d_i;\n
+\tfor(d_i = d_l; d_i;) dd.getParent(dd.elements[--d_i]);\n
+\tfor(d_i = d_l; d_i;)\n
+\t{\n
+\t\tif((d_o = dd.elements[--d_i]).children && !d_o.parent)\n
 \t\t{\n
-\t\t\tvar d_j = d_o.children.length; while(d_j--)\n
+\t\t\tfor(var d_j = d_o.children.length; d_j;)\n
+\t\t\t{--d_j;\n
 \t\t\t\td_o.children[d_j].setZ(d_o.z+d_o.children[d_j].z, 1);\n
+\t\t\t}\n
 \t\t}\n
+\t}\n
 };\n
-\n
 dd.addProps = function(d_o)\n
 {\n
-\tvar d_i, d_c;\n
-\tif (d_o.is_image)\n
+\tif(d_o.is_image)\n
 \t{\n
 \t\td_o.div = dd.getDiv(d_o.id);\n
-\t\tif (d_o.div && typeof d_o.div.style != "undefined") d_o.css = d_o.div.style;\n
-\t\td_o.nimg = (dd.n4 && d_o.div)? d_o.div.document.images[0] : (document.images[d_o.id+\'NImG\'] || null);\n
-\t\tif (!d_o.noalt && !dd.noalt)\n
+\t\td_o.css = (d_o.div && typeof d_o.div.style != dd_u)? d_o.div.style : null;\n
+\t\td_o.nimg = (dd.n4 && d_o.div)? d_o.div.document.images[0] : (document.images[d_o.id+"NI1m6G"] || null);\n
+\t\tif(!d_o.noalt && !dd.noalt && d_o.nimg && d_o.oimg)\n
 \t\t{\n
 \t\t\td_o.nimg.alt = d_o.oimg.alt || \'\';\n
-\t\t\tif (d_o.oimg.title) d_o.nimg.title = d_o.oimg.title;\n
+\t\t\tif(d_o.oimg.title) d_o.nimg.title = d_o.oimg.title;\n
 \t\t}\n
 \t\td_o.bgColor = \'\';\n
 \t}\n
 \telse\n
 \t{\n
 \t\td_o.bgColor = dd.getCssProp(d_o.div, \'background-color\',\'backgroundColor\',\'bgColor\').toLowerCase();\n
-\t\tif (dd.n6 && d_o.div)\n
+\t\tif(dd.n6 && d_o.div)\n
 \t\t{\n
-\t\t\tif ((d_c = d_o.bgColor).indexOf(\'rgb\') >= 0)\n
+\t\t\tvar d_c = d_o.bgColor.toLowerCase();\n
+\t\t\tif(d_c.indexOf(\'rgb\') >= 0)\n
 \t\t\t{\n
 \t\t\t\td_c = d_c.substring(4, d_c.length-1).split(\',\');\n
 \t\t\t\td_o.bgColor = \'#\';\n
-\t\t\t\tfor (var d_i = 0; d_i < d_c.length; d_i++) d_o.bgColor += parseInt(d_c[d_i]).toString(0x10);\n
+\t\t\t\tfor(var d_l = d_c.length, d_i = 0; d_i < d_l; d_i++) d_o.bgColor += parseInt(d_c[d_i]).toString(0x10);\n
 \t\t\t}\n
 \t\t\telse d_o.bgColor = d_c;\n
 \t\t}\n
 \t}\n
-\tif (dd.scalable) d_o.scalable = d_o.resizable^1;\n
-\telse if (dd.resizable) d_o.resizable = d_o.scalable^1;\n
+\tif(dd.scalable) d_o.scalable = d_o.resizable^1;\n
+\telse if(dd.resizable) d_o.resizable = d_o.scalable^1;\n
 \td_o.setZ(d_o.defz);\n
 \td_o.cursor = d_o.cursor || dd.cursor || \'auto\';\n
 \td_o._setCrs(d_o.nodrag? \'auto\' : d_o.cursor);\n
+\t//d_o.diaphan = d_o.diaphan || dd.diaphan || 0;\n
+\t//d_o.opacity = 1.0;\n
 \td_o.visible = true;\n
 };\n
-\n
 dd.initz = function()\n
 {\n
-\tif (!(dd && (dd.n4 || dd.n6 || dd.ie || dd.op || dd.w3c))) return;\n
-\tif (dd.op6) WINSZ(2);\n
-\telse if (dd.n6 || dd.ie || dd.op && !dd.op6 || dd.w3c) dd.recalc(1);\n
+\tif(!(dd && (dd.n4 || dd.n6 || dd.ie || dd.op || dd.w3c))) return;\n
+\tif(dd.op6) WINSZ(2);\n
 \tvar d_drag = (document.onmousemove == DRAG),\n
 \td_resize = (document.onmousemove == RESIZE);\n
-\tif (dd.loadFunc) dd.loadFunc();\n
-\tif (d_drag && document.onmousemove != DRAG) dd.setEvtHdl(1, DRAG);\n
-\telse if (d_resize && document.onmousemove != RESIZE) dd.setEvtHdl(1, RESIZE);\n
-\tif ((d_drag || d_resize) && document.onmouseup != DROP) dd.setEvtHdl(2, DROP);\n
-\tdd.setEvtHdl(0, PICK);\n
+\tif(dd.loadFunc) dd.loadFunc();\n
+\tif(d_drag && document.onmousemove != DRAG) dd.setMovHdl(DRAG);\n
+\telse if(d_resize && document.onmousemove != RESIZE) dd.setMovHdl(RESIZE);\n
+\tif((d_drag || d_resize) && document.onmouseup != DROP) dd.setUpHdl(DROP);\n
+\tdd.setDwnHdl(PICK);\n
 };\n
-\n
 dd.finlz = function()\n
 {\n
-\tif (dd.ie && dd.elements)\n
+\tif(dd.ie && dd.elements)\n
 \t{\n
-\t\tvar d_i = dd.elements.length; while (d_i--)\n
-\t\t\tdd.elements[d_i].del();\n
+\t\tfor(var d_i = dd.elements.length; d_i;)\n
+\t\t\tdd.elements[--d_i].del();\n
 \t}\n
+\tif(dd.uloadFunc) dd.uloadFunc();\n
 };\n
-\n
-dd.setEvtHdl = function(d_typ, d_func)\n
+dd.setCe = function(d_e, d_fnc)\n
 {\n
-\tif (!d_typ)\n
+\td_fnc? document.captureEvents(d_e) : document.releaseEvents(d_e);\n
+};\n
+dd.setDwnHdl = function(d_x)\n
+{\n
+\tif(document.onmousedown != d_x)\n
 \t{\n
-\t\tif (document.onmousedown != d_func) dd.downFunc = document.onmousedown || null;\n
-\t\tdocument.onmousedown = d_func;\n
-\t}\n
-\telse if (d_typ&1)\n
-\t{\n
-\t\tif (document.onmousemove != d_func) dd.moveFunc = document.onmousemove || null;\n
-\t\tdocument.onmousemove = d_func;\n
-\t}\n
-\telse\n
-\t{\n
-\t\tif (document.onmouseup != d_func) dd.upFunc = document.onmouseup || null;\n
-\t\tdocument.onmouseup = d_func;\n
-\t}\n
-\tif (dd.ce)\n
-\t{\n
-\t\tvar d_e = (!d_typ)? Event.MOUSEDOWN : (d_typ&1)? Event.MOUSEMOVE : Event.MOUSEUP;\n
-\t\td_func? document.captureEvents(d_e) : document.releaseEvents(d_e);\n
+\t\tdd.downFunc = document.onmousedown;\n
+\t\tdocument.onmousedown = d_x;\n
+\t\tif(dd.ce) dd.setCe(Event.MOUSEDOWN, d_x);\n
 \t}\n
 };\n
-\n
+dd.setMovHdl = function(d_x)\n
+{\n
+\tif(document.onmousemove != d_x)\n
+\t{\n
+\t\tdd.moveFunc = document.onmousemove;\n
+\t\tdocument.onmousemove = d_x;\n
+\t\tif(dd.ce) dd.setCe(Event.MOUSEMOVE, d_x);\n
+\t}\n
+};\n
+dd.setUpHdl = function(d_x)\n
+{\n
+\tif(document.onmouseup != d_x)\n
+\t{\n
+\t\tdd.upFunc = document.onmouseup;\n
+\t\tdocument.onmouseup = d_x;\n
+\t\tif(dd.ce) dd.setCe(Event.MOUSEUP, d_x);\n
+\t}\n
+};\n
 dd.evt = function(d_e)\n
 {\n
 \tthis.but = (this.e = d_e || window.event).which || this.e.button || 0;\n
@@ -497,74 +498,81 @@ dd.evt = function(d_e)\n
 \tthis.src.tag = ("" + (this.src.tagName || this.src)).toLowerCase();\n
 \tthis.x = dd.Int(this.e.pageX || this.e.clientX || 0);\n
 \tthis.y = dd.Int(this.e.pageY || this.e.clientY || 0);\n
-\tif (dd.ie)\n
+\tif(dd.ie)\n
 \t{\n
 \t\tthis.x += dd.getScrollX() - (dd.ie && !dd.iemac)*1;\n
 \t\tthis.y += dd.getScrollY() - (dd.ie && !dd.iemac)*1;\n
 \t}\n
 \tthis.modifKey = this.e.modifiers? this.e.modifiers&Event.SHIFT_MASK : (this.e.shiftKey || false);\n
 };\n
-\n
+dd.getEventTarget = function(d_e, d_s, d_n)\n
+{\n
+\td_e = d_e || window.event;\n
+\tif(d_e && (d_s = d_e.target || d_e.srcElement || null) != null)\n
+\t{\n
+\t\tif(null != (d_n = d_s.id || d_s.name || null))\n
+\t\t{\n
+\t\t\tif(d_n.indexOf("dIi15vNI1m6G") == d_n.length-12)\n
+\t\t\t\treturn dd.elements[d_n.substring(0, d_n.length-12)] || null;\n
+\t\t\tif(d_n.indexOf("dIi15v") == d_n.length-6)\n
+\t\t\t\treturn dd.elements[d_n.substring(0, d_n.length-6)] || null;\n
+\t\t\treturn dd.elements[d_n] || null;\n
+\t\t}\n
+\t}\n
+\treturn null;\n
+};\n
 dd.recalc = function(d_x)\n
 {\n
-\tif (dd.elements)\n
+\tfor(var d_o, d_i = dd.elements.length; d_i;)\n
 \t{\n
-\t\tvar d_o, d_i = dd.elements.length; while(d_i--)\n
+\t\tif(!(d_o = dd.elements[--d_i]).is_image && d_o.div)\n
 \t\t{\n
-\t\t\tif (!(d_o = dd.elements[d_i]).is_image && d_o.div)\n
+\t\t\tdd.getWH(d_o);\n
+\t\t\tif(d_o.div.pos_rel)\n
 \t\t\t{\n
-\t\t\t\tdd.getWH(d_o);\n
-\t\t\t\tif (d_o.div.pos_rel)\n
+\t\t\t\tdd.getPageXY(d_o.div);\n
+\t\t\t\tvar d_dx = dd.x - d_o.x, d_dy = dd.y - d_o.y;\n
+\t\t\t\td_o.defx += d_dx;\n
+\t\t\t\td_o.x += d_dx;\n
+\t\t\t\td_o.defy += d_dy;\n
+\t\t\t\td_o.y += d_dy;\n
+\t\t\t\tfor(var d_p, d_j = d_o.children.length; d_j;)\n
 \t\t\t\t{\n
-\t\t\t\t\tdd.getPageXY(d_o.div);\n
-\t\t\t\t\tvar d_dx = dd.x - d_o.x, d_dy = dd.y - d_o.y;\n
-\t\t\t\t\td_o.defx += d_dx;\n
-\t\t\t\t\td_o.x += d_dx;\n
-\t\t\t\t\td_o.defy += d_dy;\n
-\t\t\t\t\td_o.y += d_dy;\n
-\t\t\t\t\tvar d_p, d_j = d_o.children.length; while(d_j--)\n
+\t\t\t\t\tif(!(d_p = d_o.children[--d_j]).detached && (d_o != d_p.defparent || !(d_p.is_image && dd.getImg(d_p, d_p.oimg.name, 1))))\n
 \t\t\t\t\t{\n
-\t\t\t\t\t\tif (!(d_p = d_o.children[d_j]).detached && (d_o != d_p.defparent || !(d_p.is_image && dd.getImg(d_p, d_p.oimg.name, 1))))\n
-\t\t\t\t\t\t{\n
-\t\t\t\t\t\t\td_p.defx += d_dx;\n
-\t\t\t\t\t\t\td_p.defy += d_dy;\n
-\t\t\t\t\t\t\td_p.moveBy(d_dx, d_dy);\n
+\t\t\t\t\t\td_p.defx += d_dx;\n
+\t\t\t\t\t\td_p.defy += d_dy;\n
+\t\t\t\t\t\td_p.moveBy(d_dx, d_dy);\n
 \t\t\t\t\t\t}\n
 \t\t\t\t\t}\n
 \t\t\t\t}\n
 \t\t\t}\n
-\t\t\telse if (d_o.is_image && !dd.op6 && !dd.n4)\n
-\t\t\t{\n
-\t\t\t\tif (dd.n6 && d_x && !d_o.defw) d_o.resizeTo(d_o.defw = dd.getImgW(d_o.oimg), d_o.defh = dd.getImgH(d_o.oimg));\n
-\t\t\t\tvar d_defx = d_o.defx, d_defy = d_o.defy;\n
-\t\t\t\tif (!(d_o.parent && d_o.parent != d_o.defparent) && (d_x || !d_o.detached || d_o.horizontal || d_o.vertical) && dd.getImg(d_o, d_o.oimg.name, 1))\n
-\t\t\t\t\td_o.moveBy(d_o.defx-d_defx, d_o.defy-d_defy);\n
+\t\telse if(d_o.is_image && !dd.op6 && !dd.n4)\n
+\t\t{\n
+\t\t\tif(dd.n6 && d_x && !d_o.defw) d_o.resizeTo(d_o.defw = dd.getImgW(d_o.oimg), d_o.defh = dd.getImgH(d_o.oimg));\n
+\t\t\tvar d_defx = d_o.defx, d_defy = d_o.defy;\n
+\t\t\tif(!(d_o.parent && d_o.parent != d_o.defparent) && (d_x || !d_o.detached || d_o.horizontal || d_o.vertical) && dd.getImg(d_o, d_o.oimg.name, 1))\n
+\t\t\t\td_o.moveBy(d_o.defx-d_defx, d_o.defy-d_defy);\n
 \t\t\t}\n
-\t\t}\n
-\t   }\n
+\t}\n
 };\n
-\n
-\n
-\n
 function WINSZ(d_x)\n
 {\n
-\tif (d_x)\n
+\tif(d_x)\n
 \t{\n
-\t\tif (dd.n4 || dd.op6 && d_x&2)\n
+\t\tif(dd.n4 || dd.op6 && d_x&2)\n
 \t\t{\n
 \t\t\tdd.iW = innerWidth;\n
 \t\t\tdd.iH = innerHeight;\n
-\t\t\tif (dd.op6) setTimeout("WINSZ()", 0x1ff);\n
+\t\t\tif(dd.op6) setTimeout("WINSZ()", 0x1ff);\n
 \t\t}\n
 \t\twindow.onresize = new Function(\'WINSZ();\');\n
 \t}\n
-\telse if ((dd.n4 || dd.op6) && (innerWidth != dd.iW || innerHeight != dd.iH)) location.reload();\n
-\telse if (dd.op6) setTimeout("WINSZ()", 0x1ff);\n
-\telse if (!dd.n4) setTimeout(\'dd.recalc()\', 0xa);\n
+\telse if((dd.n4 || dd.op6) && (innerWidth != dd.iW || innerHeight != dd.iH)) location.reload();\n
+\telse if(dd.op6) setTimeout("WINSZ()", 0x1ff);\n
+\t//else if(!dd.n4) setTimeout(\'dd.recalc()\', 0xa);\n
 }\n
-WINSZ(1);\n
-\n
-\n
+//WINSZ(1);\n
 \n
 function DDObj(d_o, d_i)\n
 {\n
@@ -576,7 +584,7 @@ function DDObj(d_o, d_i)\n
 \tthis.maxoffr = dd.getCmdVal(this, MAXOFFRIGHT, 0, 1);\n
 \tthis.maxofft = dd.getCmdVal(this, MAXOFFTOP, 0, 1);\n
 \tvar d_j = dd_cursors.length; while(d_j--)\n
-\t\tif (dd.getCmd(this, dd_cursors[d_j], 1)) this.cursor = dd_cursors[d_j].substring(2);\n
+\t\tif(dd.getCmd(this, dd_cursors[d_j], 1)) this.cursor = dd_cursors[d_j].substring(2);\n
 \tthis.clone = dd.getCmd(this, CLONE, 1);\n
 \tthis.detach = dd.getCmd(this, DETACH_CHILDREN);\n
 \tthis.scalable = dd.getCmd(this, SCALABLE, 1);\n
@@ -584,29 +592,33 @@ function DDObj(d_o, d_i)\n
 \tthis.noalt = dd.getCmd(this, NO_ALT, 1);\n
 \tthis.nodrag = dd.getCmd(this, NO_DRAG);\n
 \tthis.scroll = dd.getCmd(this, SCROLL, 1);\n
-\tthis.resizable = dd.getCmd(this, RESIZABLE, 1);\n
+ \tthis.resizable = dd.getCmd(this, RESIZABLE, 1);\n
 \tthis.re_z = dd.getCmd(this, RESET_Z, 1);\n
+\tthis.diaphan = dd.getCmd(this, TRANSPARENT, 1);\n
 \tthis.vertical = dd.getCmd(this, VERTICAL);\n
 \tthis.maxw = dd.getCmdVal(this, MAXWIDTH, 1, 1);\n
 \tthis.minw = Math.abs(dd.getCmdVal(this, MINWIDTH, 1, 1));\n
 \tthis.maxh = dd.getCmdVal(this, MAXHEIGHT, 1, 1);\n
 \tthis.minh = Math.abs(dd.getCmdVal(this, MINHEIGHT, 1, 1));\n
+\tthis.pickFunc = this.dragFunc = this.resizeFunc = this.dropFunc = null;\n
         this.moved = 0\n
 \tthis.name = this.id + (d_i || \'\');\n
 \tthis.oimg = dd.getImg(this, this.id, 1);\n
 \tthis.is_image = !!this.oimg;\n
+\tthis.lineIndex = 0\n
+\tthis.linePosition = 0\n
 \tthis.copies = new Array();\n
 \tthis.children = new Array();\n
 \tthis.parent = this.original = null;\n
-\tif (this.oimg)\n
+\tif(this.oimg)\n
 \t{\n
-\t\tthis.id += \'div\' + (d_i || \'\');\n
+\t\tthis.id = this.name + "dIi15v";\n
 \t\tthis.w = dd.getImgW(this.oimg);\n
 \t\tthis.h = dd.getImgH(this.oimg);\n
 \t\tthis.dw = this.dh = 0;\n
 \t\tthis.defz = dd.Int(dd.getCssProp(this.oimg, \'z-index\',\'zIndex\',\'zIndex\')) || 1;\n
 \t\tthis.defsrc = this.src = this.oimg.src;\n
-\t\tthis.htm = \'<img name="\' + this.id + \'NImG"\'+\n
+\t\tthis.htm = \'<img name="\' + this.id + \'NI1m6G"\'+\n
 \t\t\t\' src="\' + this.oimg.src + \'" \'+\n
 \t\t\t\'width="\' + this.w + \'" height="\' + this.h + \'">\';\n
 \t\tthis.t_htm = \'<div id="\' + this.id +\n
@@ -615,13 +627,13 @@ function DDObj(d_o, d_i)\n
 \t\t\t\'top:\' + (this.cssy = this.y = this.defy) + \'px;\'+\n
 \t\t\t\'width:\' + this.w + \'px;\'+\n
 \t\t\t\'height:\' + this.h + \'px;">\'+\n
-\t\t\tthis.htm + \'<\\/div>\';\n
+\t\t\tthis.htm + \'</div>\';\n
 \t}\n
 \telse\n
 \t{\n
-\t\tif (!!(this.div = dd.getDiv(this.id)) && typeof this.div.style != "undefined") this.css = this.div.style;\n
+\t\tif(!!(this.div = dd.getDiv(this.id)) && typeof this.div.style != dd_u) this.css = this.div.style;\n
 \t\tdd.getWH(this);\n
-\t\tif (this.div)\n
+\t\tif(this.div)\n
 \t\t{\n
 \t\t\tthis.div.ddObj = this;\n
 \t\t\tthis.div.pos_rel = ("" + (this.div.parentNode? this.div.parentNode.tagName : this.div.parentElement? this.div.parentElement.tagName : \'\').toLowerCase().indexOf(\'body\') < 0);\n
@@ -635,39 +647,54 @@ function DDObj(d_o, d_i)\n
 \tthis.defw = this.w || 0;\n
 \tthis.defh = this.h || 0;\n
 }\n
-\n
+DDObj.prototype.setPickFunc = function(d_x)\n
+{\n
+\tthis.pickFunc = d_x;\n
+};\n
+DDObj.prototype.setDragFunc = function(d_x)\n
+{\n
+\tthis.dragFunc = d_x;\n
+};\n
+DDObj.prototype.setResizeFunc = function(d_x)\n
+{\n
+\tthis.resizeFunc = d_x;\n
+};\n
+DDObj.prototype.setDropFunc = function(d_x)\n
+{\n
+\tthis.dropFunc = d_x;\n
+};\n
 DDObj.prototype.moveBy = function(d_x, d_y, d_kds, d_o)\n
 {\n
-\tif (!this.div) return;\n
+\tif(!this.div) return;\n
 \tthis.x += (d_x = dd.Int(d_x));\n
 \tthis.y += (d_y = dd.Int(d_y));\n
-\tif (!d_kds || this.is_image || this.parent != this.defparent)\n
+\tif(!d_kds || this.is_image || this.parent != this.defparent)\n
 \t{\n
 \t\t(d_o = this.css || this.div).left = (this.cssx += d_x) + dd.px;\n
 \t\td_o.top = (this.cssy += d_y) + dd.px;\n
 \t}\n
-\tvar d_i = this.children.length; while (d_i--)\n
+\tfor(var d_i = this.children.length; d_i;)\n
 \t{\n
-\t\tif (!(d_o = this.children[d_i]).detached) d_o.moveBy(d_x, d_y, 1);\n
+\t\tif(!(d_o = this.children[--d_i]).detached) d_o.moveBy(d_x, d_y, 1);\n
 \t\td_o.defx += d_x;\n
 \t\td_o.defy += d_y;\n
 \t}\n
+\tdd.addMovedElt(this)\n
 };\n
 \n
 DDObj.prototype.moveTo = function(d_x, d_y)\n
 {\n
 \tthis.moveBy(dd.Int(d_x)-this.x, dd.Int(d_y)-this.y);\n
 };\n
-\n
 DDObj.prototype.hide = function(d_m, d_o, d_p)\n
 {\n
-\tif (this.div && this.visible)\n
+\tif(this.div && this.visible)\n
 \t{\n
 \t\td_p = this.css || this.div;\n
-\t\tif (d_m && !dd.n4)\n
+\t\tif(d_m && !dd.n4)\n
 \t\t{\n
 \t\t\tthis.display = dd.getCssProp(this.div, "display", "display", "display");\n
-\t\t\tif (this.oimg)\n
+\t\t\tif(this.oimg)\n
 \t\t\t{\n
 \t\t\t\tthis.oimg.display = dd.getCssProp(this.oimg, "display", "display", "display");\n
 \t\t\t\tthis.oimg.style.display = "none";\n
@@ -678,47 +705,45 @@ DDObj.prototype.hide = function(d_m, d_o, d_p)\n
 \t\telse d_p.visibility = "hidden";\n
 \t}\n
 \tthis.visible = false;\n
-\tvar d_i = this.children.length; while (d_i--)\n
-\t\tif (!(d_o = this.children[d_i]).detached) d_o.hide(d_m);\n
+\tfor(var d_i = this.children.length; d_i;)\n
+\t\tif(!(d_o = this.children[--d_i]).detached) d_o.hide(d_m);\n
 };\n
-\n
 DDObj.prototype.show = function(d_o, d_p)\n
 {\n
-\tif (this.div)\n
+\tif(this.div)\n
 \t{\n
 \t\td_p = this.css || this.div;\n
-\t\tif (d_p.display && d_p.display == "none")\n
+\t\tif(d_p.display && d_p.display == "none")\n
 \t\t{\n
 \t\t\td_p.display = this.display || "block";\n
-\t\t\tif (this.oimg) this.oimg.style.display = this.oimg.display || "inline";\n
+\t\t\tif(this.oimg) this.oimg.style.display = this.oimg.display || "inline";\n
 \t\t\tdd.recalc();\n
 \t\t}\n
 \t\telse d_p.visibility = "visible";\n
 \t}\n
 \tthis.visible = true;\n
-\tvar d_i = this.children.length; while (d_i--)\n
-\t\tif (!(d_o = this.children[d_i]).detached) d_o.show();\n
+\tfor(var d_i = this.children.length; d_i;)\n
+\t\tif(!(d_o = this.children[--d_i]).detached) d_o.show();\n
 };\n
-\n
 DDObj.prototype.resizeTo = function(d_w, d_h, d_o)\n
 {\n
-\tif (!this.div) return;\n
+\tif(!this.div) return;\n
 \td_w = (this.w = dd.Int(d_w))-this.dw;\n
 \td_h = (this.h = dd.Int(d_h))-this.dh;\n
-\tif (dd.n4)\n
+\tif(dd.n4)\n
 \t{\n
 \t\tthis.div.resizeTo(d_w, d_h);\n
-\t\tif (this.is_image)\n
+\t\tif(this.is_image)\n
 \t\t{\n
 \t\t\tthis.write(\'<img src="\' + this.src + \'" width="\' + d_w + \'" height="\' + d_h + \'">\');\n
 \t\t\t(this.nimg = this.div.document.images[0]).src = this.src;\n
 \t\t}\n
 \t}\n
-\telse if (typeof this.css.pixelWidth != "undefined")\n
+\telse if(typeof this.css.pixelWidth != dd_u)\n
 \t{\n
 \t\tthis.css.pixelWidth = d_w;\n
 \t\tthis.css.pixelHeight = d_h;\n
-\t\tif (this.is_image)\n
+\t\tif(this.is_image)\n
 \t\t{\n
 \t\t\t(d_o = this.nimg.style).pixelWidth = d_w;\n
 \t\t\td_o.pixelHeight = d_h;\n
@@ -728,68 +753,67 @@ DDObj.prototype.resizeTo = function(d_w, d_h, d_o)\n
 \t{\n
 \t\tthis.css.width = d_w + dd.px;\n
 \t\tthis.css.height = d_h + dd.px;\n
-\t\tif (this.is_image)\n
+\t\tif(this.is_image)\n
 \t\t{\n
 \t\t\t(d_o = this.nimg).width = d_w;\n
 \t\t\td_o.height = d_h;\n
-\t\t\tif (!d_o.complete) d_o.src = this.src;\n
+\t\t\tif(!d_o.complete) d_o.src = this.src;\n
 \t\t}\n
 \t}\n
+\tdd.addMovedElt(this)\n
+\t\n
 };\n
-\n
 DDObj.prototype.resizeBy = function(d_dw, d_dh)\n
 {\n
 \tthis.resizeTo(this.w+dd.Int(d_dw), this.h+dd.Int(d_dh));\n
 };\n
-\n
 DDObj.prototype.swapImage = function(d_x, d_cp)\n
 {\n
-\tif (!this.nimg) return;\n
+\tif(!this.nimg) return;\n
 \tthis.nimg.src = d_x;\n
 \tthis.src = this.nimg.src;\n
-\tif (d_cp)\n
+\tif(d_cp)\n
 \t{\n
-\t\tvar d_i = this.copies.length; while (d_i--)\n
+\t\tfor(var d_i = this.copies.length; d_i;)\n
+\t\t{--d_i;\n
 \t\t\tthis.copies[d_i].src = this.copies[d_i].nimg.src = this.nimg.src;\n
+\t\t}\n
 \t}\n
 };\n
-\n
 DDObj.prototype.setBgColor = function(d_x)\n
 {\n
-\tif (dd.n4 && this.div) this.div.bgColor = d_x;\n
-\telse if (this.css) this.css.background = d_x;\n
+\tif(dd.n4 && this.div) this.div.bgColor = d_x;\n
+\telse if(this.css) this.css.background = d_x;\n
 \tthis.bgColor = d_x;\n
 };\n
-\n
 DDObj.prototype.write = function(d_x, d_o)\n
 {\n
 \tthis.text = d_x;\n
-\tif (!this.div) return;\n
-\tif (dd.n4)\n
+\tif(!this.div) return;\n
+\tif(dd.n4)\n
 \t{\n
 \t\t(d_o = this.div.document).open();\n
 \t\td_o.write(d_x);\n
 \t\td_o.close();\n
 \t\tdd.getWH(this);\n
 \t}\n
-\telse if (!dd.op6)\n
+\telse\n
 \t{\n
 \t\tthis.css.height = \'auto\';\n
 \t\tthis.div.innerHTML = d_x;\n
-\t\tif (!dd.ie4) dd.recalc();\n
-\t\tif (dd.ie4 || dd.n6) setTimeout(\'dd.recalc();\', 0); // n6.0: recalc twice\n
+\t\tif(!dd.ie4) dd.recalc();\n
+\t\tif(dd.ie4 || dd.n6) setTimeout(\'dd.recalc();\', 0); // n6.0: recalc twice\n
 \t}\n
 };\n
-\n
-DDObj.prototype.copy = function(d_n, d_p)\n
+DDObj.prototype.copy = function(d_n, d_p, d_b)\n
 {\n
-\tif (!this.oimg) return;\n
-\td_n = d_n || 1;\n
-\twhile (d_n--)\n
+\tif(!this.oimg) return;\n
+\td_b = (dd.ie && document.all.tags(\'body\'))? document.all.tags(\'body\')[0] : document.getElementsByTagName? (document.getElementsByTagName(\'body\')[0] || dd.db) : dd.db;\n
+\tfor(d_n = d_n || 1; d_n > 0; --d_n)\n
 \t{\n
 \t\tvar d_l = this.copies.length,\n
 \t\td_o = new DDObj(this.name+this.cmd, d_l+1);\n
-\t\tif (dd.n4)\n
+\t\tif(dd.n4)\n
 \t\t{\n
 \t\t\td_o.id = (d_p = new Layer(d_o.w)).name;\n
 \t\t\td_p.clip.height = d_o.h;\n
@@ -798,246 +822,270 @@ DDObj.prototype.copy = function(d_n, d_p)\n
 \t\t\td_p.write(d_o.htm);\n
 \t\t\td_p.close();\n
 \t\t}\n
-\t\telse if (dd.db.insertAdjacentHTML) dd.db.insertAdjacentHTML("AfterBegin", d_o.t_htm);\n
-\t\telse if (document.createElement && dd.db && dd.db.appendChild)\n
+\t\telse if(d_b && d_b.insertAdjacentHTML) d_b.insertAdjacentHTML("AfterBegin", d_o.t_htm);\n
+\t\telse if(document.createElement && d_b && d_b.appendChild)\n
 \t\t{\n
-\t\t\tdd.db.appendChild(d_p = document.createElement(\'div\'));\n
+\t\t\td_b.appendChild(d_p = document.createElement("dIi15v"));\n
 \t\t\td_p.innerHTML = d_o.htm;\n
 \t\t\td_p.id = d_o.id;\n
 \t\t\td_p.style.position = \'absolute\';\n
 \t\t\td_p.style.width = d_o.w + \'px\';\n
 \t\t\td_p.style.height = d_o.h + \'px\';\n
 \t\t}\n
-\t\telse if (dd.db && dd.db.innerHTML) dd.db.innerHTML += d_o.t_htm;\n
+\t\telse if(d_b && d_b.innerHTML) d_b.innerHTML += d_o.t_htm;\n
 \t\td_o.defz = this.defz+1+d_l;\n
 \t\tdd.addProps(d_o);\n
 \t\td_o.original = this;\n
 \t\tdd.addElt(d_o, this);\n
-\t\tif (this.parent)\n
+\t\tif(this.parent)\n
 \t\t{\n
 \t\t\tthis.parent.addChild(d_o, this.detached);\n
 \t\t\td_o.defparent = this.defparent;\n
 \t\t}\n
 \t\td_o.moveTo(d_o.defx = this.defx, d_o.defy = this.defy);\n
-\t\tif (dd.n4) d_o.defsrc = d_o.src = this.defsrc;\n
+\t\tif(dd.n4) d_o.defsrc = d_o.src = this.defsrc;\n
 \t\td_o.swapImage(this.src);\n
 \t}\n
 };\n
-\n
 DDObj.prototype.addChild = function(d_kd, detach, defp)\n
 {\n
-\tif (typeof d_kd != "object") d_kd = dd.elements[d_kd];\n
-\tif (d_kd.parent && d_kd.parent == this || d_kd == this || !d_kd.is_image && d_kd.defparent && !defp) return;\n
+\tif(typeof d_kd != "object") d_kd = dd.elements[d_kd];\n
+\tif(d_kd.parent && d_kd.parent == this || d_kd == this || !d_kd.is_image && d_kd.defparent && !defp) return;\n
 \n
 \tthis.children[this.children.length] = this.children[d_kd.name] = d_kd;\n
 \td_kd.detached = detach || 0;\n
-\tif (defp) d_kd.defparent = this;\n
-\telse if (this == d_kd.defparent && d_kd.is_image) dd.getImg(this, d_kd.oimg.name, 1);\n
-\tif (!d_kd.defparent || this != d_kd.defparent)\n
+\tif(defp) d_kd.defparent = this;\n
+\telse if(this == d_kd.defparent && d_kd.is_image) dd.getImg(this, d_kd.oimg.name, 1);\n
+\tif(!d_kd.defparent || this != d_kd.defparent)\n
 \t{\n
 \t\td_kd.defx = d_kd.x;\n
 \t\td_kd.defy = d_kd.y;\n
 \t}\n
-\tif (!detach)\n
+\tif(!detach)\n
 \t{\n
 \t\td_kd.defz = d_kd.defz+this.defz-(d_kd.parent? d_kd.parent.defz : 0)+(!d_kd.is_image*1);\n
 \t\td_kd.setZ(d_kd.z+this.z-(d_kd.parent? d_kd.parent.z : 0)+(!d_kd.is_image*1), 1);\n
 \t}\n
-\tif (d_kd.parent) d_kd.parent._removeChild(d_kd, 1);\n
+\tif(d_kd.parent) d_kd.parent._removeChild(d_kd, 1);\n
 \td_kd.parent = this;\n
 };\n
-\n
 DDObj.prototype._removeChild = function(d_kd, d_newp)\n
 {\n
-\tif (typeof d_kd != "object") d_kd = this.children[d_kd];\n
+\tif(typeof d_kd != "object") d_kd = this.children[d_kd];\n
 \tvar d_oc = this.children, d_nc = new Array();\n
-\tfor (var d_i = 0; d_i < d_oc.length; d_i++)\n
-\t\tif (d_oc[d_i] != d_kd) d_nc[d_nc.length] = d_oc[d_i];\n
+\tfor(var d_i = 0; d_i < d_oc.length; d_i++)\n
+\t\tif(d_oc[d_i] != d_kd) d_nc[d_nc.length] = d_oc[d_i];\n
 \tthis.children = d_nc;\n
 \td_kd.parent = null;\n
-\tif (!d_newp)\n
+\tif(!d_newp)\n
 \t{\n
 \t\td_kd.detached = d_kd.defp = 0;\n
-\t\tif (d_kd.is_image) dd.getImg(d_kd, d_kd.oimg.name, 1);\n
+\t\tif(d_kd.is_image) dd.getImg(d_kd, d_kd.oimg.name, 1);\n
 \t}\n
 };\n
-\n
 DDObj.prototype.attachChild = function(d_kd)\n
 {\n
 \t(d_kd = (typeof d_kd != "object")? this.children[d_kd]: d_kd).detached = 0;\n
 \td_kd.setZ(d_kd.defz + this.z-this.defz, 1);\n
 };\n
-\n
 DDObj.prototype.detachChild = function(d_kd)\n
 {\n
 \t(d_kd = (typeof d_kd != "object")? this.children[d_kd]: d_kd).detached = 1;\n
 };\n
-\n
-DDObj.prototype.setZ = function(d_x, d_kds)\n
+DDObj.prototype.setZ = function(d_x, d_kds, d_o)\n
 {\n
-\tif (d_kds)\n
+\tif(d_kds)\n
 \t{\n
-\t\tvar d_dz = d_x-this.z,\n
-\t\td_i = this.children.length; while (d_i--)\n
-\t\t\tif (!(d_o = this.children[d_i]).detached) d_o.setZ(d_o.z+d_dz, 1);\n
+\t\tfor(var d_dz = d_x-this.z, d_i = this.children.length; d_i;)\n
+\t\t\tif(!(d_o = this.children[--d_i]).detached) d_o.setZ(d_o.z+d_dz, 1);\n
 \t}\n
 \tdd.z = Math.max(dd.z, this.z = this.div? ((this.css || this.div).zIndex = d_x) : 0);\n
 };\n
-\n
 DDObj.prototype.maximizeZ = function()\n
 {\n
 \tthis.setZ(dd.z+1, 1);\n
 };\n
-\n
 DDObj.prototype._resetZ = function(d_o)\n
 {\n
-\tif (this.re_z || dd.re_z)\n
+\tif(this.re_z || dd.re_z)\n
 \t{\n
 \t\tthis.setZ(this.defz);\n
-\t\tvar d_i = this.children.length; while (d_i--)\n
-\t\t\tif (!(d_o = this.children[d_i]).detached) d_o.setZ(d_o.defz);\n
+\t\tfor(var d_i = this.children.length; d_i;)\n
+\t\t\tif(!(d_o = this.children[--d_i]).detached) d_o.setZ(d_o.defz);\n
 \t}\n
 };\n
-\n
+DDObj.prototype.setOpacity = function(d_x)\n
+{\n
+\tthis.opacity = d_x;\n
+\tthis._setOpaRel(1.0, 1);\n
+};\n
+DDObj.prototype._setOpaRel = function(d_x, d_kd, d_y, d_o)\n
+{\n
+\tif(this.css && (this.diaphan || d_kd))\n
+\t{\n
+\t\td_y = this.opacity*d_x;\n
+\t\tif(typeof this.css.MozOpacity != dd_u) this.css.MozOpacity = d_y;\n
+\t\telse if(typeof this.css.filter != dd_u)\n
+\t\t\tthis.css.filter = "Alpha(opacity="+parseInt(100*d_y)+")";\n
+\t\telse this.css.opacity = d_y;\n
+\t\tfor(var d_i = this.children.length; d_i;)\n
+\t\t\tif(!(d_o = this.children[--d_i]).detached) d_o._setOpaRel(d_x, 1);\n
+\t}\n
+};\n
 DDObj.prototype.setCursor = function(d_x)\n
 {\n
 \tthis._setCrs(this.cursor = (d_x.indexOf(\'c:\')+1)? d_x.substring(2) : d_x);\n
 };\n
-\n
 DDObj.prototype._setCrs = function(d_x)\n
 {\n
-\tif (this.css) this.css.cursor = ((!dd.ie || dd.iemac) && d_x == \'hand\')? \'pointer\' : d_x;\n
+\tif(this.css) this.css.cursor = ((!dd.ie || dd.iemac) && d_x == \'hand\')? \'pointer\' : d_x;\n
 };\n
-\n
 DDObj.prototype.setDraggable = function(d_x)\n
 {\n
 \tthis.nodrag = !d_x*1;\n
 \tthis._setCrs(d_x? this.cursor : \'auto\');\n
 };\n
-\n
 DDObj.prototype.setResizable = function(d_x)\n
 {\n
 \tthis.resizable = d_x*1;\n
-\tif (d_x) this.scalable = 0;\n
+\tif(d_x) this.scalable = 0;\n
 };\n
-\n
 DDObj.prototype.setScalable = function(d_x)\n
 {\n
 \tthis.scalable = d_x*1;\n
-\tif (d_x) this.resizable = 0;\n
+\tif(d_x) this.resizable = 0;\n
 };\n
-\n
+DDObj.prototype.setHorizontal = function(d_x)\n
+{\n
+\tthis.horizontal = d_x*1;\n
+};\n
+DDObj.prototype.setVertical = function(d_x)\n
+{\n
+\tthis.vertical = d_x*1;\n
+};\n
+DDObj.prototype.getEltBelow = function(d_ret, d_x, d_y)\n
+{\n
+\tvar d_o, d_cmp = -1, d_i = dd.elements.length; while(d_i--)\n
+\t{\n
+\t\td_o = dd.elements[d_i];\n
+\t\td_x = d_o.x-this.w/2;\n
+\t\td_y = d_o.y-this.h/2;\n
+\t\tif(d_o.visible && d_o.z < this.z && this.x >= d_x && this.x <= d_x+d_o.w && this.y >= d_y && this.y <= d_y+d_o.h)\n
+\t\t{\n
+\t\t\tif(d_o.z > d_cmp)\n
+\t\t\t{\n
+\t\t\t\td_cmp = d_o.z;\n
+\t\t\t\td_ret = d_o;\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\treturn d_ret;\n
+};\n
 DDObj.prototype.del = function(d_os, d_o)\n
 {\n
-\tif (this.parent && this.parent._removeChild) this.parent._removeChild(this);\n
-\tif (this.original)\n
+\tvar d_i, d_l;\n
+\tif(this.parent && this.parent._removeChild) this.parent._removeChild(this);\n
+\tif(this.original)\n
 \t{\n
 \t\tthis.hide();\n
-\t\tif (this.original.copies)\n
+\t\tif(this.original.copies)\n
 \t\t{\n
 \t\t\td_os = new Array();\n
-\t\t\tfor (var d_i = 0; d_i < this.original.copies.length; d_i++)\n
-\t\t\t\tif ((d_o = this.original.copies[d_i]) != this) d_os[d_os.length] = d_os[d_o.name] = d_o;\n
+\t\t\tfor(d_l = this.original.copies.length, d_i = 0; d_i < d_l; d_i++)\n
+\t\t\t\tif((d_o = this.original.copies[d_i]) != this) d_os[d_o.name] = d_os[d_os.length] = d_o;\n
 \t\t\tthis.original.copies = d_os;\n
 \t\t}\n
 \t}\n
-\telse if (this.is_image)\n
+\telse if(this.is_image)\n
 \t{\n
 \t\tthis.hide();\n
-\t\tif (this.oimg)\n
+\t\tif(this.oimg)\n
 \t\t{\n
-\t\t  if (dd.n4) this.oimg.src = this.defsrc;\n
+\t\t  if(dd.n4) this.oimg.src = this.defsrc;\n
 \t\t  else this.oimg.style.visibility = \'visible\';\n
 \t\t}\n
 \t}\n
-\telse if (this.moveTo)\n
+\telse if(this.moveTo)\n
 \t{\n
-\t\tif (this.css) this.css.cursor = \'default\';\n
+\t\tif(this.css) this.css.cursor = \'default\';\n
 \t\tthis.moveTo(this.defx, this.defy);\n
 \t\tthis.resizeTo(this.defw, this.defh);\n
 \t}\n
 \td_os = new Array();\n
-\tfor (var d_i = 0; d_i < dd.elements.length; d_i++)\n
+\tfor(var d_i = 0; d_i < dd.elements.length; d_i++)\n
 \t{\n
-\t\tif ((d_o = dd.elements[d_i]) != this) d_os[d_os.length] = d_os[d_o.name] = d_o;\n
+\t\tif((d_o = dd.elements[d_i]) != this) d_os[d_os.length] = d_os[d_o.name] = d_o;\n
 \t\telse d_o._free();\n
 \t}\n
 \tdd.elements = d_os;\n
-\tif (!dd.op6 && !dd.n4) dd.recalc();\n
+\tif(!dd.op6 && !dd.n4) dd.recalc();\n
 };\n
-\n
 DDObj.prototype._free = function()\n
 {\n
-\tfor (var d_i in this)\n
+\tfor(var d_i in this)\n
 \t\tthis[d_i] = null;\n
 \tdd.elements[this.name] = null;\n
 };\n
-\n
-\n
-\n
 dd.n4RectVis = function(vis)\n
 {\n
-\tfor (var d_i = 4; d_i--;)\n
-\t{\n
+\tfor(var d_i = 4; d_i;)\n
+\t{--d_i;\n
 \t\tdd.rectI[d_i].visibility = dd.rectA[d_i].visibility = vis? \'show\' : \'hide\';\n
-\t\tif (vis) dd.rectI[d_i].zIndex = dd.rectA[d_i].zIndex = dd.z+2;\n
+\t\tif(vis) dd.rectI[d_i].zIndex = dd.rectA[d_i].zIndex = dd.z+2;\n
 \t}\n
 };\n
-\n
 dd.n4RectPos = function(d_o, d_x, d_y, d_w, d_h)\n
 {\n
 \td_o.x = d_x;\n
 \td_o.y = d_y;\n
 \td_o.clip.width = d_w;\n
 \td_o.clip.height = d_h;\n
-};  \n
-\n
-// NN4: draw im resize rectangle.\n
+};\n
+// NN4: Draw img sizing rect\n
 dd.n4Rect = function(d_w, d_h)\n
 {\n
-\tif (!dd.rectI)\n
+\tvar d_i;\n
+\tif(!dd.rectI)\n
 \t{\n
 \t\tdd.rectI = new Array();\n
 \t\tdd.rectA = new Array();\n
 \t}\n
-\tif (!dd.rectI[0])\n
+\tif(!dd.rectI[0])\n
 \t{\n
-\t\tfor (var d_i = 4; d_i--;)\n
+\t\tfor(d_i = 4; d_i;)\n
 \t\t{\n
-\t\t\t(dd.rectI[d_i] = new Layer(1)).bgColor = \'#000000\';\n
+\t\t\t(dd.rectI[--d_i] = new Layer(1)).bgColor = \'#000000\';\n
 \t\t\t(dd.rectA[d_i] = new Layer(1)).bgColor = \'#ffffff\';\n
 \t\t}\n
 \t}\n
-\tif (!dd.rectI[0].visibility || dd.rectI[0].visibility == \'hide\') dd.n4RectVis(1);\n
+\tif(!dd.rectI[0].visibility || dd.rectI[0].visibility == \'hide\') dd.n4RectVis(1);\n
 \tdd.obj.w = d_w;\n
 \tdd.obj.h = d_h;\n
-\tfor (var d_i = 4; d_i--;)\n
-\t{\n
+\tfor(d_i = 4; d_i;)\n
+\t{--d_i;\n
 \t\tdd.n4RectPos(dd.rectI[d_i], dd.obj.x + (!(d_i-1)? (dd.obj.w-1) : 0), dd.obj.y + (!(d_i-2)? (dd.obj.h-1) : 0), d_i&1 || dd.obj.w, !(d_i&1) || dd.obj.h);\n
 \t\tdd.n4RectPos(dd.rectA[d_i], !(d_i-1)? dd.rectI[1].x+1 : (dd.obj.x-1), !(d_i-2)? dd.rectI[2].y+1 : (dd.obj.y-1), d_i&1 || dd.obj.w+2, !(d_i&1) || dd.obj.h+2);\n
 \t}\n
 };\n
-\n
 dd.reszTo = function(d_w, d_h)\n
 {\n
-\tif (dd.n4 && dd.obj.is_image) dd.n4Rect(d_w, d_h);\n
+\tif(dd.n4 && dd.obj.is_image) dd.n4Rect(d_w, d_h);\n
 \telse dd.obj.resizeTo(d_w, d_h);\n
 };\n
-\n
 dd.embedVis = function(d_vis)\n
 {\n
 \tvar d_o = new Array(\'iframe\', \'applet\', \'embed\', \'object\');\n
-\tvar d_i = d_o.length; while (d_i--)\n
-\t{\n
+\tfor(var d_i = d_o.length; d_i;)\n
+\t{--d_i;\n
 \t\tvar d_p = dd.ie? document.all.tags(d_o[d_i]) : document.getElementsByTagName? document.getElementsByTagName(d_o[d_i]) : null;\n
-\t\tif (d_p)\n
+\t\tif(d_p)\n
 \t\t{\n
-\t\t\tvar d_j = d_p.length; while (d_j--)\n
+\t\t\tfor(var d_j = d_p.length; d_j;)\n
 \t\t\t{\n
-\t\t\t\tvar d_q = d_p[d_j];\n
-\t\t\t\twhile (d_q.offsetParent || d_q.parentNode)\n
+\t\t\t\tvar d_q = d_p[--d_j];\n
+\t\t\t\twhile(d_q.offsetParent || d_q.parentNode)\n
 \t\t\t\t{\n
-\t\t\t\t\tif ((d_q = d_q.parentNode || d_q.offsetParent || null) == dd.obj.div)\n
+\t\t\t\t\tif((d_q = d_q.parentNode || d_q.offsetParent || null) == dd.obj.div)\n
 \t\t\t\t\t{\n
 \t\t\t\t\t\td_p[d_j].style.visibility = d_vis;\n
 \t\t\t\t\t\tbreak;\n
@@ -1050,75 +1098,68 @@ dd.embedVis = function(d_vis)\n
 \n
 dd.maxOffX = function(d_x, d_y)\n
 {\n
-\treturn (\n
+\treturn(\n
 \t\t(dd.obj.maxoffl+1 && (d_y = dd.obj.defx-dd.obj.maxoffl)-d_x > 0\n
 \t\t|| dd.obj.maxoffr+1 && (d_y = dd.obj.defx+dd.obj.maxoffr)-d_x < 0)? d_y\n
 \t\t: d_x\n
 \t);\n
 };\n
-\n
 dd.maxOffY = function(d_x, d_y)\n
 {\n
-\treturn (\n
+\treturn(\n
 \t\t(dd.obj.maxofft+1 && (d_y = dd.obj.defy-dd.obj.maxofft)-d_x > 0\n
 \t\t|| dd.obj.maxoffb+1 && (d_y = dd.obj.defy+dd.obj.maxoffb)-d_x < 0)? d_y\n
 \t\t: d_x\n
 \t);\n
 };\n
-\n
 dd.inWndW = function(d_x, d_y)\n
 {\n
 \tvar d_wx = dd.getScrollX(),\n
 \td_ww = dd.getWndW();\n
-\treturn (\n
+\treturn(\n
 \t\t((d_y = d_wx+2)-d_x > 0) || ((d_y = d_wx+d_ww+dd.obj.w-2)-d_x < 0)? d_y\n
 \t\t: d_x\n
 \t);\n
 };\n
-\n
 dd.inWndH = function(d_x, d_y)\n
 {\n
 \tvar d_wy = dd.getScrollY(),\n
 \td_wh = dd.getWndH();\n
-\treturn (\n
+\treturn(\n
 \t\t((d_y = d_wy+2)-d_x > 0) || ((d_y = d_wy+d_wh+dd.obj.h-2)-d_x < 0)? d_y\n
 \t\t: d_x\n
 \t);\n
 };\n
-\n
 // These two funcs limit the size of element when mouseresized.\n
-// Implemented 22.5.2003 by Gregor L\xc3\x83\xc2\xbctolf <gregor@milou.ch>, modified by Walter Zorn\n
+// Implemented 22.5.2003 by Gregor Ltolf, modified by Walter Zorn\n
 dd.limW = function(d_w)\n
 {\n
-\treturn (\n
+\treturn(\n
 \t\t(dd.obj.minw-d_w > 0)? dd.obj.minw\n
 \t\t: (dd.obj.maxw > 0 && dd.obj.maxw-d_w < 0)? dd.obj.maxw\n
 \t\t: d_w\n
 \t);\n
 };\n
-\n
 dd.limH = function(d_h)\n
 {\n
-\treturn (\n
+\treturn(\n
 \t\t(dd.obj.minh-d_h > 0)? dd.obj.minh\n
 \t\t: (dd.obj.maxh > 0 && dd.obj.maxh-d_h < 0)? dd.obj.maxh\n
 \t\t: d_h\n
 \t);\n
 };\n
-\n
-\n
 // Optional autoscroll-page functionality. Courtesy Cedric Savarese.\n
-// Implemented by Walter Zorn\n
+// Modified by Walter Zorn.\n
 function DDScroll()\n
 {\n
-\tif (!dd.obj || !dd.obj.scroll && !dd.scroll || dd.op || dd.ie4 || dd.whratio)\n
+\tif(!dd.obj || !dd.obj.scroll && !dd.scroll || dd.op || dd.ie4 || dd.whratio)\n
 \t{\n
 \t\tdd.scrx = dd.scry = 0;\n
 \t\treturn;\n
 \t}\n
 \tvar d_bnd = 0x1c,\n
 \td_wx = dd.getScrollX(), d_wy = dd.getScrollY();\n
-\tif (dd.msmoved)\n
+\tif(dd.msmoved)\n
 \t{\n
 \t\tvar d_ww = dd.getWndW(), d_wh = dd.getWndH(), d_y;\n
 \t\tdd.scrx = ((d_y = dd.e.x-d_ww-d_wx+d_bnd) > 0)? (d_y>>=2)*d_y\n
@@ -1128,7 +1169,7 @@ function DDScroll()\n
 \t\t\t: ((d_y = d_wy+d_bnd-dd.e.y) > 0)? -(d_y>>=2)*d_y\n
 \t\t\t: 0;\n
 \t}\n
-\tif (dd.scrx || dd.scry)\n
+\tif(dd.scrx || dd.scry)\n
 \t{\n
 \t\twindow.scrollTo(\n
 \t\t\td_wx + (dd.scrx = dd.obj.is_resized? dd.limW(dd.obj.w+dd.scrx)-dd.obj.w : dd.obj.vertical? 0 : (dd.maxOffX(dd.obj.x+dd.scrx)-dd.obj.x)),\n
@@ -1140,82 +1181,81 @@ function DDScroll()\n
 \tdd.msmoved = 0;\n
 \twindow.setTimeout(\'DDScroll()\', 0x33);\n
 }\n
-\n
-\n
-\n
 function PICK(d_ev)\n
 {\n
 \tdd.e = new dd.evt(d_ev);\n
-\tif (dd.e.x >= dd.getWndW()+dd.getScrollX() || dd.e.y >= dd.getWndH()+dd.getScrollY()) return true; // on scrollbar\n
+\tif(dd.e.x >= dd.getWndW()+dd.getScrollX() || dd.e.y >= dd.getWndH()+dd.getScrollY()) return true; // on scrollbar\n
 \tvar d_o, d_cmp = -1, d_i = dd.elements.length; while (d_i--)\n
 \t{\n
 \t\td_o = dd.elements[d_i];\n
-\t\tif (dd.n4 && dd.e.but > 1 && dd.e.src == d_o.oimg && !d_o.clone) return false;\n
-\t\tif (d_o.visible && dd.e.but <= 1 && dd.e.x >= d_o.x && dd.e.x <= d_o.x+d_o.w && dd.e.y >= d_o.y && dd.e.y <= d_o.y+d_o.h)\n
+\t\tif(dd.n4 && dd.e.but > 1 && dd.e.src == d_o.oimg && !d_o.clone) return false;\n
+\t\tif(d_o.visible && dd.e.but <= 1 && dd.e.x >= d_o.x && dd.e.x <= d_o.x+d_o.w && dd.e.y >= d_o.y && dd.e.y <= d_o.y+d_o.h)\n
 \t\t{\n
-\t\t\tif (d_o.z > d_cmp && dd.e.src.tag.indexOf(\'input\') < 0 && dd.e.src.tag.indexOf(\'textarea\') < 0 && dd.e.src.tag.indexOf(\'select\') < 0 && dd.e.src.tag.indexOf(\'option\') < 0)\n
+\t\t\tif(d_o.z > d_cmp && dd.e.src.tag.indexOf(\'input\') < 0 && dd.e.src.tag.indexOf(\'textarea\') < 0 && dd.e.src.tag.indexOf(\'select\') < 0 && dd.e.src.tag.indexOf(\'option\') < 0)\n
 \t\t\t{\n
 \t\t\t\td_cmp = d_o.z;\n
 \t\t\t\tdd.obj = d_o;\n
 \t\t\t}\n
 \t\t}\n
 \t}\n
-\tif (dd.obj)\n
+\tif(dd.obj)\n
 \t{\n
-\t\tif (dd.obj.nodrag) dd.obj = null;\n
+\t\tif(dd.obj.nodrag) dd.obj = null;\n
 \t\telse\n
 \t\t{\n
 \t\t\tdd.e.e.cancelBubble = true;\n
 \t\t\tvar d_rsz = dd.e.modifKey && (dd.obj.resizable || dd.obj.scalable);\n
-\t\t\tif (dd.op && !dd.op6)\n
+\t\t\tif(dd.op)\n
 \t\t\t{\n
 \t\t\t\t(d_o = document.getElementById(\'OpBlUr\')).style.pixelLeft = dd.e.x;\n
 \t\t\t\td_o.style.pixelTop = dd.e.y;\n
 \t\t\t\t(d_o = d_o.children[0].children[0]).focus();\n
 \t\t\t\td_o.blur();\n
 \t\t\t}\n
-\t\t\telse if (dd.ie && !dd.ie4)\n
+\t\t\telse if(dd.ie && !dd.ie4)\n
 \t\t\t{\n
-\t\t\t\tif (document.selection && document.selection.empty) document.selection.empty();\n
+\t\t\t\tif(document.selection && document.selection.empty) document.selection.empty();\n
 \t\t\t\tdd.db.onselectstart = function()\n
 \t\t\t\t{\n
 \t\t\t\t\tevent.returnValue = false;\n
 \t\t\t\t};\n
 \t\t\t}\n
-\t\t\tif (d_rsz)\n
+\t\t\tif(d_rsz)\n
 \t\t\t{\n
 \t\t\t\tdd.obj._setCrs(\'se-resize\');\n
 \t\t\t\tdd.obj.is_resized = 1;\n
 \t\t\t\tdd.whratio = dd.obj.scalable? dd.obj.defw/dd.obj.defh : 0;\n
-\t\t\t\tif (dd.ie)\n
+\t\t\t\tif(dd.ie)\n
 \t\t\t\t{\n
-\t\t\t\t\tif (dd.ie4)\n
+\t\t\t\t\tif(dd.ie4)\n
 \t\t\t\t\t{\n
 \t\t\t\t\t\twindow.dd_x = dd.getScrollX();\n
 \t\t\t\t\t\twindow.dd_y = dd.getScrollY();\n
 \t\t\t\t\t}\n
 \t\t\t\t\tsetTimeout(\n
-\t\t\t\t\t\t\'if (dd.obj && document.selection && document.selection.empty)\'+\n
+\t\t\t\t\t\t\'if(dd.obj && document.selection && document.selection.empty)\'+\n
 \t\t\t\t\t\t\'{\'+\n
 \t\t\t\t\t\t\t\'document.selection.empty();\'+\n
-\t\t\t\t\t\t\t\'if (dd.ie4) window.scrollTo(window.dd_x, window.dd_y);\'+\n
+\t\t\t\t\t\t\t\'if(dd.ie4) window.scrollTo(window.dd_x, window.dd_y);\'+\n
 \t\t\t\t\t\t\'}\'\n
 \t\t\t\t\t,0);\n
 \t\t\t\t}\n
-\t\t\t\tdd.setEvtHdl(1, RESIZE);\n
+\t\t\t\tdd.setMovHdl(RESIZE);\n
 \t\t\t\tdd.reszTo(dd.obj.w, dd.obj.h);\n
 \t\t\t}\n
-\t\t\telse if (!dd.obj.nodrag)\n
+\t\t\telse if(!dd.obj.nodrag)\n
 \t\t\t{\n
 \t\t\t\tdd.obj.is_dragged = 1;\n
-\t\t\t\tdd.setEvtHdl(1, DRAG);\n
+\t\t\t\tdd.setMovHdl(DRAG);\n
 \t\t\t}\n
-\t\t\tdd.setEvtHdl(2, DROP);\n
+\t\t\tdd.setUpHdl(DROP);\n
 \t\t\tdd.embedVis(\'hidden\');\n
+\t\t\t//dd.obj._setOpaRel(0.7);\n
 \t\t\tdd.obj.maximizeZ();\n
 \t\t\tdd.ofx = dd.obj.x+dd.obj.w-dd.e.x;\n
 \t\t\tdd.ofy = dd.obj.y+dd.obj.h-dd.e.y;\n
-\t\t\tif (window.my_PickFunc) my_PickFunc();\n
+\t\t\tif(window.my_PickFunc) my_PickFunc();\n
+\t\t\tif(dd.obj.pickFunc) dd.obj.pickFunc();\n
 \t\t\tDDScroll();\n
 \t\t\treturn !(\n
 \t\t\t\tdd.obj.is_resized\n
@@ -1224,21 +1264,20 @@ function PICK(d_ev)\n
 \t\t\t);\n
 \t\t}\n
 \t}\n
-\tif (dd.downFunc) return dd.downFunc(d_ev);\n
+\tif(dd.downFunc) return dd.downFunc(d_ev);\n
 \treturn true;\n
 }\n
-\n
 function DRAG(d_ev)\n
 {\n
-\tif (!dd.obj || !dd.obj.visible) return true;\n
-\tif (dd.ie4 || dd.w3c || dd.n6 || dd.obj.children.length > 0xf)\n
+\tif(!dd.obj || !dd.obj.visible) return true;\n
+\tif(dd.ie4 || dd.w3c || dd.n6 || dd.obj.children.length > 0xf)\n
 \t{\n
-\t\tif (dd.wait) return false;\n
+\t\tif(dd.wait) return false;\n
 \t\tdd.wait = 1;\n
-\t\tsetTimeout(\'dd.wait = 0;\', 5);\n
+\t\tsetTimeout(\'dd.wait = 0;\', dd.tiv);\n
 \t}\n
 \tdd.e = new dd.evt(d_ev);\n
-\tif (dd.ie && !dd.e.but)\n
+\tif(dd.ie && !dd.e.but)\n
 \t{\n
 \t\tDROP(d_ev);\n
 \t\treturn true;\n
@@ -1249,179 +1288,93 @@ function DRAG(d_ev)\n
 \t\tdd.obj.horizontal? dd.obj.y : dd.maxOffY(dd.inWndH(dd.ofy+dd.e.y)-dd.obj.h)\n
 \t);\n
 \n
-\tif (window.my_DragFunc) my_DragFunc();\n
+\tif(window.my_DragFunc) my_DragFunc();\n
+\tif(dd.obj.dragFunc) dd.obj.dragFunc();\n
+\tif(dd.moveFunc) return dd.moveFunc(d_ev);\n
 \treturn false;\n
 }\n
-\n
 function RESIZE(d_ev)\n
 {\n
-\tif (!dd.obj || !dd.obj.visible) return true;\n
-\tif (dd.wait) return false;\n
+\tif(!dd.obj || !dd.obj.visible) return true;\n
+\tif(dd.wait) return false;\n
 \tdd.wait = 1;\n
-\tsetTimeout(\'dd.wait = 0;\', 5);\n
+\tsetTimeout(\'dd.wait = 0;\', dd.tiv);\n
 \tdd.e = new dd.evt(d_ev);\n
-\tif (dd.ie && !dd.e.but)\n
+\tif(dd.ie && !dd.e.but)\n
 \t{\n
 \t\tDROP(d_ev);\n
 \t\treturn true;\n
 \t}\n
 \tdd.msmoved = 1;\n
-\tvar d_w = dd.limW(dd.inWndW(dd.ofx+dd.e.x)-dd.obj.x);\n
-\tif (!dd.whratio) var d_h = dd.limH(dd.inWndH(dd.ofy+dd.e.y)-dd.obj.y);\n
+\tvar d_w = dd.limW(dd.inWndW(dd.ofx+dd.e.x)-dd.obj.x), d_h;\n
+\tif(!dd.whratio) d_h = dd.limH(dd.inWndH(dd.ofy+dd.e.y)-dd.obj.y);\n
 \telse\n
 \t{\n
-\t\tvar d_h = dd.limH(dd.inWndH(Math.round(d_w/dd.whratio)+dd.obj.y)-dd.obj.y);\n
+\t\td_h = dd.limH(dd.inWndH(Math.round(d_w/dd.whratio)+dd.obj.y)-dd.obj.y);\n
 \t\td_w = Math.round(d_h*dd.whratio);\n
-    \n
-  }\n
+\t}\n
 \tdd.reszTo(d_w, d_h);\n
-\tif (window.my_ResizeFunc) my_ResizeFunc();\n
+\tif(window.my_ResizeFunc) my_ResizeFunc();\n
+\tif(dd.obj.resizeFunc) dd.obj.resizeFunc();\n
+\tif(dd.moveFunc) return dd.moveFunc(d_ev);\n
 \treturn false;\n
 }\n
-\n
 function DROP(d_ev)\n
 {\n
-\tif (dd.obj)\n
+\tif(dd.obj)\n
 \t{\n
-\t\tif (dd.obj.is_dragged)\n
+\t\tif(dd.obj.is_dragged)\n
 \t\t{\n
-\t\t\tif (!dd.obj.is_image) dd.getWH(dd.obj);\n
+\t\t\tif(!dd.obj.is_image) dd.getWH(dd.obj);\n
 \t\t}\n
-\t\telse if (dd.n4)\n
+\t\telse if(dd.n4)\n
 \t\t{\n
-\t\t\tif (dd.obj.is_image)\n
+\t\t\tif(dd.obj.is_image)\n
 \t\t\t{\n
 \t\t\t\tdd.n4RectVis(0);\n
 \t\t\t\tdd.obj.resizeTo(dd.obj.w, dd.obj.h);\n
 \t\t\t}\n
 \t\t}\n
-\t\tif (!dd.n4 && !dd.op6 || !dd.obj.is_image) dd.recalc();\n
-\t\tdd.setEvtHdl(1, dd.moveFunc);\n
-\t\tdd.setEvtHdl(2, dd.upFunc);\n
-\t\tif (dd.db) dd.db.onselectstart = null;\n
+\t\t//if(!dd.n4 && !dd.op6 || !dd.obj.is_image) dd.recalc();\n
+\t\tdd.setMovHdl(dd.moveFunc);\n
+\t\tdd.setUpHdl(dd.upFunc);\n
+\t\tif(dd.db) dd.db.onselectstart = null;\n
+\t\t//dd.obj._setOpaRel(1.0);\n
 \t\tdd.obj._setCrs(dd.obj.cursor);\n
 \t\tdd.embedVis(\'visible\');\n
 \t\tdd.obj._resetZ();\n
-\t\tif (window.my_DropFunc)\n
-\t\t{\n
-\t\t\tdd.e = new dd.evt(d_ev);\n
-\t\t\tmy_DropFunc();\n
-\t\t}\n
+\t\tdd.e = new dd.evt(d_ev);\n
+\t\tif(window.my_DropFunc) my_DropFunc();\n
+\t\tif(dd.obj.dropFunc) dd.obj.dropFunc();\n
 \t\tdd.msmoved = dd.obj.is_dragged = dd.obj.is_resized = dd.whratio = 0;\n
 \t\tdd.obj = null;\n
 \t}\n
-\tdd.setEvtHdl(0, PICK);\n
+\tdd.setDwnHdl(PICK);\n
 }\n
-\n
 function compare_x(a,b){\n
 return a.x-b.x;\n
 }\n
-\n
-\n
-\n
-function SET_DHTML2()\n
-{\n
-\tdd.elements = new Array();\n
-\tvar d_a = SET_DHTML2.arguments, d_ai, d_htm = \'\', d_o, d_i = d_a.length; while (d_i--)\n
-\t{\n
-\t\tif (dd.op6)\n
-\t\t{\n
-\t\t\tvar d_t0 = (new Date()).getTime();\n
-\t\t\twhile ((new Date()).getTime()-d_t0 < 0x99);\n
-\t\t}\n
-\t\tif (!(d_ai = d_a[d_i]).indexOf(\'c:\')) dd.cursor = d_ai.substring(2);\n
-\t\telse if (d_ai == NO_ALT) dd.noalt = 1;\n
-\t\telse if (d_ai == SCROLL) dd.scroll = 1;\n
-\t\telse if (d_ai == RESET_Z) dd.re_z = 1;\n
-\t\telse if (d_ai == RESIZABLE) dd.resizable = 1;\n
-\t\telse if (d_ai == SCALABLE) dd.scalable = 1;\n
-\t\telse\n
-\t\t{\n
-\t\t\td_o = new DDObj(d_ai);\n
-\t\t\tdd.addElt(d_o);\n
-\t\t\td_htm += d_o.t_htm || \'\';\n
-\t\t\tif (d_o.oimg && d_o.cpy_n)\n
-\t\t\t{\n
-\t\t\t\tvar d_j = 0; while (d_j < d_o.cpy_n)\n
-\t\t\t\t{\n
-\t\t\t\t\tvar d_p = new DDObj(d_o.name+d_o.cmd, ++d_j);\n
-\t\t\t\t\tdd.addElt(d_p, d_o);\n
-\t\t\t\t\td_p.defz = d_o.defz+d_j;\n
-\t\t\t\t\td_p.original = d_o;\n
-\t\t\t\t\td_htm += d_p.t_htm;\n
-\t\t\t\t}\n
-\t\t\t}\n
-\t\t}\n
-\t}\n
-\tif (dd.n4 || dd.n6 || dd.ie || dd.op || dd.w3c) document.write(\n
-\t\t(dd.n4? \'<div style="position:absolute;"><\\/div>\\n\'\n
-\t\t: (dd.op && !dd.op6)? \'<div id="OpBlUr" style="position:absolute;visibility:hidden;width:0px;height:0px;"><form><input type="text" style="width:0px;height:0px;"><\\/form><\\/div>\'\n
-\t\t: \'\') + d_htm\n
-\t);\n
-\tdd.z = 0x33;\n
-\td_i = dd.elements.length; while (d_i--)\n
-\t{\n
-\t\tdd.addProps(d_o = dd.elements[d_i]);\n
-\t\tif (d_o.is_image && !d_o.original && !d_o.clone)\n
-\t\t\tdd.n4? d_o.oimg.src = spacer : d_o.oimg.style.visibility = \'hidden\';\n
-\t}\n
-\tdd.mkWzDom();\n
-\tif (window.onload) dd.loadFunc = window.onload;\n
-\twindow.onload = dd.initz;\n
-\twindow.onunload = dd.finlz;\n
-\tdd.setEvtHdl(0, PICK);\n
-\n
-  \n
- for (var i=0;i < lines.length;i++){ \n
- lines[i]=lines[i].sort(compare_x);\n
- }\n
- \n
- lt = dd.elements.top;\n
- rt = dd.elements.right;\n
- rb = dd.elements.bottom;\n
- lb = dd.elements.left;\n
- grips = [lt, rt, rb, lb];\n
- \n
- \n
-\n
- \n
- //******************************\n
- hideGrips();\n
-    //main.setZ(main.z+1);\n
-    //dd.obj.ondblclick = showGrips;//*****************************************************************************\n
-\n
-}\n
-\n
-\n
-\n
-\n
-\n
-  \n
-\n
 function SET_DHTML()\n
 {\n
-\tdd.elements = new Array();\n
-\tvar d_a = SET_DHTML.arguments, d_ai, d_htm = \'\', d_o, d_i = d_a.length; while (d_i--)\n
+\t//dd.elements = new Array();\n
+\tvar d_a = arguments, d_ai, d_htm = \'\', d_o, d_i = d_a.length;\n
+\twhile(d_i)\n
 \t{\n
-\t\tif (dd.op6)\n
-\t\t{\n
-\t\t\tvar d_t0 = (new Date()).getTime();\n
-\t\t\twhile ((new Date()).getTime()-d_t0 < 0x99);\n
-\t\t}\n
-\t\tif (!(d_ai = d_a[d_i]).indexOf(\'c:\')) dd.cursor = d_ai.substring(2);\n
-\t\telse if (d_ai == NO_ALT) dd.noalt = 1;\n
-\t\telse if (d_ai == SCROLL) dd.scroll = 1;\n
-\t\telse if (d_ai == RESET_Z) dd.re_z = 1;\n
-\t\telse if (d_ai == RESIZABLE) dd.resizable = 1;\n
-\t\telse if (d_ai == SCALABLE) dd.scalable = 1;\n
+\t\tif(!(d_ai = d_a[--d_i]).indexOf(\'c:\')) dd.cursor = d_ai.substring(2);\n
+\t\telse if(d_ai == NO_ALT) dd.noalt = 1;\n
+\t\telse if(d_ai == SCROLL) dd.scroll = 1;\n
+\t\telse if(d_ai == RESET_Z) dd.re_z = 1;\n
+\t\telse if(d_ai == RESIZABLE) dd.resizable = 1;\n
+\t\telse if(d_ai == SCALABLE) dd.scalable = 1;\n
+\t\telse if(d_ai == TRANSPARENT) dd.diaphan = 1;\n
 \t\telse\n
 \t\t{\n
 \t\t\td_o = new DDObj(d_ai);\n
 \t\t\tdd.addElt(d_o);\n
 \t\t\td_htm += d_o.t_htm || \'\';\n
-\t\t\tif (d_o.oimg && d_o.cpy_n)\n
+\t\t\tif(d_o.oimg && d_o.cpy_n)\n
 \t\t\t{\n
-\t\t\t\tvar d_j = 0; while (d_j < d_o.cpy_n)\n
+\t\t\t\tfor(var d_l = d_o.cpy_n, d_j = 0; d_j < d_l;)\n
 \t\t\t\t{\n
 \t\t\t\t\tvar d_p = new DDObj(d_o.name+d_o.cmd, ++d_j);\n
 \t\t\t\t\tdd.addElt(d_p, d_o);\n
@@ -1432,42 +1385,45 @@ function SET_DHTML()\n
 \t\t\t}\n
 \t\t}\n
 \t}\n
-\tif (dd.n4 || dd.n6 || dd.ie || dd.op || dd.w3c) document.write(\n
+\tif(dd.n4 || dd.n6 || dd.ie || dd.op || dd.w3c) document.write(\n
 \t\t(dd.n4? \'<div style="position:absolute;"><\\/div>\\n\'\n
 \t\t: (dd.op && !dd.op6)? \'<div id="OpBlUr" style="position:absolute;visibility:hidden;width:0px;height:0px;"><form><input type="text" style="width:0px;height:0px;"><\\/form><\\/div>\'\n
 \t\t: \'\') + d_htm\n
 \t);\n
 \tdd.z = 0x33;\n
-\td_i = dd.elements.length; while (d_i--)\n
+\tfor(d_i = dd.elements.length; d_i;)\n
 \t{\n
-\t\tdd.addProps(d_o = dd.elements[d_i]);\n
-\t\tif (d_o.is_image && !d_o.original && !d_o.clone)\n
+\t\tdd.addProps(d_o = dd.elements[--d_i]);\n
+\t\tif(d_o.is_image && !d_o.original && !d_o.clone)\n
 \t\t\tdd.n4? d_o.oimg.src = spacer : d_o.oimg.style.visibility = \'hidden\';\n
 \t}\n
 \tdd.mkWzDom();\n
-\tif (window.onload) dd.loadFunc = window.onload;\n
+\tif(window.onload) dd.loadFunc = window.onload;\n
 \twindow.onload = dd.initz;\n
 \twindow.onunload = dd.finlz;\n
-\tdd.setEvtHdl(0, PICK);\n
-\n
+\tdd.setDwnHdl(PICK);\n
+  dd.elements = dd.elements.sort(compare_x);\n
   // from this point. Written by jonathan\n
   //creation of the structure of lines \n
-  for (var i=0;i < dd.elements.length;i++){\n
-  if (dd.elements[i].nodrag==0){ // do not need to add in lines the informations inside a div\n
-  test=false; //used for determining if blocks with same y of the current is block are already present\n
-  for (var j=0;j < lines.length;j++){\n
-     if ((dd.elements[i].y+dd.elements[i].h)==(lines[j][0].y+lines[j][0].h)){\n
-           lines[j][lines[j].length]=dd.elements[i];\n
-           test=true;\n
+  for(var i=0;i < dd.elements.length;i++){\n
+   if(dd.elements[i].nodrag==0){ // do not need to add in lines the informations inside a div\n
+    test=false; //used for determining if blocks with same y of the current is block are already present\n
+    for(var j=0;j < lines.length;j++){\n
+      if((dd.elements[i].y+dd.elements[i].h)==(lines[j][0].y+lines[j][0].h)){\n
+            lines[j][lines[j].length]=dd.elements[i];\n
+            dd.elements[i].linePosition = lines[j].length -1\n
+            dd.elements[i].lineIndex = j\n
+            test=true;\n
         }\n
      }\n
-     if (test==false){ //we create a new line\n
+     if(test==false){ //we create a new line\n
      lines[lines.length]=new Array(dd.elements[i]);\n
+     dd.elements[i].lineIndex = lines.length -1\n
      }\n
   }}\n
-  \n
-  \n
- for (var i=0;i < lines.length;i++){ \n
+\n
+\n
+ for(var i=0;i < lines.length;i++){ \n
  lines[i]=lines[i].sort(compare_x);\n
  }\n
  \n
@@ -1476,48 +1432,36 @@ function SET_DHTML()\n
  rb = dd.elements.bottom;\n
  lb = dd.elements.left;\n
  grips = [lt, rt, rb, lb];\n
- \n
- \n
 \n
- \n
- //******************************\n
  hideGrips();\n
-    //main.setZ(main.z+1);\n
-    //dd.obj.ondblclick = showGrips;//*****************************************************************************\n
-\n
+ //main.setZ(main.z+1);\n
+ //dd.obj.ondblclick = showGrips;\n
 }\n
-\n
-function ADD_DHTML(d_o) // layers only!\n
+function ADD_DHTML() // layers only!\n
 {\n
-\td_o = new DDObj(d_o);\n
-\tdd.addElt(d_o);\n
-\tdd.addProps(d_o);\n
+\tvar d_a = arguments, d_o, d_i = d_a.length; while(d_i)\n
+\t{\n
+\t\td_o = new DDObj(d_a[--d_i]);\n
+\t\tdd.addElt(d_o);\n
+\t\tdd.addProps(d_o);\n
+\t}\n
 \tdd.mkWzDom();\n
 }\n
-\n
-\n
-\n
 \n
 ////////////////////////////////////////////////////////////\n
 // If not needed, all code below this line may be removed\n
 \n
-\n
 // For backward compatibility\n
-dd.d = document;            // < v. 2.72\n
+dd.d = document;\t\t\t// < v. 2.72\n
 var RESET_ZINDEX = RESET_Z; // < 3.44\n
 var KEYDOWN_RESIZE = RESIZABLE; // < 4.43\n
 var CURSOR_POINTER = CURSOR_HAND; // < 4.44\n
-var NO_SCROLL = \'\';         // < v. 4.49\n
-\n
-\n
-\n
+var NO_SCROLL = \'\';\t\t // < v. 4.49\n
 \n
 ////////////////////////////////////////////////////////////\n
 // FUNCTIONS FOR EXTENDED SCRIPTING\n
 // Use these for your own extensions,\n
 // or to call functions defined elsewhere\n
-\n
-\n
 \n
 /* my_PickFunc IS AUTOMATICALLY CALLED WHEN AN ITEM STARTS TO BE DRAGGED.\n
 The following objects/properties are accessible from here:\n
@@ -1552,247 +1496,224 @@ var obj_record;\n
 var direction; //knows whether we move a block on the right or on the left \n
 var prev_dd_obj;// used when resizing. This variable stocks the previous block clicked\n
 \n
-\n
-\n
 function my_PickFunc()\n
 { // window.status=dd.e.button;\n
-\n
-// used by bmoved\n
-for (var i=0;i<grips.length;i++){\n
-if (dd.obj.name!=grips[i].name){\n
-obj_oldx=dd.obj.x;\n
-obj_oldy=dd.obj.y;\n
-}}\n
-//*****\n
-\n
-obj_old=dd.obj.x;\n
-obj_size_w=dd.obj.w;\n
-x_old=dd.obj.x+dd.obj.w;\n
-y_old=dd.obj.y+dd.obj.h;\n
-\n
-test=false;\n
-        var i = 4; while (i--)\n
-        { \n
-            if (grips[i] != dd.obj){\n
-                grips[i].hide();}    \n
-                else{\n
-                test=true;}\n
-    }\n
-    if (test==false){\n
-    prev_dd_obj=dd.obj;\n
-    hideGrips();    \n
-    }\n
-\n
-}\n
-\n
-\n
-\n
-// these two checks functions are called when a collision is detected, they move blocks which are  touched\n
-function check_list_right(index_line){\n
-\n
-   for (var j=0;j<lines[index_line].length;j++){ //we compare each block of a line with its following.\n
-        if ((j+1)!=lines[index_line].length){\n
-         if (lines[index_line][j].x>lines[index_line][j+1].x || ((lines[index_line][j].x+lines[index_line][j].w)>lines[index_line][j+1].x)){\n
-           if (((lines[index_line][j].y)<(lines[index_line][j+1].y+lines[index_line][j+1].h) && (lines[index_line][j].y+lines[index_line][j].h>lines[index_line][j+1].y))){\n
-           delta=lines[index_line][j].x+lines[index_line][j].w-lines[index_line][j+1].x;\n
-             lines[index_line][j+1].moveBy(+delta,0);\n
-             }}\n
-        }\n
-      }\n
-}\n
-\n
-\n
-function check_list_left(index_line){\n
-\n
-   for (var j=(lines[index_line].length)-1;j>-1;j--){\n
-      if ((j-1)!=-1){\n
-         if(lines[index_line][j-1].x>lines[index_line][j].x || ((lines[index_line][j-1].x+lines[index_line][j-1].w)>lines[index_line][j].x)){\n
-          if (((lines[index_line][j-1].y)<(lines[index_line][j].y+lines[index_line][j].h) && (lines[index_line][j-1].y+lines[index_line][j-1].h>lines[index_line][j].y))){ \n
-             delta=(lines[index_line][j-1].x+lines[index_line][j-1].w)-lines[index_line][j].x;\n
-             lines[index_line][j-1].moveBy(-delta,0);\n
-             }\n
+  // used by bmoved\n
+  //for(var i=0;i<grips.length;i++){\n
+    //if(dd.obj.name!=grips[i].name){\n
+      //obj_oldx=dd.obj.x;\n
+      //obj_oldy=dd.obj.y;\n
+    //}\n
+  //}\n
+  obj_old=dd.obj.x;\n
+  obj_size_w=dd.obj.w;\n
+  x_old=dd.obj.x+dd.obj.w;\n
+  y_old=dd.obj.y+dd.obj.h;\n
+  test=false;\n
+  var i = 4; while (i--)\n
+     { \n
+      if(grips[i] != dd.obj){\n
+        grips[i].hide();}    \n
+      else{\n
+         test=true;}\n
        }\n
+  if(test==false){\n
+      prev_dd_obj=dd.obj;\n
+      hideGrips();    \n
+   }\n
+}\n
+\n
+// these two checks functions are called when a collision is detected, they move blocks which are touched\n
+function check_list_right(index_line, position ){\n
+   for(var j=position;j<lines[index_line].length;j++) { \n
+     if((j+1)!=lines[index_line].length){\n
+       if(lines[index_line][j].x>lines[index_line][j+1].x || ((lines[index_line][j].x+lines[index_line][j].w)>lines[index_line][j+1].x))\n
+       {\n
+         if(((lines[index_line][j].y)<(lines[index_line][j+1].y+lines[index_line][j+1].h) && (lines[index_line][j].y+lines[index_line][j].h>lines[index_line][j+1].y)))\n
+         {\n
+           delta=lines[index_line][j].x+lines[index_line][j].w-lines[index_line][j+1].x;\n
+           lines[index_line][j+1].moveBy(+delta,0);\n
+         }\n
+       }\n
+       else {break}\n
      }\n
-}}\n
+   }\n
+}\n
 \n
-\n
-\n
+function check_list_left(index_line,position){\n
+   var collision_count = 0;\n
+   for(var j=position;j>-1;j--){\n
+     if((j-1)!=-1) {\n
+       if(lines[index_line][j-1].x>lines[index_line][j].x || ((lines[index_line][j-1].x+lines[index_line][j-1].w)>lines[index_line][j].x)){\n
+         if(((lines[index_line][j-1].y)<(lines[index_line][j].y+lines[index_line][j].h) && (lines[index_line][j-1].y+lines[index_line][j-1].h>lines[index_line][j].y))){ \n
+           delta=(lines[index_line][j-1].x+lines[index_line][j-1].w)-lines[index_line][j].x;\n
+           lines[index_line][j-1].moveBy(-delta,0);    \n
+         }\n
+       }\n
+       else {break}\n
+     }\n
+  }\n
+}\n
 \n
 //function called when a block jump an other, so we exchange the objects in the list\n
-function exchange_object(index_line){\n
-   for (var j=0;j<lines[index_line].length;j++){  \n
-      if ((j+1)!=lines[index_line].length){\n
-         if(lines[index_line][j].x>lines[index_line][j+1].x){\n
-             var dobject=lines[index_line][j+1];\n
-             lines[index_line][j+1]=lines[index_line][j];\n
-             lines[index_line][j]=dobject;\n
+function exchange_object(index_line, direction, position){\n
+ var check_begin = 0\n
+ var check_end = lines[index_line].length\n
+  if(direction>0){\n
+  check_begin=position\n
+  }\n
+  else {\n
+  check_end = position\n
+   }\n
+  for(var j=check_begin;j<check_end;j++){  \n
+     if((j+1)!=lines[index_line].length){\n
+       if(lines[index_line][j].x>lines[index_line][j+1].x){\n
+           var dobject=lines[index_line][j+1];\n
+           lines[index_line][j+1].linePosition=j;\n
+           lines[index_line][j].linePosition=j+1;\n
+           lines[index_line][j+1]=lines[index_line][j];\n
+           lines[index_line][j]=dobject;\n
           }\n
       }\n
     }\n
  }\n
 \n
-\n
- \n
- function move_block(direction){\n
-found=false; \n
- test=false;\n
-        var i = 4; while (i--)\n
-        { \n
-            if (grips[i] == dd.obj){\n
-            current_obj=prev_dd_obj;\n
-            test=true;\n
-            }\n
+function move_block(direction){\n
+  found=false; \n
+  test=false;\n
+  var i = 4; while (i--)\n
+  { \n
+    if(grips[i] == dd.obj){\n
+      current_obj=prev_dd_obj;\n
+      test=true;\n
     }\n
-    if (test==false){\n
-    current_obj=dd.obj;    \n
-    }\n
-  \n
- for (var i=0;i<lines.length;i++){ \n
-      for (var k=0;k<lines[i].length;k++){\n
-        if (current_obj==lines[i][k]){ //it means we are in the correct lines\n
-          var found=true;\n
-          for (var j=0;j<lines[i].length;j++){\n
-             if (direction>0){ //to the right\n
-               if((lines[i][j].x < (current_obj.x+current_obj.w)) && (lines[i][j]!=current_obj)){\n
-                  if ( ((current_obj.y)<(lines[i][j].y+lines[i][j].h)) && ((current_obj.y+current_obj.h) > (lines[i][j].y)) ){\n
-                              check_list_right(i);//sometimes a collision is not detected when the mouse is speeding.\n
-                      if (current_obj.x<(lines[i][j].x+lines[i][j].w)){\n
-                         delta= (current_obj.x+current_obj.w)-lines[i][j].x;\n
-\t                       lines[i][j].moveBy(+delta,0);\n
-                        //check_list_right(i); //REMOVE IF IT IS TOO SLOW\n
-                      }\n
-                 }\n
-                 else{ //we have jumped so we exchange two objects in lines\n
-                  check_list_left(i);\n
-                    exchange_object(i);\n
-                 } \n
-                 \n
-                 }}\n
-            else{ //to the left\n
-            \n
-               if(((lines[i][j].x+lines[i][j].w) > current_obj.x)&& (lines[i][j]!=current_obj)){          \n
-                 if ( (current_obj.y<(lines[i][j].y+lines[i][j].h)) && ((current_obj.y+current_obj.h) > lines[i][j].y) ){\n
-                    check_list_left(i);\n
-                    if ( (current_obj.x+current_obj.w)>lines[i][j].x){      \n
-                       delta= (lines[i][j].x+lines[i][j].w)-current_obj.x;\n
-                       lines[i][j].moveBy(-delta,0);\n
-                       check_list_left(i);  //don\'t know why but needed...\n
-                   }\n
-                 }\n
-               else{\n
-               check_list_left(i); //needed because sometimes a block can jump over an other even if there is a colision\n
-                exchange_object(i);}      \n
-               } \n
-            }\n
-           }\n
-          }\n
-             if (found==true){ //we found the line of the current object so it\'s no use continuing.\n
-             break;\n
-             }\n
-         }\n
-\n
-      }\n
   }\n
- \n
-\n
-\n
+  if(test==false){\n
+    current_obj=dd.obj;    \n
+  }\n
+  var position=current_obj.linePosition;\n
+  var i=current_obj.lineIndex;\n
+  var found=true;\n
+  if(direction>0){ //to the right  \n
+    var j = position +1\n
+    if ( (j > -1) && (j < lines[i].length)) {  \n
+      if((lines[i][j].x < (current_obj.x+current_obj.w)) && (lines[i][j]!=current_obj)){\n
+        if( ((current_obj.y)<(lines[i][j].y+lines[i][j].h)) && ((current_obj.y+current_obj.h) > (lines[i][j].y))){\n
+          //sometimes a collision is not detected when the mouse is speeding.\n
+          check_list_right(i,position); \n
+          if(current_obj.x<(lines[i][j].x+lines[i][j].w)){\n
+            delta= (current_obj.x+current_obj.w)-lines[i][j].x;\n
+\t    lines[i][j].moveBy(+delta,0);\n
+            //check_list_right(i,position);\n
+          }\n
+        }\n
+        else{ \n
+          //we have jumped so we exchange two objects in lines\n
+          //check_list_left(i,position);\n
+          exchange_object(i, direction,position);\n
+        }          \n
+      }\n
+    }\n
+  }\n
+  else{ //to the left        \n
+    var j = position - 1\n
+    if ( (j > -1) && (j < lines[i].length)) {  \n
+      if(((lines[i][j].x+lines[i][j].w) > current_obj.x)&& (lines[i][j]!=current_obj)){          \n
+        if( (current_obj.y<(lines[i][j].y+lines[i][j].h)) && ((current_obj.y+current_obj.h) > lines[i][j].y) ){\n
+          check_list_left(i,position);\n
+          if((current_obj.x+current_obj.w)>lines[i][j].x){      \n
+            delta= (lines[i][j].x+lines[i][j].w)-current_obj.x;\n
+            lines[i][j].moveBy(-delta,0);\n
+            //check_list_left(i,position);\n
+           }\n
+         }\n
+         else{\n
+             //check_list_right(i,position);\n
+             exchange_object(i, direction, position);\n
+         }\n
+       }\n
+    }\n
+  }\n
+} \n
 /* my_DragFunc IS CALLED WHILE AN ITEM IS DRAGGED\n
 See the description of my_PickFunc above for what\'s accessible from here. */\n
-//***************************************************************************************\n
 function my_DragFunc()\n
-{ \n
-\n
- if (dd.obj == rb)\n
-   {if (dd.obj.y> prev_dd_obj.y ){\n
-        prev_dd_obj.resizeTo(prev_dd_obj.w,rb.y-lt.y);\n
-        //************************\n
-        //window.status=prev_dd_obj.children.length;\n
-        for (var i=0;i<prev_dd_obj.children.length;i++){\n
-        \n
-          if (dd.obj.y<prev_dd_obj.children[i].y+prev_dd_obj.children[i].h){\n
-          prev_dd_obj.children[i].hide();\n
-          }\n
-          else{\n
-          prev_dd_obj.children[i].show();\n
-          }\n
-          \n
-          }\n
-          //*********************************\n
-    }}\n
-    else if (dd.obj == rt)\n
-    {\n
-    if (dd.obj.x > prev_dd_obj.x ){\n
-        prev_dd_obj.resizeTo(rt.x-lb.x, prev_dd_obj.h);\n
-        prev_dd_obj.moveTo(rt.x-prev_dd_obj.w+rt.w/2,prev_dd_obj.y);\n
-         //***********************************\n
-         for (var i=0;i<prev_dd_obj.children.length;i++){\n
-         \n
-          if (dd.obj.x<prev_dd_obj.children[i].x+prev_dd_obj.children[i].w){\n
-          prev_dd_obj.children[i].hide();\n
-          }\n
-          else{\n
-          prev_dd_obj.children[i].show();\n
-          }\n
-          }\n
-          //***************************************\n
-    }}   \n
-    \n
-    else if (dd.obj == lb)\n
-    { if (dd.obj.x+dd.obj.w < prev_dd_obj.x+prev_dd_obj.w){\n
-        prev_dd_obj.moveTo(lb.x+lb.w/2,prev_dd_obj.y);\n
-        prev_dd_obj.resizeTo(rt.x-lb.x,prev_dd_obj.h);\n
-         //***********************************\n
-         for (var i=0;i<prev_dd_obj.children.length;i++){\n
-          if (prev_dd_obj.x+prev_dd_obj.w<prev_dd_obj.children[i].x+prev_dd_obj.children[i].w ){\n
-          prev_dd_obj.children[i].hide();\n
-          }\n
-          else{\n
-          prev_dd_obj.children[i].show();\n
-          }\n
-          }\n
-          //***************************************\n
-    }}\n
-    else if (dd.obj == lt)\n
-    {\n
-   if (dd.obj.y+dd.obj.h< (prev_dd_obj.y+prev_dd_obj.h)){\n
-      prev_dd_obj.moveTo(prev_dd_obj.x, lt.y+lt.h/2);\n
-      prev_dd_obj.resizeTo(prev_dd_obj.w, rb.y-lt.y);\n
-        \n
-         //***********************************\n
-         for (var i=0;i<prev_dd_obj.children.length;i++){\n
-          if ((prev_dd_obj.y+prev_dd_obj.h)< (prev_dd_obj.children[i].y+prev_dd_obj.children[i].h)){\n
-          prev_dd_obj.children[i].hide();\n
-          }\n
-          else{\n
-          prev_dd_obj.children[i].show();\n
-          }\n
-          }\n
-          //***************************************\n
-        \n
-    }}\n
-\n
-if ((dd.obj.x-obj_old)>0 ){\n
-    direction=1;\n
+{\n
+ if(dd.obj == rb){\n
+   if(dd.obj.y> prev_dd_obj.y ){\n
+     prev_dd_obj.resizeTo(prev_dd_obj.w,rb.y-lt.y);\n
+     //window.status=prev_dd_obj.children.length;\n
+     for(var i=0;i<prev_dd_obj.children.length;i++){\n
+       if(dd.obj.y<prev_dd_obj.children[i].y+prev_dd_obj.children[i].h){\n
+         prev_dd_obj.children[i].hide();\n
+       }\n
+       else{\n
+         prev_dd_obj.children[i].show();\n
+       }\n
+     }\n
+   }\n
+ }\n
+ else if(dd.obj == rt)\n
+ {\n
+   if(dd.obj.x > prev_dd_obj.x ){\n
+     prev_dd_obj.resizeTo(rt.x-lb.x, prev_dd_obj.h);\n
+     prev_dd_obj.moveTo(rt.x-prev_dd_obj.w+rt.w/2,prev_dd_obj.y);\n
+     for(var i=0;i<prev_dd_obj.children.length;i++){\n
+       if(dd.obj.x<prev_dd_obj.children[i].x+prev_dd_obj.children[i].w){\n
+         prev_dd_obj.children[i].hide();\n
+       }\n
+       else{\n
+         prev_dd_obj.children[i].show();\n
+       }\n
+     }\n
+   }\n
+ }   \n
+ else if(dd.obj == lb)\n
+ { \n
+   if(dd.obj.x+dd.obj.w < prev_dd_obj.x+prev_dd_obj.w){\n
+     prev_dd_obj.moveTo(lb.x+lb.w/2,prev_dd_obj.y);\n
+     prev_dd_obj.resizeTo(rt.x-lb.x,prev_dd_obj.h);\n
+     for(var i=0;i<prev_dd_obj.children.length;i++){\n
+       if(prev_dd_obj.x+prev_dd_obj.w<prev_dd_obj.children[i].x+prev_dd_obj.children[i].w ){\n
+         prev_dd_obj.children[i].hide();\n
+       }\n
+       else{\n
+         prev_dd_obj.children[i].show();\n
+       }\n
+     }\n
+    }\n
+ }\n
+ else if(dd.obj == lt)\n
+ {\n
+   if(dd.obj.y+dd.obj.h< (prev_dd_obj.y+prev_dd_obj.h)){\n
+     prev_dd_obj.moveTo(prev_dd_obj.x, lt.y+lt.h/2);\n
+     prev_dd_obj.resizeTo(prev_dd_obj.w, rb.y-lt.y);\n
+     for(var i=0;i<prev_dd_obj.children.length;i++){\n
+       if((prev_dd_obj.y+prev_dd_obj.h)< (prev_dd_obj.children[i].y+prev_dd_obj.children[i].h)){\n
+         prev_dd_obj.children[i].hide();\n
+       }\n
+       else{\n
+         prev_dd_obj.children[i].show();\n
+       }\n
+     }\n
+   }\n
+ }\n
+ if((dd.obj.x-obj_old)>0 ){\n
+   direction=1;\n
+ }\n
+ else{\n
+   direction=-1;\n
+ }\n
+ obj_old=dd.obj.x;\n
+ obj_size_w=dd.obj.w;\n
+ move_block(direction);\n
 }\n
-else{\n
- direction=-1;\n
-}\n
-obj_old=dd.obj.x;\n
-obj_size_w=dd.obj.w;\n
-move_block(direction);\n
-\n
-}          \n
-\n
-\n
 \n
 /* my_ResizeFunc IS CALLED WHILE AN ITEM IS RESIZED\n
 See the description of my_PickFunc above for what\'s accessible from here. */\n
 function my_ResizeFunc()\n
 {\n
-\n
 }\n
-\n
-\n
 \n
 /* THIS ONE IS CALLED ONCE AN ITEM IS DROPPED\n
 See the description of my_PickFunc for what\'s accessible from here.\n
@@ -1801,22 +1722,21 @@ of the dropped item, and where (dd.obj.x, dd.obj.y) it has been dropped... */\n
 function my_DropFunc()\n
 {\n
 hideGrips();\n
-x_old=dd.obj.x+dd.obj.w;\n
-y_old=dd.obj.y+dd.obj.h;x_old=dd.obj.x+dd.obj.w;\n
-isnotobject=0;\n
-\n
-for (var j=0;j<grips.length;j++){\n
-   if (grips[j].name == dd.obj.name){\n
-     isnotobject=1;\n
-    } \n
- }\n
-if (isnotobject == 0){\n
-obj_record=dd.obj;\n
-}\n
-\n
+for (var i in dd.moved_list) {\n
+   x_old=dd.moved_list[i].x+dd.moved_list[i].w;\n
+   y_old=dd.moved_list[i].y+dd.moved_list[i].h;\n
+  var isnotobject=0;\n
+  for(var j=0;j<grips.length;j++){\n
+     if(grips[j].name == dd.moved_list[i].name){\n
+       isnotobject=1;\n
+      } \n
+   }\n
+   if(isnotobject == 0){\n
+     obj_record=dd.moved_list[i];\n
+   }\n
     var present=false;\n
     for(var i=0; i < bmoved.length; i++){\n
-     if (bmoved[i][0]==obj_record.name){\n
+     if(bmoved[i][0]==obj_record.name){\n
         present=true; //the block has already be moved a first time.\n
         bmoved[i][3]=obj_record.x;\n
         bmoved[i][4]=obj_record.y;\n
@@ -1824,22 +1744,23 @@ obj_record=dd.obj;\n
         bmoved[i][6]=obj_record.h;      \n
         break;}  \n
      }\n
-     \n
-   if (present==false){\n
-     if (bmoved.length==0){\n
-      bmoved[0]=new Array(obj_record.name,obj_oldx,obj_oldy,obj_record.x,obj_record.y,obj_record.w,obj_record.h);}//first block moved\n
-     else{\n
-     \n
-      bmoved[i]=new Array(obj_record.name,obj_oldx,obj_oldy,obj_record.x,obj_record.y,obj_record.w,obj_record.h);\n
-     }\n
+   \n
+   if(isnotobject == 0){\n
+     if(present==false){\n
+       if(bmoved.length==0){\n
+         bmoved[0]=new Array(obj_record.name,obj_record.defx,obj_record.defy,obj_record.x,obj_record.y,obj_record.w,obj_record.h);}//first block moved\n
+      else{\n
+         bmoved[i]=new Array(obj_record.name,obj_record.defx,obj_record.defy,obj_record.x,obj_record.y,obj_record.w,obj_record.h);\n
+      }\n
     }\n
-/* we save all the informations in an hidden input called "block_moved". The datas are stored in an unique string with the following sheme:\n
-"name,x,y,width,height*name,x,y,width,height-name etc.." */\n
-\n
-document.forms["main_form"]["block_moved"].value=bmoved.join("*");\n
-\n
+    /* we save all the informations in an hidden input called "block_moved". The datas are stored in an unique string with the following sheme:\n
+    "name,x,y,width,height*name,x,y,width,height-name etc.." */\n
+    obj_record.moved=0\n
+    document.forms["main_form"]["block_moved"].value=bmoved.join("*");\n
+  }\n
+  }\n
+  dd.moved_list = new Array();\n
 }\n
-\n
 //specific functions for resizing. ******\n
 function showGrips()\n
 {\n
@@ -1859,12 +1780,12 @@ function hideGrips()\n
 }\n
 \n
 \n
-/*               (lt) \n
-      ___________\xc3\x82\xc2\xa4____________\n
-     |                       |\n
-(lb)\xc3\x82\xc2\xa4|                       |\xc3\x82\xc2\xa4 (rt)\n
-     |_______________________|\n
-                \xc3\x82\xc2\xa4 (rb)\n
+/*                          (lt) \n
+          ___________\xc3\x82\xc2\xa4____________\n
+         |                                             |\n
+(lb)\xc3\x82\xc2\xa4|                                              |\xc3\x82\xc2\xa4 (rt)\n
+         |__________________________|\n
+                           \xc3\x82\xc2\xa4 (rb)\n
 */\n
 \n
 function moveGripsToCorners()\n
