@@ -938,6 +938,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('calendar_period')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalModuleTypeList')
+  def getPortalModuleTypeList(self):
+    """
+    Return module types.
+    """
+    return self._getPortalGroupedTypeList('module')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER):
     """
