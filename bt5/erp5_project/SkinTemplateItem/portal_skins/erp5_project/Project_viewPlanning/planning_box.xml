@@ -530,7 +530,7 @@
                 </item>
                 <item>
                     <key> <string>size_planning_width</string> </key>
-                    <value> <int>1000</int> </value>
+                    <value> <int>800</int> </value>
                 </item>
                 <item>
                     <key> <string>size_x_axis_height</string> </key>
@@ -577,7 +577,7 @@
                 </item>
                 <item>
                     <key> <string>use_date_zoom</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
