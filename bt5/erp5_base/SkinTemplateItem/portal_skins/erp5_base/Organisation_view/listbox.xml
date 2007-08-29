@@ -21,6 +21,7 @@
                 <string>list_method</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>url_columns</string>
                 <string>domain_tree</string>
                 <string>report_tree</string>
               </list>
@@ -190,6 +191,17 @@
                 <item>
                     <key>                 <string>title</string> </key>
                     <value> <string>Persons</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>default_email_text</string>
+                          <string>Entity_getDefaultEmailAsURL</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>width</string> </key>
