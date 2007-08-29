@@ -119,7 +119,7 @@
                         </tuple>
                         <tuple>
                           <string>default_telephone_text</string>
-                          <string>Phone</string>
+                          <string>Telephone</string>
                         </tuple>
                         <tuple>
                           <string>default_fax_text</string>
@@ -175,20 +175,24 @@
                           <string>Organisation</string>
                         </tuple>
                         <tuple>
-                          <string>default_telephone_text</string>
-                          <string>Phone</string>
-                        </tuple>
-                        <tuple>
-                          <string>default_region_title</string>
-                          <string>Region</string>
+                          <string>description</string>
+                          <string>Description</string>
                         </tuple>
                         <tuple>
                           <string>role_title</string>
                           <string>Role</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>default_telephone_text</string>
+                          <string>Telephone</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_email_text</string>
+                          <string>Email</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_region_title</string>
+                          <string>Region</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

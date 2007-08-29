@@ -235,7 +235,7 @@
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>entity_financial_information_selection</string> </value>
+                    <value> <string>entity_viewFinancialInformationList_bank_account_selection</string> </value>
                 </item>
                 <item>
                     <key>                 <string>sort_columns</string> </key>

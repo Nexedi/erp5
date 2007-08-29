@@ -71,6 +71,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -95,6 +96,12 @@
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
@@ -105,6 +112,7 @@
                         <string>my_activity</string>
                         <string>my_function</string>
                         <string>my_site</string>
+                        <string>my_market_segment_list</string>
                       </list>
                     </value>
                 </item>
@@ -114,6 +122,7 @@
                       <list>
                         <string>my_default_email_text</string>
                         <string>my_default_telephone_text</string>
+                        <string>my_mobile_telephone_text</string>
                         <string>my_default_fax_text</string>
                         <string>my_default_address_street_address</string>
                         <string>my_default_address_zip_code</string>

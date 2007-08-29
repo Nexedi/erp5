@@ -88,7 +88,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>A Market segment is a subgroup of people or organizations sharing one or more characteristics that cause them to have similar product needs.</string> </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>

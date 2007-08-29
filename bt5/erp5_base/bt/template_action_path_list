@@ -25,16 +25,13 @@ Organisation | details
 Organisation | document_view
 Organisation | financial_view
 Organisation | jump_to_persons
-Organisation | person_list
 Organisation | view
 Person Module | ooo_import
 Person Module | view
 Person | assignment
-Person | career
 Person | details
 Person | document_view
 Person | financial_view
-Person | profile
 Person | report
 Person | terminate_career
 Person | view

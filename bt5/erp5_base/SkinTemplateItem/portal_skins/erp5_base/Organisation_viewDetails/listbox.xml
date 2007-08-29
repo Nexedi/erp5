@@ -16,11 +16,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>selection_name</string>
-                <string>portal_types</string>
-                <string>enabled</string>
               </list>
             </value>
         </item>
@@ -63,18 +59,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_action</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -88,72 +84,20 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Start Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Stop Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_contact_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Accounting Period</string>
-                          <string>Accounting Period</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Entity_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>organisation_accounting_period_selection</string> </value>
+                    <value> <string>organisation_viewDetails_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>title</string> </key>
-                    <value> <string>Accounting Periods</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -175,7 +119,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getPortalObject().restrictedTraverse(\'accounting_module\', None) is not None</string> </value>
+            <value> <string>python:\'Folder_viewContentList?\' + modules[\'ZTUtils\'].make_query(portal_type=[x[0] for x in field.get_value(\'portal_types\')])</string> </value>
         </item>
       </dictionary>
     </pickle>

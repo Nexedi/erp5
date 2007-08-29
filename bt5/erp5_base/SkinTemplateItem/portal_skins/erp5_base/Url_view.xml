@@ -90,7 +90,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_url_string</string>
+                        <string>my_int_index</string>
+                        <string>my_translated_id</string>
                       </list>
                     </value>
                 </item>
@@ -98,7 +99,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>link</string>
+                        <string>my_url_string</string>
                       </list>
                     </value>
                 </item>

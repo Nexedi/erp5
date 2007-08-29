@@ -96,7 +96,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>listbox_start_date</string>
@@ -111,11 +111,9 @@
                         <string>my_title</string>
                         <string>my_career_title</string>
                         <string>my_career_subordination_title</string>
-                        <string>my_career_role</string>
-                        <string>my_career_grade</string>
-                        <string>my_career_function</string>
                         <string>my_career_start_date</string>
                         <string>my_career_stop_date</string>
+                        <string>listbox_title</string>
                       </list>
                     </value>
                 </item>
@@ -124,6 +122,7 @@
                     <value>
                       <list>
                         <string>my_career_collective_agreement_title</string>
+                        <string>my_career_grade</string>
                         <string>my_career_salary_level</string>
                         <string>my_career_salary_coefficient</string>
                         <string>my_career_skill_list</string>

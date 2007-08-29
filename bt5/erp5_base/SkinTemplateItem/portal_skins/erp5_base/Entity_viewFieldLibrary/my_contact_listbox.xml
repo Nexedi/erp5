@@ -20,6 +20,8 @@
                 <string>columns</string>
                 <string>sort</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -85,16 +87,39 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>int_index</string>
+                          <string>Index</string>
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
-                          <string>Contact Type</string>
+                          <string>Coordinate Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_id</string>
+                          <string>Coordinate function</string>
                         </tuple>
                         <tuple>
                           <string>asText</string>
                           <string>Value</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                       </list>
                     </value>
@@ -150,6 +175,10 @@
                           <string>portal_type</string>
                           <string>Type</string>
                         </tuple>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -159,7 +188,18 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Contacts</string> </value>
+                    <value> <string>Coordinates</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>asText</string>
+                          <string>Coordinate_asURL</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>

@@ -89,8 +89,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
+                        <string>my_int_index</string>
+                        <string>my_translated_id</string>
                       </list>
                     </value>
                 </item>

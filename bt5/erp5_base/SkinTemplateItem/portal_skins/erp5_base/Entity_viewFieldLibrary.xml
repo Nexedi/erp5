@@ -104,6 +104,8 @@
                         <string>my_contact_listbox</string>
                         <string>my_product_line_list</string>
                         <string>my_title</string>
+                        <string>listbox_title</string>
+                        <string>listbox_int_index</string>
                       </list>
                     </value>
                 </item>

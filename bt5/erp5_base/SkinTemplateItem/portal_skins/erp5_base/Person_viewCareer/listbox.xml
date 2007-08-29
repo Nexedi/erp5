@@ -99,10 +99,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -115,10 +111,6 @@
                           <string>Role</string>
                         </tuple>
                         <tuple>
-                          <string>grade_title</string>
-                          <string>Grade</string>
-                        </tuple>
-                        <tuple>
                           <string>function_title</string>
                           <string>Function</string>
                         </tuple>
@@ -129,6 +121,10 @@
                         <tuple>
                           <string>stop_date</string>
                           <string>Career End Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>Base_getTranslatedId</string>
+                          <string>Career function</string>
                         </tuple>
                         <tuple>
                           <string>state_title</string>
@@ -148,6 +144,10 @@
                         <tuple>
                           <string>stop_date</string>
                           <string>Career End</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Career title</string>
                         </tuple>
                       </list>
                     </value>
@@ -188,10 +188,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -213,11 +209,11 @@
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Career Start</string>
+                          <string>Career Start Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>Career End</string>
+                          <string>Career End Date</string>
                         </tuple>
                         <tuple>
                           <string>state_title</string>
@@ -228,7 +224,7 @@
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>career_list_selection</string> </value>
+                    <value> <string>person_viewCareer_selection</string> </value>
                 </item>
                 <item>
                     <key>                 <string>sort</string> </key>
@@ -246,10 +242,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -271,11 +263,11 @@
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Career Start</string>
+                          <string>Career Start Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>Career End</string>
+                          <string>Career End Date</string>
                         </tuple>
                         <tuple>
                           <string>state_title</string>

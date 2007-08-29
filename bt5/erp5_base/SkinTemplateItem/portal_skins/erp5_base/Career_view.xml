@@ -89,15 +89,12 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
                         <string>my_subordination_title</string>
                         <string>my_role</string>
                         <string>my_grade</string>
-                        <string>my_function</string>
                         <string>my_activity</string>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
+                        <string>my_function</string>
                       </list>
                     </value>
                 </item>
@@ -105,6 +102,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
                         <string>my_collective_agreement_title</string>
                         <string>my_salary_level</string>
                         <string>my_salary_coefficient</string>

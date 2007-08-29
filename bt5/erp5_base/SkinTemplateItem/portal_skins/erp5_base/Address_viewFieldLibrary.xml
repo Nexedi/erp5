@@ -101,10 +101,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_zip_code</string>
                         <string>my_region</string>
-                        <string>my_street_address</string>
                         <string>my_city</string>
+                        <string>my_street_address</string>
+                        <string>my_zip_code</string>
                       </list>
                     </value>
                 </item>

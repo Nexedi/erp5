@@ -71,6 +71,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -95,6 +96,15 @@
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_int_index</string>
+                        <string>listbox_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
@@ -102,6 +112,10 @@
                         <string>my_last_name</string>
                         <string>my_career_subordination_title</string>
                         <string>my_gender</string>
+                        <string>my_career_role</string>
+                        <string>my_career_function</string>
+                        <string>my_career_activity</string>
+                        <string>my_product_line_list</string>
                         <string>my_nationality</string>
                       </list>
                     </value>
@@ -112,6 +126,7 @@
                       <list>
                         <string>my_default_email_text</string>
                         <string>my_default_telephone_text</string>
+                        <string>my_mobile_telephone_text</string>
                         <string>my_default_fax_text</string>
                         <string>my_default_address_street_address</string>
                         <string>my_default_address_zip_code</string>
