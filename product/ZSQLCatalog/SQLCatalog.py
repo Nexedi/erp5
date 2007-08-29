@@ -208,6 +208,7 @@ class QueryMixin:
       if type == 'float':
         # Make sure there is no space in float values
         value = value.replace(' ','')
+        value = "'%s'" % value
     else:
       if hasattr(value, 'ISO'):
         value = "'%s'" % value.ISO()
