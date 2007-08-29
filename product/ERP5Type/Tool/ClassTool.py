@@ -315,7 +315,6 @@ if allowClassTool():
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 
@@ -856,6 +855,13 @@ def initialize( context ):
 
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_viewProductGeneration?manage_tabs_message=New+Product+Saved+In+%s' % (self.absolute_url(), base_path))
+
+      security.declareProtected(Permissions.ManagePortal, 'getDocumentationHelper')
+      def getDocumentationHelper(self, uri, helper_class):
+        """
+        Returns a documentation of the appropriate class (helper_class)
+        for a given uri
+        """
 
       security.declareProtected( Permissions.ManagePortal,
                                  'asDocumentationHelper')
