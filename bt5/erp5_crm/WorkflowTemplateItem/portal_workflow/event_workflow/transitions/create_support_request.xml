@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The create_support_request logical transition creates a support request ticket based on the event properties and associates the event to it.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

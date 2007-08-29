@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-event_module?simulation_state=new&local_roles=%(local_roles)s&reset=1
+event_module?simulation_state=new&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
@@ -41,7 +41,7 @@ event_module?simulation_state=new&local_roles=%(local_roles)s&reset=1
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -49,21 +49,38 @@ event_module?simulation_state=new&local_roles=%(local_roles)s&reset=1
             <value> <string>new_events</string> </value>
         </item>
         <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Guard</string>
+          <string>Guard</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>
@@ -79,17 +96,6 @@ event_module?simulation_state=new&local_roles=%(local_roles)s&reset=1
             <key> <string>_container</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Mail Message</string>
-                        <string>Phone Call</string>
-                        <string>Incoming Fax</string>
-                        <string>Incoming Letter</string>
-                      </tuple>
-                    </value>
-                </item>
                 <item>
                     <key> <string>simulation_state</string> </key>
                     <value>

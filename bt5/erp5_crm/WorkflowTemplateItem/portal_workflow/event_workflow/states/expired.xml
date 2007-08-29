@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Events in this state are incoming events or carbon copies of outgoing events which could not be processed on time.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -32,6 +32,12 @@
         </item>
         <item>
             <key> <string>transitions</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
             <value>
               <tuple/>
             </value>

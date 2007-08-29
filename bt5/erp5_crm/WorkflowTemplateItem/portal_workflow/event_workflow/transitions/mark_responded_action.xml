@@ -32,16 +32,16 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>mark_responded</string> </value>
+            <value> <string>respond</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Use the Mark Responded action to mark the event as responded and stop further processing. This is the action to use for carbon copied outgoing messages which were sent in response to a query which does not need any processing through ticket.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -58,11 +58,36 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Mark Responded</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Guard</string>
+          <string>Guard</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Owner</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+              </tuple>
+            </value>
         </item>
       </dictionary>
     </pickle>

@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Events in this state are incoming events or carbon copies of outgoing events which have been responded and which do not need further processing through assignment. </string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -39,10 +39,13 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>respond</string>
-                <string>respond_action</string>
-              </tuple>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>

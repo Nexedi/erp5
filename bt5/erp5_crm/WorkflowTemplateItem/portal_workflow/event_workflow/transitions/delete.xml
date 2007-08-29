@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The delete logical transition sets the state of the event to deleted.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

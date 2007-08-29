@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The respond logical action sets the event state to responded.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

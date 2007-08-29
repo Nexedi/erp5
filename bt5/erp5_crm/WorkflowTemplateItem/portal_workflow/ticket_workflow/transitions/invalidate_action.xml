@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Invalidate</string> </value>
+            <value> <string>Close</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Use the CLose action to close an open ticket and mark the end of ticket processing.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Close</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

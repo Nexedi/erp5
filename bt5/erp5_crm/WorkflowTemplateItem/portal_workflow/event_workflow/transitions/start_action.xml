@@ -24,33 +24,33 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Post</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string></string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=start_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>start</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Use the Post action to send a message, place a phone call or post a not.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>mark_responded</string> </value>
+            <value> <string>start_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>responded</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -58,11 +58,35 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Post</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>2</int> </value>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Guard</string>
+          <string>Guard</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+              </tuple>
+            </value>
         </item>
       </dictionary>
     </pickle>

@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Tickets in this state require processing.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validated</string> </value>
+            <value> <string>Open</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -43,6 +43,12 @@
                 <string>invalidate</string>
                 <string>invalidate_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -78,9 +84,7 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -90,9 +94,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -104,9 +106,7 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

@@ -68,16 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>string_subject = \'\'\n
-for  letter in state_change.kwargs[\'reply_subject\']:\n
-  string_subject += letter\n
-message = state_change.kwargs[\'reply_body\']\n
+            <value> <string>message = state_change.kwargs[\'reply_body\']\n
+subject = state_change.kwargs[\'reply_subject\']\n
+recipient = state_change.kwargs[\'reply_to\']\n
+object = state_change[\'object\']\n
 \n
-state_change[\'object\'].MailHost.send(message, mto=state_change[\'object\'].getSender(), mfrom="info@nexedi.com",\n
-          subject=string_subject)\n
-\n
-#state_change[\'object\'].MailHost.send(message, mto="seb@nexedi.com", mfrom="info@nexedi.com",\n
-#          subject=string_subject)\n
+state_change[\'object\'].MailHost.send(message, mto=recipient, \n
+                                     mfrom=object.portal_preferences.getPreferredEventSenderEmail(),\n
+                                     subject=subject)\n
 </string> </value>
         </item>
         <item>
@@ -121,12 +119,12 @@ state_change[\'object\'].MailHost.send(message, mto=state_change[\'object\'].get
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>string_subject</string>
-                            <string>_getiter_</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
-                            <string>letter</string>
                             <string>message</string>
+                            <string>subject</string>
+                            <string>recipient</string>
+                            <string>object</string>
                           </tuple>
                         </value>
                     </item>

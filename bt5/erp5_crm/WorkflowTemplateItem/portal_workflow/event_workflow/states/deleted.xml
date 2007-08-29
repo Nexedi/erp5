@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Events in this state were deleted by the user as a result of clicking on the trash button.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

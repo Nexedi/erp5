@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Events in this state are incoming or outgoing events which could not be further processed. The reason why processing was stopped should be defined in the workflow history as a text comment.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

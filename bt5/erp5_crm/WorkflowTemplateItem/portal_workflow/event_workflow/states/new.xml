@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Events in this state are incoming events or carbon copies of outgoing events received through the email interface of ERP5 CRM.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Events in this state are incoming or carbon copies of outgoing events which have been assigned to a ticket, a project or a person and which still need to be acknowledged.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -40,8 +40,12 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>delete</string>
-                <string>delete_action</string>
+                <string>acknowledge</string>
+                <string>acknowledge_action</string>
+                <string>cancel</string>
+                <string>cancel_action</string>
+                <string>receive</string>
+                <string>receive_action</string>
               </tuple>
             </value>
         </item>

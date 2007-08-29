@@ -24,11 +24,11 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Respond</string> </value>
+            <value> <string>Reply by Email</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/EventWorkflow_respond?field_my_workflow_action=respond_action</string> </value>
+            <value> <string>%(content_url)s/Event_viewRespondDialog?workflow_action=respond_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -36,12 +36,12 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Use the Reply by Email action to reply to an incoming event by email and stop further processing.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -58,11 +58,36 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Reply by Email</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Guard</string>
+          <string>Guard</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Owner</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+              </tuple>
+            </value>
         </item>
       </dictionary>
     </pickle>

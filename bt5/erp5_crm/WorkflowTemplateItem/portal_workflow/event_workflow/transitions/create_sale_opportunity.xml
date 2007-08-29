@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The create_sale_opportunity logical transition creates a sale opportunity ticket based on the event properties and associates the event to it.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

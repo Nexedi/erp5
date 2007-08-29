@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Tickets in this state have been fully processed and no longer need further processing.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Invalidated</string> </value>
+            <value> <string>Closed</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -43,6 +43,12 @@
                 <string>validate</string>
                 <string>validate_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>
@@ -72,22 +78,14 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Author</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
@@ -98,9 +96,7 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

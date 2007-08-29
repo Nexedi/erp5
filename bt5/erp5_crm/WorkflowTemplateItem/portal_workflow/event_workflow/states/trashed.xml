@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Events in this state are incoming events which should be considered as spam.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -40,11 +40,15 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>assign</string>
-                <string>assign_action</string>
-                <string>respond</string>
-                <string>respond_action</string>
+                <string>receive</string>
+                <string>receive_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
