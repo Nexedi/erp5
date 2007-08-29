@@ -2696,22 +2696,24 @@ def assertAttributePortalType(o, attribute_name, portal_type):
     portal_type   --    string or list
   """
   # Checks or deletes
-  if hasattr(o,attribute_name):
+  if getattr(o, attribute_name, None) is not None:
     value = getattr(o, attribute_name)
     if not isinstance(value, BaseClass):
       # Delete local attribute if it exists
-      if hasattr(aq_self(o),attribute_name):
+      if getattr(aq_self(o), attribute_name, None) is not None:
         delattr(o, attribute_name)
       # But do not delete object
       #if attribute_name in o.objectIds():
       #  o._delObject(attribute_name)
-    if hasattr(o,attribute_name):
+    if o._getOb(attribute_name, None) is not None:
       try:
-        if isinstance(portal_type, str): portal_type = [portal_type]
+        if isinstance(portal_type, str):
+          portal_type = [portal_type]
         if getattr(o, attribute_name).portal_type not in portal_type:
           o._delObject(attribute_name)
-      except (KeyError, AttributeError):
-        LOG("ERPType Warning: assertAttributePortalType",100,str(o.absolute_url()))
+      except (KeyError, AttributeError), err:
+        LOG('ERP5Type', PROBLEM, "assertAttributePortalType failed on %s" % o,
+            error=err)
 
 #####################################################
 # Monkey Patch
