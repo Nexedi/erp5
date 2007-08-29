@@ -85,8 +85,13 @@ if ob.getSourceTotalAssetPrice() != ob.getTotalPrice(portal_type=\'Incoming Muti
   raise ValidationFailed, (msg,)\n
 \n
 # check reporter defined\n
-if ob.getSourceDecision() == 0:\n
+if ob.getDeponent() in (None, ""):\n
   msg = Message(domain = "ui", message="You must define a reporter.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# check original site defined is hq\n
+if "siege" in ob.getSource() and ob.getSourceTrade() is None:\n
+  msg = Message(domain = "ui", message="You must define the original site.")\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
@@ -140,6 +145,7 @@ if ob.getSourceDecision() == 0:\n
                             <string>_getattr_</string>
                             <string>len</string>
                             <string>msg</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

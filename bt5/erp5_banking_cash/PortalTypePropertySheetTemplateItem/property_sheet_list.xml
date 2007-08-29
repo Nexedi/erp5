@@ -126,6 +126,7 @@
   <item>Amount</item>
  </portal_type>
  <portal_type id="Mutilated Banknote">
+  <item>Mutilated Banknote</item>
   <item>Amount</item>
   <item>Price</item>
  </portal_type>

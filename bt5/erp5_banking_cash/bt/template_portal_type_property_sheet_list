@@ -63,6 +63,7 @@ Money Deposit | ItemAggregation
 Money Deposit | Price
 Money Deposit | Task
 Mutilated Banknote | Amount
+Mutilated Banknote | Mutilated Banknote
 Mutilated Banknote | Price
 Outgoing Cash Balance Regulation Line | CashDeliveryLine
 Outgoing Cash Exchange Line | CashDeliveryLine
