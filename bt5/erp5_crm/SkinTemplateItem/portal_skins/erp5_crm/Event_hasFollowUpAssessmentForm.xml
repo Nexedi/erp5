@@ -68,8 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Set preferred text format\n
-context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\n
+            <value> <string>if not context.getFollowUp():\n
+  return False\n
+followup_value = context.getFollowUpValue()\n
+if followup_value is None:\n
+  return False\n
+if getattr(followup_value, \'getAssessmentFormId\', None) is None:\n
+  return False\n
+return followup_value.getAssessmentFormId()\n
 </string> </value>
         </item>
         <item>
@@ -85,14 +91,8 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,10 +118,12 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>False</string>
+                            <string>followup_value</string>
+                            <string>None</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,7 +140,7 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_init</string> </value>
+            <value> <string>Event_hasFollowUpAssessmentForm</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

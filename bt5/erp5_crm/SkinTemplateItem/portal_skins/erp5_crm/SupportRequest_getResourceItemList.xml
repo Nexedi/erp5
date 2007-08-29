@@ -68,8 +68,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Set preferred text format\n
-context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\n
+            <value> <string>"""\n
+This script returns the list of items based on the preferred\n
+resources for events. It is intended to be used\n
+by ListField instances.\n
+"""\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+def getResourceItemList():\n
+  result = []\n
+  url_list = context.portal_preferences.getPreferredEventResourceList()\n
+  for url in url_list:\n
+    resource_value = context.getPortalObject().restrictedTraverse(url)\n
+    result.append((resource_value.getTranslatedTitle(), resource_value.getRelativeUrl()))\n
+  return result\n
+\n
+getResourceItemList = CachingMethod(getResourceItemList, \n
+      id=(\'Event_getResourceItemList\', context.Localizer.get_selected_language()), \n
+      cache_factory=\'erp5_ui_long\')\n
+                                 \n
+return getResourceItemList()\n
 </string> </value>
         </item>
         <item>
@@ -85,14 +104,8 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,8 +131,9 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>getResourceItemList</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>
@@ -138,7 +152,7 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_init</string> </value>
+            <value> <string>SupportRequest_getResourceItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

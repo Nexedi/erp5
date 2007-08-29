@@ -68,8 +68,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Set preferred text format\n
-context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\n
+            <value> <string>"""\n
+  This script creates a new event with given metadata and\n
+  attaches it to the current ticket.\n
+"""\n
+translateString = context.Base_translateString\n
+module = context.getDefaultModule(portal_type)\n
+\n
+# Create a new event\n
+event = module.newContent(portal_type=portal_type, description=description, title=title, follow_up=context.getRelativeUrl())\n
+\n
+# Trigger appropriate workflow action\n
+if direction == \'incoming\':\n
+  event.receive()\n
+else:\n
+  event.plan()\n
+\n
+# Redirect to even\n
+portal_status_message = translateString("Created and associated a new ${portal_type} to the ticket.", \n
+                                    mapping = dict(portal_type = portal_type))\n
+event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
         </item>
         <item>
@@ -85,14 +103,8 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>portal_type, title, description, direction, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,16 +124,25 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
+                            <string>portal_type</string>
+                            <string>title</string>
+                            <string>description</string>
+                            <string>direction</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+<string>context</string>
+                            <string>translateString</string>
+                            <string>module</string>
+                            <string>event</string>
+                            <string>dict</string>
+                            <string>portal_status_message</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,7 +159,7 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_init</string> </value>
+            <value> <string>Ticket_newEvent</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

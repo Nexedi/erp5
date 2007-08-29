@@ -68,8 +68,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Set preferred text format\n
-context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\n
+            <value> <string>"""\n
+This script returns the list of items based on the preferred\n
+resources for events. It is intended to be used\n
+by ListField instances.\n
+"""\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+def getFormItemList():\n
+  result = []\n
+  form_id_list = context.portal_preferences.getPreferredEventAssessmentFormIdList()\n
+  for form_id in form_id_list:\n
+    form = getattr(context.getPortalObject(), form_id, None)\n
+    if form is not None:\n
+      result.append((context.Localizer.erp5_ui.gettext(form.title) or form_id, form_id))\n
+  return result\n
+\n
+getFormItemList = CachingMethod(getFormItemList, \n
+      id=(\'Ticket_getFormItemList\', context.Localizer.get_selected_language()), \n
+      cache_factory=\'erp5_ui_long\')\n
+                                 \n
+return getFormItemList()\n
 </string> </value>
         </item>
         <item>
@@ -85,14 +105,8 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,8 +132,9 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>getFormItemList</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>
@@ -138,7 +153,7 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_init</string> </value>
+            <value> <string>Ticket_getAssessmentFormIdList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

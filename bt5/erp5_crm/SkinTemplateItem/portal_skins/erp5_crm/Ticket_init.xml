@@ -68,11 +68,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ticket = context\n
-ticket.edit(\n
-  resource = ticket.getPortalType().lower().replace(\' \', \'_\'),\n
-  quantity = 1\n
-)\n
+            <value> <string># Set preferred text format\n
+context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\n
 </string> </value>
         </item>
         <item>
@@ -123,9 +120,8 @@ ticket.edit(\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
-                            <string>context</string>
-                            <string>ticket</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

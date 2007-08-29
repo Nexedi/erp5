@@ -68,8 +68,36 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Set preferred text format\n
-context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\n
+            <value> <string>"""\n
+  This script creates a new event with given metadata and\n
+  attaches it to the current ticket.\n
+"""\n
+translateString = context.Base_translateString\n
+module = context.getDefaultModule(portal_type)\n
+\n
+# Build selection\n
+person_list = context.portal_selections.getSelectionCheckedValueList(selection_name)\n
+if not person_list:\n
+  person_list = context.portal_selections.getSelectionValueList(selection_name)\n
+\n
+# For every person, create an event\n
+count = 0\n
+for person in person_list:\n
+  # Create a new event\n
+  event = module.newContent(portal_type=portal_type, description=description, title=title, follow_up=follow_up)\n
+  count += 1\n
+  # Trigger appropriate workflow action\n
+  if direction == \'incoming\':\n
+    event.setSourceValue(person)\n
+    event.receive()\n
+  else:\n
+    event.plan()\n
+    event.setDestinationValue(person)\n
+\n
+# Redirect to the event module (but is this the best place to go since events are not yet indexed ?)\n
+portal_status_message = translateString("Created and associated ${count} new ${portal_type}(s) to the selected ticket.", \n
+                                    mapping = dict(portal_type = portal_type, count=count))\n
+context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message, selection_name=selection_name, selection_index=selection_index), **kw)\n
 </string> </value>
         </item>
         <item>
@@ -85,14 +113,8 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>portal_type, title, description, direction, selection_name, selection_index,follow_up, form_id, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,16 +134,33 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
+                            <string>portal_type</string>
+                            <string>title</string>
+                            <string>description</string>
+                            <string>direction</string>
+                            <string>selection_name</string>
+                            <string>selection_index</string>
+                            <string>follow_up</string>
+                            <string>form_id</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>translateString</string>
+                            <string>module</string>
+                            <string>person_list</string>
+                            <string>count</string>
+                            <string>_getiter_</string>
+                            <string>person</string>
+                            <string>event</string>
+                            <string>dict</string>
+                            <string>portal_status_message</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,7 +177,7 @@ context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_init</string> </value>
+            <value> <string>PersonModule_newEvent</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
