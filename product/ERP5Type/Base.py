@@ -140,10 +140,12 @@ class WorkflowMethod(Method):
       return apply(self.__dict__['_m'], (instance,) + args, kw)
 
     # Invoke transitions on appropriate workflow
+    portal_type = instance.portal_type # Access by attribute to prevent recursion
     if call_method:
-      candidate_transition_item_list = self._invoke_always.items()
+      candidate_transition_item_list = self._invoke_always.get(portal_type, {}).items()
     else:
-      candidate_transition_item_list = self._invoke_always.items() + self._invoke_once.items()
+      candidate_transition_item_list = self._invoke_always.get(portal_type, {}).items() + \
+                                       self._invoke_once.get(portal_type, {}).items()
 
     # New implementation does not use any longer wrapWorkflowMethod
     wf = getToolByName(instance, 'portal_workflow', None)
@@ -178,18 +180,18 @@ class WorkflowMethod(Method):
     # Return result finally
     return result
 
-  def registerTransitionAlways(self, workflow_id, transition_id):
+  def registerTransitionAlways(self, portal_type, workflow_id, transition_id):
     """
       Transitions registered as always will be invoked always
     """
-    self._invoke_always.setdefault(workflow_id, []).append(transition_id)
+    self._invoke_always.setdefault(portal_type, {}).setdefault(workflow_id, []).append(transition_id)
 
-  def registerTransitionOncePerTransaction(self, workflow_id, transition_id):
+  def registerTransitionOncePerTransaction(self, portal_type, workflow_id, transition_id):
     """
       Transitions registered as one per transactions will be invoked 
       only once per transaction
     """
-    self._invoke_once.setdefault(workflow_id, []).append(transition_id)
+    self._invoke_once.setdefault(portal_type, {}).setdefault(workflow_id, []).append(transition_id)
 
 class ActionMethod(Method):
 
@@ -391,7 +393,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     initializeDefaultProperties([prop_holder], object=self)
     #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
 #     initializePortalTypeDynamicWorkflowMethods(self,
-    initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder)
+    initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder)
     # We can now associate it after initialising security
     InitializeClass(prop_holder)
     prop_holder.__propholder__ = prop_holder
@@ -400,13 +402,14 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     #klass.__ac_permissions__ = prop_holder.__ac_permissions__
     Base.aq_portal_type[ptype] = prop_holder
 
-def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
+def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
   # aq_inner is required to prevent extra name lookups from happening
   # infinitely. For instance, if a workflow is missing, and the acquisition
   # wrapper contains an object with _aq_dynamic defined, the workflow id
   # is looked up with _aq_dynamic, thus causes infinite recursions.
+
   portal_workflow = aq_inner(getToolByName(self, 'portal_workflow'))
   for wf in portal_workflow.getWorkflowsFor(self):
     if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
@@ -466,7 +469,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
           if (not hasattr(prop_holder, method_id)) and \
              (not hasattr(klass, method_id)):
             method = WorkflowMethod(klass._doNothing, tr_id)
-            method.registerTransitionAlways(wf_id, tr_id)
+            method.registerTransitionAlways(ptype, wf_id, tr_id)
             # Attach to portal_type
             setattr(prop_holder, method_id, method)
             prop_holder.security.declareProtected(
@@ -485,7 +488,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
             if callable(method):
               if not isinstance(method, WorkflowMethod):
                 method = WorkflowMethod(method, method_id)
-                method.registerTransitionAlways(wf_id, tr_id)
+                method.registerTransitionAlways(ptype, wf_id, tr_id)
                 setattr(work_method_holder, method_id, method)
               else :
                 # some methods (eg. set_ready) don't have the same name
@@ -496,7 +499,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
                 # a wrong transition name (setReady).
                 # Here we force it's id to be the transition name (set_ready).
                 method._setId(tr_id)
-                method.registerTransitionAlways(wf_id, tr_id)
+                method.registerTransitionAlways(ptype, wf_id, tr_id)
             else:
               LOG('initializePortalTypeDynamicWorkflowMethods', 100,
                   'WARNING! Can not initialize %s on %s' % \
@@ -526,9 +529,9 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
                 (not hasattr(klass,method_id)):
                 method = WorkflowMethod(klass._doNothing, imethod_id)
                 if not tdef.once_per_transaction:
-                  method.registerTransitionAlways(wf_id, tr_id)
+                  method.registerTransitionAlways(ptype, wf_id, tr_id)
                 else:
-                  method.registerTransitionOncePerTransaction(wf_id, tr_id)
+                  method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
                 # Attach to portal_type
                 setattr(prop_holder, method_id, method)
                 prop_holder.security.declareProtected(
@@ -542,33 +545,33 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
                     if not isinstance(method, WorkflowMethod):
                       method = WorkflowMethod(method, method_id)
                       if not tdef.once_per_transaction:
-                        method.registerTransitionAlways(wf_id, tr_id)
+                        method.registerTransitionAlways(ptype, wf_id, tr_id)
                       else:
-                        method.registerTransitionOncePerTransaction(wf_id, tr_id)
+                        method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
                       # We must set the method on the klass
                       # because klass has priority in lookup over
                       # _ac_dynamic
                       setattr(klass, method_id, method)
                     else:
                       if not tdef.once_per_transaction:
-                        method.registerTransitionAlways(wf_id, tr_id)
+                        method.registerTransitionAlways(ptype, wf_id, tr_id)
                       else:
-                        method.registerTransitionOncePerTransaction(wf_id, tr_id)
+                        method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
                 else:
                   method = getattr(prop_holder, method_id)
                   if callable(method):
                     if not isinstance(method, WorkflowMethod):
                       method = WorkflowMethod(method, method_id)
                       if not tdef.once_per_transaction:
-                        method.registerTransitionAlways(wf_id, tr_id)
+                        method.registerTransitionAlways(ptype, wf_id, tr_id)
                       else:
-                        method.registerTransitionOncePerTransaction(wf_id, tr_id)
+                        method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
                       setattr(prop_holder, method_id, method)
                     else:
                       if not tdef.once_per_transaction:
-                        method.registerTransitionAlways(wf_id, tr_id)
+                        method.registerTransitionAlways(ptype, wf_id, tr_id)
                       else:
-                        method.registerTransitionOncePerTransaction(wf_id, tr_id)
+                        method.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
 
 class Base( CopyContainer,
             PortalContent,
@@ -2894,7 +2897,8 @@ class Base( CopyContainer,
     # Make sure this object is not in the catalog
     catalog = getToolByName(self, 'portal_catalog', None)
     if catalog is not None:
-       catalog.unindexObject(self)
+       #catalog.unindexObject(self)
+       pass
     self.isIndexable = 0
     self.isTemplate = 1
 
