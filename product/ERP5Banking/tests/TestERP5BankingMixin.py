@@ -543,14 +543,17 @@ class TestERP5BankingMixin:
     self.site_base_category = getattr(self.category_tool, 'site')
     # add the category testsite in the category site which hold vaults situated in the bank
     self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category',codification='TEST',vault_type='site')
+    created_site_list = []
     if len(site_list) != 0:
       if 'paris' in site_list:
         self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
+        created_site_list.append(self.paris)
       if 'madrid' in site_list:
         self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
+        created_site_list.append(self.madrid)
       if 'siege' in site_list:
-        self.siege = self.testsite.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
-
+        self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
+        created_site_list.append(self.siege)
     self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
     site_vault_type = self.vault_type_base_category.newContent(id='site')
     surface_vault_type = site_vault_type.newContent('surface')
@@ -568,7 +571,7 @@ class TestERP5BankingMixin:
     salle_tri = surface_vault_type.newContent('salle_tri')
       
     if not no_site:
-      for c in self.testsite.getCategoryChildValueList():
+      for c in created_site_list: #self.testsite.getCategoryChildValueList():
         # create bank structure for each agency
         site = c.getId()
         # surface
@@ -650,7 +653,7 @@ class TestERP5BankingMixin:
       if 'madrid' not in site_list:
         self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
       if 'siege' not in site_list:
-        self.siege = self.testsite.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
+        self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
 
   def _openDate(self, date=None, site=None, id=None, open=True, container=None, portal_type=None):
     if date is None:

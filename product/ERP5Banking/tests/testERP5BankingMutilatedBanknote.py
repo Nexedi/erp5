@@ -106,11 +106,11 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.organisation_1 = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
                           function='banking', group='baobab',  site='testsite/paris')
     self.organisation_2 = self.organisation_module.newContent(id='baobab_org_hq', portal_type='Organisation',
-                                                            function='banking', group='baobab',  site='testsite/siege')
+                                                            function='banking', group='baobab',  site='siege')
     # define the user
     user_dict = {
         'super_user' : [['Manager'], self.organisation_1, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1'],
-        'hq_super_user' : [['Manager'], self.organisation_2, 'banking/comptable', 'baobab', 'testsite/siege/surface/banque_interne/guichet_1']
+        'hq_super_user' : [['Manager'], self.organisation_2, 'banking/comptable', 'baobab', 'siege/surface/banque_interne/guichet_1']
       }
     # call method to create this user
     self.createERP5Users(user_dict)
@@ -168,6 +168,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                                     source_total_asset_price=0.0,
                                     destination_total_asset_price=0.0,
                                     description='test',
+                                    deponent="user",
                                     destination_value=self.mutilated_banknote_vault
                                                                         )
     self.stepTic()
@@ -444,7 +445,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.checkBanknoteInventory(node_path=self.hq_maculated_banknote_vault.getRelativeUrl(), quantity=0.0)
 
   def stepCreateHQMutilatedBanknote(self, sequence=None, sequence_list=None,
-      owner_assigned_counter='site/testsite/siege/surface/banque_interne/guichet_1', **kwd):
+      owner_assigned_counter='site/siege/surface/banque_interne/guichet_1', **kwd):
     """
     Create a mutilated banknote document and check it
     """
@@ -453,6 +454,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                                                                            source_total_asset_price=0.0,
                                                                            destination_total_asset_price=0.0,
                                                                            destination_value=self.hq_mutilated_banknote_vault,
+                                                                           deponent="hq user",
                                                                            causality_value=self.mutilated_banknote
                                                                            )
     self.hq_mutilated_banknote.edit(source_trade='site/testsite/paris')
