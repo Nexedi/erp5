@@ -10,6 +10,7 @@ Career | view
 Chat Address | view
 Credit Card | view
 Currency Exchange Line | view
+Currency Module | module_view
 Currency Module | view
 Currency | view
 Email | view
@@ -20,12 +21,14 @@ Image | download
 Image | fullsize_view
 Image | view
 Link | view
+Organisation Module | module_view
 Organisation Module | view
 Organisation | details
 Organisation | document_view
 Organisation | financial_view
 Organisation | jump_to_persons
 Organisation | view
+Person Module | module_view
 Person Module | ooo_import
 Person Module | view
 Person | assignment
@@ -35,6 +38,7 @@ Person | financial_view
 Person | report
 Person | terminate_career
 Person | view
+Query Module | module_view
 Query Module | view
 Query | view
 Telephone | view

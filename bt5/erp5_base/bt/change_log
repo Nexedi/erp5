@@ -1,3 +1,6 @@
+2007-08-29 Yusei
+* Added new view action for module.
+
 2007-08-13 Jerome
 * Remove portal type actions that are now defined as global actions
 
