@@ -215,6 +215,7 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
 getVaultItemList = CachingMethod(getVaultItemList, id=(\'Delivery_getVaultItemList\', \'getVaultItemList\'), \n
                                  cache_factory=\'erp5_ui_long\')\n
 \n
+\n
 if vault_type is None:\n
   assignment_list = context.Baobab_getUserAssignmentList()\n
 else:\n

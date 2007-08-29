@@ -74,6 +74,7 @@ if len(user_site_list)>0:\n
   site = context.Baobab_getVaultSite(user_site_list[0])\n
   site_url = site.getRelativeUrl()\n
   context.setSite(site_url)\n
+context.updateLocalRolesOnSecurityGroups()\n
 
 
 ]]></string> </value>
