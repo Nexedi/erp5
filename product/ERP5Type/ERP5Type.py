@@ -184,6 +184,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
       'divergence_tester', 'calendar_period',
       # Project
       'project',
+      # Module
+      'module',
     )
     group_list = ()
 
