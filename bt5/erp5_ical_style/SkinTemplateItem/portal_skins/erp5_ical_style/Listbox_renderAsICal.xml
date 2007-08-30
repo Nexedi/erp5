@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>OFS.DTMLMethod</string>
+          <string>DTMLMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Listbox_renderAsICal</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+BEGIN:VCALENDAR\n
+VERSION:2.0\n
+PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN\n
+<dtml-in prefix="loop" expr="items">\n
+<dtml-if expr="loop_item[\'COMPONENT\']==\'event\'">\n
+BEGIN:VEVENT\n
+CREATED:<dtml-var expr="loop_item[\'CREATED\']">\n
+LAST-MODIFIED:<dtml-var expr="loop_item[\'LAST-MODIFIED\']">\n
+DTSTAMP:<dtml-var expr="loop_item[\'CREATED\']">\n
+UID:uuid<dtml-var expr="loop_item[\'UID\']">\n
+SUMMARY:<dtml-var expr="loop_item[\'SUMMARY\']">\n
+DTSTART:<dtml-var expr="loop_item[\'DTSTART\']">\n
+DTEND:<dtml-var expr="loop_item[\'DTEND\']">\n
+<dtml-if expr="loop_item.get(\'LOCATION\', \'\')">\n
+LOCATION:<dtml-var expr="loop_item[\'LOCATION\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'CATEGORIES\', \'\')">\n
+CATEGORIES:<dtml-var expr="loop_item[\'CATEGORIES\']">\n
+</dtml-if>\n
+END:VEVENT\n
+</dtml-if>\n
+<dtml-if expr="loop_item[\'COMPONENT\']==\'todo\'">\n
+BEGIN:VTODO\n
+CREATED:<dtml-var expr="loop_item[\'CREATED\']">\n
+LAST-MODIFIED:<dtml-var expr="loop_item[\'LAST-MODIFIED\']">\n
+DTSTAMP:<dtml-var expr="loop_item[\'CREATED\']">\n
+UID:uuid<dtml-var expr="loop_item[\'UID\']">\n
+SUMMARY:<dtml-var expr="loop_item[\'SUMMARY\']">\n
+<dtml-if expr="loop_item.get(\'STATUS\')">\n
+STATUS:<dtml-var expr="loop_item[\'STATUS\']">\n
+</dtml-if>\n
+DTSTART:<dtml-var expr="loop_item[\'DTSTART\']">\n
+DUE:<dtml-var expr="loop_item[\'DTEND\']">\n
+<dtml-if expr="loop_item.get(\'COMPLETED\')">\n
+COMPLETED:<dtml-var expr="loop_item[\'COMPLETED\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'PERCENT-COMPLETE\')">\n
+PERCENT-COMPLETE:<dtml-var expr="loop_item[\'PERCENT-COMPLETE\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'LOCATION\')">\n
+LOCATION:<dtml-var expr="loop_item[\'LOCATION\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'CATEGORIES\')">\n
+CATEGORIES:<dtml-var expr="loop_item[\'CATEGORIES\']">\n
+</dtml-if>\n
+END:VTODO\n
+</dtml-if>\n
+</dtml-in>\n
+END:VCALENDAR\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

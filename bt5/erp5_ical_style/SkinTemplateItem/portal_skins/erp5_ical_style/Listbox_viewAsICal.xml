@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  An ICal data format implementation.\n
+  USAGE\n
+    Data are drawn from a listbox as they are; a custom listbox is needed, with \n
+    column titles prefixed with \'ical_\'\n
+    mandatory columns: (\'summary\', \'created\', \'dtstamp\', \'last-modified\', \'uid\', \'dtstart\', \'dtend\', \'component\')\n
+    optional columns: (\'location\', \'categories\', \'status\', \'completed\', \'percent-complete\')\n
+    Title (summary) can be anything, same for location and categories (categories can be one word or a comma-separated\n
+    list, although not all clients can use multiple categories).\n
+    Component can be "event" or "todo".\n
+    Dates should be returned by listbox with no extra processing - the script formats them appropriately.\n
+    \'status\' is valid only for todo, and can be: needs-action|completed|in-process|cancelled (default is needs-action)\n
+  PREPROCESSING\n
+    If start and stop date are the same, we assume it lasts 1 hour.\n
+    If status is \'completed\' and no percent-complete is given, we take 100%.\n
+    If status is \'completed\' and no completed date is given, we take dtend.\n
+  IMPLEMENTATION DETAILS:\n
+    dtstamp = created\n
+    due (in VTODO) = dtend\n
+    dates are formatted "YYYYMMDDTHHMMSSZ" (which is HTML4 without separators).\n
+    all dates are converted to GMT, then the client will adjust them to its local timezone\n
+"""\n
+\n
+allowed_field_list = (\'summary\', \'created\', \'last-modified\', \'uid\', \'dtstart\', \'dtend\', \'component\', \'location\', \'categories\',\n
+      \'status\', \'completed\', \'percent-complete\')\n
+allowed_status_list = (\'COMPLETED\', \'IN-PROCESS\', \'CANCELLED\', \'NEEDS-ACTION\')\n
+\n
+# items are taken in the standard listbox way\n
+line_list = context.query();\n
+label_list = context.getLabelValueList();\n
+real_context = context.getContext()\n
+\n
+# figure out which column is which, by using column titles\n
+ical_column_mapping = {}\n
+for index, column_item in enumerate(label_list):\n
+  column_header = column_item[1]\n
+  if column_header.startswith(\'ical_\'):\n
+    field_name = column_header[5:]\n
+    if field_name in allowed_field_list:\n
+      ical_column_mapping[field_name] = index\n
+\n
+items = []\n
+\n
+for line in line_list:\n
+  column_item_list = line.getValueList()\n
+  ical_item_dict = {}\n
+  # collect values\n
+  for header, index in ical_column_mapping.items():\n
+    value_tuple = column_item_list[index]\n
+    # the [0] is a raw value, the [1] is rendered; we want strings rendered (as unicode),\n
+    # but other stuff (like int or DateTime) we want as they are\n
+    if hasattr(value_tuple[0], \'lower\'):\n
+      value = value_tuple[1]\n
+    else:\n
+      value = value_tuple[0]\n
+    ical_item_dict[header.upper()] = value\n
+  # check and process\n
+  if not hasattr(ical_item_dict[\'DTSTART\'], \'HTML4\'):\n
+    # real_context.log(\'Item %(SUMMARY)s has illegal start date: %(DTSTART)s, skipping\' % ical_item_dict)  \n
+    continue\n
+  if ical_item_dict[\'DTSTART\'] == ical_item_dict[\'DTEND\'] or not hasattr(ical_item_dict[\'DTEND\'], \'HTML4\'):\n
+    # real_context.log(\'End date %(DTEND)s for item %(SUMMARY)s is empty, illegal or equal to start date, assuming start date + 1 hour\' % ical_item_dict)\n
+    ical_item_dict[\'DTEND\'] = DateTime(ical_item_dict[\'DTSTART\'].timeTime() + 3600) # add 1 hour\n
+  # check and fix for todo\n
+  if ical_item_dict[\'COMPONENT\'] == \'todo\':\n
+    status = ical_item_dict.get(\'STATUS\', False)\n
+    if status:\n
+      status = status.upper()\n
+      ical_item_dict[\'STATUS\'] = status\n
+      if status not in allowed_status_list:\n
+        raise ValueError(\'ICal status %s is not allowed\' % status)\n
+      if status == \'COMPLETED\':\n
+        if not ical_item_dict.get(\'PERCENT-COMPLETE\', False):\n
+          ical_item_dict[\'PERCENT-COMPLETE\'] = 100\n
+        if not ical_item_dict.get(\'COMPLETED\', False):\n
+          ical_item_dict[\'COMPLETED\'] = ical_item_dict[\'DTEND\']\n
+    else:\n
+      ical_item_dict[\'STATUS\'] = \'NEEDS-ACTION\'\n
+  # reformat dates\n
+  for header, value in ical_item_dict.items():\n
+    if hasattr(value, \'toZone\'):\n
+      value = value.toZone(\'GMT\') # we dont specify time zone in the file, but recalculate everything into GMT instead\n
+      value = value.HTML4()\n
+      value = value.replace(\'-\', \'\')\n
+      value = value.replace(\':\', \'\')\n
+      ical_item_dict[header] = value\n
+  items.append(ical_item_dict)\n
+\n
+return real_context.Listbox_renderAsICal(items=items)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>allowed_field_list</string>
+                            <string>allowed_status_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>line_list</string>
+                            <string>label_list</string>
+                            <string>real_context</string>
+                            <string>ical_column_mapping</string>
+                            <string>_getiter_</string>
+                            <string>enumerate</string>
+                            <string>index</string>
+                            <string>column_item</string>
+                            <string>_getitem_</string>
+                            <string>column_header</string>
+                            <string>field_name</string>
+                            <string>_write_</string>
+                            <string>items</string>
+                            <string>line</string>
+                            <string>column_item_list</string>
+                            <string>ical_item_dict</string>
+                            <string>header</string>
+                            <string>value_tuple</string>
+                            <string>hasattr</string>
+                            <string>value</string>
+                            <string>DateTime</string>
+                            <string>False</string>
+                            <string>status</string>
+                            <string>ValueError</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Listbox_viewAsICal</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

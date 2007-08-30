@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_bindings_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_cache_settings_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_permissions_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_FTP_access_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_WebDAV_Locks_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_properties_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Take_ownership_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Undo_changes_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_management_screens_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Lock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Unlock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_access_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0"?>\n
+<rss version="2.0" \n
+  xmlns:dc="http://purl.org/dc/elements/1.1/" \n
+  xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"\n
+  xmlns:tal="http://xml.zope.org/namespaces/tal">\n
+  <tal:block tal:define="\n
+      field_id here/getId;\n
+      line_list here/query;\n
+      label_list here/getLabelValueList;\n
+      real_context here/getContext;\n
+      feed_data python: real_context.Listbox_asRSS(label_list, line_list);\n
+     ">\n
+    <channel tal:define="channel_info feed_data/channel_info" >\n
+      <title tal:content="channel_info/title">TITLE</title>\n
+      <link tal:content="channel_info/url">URL</link>\n
+      <description tal:content="channel_info/description">DESCRIPTION</description>\n
+      <item tal:repeat="item_info feed_data/listItemInfos" >\n
+        <tal:block tal:replace="structure item_info"/>\n
+      </item>\n
+    </channel>\n
+  </tal:block>\n
+</rss>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml; charset=utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Listbox_viewAsRSS</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
