@@ -138,8 +138,8 @@ for inventory in getInventoryList(\n
         group_by_resource=1,\n
         **inventory_param_dict):\n
   \n
-  total_price = roundCurrency(inventory.total_price, section_currency)\n
-  quantity = roundCurrency(inventory.total_quantity,\n
+  total_price = roundCurrency(inventory.total_price or 0, section_currency)\n
+  quantity = roundCurrency(inventory.total_quantity or 0,\n
                            inventory.resource_relative_url)\n
 \n
   if inventory.resource_uid != section_currency_uid:\n
