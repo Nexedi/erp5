@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>export_ods</string> </value>
+            <value> <string>ods_export</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Export as Spreadsheet</string> </value>
+            <value> <string>Export Content As Spread Sheet</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>

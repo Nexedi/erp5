@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sheet_per_ReportSection</string> </value>
+            <value> <string>your_sheet_per_report_section</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -163,7 +163,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>export a sheet per ReportSection</string> </value>
+                    <value> <string>Export a Sheet per ReportSection</string> </value>
                 </item>
               </dictionary>
             </value>

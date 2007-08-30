@@ -63,9 +63,8 @@
   <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
   <office:body>\n
     <office:spreadsheet>\n
-      <table:table table:style-name=\'ta1\' table:print=\'false\' table:name=\'Sheet1\' >\n
+      <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name python: form.REQUEST[\'selection_name\'].split(\'_selection\')[0].replace(\'_\', \' \').capitalize()" >\n
         <tal:block metal:define-macro="form_layout" tal:define="dummy python: request.set(\'here\', here); listbox python:form.get_fields_in_group(\'bottom\')[0]">\n
-          <tal:block tal:condition="python: listbox.meta_type == \'ListBox\' or (listbox.meta_type == \'ProxyField\' and listbox.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
             <tal:block metal:use-macro="here/listbox_ods_macro/macros/listbox">\n
               <tal:block metal:fill-slot="list_header">\n
                 <table:table-header-rows>\n
@@ -73,7 +72,7 @@
                     <tal:block tal:condition="python: is_report_tree_mode">\n
                       <table:table-cell table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
                         <tal:block tal:condition="listboxline/getSectionName">\n
-                          <text:p  tal:content="python: here.Localozer.erp5_ui.gettext(listboxline/getSectionName).encode(\'utf-8\')" tal:attributes="style python:\'Section%s\' % listboxline.getSectionDepth()"/>\n
+                          <text:p  tal:content="python: here.Localozer.erp5_ui.gettext(listboxline/getSectionName).encode(\'utf-8\')"/>\n
                         </tal:block>\n
                       </table:table-cell>\n
                     </tal:block>\n
@@ -99,11 +98,10 @@
                   </table:table-row>\n
                 </table:table-header-rows>\n
               </tal:block>\n
-              <!--<tal:block metal:fill-slot=\'table_bottom_line\'>\n
+              <tal:block metal:fill-slot=\'table_bottom_line\'>\n
                 <tal:block tal:replace="nothing"> don\'t write bottom line in case of this form_list, Page Format of OOo works instead of it.</tal:block>\n
-              </tal:block>-->\n
+              </tal:block>\n
             </tal:block>\n
-          </tal:block>\n
         </tal:block>\n
       </table:table>\n
     </office:spreadsheet>\n
@@ -126,7 +124,7 @@
         </item>
         <item>
             <key> <string>ooo_stylesheet</string> </key>
-            <value> <string>OooTemplate_getStyleSheet</string> </value>
+            <value> <string>Base_getDynamicODSStyleSheet</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

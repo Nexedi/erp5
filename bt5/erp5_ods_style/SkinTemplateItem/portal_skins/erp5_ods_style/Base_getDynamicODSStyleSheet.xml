@@ -68,10 +68,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempOOoDocument\n
-td = newTempOOoDocument(context, \'testOOo\')\n
-td.edit(base_content_type=\'application/vnd.oasis.opendocument.spreadsheet\', base_data=1)\n
-return [(\'\', \'\')] + td.getTargetFormatItemList()\n
+            <value> <string>from Products.ERP5Type.Message import Message\n
+\n
+translate = lambda msg: Message(\'ui\', msg)\n
+request = context.REQUEST\n
+landscape = int(request.get(\'landscape\', 0))\n
+if context.pt != \'form_list\':\n
+  if landscape == 1:\n
+    return context.Base_getODSStyleSheetLandscape\n
+  else:\n
+    return context.Base_getODSStyleSheet\n
+else:\n
+  if landscape == 1:\n
+    return context.Base_getODSStyleSheetListLandscape\n
+  else:\n
+    return context.Base_getODSStyleSheetListPortrait\n
 </string> </value>
         </item>
         <item>
@@ -114,11 +125,14 @@ return [(\'\', \'\')] + td.getTargetFormatItemList()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempOOoDocument</string>
-<string>context</string>
-                            <string>td</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>translate</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>int</string>
+                            <string>landscape</string>
                           </tuple>
                         </value>
                     </item>
@@ -135,7 +149,7 @@ return [(\'\', \'\')] + td.getTargetFormatItemList()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getExportFormat</string> </value>
+            <value> <string>Base_getDynamicODSStyleSheet</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -58,59 +58,14 @@
   <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
   <office:body>\n
     <office:spreadsheet>\n
-      <tal:block tal:define="group_list python: form.get_groups(include_empty=1);\n
-                 report_item_list python:report_method();\n
-                 field_errors python: request.get(\'field_errors,{}\');\n
-                 dummy python: request.set(\'here\', here); column_len form/listBox_getColumnNum;global sheet_per_reportsection python: int(request.get(\'sheet_per_ReportSection\', 0))">\n
 \n
- <!--       <table:table table:style-name=\'ta1\' table:print=\'false\' table:name=\'Sheet1\'>\n
-          <table:table-column table:style-name=\'co2\'/>\n
-          <table:table-column table:style-name=\'co3\'/>\n
-            <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
-              <tal:block tal:define="field_list python: form.get_fields_in_group(group);">\n
-                <tal:block tal:condition="python: field_list not in [None, []]">\n
-                  <tal:block tal:repeat="field field_list">\n
-                    <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
-                      <table:table-row table:style-name=\'ro4\'>\n
-                        <table:table-cell  table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' office:value-type=\'string\'>\n
-                          <text:p tal:content="python: here.Localizer.erp5_ui.gettext(field.get_value(\'title\')).encode(\'utf-8\')">\n
-                          </text:p>\n
-                        </table:table-cell>\n
-                        <table:table-cell table:style-name=\'report-content-heading2-with-lines\' office:value-type=\'string\' tal:attributes="table:number-columns-spanned python: column_len" tal:define="value python: field.get_value(\'default\')">\n
-                          <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
-                            <tal:block tal:repeat="item value">\n
-                              <text:p tal:content="python: str(item)"></text:p>\n
-                            </tal:block>\n
-                          </tal:block>\n
-                          <tal:block tal:condition="python: not (same_type(value, []) or same_type(value, ()) or same_type(value, None))">\n
-                            <text:p tal:content="python: field.render_pdf(value)" ></text:p>\n
-                          </tal:block>\n
-                          <tal:block tal:condition="python: value is None">\n
-                            <text:p tal:content="python: \' \'" ></text:p>\n
-                          </tal:block>\n
-                        </table:table-cell>\n
-                      </table:table-row>\n
-                    </tal:block>\n
-                  </tal:block>\n
-                  <table:table-row>\n
-                    <table:table-cell table:style-name=\'Default\'><text:p>space dans report_view</text:p></table:table-cell>\n
-                  </table:table-row>\n
-                </tal:block>\n
-              </tal:block>\n
-            </tal:block>\n
-            <tal:block tal:define="field_list python: form.get_fields_in_group(\'bottom\')">\n
-              <tal:block tal:condition="python: field_list not in [None, []]">\n
-                <tal:block tal:repeat="field field_list">\n
-                  <tal:block metal:use-macro="here/field_ods_macro/macros/field" />\n
-                </tal:block>\n
-              </tal:block>\n
-            </tal:block>\n
-          </table:table>\n
-         -->\n
+      <tal:block tal:define="report_item_list python:report_method();\n
+                 field_errors python: request.get(\'field_errors,{}\');\n
+                 dummy python: request.set(\'here\', here);global sheet_per_reportsection python: int(request.get(\'sheet_per_report_section\', 0));global column_len python:3">\n
 \n
       <tal:block tal:define="portal_object here/portal_url/getPortalObject"> \n
         <tal:block tal:condition="python: sheet_per_reportsection == 0">\n
-          <table:table table:name="report_view">\n
+          <table:table tal:attributes="table:name python:form.REQUEST[\'selection_name\'].split(\'_selection\')[0].replace(\'_\', \' \').capitalize()">\n
             <tal:block tal:repeat="report_item report_item_list">\n
               <tal:block metal:define-macro="make_report_item_table" tal:define="here python:report_item.getObject(portal_object); dummy python:report_item.pushReport(portal_object)">\n
                 <tal:block tal:condition="report_item/getTitle | report_item/getTranslatedTitle">\n
@@ -118,17 +73,17 @@
                     <tal:block tal:condition="report_item/getTitle" tal:define="level report_item/getLevel">\n
                       <tal:block  tal:condition="python: level == 1">\n
                         <table:table-cell table:style-name="report-title" tal:attributes="table:number-columns-spanned python:column_len"  office:value-type=\'string\' table:number-rows-spanned=\'1\'>\n
-                          <text:p tal:content="report_item/getTitle" i18n:translate="ui"></text:p>\n
+                          <text:p tal:content="report_item/getTitle" i18n:translate="" i18n:domain="ui"></text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: level == 2">\n
                         <table:table-cell table:style-name="report-title2" tal:attributes="table:number-columns-spanned python:column_len"  office:value-type=\'string\' table:number-rows-spanned=\'1\'>\n
-                          <text:p tal:content="report_item/getTitle" i18n:translate="ui"></text:p>\n
+                          <text:p tal:content="report_item/getTitle" i18n:translate="" i18n:domain="ui"></text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: level == 3">\n
                         <table:table-cell table:style-name="report-title3" tal:attributes="table:number-columns-spanned python:column_len"  office:value-type=\'string\' table:number-rows-spanned=\'1\'>\n
-                          <text:p tal:content="report_item/getTitle" i18n:translate="ui"></text:p>\n
+                          <text:p tal:content="report_item/getTitle" i18n:translate="" i18n:domain="ui"></text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                     </tal:block>\n
@@ -153,10 +108,12 @@
             </table:table>\n
           </tal:block>\n
           <tal:block tal:condition="python: sheet_per_reportsection == 1">\n
-            <tal:block tal:repeat="report_item python: here.Base_getReportSectionName(report_item_list)">\n
-              <table:table tal:attributes="table:name report_item/getTitle">\n
-                <tal:block metal:use-macro="here/report_view/macros/make_report_item_table"/>\n
-              </table:table> \n
+            <tal:block tal:repeat="report_item python: report_item_list">\n
+              <tal:block tal:condition="python: report_item.getFormId()">\n
+                <table:table tal:attributes="table:name report_item/getTitle">\n
+                  <tal:block metal:use-macro="here/report_view/macros/make_report_item_table"/>\n
+                </table:table>\n
+              </tal:block>\n
             </tal:block>\n
           </tal:block>\n
         </tal:block>\n
@@ -182,7 +139,7 @@
         </item>
         <item>
             <key> <string>ooo_stylesheet</string> </key>
-            <value> <string>OooTemplate_getStyleSheet</string> </value>
+            <value> <string>Base_getDynamicODSStyleSheet</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

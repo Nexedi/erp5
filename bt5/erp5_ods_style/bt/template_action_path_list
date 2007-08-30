@@ -1,2 +1,2 @@
-portal_actions | export_ods
-portal_actions | ods_report
+portal_properties | ods_export
+portal_properties | ods_report

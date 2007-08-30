@@ -97,8 +97,8 @@
                       <list>
                         <string>portal_skin</string>
                         <string>your_format</string>
-                        <string>landscape</string>
-                        <string>sheet_per_ReportSection</string>
+                        <string>your_sheet_per_report_section</string>
+                        <string>your_landscape</string>
                       </list>
                     </value>
                 </item>

@@ -92,7 +92,7 @@
       <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'false\' style:row-height=\'0.951cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-row\' style:name=\'ro7\'>\n
-      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.522cm\'/>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.587cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-row\' style:name=\'ro8\'>\n
       <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.531cm\'/>\n
@@ -104,16 +104,13 @@
       <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.538cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-row\' style:name=\'ro11\'>\n
-      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.485cm\'/>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.453cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-row\' style:name=\'ro12\'>\n
-      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.559cm\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-row\' style:name=\'ro13\'>\n
       <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.616cm\'/>\n
     </style:style>\n
-    <style:style style:family=\'table-row\' style:name=\'ro14\'>\n
-      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.453cm\'/>\n
+    <style:style style:family=\'table-row\' style:name=\'ro13\'>\n
+      <style:table-row-properties fo:break-before=\'page\' style:use-optimal-row-height=\'true\' style:row-height=\'0.453cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table\' style:name=\'ta1\' style:master-page-name=\'Default\'>\n
       <style:table-properties style:writing-mode=\'lr-tb\' table:display=\'true\'/>\n

@@ -251,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Format</string> </value>
+                    <value> <string>Export Format</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Base_getExportFormat</string> </value>
+            <value> <string>here/Base_getConversionFormatList</string> </value>
         </item>
       </dictionary>
     </pickle>

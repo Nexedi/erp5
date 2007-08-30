@@ -70,7 +70,7 @@
                selection python: here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
                is_domain_tree_mode selection/domain_tree_mode | nothing;\n
                is_report_tree_mode selection/report_tree_mode | nothing;" i18n:domain="ui">\n
-        \n
+\n
         <tal:block tal:condition="python: len(listboxline_list) > 1">\n
           <tal:block tal:condition="python: is_domain_tree_mode">\n
             <tal:block tal:define="domain_list python: selection.getDomainList()" tal:condition="python: len(domain_list) > 0" >\n
@@ -82,7 +82,7 @@
               </table:table-row>\n
             </tal:block>\n
           </tal:block>\n
-          \n
+\n
           <tal:block tal:repeat="listboxline python: listboxline_list">\n
             <table:table-column table:style-name=\'co2\' />\n
             <tal:block metal:define-slot="for_form_list" tal:condition="listboxline/isTitleLine | python: is_report_tree_mode">\n
@@ -91,7 +91,7 @@
                   <tal:block tal:condition="python: is_report_tree_mode">\n
                     <table:table-cell table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
                       <tal:block tal:condition="listboxline/getSectionName">\n
-                        <text:p  tal:content="python: here.Localozer.erp5_ui.gettext(listboxline/getSectionName).encode(\'utf-8\')" tal:attributes="style python:\'Section%s\' % listboxline.getSectionDepth()"/>\n
+                        <text:p  tal:content="python: here.Localozer.erp5_ui.gettext(listboxline/getSectionName).encode(\'utf-8\')"/>\n
                       </tal:block>\n
                     </table:table-cell>\n
                   </tal:block>\n
@@ -118,7 +118,7 @@
                 </table:table-row>\n
               </tal:block>\n
             </tal:block>\n
-              \n
+\n
             <tal:block tal:condition="not:listboxline/isTitleLine">\n
               <table:table-column table:style-name="co2"/>\n
               <table:table-row>\n
@@ -172,7 +172,7 @@
               </table:table-row>\n
             </tal:block>\n
           </tal:block>\n
-            \n
+\n
           <table:table-column table:style-name="co2"/>\n
           <table:table-row metal:define-slot="table_bottom_line">\n
             <tal:block tal:repeat="listboxline python: listboxline_list">\n
