@@ -926,7 +926,7 @@ class TestOrderMixin:
       Modify order line start date
     """
     order_line = sequence.get('order_line')
-    order_line.edit(start_date=self.datetime + 88)
+    order_line._setStartDate(self.datetime + 88)
 
   def stepModifyOrderCellStartDate(self, sequence=None, sequence_list=None, \
       **kw):
@@ -1551,6 +1551,18 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
 
+    # Test when workflow state is modified
+    sequence_string = '\
+                      stepCreateOrganisation \
+                      ' + self.variated_order_creation + '\
+                      stepPlanOrder \
+                      stepTic \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
     sequence_list.play(self)
 
 # XXX
@@ -1808,4 +1820,3 @@ else:
         suite = unittest.TestSuite()
         suite.addTest(unittest.makeSuite(TestOrder))
         return suite
-
