@@ -2897,8 +2897,7 @@ class Base( CopyContainer,
     # Make sure this object is not in the catalog
     catalog = getToolByName(self, 'portal_catalog', None)
     if catalog is not None:
-       #catalog.unindexObject(self)
-       pass
+       catalog.unindexObject(self, uid=self.getUid())
     self.isIndexable = 0
     self.isTemplate = 1
 
@@ -2993,8 +2992,8 @@ class Base( CopyContainer,
          by property or category.
     """
     # New implementation of DocumentationHelper (ongoing work)
-    #from DocumentationHelper import PortalTypeInstanceDocumentationHelper
-    #return PortalTypeInstanceDocumentationHelper(self.getRelativeUrl()).__of__(self)
+    # from DocumentationHelper import PortalTypeInstanceDocumentationHelper
+    # return PortalTypeInstanceDocumentationHelper(self.getRelativeUrl()).__of__(self)
 
     if item_id is None:
       documented_item = self
