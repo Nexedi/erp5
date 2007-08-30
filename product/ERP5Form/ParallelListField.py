@@ -160,7 +160,7 @@ class ParallelListValidator(Validator.MultiSelectionValidator):
   def validate(self, field, key, REQUEST):    
 
     result_list = []
-    hash_list = generateSubForm(field, None, REQUEST)
+    hash_list = generateSubForm(field, field.get_value('default'), REQUEST)
     is_sub_field_required = 0
     for sub_field_property_dict in hash_list:
       try:
