@@ -2164,7 +2164,7 @@ class Base( CopyContainer,
     if ptype_translation_dict is not None:
       id_ = self.getId()
       if id_ in ptype_translation_dict:
-        return Message('erp5_ui', ptype_translation_dict[id_])
+        return str(Message('erp5_ui', ptype_translation_dict[id_]))
 
 
   security.declareProtected(Permissions.AccessContentsInformation,
