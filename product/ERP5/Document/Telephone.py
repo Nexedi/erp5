@@ -85,11 +85,11 @@ class Telephone(Coordinate, Base):
         
         if coordinate_text is None:
             coordinate_text = ''
-        number_match = self.standard_parser.match(coordinate_text) or self.input_parser.match(coordinate_text)
+        number_match = self.standard_parser.match(coordinate_text)\
+                              or self.input_parser.match(coordinate_text)
         if not number_match:
           return
         number_dict = number_match.groupdict()
-        self.log(number_dict)
         country = (number_dict.get('country', '') or '').strip()
         area = (number_dict.get('area', '') or '').strip()
         number = (number_dict.get('number', '') or '').strip().replace('-', ' ')
@@ -133,6 +133,30 @@ class Telephone(Coordinate, Base):
         if text == '+(0)-':
           text = ''
         return text
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'asURL')
+    def asURL(self):
+      """Returns a text representation of the Url if defined
+      or None else.
+      """
+      telephone_country = self.getTelephoneCountry()
+      if telephone_country is not None:
+        url_string = '+%s' % telephone_country
+      else :
+        url_string = '0'
+
+      telephone_area = self.getTelephoneArea()
+      if telephone_area is not None:
+        url_string += telephone_area
+
+      telephone_number = self.getTelephoneNumber()
+      if telephone_number is not None:
+        url_string += telephone_number
+
+      if url_string == '0':
+        return None
+      return 'tel:%s' % (url_string.replace(' ',''))
 
     security.declareProtected(Permissions.View, 'getText')
     getText = asText

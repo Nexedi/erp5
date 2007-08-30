@@ -842,16 +842,19 @@ class TestHR(ERP5TypeTestCase):
     tel.setTelephoneNumber(123456789)
     self.assertEquals('+33(0)-123456789', tel.asText())
 
-## TODO: Telephone must be a subclass of Url
-##
-##  def test_TelephoneUrl(self):
-##    # http://www.rfc-editor.org/rfc/rfc3966.txt
-##    pers = self.getPersonModule().newContent(portal_type='Person')
-##    tel = pers.newContent(portal_type='Telephone')
-##    tel.setTelephoneCountry(33)
-##    tel.setTelephoneNumber(123456789)
-##    self.assertEquals('tel:+33-123456789', tel.asURL())
-##
+
+  def test_TelephoneUrl(self):
+    # http://www.rfc-editor.org/rfc/rfc3966.txt
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    tel = pers.newContent(portal_type='Telephone')
+    tel.setTelephoneCountry(33)
+    tel.setTelephoneNumber(123456789)
+    self.assertEquals('tel:+33123456789', tel.asURL())
+    
+    tel.setTelephoneCountry(None)
+    tel.setTelephoneNumber(123456789)
+    self.assertEquals('tel:0123456789', tel.asURL())
+
 
   def test_EmptyTelephoneAsText(self):
     # asText method returns an empty string for empty telephones
