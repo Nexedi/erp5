@@ -19,6 +19,23 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>business_template_registered_skin_selections</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>tokens</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -28,6 +45,14 @@
             <key> <string>_owner</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>business_template_registered_skin_selections</string> </key>
+            <value>
+              <tuple>
+                <string>ODT</string>
+              </tuple>
             </value>
         </item>
         <item>
