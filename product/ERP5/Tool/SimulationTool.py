@@ -470,7 +470,18 @@ class SimulationTool(BaseTool):
       sql_kw['input'] = input
       sql_kw['output'] = output
 
-      column_value_dict = {}
+      class DictMixIn(dict):
+        def set(dictionary, key, value):
+          result = not(not(value))
+          if result:
+            dictionary[key] = value
+          return result
+
+        def setUIDList(dictionary, key, value, as_text=0):
+          uid_list = self._generatePropertyUidList(value, as_text=as_text)
+          return dictionary.set(key, uid_list)
+
+      column_value_dict = DictMixIn()
 
       if omit_mirror_date:
         date_dict = {'query':[], 'operator':'and'}
@@ -494,112 +505,48 @@ class SimulationTool(BaseTool):
         column_value_dict['date'] = {'query': [to_date], 'range': 'ngt'}
         column_value_dict['mirror_date'] = {'query': [from_date], 'range': 'nlt'}
 
-      if resource_uid is not None :
-        column_value_dict['resource_uid'] = resource_uid
-      if section_uid is not None :
-        column_value_dict['section_uid'] = section_uid
+      column_value_dict.set('resource_uid', resource_uid)
+      if column_value_dict.set('section_uid', section_uid):
         sql_kw['section_filtered'] = 1
-      if node_uid is not None :
-        column_value_dict['node_uid'] = node_uid
-
-      resource_uid_list = self._generatePropertyUidList(resource)
-      if resource_uid_list:
-        column_value_dict['resource_uid'] = resource_uid_list
-
-      item_uid_list = self._generatePropertyUidList(item)
-      if item_uid_list:
-        column_value_dict['aggregate_uid'] = item_uid_list
-
-      node_uid_list = self._generatePropertyUidList(node)
-      if node_uid_list:
-        column_value_dict['node_uid'] = node_uid_list
-
-      payment_uid_list = self._generatePropertyUidList(payment)
-      if payment_uid_list:
-        column_value_dict['payment_uid'] = payment_uid_list
-
-      section_uid_list = self._generatePropertyUidList(section)
-      if section_uid_list:
-        column_value_dict['section_uid'] = section_uid_list
+      column_value_dict.set('node_uid', node_uid)
+      column_value_dict.setUIDList('resource_uid', resource)
+      column_value_dict.setUIDList('aggregate_uid', item)
+      column_value_dict.setUIDList('node_uid', node)
+      column_value_dict.setUIDList('payment_uid', payment)
+      if column_value_dict.setUIDList('section_uid', section):
         sql_kw['section_filtered'] = 1
+      column_value_dict.setUIDList('mirror_section_uid', mirror_section)
+      column_value_dict.setUIDList('variation_text', variation_text,
+                                   as_text=1)
+      column_value_dict.setUIDList('sub_variation_text', sub_variation_text,
+                                   as_text=1)
+      new_kw['column_value_dict'] = column_value_dict.copy()
 
-      mirror_section_uid_list = self._generatePropertyUidList(mirror_section)
-      if mirror_section_uid_list:
-        column_value_dict['mirror_section_uid'] = mirror_section_uid_list
-
-      variation_text_list = self._generatePropertyUidList(variation_text,
-                                                          as_text=1)
-      if variation_text_list:
-        column_value_dict['variation_text'] = variation_text_list
-
-      sub_variation_text_list = self._generatePropertyUidList(
-                                              sub_variation_text, as_text=1)
-      if sub_variation_text_list:
-        column_value_dict['sub_variation_text'] = sub_variation_text_list
-
-      new_kw['column_value_dict'] = column_value_dict
-
-      related_key_dict = {}
-
+      related_key_dict = DictMixIn()
       # category membership
-      resource_category_uid_list = self._generatePropertyUidList(
-                                              resource_category)
-      if resource_category_uid_list:
-        related_key_dict['resource_category_uid'] = resource_category_uid_list
-
-      node_category_uid_list = self._generatePropertyUidList(node_category)
-      if node_category_uid_list:
-        related_key_dict['node_category_uid'] = node_category_uid_list
-
-      payment_category_uid_list = self._generatePropertyUidList(payment_category)
-      if payment_category_uid_list:
-        related_key_dict['payment_category_uid'] = payment_category_uid_list
-
-      section_category_uid_list = self._generatePropertyUidList(section_category)
-      if section_category_uid_list:
-        related_key_dict['section_category_uid'] = section_category_uid_list
+      related_key_dict.setUIDList('resource_category_uid', resource_category)
+      related_key_dict.setUIDList('node_category_uid', node_category)
+      related_key_dict.setUIDList('payment_category_uid', payment_category)
+      if related_key_dict.setUIDList('section_category_uid',
+                                     section_category):
         sql_kw['section_filtered'] = 1
-
-      mirror_section_category_uid_list = self._generatePropertyUidList(
-                                              mirror_section_category)
-      if mirror_section_category_uid_list:
-        related_key_dict['mirror_section_category_uid'] =\
-                                              mirror_section_category_uid_list
-
+      related_key_dict.setUIDList('mirror_section_category_uid',
+                                  mirror_section_category)
       # category strict membership
-      resource_category_strict_membership_uid_list =\
-            self._generatePropertyUidList(resource_category_strict_membership)
-      if resource_category_strict_membership_uid_list:
-        related_key_dict['resource_category_strict_membership_uid'] =\
-            resource_category_strict_membership_uid_list
-
-      node_category_strict_membership_uid_list =\
-            self._generatePropertyUidList(node_category_strict_membership)
-      if node_category_strict_membership_uid_list:
-        related_key_dict['node_category_strict_membership_uid'] =\
-            node_category_strict_membership_uid_list
-
-      payment_category_strict_membership_uid_list =\
-            self._generatePropertyUidList(payment_category_strict_membership)
-      if payment_category_strict_membership_uid_list:
-        related_key_dict['payment_category_strict_membership_uid'] =\
-            payment_category_strict_membership_uid_list
-
-      section_category_strict_membership_uid_list =\
-            self._generatePropertyUidList(section_category_strict_membership)
-      if section_category_strict_membership_uid_list:
-        related_key_dict['section_category_strict_membership_uid'] =\
-            section_category_strict_membership_uid_list
+      related_key_dict.setUIDList('resource_category_strict_membership_uid',
+                                  resource_category_strict_membership)
+      related_key_dict.setUIDList('node_category_strict_membership_uid',
+                                  node_category_strict_membership)
+      related_key_dict.setUIDList('payment_category_strict_membership_uid',
+                                  payment_category_strict_membership)
+      if related_key_dict.setUIDList('section_category_strict_membership_uid',
+                                     section_category_strict_membership):
         sql_kw['section_filtered'] = 1
-
-      mirror_section_category_strict_membership_uid_list =\
-            self._generatePropertyUidList(
-                                  mirror_section_category_strict_membership)
-      if mirror_section_category_strict_membership_uid_list:
-        related_key_dict['mirror_section_category_strict_membership_uid'] =\
-            mirror_section_category_strict_membership_uid_list
-
-      new_kw['related_key_dict'] = related_key_dict
+      related_key_dict.setUIDList(
+        'mirror_section_category_strict_membership_uid',
+        mirror_section_category_strict_membership)
+      
+      new_kw['related_key_dict'] = related_key_dict.copy()
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
