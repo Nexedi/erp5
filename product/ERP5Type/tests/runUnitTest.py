@@ -144,6 +144,10 @@ if '__INSTANCE_HOME' not in globals().keys() :
 class ERP5TypeTestLoader(unittest.TestLoader):
   """Load test cases from the name passed on the command line.
   """
+  def __init__(self, save=0):
+    if save:
+      self.testMethodPrefix = 'dummy_test'
+
   def loadTestsFromName(self, name, module=None):
     """This method is here for compatibility with old style arguments.
     - It is possible to have the .py prefix for the test file
@@ -226,17 +230,18 @@ def runUnitTestList(test_list) :
   # it is then possible to run the debugger by "import pdb; pdb.set_trace()"
   sys.path.insert(0, tests_framework_home)
 
-  # override unittest.makeSuite to skip all tests in save mode
-  # and PortalTestCase.setUp to skip beforeSetUp and afterSetUp
+  save = 0
+  # pass save=1 to test loader to skip all tests in save mode
+  # and monkeypatch PortalTestCase.setUp to skip beforeSetUp and afterSetUp
   if os.environ.get('erp5_save_data_fs'):
     from Products.ERP5Type.tests.ERP5TypeTestCase import \
-        dummy_makeSuite, dummy_setUp, dummy_tearDown
+                             dummy_setUp, dummy_tearDown
+    save = 1
     from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
-    unittest.makeSuite = dummy_makeSuite
     PortalTestCase.setUp = dummy_setUp
     PortalTestCase.tearDown = dummy_tearDown
 
-  suite = ERP5TypeTestLoader().loadTestsFromNames(test_list)
+  suite = ERP5TypeTestLoader(save=save).loadTestsFromNames(test_list)
   return TestRunner().run(suite)
 
 def usage(stream, msg=None):
