@@ -68,8 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Using PAS removes the need of this script\n
-if state_change.getPortal().acl_users.meta_type == \'Pluggable Auth Service\':\n
+            <value> <string>portal = state_change.getPortal()\n
+\n
+# invalidate the cache for security\n
+portal.portal_caches.clearCache(cache_factory_list=(\'erp5_content_short\',))\n
+\n
+# Using PAS removes the need of anything else in this script\n
+if portal.acl_users.meta_type == \'Pluggable Auth Service\':\n
   return\n
 \n
 # Get the assignment object and its parent\n
@@ -137,6 +142,7 @@ if person_security_script is not None:\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
+                            <string>portal</string>
                             <string>_getitem_</string>
                             <string>assignment_object</string>
                             <string>person_object</string>
