@@ -1,3 +1,4 @@
+Address | change_function
 Address | view
 Agent Privilege | view
 Agent | download
@@ -6,6 +7,7 @@ Agent | signature
 Agent | view
 Assignment | view
 Bank Account | view
+Career | change_function
 Career | view
 Chat Address | view
 Credit Card | view
@@ -13,10 +15,13 @@ Currency Exchange Line | view
 Currency Module | module_view
 Currency Module | view
 Currency | view
+Email | change_function
 Email | view
+Fax | change_function
 Fax | view
 File | download
 File | view
+Image | change_function
 Image | download
 Image | fullsize_view
 Image | view
@@ -41,6 +46,7 @@ Person | view
 Query Module | module_view
 Query Module | view
 Query | view
+Telephone | change_function
 Telephone | view
 portal_actions | jump_query
 portal_actions | post_query
