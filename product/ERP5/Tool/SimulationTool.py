@@ -364,7 +364,8 @@ class SimulationTool(BaseTool):
         return self._generateSQLKeywordDictFromKeywordDict(table=table,
                  sql_kw=sql_kw, new_kw=new_kw)
 
-    def _generateSQLKeywordDictFromKeywordDict(self, table='stock', sql_kw={}, new_kw={}):
+    def _generateSQLKeywordDictFromKeywordDict(self, table='stock', sql_kw={},
+                                               new_kw={}):
         sql_kw = sql_kw.copy()
         new_kw = new_kw.copy()
         # Some columns cannot be found automatically, prepend table name to
@@ -379,8 +380,12 @@ class SimulationTool(BaseTool):
         for key, value in column_value_dict.iteritems():
           new_kw['%s.%s' % (table, key)] = value
         # Related keys
-        related_key_dict = new_kw.pop('related_key_dict', {})
-        for key, value in related_key_dict.iteritems():
+        # First, the passthrough (acts as default values)
+        for key, value in new_kw.pop('related_key_dict_passthrough', {})\
+            .iteritems():
+          new_kw[key] = value
+        # Second, calculated values
+        for key, value in new_kw.pop('related_key_dict', {}).iteritems():
           new_kw['%s_%s' % (table, key)] = value
         # Simulation states matched with input and output omission
         def joinQueriesIfNeeded(query_a, query_b, operator):
@@ -440,7 +445,8 @@ class SimulationTool(BaseTool):
         variation_text=None, sub_variation_text=None,
         variation_category=None,
         # uids
-        resource_uid=None, node_uid=None, section_uid=None,
+        resource_uid=None, node_uid=None, section_uid=None, payment_uid=None,
+        mirror_node_uid=None, mirror_section_uid=None,
         # omit input and output
         omit_input=0,
         omit_output=0,
@@ -454,6 +460,8 @@ class SimulationTool(BaseTool):
         group_by_variation=0,
         group_by_movement=0,
         group_by_resource=1,
+        # sort_on
+        sort_on=None,
         # keywords for related keys
         **kw):
       """
@@ -463,12 +471,14 @@ class SimulationTool(BaseTool):
         column. If 0, it also used the mirror_date column.
       """
       new_kw = {}
-      new_kw.update(kw)
       sql_kw = {}
 
       # input and output are used by getTrackingList
       sql_kw['input'] = input
       sql_kw['output'] = output
+      # Add sort_on parameter if defined
+      if sort_on is not None:
+        new_kw['sort_on'] = sort_on
 
       class DictMixIn(dict):
         def set(dictionary, key, value):
@@ -506,9 +516,12 @@ class SimulationTool(BaseTool):
         column_value_dict['mirror_date'] = {'query': [from_date], 'range': 'nlt'}
 
       column_value_dict.set('resource_uid', resource_uid)
+      column_value_dict.set('payment_uid', payment_uid)
       if column_value_dict.set('section_uid', section_uid):
         sql_kw['section_filtered'] = 1
       column_value_dict.set('node_uid', node_uid)
+      column_value_dict.set('mirror_node_uid', mirror_node_uid)
+      column_value_dict.set('mirror_section_uid', mirror_section_uid)
       column_value_dict.setUIDList('resource_uid', resource)
       column_value_dict.setUIDList('aggregate_uid', item)
       column_value_dict.setUIDList('node_uid', node)
@@ -547,6 +560,7 @@ class SimulationTool(BaseTool):
         mirror_section_category_strict_membership)
       
       new_kw['related_key_dict'] = related_key_dict.copy()
+      new_kw['related_key_dict_passthrough'] = kw
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
