@@ -74,13 +74,16 @@ N_ = context.Base_translateString\n
 person = context\n
 career_list = []\n
 \n
-default_career = getattr(person, \'default_career\', None)\n
-\n
+default_career = None\n
+if \'default_career\' in person.objectIds():\n
+  default_career = person[\'default_career\']\n
 \n
 if default_career is None:\n
   # No default career.\n
   message = N_(\'Current career must exist.\')\n
-  return context.Base_redirect(form_id=\'Person_viewCareer\',\n
+  return context.Base_redirect(form_id=form_id,\n
+                               selection_name=selection_name,\n
+                               selection_index=selection_index,\n
                                keep_items={\'portal_status_message\': message})\n
 else:\n
   # Copy and paste the default career.\n
@@ -90,7 +93,9 @@ else:\n
     default_career.setId(new_id)\n
   except ActivityPendingError, error:\n
     message = N_("%s" % error)\n
-    return context.Base_redirect(form_id=\'Person_viewCareer\',\n
+    return context.Base_redirect(form_id=form_id,\n
+                                 selection_name=selection_name,\n
+                                 selection_index=selection_index,\n
                                  keep_items={\'portal_status_message\': message})\n
 \n
   new_start_date = default_career.getStopDate()\n
@@ -106,7 +111,9 @@ else:\n
     stop_date=None)\n
 \n
   message = N_(\'Last career step terminated. New career step added.\')\n
-  return context.Base_redirect(form_id=\'Person_viewCareer\',\n
+  return context.Base_redirect(form_id=form_id,\n
+                               selection_name=selection_name,\n
+                               selection_index=selection_index,\n
                                keep_items={\'portal_status_message\': message})\n
 </string> </value>
         </item>
@@ -130,7 +137,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>selection_name=\'\', selection_index=\'0\', form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -150,12 +157,15 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>selection_name</string>
+                            <string>selection_index</string>
+                            <string>form_id</string>
                             <string>Products.CMFActivity.Errors</string>
                             <string>ActivityPendingError</string>
                             <string>_getattr_</string>
@@ -163,16 +173,16 @@ else:\n
                             <string>N_</string>
                             <string>person</string>
                             <string>career_list</string>
-                            <string>getattr</string>
                             <string>None</string>
                             <string>default_career</string>
+                            <string>_getitem_</string>
                             <string>message</string>
                             <string>new_id</string>
                             <string>error</string>
                             <string>new_start_date</string>
                             <string>cb_data</string>
                             <string>copied</string>
-                            <string>_getitem_</string>
+                            <string>getattr</string>
                             <string>new_default_career</string>
                           </tuple>
                         </value>
@@ -185,7 +195,11 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string></string>
+                <string>0</string>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>

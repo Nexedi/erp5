@@ -123,8 +123,8 @@
                           <string>Career End Date</string>
                         </tuple>
                         <tuple>
-                          <string>Base_getTranslatedId</string>
-                          <string>Career function</string>
+                          <string>translated_id</string>
+                          <string>Career Function</string>
                         </tuple>
                         <tuple>
                           <string>state_title</string>
