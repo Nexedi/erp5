@@ -93,6 +93,11 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
                         id=movement_id,
                         activate_kw=activate_kw
         )
+      # We shouldn't modify frozen movements
+      elif movement.isFrozen():
+        # FIXME: this is not perfect, instead of just skipping this one, we
+        # should generate a compensation movement
+        continue
       # Update movement properties
       movement.edit(**(movement_dict[movement_id]))
 
