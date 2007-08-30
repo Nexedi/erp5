@@ -196,6 +196,18 @@ class TestUserManagement(ERP5TypeTestCase):
     self.assertNotEquals(person_module[changed['new_id']].getReference(),
                          person_module[changed['id']].getReference())
   
+  def test_OpenningAssignmentClearCache(self):
+    """Openning an assignment for a person clear the cache automatically."""
+    pers = self._makePerson(reference='the_user', password='secret',
+                            open_assignment=0)
+    self._assertUserDoesNotExists('the_user', 'secret')
+    assi = pers.newContent(portal_type='Assignment')
+    assi.open()
+    self._assertUserExists('the_user', 'secret')
+    assi.close()
+    self._assertUserDoesNotExists('the_user', 'secret')
+
+
 class TestLocalRoleManagement(ERP5TypeTestCase):
   """Tests Local Role Management with ERP5Security.
 
