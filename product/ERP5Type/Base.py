@@ -150,7 +150,9 @@ class WorkflowMethod(Method):
       if valid_transition_list:
         valid_invoke_once_item_list.append((wf_id, valid_transition_list))
     candidate_transition_item_list = valid_invoke_once_item_list + \
-                                      self._invoke_once.get(portal_type, {}).items()
+                           self._invoke_always.get(portal_type, {}).items()
+
+    #LOG('candidate_transition_item_list %s' % self._id, 0, str(candidate_transition_item_list))
 
     # Try to return immediately if there are no transition to invoke
     if not candidate_transition_item_list:
@@ -169,6 +171,8 @@ class WorkflowMethod(Method):
                       if candidate_workflow.isWorkflowMethodSupported(instance, transition_id)]
       if valid_list:
         valid_transition_item_list.append((wf_id, valid_list))
+
+    #LOG('valid_transition_item_list %s' % self._id, 0, str(valid_transition_item_list))
 
     # Call whatever must be called before changing states
     for wf_id, transition_list in candidate_transition_item_list:
