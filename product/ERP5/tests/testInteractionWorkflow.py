@@ -95,8 +95,8 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     wf.scripts.manage_addProduct['PythonScripts']\
                   .manage_addPythonScript(id='afterEdit')
     self.script = wf.scripts['afterEdit']
-    wf.interactions.addInteraction(id='edit')
-    self.interaction = wf.interactions['edit']
+    wf.interactions.addInteraction(id='edit_interaction')
+    self.interaction = wf.interactions['edit_interaction']
     self.getWorkflowTool().setChainForPortalTypes(
                   [self.portal_type],'test_workflow')
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
@@ -182,7 +182,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     body = "context = sci.object\n" +\
            "context.setDescription('toto')"
     params = 'sci,**kw'
-    self.script.ZPythonScript_edit(params,body)
+    self.script.ZPythonScript_edit(params, body)
     self.createData()
     organisation = self.organisation
     organisation.setDescription('bad')
