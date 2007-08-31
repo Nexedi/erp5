@@ -1,4 +1,6 @@
 edit_workflow
+order_movement_simulation_interaction_workflow
+order_simulation_interaction_workflow
 preference_workflow
 rule_interaction_workflow
 simulation_movement_interaction_workflow
