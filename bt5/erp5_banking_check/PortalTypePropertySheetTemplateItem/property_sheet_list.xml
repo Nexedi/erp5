@@ -15,19 +15,13 @@
   <item>Amount</item>
   <item>Price</item>
  </portal_type>
- <portal_type id="Checkbook Reception Line">
-  <item>Checkbook</item>
- </portal_type>
- <portal_type id="Checkbook Reception Module">
-  <item>Checkbook</item>
- </portal_type>
  <portal_type id="Checkbook Usual Cash Transfer">
-  <item>Amount</item>
   <item>Price</item>
+  <item>Amount</item>
  </portal_type>
  <portal_type id="Checkbook Vault Transfer">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Stop Payment">
   <item>StopPayment</item>

@@ -1,6 +1,5 @@
 Check Deposit | site
 Check Payment | aggregate_resource
-Check Payment | source_trade
 Checkbook Delivery Line | check_amount
 Checkbook Delivery Line | check_type
 Checkbook Delivery Line | currency_exchange_type
