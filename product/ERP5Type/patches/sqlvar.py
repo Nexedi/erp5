@@ -69,9 +69,9 @@ def SQLVar_render(self, md):
                     'Invalid datetime value for <em>%s</em>: %r' % (name, v))
 
         try:
-            if hasattr(v, 'ISO'):
+            if getattr(v, 'ISO', None) is not None:
                 v=v.ISO()
-            elif hasattr(v, 'strftime'):
+            elif getattr(v, 'strftime', None) is not None:
                 v=v.strftime('%Y-%m-%d %H:%M:%S')
             else: 
                 v=str(v)
