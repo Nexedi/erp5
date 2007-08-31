@@ -46,7 +46,7 @@ def SQLVar_render(self, md):
             if not v and args.has_key('optional') and args['optional']:
                 return 'null'
             raise ValueError, (
-                'Invalid integer value for <em>%s</em>' % name)
+                'Invalid integer value for <em>%s</em>: %r' % (name, v))
     elif t=='float':
         try:
             if type(v) is StringType:
@@ -58,7 +58,7 @@ def SQLVar_render(self, md):
             if not v and args.has_key('optional') and args['optional']:
                 return 'null'
             raise ValueError, (
-                'Invalid floating-point value for <em>%s</em>' % name)
+                'Invalid floating-point value for <em>%s</em>: %r' % (name, v))
     # Patched by yo
     elif t=='datetime':
         if v is None:
@@ -90,7 +90,7 @@ def SQLVar_render(self, md):
                 return 'null'
             else:
                 raise ValueError, (
-                    'Invalid string value for <em>%s</em>' % name)
+                    'Invalid string value for <em>%s</em>: %r' % (name, v))
         # End of patch
 
         if not isinstance(v, (str, unicode)):
