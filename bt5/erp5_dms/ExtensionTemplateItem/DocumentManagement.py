@@ -93,7 +93,7 @@ def getLastWorkflowDate(self, state_name='simulation_state', state=('released','
   if not hasattr(self, 'workflow_history'):
     return None
   for name,wflow in self.workflow_history.items():
-    if len(wflow) == 0: continue # empty history
+    if wflow is None or len(wflow) == 0: continue # empty history
     if wflow[0].get(state_name) is None: continue # not the right one
     for i in range(len(wflow)):
       ch = wflow[-1-i]
