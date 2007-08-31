@@ -154,7 +154,7 @@ class TextContent:
     hdrlist = []
     for p in self.getPropertyMap():
       pid = p.get('base_id', p['id'])
-      if pid not in ('text_content'):
+      if pid not in ('text_content',):
         hdrlist.append((pid, self.getProperty(p['id'])))
     return hdrlist
 
