@@ -134,7 +134,8 @@
       <style:paragraph-properties fo:text-align=\'center\' fo:margin-left=\'0cm\'/>\n
     </style:style>\n
   </office:automatic-styles>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>

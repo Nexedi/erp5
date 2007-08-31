@@ -99,14 +99,15 @@
                 </table:table-header-rows>\n
               </tal:block>\n
               <tal:block metal:fill-slot=\'table_bottom_line\'>\n
-                <tal:block tal:replace="nothing"> don\'t write bottom line in case of this form_list, Page Format of OOo works instead of it.</tal:block>\n
+                <tal:block tal:replace="nothing"> don\'t write bottom line in case of this form_list, \'Page Format\' of OOo works instead of it.</tal:block>\n
               </tal:block>\n
             </tal:block>\n
         </tal:block>\n
       </table:table>\n
     </office:spreadsheet>\n
   </office:body>\n
-</office:document-content>
+</office:document-content>\n
+
 
 ]]></string> </value>
         </item>

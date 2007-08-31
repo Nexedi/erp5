@@ -60,8 +60,6 @@
   <office:body metal:define-macro="form_layout">\n
   <office:spreadsheet>\n
 \n
-    ** ##### listbox: must define the field listbox before calling this macro ! ##### **\n
-\n
     <tal:block metal:define-macro="listbox">\n
       <tal:block tal:define="listboxline_list python: listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
                selection_name python: listbox.get_value(\'selection_name\', REQUEST=request);\n

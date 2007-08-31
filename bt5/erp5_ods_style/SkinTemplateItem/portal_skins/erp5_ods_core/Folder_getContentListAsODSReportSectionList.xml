@@ -90,7 +90,7 @@ for doc in portal.portal_selections.callSelectionFor(selection_name, context=for
     action_title= action[\'title\']    \n
 \n
     if action_title != \'History\' and action_title != \'Metadata\':\n
-      report_section_list.append(ReportSection(path=doc.getPath(), form_id=form_id, level=2, title=\'%s - %s\' % (title, translate(action_title))))\n
+      report_section_list.append(ReportSection(path=doc.getPath(), form_id=form_id, level=2, title=\'%s-%s\' % (title, translate(action_title))))\n
 \n
 return report_section_list\n
 </string> </value>

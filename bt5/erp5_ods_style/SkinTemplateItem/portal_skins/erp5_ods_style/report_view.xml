@@ -59,9 +59,7 @@
   <office:body>\n
     <office:spreadsheet>\n
 \n
-      <tal:block tal:define="report_item_list python:report_method();\n
-                 field_errors python: request.get(\'field_errors,{}\');\n
-                 dummy python: request.set(\'here\', here);global sheet_per_reportsection python: int(request.get(\'sheet_per_report_section\', 0));global column_len python:3">\n
+      <tal:block tal:define="report_item_list python:report_method(); field_errors python: request.get(\'field_errors,{}\'); dummy python: request.set(\'here\', here);global sheet_per_reportsection python: int(request.get(\'sheet_per_report_section\', 0));global column_len python:3">\n
 \n
       <tal:block tal:define="portal_object here/portal_url/getPortalObject"> \n
         <tal:block tal:condition="python: sheet_per_reportsection == 0">\n
@@ -73,17 +71,17 @@
                     <tal:block tal:condition="report_item/getTitle" tal:define="level report_item/getLevel">\n
                       <tal:block  tal:condition="python: level == 1">\n
                         <table:table-cell table:style-name="report-title" tal:attributes="table:number-columns-spanned python:column_len"  office:value-type=\'string\' table:number-rows-spanned=\'1\'>\n
-                          <text:p tal:content="report_item/getTitle" i18n:translate="" i18n:domain="ui"></text:p>\n
+                          <text:p tal:content="report_item/getTitle" ></text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: level == 2">\n
                         <table:table-cell table:style-name="report-title2" tal:attributes="table:number-columns-spanned python:column_len"  office:value-type=\'string\' table:number-rows-spanned=\'1\'>\n
-                          <text:p tal:content="report_item/getTitle" i18n:translate="" i18n:domain="ui"></text:p>\n
+                          <text:p tal:content="report_item/getTitle" ></text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: level == 3">\n
                         <table:table-cell table:style-name="report-title3" tal:attributes="table:number-columns-spanned python:column_len"  office:value-type=\'string\' table:number-rows-spanned=\'1\'>\n
-                          <text:p tal:content="report_item/getTitle" i18n:translate="" i18n:domain="ui"></text:p>\n
+                          <text:p tal:content="report_item/getTitle"></text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                     </tal:block>\n
@@ -110,7 +108,7 @@
           <tal:block tal:condition="python: sheet_per_reportsection == 1">\n
             <tal:block tal:repeat="report_item python: report_item_list">\n
               <tal:block tal:condition="python: report_item.getFormId()">\n
-                <table:table tal:attributes="table:name report_item/getTitle">\n
+                <table:table tal:attributes="table:name python: unicode(report_item.getTitle(), \'utf-8\')">\n
                   <tal:block metal:use-macro="here/report_view/macros/make_report_item_table"/>\n
                 </table:table>\n
               </tal:block>\n

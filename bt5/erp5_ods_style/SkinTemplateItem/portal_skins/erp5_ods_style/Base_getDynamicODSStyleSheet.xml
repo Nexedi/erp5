@@ -75,13 +75,17 @@ request = context.REQUEST\n
 landscape = int(request.get(\'landscape\', 0))\n
 if context.pt != \'form_list\':\n
   if landscape == 1:\n
+    #normal style sheet with preview of landscape\n
     return context.Base_getODSStyleSheetLandscape\n
   else:\n
+    #preview portrait(Default) \n
     return context.Base_getODSStyleSheet\n
 else:\n
   if landscape == 1:\n
+    #style sheet for list, there is under line in preview\n
     return context.Base_getODSStyleSheetListLandscape\n
   else:\n
+    #(Default)\n
     return context.Base_getODSStyleSheetListPortrait\n
 </string> </value>
         </item>
