@@ -181,6 +181,7 @@ class ERP5Site(FolderMixIn, CMFSite):
   of a new ERP5.  It should not assist in the functionality at all.
   """
   meta_type = 'ERP5 Site'
+  portal_type = 'ERP5 Site'
   constructors = (('addERP5Site', manage_addERP5SiteForm), manage_addERP5Site, )
   uid = 0
   last_id = 0
@@ -241,6 +242,11 @@ class ERP5Site(FolderMixIn, CMFSite):
                             'getPortalObject')
   def getPortalObject(self):
     return self
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalType')
+  def getPortalType(self):
+    return self.portal_type
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitle')
