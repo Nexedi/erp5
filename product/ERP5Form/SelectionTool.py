@@ -508,10 +508,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       if selection:
         method = self.unrestrictedTraverse(selection.method_path)
         selection_list = selection(method = method, context=self, REQUEST=REQUEST)
-        o = selection_list[0]
-        url = o.absolute_url()
+        if len(selection_list):
+          o = selection_list[0]
+          url = o.absolute_url()
+        else:
+          url = REQUEST.getURL()  
       else:
-        url = REQUEST.url
+        url = REQUEST.getURL()
       url = '%s/%s?selection_index=%s&selection_name=%s' % (url, form_id, 0, selection_name)
       REQUEST.RESPONSE.redirect(url)
 
@@ -526,10 +529,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       if selection:
         method = self.unrestrictedTraverse(selection.method_path)
         selection_list = selection(method = method, context=self, REQUEST=REQUEST)
-        o = selection_list[-1]
-        url = o.absolute_url()
+        if len(selection_list):
+          o = selection_list[-1]
+          url = o.absolute_url()
+        else:
+          url = REQUEST.getURL()
       else:
-        url = REQUEST.url
+        url = REQUEST.getURL()
       url = '%s/%s?selection_index=%s&selection_name=%s' % (url, form_id, -1, selection_name)
       REQUEST.RESPONSE.redirect(url)
 
@@ -544,10 +550,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       if selection:
         method = self.unrestrictedTraverse(selection.method_path)
         selection_list = selection(method = method, context=self, REQUEST=REQUEST)
-        o = selection_list[(int(selection_index) + 1) % len(selection_list)]
-        url = o.absolute_url()
+        if len(selectionçlist):
+          o = selection_list[(int(selection_index) + 1) % len(selection_list)]
+          url = o.absolute_url()
+        else:
+          url = REQUEST.getURL()
       else:
-        url = REQUEST.url
+        url = REQUEST.getURL()
       url = '%s/%s?selection_index=%s&selection_name=%s' % (url, form_id, int(selection_index) + 1, selection_name)
       REQUEST.RESPONSE.redirect(url)
 
@@ -562,10 +571,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       if selection:
         method = self.unrestrictedTraverse(selection.method_path)
         selection_list = selection(method = method, context=self, REQUEST=REQUEST)
-        o = selection_list[(int(selection_index) - 1) % len(selection_list)]
-        url = o.absolute_url()
+        if len(selection_list):
+          o = selection_list[(int(selection_index) - 1) % len(selection_list)]
+          url = o.absolute_url()
+        else:
+          url = REQUEST.getURL()
       else:
-        url = REQUEST.url
+        url = REQUEST.getURL()
       url = '%s/%s?selection_index=%s&selection_name=%s' % (url, form_id, int(selection_index) - 1, selection_name)
       REQUEST.RESPONSE.redirect(url)
 
