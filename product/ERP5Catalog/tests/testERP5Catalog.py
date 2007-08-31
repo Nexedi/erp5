@@ -1801,7 +1801,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                'format':'1 234.12',
                                'type':'float'}}
     sql_src = self.getCatalogTool()(src__=1,**catalog_kw)
-    self.failUnless('TRUNCATE(catalog.uid,2) = 2567.54' in sql_src)
+    self.failUnless("TRUNCATE(catalog.uid,2) = '2567.54'" in sql_src)
 
   def test_SearchOnOwner(self):
     # owner= can be used a search key in the catalog to have all documents for
