@@ -124,37 +124,55 @@ class WorkflowMethod(Method):
       # should ne executed. - XXX
       return apply(self._m, (instance,) + args, kw) 
 
-    call_method = 0 # By default, this method was never called
-    if self._invoke_once:
-      # Check if this method has already been called in this transaction
-      # (only check this if we use once only workflow methods)
-      call_method_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__', self._id, instance.getPhysicalPath())
-      transactional_variable = getTransactionalVariable(instance)
-      try:
-        call_method = transactional_variable[call_method_key]
-      except KeyError:
-        transactional_variable[call_method_key] = 1
-
-    if call_method and not self._invoke_always:
-      # Try to return immediately if there are no invoke always workflow methods
-      return apply(self.__dict__['_m'], (instance,) + args, kw)
-
-    # Invoke transitions on appropriate workflow
-    portal_type = instance.portal_type # Access by attribute to prevent recursion
-    if call_method:
-      candidate_transition_item_list = self._invoke_always.get(portal_type, {}).items()
-    else:
-      candidate_transition_item_list = self._invoke_always.get(portal_type, {}).items() + \
-                                       self._invoke_once.get(portal_type, {}).items()
-
     # New implementation does not use any longer wrapWorkflowMethod
+    # but directly calls the workflow methods
     wf = getToolByName(instance, 'portal_workflow', None)
 
-    # Call whatever must be called before changing states
-    after_invoke_once = {}
+    # Build a list of transitions which may need to be invoked
+    instance_path = instance.getPhysicalPath()
+    portal_type = instance.portal_type
+    transactional_variable = getTransactionalVariable(instance)
+    invoke_once_item_list = self._invoke_once.get(portal_type, {}).items()
+    valid_invoke_once_item_list = []
+    # Only keep those transitions which were never invoked
+    for wf_id, transition_list in invoke_once_item_list:
+      valid_transition_list = []
+      for transition_id in transition_list:
+        once_transition_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__',
+                                wf_id, transition_id, instance_path)
+        try:
+          already_called_transition = transactional_variable[once_transition_key]
+        except KeyError:
+          already_called_transition = 0
+          transactional_variable[once_transition_key] = 1
+        if not already_called_transition:
+          valid_transition_list.append(transition_id)
+      if valid_transition_list:
+        valid_invoke_once_item_list.append((wf_id, valid_transition_list))
+    candidate_transition_item_list = valid_invoke_once_item_list + \
+                                      self._invoke_once.get(portal_type, {}).items()
+
+    # Try to return immediately if there are no transition to invoke
+    if not candidate_transition_item_list:
+      return apply(self.__dict__['_m'], (instance,) + args, kw)
+
+    # Prepare a list of transitions which should be invoked
+    #   this list is based on the results of isWorkflowMethodSupported
+    #   XXX - the behaviour of isWorkflowMethodSupported should be extended
+    #         some day so that a workflow method raises an exception
+    #         when it is invoked from a workflow state which does 
+    #         not support it or whenever guards reject it
+    valid_transition_item_list = []
     for wf_id, transition_list in candidate_transition_item_list:
-      after_invoke_once[wf_id] = wf[wf_id].notifyBefore(instance, self._id,
-                          args=args, kw=kw, transition_list=transition_list)
+      candidate_workflow = wf[wf_id]
+      valid_list = [transition_id for transition_id in transition_list
+                      if candidate_workflow.isWorkflowMethodSupported(instance, transition_id)]
+      if valid_list:
+        valid_transition_item_list.append((wf_id, valid_list))
+
+    # Call whatever must be called before changing states
+    for wf_id, transition_list in candidate_transition_item_list:
+       wf[wf_id].notifyBefore(instance, self._id, args=args, kw=kw, transition_list=transition_list)
 
     # Compute expected result
     result = apply(self.__dict__['_m'], (instance,) + args, kw)
@@ -172,11 +190,11 @@ class WorkflowMethod(Method):
       else:
         if getattr(aq_base(instance), 'reindexObject', None) is not None:
           instance.reindexObject()
-        
+
     # Call whatever must be called after changing states
     for wf_id, transition_list in candidate_transition_item_list:
       wf[wf_id].notifySuccess(instance, self._id, result, args=args, kw=kw, transition_list=transition_list)
-      
+
     # Return result finally
     return result
 
@@ -184,14 +202,16 @@ class WorkflowMethod(Method):
     """
       Transitions registered as always will be invoked always
     """
-    self._invoke_always.setdefault(portal_type, {}).setdefault(workflow_id, []).append(transition_id)
+    transition_list = self._invoke_always.setdefault(portal_type, {}).setdefault(workflow_id, [])
+    if transition_id not in transition_list: transition_list.append(transition_id)
 
   def registerTransitionOncePerTransaction(self, portal_type, workflow_id, transition_id):
     """
       Transitions registered as one per transactions will be invoked 
       only once per transaction
     """
-    self._invoke_once.setdefault(portal_type, {}).setdefault(workflow_id, []).append(transition_id)
+    transition_list = self._invoke_once.setdefault(portal_type, {}).setdefault(workflow_id, [])
+    if transition_id not in transition_list: transition_list.append(transition_id)
 
 class ActionMethod(Method):
 
@@ -506,7 +526,9 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder):
                     (method_id, str(work_method_holder)))
   # XXX This part is (more or less...) a copy and paste
   # We need to run this part twice in order to handle interactions of interactions
-  for wf in portal_workflow.getWorkflowsFor(self) * 2:
+  # ex. an interaction workflow creates a workflow method which matches
+  # the regexp of another interaction workflow
+  for wf in portal_workflow.getWorkflowsFor(self) * 2: # This is really necesary
     wf_id = wf.id
     if wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
       for tr_id in wf.interactions.objectIds():
