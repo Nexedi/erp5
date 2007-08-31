@@ -550,7 +550,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       if selection:
         method = self.unrestrictedTraverse(selection.method_path)
         selection_list = selection(method = method, context=self, REQUEST=REQUEST)
-        if len(selectionçlist):
+        if len(selection_list):
           o = selection_list[(int(selection_index) + 1) % len(selection_list)]
           url = o.absolute_url()
         else:
