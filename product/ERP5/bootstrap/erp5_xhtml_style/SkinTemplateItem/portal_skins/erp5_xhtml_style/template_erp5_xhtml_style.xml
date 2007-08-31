@@ -124,7 +124,7 @@ IDEAS:\n
   </head>\n
   <body>\n
     <form id="main_form"\n
-          tal:attributes="enctype form/Form_getEnctype | nothing;\n
+          tal:attributes="enctype form/Form_getEnctype | enctype | nothing;\n
                           action url;\n
                           method python:str(path(\'form/method | string:post\')).lower()">\n
       <fieldset id="hidden_fieldset">\n
