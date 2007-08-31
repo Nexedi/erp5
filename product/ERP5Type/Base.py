@@ -175,14 +175,14 @@ class WorkflowMethod(Method):
     #LOG('valid_transition_item_list %s' % self._id, 0, str(valid_transition_item_list))
 
     # Call whatever must be called before changing states
-    for wf_id, transition_list in candidate_transition_item_list:
+    for wf_id, transition_list in valid_transition_item_list:
        wf[wf_id].notifyBefore(instance, self._id, args=args, kw=kw, transition_list=transition_list)
 
     # Compute expected result
     result = apply(self.__dict__['_m'], (instance,) + args, kw)
 
     # Change the state of statefull workflows
-    for wf_id, transition_list in candidate_transition_item_list:
+    for wf_id, transition_list in valid_transition_item_list:
       try:
         wf[wf_id].notifyWorkflowMethod(instance, self._id, args=args, kw=kw, transition_list=transition_list)
       except ObjectDeleted:
@@ -196,7 +196,7 @@ class WorkflowMethod(Method):
           instance.reindexObject()
 
     # Call whatever must be called after changing states
-    for wf_id, transition_list in candidate_transition_item_list:
+    for wf_id, transition_list in valid_transition_item_list:
       wf[wf_id].notifySuccess(instance, self._id, result, args=args, kw=kw, transition_list=transition_list)
 
     # Return result finally
