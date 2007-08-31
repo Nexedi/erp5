@@ -701,6 +701,11 @@ def setupERP5Site( business_template_list=(),
                           % title) # run_unit_test depends on this string.
       raise
 
+from unittest import _makeLoader, TestSuite
+
+def dummy_makeSuite(testCaseClass, prefix='dummy_test', sortUsing=cmp, suiteClass=TestSuite):
+  return _makeLoader(prefix, sortUsing, suiteClass).loadTestsFromTestCase(testCaseClass)
+
 def dummy_setUp(self):
   '''
   This one is overloaded so that it dos not execute beforeSetUp and afterSetUp

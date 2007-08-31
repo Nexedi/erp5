@@ -232,12 +232,15 @@ def runUnitTestList(test_list) :
 
   save = 0
   # pass save=1 to test loader to skip all tests in save mode
-  # and monkeypatch PortalTestCase.setUp to skip beforeSetUp and afterSetUp
+  # and monkeypatch PortalTestCase.setUp to skip beforeSetUp and afterSetUp.
+  # Also patch unittest.makeSuite, as it's used in test_suite function in 
+  # test cases.
   if os.environ.get('erp5_save_data_fs'):
     from Products.ERP5Type.tests.ERP5TypeTestCase import \
-                             dummy_setUp, dummy_tearDown
+                  dummy_makeSuite, dummy_setUp, dummy_tearDown
     save = 1
     from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+    unittest.makeSuite = dummy_makeSuite
     PortalTestCase.setUp = dummy_setUp
     PortalTestCase.tearDown = dummy_tearDown
 
