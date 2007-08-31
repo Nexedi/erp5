@@ -152,6 +152,17 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>stock_table_id</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string>stock</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>where_expression</string> </key>
                                 <value>
                                   <dictionary/>
@@ -181,6 +192,7 @@
                             <string>precision</string>
                             <string>inventory_list</string>
                             <string>statistic</string>
+                            <string>stock_table_id</string>
                           </list>
                         </value>
                     </item>
@@ -213,7 +225,8 @@ input_simulation_state:list\r\n
 output_simulation_state:list\r\n
 precision\r\n
 inventory_list\r\n
-statistic</string> </value>
+statistic\r\n
+stock_table_id=stock</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -255,13 +268,13 @@ statistic</string> </value>
 
 SELECT\n
 <dtml-if expr="precision is not None">\n
-  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS inventory,\n
-  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
-  SUM(ROUND(stock.total_price, <dtml-var precision>)) AS total_price\n
+  SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS inventory,\n
+  SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS total_quantity,\n
+  SUM(ROUND(<dtml-var stock_table_id>.total_price, <dtml-var precision>)) AS total_price\n
 <dtml-else>\n
-  SUM(stock.quantity) AS inventory,\n
-  SUM(stock.quantity) AS total_quantity,\n
-  SUM(stock.total_price) AS total_price\n
+  SUM(<dtml-var stock_table_id>.quantity) AS inventory,\n
+  SUM(<dtml-var stock_table_id>.quantity) AS total_quantity,\n
+  SUM(<dtml-var stock_table_id>.total_price) AS total_price\n
 </dtml-if>\n
 <dtml-if inventory_list>\n
   ,node.title AS node_title,\n
@@ -270,15 +283,15 @@ SELECT\n
   section.relative_url AS section_relative_url,\n
   resource.title AS resource_title,\n
   resource.relative_url AS resource_relative_url,\n
-  stock.variation_text AS variation_text,\n
-  stock.sub_variation_text AS sub_variation_text,\n
-  stock.resource_uid AS resource_uid,\n
-  stock.uid AS stock_uid,\n
-  stock.date as date,\n
-  stock.simulation_state as simulation_state,\n
-  stock.mirror_section_uid as mirror_section_uid,\n
-  stock.payment_uid as payment_uid,\n
-  stock.mirror_node_uid as mirror_node_uid,\n
+  <dtml-var stock_table_id>.variation_text AS variation_text,\n
+  <dtml-var stock_table_id>.sub_variation_text AS sub_variation_text,\n
+  <dtml-var stock_table_id>.resource_uid AS resource_uid,\n
+  <dtml-var stock_table_id>.uid AS stock_uid,\n
+  <dtml-var stock_table_id>.date as date,\n
+  <dtml-var stock_table_id>.simulation_state as simulation_state,\n
+  <dtml-var stock_table_id>.mirror_section_uid as mirror_section_uid,\n
+  <dtml-var stock_table_id>.payment_uid as payment_uid,\n
+  <dtml-var stock_table_id>.mirror_node_uid as mirror_node_uid,\n
   catalog.path as path\n
 </dtml-if>\n
 <dtml-if statistic>\n
@@ -289,19 +302,19 @@ SELECT\n
   COUNT(DISTINCT section.relative_url) AS section_relative_url,\n
   COUNT(DISTINCT resource.title) AS resource_title,\n
   COUNT(DISTINCT resource.relative_url) AS resource_relative_url,\n
-  COUNT(DISTINCT stock.variation_text) AS variation_text,\n
-  MAX(stock.resource_uid) AS resource_uid,\n
-  COUNT(DISTINCT stock.uid) AS stock_uid,\n
-  MAX(stock.date) AS date\n
+  COUNT(DISTINCT <dtml-var stock_table_id>.variation_text) AS variation_text,\n
+  MAX(<dtml-var stock_table_id>.resource_uid) AS resource_uid,\n
+  COUNT(DISTINCT <dtml-var stock_table_id>.uid) AS stock_uid,\n
+  MAX(<dtml-var stock_table_id>.date) AS date\n
 </dtml-if>\n
 \n
 \n
 FROM\n
-  stock\n
+  <dtml-var stock_table_id>\n
   <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
-       JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+       JOIN catalog AS section ON (section.uid = <dtml-var stock_table_id>.section_uid)\n
 <dtml-in prefix="table" expr="from_table_list"> \n
-  <dtml-if expr="table_key != \'stock\'">\n
+  <dtml-if expr="table_key != stock_table_id">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
@@ -315,15 +328,15 @@ WHERE\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 \n
-  AND node.uid = stock.node_uid\n
-  AND resource.uid = stock.resource_uid\n
+  AND node.uid = <dtml-var stock_table_id>.node_uid\n
+  AND resource.uid = <dtml-var stock_table_id>.resource_uid\n
 \n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != \'Simulation Movement\'\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'stock\', join_column=\'node_uid\')">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=stock_table_id, join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
@@ -376,13 +389,13 @@ ORDER BY\n
 
 SELECT\n
 <dtml-if expr="precision is not None">\n
-  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS inventory,\n
-  SUM(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
-  SUM(ROUND(stock.total_price, <dtml-var precision>)) AS total_price\n
+  SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS inventory,\n
+  SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS total_quantity,\n
+  SUM(ROUND(<dtml-var stock_table_id>.total_price, <dtml-var precision>)) AS total_price\n
 <dtml-else>\n
-  SUM(stock.quantity) AS inventory,\n
-  SUM(stock.quantity) AS total_quantity,\n
-  SUM(stock.total_price) AS total_price\n
+  SUM(<dtml-var stock_table_id>.quantity) AS inventory,\n
+  SUM(<dtml-var stock_table_id>.quantity) AS total_quantity,\n
+  SUM(<dtml-var stock_table_id>.total_price) AS total_price\n
 </dtml-if>\n
 <dtml-if inventory_list>\n
   ,node.title AS node_title,\n
@@ -391,15 +404,15 @@ SELECT\n
   section.relative_url AS section_relative_url,\n
   resource.title AS resource_title,\n
   resource.relative_url AS resource_relative_url,\n
-  stock.variation_text AS variation_text,\n
-  stock.sub_variation_text AS sub_variation_text,\n
-  stock.resource_uid AS resource_uid,\n
-  stock.uid AS stock_uid,\n
-  stock.date as date,\n
-  stock.simulation_state as simulation_state,\n
-  stock.mirror_section_uid as mirror_section_uid,\n
-  stock.payment_uid as payment_uid,\n
-  stock.mirror_node_uid as mirror_node_uid,\n
+  <dtml-var stock_table_id>.variation_text AS variation_text,\n
+  <dtml-var stock_table_id>.sub_variation_text AS sub_variation_text,\n
+  <dtml-var stock_table_id>.resource_uid AS resource_uid,\n
+  <dtml-var stock_table_id>.uid AS stock_uid,\n
+  <dtml-var stock_table_id>.date as date,\n
+  <dtml-var stock_table_id>.simulation_state as simulation_state,\n
+  <dtml-var stock_table_id>.mirror_section_uid as mirror_section_uid,\n
+  <dtml-var stock_table_id>.payment_uid as payment_uid,\n
+  <dtml-var stock_table_id>.mirror_node_uid as mirror_node_uid,\n
   catalog.path as path\n
 </dtml-if>\n
 <dtml-if statistic>\n
@@ -410,19 +423,19 @@ SELECT\n
   COUNT(DISTINCT section.relative_url) AS section_relative_url,\n
   COUNT(DISTINCT resource.title) AS resource_title,\n
   COUNT(DISTINCT resource.relative_url) AS resource_relative_url,\n
-  COUNT(DISTINCT stock.variation_text) AS variation_text,\n
-  MAX(stock.resource_uid) AS resource_uid,\n
-  COUNT(DISTINCT stock.uid) AS stock_uid,\n
-  MAX(stock.date) AS date\n
+  COUNT(DISTINCT <dtml-var stock_table_id>.variation_text) AS variation_text,\n
+  MAX(<dtml-var stock_table_id>.resource_uid) AS resource_uid,\n
+  COUNT(DISTINCT <dtml-var stock_table_id>.uid) AS stock_uid,\n
+  MAX(<dtml-var stock_table_id>.date) AS date\n
 </dtml-if>\n
 \n
 \n
 FROM\n
-  stock\n
+  <dtml-var stock_table_id>\n
   <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
-       JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+       JOIN catalog AS section ON (section.uid = <dtml-var stock_table_id>.section_uid)\n
 <dtml-in prefix="table" expr="from_table_list"> \n
-  <dtml-if expr="table_key != \'stock\'">\n
+  <dtml-if expr="table_key != stock_table_id">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
@@ -436,15 +449,15 @@ WHERE\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 \n
-  AND node.uid = stock.node_uid\n
-  AND resource.uid = stock.resource_uid\n
+  AND node.uid = <dtml-var stock_table_id>.node_uid\n
+  AND resource.uid = <dtml-var stock_table_id>.resource_uid\n
 \n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != \'Simulation Movement\'\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'stock\', join_column=\'node_uid\')">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=stock_table_id, join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
