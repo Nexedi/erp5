@@ -178,12 +178,11 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         NOTE: this method is not used in ERP5 because
         of transition_list approach
         '''
-        for t in self.interactions.values():
-            if t.trigger_type == TRIGGER_WORKFLOW_METHOD:
-                if method_id in t.method_id:
-                    if ((t.portal_type_filter is None or ob.getPortalType() in t.portal_type_filter)
-                      and self._checkTransitionGuard(t, ob)):
-                        return 1
+        tdef = self.interactions.get(method_id, None)
+        if (tdef is not None and
+          tdef.trigger_type == TRIGGER_WORKFLOW_METHOD and
+          self._checkTransitionGuard(tdef, ob)):
+          return 1
         return 0
 
 
