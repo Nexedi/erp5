@@ -76,7 +76,6 @@
   containing searched words as well highlighting the searched \n
   words in the text itself.\n
 """\n
-\n
 # convert object to text (if possible)\n
 document_text = \'\'\n
 if hasattr(context, \'asText\'):\n
@@ -90,7 +89,11 @@ argument_names = (\'advanced_search_text\', \n
                   \'SearchableText_any\',\n
                   \'SearchableText_all\', \n
                   \'SearchableText_phrase\',)\n
-params = context.portal_selections.getSelectionParamsFor(\'web_search_result_selection\')\n
+if selection is not None:\n
+  params = selection.getParams()\n
+else:\n
+  params = context.portal_selections.getSelectionParamsFor(\'web_search_result_selection\')\n
+\n
 params = [params.get(name, \'\') for name in argument_names]\n
 params = [(hasattr(par, \'sort\') and \'\'.join(par) or par) for par in params]\n
 search_string = \' \'.join(params)\n
@@ -146,7 +149,7 @@ return \' \'.join(map(str, found_text_fragments))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection</string> </value>
+            <value> <string>brain, selection=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -179,6 +182,7 @@ return \' \'.join(map(str, found_text_fragments))\n
                             <string>context</string>
                             <string>_getattr_</string>
                             <string>argument_names</string>
+                            <string>None</string>
                             <string>params</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -189,7 +193,6 @@ return \' \'.join(map(str, found_text_fragments))\n
                             <string>_getitem_</string>
                             <string>search_argument_list</string>
                             <string>search_words</string>
-                            <string>None</string>
                             <string>result</string>
                             <string>isinstance</string>
                             <string>str</string>
@@ -208,7 +211,9 @@ return \' \'.join(map(str, found_text_fragments))\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
