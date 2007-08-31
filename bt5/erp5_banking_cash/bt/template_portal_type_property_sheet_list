@@ -1,7 +1,5 @@
 Cash Balance Regulation | Amount
 Cash Balance Regulation | Price
-Cash Balance Regulation | Resource
-Cash Balance Regulation | Simulation
 Cash Exchange | Amount
 Cash Exchange | Price
 Cash Exchange | Resource
@@ -34,10 +32,8 @@ Incoming Cash To Currency Purchase Line | CashDeliveryLine
 Incoming Cash To Currency Sale Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
 Incoming Mutilated Banknote Line | CashDeliveryLine
-Internal Money Deposit | Arrow
-Internal Money Deposit | InternalMoney
+Internal Money Deposit | ItemAggregation
 Internal Money Deposit | Price
-Internal Money Deposit | Task
 Monetary Destruction Cell | CashDeliveryLine
 Monetary Destruction Line | CashDeliveryLine
 Monetary Destruction | Account
@@ -59,7 +55,6 @@ Monetary Survey | Task
 Money Deposit Rendering | Amount
 Money Deposit Rendering | Price
 Money Deposit | Arrow
-Money Deposit | ItemAggregation
 Money Deposit | Price
 Money Deposit | Task
 Mutilated Banknote | Amount

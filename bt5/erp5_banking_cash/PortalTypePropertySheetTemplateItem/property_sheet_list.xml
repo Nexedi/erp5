@@ -1,9 +1,7 @@
 <property_sheet_list>
  <portal_type id="Cash Balance Regulation">
-  <item>Resource</item>
   <item>Amount</item>
   <item>Price</item>
-  <item>Simulation</item>
  </portal_type>
  <portal_type id="Cash Exchange">
   <item>Price</item>
@@ -72,10 +70,8 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
-  <item>Arrow</item>
-  <item>Task</item>
   <item>Price</item>
-  <item>InternalMoney</item>
+  <item>ItemAggregation</item>
  </portal_type>
  <portal_type id="Monetary Destruction">
   <item>Amount</item>
@@ -119,7 +115,6 @@
   <item>Arrow</item>
   <item>Task</item>
   <item>Price</item>
-  <item>ItemAggregation</item>
  </portal_type>
  <portal_type id="Money Deposit Rendering">
   <item>Price</item>

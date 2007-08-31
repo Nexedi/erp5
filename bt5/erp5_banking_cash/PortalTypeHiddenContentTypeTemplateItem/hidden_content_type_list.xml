@@ -36,8 +36,6 @@
   <item>Container Cell</item>
  </portal_type>
  <portal_type id="Counter Rendering">
-  <item>Amount</item>
-  <item>Price</item>
   <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Destruction Survey">
@@ -91,9 +89,6 @@
   <item>Cash Container</item>
   <item>Cash Container Item</item>
   <item>Cash Delivery Line</item>
- </portal_type>
- <portal_type id="Monetary Reception Module">
-  <item>Monetary Reception</item>
  </portal_type>
  <portal_type id="Monetary Survey">
   <item>Cash Delivery Line</item>

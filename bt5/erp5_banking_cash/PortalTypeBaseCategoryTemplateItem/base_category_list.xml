@@ -24,9 +24,6 @@
  <portal_type id="Foreign Cash Reception">
   <item>currency_exchange_type</item>
  </portal_type>
- <portal_type id="Internal Money Deposit">
-  <item>external_software</item>
- </portal_type>
  <portal_type id="Monetary Destruction Cell">
   <item>variation</item>
  </portal_type>
@@ -35,7 +32,6 @@
  </portal_type>
  <portal_type id="Money Deposit">
   <item>source_trade</item>
-  <item>external_software</item>
  </portal_type>
  <portal_type id="Mutilated Banknote">
   <item>source_decision</item>

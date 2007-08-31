@@ -259,18 +259,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTotalPrice(deliveryLineType=\'Incoming Cash To Currency Sale Line\')</string> </value>
+            <value> <string>python: here.getTotalPrice(fast=0, deliveryLineType=\'Incoming Cash To Currency Sale Line\')</string> </value>
         </item>
       </dictionary>
     </pickle>

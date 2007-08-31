@@ -14,9 +14,7 @@ Cash To Currency Sale | Outgoing Cash To Currency Sale Line
 Classification Survey | Incoming Classification Survey Line
 Classification Survey | Outgoing Classification Survey Line
 Container Line | Container Cell
-Counter Rendering | Amount
 Counter Rendering | Cash Delivery Line
-Counter Rendering | Price
 Destruction Survey | Cash Delivery Line
 Foreign Cash Reception | Cash Delivery Line
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
@@ -34,7 +32,6 @@ Monetary Issue | Monetary Issue Container
 Monetary Issue | Monetary Issue Line
 Monetary Recall Line | Monetary Recall Cell
 Monetary Recall | Monetary Recall Line
-Monetary Reception Module | Monetary Reception
 Monetary Reception | Cash Container
 Monetary Reception | Cash Container Item
 Monetary Reception | Cash Delivery Line

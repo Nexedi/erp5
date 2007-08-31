@@ -192,9 +192,6 @@
  <portal_type id="Outgoing Mutilated Banknote Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
- <portal_type id="Outgoing Usual Cash Incident Line">
-  <item>Cash Delivery Cell</item>
- </portal_type>
  <portal_type id="Usual Cash Rendering">
   <item>Cash Delivery Line</item>
  </portal_type>
