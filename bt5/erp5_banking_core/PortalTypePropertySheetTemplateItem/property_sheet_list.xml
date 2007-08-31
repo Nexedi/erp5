@@ -45,7 +45,6 @@
   <item>Arrow</item>
   <item>VariationRange</item>
   <item>Task</item>
-  <item>Checkbook</item>
  </portal_type>
  <portal_type id="Checkbook Model">
   <item>CheckModel</item>

@@ -1,6 +1,5 @@
 Accounting Cancellation | site
 Accounting Date | site
-Banking Operation Line | aggregate_resource
 Cash Delivery Cell | variation
 Check Model Type Variation | check_type
 Check Operation Line | aggregate_resource
