@@ -84,7 +84,16 @@ from zLOG import LOG, INFO, ERROR, WARNING
 
 _MARKER=[]
 
+global registered_workflow_method_set
 wildcard_interaction_method_id_matcher = re.compile(".*[\+\*].*")
+workflow_method_registry = [] # XXX A set() would be better but would require a hash in WorkflowMethod class
+
+def resetRegisteredWorkflowMethod(portal_type=None):
+  """
+    TODO: unwrap workflow methos which were standard methods initially
+  """
+  for method in workflow_method_registry:
+    method.reset(portal_type=portal_type)
 
 class WorkflowMethod(Method):
 
@@ -208,6 +217,7 @@ class WorkflowMethod(Method):
     """
     transition_list = self._invoke_always.setdefault(portal_type, {}).setdefault(workflow_id, [])
     if transition_id not in transition_list: transition_list.append(transition_id)
+    self.register()
 
   def registerTransitionOncePerTransaction(self, portal_type, workflow_id, transition_id):
     """
@@ -216,6 +226,25 @@ class WorkflowMethod(Method):
     """
     transition_list = self._invoke_once.setdefault(portal_type, {}).setdefault(workflow_id, [])
     if transition_id not in transition_list: transition_list.append(transition_id)
+    self.register()
+
+  def register(self):
+    """
+      Registers the method so that _aq_reset may later reset it
+    """
+    global registered_workflow_method_set
+    workflow_method_registry.append(self)
+
+  def reset(self, portal_type=None):
+    """
+      Reset the list of registered interactions or transitions
+    """
+    if portal_type:
+      self._invoke_once[portal_type] = {}
+      self._invoke_always[portal_type] = {}
+    else:
+      self._invoke_once = {}
+      self._invoke_always = {}
 
 class ActionMethod(Method):
 
@@ -239,6 +268,9 @@ def _aq_reset():
   # Some method generations are based on portal methods, and portal methods cache results.
   # So it is safer to invalidate the cache.
   clearCache()
+
+  # Reset workflow methods so that they no longer invoke workflows
+  resetRegisteredWorkflowMethod()
 
 class PropertyHolder:
   isRADContent = 1
