@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_source_project_title</string> </value>
+            <value> <string>my_follow_up_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -383,7 +383,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>source_project</string> </value>
+                    <value> <string>follow_up</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -552,7 +552,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_getRelatedObjectTitle(\'source_project\')</string> </value>
+            <value> <string>python:here.Base_getRelatedObjectTitle(\'follow_up\')</string> </value>
         </item>
       </dictionary>
     </pickle>

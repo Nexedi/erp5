@@ -81,7 +81,7 @@ for person_object in object.getDestinationValueList(portal_type=\'Person\'):\n
     if assignment.getValidationState() == \'open\':\n
       category_dict = {}\n
       for base_category in base_category_list:\n
-        if base_category == \'source_project\':\n
+        if base_category == \'follow_up\':\n
           category_value = assignment.getDestinationProject()\n
         else:\n
           category_value = assignment.getProperty(base_category)\n

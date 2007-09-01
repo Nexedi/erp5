@@ -76,7 +76,7 @@ policies (defined with wildcard, like "personal/*" or "*/project") applies to th
 Classification has to have two levels, and first level is translated into a selected second-level\n
 classification.\n
 \n
-Some classifications require something more to apply (like */project requires source_project), but\n
+Some classifications require something more to apply (like */project requires follow_up), but\n
 this check can be skipped by setting membershiponly to True.\n
 """\n
 \n
@@ -99,7 +99,7 @@ pol = policy.split(\'/\')\n
 if not membershiponly:\n
   # project policies do not apply if we don\'t have source_project\n
   if pol[1] == \'project\':\n
-    if context.getSourceProject() == None:\n
+    if context.getFollowUp() == None:\n
       return False\n
 \n
 # if all conditions are met, check if the policy is ok (wildcards are ok)\n

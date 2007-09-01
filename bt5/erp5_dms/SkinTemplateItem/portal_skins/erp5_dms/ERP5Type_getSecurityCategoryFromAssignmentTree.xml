@@ -75,7 +75,7 @@ A script returning security categories from a Person\'s assignments.\n
 \n
 Differences to the stock implementation:\n
 \n
-*  if category is source_project, we look for destination_project\n
+*  if category is follow_up, we look for destination_project\n
 \n
 * if category not strict, we return not only the category, but also all its parents\n
   (unless we say it is strict)\n
@@ -108,7 +108,7 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
   if assignment.getValidationState() == \'open\':\n
     try:\n
       for base_category in base_category_list:\n
-        if base_category == \'source_project\':\n
+        if base_category == \'follow_up\':\n
           category_value = assignment.getDestinationProject()\n
         else:\n
           category_value = assignment.getProperty(base_category)\n

@@ -78,8 +78,8 @@ deprecated ERP5Type_asSecurityGroupIdList\n
 \n
 return (\n
 (\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\'] ),\n
-(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'source_project\'] ),\n
-(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'source_project\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'follow_up\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'follow_up\'] ),\n
 (\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'group\'] ),\n
 (\'ERP5Type_getSecurityCategoryRoot\', [\'group\']),\n
 )\n
