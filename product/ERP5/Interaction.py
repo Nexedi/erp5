@@ -125,11 +125,11 @@ class InteractionDefinition (SimpleItem):
                       actbox_category='workflow',
                       method_id=(),
                       props=None, REQUEST=None, description=''):
-        '''
+        """
           Update transition properties
           XXX - then make sure that method_id is WorkflowMethod for portal_type_filter
           XXX - this will likely require dynamic
-        '''
+        """
         if type(method_id) is type(''):
             self.method_id = method_id.split()
         else:
