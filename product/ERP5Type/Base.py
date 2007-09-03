@@ -2192,9 +2192,8 @@ class Base( CopyContainer,
   def getIdTranslationDict(self):
     """Returns the mapping which is used to translate IDs.
     """
-    return {
-        'Address': dict(default_address='Default Address',
-                        head_quarter_address='Head Quarter Address'),
+    property_dict = {
+        'Address': dict(default_address='Default Address'),
         'Telephone': dict(default_telephone='Default Telephone',
                           mobile_telephone='Mobile Telephone',),
         'Fax': dict(default_fax='Default Fax'),
@@ -2209,6 +2208,16 @@ class Base( CopyContainer,
         'Sale Supply Line': dict(sale_supply_line=
                                  'Default Sale Supply Line'),
     }
+    method = self._getTypeBasedMethod('getIdTranslationDict',
+        fallback_script_id = 'Base_getIdTranslationDict')
+    if method is not None:
+      user_dict = method()
+      for k in user_dict.keys():
+        if property_dict.get(k, None) is not None:
+          property_dict[k].update(user_dict[k])
+        else:
+          property_dict.update(user_dict)
+    return property_dict
 
 
   security.declareProtected(Permissions.AccessContentsInformation,
