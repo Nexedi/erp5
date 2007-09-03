@@ -4617,7 +4617,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       dependency_list = self.getDependencyList()
       if len(dependency_list)!=0:
         for dependency_couple in dependency_list:
-          dependency_couple_list = dependency_couple.split(' ')
+          dependency_couple_list = dependency_couple.split(' ', 1)
           dependency = dependency_couple_list[0]
           if dependency in (None, ''):
             continue
