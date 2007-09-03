@@ -1104,12 +1104,14 @@ class Subscription(Folder, XMLSyncUtils):
       query_method = getattr(destination, query, None)
       if query_method is not None:
         query_list = query_method(**kw)
+      else:
+        LOG('This Subscriber %s provide no Query with id :' % (self.getTitle()), INFO, query)
     elif callable(query): # used in the test
       query_list = query(destination)
     else:
       LOG('This Subscriber %s provide no Query with id :' % (self.getTitle()), INFO, query)
     return [x for x in query_list
-              if not getattr(x,'_conflict_resolution',False)]
+              if not getattr(x,'_conflict_resolution', False)]
 
   def generateNewIdWithGenerator(self, object=None, gid=None):
     """
