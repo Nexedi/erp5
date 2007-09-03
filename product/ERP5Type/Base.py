@@ -2193,7 +2193,8 @@ class Base( CopyContainer,
     """Returns the mapping which is used to translate IDs.
     """
     return {
-        'Address': dict(default_address='Default Address'),
+        'Address': dict(default_address='Default Address',
+                        head_quarter_address='Head Quarter Address'),
         'Telephone': dict(default_telephone='Default Telephone',
                           mobile_telephone='Mobile Telephone',),
         'Fax': dict(default_fax='Default Fax'),
