@@ -232,7 +232,6 @@ class TestHR(ERP5TypeTestCase):
               category_type = 'Category'
             base_path_obj.newContent( portal_type       = category_type
                                     , id                = category_id
-                                    , immediate_reindex = 1
                                     )
           base_path_obj = base_path_obj[category_id]
           is_base_category = False
@@ -273,7 +272,6 @@ class TestHR(ERP5TypeTestCase):
     portal_type = 'Organisation'
     organisation_module = self.portal.getDefaultModule(portal_type)
     organisation = organisation_module.newContent(portal_type=portal_type,
-                                                  immediate_reindex=1,
                                                   title='A new organisation')
     sequence.edit(organisation = organisation)
 
@@ -469,7 +467,6 @@ class TestHR(ERP5TypeTestCase):
     portal_type = 'Person'
     person_module = self.portal.getDefaultModule(portal_type)
     person = person_module.newContent( portal_type       = portal_type
-                                     , immediate_reindex = 1
                                      )
     sequence.edit(person = person)
 

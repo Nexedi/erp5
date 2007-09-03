@@ -188,15 +188,21 @@ class TestXMLMatrix(ERP5TypeTestCase):
         self.assertEqual(getattr(cell, 'test_id', None), value_list[i])
       i += 1
 
-  def checkSetCellRangeAndCatalog(self,active=1):
+  def checkSetCellRangeAndCatalog(self, active=1):
     """
     Tests if set Cell range do well catalog and uncatalog
     """
     portal = self.getPortal()
-    if not active:
-      portal._delObject('portal_activities')
     module = portal.purchase_order_module
-    module.recursiveImmediateReindexObject()
+    if not active:
+      # FIXME: deleting portal_activities prevent from running another test
+      # after this one (because this methods commits the transaction)
+      portal._delObject('portal_activities')
+      module.recursiveImmediateReindexObject()
+    else:
+      module.recursiveReindexObject()
+      get_transaction().commit()
+      self.tic()
     catalog = portal.portal_catalog
 
     order = module._getOb('1')
