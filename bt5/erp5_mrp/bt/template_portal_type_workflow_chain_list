@@ -1,8 +1,11 @@
 Production Order Cell | edit_workflow
+Production Order Cell | order_movement_simulation_interaction_workflow
 Production Order Line | edit_workflow
+Production Order Line | order_movement_simulation_interaction_workflow
 Production Order Line | production_matrix_workflow
 Production Order Rule | edit_workflow
 Production Order | edit_workflow
+Production Order | order_simulation_interaction_workflow
 Production Order | production_order_workflow
 Production Packing List Line | edit_workflow
 Production Packing List Line | production_matrix_workflow
