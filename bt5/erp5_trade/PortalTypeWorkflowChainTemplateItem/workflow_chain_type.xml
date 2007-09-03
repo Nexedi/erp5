@@ -53,15 +53,15 @@
  </chain>
  <chain>
   <type>Purchase Order</type>
-  <workflow>edit_workflow, order_workflow</workflow>
+  <workflow>edit_workflow, order_simulation_interaction_workflow, order_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Order Cell</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>order_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Order Line</type>
-  <workflow>trade_matrix_workflow, edit_workflow</workflow>
+  <workflow>trade_matrix_workflow, edit_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List</type>
@@ -93,19 +93,19 @@
  </chain>
  <chain>
   <type>Sale Order</type>
-  <workflow>order_workflow, edit_workflow</workflow>
+  <workflow>order_workflow, order_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order Cell</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>order_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order Line</type>
-  <workflow>trade_matrix_workflow, edit_workflow</workflow>
+  <workflow>trade_matrix_workflow, order_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List</type>
-  <workflow>edit_workflow, delivery_edit_workflow, packing_list_interaction_workflow, packing_list_container_workflow, packing_list_causality_workflow, packing_list_workflow</workflow>
+  <workflow>packing_list_interaction_workflow, edit_workflow, delivery_edit_workflow, packing_list_container_workflow, packing_list_causality_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Cell</type>
