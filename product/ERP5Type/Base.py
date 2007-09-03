@@ -2208,8 +2208,7 @@ class Base( CopyContainer,
         'Sale Supply Line': dict(sale_supply_line=
                                  'Default Sale Supply Line'),
     }
-    method = self._getTypeBasedMethod('getIdTranslationDict',
-        fallback_script_id = 'Base_getIdTranslationDict')
+    method = self._getTypeBasedMethod('getIdTranslationDict')
     if method is not None:
       user_dict = method()
       for k in user_dict.keys():
