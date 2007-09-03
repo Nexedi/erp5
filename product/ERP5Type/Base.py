@@ -2216,7 +2216,7 @@ class Base( CopyContainer,
         if property_dict.get(k, None) is not None:
           property_dict[k].update(user_dict[k])
         else:
-          property_dict.update(user_dict)
+          property_dict[k] = user_dict[k]
     return property_dict
 
 
