@@ -74,11 +74,3 @@ class OrderCell(DeliveryCell):
       Reindex children and simulation
       """
       self.recursiveReindexObject(*k,**kw)
-
-    security.declarePublic('recursiveReindexObject')
-    def recursiveReindexObject(self, activate_kw={}, *k, **kw):
-      """
-      Reindex children and simulation
-      """
-      self.getExplanationValue().expandAppliedRuleRelatedToOrder(activate_kw=activate_kw, **kw)
-      DeliveryCell.recursiveReindexObject(self, activate_kw=activate_kw, *k, **kw)

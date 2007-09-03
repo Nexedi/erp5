@@ -144,14 +144,6 @@ class Order(Delivery):
       LOG('Order.updateAppliedRule ',0,'This method this method should not be used anymore.')
       Delivery.updateAppliedRule(self, rule_id, force=force,**kw)
 
-    def recursiveReindexObject(self, activate_kw=None, *k, **kw):
-      """
-      Reindex children and simulation
-      """
-      Delivery.recursiveReindexObject(self, activate_kw=activate_kw, *k, **kw)
-      self.activate(activate_kw=activate_kw).\
-          expandAppliedRuleRelatedToOrder(activate_kw=activate_kw, **kw)
-
     def expandAppliedRuleRelatedToOrder(self, activate_kw=None,**kw):
       """
       Expand the applied rule related 
