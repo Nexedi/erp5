@@ -4198,7 +4198,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  
+  def test_getInstalledBusinessTemplate(self):
+    self.assertNotEquals(None, self.getPortal()\
+        .portal_templates.getInstalledBusinessTemplate('erp5_core'))
+
   def test_CompareVersions(self):
     """Tests compare version on template tool. """
     compareVersions = self.getPortal().portal_templates.compareVersions
@@ -4220,6 +4223,26 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(compareVersionStrings('1.1', '> 1.0'))
     self.assertFalse(compareVersionStrings('1.1rc1', '= 1.0'))
     self.assertFalse(compareVersionStrings('1.0rc1', '> 1.0'))
+    self.assertFalse(compareVersionStrings('1.0rc1', '>= 1.0'))
+    self.assertTrue(compareVersionStrings('1.0rc1', '>= 1.0rc1'))
+  
+
+  def test_checkDependencies(self):
+    from Products.ERP5Type.Document.BusinessTemplate import \
+          BusinessTemplateMissingDependency
+    template_tool = self.getPortal().portal_templates
+    erp5_core_version = template_tool.getInstalledBusinessTemplate(
+                                    'erp5_core').getVersion()
+    bt5 = self.getPortal().portal_templates.newContent(
+          portal_type='Business Template',
+          dependency_list=['erp5_core (>= %s)' % erp5_core_version])
+    self.assertEquals(None, bt5.checkDependencies())
+    
+    bt5.setDependencyList(['erp5_core (> %s)' % erp5_core_version])
+    self.assertRaises(BusinessTemplateMissingDependency, bt5.checkDependencies)
+    
+    bt5.setDependencyList(['not_exists (= 1.0)'])
+    self.assertRaises(BusinessTemplateMissingDependency, bt5.checkDependencies)
     
 
 if __name__ == '__main__':
