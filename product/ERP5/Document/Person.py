@@ -35,7 +35,6 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Utils import assertAttributePortalType
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Cache import clearCache
 
 try:
   from Products import PluggableAuthService
@@ -180,7 +179,8 @@ class Person(XMLObject):
       self._setReference(value)
       self.reindexObject()
       # invalid the cache for ERP5Security
-      clearCache(cache_factory_list=('erp5_content_short', ))
+      portal_caches = getToolByName(self.getPortalObject(), 'portal_caches')
+      portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
 
     security.declareProtected(Permissions.SetOwnPassword, 'setPassword')
     def setPassword(self, value) :
