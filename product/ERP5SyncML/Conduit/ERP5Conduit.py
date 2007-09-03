@@ -165,6 +165,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             portal_type = self.getXupdateObjectType(xml) # Deprecated ???
           sub_object = self.constructContent(object, object_id, docid, 
               portal_type)
+          reset_local_roles = 0
         self.newObject(
                   object=sub_object,
                   xml=xml,
