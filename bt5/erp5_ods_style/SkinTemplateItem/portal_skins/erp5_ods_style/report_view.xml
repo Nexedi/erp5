@@ -63,7 +63,7 @@
 \n
       <tal:block tal:define="portal_object here/portal_url/getPortalObject"> \n
         <tal:block tal:condition="python: sheet_per_reportsection == 0">\n
-          <table:table tal:attributes="table:name python:form.REQUEST[\'selection_name\'].split(\'_selection\')[0].replace(\'_\', \' \').capitalize()">\n
+          <table:table tal:attributes="table:name python:here.getProperty(\'title\')">\n
             <tal:block tal:repeat="report_item report_item_list">\n
               <tal:block metal:define-macro="make_report_item_table" tal:define="here python:report_item.getObject(portal_object); dummy python:report_item.pushReport(portal_object)">\n
                 <tal:block tal:condition="report_item/getTitle | report_item/getTranslatedTitle">\n

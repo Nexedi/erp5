@@ -63,7 +63,7 @@
   <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
   <office:body>\n
     <office:spreadsheet>\n
-      <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name python: form.REQUEST[\'selection_name\'].split(\'_selection\')[0].replace(\'_\', \' \').capitalize()" >\n
+      <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name here/getTitle" >\n
         <tal:block metal:define-macro="form_layout" tal:define="dummy python: request.set(\'here\', here); listbox python:form.get_fields_in_group(\'bottom\')[0]">\n
             <tal:block metal:use-macro="here/listbox_ods_macro/macros/listbox">\n
               <tal:block metal:fill-slot="list_header">\n

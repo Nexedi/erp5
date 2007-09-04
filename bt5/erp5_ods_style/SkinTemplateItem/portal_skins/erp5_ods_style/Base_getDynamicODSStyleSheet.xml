@@ -83,10 +83,10 @@ if context.pt != \'form_list\':\n
 else:\n
   if landscape == 1:\n
     #style sheet for list, there is under line in preview\n
-    return context.Base_getODSStyleSheetListLandscape\n
+    return context.Base_getODSListStyleSheetLandscape\n
   else:\n
-    #(Default)\n
-    return context.Base_getODSStyleSheetListPortrait\n
+    #preview portrait(Default)\n
+    return context.Base_getODSListStyleSheet\n
 </string> </value>
         </item>
         <item>

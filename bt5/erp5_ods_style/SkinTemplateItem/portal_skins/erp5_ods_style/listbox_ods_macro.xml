@@ -71,25 +71,24 @@
 \n
         <tal:block tal:condition="python: len(listboxline_list) > 1">\n
           <tal:block tal:condition="python: is_domain_tree_mode">\n
-            <tal:block tal:define="domain_list python: selection.getDomainList()" tal:condition="python: len(domain_list) > 0" >\n
+            <tal:block tal:define="domain_list python: selection.getDomainList()" tal:condition="python: len(domain_list) > 0">\n
               <table:table-column table:style-name="co2"/>\n
               <table:table-row>\n
                 <table:table-cell office:value-type=\'string\'>\n
-                  <text:p tal:content="python: domain_list[-1]" />\n
+                  <text:p tal:content="python: domain_list[-1]"/>\n
                 </table:table-cell>\n
               </table:table-row>\n
             </tal:block>\n
           </tal:block>\n
-\n
           <tal:block tal:repeat="listboxline python: listboxline_list">\n
-            <table:table-column table:style-name=\'co2\' />\n
+            <table:table-column table:style-name=\'co2\'/>\n
             <tal:block metal:define-slot="for_form_list" tal:condition="listboxline/isTitleLine | python: is_report_tree_mode">\n
               <tal:block metal:define-slot="list_header">\n
                 <table:table-row table:style-name=\'ro4\'>\n
                   <tal:block tal:condition="python: is_report_tree_mode">\n
-                    <table:table-cell table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
+                    <table:table-cell table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\'>\n
                       <tal:block tal:condition="listboxline/getSectionName">\n
-                        <text:p  tal:content="python: here.Localozer.erp5_ui.gettext(listboxline/getSectionName).encode(\'utf-8\')"/>\n
+                        <text:p  tal:content="listboxline/getSectionName"/>\n
                       </tal:block>\n
                     </table:table-cell>\n
                   </tal:block>\n
@@ -98,8 +97,8 @@
                   <tal:block tal:condition="listboxline/isTitleLine">\n
                     <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
                       <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
-                        <tal:block tal:condition="python: column_property is not None" >\n
-                          <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
+                        <tal:block tal:condition="python: column_property is not None">\n
+                          <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\'>\n
                             <text:p tal:content="python: column_property">\n
                             </text:p>\n
                           </table:table-cell>\n
@@ -120,48 +119,49 @@
             <tal:block tal:condition="not:listboxline/isTitleLine">\n
               <table:table-column table:style-name="co2"/>\n
               <table:table-row>\n
-                <tal:block tal:condition="listboxline/isDataLine | python: listboxline.isSummaryLine()">\n
+                <tal:block tal:condition="python: listboxline.isDataLine() or listboxline.isSummaryLine()">\n
                   <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
                     <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]; is_list python:same_type(column_property, []) or same_type(column_property, ())">\n
                       <tal:block tal:condition="python: is_list">\n
-                        <table:table-cell  table:style-name=\'report-content-heading2\'>\n
-                          <tal:block tal:repeat="item column_property">\n
-                            <text:p tal:content="python: here.Localizer.erp5_ui.gettext(item).encode(\'utf-8\')">\n
-                            </text:p>\n
-                          </tal:block>\n
+                        <table:table-cell tal:define="field python: editable_fields.get(column_id, None)" tal:attributes="table:style-name python:isinstance(column_property, (int, long, float)) and \'report-stat2-sans-bold\' or \'report-content-heading2\'">\n
+                          <text:p tal:condition="python: field is None" tal:content="python: column_property">\n
+                          </text:p>\n
+                          <text:p tal:condition="python: field is not None"\n
+                                  tal:content="python: field.render_pdf(column_property)">\n
+                          </text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: column_property is not None and not is_list">\n
                         <table:table-cell tal:define="field python: editable_fields.get(column_id, None)" tal:attributes="table:style-name python:isinstance(column_property, (int, long, float)) and \'report-stat2-sans-bold\' or \'report-content-heading2\'">\n
-                          <text:p tal:condition="python: field is None" tal:content="python: column_property" >\n
+                          <text:p tal:condition="python: field is None" tal:content="python: column_property">\n
                           </text:p>\n
                           <text:p tal:condition="python: field is not None"\n
-                                tal:content="python: here.Localizer.erp5_ui.gettext(field.render_pdf(column_property)).encode(\'utf-8\')" >\n
+                                tal:content="python: field.render_pdf(column_property)">\n
                           </text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: column_property is None">\n
-                        <table:table-cell office:value-type=\'string\' table:style-name=\'report-content-heading2\' table:number-columns-spanned=\'1\' >\n
-                          <text:p tal:content="python: \'\'" >\n
+                        <table:table-cell office:value-type=\'string\' table:style-name=\'report-content-heading2\' table:number-columns-spanned=\'1\'>\n
+                          <text:p tal:content="python: \'\'">\n
                           </text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                     </tal:block>\n
                   </tal:block>\n
                 </tal:block>\n
-                <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()" >\n
+                <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()">\n
                   <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                     <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
                       <tal:block tal:condition="python: column_property is not None">\n
-                        <table:table-cell table:style-name="report-stat2-sans-bold"  table:number-columns-spanned=\'1\'  tal:define="field python: editable_fields.get(column_id, None)" >\n
+                        <table:table-cell table:style-name="report-stat2-sans-bold-with-lines"  table:number-columns-spanned=\'1\'  tal:define="field python: editable_fields.get(column_id, None)"> \n
                           <text:p  tal:condition="python: field is None" tal:content="python: column_property">\n
                           </text:p>\n
-                          <text:p  tal:condition="python: field is not None" tal:content="python:here.Localizer.erp5_ui.gettext(field.render_pdf(column_property)).encode(\'utf-8\')">\n
+                          <text:p  tal:condition="python: field is not None" tal:content="python:field.render_pdf(column_property)">\n
                           </text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: column_property is None">\n
-                        <table:table-cell table:style-name="report-stat2-sans-bold"  table:number-columns-spanned=\'1\' >\n
+                        <table:table-cell table:style-name="report-stat2-sans-bold-with-lines"  table:number-columns-spanned=\'1\' >\n
                         </table:table-cell>\n
                       </tal:block>\n
                     </tal:block>\n
@@ -170,7 +170,6 @@
               </table:table-row>\n
             </tal:block>\n
           </tal:block>\n
-\n
           <table:table-column table:style-name="co2"/>\n
           <table:table-row metal:define-slot="table_bottom_line">\n
             <tal:block tal:repeat="listboxline python: listboxline_list">\n
