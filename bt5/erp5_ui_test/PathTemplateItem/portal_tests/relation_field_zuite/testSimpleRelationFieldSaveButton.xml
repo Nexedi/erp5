@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -134,7 +131,7 @@ button</td></tr>\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="string: ${here/portal_url/getPortalPath}/portal_categories/foo_category/a/a1/view"/>\n
+  <td tal:content="string: ${here/portal_url/absolute_url_path}/portal_categories/foo_category/a/a1/view"/>\n
   <td/>\n
 </tr>\n
 </tbody></table>\n

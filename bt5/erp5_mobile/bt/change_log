@@ -1,0 +1,2 @@
+2007-09-04 Kazuhiko
+* use absolute_url_path instead of getPortalPath for better virtual host support.

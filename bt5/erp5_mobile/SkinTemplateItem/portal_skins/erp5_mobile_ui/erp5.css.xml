@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.DTMLDocument</string>
-          <string>DTMLDocument</string>
-        </tuple>
-        <none/>
+        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -434,7 +431,7 @@ margin: 15px;\n
 .button {\n
   border-Top-Width: thin;\n
   border-Top-Color: #3D6464;\n
-  border-Right-Width: thin; \n
+  border-Right-Width: thin;\n
   border-Right-Color: #3D6464;\n
   border-Bottom-Width: thin;\n
   border-Bottom-Color: #3D7474;\n
@@ -449,7 +446,7 @@ margin: 15px;\n
 .button_save {\n
   border-Top-Width: thin;\n
   border-Top-Color: #3D6464;\n
-  border-Right-Width: thin; \n
+  border-Right-Width: thin;\n
   border-Right-Color: #3D6464;\n
   border-Bottom-Width: thin;\n
   border-Bottom-Color: #3D7474;\n
@@ -809,7 +806,7 @@ fieldset {\n
 /* listbox */\n
 \n
 .ListSummary {\n
-  background: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/tab_left.png\') top left no-repeat;\n
+  background: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/tab_left.png\') top left no-repeat;\n
   color: #000;\n
   background-color: <dtml-var document_background_color>;\n
   padding-left: 10px;\n
@@ -907,43 +904,43 @@ fieldset {\n
 }\n
 \n
 #favourites button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/favourite.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/favourite.png\');\n
 }\n
 \n
 #modules button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/appearance.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/appearance.png\');\n
 }\n
 \n
 #language button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/language.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/language.png\');\n
 }\n
 \n
 #search button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/info.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/info.png\');\n
 }\n
 \n
 #actions button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/exec16.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/exec16.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .jump_first .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/2leftarrowb.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/2leftarrowb.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .jump_previous .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/1leftarrowb.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/1leftarrowb.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .jump_next .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/1rightarrowb.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/1rightarrowb.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .jump_last .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/2rightarrowb.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/2rightarrowb.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .list_mode .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalPath()">/images/text_block.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/text_block.png\');\n
 }\n
 \n
 #navigation_bar button .image,\n
