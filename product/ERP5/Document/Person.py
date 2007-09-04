@@ -42,10 +42,16 @@ try:
 except ImportError:
   PluggableAuthService = None
 
-try :
+try:
   from AccessControl.AuthEncoding import pw_encrypt
 except ImportError:
   pw_encrypt = lambda pw:pw
+
+try:
+  from AccessControl.AuthEncoding import pw_validate
+except ImportError:
+  pw_validate = lambda reference, attempt: reference == attempt
+      
 
 #class Person(Node, XMLObject):
 class Person(XMLObject):
@@ -182,6 +188,15 @@ class Person(XMLObject):
       portal_caches = getToolByName(self.getPortalObject(), 'portal_caches')
       portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
 
+    security.declareProtected(Permissions.SetOwnPassword, 'checkPassword')
+    def checkPassword(self, value) :
+      """
+        Check the password, usefull when changing password
+      """      
+      if value is not None :
+        return pw_validate(self.getPassword(), value)
+      return False
+    
     security.declareProtected(Permissions.SetOwnPassword, 'setPassword')
     def setPassword(self, value) :
       """
