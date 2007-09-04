@@ -67,9 +67,11 @@ dQEAAAAA</string> </value>
 \n
     <tal:block tal:define="field_list python:form.get_fields_in_group(\'bottom\')">\n
       <tal:block tal:define="global column_len python:3"/>\n
-      <tal:block tal:define="field python:field_list[0]">\n
-        <tal:block tal:condition="python:field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
-          <tal:block tal:define="column_list python: field.get_value(\'columns\'); global column_len python: len(column_list)" />\n
+      <tal:block tal:condition=\'field_list\'>\n
+        <tal:block tal:define="field python:field_list[0]">\n
+          <tal:block tal:condition="python:field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
+            <tal:block tal:define="column_list python: field.get_value(\'columns\'); global column_len python: len(column_list)" />\n
+          </tal:block>\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
