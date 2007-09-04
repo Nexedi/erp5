@@ -65,15 +65,15 @@
  </chain>
  <chain>
   <type>Purchase Packing List</type>
-  <workflow>edit_workflow, delivery_edit_workflow, packing_list_interaction_workflow, packing_list_causality_workflow, packing_list_workflow</workflow>
+  <workflow>edit_workflow, delivery_edit_workflow, packing_list_interaction_workflow, packing_list_causality_workflow, packing_list_workflow, delivery_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List Cell</type>
-  <workflow>delivery_edit_workflow</workflow>
+  <workflow>delivery_edit_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List Line</type>
-  <workflow>trade_matrix_workflow, edit_workflow, delivery_edit_workflow, packing_list_interaction_workflow</workflow>
+  <workflow>edit_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, delivery_edit_workflow, packing_list_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Supply</type>
@@ -105,15 +105,15 @@
  </chain>
  <chain>
   <type>Sale Packing List</type>
-  <workflow>packing_list_interaction_workflow, edit_workflow, delivery_edit_workflow, packing_list_container_workflow, packing_list_causality_workflow, packing_list_workflow</workflow>
+  <workflow>packing_list_interaction_workflow, edit_workflow, delivery_edit_workflow, packing_list_container_workflow, packing_list_causality_workflow, packing_list_workflow, delivery_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Cell</type>
-  <workflow>delivery_edit_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Line</type>
-  <workflow>delivery_edit_workflow, trade_matrix_workflow, packing_list_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_edit_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, packing_list_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Supply</type>

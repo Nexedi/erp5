@@ -29,10 +29,13 @@ Purchase Order | edit_workflow
 Purchase Order | order_simulation_interaction_workflow
 Purchase Order | order_workflow
 Purchase Packing List Cell | delivery_edit_workflow
+Purchase Packing List Cell | delivery_movement_causality_interaction_workflow
 Purchase Packing List Line | delivery_edit_workflow
+Purchase Packing List Line | delivery_movement_causality_interaction_workflow
 Purchase Packing List Line | edit_workflow
 Purchase Packing List Line | packing_list_interaction_workflow
 Purchase Packing List Line | trade_matrix_workflow
+Purchase Packing List | delivery_causality_interaction_workflow
 Purchase Packing List | delivery_edit_workflow
 Purchase Packing List | edit_workflow
 Purchase Packing List | packing_list_causality_workflow
@@ -53,10 +56,13 @@ Sale Order | edit_workflow
 Sale Order | order_simulation_interaction_workflow
 Sale Order | order_workflow
 Sale Packing List Cell | delivery_edit_workflow
+Sale Packing List Cell | delivery_movement_causality_interaction_workflow
 Sale Packing List Line | delivery_edit_workflow
+Sale Packing List Line | delivery_movement_causality_interaction_workflow
 Sale Packing List Line | edit_workflow
 Sale Packing List Line | packing_list_interaction_workflow
 Sale Packing List Line | trade_matrix_workflow
+Sale Packing List | delivery_causality_interaction_workflow
 Sale Packing List | delivery_edit_workflow
 Sale Packing List | edit_workflow
 Sale Packing List | packing_list_causality_workflow

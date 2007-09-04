@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
-        <tuple/>
+        <tuple>
+          <string>Products.DCWorkflow.States</string>
+          <string>StateDefinition</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -41,12 +44,18 @@
                 <string>accept_decision_action</string>
                 <string>adopt_prevision</string>
                 <string>adopt_prevision_action</string>
+                <string>calculate</string>
                 <string>converge</string>
-                <string>edit</string>
                 <string>split_prevision</string>
                 <string>split_prevision_action</string>
                 <string>start_building</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>
