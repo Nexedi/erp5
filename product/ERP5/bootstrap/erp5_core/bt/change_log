@@ -1,3 +1,6 @@
+2007-09-04 yo
+* Fix the way of calling reindexObject in InventoryModule_reindexMovementList
+
 2007-09-04
 *Add style in get_ODSStyleSheet
 

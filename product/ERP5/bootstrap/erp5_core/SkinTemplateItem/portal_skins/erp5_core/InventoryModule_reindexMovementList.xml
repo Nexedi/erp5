@@ -81,11 +81,12 @@ for o in [ x.getObject() for x in context.portal_catalog(\n
                                    , sql_catalog_id = sql_catalog_id\n
                                    )\n
 ]:\n
-  o.reindexObject( after_tag = \'inventory_%i\' % count\n
-                 , tag       = \'inventory_%i\' % (count+1)\n
-                 , sql_catalog_id = sql_catalog_id\n
-                 , passive_commit=passive_commit\n
-                 )\n
+  activate_kw = {\n
+    \'tag\': \'inventory_%i\' % (count+1),\n
+    \'after_tag\': \'inventory_%i\' % count,\n
+    \'passive_commit\': passive_commit,\n
+  }\n
+  o.reindexObject(activate_kw=activate_kw, sql_catalog_id=sql_catalog_id)\n
   count += 1\n
 \n
 if final_activity_tag is not None and count > 1:\n
@@ -104,6 +105,12 @@ if final_activity_tag is not None and count > 1:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -149,6 +156,7 @@ if final_activity_tag is not None and count > 1:\n
                             <string>None</string>
                             <string>x</string>
                             <string>o</string>
+                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>
