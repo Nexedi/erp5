@@ -85,7 +85,6 @@
                       <list>
                         <string>my_priority</string>
                         <string>my_preferred_section_category</string>
-                        <string>my_preferred_date_order</string>
                         <string>my_preferred_ooodoc_server_address</string>
                         <string>my_preferred_ooodoc_server_port_number</string>
                         <string>my_translated_preference_state_title</string>

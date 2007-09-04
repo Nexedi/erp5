@@ -17,8 +17,6 @@
             <value>
               <list>
                 <string>lines</string>
-                <string>list_method</string>
-                <string>count_method</string>
                 <string>search</string>
                 <string>select</string>
               </list>
@@ -87,12 +85,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>search</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -112,10 +104,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>count_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>listbox</string> </value>
                 </item>
@@ -128,14 +116,8 @@
                     <value> <int>10</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key>                 <string>search</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key>                 <string>select</string> </key>
@@ -223,44 +205,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>preferences/getPreferredListboxListModeLineCount | python: 30</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>request/proxy_form_id_list_method | string:searchFolder</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>

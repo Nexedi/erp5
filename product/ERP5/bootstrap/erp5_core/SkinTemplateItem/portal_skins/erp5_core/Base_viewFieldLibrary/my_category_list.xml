@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>MultiListField</string>
+          <string>Products.ERP5Form.ParallelListField</string>
+          <string>ParallelListField</string>
         </tuple>
         <none/>
       </tuple>
@@ -73,6 +73,14 @@
                 </item>
                 <item>
                     <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hash_script_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -144,6 +152,14 @@
                 </item>
                 <item>
                     <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hash_script_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -222,6 +238,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hash_script_id</string> </key>
+                    <value> <string>Base_hashCategoryList</string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -237,7 +261,7 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>4</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -275,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_categories[field.getId().replace(\'my_\', \'\', 1).replace(\'_list\', \'\')].getCategoryChildCompactLogicalPathItemList()</string> </value>
+            <value> <string>python: here.portal_categories[field.getId().replace(\'my_\', \'\', 1).replace(\'_list\', \'\')].getCategoryChildCompactLogicalPathItemList(display_none_category=0)</string> </value>
         </item>
       </dictionary>
     </pickle>

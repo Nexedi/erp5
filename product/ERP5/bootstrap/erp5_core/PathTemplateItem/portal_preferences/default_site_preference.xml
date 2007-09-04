@@ -16,17 +16,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Member</string>
                 <string>Owner</string>
-                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -43,17 +34,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Member</string>
                 <string>Owner</string>
-                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -92,6 +74,26 @@
                   <item>
                       <key> <string>id</string> </key>
                       <value> <string>preferred_accounting_transaction_gap_root</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_quantity_field_width</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_money_quantity_field_width</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -416,8 +418,30 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             </value>
         </item>
         <item>
+            <key> <string>preferred_campaign_resource</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>preferred_category_child_item_list_method_id</string> </key>
             <value> <string>getCategoryChildTranslatedLogicalPathItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_date_order</string> </key>
+            <value> <string>ymd</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_event_assessment_form_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_event_resource</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>preferred_html_style_contextual_help</string> </key>
@@ -425,7 +449,7 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
         </item>
         <item>
             <key> <string>preferred_html_style_developper_mode</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>preferred_html_style_translator_mode</string> </key>
@@ -440,12 +464,32 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             <value> <int>15</int> </value>
         </item>
         <item>
+            <key> <string>preferred_meeting_resource</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_money_quantity_field_width</string> </key>
+            <value> <int>10</int> </value>
+        </item>
+        <item>
             <key> <string>preferred_ooodoc_server_address</string> </key>
             <value> <string>localhost</string> </value>
         </item>
         <item>
             <key> <string>preferred_ooodoc_server_port_number</string> </key>
             <value> <int>8008</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_quantity_field_width</string> </key>
+            <value> <int>5</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_sale_opportunity_resource</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>preferred_section_category</string> </key>
@@ -465,6 +509,12 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
         </item>
         <item>
             <key> <string>preferred_subversion_working_copy</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_support_request_resource</string> </key>
             <value>
               <tuple/>
             </value>

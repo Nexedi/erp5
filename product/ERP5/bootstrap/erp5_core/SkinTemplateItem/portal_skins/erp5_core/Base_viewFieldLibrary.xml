@@ -110,10 +110,14 @@
                         <string>my_view_mode_listbox</string>
                         <string>my_description</string>
                         <string>my_translated_workflow_state_title</string>
-                        <string>my_currency_value</string>
                         <string>my_integer_value</string>
-                        <string>my_category_list</string>
                         <string>my_password</string>
+                        <string>my_text_area_field</string>
+                        <string>my_multi_relation_field</string>
+                        <string>my_category_list</string>
+                        <string>my_money_quantity</string>
+                        <string>my_title</string>
+                        <string>my_quantity</string>
                       </list>
                     </value>
                 </item>
