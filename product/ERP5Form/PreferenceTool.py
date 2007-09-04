@@ -124,14 +124,14 @@ class PreferenceMethod(Method):
     self._null = (None, '', (), [])
 
   def __call__(self, instance, *args, **kw):
-    def _getPreference(user_name=None):
+    def _getPreference(user_name=None, *args, **kw):
       value = None
-      for pref in instance._getSortedPreferenceList():
+      for pref in instance._getSortedPreferenceList(*args, **kw):
         value = getattr(pref, self._preference_name, _marker)
         if value is not _marker:
           # If callable, store the return value.
           if callable(value):
-            value = value()
+            value = value(*args, **kw)
           if value not in self._null:
             break
       return value
@@ -139,7 +139,7 @@ class PreferenceMethod(Method):
             id=self._preference_cache_id,
             cache_factory='erp5_ui_short')
     user_name = getSecurityManager().getUser().getId()
-    value = _getPreference(user_name=user_name)
+    value = _getPreference(user_name=user_name, *args, **kw)
     # XXX Preference Tool has a strange assumption that, even if
     # all values are null values, one of them must be returned.
     # Therefore, return a default value, only if explicitly specified,
@@ -178,6 +178,8 @@ class PreferenceTool(BaseTool):
           ['Member', 'Author', 'Manager'])
     item.manage_permission(Permissions.View,
           ['Member', 'Auditor', 'Manager'])
+    item.manage_permission(Permissions.SetOwnPassword,
+          ['Member', 'Author', 'Manager'])
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
   security.declarePublic('getPreference')
