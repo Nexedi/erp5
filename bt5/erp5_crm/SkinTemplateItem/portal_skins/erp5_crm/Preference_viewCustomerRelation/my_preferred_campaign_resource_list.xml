@@ -235,7 +235,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>A list of relative URLs for the services to display in the "Nature" pop-up menu of Events.</string> </value>
+                    <value> <string>A list of relative URLs for the services to display in the "Nature" pop-up menu of Campaigns.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

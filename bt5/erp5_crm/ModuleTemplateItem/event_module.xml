@@ -100,12 +100,6 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Add ChartObject</name>
-  </permission>
-  <permission type='list'>
-   <name>Add ChartTemplate</name>
-  </permission>
-  <permission type='list'>
    <name>Add Configured CMF Sites</name>
   </permission>
   <permission type='tuple'>
@@ -202,15 +196,6 @@
    <name>Add Formulator Forms</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Add KZMailmans</name>
-  </permission>
-  <permission type='list'>
-   <name>Add LDAP Connections</name>
-  </permission>
-  <permission type='list'>
-   <name>Add LDAP Filters</name>
-  </permission>
   <permission type='tuple'>
    <name>Add LocalContents</name>
    <role>Manager</role>
@@ -227,26 +212,12 @@
    <name>Add MailHost objects</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Add Mailman List Member</name>
-  </permission>
   <permission type='tuple'>
    <name>Add MessageCatalogs</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Add MimetypesRegistry Tools</name>
-  </permission>
   <permission type='tuple'>
    <name>Add Page Templates</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photo Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photos</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -255,9 +226,6 @@
   </permission>
   <permission type='list'>
    <name>Add Plugin Registrys</name>
-  </permission>
-  <permission type='list'>
-   <name>Add PortalTransforms Tools</name>
   </permission>
   <permission type='tuple'>
    <name>Add Python Scripts</name>
@@ -270,9 +238,6 @@
   <permission type='tuple'>
    <name>Add ReStructuredText Documents</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Add RenderableObject</name>
   </permission>
   <permission type='tuple'>
    <name>Add Session Data Manager</name>
@@ -305,15 +270,6 @@
   <permission type='tuple'>
    <name>Add Vocabularies</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Add WSDLObject</name>
-  </permission>
-  <permission type='list'>
-   <name>Add XML Method Cache Managers</name>
-  </permission>
-  <permission type='list'>
-   <name>Add XSLT Methods</name>
   </permission>
   <permission type='tuple'>
    <name>Add Z Gadfly Database Connections</name>
@@ -368,12 +324,6 @@
    <name>Add portal topics</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Admin KZMailman</name>
-  </permission>
-  <permission type='list'>
-   <name>Browse Connection Entries</name>
-  </permission>
   <permission type='tuple'>
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
@@ -414,22 +364,12 @@
    <name>Change Images and Files</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Change LDAP Methods</name>
-  </permission>
   <permission type='tuple'>
    <name>Change Lock Information</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Change Mailman List Options</name>
-  </permission>
   <permission type='tuple'>
    <name>Change Page Templates</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change Photo</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -487,16 +427,10 @@
    <name>Change proxy roles</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Change user folder</name>
-  </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Assignor</role>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Create New Entry Objects</name>
   </permission>
   <permission type='tuple'>
    <name>Create Transient Objects</name>
@@ -510,9 +444,6 @@
    <name>Define permissions</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Delete Entry Objects</name>
-  </permission>
   <permission type='tuple'>
    <name>Delete objects</name>
    <role>Assignor</role>
@@ -521,9 +452,6 @@
   <permission type='tuple'>
    <name>Download ExtFile/ExtImage</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Edit</name>
   </permission>
   <permission type='tuple'>
    <name>Edit Factories</name>
@@ -534,17 +462,11 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Edit connection</name>
-  </permission>
-  <permission type='list'>
    <name>Edit target</name>
   </permission>
   <permission type='tuple'>
    <name>FTP access</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Get Mailman List Members</name>
   </permission>
   <permission type='tuple'>
    <name>Import/Export objects</name>
@@ -588,13 +510,7 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Manage Entry information</name>
-  </permission>
-  <permission type='list'>
    <name>Manage Groups</name>
-  </permission>
-  <permission type='list'>
-   <name>Manage Selenium test cases</name>
   </permission>
   <permission type='tuple'>
    <name>Manage Transient Object Container</name>
@@ -608,12 +524,6 @@
    <name>Manage WebDAV Locks</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Manage XML Method Cache</name>
-  </permission>
-  <permission type='list'>
-   <name>Manage XML Methods</name>
-  </permission>
   <permission type='tuple'>
    <name>Manage Z Classes</name>
    <role>Manager</role>
@@ -625,9 +535,6 @@
   <permission type='tuple'>
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Manage extensions</name>
   </permission>
   <permission type='tuple'>
    <name>Manage languages</name>
@@ -658,9 +565,6 @@
    <role>Assignor</role>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Open/Close Connection</name>
-  </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connection</name>
    <role>Manager</role>
@@ -676,9 +580,6 @@
   <permission type='tuple'>
    <name>Query Vocabulary</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Remove Mailman List Member</name>
   </permission>
   <permission type='tuple'>
    <name>Reply to item</name>
@@ -737,9 +638,6 @@
    <name>Use Factories</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Use LDAP Methods</name>
-  </permission>
   <permission type='tuple'>
    <name>Use mailhost services</name>
    <role>Manager</role>
@@ -761,9 +659,6 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>View KZMailman</name>
   </permission>
   <permission type='tuple'>
    <name>View ZMailMessage</name>

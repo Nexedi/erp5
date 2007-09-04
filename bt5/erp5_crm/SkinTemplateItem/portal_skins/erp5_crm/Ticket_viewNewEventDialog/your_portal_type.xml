@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:map(lambda x: (x, here.Localizer.erp5_ui.gettext(x)), here.getPortalEventTypeList())</string> </value>
+            <value> <string>python:map(lambda x: (here.Localizer.erp5_ui.gettext(x), x), here.getPortalEventTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>

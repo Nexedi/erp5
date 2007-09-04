@@ -75,6 +75,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -94,6 +95,15 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_delivery_stop_date</string>
+                      </list>
                     </value>
                 </item>
                 <item>

@@ -17,8 +17,13 @@
             <value>
               <list>
                 <string>title</string>
+                <string>description</string>
                 <string>columns</string>
+                <string>sort</string>
                 <string>list_method</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -84,16 +89,47 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>creation_date</string>
+                          <string>translated_portal_type</string>
+                          <string>Event Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
                           <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Sender</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Recipients</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>description</string> </key>
+                    <value> <string>List of all events related to the follow up ticket</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Recipients</string>
                         </tuple>
                       </list>
                     </value>
@@ -113,12 +149,54 @@
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Mail Message</string>
+                          <string>Email</string>
+                        </tuple>
+                        <tuple>
+                          <string>Phone Call</string>
+                          <string>Phone Call</string>
+                        </tuple>
+                        <tuple>
+                          <string>Fax Message</string>
+                          <string>Fax</string>
+                        </tuple>
+                        <tuple>
+                          <string>Letter</string>
+                          <string>Letter</string>
+                        </tuple>
+                        <tuple>
+                          <string>Note</string>
+                          <string>Note</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string>ticket_view_selection</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>asc</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Follow-up</string> </value>
+                    <value> <string>Events</string> </value>
                 </item>
               </dictionary>
             </value>

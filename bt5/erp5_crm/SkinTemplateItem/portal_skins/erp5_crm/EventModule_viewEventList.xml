@@ -96,7 +96,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_destination_title</string>
+                        <string>listbox_delivery_start_date</string>
+                      </list>
                     </value>
                 </item>
                 <item>
