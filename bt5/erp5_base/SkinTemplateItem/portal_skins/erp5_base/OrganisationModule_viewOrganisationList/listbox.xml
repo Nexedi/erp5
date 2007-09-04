@@ -23,6 +23,7 @@
                 <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>url_columns</string>
                 <string>domain_tree</string>
                 <string>domain_root_list</string>
               </list>
@@ -191,10 +192,6 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>role_title</string>
-                          <string>Role</string>
-                        </tuple>
-                        <tuple>
                           <string>activity_title</string>
                           <string>Activity</string>
                         </tuple>
@@ -292,10 +289,6 @@
                           <string>Site</string>
                         </tuple>
                         <tuple>
-                          <string>role_title</string>
-                          <string>Role</string>
-                        </tuple>
-                        <tuple>
                           <string>group_title</string>
                           <string>Group</string>
                         </tuple>
@@ -368,6 +361,21 @@
                 <item>
                     <key>                 <string>title</string> </key>
                     <value> <string>Organisations</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>default_email_text</string>
+                          <string>Entity_getDefaultEmailAsURL</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_telephone_text</string>
+                          <string>Entity_getDefaultTelephoneAsURL</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>width</string> </key>

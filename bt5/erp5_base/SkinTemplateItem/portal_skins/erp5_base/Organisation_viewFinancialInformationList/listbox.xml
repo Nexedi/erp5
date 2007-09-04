@@ -106,7 +106,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -145,7 +145,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -176,7 +176,7 @@
                     <value> <string>CONTACT_LIST</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_types</string> </key>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -195,7 +195,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>search_columns</string> </key>
+                    <key> <string>search_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -234,11 +234,11 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>entity_viewFinancialInformationList_bank_account_selection</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>sort_columns</string> </key>
+                    <key> <string>sort_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -281,7 +281,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Bank Accounts</string> </value>
                 </item>
                 <item>

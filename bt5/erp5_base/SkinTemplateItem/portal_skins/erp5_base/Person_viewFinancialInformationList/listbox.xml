@@ -18,10 +18,11 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
-                <string>list_method</string>
+                <string>search_columns</string>
+                <string>sort_columns</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
-                <string>url_columns</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -78,6 +79,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -90,7 +97,7 @@
               <dictionary>
                 <item>
                     <key> <string>Base_viewSearchResultList</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>all_editable_columns</string> </key>
@@ -99,36 +106,55 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>first_name</string>
-                          <string>First Name</string>
+                          <string>bank_account_number</string>
+                          <string>Number</string>
                         </tuple>
                         <tuple>
-                          <string>last_name</string>
-                          <string>Last Name</string>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>default_telephone_text</string>
-                          <string>Telephone</string>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
                         </tuple>
                         <tuple>
-                          <string>mobile_telephone_text</string>
-                          <string>Mobile Telephone</string>
+                          <string>start_date</string>
+                          <string>Opening Date</string>
                         </tuple>
                         <tuple>
-                          <string>default_email_text</string>
-                          <string>Email</string>
+                          <string>stop_date</string>
+                          <string>Closing Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Opening Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Closing Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -147,21 +173,19 @@
                 </item>
                 <item>
                     <key> <string>list_cookie</string> </key>
-                    <value> <string>FOLDER_LIST</string> </value>
+                    <value> <string>CONTACT_LIST</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>portal_types</string> </key>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
+                          <string>Bank Account</string>
+                          <string>Bank Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>Credit Card</string>
+                          <string>Credit Card</string>
                         </tuple>
                       </list>
                     </value>
@@ -171,35 +195,94 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
-                    <value> <string>organisation_view_selection</string> </value>
+                    <key> <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>bank_account_number</string>
+                          <string>Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Opening Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Closing Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>entity_viewFinancialInformationList_bank_account_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>bank_account_number</string>
+                          <string>Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Opening Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Closing Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
-                    <value> <string>Persons</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>url_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>default_email_text</string>
-                          <string>Entity_getDefaultEmailAsURL</string>
-                        </tuple>
-                        <tuple>
-                          <string>default_telephone_text</string>
-                          <string>Entity_getDefaultTelephoneAsURL</string>
-                        </tuple>
-                        <tuple>
-                          <string>mobile_telephone_text</string>
-                          <string>Entity_getMobileTelephoneAsURL</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Bank Accounts</string> </value>
                 </item>
                 <item>
                     <key> <string>width</string> </key>
@@ -225,7 +308,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'person_module/view?\' + modules[\'ZTUtils\'].make_query(subordination_uid=here.getUid())</string> </value>
+            <value> <string>python:\'Folder_viewContentList?\' + modules[\'ZTUtils\'].make_query(portal_type=[x[0] for x in field.get_value(\'portal_types\')])</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -234,8 +317,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
         </tuple>
         <none/>
       </tuple>
@@ -243,8 +326,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>getSubordinationRelatedValueList</string> </value>
+            <key> <string>_text</string> </key>
+            <value> <string>python:[(x, x) for x in here.getPortalPaymentNodeTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

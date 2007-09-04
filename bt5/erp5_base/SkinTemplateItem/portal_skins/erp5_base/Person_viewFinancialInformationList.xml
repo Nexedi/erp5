@@ -91,44 +91,29 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
+                        <string>my_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_start_date</string>
+                        <string>listbox_stop_date</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_corporate_name</string>
-                        <string>my_group</string>
-                        <string>my_role_list</string>
-                        <string>my_activity</string>
-                        <string>my_function</string>
-                        <string>my_site</string>
-                        <string>my_market_segment_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_default_email_text</string>
-                        <string>my_default_telephone_text</string>
-                        <string>my_default_fax_text</string>
-                        <string>my_default_address_street_address</string>
-                        <string>my_default_address_zip_code</string>
-                        <string>my_default_address_city</string>
-                        <string>my_default_address_region</string>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -136,7 +121,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Organisation_view</string> </value>
+            <value> <string>Person_viewFinancialInformationList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -160,7 +145,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Organisation</string> </value>
+            <value> <string>Financial Informations</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

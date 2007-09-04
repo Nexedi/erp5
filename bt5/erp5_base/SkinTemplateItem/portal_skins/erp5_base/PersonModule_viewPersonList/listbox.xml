@@ -23,6 +23,7 @@
                 <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>url_columns</string>
                 <string>domain_tree</string>
                 <string>domain_root_list</string>
               </list>
@@ -343,6 +344,21 @@ Role & Region
                 <item>
                     <key>                 <string>title</string> </key>
                     <value> <string>Persons</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>default_email_text</string>
+                          <string>Entity_getDefaultEmailAsURL</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_telephone_text</string>
+                          <string>Entity_getDefaultTelephoneAsURL</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>width</string> </key>
