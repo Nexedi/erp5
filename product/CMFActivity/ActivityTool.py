@@ -51,6 +51,7 @@ from ActivityBuffer import ActivityBuffer
 from zExceptions import ExceptionFormatter
 
 from ZODB.POSException import ConflictError
+from Products.MailHost.MailHost import MailHostError
 
 from zLOG import LOG, INFO, WARNING
 
@@ -230,7 +231,10 @@ Exception: %s %s
 """ % (activity_tool.email_from_address, user_email, message,
        message, '/'.join(self.object_path), self.method_id,
        self.exc_type, self.exc_value, self.traceback)
-    activity_tool.MailHost.send( mail_text )
+    try:
+      activity_tool.MailHost.send( mail_text )
+    except (socket.error, MailHostError), message:
+      LOG('ActivityTool.notifyUser', WARNING, 'Mail containing failure information failed to be sent: %s' % (message, ))
 
   def reactivate(self, activity_tool):
     # Reactivate the original object.
