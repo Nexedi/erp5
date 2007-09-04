@@ -74,44 +74,44 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_default_follow_up_title</string>
                         <string>my_description</string>
+                        <string>attachment_list</string>
+                        <string>my_title</string>
+                        <string>my_start_date</string>
+                        <string>portal_type</string>
+                        <string>my_translated_simulation_state_title</string>
                         <string>my_destination_title_list</string>
                         <string>my_source_title</string>
-                        <string>my_start_date</string>
-                        <string>my_title</string>
-                        <string>portal_type</string>
-                        <string>my_aggregate_title_list</string>
-                        <string>attachment_list</string>
-                        <string>my_text_content</string>
                         <string>my_resource</string>
-                        <string>my_translated_simulation_state_title</string>
+                        <string>my_aggregate_title_list</string>
+                        <string>my_default_follow_up_title</string>
+                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list/>
                     </value>
