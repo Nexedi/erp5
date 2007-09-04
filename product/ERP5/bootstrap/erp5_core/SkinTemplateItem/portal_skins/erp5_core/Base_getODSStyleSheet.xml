@@ -336,6 +336,10 @@ AABzZXR0aW5ncy54bWxQSwECFAAUAAgACACsQyQ3zAZNZkIBAABRBwAAFQAAAAAAAAAAAAAAAABU
 PAAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAAPAA8A7gMAANk9AAAAAA==</string> </value>
         </item>
         <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>
