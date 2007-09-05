@@ -483,7 +483,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       if format:
         return self._asFormat(ooo, format, request, batch_mode)
 
-    if format is None and not batch_mode:
+    if not format and not batch_mode:
       request.RESPONSE.setHeader('Content-Type','%s;; charset=utf-8' % self.content_type)
       request.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s' % self.title_or_id())
     else:
