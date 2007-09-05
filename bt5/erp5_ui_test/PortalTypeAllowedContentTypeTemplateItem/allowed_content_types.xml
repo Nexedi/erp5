@@ -6,6 +6,9 @@
  <portal_type id="Foo">
   <item>Foo Line</item>
  </portal_type>
+ <portal_type id="Foo Line">
+  <item>Foo Line</item>
+ </portal_type>
  <portal_type id="Foo Module">
   <item>Foo</item>
  </portal_type>
