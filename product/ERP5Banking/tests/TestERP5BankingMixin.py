@@ -38,7 +38,6 @@ def isSameSet(a, b):
   if len(a) != len(b) : return 0
   return 1
 
-
 class TestERP5BankingMixin:
   """
   Mixin class for unit test of banking operations
@@ -542,7 +541,7 @@ class TestERP5BankingMixin:
     # get the base category site
     self.site_base_category = getattr(self.category_tool, 'site')
     # add the category testsite in the category site which hold vaults situated in the bank
-    self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category',codification='TEST',vault_type='site')
+    self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category',codification='TEST')
     created_site_list = []
     if len(site_list) != 0:
       if 'paris' in site_list:
@@ -568,6 +567,15 @@ class TestERP5BankingMixin:
     op_vault_type = surface_vault_type.newContent('operations_diverses')
     guichet_op_vault_type = op_vault_type.newContent('guichet')
     caveau_vault_type = site_vault_type.newContent('caveau')
+    auxiliaire_vault_type = caveau_vault_type.newContent('auxiliaire')
+    auxiliaire_vault_type.newContent('auxiliaire_vault_type')
+    auxiliaire_vault_type.newContent('encaisse_des_devises')
+    externe = auxiliaire_vault_type.newContent('encaisse_des_externes')
+    externe.newContent('transit')
+    caveau_vault_type.newContent('reserve')
+    serre = caveau_vault_type.newContent('serre')
+    serre.newContent('transit')
+    serre.newContent('retire')
     salle_tri = surface_vault_type.newContent('salle_tri')
       
     if not no_site:
@@ -627,7 +635,8 @@ class TestERP5BankingMixin:
           else:
             for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes',
                        'encaisse_des_billets_recus_pour_ventilation','encaisse_des_devises']:
-              ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+              title = upperCase(ss)
+              ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),), title=title)
               if 'ventilation' in ss.getId():
                 for country in ['madrid', 'paris']:
                   if country[0] != c.getCodification()[0]:
@@ -641,7 +650,8 @@ class TestERP5BankingMixin:
               #  for
             if s.getId() == 'auxiliaire':
               for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits', 'billets_detenus_par_des_tiers', 'encaisse_des_billets_recus_pour_ventilation_venant_de']:
-                s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+                title = upperCase(ss)
+                s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),), title=title)
         # Create forreing currency entries in encaisse_des_devises.
         for currency in ['usd', ]:
           caisse_courante.encaisse_des_devises.newContent(id=currency, portal_type='Category', codification='', vault_type='site/surface/caisse_courante/encaisse_des_devises')
