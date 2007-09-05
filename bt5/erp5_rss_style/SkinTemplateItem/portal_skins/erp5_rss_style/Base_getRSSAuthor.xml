@@ -71,6 +71,8 @@
             <value> <string>"""\n
   Overwrite this script to get more meaningful information about author\n
   for RSS feeds.\n
+  It is highly recommended to return a valid email address here, to make the\n
+  feed 100% standard-compliant.\n
 """\n
 \n
 return context.getOwnerInfo().get(\'id\', \'\')\n
