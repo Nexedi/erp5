@@ -57,7 +57,7 @@ class TestRamCache(unittest.TestCase):
     sql_cache_kw['cache_table_name'] = 'cache'
 
     self.cache_plugins = (RamCache(),
-                          DistributedRamCache({'servers': '127.0.0.1:11211',
+                          DistributedRamCache({'server': '127.0.0.1:11211',
                                                  'debugLevel': 7,}),
                           SQLCache( sql_cache_kw ),
                         )
