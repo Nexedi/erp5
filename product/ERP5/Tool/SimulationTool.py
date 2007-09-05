@@ -631,10 +631,9 @@ class SimulationTool(BaseTool):
         group_by_expression_list.append('variation_text')
       if group_by_movement:
         group_by_expression_list.append('uid')
+      if group_by_resource:
+        group_by_expression_list.append('resource_uid')
       if group_by_expression_list:
-        # by default, we group by resource
-        if group_by_resource:
-          group_by_expression_list.append('resource_uid')
         new_kw['group_by'] = group_by_expression_list
       return sql_kw, new_kw 
 
