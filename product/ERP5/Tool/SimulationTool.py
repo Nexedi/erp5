@@ -806,20 +806,34 @@ class SimulationTool(BaseTool):
       """
       return self.getInventory(simulation_period='Future', **kw)
     
-    def _getDefaultGroupByParameters(self, ignore_group_by=0, **kw):
+    def _getDefaultGroupByParameters(self, ignore_group_by=0, 
+        group_by_node=0, group_by_mirror_node=0,
+        group_by_section=0, group_by_mirror_section=0,
+        group_by_payment=0,
+        group_by_variation=0, group_by_sub_variation=0,
+        group_by_movement=0,
+        group_by_resource=1,
+        **ignored):
       """
       Set defaults group_by parameters
+
+      If ignore_group_by is true, this function returns an empty dict.
+
+      If any group-by is provided, automatically group by resource aswell
+      unless group_by_resource is explicitely set to false.
+      If no group by is provided, group by movement, node and resource.
       """
-      if not (ignore_group_by \
-         or kw.get('group_by_node', 0) or kw.get('group_by_mirror_node', 0) \
-         or kw.get('group_by_section', 0) or kw.get('group_by_mirror_section', 0) \
-         or kw.get('group_by_payment', 0) or kw.get('group_by_sub_variation', 0) \
-         or kw.get('group_by_variation', 0) or kw.get('group_by_movement', 0) \
-         or kw.get('group_by_resource', 0)):
-        kw['group_by_movement'] = 1
-        kw['group_by_node'] = 1
-        kw['group_by_resource'] = 1
-      return kw
+      new_group_by_dict = {}
+      if not ignore_group_by:
+        if group_by_node or group_by_mirror_node or group_by_section or \
+           group_by_mirror_section or group_by_payment or \
+           group_by_sub_variation or group_by_variation or group_by_movement:
+          new_group_by_dict['group_by_resource'] = group_by_resource
+        else:
+          new_group_by_dict['group_by_movement'] = 1
+          new_group_by_dict['group_by_node'] = 1
+          new_group_by_dict['group_by_resource'] = 1
+      return new_group_by_dict
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryList')
@@ -838,7 +852,7 @@ class SimulationTool(BaseTool):
         average, cost, etc.)
       """
       # If no group at all, give a default sort group by
-      kw = self._getDefaultGroupByParameters(**kw)
+      kw.update(self._getDefaultGroupByParameters(**kw))
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetInventoryList(
                     src__=src__, ignore_variation=ignore_variation,
