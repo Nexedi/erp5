@@ -131,7 +131,7 @@ button</td></tr>\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="string: ${here/portal_url/absolute_url_path}/portal_categories/foo_category/a/a1/view"/>\n
+  <td tal:content="string: ${here/portal_url/getPortalObject/absolute_url_path}/portal_categories/foo_category/a/a1/view"/>\n
   <td/>\n
 </tr>\n
 </tbody></table>\n

@@ -1,5 +1,5 @@
 2007-09-04 Kazuhiko
-* use absolute_url_path instead of getPortalPath for better virtual host support.
+* use portal_url.getPortalObject().absolute_url_path() instead of portal_url.getPortalPath() for better virtual host support.
 
 2007-02-13 yo
 * Add datetime_field_zuite.

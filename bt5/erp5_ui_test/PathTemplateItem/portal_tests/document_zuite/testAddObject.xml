@@ -51,7 +51,6 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\n
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
@@ -80,7 +79,7 @@
 have id "2". This is probably a bit too stupid. -->\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="string:${here/portal_url/absolute_url_path}/foo_module/2/view"/>\n
+  <td tal:content="string:${here/portal_url/getPortalObject/absolute_url_path}/foo_module/2/view"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -101,7 +100,7 @@ have id "2". This is probably a bit too stupid. -->\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="string:${here/portal_url/absolute_url_path}/foo_module/2/1/view"/>\n
+  <td tal:content="string:${here/portal_url/getPortalObject/absolute_url_path}/foo_module/2/1/view"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -129,7 +128,7 @@ have id "2". This is probably a bit too stupid. -->\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="string:${here/portal_url/absolute_url_path}/foo_module/3/view"/>\n
+  <td tal:content="string:${here/portal_url/getPortalObject/absolute_url_path}/foo_module/3/view"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -151,7 +150,7 @@ another object of the same type. -->\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="string:${here/portal_url/absolute_url_path}/foo_module/4/view"/>\n
+  <td tal:content="string:${here/portal_url/getPortalObject/absolute_url_path}/foo_module/4/view"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n

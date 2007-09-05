@@ -76,7 +76,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
 <tal:block tal:define="form_action string:logged_in;\n
-                       js_list python: [\'%s/login_form.js\' % (here.portal_url.absolute_url_path(), )]">\n
+                       js_list python: [\'%s/login_form.js\' % (here.portal_url.getPortalObject().absolute_url_path(), )]">\n
 <tal:block metal:use-macro="here/main_template/macros/master">\n
   <tal:block metal:fill-slot="main">\n
     <div class="content login">\n
