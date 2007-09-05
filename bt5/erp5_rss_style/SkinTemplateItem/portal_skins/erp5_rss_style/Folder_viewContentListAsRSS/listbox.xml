@@ -474,7 +474,12 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>descending</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
