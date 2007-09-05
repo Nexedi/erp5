@@ -76,10 +76,11 @@ class TestConstraint(PropertySheetTestCase):
       some categories for testing them
     """
     category_list = ['testGroup1', 'testGroup2']
-    if len(self.category_tool.group.contentValues()) == 0 :
+    group = self.category_tool.group
+    if 'testGroup1' not in group.contentIds():
       for category_id in category_list:
-        o = self.category_tool.group.newContent(portal_type='Category',
-                                                id=category_id)
+        o = group.newContent(portal_type='Category',
+                             id=category_id)
 
   def stepDeleteObjectModuleContent(self, sequence=None, 
                                     sequence_list=None, **kw):
