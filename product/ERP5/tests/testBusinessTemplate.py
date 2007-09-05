@@ -3726,7 +3726,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveKeysAndTable \
                        RemoveRole \
                        RemovePropertySheet \
-                       RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
@@ -3825,7 +3824,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveKeysAndTable \
                        RemoveRole \
                        RemovePropertySheet \
-                       RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
