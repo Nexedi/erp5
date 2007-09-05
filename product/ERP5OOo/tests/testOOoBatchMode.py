@@ -27,15 +27,10 @@
 ##############################################################################
 
 import os
-import sys
-import Zope
+import unittest
 from AccessControl.SecurityManagement import newSecurityManager
-from Testing import ZopeTestCase
-from Products.PageTemplates.GlobalTranslationService import setGlobalTranslationService
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Testing.makerequest import makerequest
 from Products.ERP5.Document.Document import ConversionError
-from App.config import getConfiguration
 
 class TestOoodResponse(ERP5TypeTestCase):
 
@@ -47,7 +42,7 @@ class TestOoodResponse(ERP5TypeTestCase):
   def getTitle(self):
     return "TestOOoBatchMode"
 
-  def login(self, quiet=0, run=run_all_test):
+  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     user = uf.getUserById(self.manager_username).__of__(uf)
@@ -59,12 +54,14 @@ class TestOoodResponse(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
     portal_skins = self.getSkinsTool()
-    portal_skins.custom.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
-    import_file_path = os.path.join(os.path.dirname(__file__), 'PersonSpreadsheetStylesheet')
+    import_file_path = os.path.join(os.path.dirname(__file__),
+                                    'PersonSpreadsheetStylesheet')
     import_file = open(import_file_path, 'rb')
-    addStyleSheet = portal_skins.custom.manage_addProduct['OFSP'].manage_addFile
-    addStyleSheet(id='Base_getODTStyleSheet', file=import_file, title='', precondition='', content_type='application/vnd.oasis.opendocument.text')
-    addOOoTemplate = portal_skins.custom.manage_addProduct['ERP5OOo'].addOOoTemplate
+    custom = portal_skins.custom
+    addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
+    addStyleSheet(id='Base_getODTStyleSheet', file=import_file, title='',
+      precondition='', content_type='application/vnd.oasis.opendocument.text')
+    addOOoTemplate = custom.manage_addProduct['ERP5OOo'].addOOoTemplate
     addOOoTemplate(id='ERP5Site_viewNothingAsOdt', title='')
     portal_skins.changeSkin(skinname=None)
     ERP5Site_viewNothingAsOdt = self.getPortal().ERP5Site_viewNothingAsOdt
@@ -73,40 +70,42 @@ class TestOoodResponse(ERP5TypeTestCase):
     ERP5Site_viewNothingAsOdt.pt_edit(text, content_type)
 
   def test_01_noExcNoFormatNoBatchMode(self):
-    portal_skins = self.getSkinsTool()
-    portal_skins.custom.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
+    request = self.portal.REQUEST
+    request.RESPONSE.setHeader('content-type', 'text/html')
     ERP5Site_viewNothingAsOdt = self.getPortal().ERP5Site_viewNothingAsOdt
     ERP5Site_viewNothingAsOdt(batch_mode=0)
-    self.assertEqual('application/vnd.oasis.opendocument.text', portal_skins.custom.REQUEST.RESPONSE.getHeader('content-type').split(';')[0])
-    self.assertEqual('inline;filename=ERP5Site_viewNothingAsOdt', portal_skins.custom.REQUEST.RESPONSE.getHeader('content-disposition'))
+    self.assertEqual('application/vnd.oasis.opendocument.text',
+        request.RESPONSE.getHeader('content-type').split(';')[0])
+    self.assertEqual('inline;filename=ERP5Site_viewNothingAsOdt',
+        request.RESPONSE.getHeader('content-disposition'))
     
   def test_02_noExcNoFormatBatchMode(self):
-    portal_skins = self.getSkinsTool()
-    portal_skins.custom.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
+    request = self.portal.REQUEST
+    request.RESPONSE.setHeader('content-type', 'text/html')
     ERP5Site_viewNothingAsOdt = self.getPortal().ERP5Site_viewNothingAsOdt
     ERP5Site_viewNothingAsOdt(batch_mode=1)
-    self.assertEqual('text/html', portal_skins.custom.REQUEST.RESPONSE.getHeader('content-type').split(';')[0])
+    self.assertEqual('text/html',
+        request.RESPONSE.getHeader('content-type').split(';')[0])
     
   def test_03_excPdfFormatNoBatchMode(self):
-    portal_skins = self.getSkinsTool()
-    portal_skins.custom.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
+    request = self.portal.REQUEST
+    request.RESPONSE.setHeader('content-type', 'text/html')
     ERP5Site_viewNothingAsOdt = self.getPortal().ERP5Site_viewNothingAsOdt
-    self.assertRaises(ConversionError, ERP5Site_viewNothingAsOdt, batch_mode=0, format='pdf') 
-    self.assertEqual('text/html', portal_skins.custom.REQUEST.RESPONSE.getHeader('content-type').split(';')[0])
+    self.assertRaises(ConversionError, ERP5Site_viewNothingAsOdt,
+                      batch_mode=0, format='pdf')
+    self.assertEqual('text/html',
+        request.RESPONSE.getHeader('content-type').split(';')[0])
 
   def test_04_excPdfFormatBatchMode(self):
-    portal_skins = self.getSkinsTool()
-    portal_skins.custom.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
+    request = self.portal.REQUEST
+    request.RESPONSE.setHeader('content-type', 'text/html')
     ERP5Site_viewNothingAsOdt = self.getPortal().ERP5Site_viewNothingAsOdt
-    self.assertRaises(ConversionError, ERP5Site_viewNothingAsOdt, batch_mode=1, format='pdf')
-    self.assertEqual('text/html', portal_skins.custom.REQUEST.RESPONSE.getHeader('content-type').split(';')[0])
+    self.assertRaises(ConversionError, ERP5Site_viewNothingAsOdt,
+                         batch_mode=1, format='pdf')
+    self.assertEqual('text/html', request.RESPONSE.getHeader('content-type').split(';')[0])
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestOoodResponse))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestOoodResponse))
+  return suite
 
