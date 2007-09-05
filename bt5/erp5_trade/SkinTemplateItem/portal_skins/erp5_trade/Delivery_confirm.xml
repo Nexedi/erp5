@@ -74,8 +74,6 @@ if packing_list_state == "draft":\n
                                   packing_list,\n
                                   \'confirm_action\',\n
                                   comment="Initialized by Delivery Builder")\n
-\n
-packing_list.edit()\n
 </string> </value>
         </item>
         <item>
