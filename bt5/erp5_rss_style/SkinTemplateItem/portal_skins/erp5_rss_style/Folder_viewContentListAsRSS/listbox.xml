@@ -342,7 +342,7 @@
                           <string>rss_link</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
+                          <string>Base_getRSSDescription</string>
                           <string>rss_description</string>
                         </tuple>
                         <tuple>
