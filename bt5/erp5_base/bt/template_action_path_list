@@ -46,6 +46,7 @@ Person | view
 Query Module | module_view
 Query Module | view
 Query | view
+Role Definition | view
 Telephone | change_function
 Telephone | view
 portal_actions | jump_query

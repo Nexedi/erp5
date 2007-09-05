@@ -68,6 +68,10 @@
   <workflow>edit_workflow, query_workflow</workflow>
  </chain>
  <chain>
+  <type>Role Definition</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Telephone</type>
   <workflow>edit_workflow</workflow>
  </chain>

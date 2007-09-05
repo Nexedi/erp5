@@ -21,4 +21,5 @@ Person | edit_workflow
 Person | validation_workflow
 Query | edit_workflow
 Query | query_workflow
+Role Definition | edit_workflow
 Telephone | edit_workflow
