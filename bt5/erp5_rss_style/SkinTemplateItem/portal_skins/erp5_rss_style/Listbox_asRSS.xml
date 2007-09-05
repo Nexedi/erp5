@@ -90,6 +90,7 @@
   - rss_description\n
   - rss_pubDate\n
   - rss_link\n
+  - rss_guid (which should be an absolute url of the document)\n
   The way an object is presented should be defined in the listbox - the RSS skin passes on\n
   what is in the listbox, as is. So you can produce your own description, author information\n
   or publication date. A partial exception to this rule is dates - RSS protocol requires\n

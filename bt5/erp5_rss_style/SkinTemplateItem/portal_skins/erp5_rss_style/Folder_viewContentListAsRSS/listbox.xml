@@ -345,6 +345,10 @@
                           <string>description</string>
                           <string>rss_description</string>
                         </tuple>
+                        <tuple>
+                          <string>absolute_url</string>
+                          <string>rss_guid</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
