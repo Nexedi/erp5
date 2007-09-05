@@ -1072,8 +1072,16 @@ class XMLSyncUtilsMixin(SyncCode):
         signature.setRid(rid)
       #LOG('gid == rid ?', DEBUG, 'gid=%s, rid=%s' % (gid, rid))
       object = subscriber.getObjectFromGid(gid)
-      if object is None and not(domain.getSynchronizeWithERP5Sites()):
+      if object == None and not(domain.getSynchronizeWithERP5Sites()):
+        #if the object is None, that could mean two things :
+        # - the object to synchronize don't exists
+        # - the id is not a gid but a rid
+        #here we try to find an object with the rid
+        #LOG('applyActionList, try to find an object with rid', DEBUG, '')
         object = subscriber.getObjectFromRid(rid)
+        signature = subscriber.getSignatureFromRid(rid)
+        if signature not in ('', None):
+          gid = signature.getId()
       #LOG('applyActionList subscriber.getObjectFromGid %s' % gid, DEBUG, object)
       if signature is None:
         #LOG('applyActionList, signature is None', DEBUG, signature)
@@ -1198,6 +1206,7 @@ class XMLSyncUtilsMixin(SyncCode):
             data_subnode = self.getDataText(action)
           else:
             data_subnode = self.getDataSubNode(action)
+          #LOG('applyActionList, object gid to delete :', 0, subscriber.getObjectFromGid(object_id))
           if subscriber.getObjectFromGid(object_id) not in (None, ''):
           #if the object exist:
             conduit.deleteNode(
