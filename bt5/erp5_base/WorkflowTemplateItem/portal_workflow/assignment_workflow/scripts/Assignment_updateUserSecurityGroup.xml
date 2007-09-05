@@ -113,7 +113,9 @@ if person_security_script is not None:\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -166,6 +168,10 @@ if person_security_script is not None:\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Assignment_updateUserSecurityGroup</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>This script use Proxy Role(Manager)</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
