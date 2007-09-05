@@ -96,13 +96,13 @@ class PDFTk:
 
     if hasattr(pdfFile, "read") :
       pdfFile = pdfFile.read()
-    tmpPdfFile = open(pdfFormFileName, "w")
+    tmpPdfFile = open(pdfFormFileName, "wb")
     tmpPdfFile.write(pdfFile)
     tmpPdfFile.close()
 
     if hasattr(fdfFile, "read") :
       fdfFile = fdfFile.read()
-    tmpFdfFile = open(fdfFormFileName, "w")
+    tmpFdfFile = open(fdfFormFileName, "wb")
     tmpFdfFile.write(fdfFile)
     tmpFdfFile.close()
 

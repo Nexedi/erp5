@@ -81,11 +81,11 @@ class FileUploadTest(file):
 
   def __init__(self, path, name):
     self.filename = name
-    file.__init__(self, path)
+    file.__init__(self, path, 'rb')
     self.headers = {}
 
 def makeFilePath(name):
-  return os.getenv('INSTANCE_HOME') + '/../Products/ERP5OOo/tests/test_document/' + name
+  return os.path.join(os.path.dirname(__file__), 'test_document', name)
 
 def makeFileUpload(name):
   path = makeFilePath(name)

@@ -80,7 +80,7 @@ RUN_ALL_TEST = 1
 # Define the conversion server host
 conversion_server_host = ('127.0.0.1', 8008)
 
-TEST_FILES_HOME = os.path.join(os.getenv('INSTANCE_HOME'), 'Products', 'ERP5OOo', 'tests', 'test_document')
+TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
@@ -193,7 +193,7 @@ class TestDocument(ERP5TypeTestCase):
     dm=self.getPortal().document_module
     doctext=dm.newContent(portal_type=portal_type)
     if file_name is not None:
-      f = open(makeFilePath(file_name))
+      f = open(makeFilePath(file_name), 'rb')
       doctext.setTextContent(f.read())
       f.close()
     doctext.setReference(reference)

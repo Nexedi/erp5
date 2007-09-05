@@ -60,20 +60,8 @@ class TestOoodResponse(ERP5TypeTestCase):
     self.login()
     portal_skins = self.getSkinsTool()
     portal_skins.custom.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
-    try:
-      import_file_path = os.path.join(getConfiguration().instancehome,
-                                      'Products',
-                                      'ERP5OOo',
-                                      'tests',
-                                      'PersonSpreadsheetStylesheet' )
-    except IOError:
-      import_file_path = os.path.join(getConfiguration().softwarehome,
-                                      'Products',
-                                      'ERP5OOo',
-                                      'tests',
-                                      'PersonSpreadsheetStylesheet')
-      
-    import_file = open(import_file_path)
+    import_file_path = os.path.join(os.path.dirname(__file__), 'PersonSpreadsheetStylesheet')
+    import_file = open(import_file_path, 'rb')
     addStyleSheet = portal_skins.custom.manage_addProduct['OFSP'].manage_addFile
     addStyleSheet(id='Base_getODTStyleSheet', file=import_file, title='', precondition='', content_type='application/vnd.oasis.opendocument.text')
     addOOoTemplate = portal_skins.custom.manage_addProduct['ERP5OOo'].addOOoTemplate

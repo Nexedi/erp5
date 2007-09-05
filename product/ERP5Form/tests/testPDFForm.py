@@ -41,7 +41,7 @@ class TestPDFForm(unittest.TestCase):
     """
     self.document = Document('doc_id')
     pdf_file = open(os.path.join(os.path.dirname(__file__),
-                                      'data', 'test_1.pdf'))
+                                      'data', 'test_1.pdf'), 'rb')
     self.pdf_form = PDFForm('test_pdf_form').__of__(self.document)
     self.pdf_form.manage_upload(pdf_file)
     
