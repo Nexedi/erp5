@@ -672,7 +672,7 @@ class TestInventoryList(InventoryAPITestCase):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement(quantity=100)
     self._makeMovement(resource_value=self.other_resource, quantity=100)
-    # group_by_resource is implicit ...
+    # group_by_resource is implicit when grouping by something ...
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_node=1)
     self.assertEquals(2, len(inventory_list))
