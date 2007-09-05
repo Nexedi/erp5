@@ -28,6 +28,7 @@
 ##############################################################################
 
 from CopyToTarget import CopyToTarget
+from Products.ERP5Type.DateUtils import createDateTimeFromMillis
 
 class ResourceBackpropagation(CopyToTarget):
   """
@@ -53,10 +54,11 @@ class ResourceBackpropagation(CopyToTarget):
       quantity_ratio = new_quantity / old_quantity
     start_date_delta = 0
     stop_date_delta = 0
+    # get the date delta in milliseconds, to prevent rounding issues
     if new_start_date is not None and old_start_date is not None:
-      start_date_delta = new_start_date - old_start_date
+      start_date_delta = new_start_date.millis() - old_start_date.millis()
     if new_stop_date is not None and old_stop_date is not None:
-      stop_date_delta = new_stop_date - old_stop_date
+      stop_date_delta = new_stop_date.millis() - old_stop_date.millis()
     return {
       'quantity_ratio': quantity_ratio,
       'start_date_delta': start_date_delta,
@@ -82,10 +84,10 @@ class ResourceBackpropagation(CopyToTarget):
     # Modify quantity, start_date, stop_date
     start_date = simulation_movement.getStartDate()
     if start_date is not None:
-      value_dict['start_date'] = start_date + start_date_delta
+      value_dict['start_date'] = createDateTimeFromMillis(start_date.millis() + start_date_delta)
     stop_date = simulation_movement.getStopDate()
     if stop_date is not None:
-      value_dict['stop_date'] = stop_date + stop_date_delta
+      value_dict['stop_date'] = createDateTimeFromMillis(stop_date.millis() + stop_date_delta)
     value_dict['quantity'] = simulation_movement.getQuantity() * quantity_ratio
     if resource_list:
       value_dict['resource_list'] = resource_list
