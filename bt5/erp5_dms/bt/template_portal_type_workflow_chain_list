@@ -24,7 +24,6 @@ Presentation | processing_status_workflow
 RSS Feed | document_publication_workflow
 RSS Feed | edit_workflow
 RSS Feed | local_permission_interaction_workflow
-Role Definition | edit_workflow
 Role Definition | local_permission_interaction_workflow
 Spreadsheet | document_interaction_workflow
 Spreadsheet | document_publication_workflow
