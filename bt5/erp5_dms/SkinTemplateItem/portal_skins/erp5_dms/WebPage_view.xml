@@ -123,6 +123,7 @@
                         <string>my_language</string>
                         <string>my_int_index</string>
                         <string>my_revision</string>
+                        <string>my_follow_up_title</string>
                       </list>
                     </value>
                 </item>
@@ -142,7 +143,6 @@
                         <string>my_group_list</string>
                         <string>my_site_list</string>
                         <string>my_function_list</string>
-                        <string>my_source_project_title</string>
                         <string>my_publication_section_list</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
