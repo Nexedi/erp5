@@ -459,7 +459,7 @@ class SimulationTool(BaseTool):
         group_by_sub_variation=0,
         group_by_variation=0,
         group_by_movement=0,
-        group_by_resource=1,
+        group_by_resource=0,
         # sort_on
         sort_on=None,
         # keywords for related keys
