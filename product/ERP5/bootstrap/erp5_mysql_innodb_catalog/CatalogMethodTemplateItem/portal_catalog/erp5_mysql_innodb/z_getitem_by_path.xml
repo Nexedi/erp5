@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -39,6 +36,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>path_list</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>uid_only</string> </key>
                                 <value>
                                   <dictionary/>
@@ -51,8 +54,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>path</string>
-                            <string>uid_only</string>
+<string>path</string>
+<string>path_list</string>
+<string>uid_only</string>
                           </list>
                         </value>
                     </item>
@@ -69,7 +73,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>path\n
+            <value> <string>path\r\n
+path_list\r\n
 uid_only</string> </value>
         </item>
         <item>
@@ -86,9 +91,7 @@ uid_only</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -100,17 +103,27 @@ uid_only</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
-            <value> <int>100</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>10</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-select <dtml-if uid_only>uid<dtml-else>*</dtml-if> from catalog where <dtml-sqltest path op=eq type="string">
+SELECT <dtml-if uid_only>uid<dtml-else>uid,path</dtml-if> from catalog \n
+WHERE \n
+  1 = 1\n
+<dtml-if path>\n
+  AND <dtml-sqltest path op=eq type="string">\n
+</dtml-if>\n
+<dtml-if path_list>\n
+  AND path IN (<dtml-in path_list><dtml-sqlvar sequence-item type="string">\n
+               <dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)\n
+</dtml-if>\n
+
 
 ]]></string> </value>
         </item>
@@ -119,9 +132,11 @@ select <dtml-if uid_only>uid<dtml-else>*</dtml-if> from catalog where <dtml-sqlt
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -148,7 +163,17 @@ select <dtml-if uid_only>uid<dtml-else>*</dtml-if> from catalog where <dtml-sqlt
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-select <dtml-if uid_only>uid<dtml-else>*</dtml-if> from catalog where <dtml-sqltest path op=eq type="string">
+SELECT <dtml-if uid_only>uid<dtml-else>uid,path</dtml-if> from catalog \n
+WHERE \n
+  1 = 1\n
+<dtml-if path>\n
+  AND <dtml-sqltest path op=eq type="string">\n
+</dtml-if>\n
+<dtml-if path_list>\n
+  AND path IN (<dtml-in path_list><dtml-sqlvar sequence-item type="string">\n
+               <dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)\n
+</dtml-if>\n
+
 
 ]]></string> </value>
                     </item>
