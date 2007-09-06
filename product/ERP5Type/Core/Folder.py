@@ -77,7 +77,7 @@ class FolderMixIn(ExtensionClass.Base):
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, immediate_reindex=0,
           container=None, created_by_builder=0, activate_kw=None,
-          is_indexable=None, temp_object=0, **kw):
+          is_indexable=None, temp_object=0, reindex_kw=None, **kw):
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
@@ -113,6 +113,7 @@ class FolderMixIn(ExtensionClass.Base):
                            id=new_id,
                            created_by_builder=created_by_builder,
                            activate_kw=activate_kw,
+                           reindex_kw=reindex_kw,
                            is_indexable=is_indexable
                            ) # **kw) removed due to CMF bug
       # TODO :the **kw makes it impossible to create content not based on
@@ -588,6 +589,10 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
 
       if activate_kw is None:
         activate_kw = {}
+
+      reindex_kw = self.getDefaultReindexParametersDict()
+      if reindex_kw is not None:
+        kw.update(reindex_kw)
 
       group_id_list  = []
       if kw.get("group_id", "") not in ('', None):

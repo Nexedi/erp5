@@ -330,10 +330,12 @@ class DocumentConstructor(Method):
       self.klass = klass
 
     def __call__(self, folder, id, REQUEST=None,
-                 activate_kw=None, is_indexable=None, **kw):
+                 activate_kw=None, is_indexable=None, reindex_kw=None, **kw):
       o = self.klass(id)
       if activate_kw is not None:
         o.__of__(folder).setDefaultActivateParameters(**activate_kw)
+      if reindex_kw is not None:
+        o.__of__(folder).setDefaultReindexParameters(**reindex_kw)        
       if is_indexable is not None:
         o.isIndexable = is_indexable
       folder._setObject(id, o)
