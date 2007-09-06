@@ -1368,6 +1368,10 @@ class TestNextNegativeInventoryDate(InventoryAPITestCase):
     self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), date+2)
     makeMovement(quantity=5, change_way=1, start_date=date+1)
     self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    makeMovement(quantity=7, change_way=0, start_date=date+5)
+    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), date+5)
+    makeMovement(quantity=7, change_way=1, start_date=date+4)
+    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), None)
     makeMovement(quantity=7, change_way=0, start_date=date+3)
     self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), date+3)
 
