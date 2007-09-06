@@ -29,12 +29,13 @@ from SQLCatalog import Catalog, CatalogError
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.DTML import RestrictedDTML
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Cache import clearCache
 import string, os, sys, types
 import time
 import urllib
 from ZODB.POSException import ConflictError
 
-from zLOG import LOG
+from zLOG import LOG, ERROR, INFO
 
 _marker = object()
 
@@ -183,7 +184,8 @@ class ZCatalog(Folder, Persistent, Implicit):
   destination_sql_catalog_id = None
   hot_reindexing_state = None
   default_sql_catalog_id = None
-
+  archive = None
+  
   manage_catalogAddRowForm = DTMLFile('dtml/catalogAddRowForm', globals())
   manage_catalogFilter = DTMLFile( 'dtml/catalogFilter', globals() )
   manage_catalogView = DTMLFile('dtml/catalogView',globals())
@@ -250,13 +252,14 @@ class ZCatalog(Folder, Persistent, Implicit):
       return HOT_REINDEXING_FINISHED_STATE
     return value
 
-  def setHotReindexingState(self, state='', source_sql_catalog_id=None, destination_sql_catalog_id=None):
+  def setHotReindexingState(self, state='', source_sql_catalog_id=None, destination_sql_catalog_id=None, archive=None):
     """
       Set the state of hot reindexing.
 
       Do not use setProperty because the state should not modified from the ZMI directly.
       It must be maintained very carefully.
     """
+    #LOG("setHotReindexingState call", 300, state)
     if source_sql_catalog_id is None:
       source_sql_catalog_id = self.default_sql_catalog_id
 
@@ -264,11 +267,13 @@ class ZCatalog(Folder, Persistent, Implicit):
       self.hot_reindexing_state = None
       self.source_sql_catalog_id = None
       self.destination_sql_catalog_id = None
+      self.archive = None
     elif state == HOT_REINDEXING_RECORDING_STATE or \
          state == HOT_REINDEXING_DOUBLE_INDEXING_STATE:
       self.hot_reindexing_state = state
       self.source_sql_catalog_id = source_sql_catalog_id
       self.destination_sql_catalog_id = destination_sql_catalog_id
+      self.archive = archive
     else:
       raise CatalogError, 'unknown hot reindexing state %s' % state
 
@@ -283,6 +288,7 @@ class ZCatalog(Folder, Persistent, Implicit):
                            skin_selection_dict=skin_selection_dict,
                            sql_connection_id_dict=sql_connection_id_dict)
     self.setHotReindexingState(state=HOT_REINDEXING_FINISHED_STATE)
+    clearCache(cache_factory_list=('erp5_content_short',))
 
   def cancelHotReindexing(self):
     """
@@ -381,23 +387,25 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     LOG('exchangeDatabases skin_selection_dict:',0,skin_selection_dict)
     if skin_selection_dict is not None:
-      LOG('exchangeDatabases skin_selection_dict:',0,'we will do manage_skinLayers')
+      #LOG('exchangeDatabases skin_selection_dict:',0,'we will do manage_skinLayers')
       for skin_name, selection in self.portal_skins.getSkinPaths():
         if skin_name in skin_selection_dict:
           new_selection = tuple(skin_selection_dict[skin_name])
           self.portal_skins.manage_skinLayers(skinpath = new_selection, skinname = skin_name, add_skin = 1)
 
+    LOG('exchangeDatabases sql_connection_id_dict :',0,sql_connection_id_dict)
     if sql_connection_id_dict is not None:
       self.changeSQLConnectionIds(self.portal_skins, sql_connection_id_dict)
 
   def manage_hotReindexAll(self, source_sql_catalog_id,
-                                 destination_sql_catalog_id,
-                                 source_sql_connection_id_list=None,
-                                 destination_sql_connection_id_list=None,
-                                 skin_name_list=None,
-                                 skin_selection_list=None,
-                                 update_destination_sql_catalog=None,
-                                 REQUEST=None, RESPONSE=None):
+                           destination_sql_catalog_id,
+                           archive=None,
+                           source_sql_connection_id_list=None,
+                           destination_sql_connection_id_list=None,
+                           skin_name_list=None,
+                           skin_selection_list=None,
+                           update_destination_sql_catalog=None,
+                           REQUEST=None, RESPONSE=None):
     """
       Starts a hot reindexing.
 
@@ -428,7 +436,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     # Hot reindexing can only be runing once at a time on a system.
     if self.hot_reindexing_state is not None:
-      raise CatalogError, 'hot reindexing process is already running'
+      raise CatalogError, 'hot reindexing process is already running %s -%s' %(self, self.hot_reindexing_state)
 
     if source_sql_catalog_id == destination_sql_catalog_id:
       raise CatalogError, 'Hot reindexing cannot be done with the same '\
@@ -477,8 +485,8 @@ class ZCatalog(Folder, Persistent, Implicit):
     portal = self.getPortalObject()
     for id in portal.objectIds():
       getUid = getattr(portal[id], 'getUid', None)
-      LOG('before getUid portal[id], id',0,id)
-      if getUid is not None:
+      if getUid is not None and id != "portal_uidhandler":
+        # XXX check adviced by yo, getUid is different for this tool
         getUid() # Trigger the uid generation if none is set.
 
     # Mark the hot reindex as begun. Each object indexed in the still-current
@@ -486,10 +494,11 @@ class ZCatalog(Folder, Persistent, Implicit):
     LOG('hotReindexObjectList', 0, 'Starting recording')
     self.setHotReindexingState(HOT_REINDEXING_RECORDING_STATE,
                                source_sql_catalog_id=source_sql_catalog_id,
-                               destination_sql_catalog_id=destination_sql_catalog_id)
+                               destination_sql_catalog_id=destination_sql_catalog_id,
+                               archive=archive)
     # Clear the future catalog and start reindexing the site in it.
     final_activity_tag = 'hot_reindex_last_ERP5Site_reindexAll_tag'
-    self.ERP5Site_reindexAll(sql_catalog_id=destination_sql_catalog_id,
+    self.ERP5Site_reindexAll(sql_catalog_id=destination_sql_catalog_id,                           
                              final_activity_tag=final_activity_tag,
                              clear_catalog=1,
                              passive_commit=1)
@@ -508,7 +517,8 @@ class ZCatalog(Folder, Persistent, Implicit):
     # Once there is nothing to replay, databases are sync'ed, so the new
     # catalog can become current.
     self.activate(passive_commit=1,
-                  after_method_id=('playBackRecordedObjectList'),
+                  after_method_id=('playBackRecordedObjectList', 'runInventoryMethod'),
+                  after_tag='runInventoryMethod',
                   priority=5).finishHotReindexing(
                       source_sql_catalog_id=source_sql_catalog_id,
                       destination_sql_catalog_id=destination_sql_catalog_id,
@@ -676,17 +686,44 @@ class ZCatalog(Folder, Persistent, Implicit):
     """ wrapper around catalog """
     self.catalogObjectList([obj], sql_catalog_id=sql_catalog_id)
 
-  def catalogObjectList(self, object_list, sql_catalog_id=None, **kw):
+  def catalogObjectList(self, object_list, sql_catalog_id=None, disable_archive=0, **kw):
     """Catalog a list of objects.
     """
     catalog = self.getSQLCatalog(sql_catalog_id)
+    default_catalog = self.getSQLCatalog()
     hot_reindexing = (self.hot_reindexing_state is not None) and \
                      (catalog is not None) and \
                      (self.source_sql_catalog_id == catalog.id)
-    
+    archiving = self.archive is not None
     wrapped_object_list = []
     failed_object_list = []
     url_list = []
+    if getattr(self, "portal_archives", None) is not None:
+      archive_list = self.portal_archives.getArchiveList()
+    else:
+      archive_list = []
+
+    catalog_dict = {}
+
+    # Create archive obj list if necessary
+    if archiving:
+      archive_obj_list = [self.archive,]
+      for archive_path in archive_list:
+        try:
+          archive = self.unrestrictedTraverse(archive_path)
+        except KeyError:
+          continue
+        if archive.getCatalogId() == self.destination_sql_catalog_id:
+          archive_obj_list.append(archive)
+    else:
+      archive_obj_list = []
+      for archive_path in archive_list:
+        try:
+          archive = self.unrestrictedTraverse(archive_path)
+        except KeyError:
+          continue
+        archive_obj_list.append(archive)
+    # Construct list of object to catalog
     for obj in object_list:
       if hot_reindexing:
         try: 
@@ -698,38 +735,101 @@ class ZCatalog(Folder, Persistent, Implicit):
             )
         url = '/'.join(url())
         url_list.append(url)
-
-      try:
-        obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
-      except ConflictError:
-        raise
-      except:
-        LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
-        failed_object_list.append(obj)
+        
+      goto_current_catalog = 0
+      if disable_archive == 0 and (archiving or (len(archive_obj_list) > 0 and \
+                                                 (sql_catalog_id == default_catalog.id or \
+                                                  sql_catalog_id is None))):
+        # check in which archive object must go
+        catalog_id = None
+        for archive in archive_obj_list:
+          if archive.test(obj) is True:
+            goto_current_catalog = 0
+            catalog_id = archive.getCatalogId()
+            priority = archive.getPriority()
+            if catalog_dict.has_key(catalog_id):
+              catalog_dict[catalog_id]['obj'].append(obj)
+            else:
+              catalog_dict[catalog_id] = {'priority' : priority, 'obj' : [obj,]}
+        if catalog_id is None: # or sql_catalog_id is None:
+          # at least put object in current catalog if no archive match
+          goto_current_catalog = 1
       else:
-        wrapped_object_list.append(obj)
-
+        goto_current_catalog = 1
+      if goto_current_catalog == 1:
+        try:
+          # wrap object only when sure it will be reindex now
+          # thus security uid is also reindex
+          wrap_obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
+        except ConflictError:
+          raise
+        except:
+          LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
+          failed_object_list.append(obj)
+        wrapped_object_list.append(wrap_obj)
+      
+    # run activity or execute for each archive depending on priority
+    if len(catalog_dict):
+      for catalog_id in catalog_dict.keys():
+        d = catalog_dict[catalog_id]        
+        if hot_reindexing and self.hot_reindexing_state == HOT_REINDEXING_DOUBLE_INDEXING_STATE and \
+               self.destination_sql_catalog_id == catalog_id:          
+          destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
+          # wrap all objects
+          wrapped_object_list_2 = []
+          for obj in d['obj']:
+            try:
+              wrap_obj = self.wrapObject(obj, sql_catalog_id=catalog_id)
+            except ConflictError:
+              raise
+            except:
+              LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
+              failed_object_list.append(obj)              
+            wrapped_object_list_2.append(wrap_obj)
+          # reindex objects in destination catalog
+          destination_catalog.catalogObjectList(wrapped_object_list_2, **kw)
+        else:
+          for obj in d['obj']:
+            obj.reindexObject(sql_catalog_id=catalog_id, activate_kw = \
+                              {'priority': d['priority']}, disable_archive=1, **kw)
+    
     if catalog is not None:
-      catalog.catalogObjectList(wrapped_object_list,**kw)
+      if len(wrapped_object_list):
+        catalog.catalogObjectList(wrapped_object_list, **kw)
       if hot_reindexing:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
         if destination_catalog.id != catalog.id:
           if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
             destination_catalog.recordObjectList(url_list, 1)
           else:
-            destination_catalog.catalogObjectList(wrapped_object_list,**kw)
-          
+            if len(wrapped_object_list):
+              destination_catalog.catalogObjectList(wrapped_object_list,**kw)
+
     object_list[:] = failed_object_list[:]
           
 
   def uncatalog_object(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
-    catalog = self.getSQLCatalog(sql_catalog_id)
     if uid is None:
       raise TypeError, "sorry uncatalog_object supports only uid"
-    if catalog is not None:
-      catalog.uncatalogObject(uid=uid,path=path)
 
+    if getattr(self, "portal_archives", None) is not None:
+      archive_list = self.portal_archives.getArchiveList()
+    else:
+      archive_list = []
+    catalog_id = None
+    if len(archive_list) and sql_catalog_id is None:
+      for archive_path in archive_list:
+        try:
+          archive = self.unrestrictedTraverse(archive_path)
+        except KeyError:
+          continue
+        catalog_id = archive.getCatalogId()
+        archive.activate(priority=archive.getPriority()).uncatalogObject(uid=uid,path=path,
+                                                                         sql_catalog_id=catalog_id)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None and catalog_id is None:
+      catalog.uncatalogObject(uid=uid,path=path)
       if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
         if destination_catalog.id != catalog.id:
@@ -737,6 +837,7 @@ class ZCatalog(Folder, Persistent, Implicit):
             destination_catalog.recordObjectList([uid], 0)
           else:
             destination_catalog.uncatalogObject(uid=uid)
+
 
   def beforeUncatalogObject(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
