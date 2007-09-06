@@ -131,11 +131,16 @@ class WorkflowMethod(Method):
       # critical sections in this part of the code and a
       # thread variable which tells in which semantic context the code
       # should ne executed. - XXX
-      return apply(self._m, (instance,) + args, kw) 
+      return self._m(instance, *args, **kw)
 
     # New implementation does not use any longer wrapWorkflowMethod
     # but directly calls the workflow methods
     wf = getToolByName(instance, 'portal_workflow', None)
+
+    if wf is None:
+      # XXX instance is unwrapped(no acquisition)
+      # XXX I must think that what is a correct behavior.(Yusei)
+      return self._m(instance, *args, **kw)
 
     # Build a list of transitions which may need to be invoked
     instance_path = instance.getPhysicalPath()
