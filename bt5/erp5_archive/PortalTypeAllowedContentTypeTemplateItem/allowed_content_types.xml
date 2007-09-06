@@ -1,0 +1,11 @@
+<allowed_content_type_list>
+ <portal_type id="Archive Inventory">
+  <item>Archive Inventory Line</item>
+ </portal_type>
+ <portal_type id="Archive Inventory Line">
+  <item>Archive Inventory Cell</item>
+ </portal_type>
+ <portal_type id="Archive Inventory Module">
+  <item>Archive Inventory</item>
+ </portal_type>
+</allowed_content_type_list>

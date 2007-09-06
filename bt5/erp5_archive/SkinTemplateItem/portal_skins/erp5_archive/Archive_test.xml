@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+non_reflected_portal_type = []\n
+result = True\n
+\n
+log = 0\n
+#if context.getPortalType() == "Archive Inventory Line":\n
+#  log = 1\n
+\n
+\n
+\n
+# Check Date\n
+if getattr(context, \'getStopDate\', None) is not None:\n
+  max_stop_date = predicate.getStopDateRangeMax()\n
+  min_stop_date = predicate.getStopDateRangeMin()\n
+  if log:\n
+    context.log("obj stop date %s" %context.getStopDate(), "min %s, max %s" %(min_stop_date, max_stop_date))\n
+  if max_stop_date is not None:\n
+    result = result and (context.getStopDate() <= max_stop_date)\n
+  if min_stop_date is not None:\n
+    result = result and (context.getStopDate() >= min_stop_date)\n
+if log:\n
+  context.log("result after date", result)\n
+# Object not delivery or movement goes in all archive\n
+result = result or (not(getattr(context, \'isMovement\', 0) or getattr(context, \'isDelivery\', 0)))\n
+if log:\n
+  context.log("result after isMovement/Delivery", result)\n
+# Except those we don\'t want\n
+result = result and (context.getPortalType() not in non_reflected_portal_type)\n
+if log:\n
+  context.log("result after reflected", result)\n
+# XXX must manage specific case like Applied Rule, where do we want them to go ?\n
+return result\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>predicate=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>predicate</string>
+                            <string>non_reflected_portal_type</string>
+                            <string>True</string>
+                            <string>result</string>
+                            <string>log</string>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>max_stop_date</string>
+                            <string>min_stop_date</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Archive_test</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

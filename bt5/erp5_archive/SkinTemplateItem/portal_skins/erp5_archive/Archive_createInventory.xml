@@ -1,0 +1,328 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script create inventory for a bunch of node uid\n
+from DateTime import DateTime\n
+date = DateTime(inventory_date)\n
+node_inventory_list = []\n
+payment_inventory_list = []\n
+if len(node_uid_list):\n
+  node_inventory_list = context.portal_simulation.getCurrentInventoryList(node_uid=node_uid_list,\n
+                                                                     at_date=inventory_date,\n
+                                                                     group_by_variation=1,\n
+                                                                     group_by_resource=1,\n
+                                                                     group_by_section=1,\n
+                                                                     group_by_node=1,\n
+                                                                     connection_id=source_connection_id)\n
+  rq = context.portal_simulation.getCurrentInventoryList(node_uid=node_uid_list,\n
+                                                         at_date=inventory_date,\n
+                                                         group_by_variation=1,\n
+                                                         group_by_resource=1,\n
+                                                         group_by_section=1,\n
+                                                         group_by_node=1,\n
+                                                         src__=1,\n
+                                                         connection_id=source_connection_id)\n
+  \n
+  context.log("node",list(node_inventory_list))\n
+  context.log("request = %s" %rq, "" )\n
+if len(payment_uid_list):\n
+  payment_inventory_list = context.portal_simulation.getCurrentInventoryList(payment_uid=payment_uid_list,\n
+                                                                     at_date=inventory_date,\n
+                                                                     group_by_variation=1,\n
+                                                                     group_by_resource=1,\n
+                                                                     group_by_section=1,\n
+                                                                     group_by_payment=1,\n
+                                                                     connection_id=source_connection_id)\n
+  context.log("payment",list(payment_inventory_list))\n
+\n
+inventory_module = context.getPortalObject().archive_inventory_module\n
+node_inventory_dict = {}\n
+for inventory in node_inventory_list:\n
+  context.log("inventory quantity/variation_text/section", ((inventory.total_quantity, inventory.variation_text)))\n
+  # Do only one inventory per node\n
+  if not node_inventory_dict.has_key(inventory.node_relative_url):\n
+    \n
+    inv = inventory_module.newContent(portal_type="Archive Inventory",\n
+                                      destination=inventory.node_relative_url,\n
+                                      start_date = date,\n
+                                      activate_kw = {"tag" : tag},\n
+                                      reindex_kw = {"sql_catalog_id" : destination_sql_catalog_id})\n
+    node_inventory_dict[inventory.node_relative_url] = inv\n
+  else:\n
+    inv = node_inventory_dict[inventory.node_relative_url]\n
+\n
+  inv.setDefaultActivateParameters(tag=tag)\n
+  inv.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  # Create one line per resource\n
+  inv_line = inv.newContent(portal_type = "Archive Inventory Line",\n
+                            resource=inventory.resource_relative_url,\n
+                            destination_section=inventory.section_relative_url,\n
+                            activate_kw = {"tag" : tag},\n
+                            reindex_kw = {"sql_catalog_id" : destination_sql_catalog_id})\n
+  inv_line.setDefaultActivateParameters(tag=tag)\n
+  inv_line.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  # This is a hack so that price is now and not at reindexing part\n
+  inv_line.getPrice()\n
+\n
+  if inventory.variation_text in ("", None):\n
+    context.log("setting quantity on line", inventory.total_quantity)\n
+    inv_line.edit(quantity=inventory.total_quantity)\n
+  else:\n
+    # construct base category list\n
+    variation_category_list = inventory.variation_text.split(\'\\n\')\n
+    base_category_list = []\n
+    for variation in variation_category_list:\n
+      base_category_list.append(variation.split("/")[0])\n
+\n
+    # set base category list on line\n
+    inv_line.setVariationBaseCategoryList(base_category_list)\n
+    # set category list line\n
+    inv_line.setVariationCategoryList(variation_category_list)\n
+    context.log("construct cell", "base %s, %s" %(base_category_list,variation_category_list))\n
+    base_id = "movement"\n
+    line_kwd = {\'base_id\':base_id, "activate_kw":{"tag":tag}}\n
+    inv_line.updateCellRange(script_id=\'CashDetail_asCellRange\', base_id=base_id)\n
+    # create cell\n
+    cell_range_key_list = inv_line.getCellRangeKeyList(base_id=base_id)\n
+    if cell_range_key_list <> [[None, None]] :\n
+      for k in cell_range_key_list:\n
+        category_list = filter(lambda k_item: k_item is not None, k)\n
+        cell = inv_line.newCell(*k, **line_kwd)\n
+        cell.setDefaultActivateParameters(tag=tag)\n
+        cell.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+\n
+        mapped_value_list = [\'price\', \'quantity\']\n
+        cell.edit( membership_criterion_category_list = category_list\n
+                   , mapped_value_property_list         = mapped_value_list\n
+                   , category_list                      = category_list\n
+                   , force_update                       = 1\n
+                   )\n
+        cell.setQuantity(inventory.total_quantity)\n
+\n
+\n
+\n
+# deliver all inventory\n
+for inv in node_inventory_dict.values():  \n
+  inv.setDefaultActivateParameters(tag=tag)\n
+  inv.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  inv.deliver()\n
+\n
+\n
+\n
+\n
+# same for payment uid\n
+payment_inventory_dict = {}\n
+for inventory in payment_inventory_list:\n
+  context.log("inventory quantity/variation_text/section", ((inventory.total_quantity, inventory.variation_text)))\n
+  # Do only one inventory per payment\n
+  if not payment_inventory_dict.has_key(inventory.payment_uid):\n
+    \n
+    inv = inventory_module.newContent(portal_type="Archive Inventory",\n
+                                      destination=inventory.node_relative_url,\n
+                                      destination_payment_uid=inventory.payment_uid,\n
+                                      start_date = date,\n
+                                      activate_kw = {"tag" : tag},\n
+                                      reindex_kw = {"sql_catalog_id" : destination_sql_catalog_id})\n
+    payment_inventory_dict[inventory.payment_uid] = inv\n
+  else:\n
+    inv = payment_inventory_dict[inventory.payment_uid]\n
+\n
+  inv.setDefaultActivateParameters(tag=tag)\n
+  inv.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  # Create one line per resource\n
+  inv_line = inv.newContent(portal_type = "Archive Inventory Line",\n
+                            resource=inventory.resource_relative_url,\n
+                            destination_section=inventory.section_relative_url,\n
+                            activate_kw = {"tag" : tag},\n
+                            reindex_kw = {"sql_catalog_id" : destination_sql_catalog_id})\n
+  inv_line.setDefaultActivateParameters(tag=tag)\n
+  inv_line.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  inv_line.edit(quantity=inventory.total_quantity)\n
+  # This is a hack so that price is now and not at reindexing part\n
+  inv_line.getPrice()\n
+\n
+\n
+# deliver all inventory\n
+for inv in payment_inventory_dict.values():  \n
+  inv.setDefaultActivateParameters(tag=tag)\n
+  inv.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  inv.deliver()\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>source_connection_id, destination_sql_catalog_id, tag, node_uid_list=[], payment_uid_list=[], inventory_date=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>6</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>source_connection_id</string>
+                            <string>destination_sql_catalog_id</string>
+                            <string>tag</string>
+                            <string>node_uid_list</string>
+                            <string>payment_uid_list</string>
+                            <string>inventory_date</string>
+                            <string>DateTime</string>
+                            <string>date</string>
+                            <string>node_inventory_list</string>
+                            <string>payment_inventory_list</string>
+                            <string>len</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>rq</string>
+                            <string>list</string>
+                            <string>inventory_module</string>
+                            <string>node_inventory_dict</string>
+                            <string>_getiter_</string>
+                            <string>inventory</string>
+                            <string>inv</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
+                            <string>inv_line</string>
+                            <string>None</string>
+                            <string>variation_category_list</string>
+                            <string>base_category_list</string>
+                            <string>variation</string>
+                            <string>base_id</string>
+                            <string>line_kwd</string>
+                            <string>cell_range_key_list</string>
+                            <string>k</string>
+                            <string>filter</string>
+                            <string>category_list</string>
+                            <string>_apply_</string>
+                            <string>cell</string>
+                            <string>mapped_value_list</string>
+                            <string>payment_inventory_dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+                <list/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Archive_createInventory</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
