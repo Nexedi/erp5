@@ -48,6 +48,8 @@ from Products.PythonScripts.Utility import allow_class
 
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, QueryMixin
 
+from Shared.DC.ZRDB.Results import Results
+
 class SimulationTool(BaseTool):
     """
     The SimulationTool implements the ERP5
@@ -848,7 +850,8 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryList')
-    def getInventoryList(self, src__=0, ignore_variation=0, standardise=0,
+    def getInventoryList(self, src__=0, optimisation__=True,
+                         ignore_variation=0, standardise=0,
                          omit_simulation=0, 
                          selection_domain=None, selection_report=None,
                          statistic=0, inventory_list=1, 
@@ -861,17 +864,285 @@ class SimulationTool(BaseTool):
         NOTE: we may want to define a parameter so that we can select
         the kind of inventory statistics we want to display (ex. sum,
         average, cost, etc.)
+
+        Optimisation queries.
+        Optimisation of a stock lookup is done to avoid a table scan
+        of all lines corresponding to a given node, section or payment,
+        because they grow with time and query time should not.
+        First query: Fetch fitting full inventory dates.
+          For each node, section or payment, find the first anterior full
+          inventory.
+        Second query: Fetch full inventory amounts.
+          Fetch values of inventory identified in the first query.
+        Tird query: Classic stock table read.
+          Fetch all rows in stock table which are posterior to the inventory.
+        Final result
+          Add results of the second and third queries, and return it.
+
+        Missing optimisations:
+         - In a getInventory case where everything is specified for the
+           resource, it's not required for the inventory to be full, it
+           just need to be done for the right resource.
+           If the resource isn't completely defined, we require inventory
+           to be full, which is implemented.
+         - Querying multiple nodes/categories/payments in one call prevents
+           from using optimisation, it should be equivalent to multiple calls
+           on individual nodes/categories/payments.
+         - 
       """
+      if src__:
+        sql_source_list = []
       # If no group at all, give a default sort group by
       kw.update(self._getDefaultGroupByParameters(**kw))
-      sql_kw = self._generateSQLKeywordDict(**kw)
-      return self.Resource_zGetInventoryList(
+      sql_kw, new_kw = self._generateKeywordDict(**kw)
+      stock_sql_kw = self._generateSQLKeywordDictFromKeywordDict(
+                       table='stock', sql_kw=sql_kw, new_kw=new_kw)
+      Resource_zGetFullInventoryDate = \
+        getattr(self, 'Resource_zGetFullInventoryDate', None)
+      optimisation_success = optimisation__ and \
+                             Resource_zGetFullInventoryDate is not None
+      # Generate first query parameter dict
+      if optimisation_success:
+        def getFirstQueryParameterDict(query_generator_kw):
+          AVAILABLE_CRITERIONS_IN_INVENTORY_TABLE = ['node_uid',
+                                                     'section_uid',
+                                                     'payment_uid']
+          group_by_list = query_generator_kw.get('group_by', [])
+          column_value_dict = query_generator_kw.get('column_value_dict', {})
+          new_group_by_list = []
+          new_column_value_dict = {}
+          for criterion_id in AVAILABLE_CRITERIONS_IN_INVENTORY_TABLE:
+            criterion_value_list = column_value_dict.get(criterion_id, [])
+            if not isinstance(criterion_value_list, (list, tuple)):
+              criterion_value_list = [criterion_value_list]
+            if len(criterion_value_list) > 0:
+              if len(criterion_value_list) > 1:
+                # Impossible to optimise if there is more than one possible
+                # value per criterion.
+                optimisation_success = False
+                break
+              new_column_value_dict[criterion_id] = criterion_value_list
+              new_group_by_list.append(criterion_id)
+            elif criterion_id in group_by_list:
+              new_group_by_list.append(criterion_id)
+          group_by_expression = ', '.join(new_group_by_list)
+          column_id_list = new_column_value_dict.keys()
+          column_value_list_list = new_column_value_dict.values()
+          date_value_list = column_value_dict.get('date', {}).get('query', [])
+          if len(date_value_list) > 0:
+            date = min(date_value_list)
+            if isinstance(date, DateTime):
+              date = date.ISO()
+          else:
+            date = None
+          return {'group_by_expression': group_by_expression,
+                  'column_id_list': column_id_list,
+                  'column_value_list_list': column_value_list_list,
+                  'date': date}
+        first_query_param_dict = getFirstQueryParameterDict(new_kw)
+        if optimisation_success:
+          if len(first_query_param_dict['column_id_list']):
+            inventory_date_line_list = self.Resource_zGetFullInventoryDate(
+                                         **first_query_param_dict)
+            if src__:
+              sql_source_list.append(
+                self.Resource_zGetFullInventoryDate(src__=src__,
+                  **first_query_param_dict))
+            # Check that all expected uids have been found, otherwise a full
+            # inventory of a node/section/payment might be missing.
+            if len(inventory_date_line_list) >= max([len(x) for x in \
+               first_query_param_dict['column_value_list_list']]):
+              # Generate a where expression which filters on dates retrieved
+              # in the first query to be used in the second query.
+              # Also, generate a where expression to use in the third query,
+              # since it is based on the same data.
+              # XXX: uggly duplicated query generation code
+              # XXX: duplicates SQL variable formatting present in
+              #      ERP5Type/patches/sqlvar.py about datetime SQL columns.
+              equal_date_query_list = []
+              greater_than_date_query_list = []
+              EQUAL_DATE_TABLE_ID = 'inventory_stock'
+              GREATER_THAN_DATE_TABLE_ID = 'stock'
+              for inventory_date_line_dict in \
+                  inventory_date_line_list.dictionaries():
+                date = inventory_date_line_dict['date']
+                non_date_value_dict = dict([(k, v) for k, v \
+                  in inventory_date_line_dict.iteritems() if k != 'date'])
+                equal_date_query_list.append(
+                  ComplexQuery(
+                    ComplexQuery(operator='AND',
+                      *[Query(**{'%s.%s' % (EQUAL_DATE_TABLE_ID, k): v}) \
+                        for k, v in non_date_value_dict.iteritems()]),
+                    Query(**{'%s.date' % (EQUAL_DATE_TABLE_ID, ): date}),
+                    operator='AND'))
+                greater_than_date_query_list.append(
+                  ComplexQuery(
+                    ComplexQuery(operator='AND',
+                      *[Query(**{'%s.%s' % (GREATER_THAN_DATE_TABLE_ID, k): \
+                                 v}) \
+                        for k, v in non_date_value_dict.iteritems()]),
+                    Query(**{'%s.date' % (GREATER_THAN_DATE_TABLE_ID, ): \
+                             '>%s' % (date.ISO(), )}),
+                    operator='AND'))
+              assert len(equal_date_query_list) == \
+                     len(greater_than_date_query_list)
+              assert len(equal_date_query_list) > 0
+              equal_date_query = ComplexQuery(operator='OR',
+                *equal_date_query_list).asSQLExpression()\
+                ['where_expression']
+              greater_than_date_query = ComplexQuery(operator='OR',
+                *greater_than_date_query_list).asSQLExpression()\
+                ['where_expression']
+              inventory_stock_sql_kw = \
+                self._generateSQLKeywordDictFromKeywordDict(
+                  table=EQUAL_DATE_TABLE_ID, sql_kw=sql_kw, new_kw=new_kw)
+              inventory_stock_where_query = \
+                inventory_stock_sql_kw.get('where_expression', '(1)')
+              assert isinstance(inventory_stock_where_query, basestring) \
+                     and len(inventory_stock_where_query)
+              inventory_stock_sql_kw['where_expression'] = '(%s) AND (%s)' % \
+                (inventory_stock_where_query, equal_date_query)
+              where_query = stock_sql_kw.get('where_expression', '(1)')
+              assert isinstance(where_query, basestring) and len(where_query)
+              stock_sql_kw['where_expression'] = '(%s) AND (%s)' % \
+                (where_query, greater_than_date_query)
+              # Get initial inventory amount
+              initial_inventory_line_list = self.Resource_zGetInventoryList(
+                stock_table_id='inventory_stock',
+                src__=src__, ignore_variation=ignore_variation,
+                standardise=standardise, omit_simulation=omit_simulation,
+                selection_domain=selection_domain,
+                selection_report=selection_report, precision=precision,
+                inventory_list=inventory_list,
+                statistic=statistic, **inventory_stock_sql_kw)
+              # Get delta inventory
+              delta_inventory_line_list = self.Resource_zGetInventoryList(
+                stock_table_id='stock',
+                src__=src__, ignore_variation=ignore_variation,
+                standardise=standardise, omit_simulation=omit_simulation,
+                selection_domain=selection_domain,
+                selection_report=selection_report, precision=precision,
+                inventory_list=inventory_list,
+                statistic=statistic, **stock_sql_kw)
+              # Match & add initial and delta inventories
+              if src__:
+                sql_source_list.extend((initial_inventory_line_list,
+                                        delta_inventory_line_list))
+              else:
+                if 'group_by' in new_kw:
+                  group_by_id_list = []
+                  group_by_id_list_append = group_by_id_list.append
+                  for group_by_id in new_kw['group_by']:
+                    if group_by_id == 'uid':
+                      group_by_id_list_append('stock_uid')
+                    else:
+                      group_by_id_list_append(group_by_id)
+                  def getInventoryListKey(line):
+                    """
+                      Generate a key based on values used in SQL group_by
+                    """
+                    return tuple([line[x] for x in group_by_id_list])
+                else:
+                  def getInventoryListKey(line):
+                    """
+                      No group by criterion, regroup everything.
+                    """
+                    return 'dummy_key'
+                result_column_id_dict = {}
+                result_column_id_dict['inventory'] = None
+                result_column_id_dict['total_quantity'] = None
+                result_column_id_dict['total_price'] = None
+                def addLineValues(line_a=None, line_b=None):
+                  """
+                    Addition columns of 2 lines and return a line with same
+                    schema. If one of the parameters is None, returns the
+                    other parameters.
+
+                    Arythmetic modifications on additions:
+                      None + x = x
+                      None + None = None
+                  """
+                  if line_a is None:
+                    return line_b
+                  if line_b is None:
+                    return line_a
+                  result = {}
+                  for key, value in line_a.iteritems():
+                    if key in result_column_id_dict:
+                      value_b = line_b[key]
+                      if None not in (value, value_b):
+                        result[key] = value + value_b
+                      elif value is not None:
+                        result[key] = value
+                      else:
+                        result[key] = value_b
+                    elif line_a[key] == line_b[key]:
+                      result[key] = line_a[key]
+                    else:
+                      LOG('InventoryTool.getInventoryList.addLineValues', 0,
+                          'missmatch for %s column: %s and %s' % \
+                          (key, line_a[key], line_b[key]))
+                  return result
+                inventory_list_dict = {}
+                for line_list in (initial_inventory_line_list,
+                                  delta_inventory_line_list):
+                  for line in line_list.dictionaries():
+                    line_key = getInventoryListKey(line)
+                    line_a = inventory_list_dict.get(line_key)
+                    inventory_list_dict[line_key] = addLineValues(line_a,
+                                                                  line)
+                ## XXX: Returns a dict instead of an <r> instance
+                ## As long as they are accessed like dicts it's ok, but...
+                #result = inventory_list_dict.values()
+                sorted_inventory_list = inventory_list_dict.values()
+                sort_on = new_kw.get('sort_on', tuple())
+                if len(sort_on) != 0:
+                  def cmp_inventory_line(line_a, line_b):
+                    """
+                      Compare 2 inventory lines and sort them according to
+                      sort_on parameter.
+                    """
+                    result = 0
+                    for key, sort_direction in sort_on:
+                      if not(key in line_a and key in line_b):
+                        raise Exception, "Impossible to sort result since " \
+                          "columns sort happens on are not available in " \
+                          "result."
+                      result = cmp(line_a[key], line_b[key])
+                      if result != 0:
+                        if len(sort_direction[0]) and \
+                           sort_direction[0].upper() != 'A':
+                          # Default sort is ascending, if a sort is given and
+                          # it does not start with an 'A' then reverse sort.
+                          # Tedious syntax checking is MySQL's job, and
+                          # happened when queries were executed.
+                          result *= -1
+                        break
+                    return result
+                  sorted_inventory_list.sort(cmp_inventory_line)
+                result = Results((delta_inventory_line_list.\
+                                    _searchable_result_columns(),
+                                 tuple(sorted_inventory_list)))
+            else:
+              # Not all required full inventories are found
+              optimisation_success = False
+          else:
+            # Not enough criterions to trigger optimisation
+            optimisation_success = False
+      if not optimisation_success:
+        result = self.Resource_zGetInventoryList(
+                    stock_table_id='stock',
                     src__=src__, ignore_variation=ignore_variation,
                     standardise=standardise, omit_simulation=omit_simulation,
                     selection_domain=selection_domain,
                     selection_report=selection_report, precision=precision,
                     inventory_list=inventory_list, 
-                    statistic=statistic, **sql_kw)
+                    statistic=statistic, **stock_sql_kw)
+        if src__:
+          sql_source_list.append(result)
+      if src__:
+        result = ';\n-- NEXT QUERY\n'.join(sql_source_list)
+      return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryList')

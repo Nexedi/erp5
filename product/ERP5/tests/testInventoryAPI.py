@@ -1441,6 +1441,393 @@ class TestTrackingList(InventoryAPITestCase):
     self.assertEquals(len(result),2)
     self.failIfDifferentSet([x.uid for x in result], [item_uid, other_item_uid])
 
+class TestInventoryDocument(InventoryAPITestCase):
+  """ Test impact of creating full inventories of stock points on inventory
+  lookup. This is an optimisation to regular inventory system to avoid
+  reading all stock entries since a node/section/payment is used when
+  gathering its amounts of resources.
+  """
+  def _createAutomaticInventoryAtDate(self, date, override_inventory=None,
+                                      full_inventory=False):
+    """
+      getInventoryList is tested to work in another unit test.
+      If full_inventory is false, only inventoriate the first resource
+      found.
+    """
+    self.tic() # Tic so that grabbed inventory is up to date.
+    getInventoryList = self.getSimulationTool().getInventoryList
+    portal = self.getPortal()
+    inventory_module = portal.getDefaultModule(portal_type='Inventory')
+    inventory = inventory_module.newContent(portal_type='Inventory')
+    inventory.edit(destination_value=self.node,
+                   destination_section_value=self.section,
+                   start_date=date,
+                   full_inventory=full_inventory)
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      at_date=date,
+                                      omit_output=1)
+    if full_inventory:
+      inventory_list = [inventory_list[0]]
+    # TODO: Define a secon resource which will only be present in full
+    # inventories. This will allow testing getInentoryList.
+    #else:
+    #  inventory_list.append({'resource_relative_url': '','total_quantity': 50,'variation_text': ''})
+    for inventory_line in inventory_list:
+      line = inventory.newContent(portal_type='Inventory Line')
+      if override_inventory is None:
+        total_quantity = inventory_line['total_quantity']
+      else:
+        total_quantity = override_inventory
+      line.edit(resource=inventory_line['resource_relative_url'],
+                inventory=total_quantity,
+                variation_text=inventory_line['variation_text'])
+      # TODO: pass more properties through from calcuated inventory to
+      # inventory lines if needed.
+    inventory.deliver()
+    return inventory
+    
+  def _populateInventoryModule(self):
+    """
+      Create 3 inventories:
+         Type     Deviation  Date (see stepCreateInitialMovements)
+       - partial  1000       
+       - full     10000      
+       - full     100000     
+    """
+    self.BASE_QUANTITY = BASE_QUANTITY = 1
+    # TODO: It would be better to strip numbers below seconds instead of below
+    # days.
+    self.MAX_DATE = MAX_DATE = DateTime(DateTime().Date()) - 1
+    self.INVENTORY_DATE_3 = INVENTORY_DATE_3 = MAX_DATE - 10 # Newest
+    self.INVENTORY_QUANTITY_3 = INVENTORY_QUANTITY_3 = 100000
+    self.INVENTORY_DATE_2 = INVENTORY_DATE_2 = INVENTORY_DATE_3 - 10
+    self.INVENTORY_QUANTITY_2 = INVENTORY_QUANTITY_2 = 10000
+    self.INVENTORY_DATE_1 = INVENTORY_DATE_1 = INVENTORY_DATE_2 - 10 # Oldest
+    self.INVENTORY_QUANTITY_1 = INVENTORY_QUANTITY_1 = 1000
+    self.movement_uid_list = movement_uid_list = []
+    movement = self._makeMovement(quantity=BASE_QUANTITY,
+      start_date=INVENTORY_DATE_1 - 1)
+    movement_uid_list.append(movement.getUid())
+    partial_inventory = self._createAutomaticInventoryAtDate(
+      date=INVENTORY_DATE_1, override_inventory=INVENTORY_QUANTITY_1)
+    movement = self._makeMovement(quantity=BASE_QUANTITY,
+      start_date=INVENTORY_DATE_2 - 1)
+    movement_uid_list.append(movement.getUid())
+    self._createAutomaticInventoryAtDate(date=INVENTORY_DATE_2,
+      override_inventory=INVENTORY_QUANTITY_2,
+      full_inventory=True)
+    movement = self._makeMovement(quantity=BASE_QUANTITY,
+      start_date=INVENTORY_DATE_3 - 1)
+    movement_uid_list.append(movement.getUid())
+    self._createAutomaticInventoryAtDate(date=INVENTORY_DATE_3,
+      override_inventory=INVENTORY_QUANTITY_3,
+      full_inventory=True)
+    movement = self._makeMovement(quantity=BASE_QUANTITY,
+      start_date=INVENTORY_DATE_3 + 1)
+    movement_uid_list.append(movement.getUid())
+    self.tic()
+    manage_test = self.getPortal().erp5_sql_transactionless_connection.manage_test
+    def executeSQL(query):
+      manage_test("BEGIN\x00%s\x00COMMIT" % (query, ))
+      
+    # Make stock table inconsistent with inventory_stock to make sure
+    # inventory_stock is actually tested.
+    executeSQL("UPDATE stock SET quantity=quantity*2 WHERE uid IN (%s)" %
+               (', '.join([str(x) for x in movement_uid_list]), ))
+    self.BASE_QUANTITY *= 2
+    # Make inventory_stock table inconsistent with stock to make sure
+    # inventory_stock is actually not used when checking that partial
+    # inventory is not taken into account.
+    executeSQL("UPDATE inventory_stock SET quantity=quantity*2 WHERE "\
+               "uid IN (%s)" % (', '.join([str(x.getUid()) for x in \
+                                           partial_inventory.objectValues()]),
+                               ))
+
+  def afterSetUp(self):
+    InventoryAPITestCase.afterSetUp(self)
+    self._populateInventoryModule()
+    simulation_tool = self.getSimulationTool()
+    self.getInventory = simulation_tool.getInventory
+    self.getInventoryList = simulation_tool.getInventoryList
+    self.node_uid = self.node.getUid()
+
+  def _doesInventoryLineMatch(self, criterion_dict, inventory_line):
+    """
+      True: all values from criterion_dict match given inventory_line.
+      False otherwise.
+    """
+    for criterion_id, criterion_value in criterion_dict.iteritems():
+      if criterion_id not in inventory_line \
+         or criterion_value != inventory_line[criterion_id]:
+        return False
+    return True
+
+  def _checkInventoryList(self, inventory_list, criterion_dict_list,
+                          ordered_check=False):
+    """
+      Check that:
+        - inventory_list matches length of criterion_dict_list
+        - inventory_list contains criterions mentionned in
+          criterion_dict_list, line per line.
+
+      If ordered_check is true, chek that lines match in the order they are
+      provided.
+
+      Warning: If a criterion can match multiple line, the first encountered
+      line is accepted and will not be available for other checks. Sort
+      inventory & criterions prior to checking if there is no other way - but
+      it's most probable that your test is wrong if such case happens.
+
+      Given inventory must have usable methods:
+        __contains__ : to know if a column is present in the inventory
+        __getitem__  : to get the value of an inventory column
+    """
+    if getattr(inventory_list, 'dictionaries', None) is not None:
+      inventory_list = inventory_list.dictionaries()
+    else:
+      inventory_list = inventory_list[:] # That list is modified in this method
+    self.assertEquals(len(inventory_list), len(criterion_dict_list))
+    for criterion_dict in criterion_dict_list:
+      success = False
+      for inventory_position in xrange(len(inventory_list)):
+        if self._doesInventoryLineMatch(criterion_dict,
+                                        inventory_list[inventory_position]):
+          del inventory_list[inventory_position]
+          success = True
+          break
+        if ordered_check:
+          # We only reach this test if first line of inventory_list didn't
+          # match current criterion_dict, which means lines at same initial
+          # position do not match.
+          break
+      # Avoid rendering assertion error messages when no error happened.
+      # This is because error messages might causes errors to be thrown if
+      # they are rendered in cases where no assertion error would happen...
+      # Leads to rasing exception instead of calling self.assert[...] method.
+      if not success:
+        if ordered_check:
+          raise AssertionError, 'Line %r do not match %r' % \
+                                (inventory_list[inventory_position],
+                                 criterion_dict)
+        else:
+          raise AssertionError, 'No line in %r match %r' % \
+                                (inventory_list, criterion_dict)
+
+  def getInventoryEquals(self, value, inventory_kw):
+    """
+      Check that optimised getInventory call is equal to given value
+      and that unoptimised call is *not* equal to thi value.
+    """
+    self.assertEquals(value, self.getInventory(**inventory_kw))
+    self.assertNotEquals(value,
+                         self.getInventory(optimisation__=False,
+                                           **inventory_kw))
+
+  def test_01_CurrentInventoryWithFullInventory(self):
+    """
+      Check that inventory optimisation is executed when querying current
+      amount (there is a usable full inventory which is the latest).
+    """
+    self.getInventoryEquals(value=self.INVENTORY_QUANTITY_3 + \
+                                  self.BASE_QUANTITY,
+                            inventory_kw={'node_uid': self.node_uid})
+
+  def test_02_InventoryAtLatestFullInventoryDate(self):
+    """
+      Check that inventory optimisation is executed when querying an amount
+      at the exact time of latest usable full inventory.
+    """
+    self.getInventoryEquals(value=self.INVENTORY_QUANTITY_3,
+                            inventory_kw={'node_uid': self.node_uid,
+                                          'at_date': self.INVENTORY_DATE_3})
+
+  def test_03_InventoryAtEarlierFullInventoryDate(self):
+    """
+      Check that inventory optimisation is executed when querying past
+      amount (there is a usable full inventory which is not the latest).
+    """
+    self.getInventoryEquals(value=self.INVENTORY_QUANTITY_2 + \
+                                  self.BASE_QUANTITY,
+                            inventory_kw={'node_uid': self.node_uid,
+                                          'at_date': self.INVENTORY_DATE_3 - \
+                                                     1})
+
+  def test_04_InventoryBeforeFullInventoryAfterPartialInventory(self):
+    """
+      Check that optimisation is not executed when querying past amount
+      with no usable full inventory.
+
+      If optimisation was executed,
+        self.INVENTORY_QUANTITY_1 * 2 + self.BASE_QUANTITY * 2
+      would be found.
+    """
+    self.assertEquals(self.INVENTORY_QUANTITY_1 + self.BASE_QUANTITY * 2,
+                      self.getInventory(node_uid=self.node_uid,
+                                   at_date=self.INVENTORY_DATE_2 - 1))
+
+  def test_05_InventoryListWithFullInventory(self):
+    """
+      Check that inventory optimisation is executed when querying current
+      amount list (there is a usable full inventory which is the latest).
+    """
+    inventory = self.getInventoryList(node_uid=self.node_uid)
+    reference_inventory = [
+      {'date': self.INVENTORY_DATE_3,
+       'inventory': self.INVENTORY_QUANTITY_3,
+       'node_uid': self.node_uid},
+      {'date': self.INVENTORY_DATE_3 + 1,
+       'inventory': self.BASE_QUANTITY,
+       'node_uid': self.node_uid}
+    ]
+    self._checkInventoryList(inventory, reference_inventory)
+
+  def test_06_InventoryListAtLatestFullInventoryDate(self):
+    """
+      Check that inventory optimisation is executed when querying past
+      amount list (there is a usable full inventory which is not the latest).
+    """
+    inventory = self.getInventoryList(node_uid=self.node_uid,
+                                      at_date=self.INVENTORY_DATE_3)
+    reference_inventory = [
+      {'date': self.INVENTORY_DATE_3,
+       'inventory': self.INVENTORY_QUANTITY_3,
+       'node_uid': self.node_uid}
+    ]
+    self._checkInventoryList(inventory, reference_inventory)
+
+  def test_07_InventoryListAtEarlierFullInventoryDate(self):
+    """
+      Check that inventory optimisation is executed when querying past
+      amount list (there is a usable full inventory which is not the latest).
+    """
+    inventory = self.getInventoryList(node_uid=self.node_uid,
+                                      at_date=self.INVENTORY_DATE_3 - 1)
+    reference_inventory = [
+      {'date': self.INVENTORY_DATE_2,
+       'inventory': self.INVENTORY_QUANTITY_2,
+       'node_uid': self.node_uid},
+      {'date': self.INVENTORY_DATE_3 - 1,
+       'inventory': self.BASE_QUANTITY,
+       'node_uid': self.node_uid}
+    ]
+    self._checkInventoryList(inventory, reference_inventory)
+
+  def test_08_InventoryListBeforeFullInventoryAfterPartialInventory(self):
+    """
+      Check that optimisation is not executed when querying past amount list
+      with no usable full inventory.
+    """
+    inventory = self.getInventoryList(node_uid=self.node_uid,
+                                      at_date=self.INVENTORY_DATE_2 - 1)
+    reference_inventory = [
+      {'date': self.INVENTORY_DATE_1 - 1,
+       'inventory': self.BASE_QUANTITY,
+       'node_uid': self.node_uid},
+      {'date': self.INVENTORY_DATE_1,
+       'inventory': self.INVENTORY_QUANTITY_1,
+       'node_uid': self.node_uid},
+      {'date': self.INVENTORY_DATE_2 - 1,
+       'inventory': self.BASE_QUANTITY,
+       'node_uid': self.node_uid}
+    ]
+    self._checkInventoryList(inventory, reference_inventory)
+
+  def test_09_InventoryListGroupedByResource(self):
+    """
+      Group inventory list by resource explicitely, used inventory is the
+      latest.
+    """
+    inventory = self.getInventoryList(node_uid=self.node_uid,
+                                      group_by_resource=1)
+    reference_inventory = [
+    {'inventory': self.INVENTORY_QUANTITY_3 + self.BASE_QUANTITY,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid}
+    ]
+    self._checkInventoryList(inventory, reference_inventory)
+
+  def test_10_InventoryListGroupedByResourceBeforeLatestFullInventoryDate(self):
+    """
+      Group inventory list by resource explicitely, used inventory is not the
+      latest.
+    """
+    inventory = self.getInventoryList(node_uid=self.node_uid,
+                                      group_by_resource=1,
+                                      at_date=self.INVENTORY_DATE_3 - 1)
+    reference_inventory = [
+    {'inventory': self.INVENTORY_QUANTITY_2 + self.BASE_QUANTITY,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid}
+    ]
+    self._checkInventoryList(inventory, reference_inventory)
+
+  def test_11_InventoryListAroundLatestInventoryDate(self):
+    """
+      Test getInventoryList with a min and a max date around a full
+      inventory. A full inventory is used and is not the latest.
+    """
+    inventory = self.getInventoryList(node_uid=self.node_uid,
+                                      from_date=self.INVENTORY_DATE_3 - 1,
+                                      at_date=self.INVENTORY_DATE_3 + 1)
+    reference_inventory = [
+    {'inventory': self.BASE_QUANTITY,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid,
+     'date': self.INVENTORY_DATE_3 - 1},
+    {'inventory': self.INVENTORY_QUANTITY_3,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid,
+     'date': self.INVENTORY_DATE_3},
+    {'inventory': -self.INVENTORY_QUANTITY_2,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid,
+     'date': self.INVENTORY_DATE_3},
+    {'inventory': self.BASE_QUANTITY,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid,
+     'date': self.INVENTORY_DATE_3 + 1}
+    ]
+    self._checkInventoryList(inventory, reference_inventory)
+
+  def test_12_InventoryListWithOrderByDate(self):
+    """
+      Test order_by is preserved by optimisation on date column.
+      Also sort on total_quantity column because there are inventory lines
+      which are on the same date but with distinct quantities.
+    """
+    inventory = self.getInventoryList(node_uid=self.node_uid,
+                                      from_date=self.INVENTORY_DATE_3 - 1,
+                                      at_date=self.INVENTORY_DATE_3 + 1,
+                                      sort_on=(('date', 'ASC'),
+                                               ('total_quantity', 'DESC')))
+    reference_inventory = [
+    {'inventory': self.BASE_QUANTITY,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid,
+     'date': self.INVENTORY_DATE_3 - 1},
+    {'inventory': self.INVENTORY_QUANTITY_3,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid,
+     'date': self.INVENTORY_DATE_3},
+    {'inventory': -self.INVENTORY_QUANTITY_2,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid,
+     'date': self.INVENTORY_DATE_3},
+    {'inventory': self.BASE_QUANTITY,
+     'resource_uid': self.resource.getUid(),
+     'node_uid': self.node_uid,
+     'date': self.INVENTORY_DATE_3 + 1}
+    ]
+    self._checkInventoryList(inventory, reference_inventory,
+                             ordered_check=True)
+    inventory = self.getInventoryList(node_uid=self.node_uid,
+                                      from_date=self.INVENTORY_DATE_3 - 1,
+                                      at_date=self.INVENTORY_DATE_3 + 1,
+                                      sort_on=(('date', 'DESC'),
+                                               ('total_quantity', 'ASC')))
+    reference_inventory.reverse()
+    self._checkInventoryList(inventory, reference_inventory,
+                             ordered_check=True)
 
 if __name__ == '__main__':
   framework()
@@ -1455,6 +1842,7 @@ else:
     suite.addTest(unittest.makeSuite(TestNextNegativeInventoryDate))
     suite.addTest(unittest.makeSuite(TestInventoryStat))
     suite.addTest(unittest.makeSuite(TestTrackingList))
+    #suite.addTest(unittest.makeSuite(TestInventoryDocument))
     return suite
 
 # vim: foldmethod=marker
