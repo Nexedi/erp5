@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -338,6 +344,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>source_project_title</string>
+                          <string>Project</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery.start_date</string>
                           <string>Starting</string>
                         </tuple>
@@ -458,6 +468,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
