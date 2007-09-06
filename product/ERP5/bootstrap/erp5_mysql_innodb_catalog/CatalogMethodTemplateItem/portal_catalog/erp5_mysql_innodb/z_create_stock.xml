@@ -125,7 +125,8 @@ CREATE TABLE `stock` (\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `simulation_state` (`simulation_state`),\n
   KEY `resource_node_uid` (`resource_uid`, `node_uid`),\n
-  KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`)\n
+  KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`),\n
+  KEY `date` (`date`)\n
 ) TYPE = InnoDB;\n
 </string> </value>
         </item>
@@ -195,7 +196,8 @@ CREATE TABLE `stock` (\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `simulation_state` (`simulation_state`),\n
   KEY `resource_node_uid` (`resource_uid`, `node_uid`),\n
-  KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`)\n
+  KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`),\n
+  KEY `date` (`date`)\n
 ) TYPE = InnoDB;\n
 </string> </value>
                     </item>
