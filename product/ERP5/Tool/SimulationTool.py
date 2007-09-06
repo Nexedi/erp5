@@ -415,6 +415,15 @@ class SimulationTool(BaseTool):
           simulation_query = regular_query
         if simulation_query is not None:
           new_kw['query'] = simulation_query
+        # Sort on
+        if 'sort_on' in new_kw:
+          sort_on = new_kw['sort_on']
+          new_sort_on = []
+          for column_id, sort_direction in sort_on:
+            if '.' not in column_id:
+              column_id = '%s.%s' % (table, column_id)
+            new_sort_on.append((column_id, sort_direction))
+          new_kw['sort_on'] = tuple(new_sort_on)
         sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
         return sql_kw
 
@@ -1143,7 +1152,7 @@ class SimulationTool(BaseTool):
       #sql_kw['order_by_expression'] = 'stock.date'
 
       result = self.getInventoryList(src__=src__,
-          sort_on = (('stock.date', 'ascending'),), group_by_movement=1, **kw)
+          sort_on = (('date', 'ascending'),), group_by_movement=1, **kw)
       if src__ :
         return result
 
