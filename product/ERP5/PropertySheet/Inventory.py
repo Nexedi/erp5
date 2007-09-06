@@ -32,29 +32,15 @@ from Products.CMFCore.Expression import Expression
 class Inventory:
   """
         Properties for Inventory.
-
-        No default value is set in order to allow
-        None inventory values in movements
-
   """
 
   _properties = (
 
     # Inventory
-    { 'id'          : 'inventory',
-      'description' : """The quantity of items in stock after inventory.""",
-      'type'        : 'float',
-      'acquisition_base_category'     : ('delivery',),
-      'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList()'),
-      'acquisition_copy_value'        : 0,
-      'acquisition_mask_value'        : 1,
-      'acquisition_accessor_id'       : 'getInventory',
-      'acquisition_depends'           : None,
-      'mode'        : 'w' },
-    { 'id'          : 'inventory_efficiency',
-      'description' : """The efficiency of the inventory. 1.0 is perfect.""",
-      'type'        : 'float',
-      'default'     : None,
+    { 'id'          : 'full_inventory',
+      'description' : """Set to True if inventory contains everything, False if it's only a partial inventory.""",
+      'type'        : 'boolean',
+      'default'     : False,
       'mode'        : 'w' },
   )
 

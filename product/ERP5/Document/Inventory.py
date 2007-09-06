@@ -59,6 +59,7 @@ class Inventory(Delivery):
                       , PropertySheet.Delivery
                       , PropertySheet.Path
                       , PropertySheet.FlowCapacity
+                      , PropertySheet.Inventory
                       )
 
     security.declarePublic('alternateReindexObject')
