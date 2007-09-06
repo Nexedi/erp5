@@ -672,10 +672,10 @@ class Base( CopyContainer,
   isCapacity = 0      #
   isCategory = 0      #
   isBaseCategory = 0  #
+  isInventoryMovement = 0      #
   isMovement = 0      #
   isDelivery = 0      #
   isInventory = 0     #
-  isInventoryLine = 0 #
   isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
   isPredicate = 0     #
   isTemplate = 0      #
@@ -2533,6 +2533,10 @@ class Base( CopyContainer,
       if activate_kw is None:
         activate_kw = {}
 
+      reindex_kw = self.getDefaultReindexParametersDict()
+      if reindex_kw is not None:
+        kw.update(reindex_kw)
+      
       group_id_list  = []
       if kw.get("group_id", "") not in ('', None):
         group_id_list.append(kw.get("group_id", ""))
@@ -3298,6 +3302,24 @@ class Base( CopyContainer,
     dynamic_property_list.sort()
     dochelper.setDynamicPropertyList(dynamic_property_list)
     return dochelper
+
+
+  security.declareProtected(permissions.ModifyPortalContent, 'setDefaultReindexParameters' )
+  def setDefaultReindexParameters(self, **kw):
+    # This method sets the default keyword parameters to reindex. This is useful
+    # when you need to specify special parameters implicitly (e.g. to reindexObject).
+    tv = getTransactionalVariable(self)
+    key = ('default_reindex_parameter', id(aq_base(self)))
+    tv[key] = kw
+
+  security.declareProtected(permissions.View, 'getDefaultReindexParameterDict' )
+  def getDefaultReindexParametersDict(self):
+    # This method returns default reindex parameters to self.
+    # The result can be either a dict object or None.
+    tv = getTransactionalVariable(self)
+    key = ('default_reindex_parameter', id(aq_base(self)))
+    return tv.get(key)
+
 
 InitializeClass(Base)
 
