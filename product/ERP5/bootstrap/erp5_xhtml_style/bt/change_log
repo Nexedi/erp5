@@ -1,3 +1,6 @@
+2007-09-06 yo
+* Obtain a listbox with Form_getListbox instead of from a fixed localtion in configure_list_dialog and sort_list_dialog.
+
 2007-09-04 Kazuhiko
 * use portal_url.getPortalObject().absolute_url_path() instead of portal_url.getPortalPath() for better virtual host support.
 

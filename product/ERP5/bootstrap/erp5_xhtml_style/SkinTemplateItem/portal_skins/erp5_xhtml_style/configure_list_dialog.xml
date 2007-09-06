@@ -90,13 +90,14 @@ XXX: uses hardcoded indices values to access fields\n
         <table tal:define="selection_name request/selection_name;\n
                           base_form python: getattr(here, request[\'form_id\']);\n
                           groups base_form/get_groups;\n
-                          default_columns python: base_form.get_fields_in_group(groups[0])[0].get_value(\'columns\');\n
+                          listbox python: base_form.Form_getListbox();\n
+                          default_columns python: listbox.get_value(\'columns\');\n
                           columns python: here.portal_selections.getSelectionColumns(selection_name, REQUEST=request, columns=default_columns);\n
                           selected_stats  python: here.portal_selections.getSelectionStats(selection_name, REQUEST=request);\n
                           global row_index python: 0;\n
                           global row_keys python: [\'None\'];\n
                           global stats python: [\' \',\'count\',\'sum\',\'max\',\'min\',\'avg\'];\n
-                          all_columns python: base_form.get_fields_in_group(groups[0])[0].get_value(\'all_columns\')">\n
+                          all_columns python: listbox.get_value(\'all_columns\')">\n
           <tal:block tal:repeat="item columns">\n
             <tr tal:define="global row_index python:row_index+1;\n
                             dummy python:row_keys.append(item[0])"\n

@@ -89,7 +89,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             tal:define="items python:here.portal_selections.getSelectionSortOrder(request[\'selection_name\'], REQUEST=request);\n
                         base_form python:getattr(here,request[\'form_id\']);\n
                         groups base_form/get_groups;\n
-                        columns python:base_form.get_fields_in_group(groups[0])[0].get_value(\'all_columns\');\n
+                        listbox python:base_form.Form_getListbox();\n
+                        columns python:listbox.get_value(\'all_columns\');\n
                         global row_index python:0;\n
                         global row_keys python:[\'None\'];\n
                         all_columns python: [(\'None\',\'\')] + columns;">\n
