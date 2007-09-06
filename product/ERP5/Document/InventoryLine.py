@@ -45,7 +45,7 @@ class InventoryLine(DeliveryLine):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
-    isInventoryLine = 1
+    isInventoryMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -66,6 +66,7 @@ class InventoryLine(DeliveryLine):
                       , PropertySheet.VariationRange
                       , PropertySheet.ItemAggregation
                       )
+
 
     def _edit(self, REQUEST=None, force_update = 0, **kw):
       DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)

@@ -46,6 +46,7 @@ class InventoryCell(DeliveryCell):
     isPortalContent = 1
     isRADContent = 1
     isMovement = 1
+    isInventoryMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -66,7 +67,7 @@ class InventoryCell(DeliveryCell):
                       , PropertySheet.MappedValue
                       , PropertySheet.ItemAggregation
                       )
-
+    
     def _edit(self, REQUEST=None, force_update = 0, **kw):
       DeliveryCell._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
       # Calculate inventory
