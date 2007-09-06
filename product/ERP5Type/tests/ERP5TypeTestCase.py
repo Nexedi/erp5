@@ -455,6 +455,9 @@ class ERP5TypeTestCase(PortalTestCase):
     def getActivityTool(self):
       return getattr(self.getPortal(), 'portal_activities', None)
 
+    def getArchiveTool(self):
+      return getattr(self.getPortal(), 'portal_archives', None)
+
     def getOrganisationModule(self):
       return getattr(self.getPortal(), 'organisation_module',
           getattr(self.getPortal(), 'organisation', None))
