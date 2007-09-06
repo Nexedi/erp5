@@ -457,6 +457,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
 
       # Create an empty local Role Definition dict
       role_category_list_dict = {}
+      role_group_list_dict = {}
 
       # Fill it with explicit local roles defined as subobjects of current
       # object
@@ -528,7 +529,10 @@ class ERP5TypeInformation( FactoryTypeInformation,
               # category_result is a dict (which provide group IDs directly)
               # which represents of mapping of roles, security group IDs
               # XXX explain that this is for providing user IDs mostly
-              role_category_list_dict.setdefault(role, category_result)
+              role_group_list = role_group_list_dict.setdefault(role, [])
+              for k, v in category_result.items():
+                if k == role:
+                  role_group_list.extend(v)
             else:
               # category_result is a list of dicts that represents the resolved
               # categories we create a category_value_dict from each of these
@@ -549,12 +553,9 @@ class ERP5TypeInformation( FactoryTypeInformation,
       if group_id_generator is None:
         raise RuntimeError, '%s script was not found' % \
                               ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+      for role, group_list in role_group_list_dict.items():
+        role_group_id_dict.setdefault(role, []).extend(group_list)
       for role, value_list in role_category_list_dict.items():
-        if isinstance(value_list, dict):
-          # value_list is a dict (which provide group IDs directly)
-          # This is used by acquisition scripts
-          role_group_id_dict.setdefault(role, []).extend(value_list.get(role, []))
-          continue
         role_group_dict = {}
         for category_dict in value_list:
           group_id = group_id_generator(**category_dict) # category_order is passed in the dict
