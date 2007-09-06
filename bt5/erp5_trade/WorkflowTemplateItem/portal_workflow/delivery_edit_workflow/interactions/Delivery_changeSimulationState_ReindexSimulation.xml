@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5.Interaction</string>
+          <string>InteractionDefinition</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -55,7 +58,7 @@ FIXME: reindexObjectSecurity is probably not optimal, it may launch  unnecessary
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_changeSimulationState_ReindexSimulation   </string> </value>
+            <value> <string>Delivery_changeSimulationState_ReindexSimulation</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>

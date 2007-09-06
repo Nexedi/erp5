@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5.Interaction</string>
+          <string>InteractionDefinition</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -53,7 +56,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DeliveryCell_edit_UpdateSimulation   </string> </value>
+            <value> <string>DeliveryCell_edit_UpdateSimulation</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>

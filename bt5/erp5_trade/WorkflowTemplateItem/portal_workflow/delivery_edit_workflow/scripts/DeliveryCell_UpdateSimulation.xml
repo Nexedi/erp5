@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -66,7 +69,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># trigger the simulation update from the parent line\n
-sci[\'object\'].getParentValue().edit()\n
+line = sci[\'object\'].getParentValue()\n
+context.DeliveryLine_UpdateSimulation(sci, line)\n
 </string> </value>
         </item>
         <item>
@@ -112,6 +116,8 @@ sci[\'object\'].getParentValue().edit()\n
                             <string>sci</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
+                            <string>line</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -65,8 +68,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># trigger the simulation update from the parent invoice\n
-sci[\'object\'].getParentValue().edit()\n
+            <value> <string># trigger the simulation update from the parent delivery\n
+\n
+if obj is None:\n
+  delivery = sci[\'object\'].getParentValue()\n
+else:\n
+  delivery = obj\n
+context.Delivery_UpdateSimulation(sci, delivery)\n
 </string> </value>
         </item>
         <item>
@@ -83,7 +91,7 @@ sci[\'object\'].getParentValue().edit()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sci</string> </value>
+            <value> <string>sci, obj=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -103,15 +111,19 @@ sci[\'object\'].getParentValue().edit()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>sci</string>
+                            <string>obj</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
+                            <string>delivery</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -123,7 +135,9 @@ sci[\'object\'].getParentValue().edit()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

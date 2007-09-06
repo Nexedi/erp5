@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="Interaction" module="Products.ERP5.Interaction"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5.Interaction</string>
+          <string>Interaction</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

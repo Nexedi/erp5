@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -72,7 +75,11 @@ It is responsible of updating the applied rule\n
 \n
 """\n
 \n
-delivery = sci[\'object\']\n
+if obj is None:\n
+  delivery = sci[\'object\']\n
+else:\n
+  delivery = obj\n
+\n
 delivery_portal_type = delivery.getPortalType()\n
 portal = sci.getPortal()\n
 LOG = lambda msg:delivery.log("delivery_edit_workflow.Delivery_UpdateSimulation (%s)\\n" % (delivery.getPath()), msg)\n
@@ -122,7 +129,7 @@ LOG(\'END\')\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sci</string> </value>
+            <value> <string>sci, obj=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -142,13 +149,15 @@ LOG(\'END\')\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>sci</string>
+                            <string>obj</string>
+                            <string>None</string>
                             <string>_getitem_</string>
                             <string>delivery</string>
                             <string>_getattr_</string>
@@ -171,7 +180,9 @@ LOG(\'END\')\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
