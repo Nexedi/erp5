@@ -263,6 +263,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.monetary_destruction = self.monetary_destruction_module.newContent(
                                       id='monetary_destruction_1',
                                       portal_type='Monetary Destruction',
+                                      start_date = DateTime().Date(),
                                       source_value=self.source,
                                       destination_value=None,
                                       source_total_asset_price=110000.0,
@@ -301,6 +302,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                                         id='monetary_destruction_1',
                                         portal_type='Monetary Destruction',
                                         source_value=self.source_for_externe,
+                                        start_date = DateTime().Date(),
                                         destination_value=None,
                                         source_total_asset_price=110000.0,
                                         source_section_value=self.madrid)
@@ -739,7 +741,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     Confirm the monetary_destruction and check it
     """
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.monetary_destruction, 'confirm_action', wf_id='monetary_destruction_workflow', stop_date=DateTime())
+    self.workflow_tool.doActionFor(self.monetary_destruction, 'confirm_action', wf_id='monetary_destruction_workflow', stop_date=DateTime().Date())
     # execute tic
     self.stepTic()
     # get state
