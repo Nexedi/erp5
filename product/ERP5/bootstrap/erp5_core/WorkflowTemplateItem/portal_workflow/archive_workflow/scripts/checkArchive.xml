@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+# Check new catalog or catalog is the same as previous archive\n
+# Check date\n
+# Check connection definition\n
+\n
+archive = state_change[\'object\']\n
+min_stop_date = archive.getStopDateRangeMin()\n
+catalog_id = archive.getCatalogId()\n
+\n
+if "deferred" not in archive.getDeferredConnectionId():\n
+  msg = Message(domain=\'ui\', message=\'Deferred connection ID choose is not a deferred connection.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+previous_archive_list = [x.getObject() for x in archive.portal_catalog(portal_type="Archive", validation_state=\'validated\')]\n
+\n
+def sort_max_date(a, b):\n
+  return cmp(a.getStopDateRangeMax(), b.getStopDateRangeMax())\n
+previous_archive_list.sort(sort_max_date)\n
+\n
+if len(previous_archive_list) > 0:\n
+  # Check the date\n
+  previous_archive = previous_archive_list[-1]\n
+  if previous_archive.getStopDateRangeMax() is None:\n
+    msg = Message(domain=\'ui\', message=\'No max stop date defined in previous archive.\')\n
+    raise ValidationFailed, (msg,)\n
+  if previous_archive.getStopDateRangeMax() + 1 != min_stop_date:\n
+    msg = Message(domain=\'ui\', message=\'Archive are not contiguous.\')\n
+    raise ValidationFailed, (msg,)\n
+  # Check the catalog\n
+  for arch in previous_archive_list:\n
+    if arch.getCatalogId() == catalog_id and arch is not previous_archive:\n
+      msg = Message(domain=\'ui\', message=\'Use of a former catalog is prohibited.\')\n
+      raise ValidationFailed, (msg,)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getitem_</string>
+                            <string>archive</string>
+                            <string>_getattr_</string>
+                            <string>min_stop_date</string>
+                            <string>catalog_id</string>
+                            <string>msg</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>previous_archive_list</string>
+                            <string>sort_max_date</string>
+                            <string>len</string>
+                            <string>previous_archive</string>
+                            <string>None</string>
+                            <string>arch</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>checkArchive</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

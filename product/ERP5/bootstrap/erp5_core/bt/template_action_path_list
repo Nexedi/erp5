@@ -3,6 +3,12 @@ Alarm | periodicity
 Alarm | view
 Applied Rule | list
 Applied Rule | view
+Archive Tool | create_archive
+Archive Tool | list_ui
+Archive Tool | view
+Archive | history
+Archive | metadata
+Archive | view
 Base Category | list
 Base Category | view
 Base Domain | list
@@ -84,6 +90,7 @@ Trash Tool | view
 portal_actions | bt_tool
 portal_actions | category_tool
 portal_actions | create_module
+portal_actions | manage_archive
 portal_membership | manage_members
 portal_properties | history
 portal_properties | list_ui
