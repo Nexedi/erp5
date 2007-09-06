@@ -855,7 +855,7 @@ class SimulationTool(BaseTool):
                          omit_simulation=0, 
                          selection_domain=None, selection_report=None,
                          statistic=0, inventory_list=1, 
-                         precision=None, **kw):
+                         precision=None, connection_id=None, **kw):
       """
         Returns a list of inventories for a single or multiple
         resources on a single or multiple nodes, grouped by resource,
@@ -1136,7 +1136,7 @@ class SimulationTool(BaseTool):
                     standardise=standardise, omit_simulation=omit_simulation,
                     selection_domain=selection_domain,
                     selection_report=selection_report, precision=precision,
-                    inventory_list=inventory_list, 
+                    inventory_list=inventory_list, connection_id=connection_id,
                     statistic=statistic, **stock_sql_kw)
         if src__:
           sql_source_list.append(result)
