@@ -821,7 +821,7 @@ class SimulationTool(BaseTool):
         group_by_payment=0,
         group_by_variation=0, group_by_sub_variation=0,
         group_by_movement=0,
-        group_by_resource=1,
+        group_by_resource=None,
         **ignored):
       """
       Set defaults group_by parameters
@@ -837,8 +837,10 @@ class SimulationTool(BaseTool):
         if group_by_node or group_by_mirror_node or group_by_section or \
            group_by_mirror_section or group_by_payment or \
            group_by_sub_variation or group_by_variation or group_by_movement:
+          if group_by_resource is None:
+            group_by_resource = 1
           new_group_by_dict['group_by_resource'] = group_by_resource
-        else:
+        elif group_by_resource is None:
           new_group_by_dict['group_by_movement'] = 1
           new_group_by_dict['group_by_node'] = 1
           new_group_by_dict['group_by_resource'] = 1
