@@ -1464,6 +1464,24 @@ class Catalog( Folder,
     # Reminder about optimization: This below calls one or two small SQL
     # queries for every object. This is extremely inefficient. It is
     # far more efficient to send one or two queries for all objects.
+    path_uid_dict = {}
+    uid_path_dict = {}
+
+    if check_uid:
+      path_list = []
+      path_list_append = path_list.append
+      uid_list = []
+      uid_list_append = uid_list.append
+      for object in object_list:
+        path = object.getPath()
+        if path is not None:
+          path_list_append(path)
+        uid = object.uid
+        if uid is not None:
+          uid_list_append(uid)
+      path_uid_dict = self.getUidDictForPathList(path_list=path_list)
+      uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
+
     for object in object_list:
       path = object.getPath()
       if not getattr(aq_base(object), 'uid', None):
@@ -1476,7 +1494,7 @@ class Catalog( Folder,
       elif check_uid:
         uid = object.uid
         path = object.getPath()
-        index = self.getUidForPath(path)
+        index = path_uid_dict.get(path, None)
         try:
           index = long(index)
         except TypeError:
@@ -1493,7 +1511,10 @@ class Catalog( Folder,
           # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
           # This can be very dangerous with relations stored in a category table (CMFCategory)
           # This is why we recommend completely reindexing subobjects after any change of id
-          catalog_path = self.getPathForUid(uid)
+          if uid_path_dict.get(uid, None) is not None:
+            catalog_path = uid_path_dict.get(uid)
+          else:
+            catalog_path = self.getPathForUid(uid)
           #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
           if catalog_path == "reserved":
             # Reserved line in catalog table
@@ -1609,6 +1630,7 @@ class Catalog( Folder,
           #else:
           #  profile_dict[method_name] += end_time.timeTime() - start_time.timeTime()
           #LOG('catalogObjectList', 0, '%s: %f seconds' % (method_name, profile_dict[method_name]))
+
         except ConflictError:
           raise
         except:
@@ -1672,7 +1694,8 @@ class Catalog( Folder,
     """Catalog translations.
     """
     method_name = self.sql_catalog_translation_list
-    return self.catalogObjectList(object_list, method_id_list = (method_name,))
+    return self.catalogObjectList(object_list, method_id_list = (method_name,),
+                                  check_uid=0)
 
   def deleteTranslationList(self):
     """Delete translations.
@@ -1709,6 +1732,48 @@ class Catalog( Folder,
       return long(search_result[0].uid)
     else:
       return None
+
+  def getUidDictForPathList(self, path_list):
+    """ Looks up into catalog table to convert path into uid """
+    # Get the appropriate SQL Method
+    method = getattr(self, self.sql_getitem_by_path)
+    path_uid_dict = {}
+    try:
+      search_result = method(path_list = path_list)
+      # If not empty, return first record
+      for result in search_result:
+        path_uid_dict[result.path] = result.uid
+    except ValueError, message:
+      # This code is only there for backward compatibility
+      # XXX this must be removed one day
+      # This means we have the previous zsql method
+      # and we must call the method for every path
+      for path in path_list:
+        search_result = method(path = path)
+        if len(search_result) > 0:
+          path_uid_dict[path] = search_result[0].uid
+    return path_uid_dict
+
+  def getPathDictForUidList(self, uid_list):
+    """ Looks up into catalog table to convert uid into path """
+    # Get the appropriate SQL Method
+    method = getattr(self, self.sql_getitem_by_uid)
+    uid_path_dict = {}
+    try:
+      search_result = method(uid_list = uid_list)
+      # If not empty, return first record
+      for result in search_result:
+        uid_path_dict[result.uid] = result.path
+    except ValueError, message:
+      # This code is only there for backward compatibility
+      # XXX this must be removed one day
+      # This means we have the previous zsql method
+      # and we must call the method for every path
+      for uid in uid_list:
+        search_result = method(uid = uid)
+        if len(search_result) > 0:
+          uid_path__dict[uid] = search_result[0].path
+    return uid_path_dict
 
   def hasPath(self, path):
     """ Checks if path is catalogued """
