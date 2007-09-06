@@ -674,6 +674,8 @@ class Base( CopyContainer,
   isBaseCategory = 0  #
   isMovement = 0      #
   isDelivery = 0      #
+  isInventory = 0     #
+  isInventoryLine = 0 #
   isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
   isPredicate = 0     #
   isTemplate = 0      #

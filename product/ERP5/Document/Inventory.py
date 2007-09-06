@@ -42,6 +42,7 @@ class Inventory(Delivery):
     isPortalContent = 1
     isRADContent = 1
     isDelivery = 1
+    isInventory = 1
 
     # Declarative security
     security = ClassSecurityInfo()

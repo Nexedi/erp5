@@ -45,6 +45,7 @@ class InventoryLine(DeliveryLine):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    isInventoryLine = 1
 
     # Declarative security
     security = ClassSecurityInfo()
