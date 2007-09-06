@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -159,6 +156,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>isInventoryMovement</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>isMovement</string> </key>
                                 <value>
                                   <dictionary/>
@@ -177,29 +180,30 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid</string>
-                            <string>getResourceUid</string>
-                            <string>getInventoriatedQuantity</string>
-                            <string>getSourceUid</string>
-                            <string>getDestinationUid</string>
-                            <string>getSourceSectionUid</string>
-                            <string>getDestinationSectionUid</string>
-                            <string>isMovement</string>
-                            <string>getSourcePaymentUid</string>
-                            <string>getDestinationPaymentUid</string>
-                            <string>getSourceFunctionUid</string>
-                            <string>getDestinationFunctionUid</string>
-                            <string>getSourceProjectUid</string>
-                            <string>getDestinationProjectUid</string>
-                            <string>getSimulationState</string>
-                            <string>getSourceInventoriatedTotalAssetPrice</string>
-                            <string>getDestinationInventoriatedTotalAssetPrice</string>
-                            <string>getStartDate</string>
-                            <string>getStopDate</string>
-                            <string>isAccountable</string>
-                            <string>getPortalType</string>
-                            <string>getVariationText</string>
-                            <string>getSubVariationText</string>
+<string>uid</string>
+<string>getResourceUid</string>
+<string>getInventoriatedQuantity</string>
+<string>getSourceUid</string>
+<string>getDestinationUid</string>
+<string>getSourceSectionUid</string>
+<string>getDestinationSectionUid</string>
+<string>isMovement</string>
+<string>isInventoryMovement</string>
+<string>getSourcePaymentUid</string>
+<string>getDestinationPaymentUid</string>
+<string>getSourceFunctionUid</string>
+<string>getDestinationFunctionUid</string>
+<string>getSourceProjectUid</string>
+<string>getDestinationProjectUid</string>
+<string>getSimulationState</string>
+<string>getSourceInventoriatedTotalAssetPrice</string>
+<string>getDestinationInventoriatedTotalAssetPrice</string>
+<string>getStartDate</string>
+<string>getStopDate</string>
+<string>isAccountable</string>
+<string>getPortalType</string>
+<string>getVariationText</string>
+<string>getSubVariationText</string>
                           </list>
                         </value>
                     </item>
@@ -224,6 +228,7 @@ getDestinationUid\r\n
 getSourceSectionUid\r\n
 getDestinationSectionUid\r\n
 isMovement\r\n
+isInventoryMovement\r\n
 getSourcePaymentUid\r\n
 getDestinationPaymentUid\r\n
 getSourceFunctionUid\r\n
@@ -291,6 +296,7 @@ WHERE\n
 <dtml-let row_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
     <dtml-if "isMovement[loop_item]">\n
+    <dtml-if "not isInventoryMovement[loop_item]">\n
       <dtml-if "isAccountable[loop_item]">\n
         <dtml-if "getResourceUid[loop_item]">\n
             <dtml-if "getDestinationUid[loop_item]">\n
@@ -336,6 +342,7 @@ WHERE\n
         </dtml-if>\n
       </dtml-if>\n
     </dtml-if>\n
+    </dtml-if>\n
   </dtml-in>  \n
   \n
   <dtml-if "row_list">\n
@@ -375,9 +382,11 @@ VALUES\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -417,6 +426,7 @@ WHERE\n
 <dtml-let row_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
     <dtml-if "isMovement[loop_item]">\n
+    <dtml-if "not isInventoryMovement[loop_item]">\n
       <dtml-if "isAccountable[loop_item]">\n
         <dtml-if "getResourceUid[loop_item]">\n
             <dtml-if "getDestinationUid[loop_item]">\n
@@ -461,6 +471,7 @@ WHERE\n
             </dtml-if>\n
         </dtml-if>\n
       </dtml-if>\n
+    </dtml-if>\n
     </dtml-if>\n
   </dtml-in>  \n
   \n
