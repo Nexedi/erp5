@@ -58,7 +58,7 @@ class InventoryCell(DeliveryCell):
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.CategoryCore
                       , PropertySheet.Amount
-                      , PropertySheet.Inventory
+                      , PropertySheet.InventoryMovement
                       , PropertySheet.Task
                       , PropertySheet.Movement
                       , PropertySheet.Price

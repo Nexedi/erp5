@@ -58,7 +58,7 @@ class InventoryLine(DeliveryLine):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.Amount
-                      , PropertySheet.Inventory
+                      , PropertySheet.InventoryMovement
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
