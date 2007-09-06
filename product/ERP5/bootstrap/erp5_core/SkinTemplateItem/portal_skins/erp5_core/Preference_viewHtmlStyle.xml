@@ -69,6 +69,7 @@
               <list>
                 <string>left</string>
                 <string>right</string>
+                <string>center</string>
               </list>
             </value>
         </item>
@@ -76,6 +77,15 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key>                 <string>center</string> </key>
+                    <value>
+                      <list>
+                        <string>my_preferred_text_editor</string>
+                        <string>my_preferred_text_format</string>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>

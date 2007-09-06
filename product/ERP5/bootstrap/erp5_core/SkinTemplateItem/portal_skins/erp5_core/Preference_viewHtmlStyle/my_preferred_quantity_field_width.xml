@@ -90,7 +90,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Quantity Fields Width</string> </value>
                 </item>
               </dictionary>
