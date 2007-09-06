@@ -1,7 +1,7 @@
-##############################################################################
+#############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
+#               Aurélien Calonne <aurel@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,30 +25,20 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-"""
-    ERP5Catalog provides an extended catalog based on ZSQLCatalog
-    and extended local roles management
-"""
 
-# Update ERP5 Globals
-from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import sys, Permissions
-this_module = sys.modules[ __name__ ]
-document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
-# Define object classes and tools
-from Tool import ArchiveTool
-import CatalogTool
-object_classes = ()
-portal_tools = (CatalogTool.CatalogTool,
-                ArchiveTool.ArchiveTool)
-content_classes = ()
-content_constructors = ()
+class CatalogPreference:
+  """
+    This property sheet defines the user preference for catalog.
+  """
 
-# Finish installation
-def initialize( context ):
-  initializeProduct(context, this_module, globals(),
-                         object_classes = object_classes,
-                         portal_tools = portal_tools,
-                         content_constructors = content_constructors,
-                         content_classes = content_classes)
+  _properties = (
+    { 'id'          : 'preferred_archive',
+      'description' : 'The archive the user want to use',
+      'type'        : 'string',
+      'preference'  : 1,
+      'mode'        : '' },
+    )
+
+
+

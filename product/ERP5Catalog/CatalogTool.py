@@ -50,7 +50,7 @@ from MethodObject import Method
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 
 import os, time, urllib, warnings
-from zLOG import LOG, PROBLEM
+from zLOG import LOG, PROBLEM, INFO
 
 SECURITY_USING_NUX_USER_GROUPS, SECURITY_USING_PAS = range(2)
 try:
@@ -74,6 +74,9 @@ try:
 except ImportError:
   pass
 
+from Persistence import Persistent
+from Acquisition import Implicit
+
 def getSecurityProduct(acl_users):
   """returns the security used by the user folder passed.
   (NuxUserGroup, ERP5Security, or None if anything else).
@@ -82,6 +85,7 @@ def getSecurityProduct(acl_users):
     return SECURITY_USING_PAS
   elif acl_users.meta_type == NUG_meta_type:
     return SECURITY_USING_NUX_USER_GROUPS
+
 
 class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 
@@ -187,6 +191,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     id = 'portal_catalog'
     meta_type = 'ERP5 Catalog'
     security = ClassSecurityInfo()
+
     default_result_limit = 1000
     
     manage_options = ( { 'label' : 'Overview', 'action' : 'manage_overview' },
@@ -204,6 +209,29 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 , 'manage_schema' )
     manage_schema = DTMLFile( 'dtml/manageSchema', globals() )
 
+    def getPreferredSQLCatalogId(self, id=None):
+      """
+      Get the SQL Catalog from preference.
+      """
+      if id is None:
+        # Check if we want to use an archive
+        #if getattr(aq_base(self.portal_preferences), 'uid', None) is not None:
+        archive_path = self.portal_preferences.getPreferredArchive(sql_catalog_id=self.default_sql_catalog_id)
+        if archive_path not in ('', None):
+          try:
+            archive = self.restrictedTraverse(archive_path)
+          except KeyError:
+            # Do not fail if archive object has been removed,
+            # but preference is not up to date
+            return None
+          if archive is not None:
+            catalog_id = archive.getCatalogId()
+            if catalog_id not in ('', None):
+              return catalog_id
+        return None
+      else:
+        return id
+      
     security.declareProtected( 'Import/Export objects', 'addDefaultSQLMethods' )
     def addDefaultSQLMethods(self, config_id='erp5'):
       """
@@ -401,7 +429,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
 
     security.declarePublic( 'getAllowedRolesAndUsers' )
-    def getAllowedRolesAndUsers(self, **kw):
+    def getAllowedRolesAndUsers(self, sql_catalog_id=None, **kw):
       """
         Return allowed roles and users.
 
@@ -419,7 +447,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       user_is_superuser = (user_str == SUPER_USER)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
-      column_map = self.getSQLCatalog().getColumnMap()
+      column_map = self.getSQLCatalog(sql_catalog_id).getColumnMap()
 
       # Patch for ERP5 by JP Smets in order
       # to implement worklists and search of local roles
@@ -464,7 +492,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return allowedRolesAndUsers, role_column_dict
 
-    def getSecurityUidListAndRoleColumnDict(self, **kw):
+    def getSecurityUidListAndRoleColumnDict(self, sql_catalog_id=None, **kw):
       """
         Return a list of security Uids and a dictionnary containing available
         role columns.
@@ -474,7 +502,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         catalogs.
       """
       allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
-      catalog = self.getSQLCatalog()
+      catalog = self.getSQLCatalog(sql_catalog_id)
       method = getattr(catalog, catalog.sql_search_security, None)
       if method is None:
         raise DeprecationWarning, "The usage of allowedRolesAndUsers is "\
@@ -501,7 +529,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return security_uid_list, role_column_dict
 
     security.declarePublic( 'getSecurityQuery' )
-    def getSecurityQuery(self, query=None, **kw):
+    def getSecurityQuery(self, query=None, sql_catalog_id=None, **kw):
       """
         Build a query based on allowed roles or on a list of security_uid
         values. The query takes into account the fact that some roles are
@@ -509,10 +537,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       original_query = query
       try:
-        security_uid_list, role_column_dict = self.getSecurityUidListAndRoleColumnDict(**kw)
+        security_uid_list, role_column_dict = self.getSecurityUidListAndRoleColumnDict(sql_catalog_id=sql_catalog_id, **kw)
       except DeprecationWarning, message:
         warnings.warn(message, DeprecationWarning)
-        allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
+        allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(sql_catalog_id=sql_catalog_id, **kw)
         if role_column_dict:
           query_list = []
           for key, value in role_column_dict.items():
@@ -557,9 +585,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
             kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
-        query = self.getSecurityQuery(query=query, **kw)
+        catalog_id = self.getPreferredSQLCatalogId(kw.pop("sql_catalog_id", None))
+        query = self.getSecurityQuery(query=query, sql_catalog_id=catalog_id, **kw)
         kw.setdefault('limit', self.default_result_limit)
-        return ZCatalog.searchResults(self, query=query, **kw)
+        # get catalog from preference
+        #LOG("searchResult", INFO, catalog_id)
+        #         LOG("searchResult", INFO, ZCatalog.searchResults(self, query=query, sql_catalog_id=catalog_id, src__=1, **kw))
+        return ZCatalog.searchResults(self, query=query, sql_catalog_id=catalog_id, **kw)
 
     __call__ = searchResults
 
@@ -609,10 +641,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    now = DateTime()
         #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
-
-        query = self.getSecurityQuery(query=query, **kw)
+        catalog_id = self.getPreferredSQLCatalogId(kw.pop("sql_catalog_id", None))        
+        query = self.getSecurityQuery(query=query, sql_catalog_id=catalog_id, **kw)
         kw.setdefault('limit', self.default_result_limit)
-        return ZCatalog.countResults(self, query=query, **kw)
+        # get catalog from preference
+        return ZCatalog.countResults(self, query=query, sql_catalog_id=catalog_id, **kw)
     
     security.declarePrivate('unrestrictedCountResults')
     def unrestrictedCountResults(self, REQUEST=None, **kw):
@@ -821,6 +854,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           return aq_base_name
       return aq_base_name
+
+
 
 
 

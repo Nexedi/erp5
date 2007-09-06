@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
+#                Aurélien Calonne <aurel@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,30 +25,40 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-"""
-    ERP5Catalog provides an extended catalog based on ZSQLCatalog
-    and extended local roles management
-"""
 
-# Update ERP5 Globals
-from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import sys, Permissions
-this_module = sys.modules[ __name__ ]
-document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
-# Define object classes and tools
-from Tool import ArchiveTool
-import CatalogTool
-object_classes = ()
-portal_tools = (CatalogTool.CatalogTool,
-                ArchiveTool.ArchiveTool)
-content_classes = ()
-content_constructors = ()
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import PropertySheet, Permissions, Interface
+from Globals import InitializeClass
+from Products.ERP5.Document.Predicate import Predicate
 
-# Finish installation
-def initialize( context ):
-  initializeProduct(context, this_module, globals(),
-                         object_classes = object_classes,
-                         portal_tools = portal_tools,
-                         content_constructors = content_constructors,
-                         content_classes = content_classes)
+
+class Archive(Predicate):
+  """
+  A Catalog Archive object
+
+  It defines the date of the archive and the catalog to use
+  """
+
+  meta_type = 'ERP5 Archive'
+  portal_type = 'Archive'
+  isPortalContent = 1
+  isRADContent = 1
+  
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative interfaces
+  __implements__ = ( Interface.Predicate, )
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.Archive
+                    )
+  
+  isIndexable = 1
+    
+
+InitializeClass(Archive)
