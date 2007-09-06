@@ -40,6 +40,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>validate</string>
                 <string>validate_action</string>
               </tuple>
@@ -93,9 +95,14 @@
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <list>
-                        <string>Reviewer</string>
-                      </list>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
@@ -104,18 +111,11 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>Review portal content</string> </key>
-                    <value>
-                      <list>
-                        <string>Reviewer</string>
-                      </list>
                     </value>
                 </item>
                 <item>

@@ -24,46 +24,64 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Drafts to Validate (%(count)s)</string> </value>
+            <value> <string>Organisations to validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?validation_state=draft&portal_type=%(portal_type)s&reset=1
+organisation_module?validation_state=draft&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Documents to Validate</string> </value>
+            <value> <string>Organisations to validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>2_draft_organisation_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Guard</string>
+          <string>Guard</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>
@@ -79,6 +97,14 @@ Base_viewSearchResultList?validation_state=draft&portal_type=%(portal_type)s&res
             <key> <string>_container</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Organisation</string>
+                      </tuple>
+                    </value>
+                </item>
                 <item>
                     <key> <string>validation_state</string> </key>
                     <value>
