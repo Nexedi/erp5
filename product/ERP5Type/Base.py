@@ -3304,7 +3304,7 @@ class Base( CopyContainer,
     return dochelper
 
 
-  security.declareProtected(permissions.ModifyPortalContent, 'setDefaultReindexParameters' )
+  security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultReindexParameters' )
   def setDefaultReindexParameters(self, **kw):
     # This method sets the default keyword parameters to reindex. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
@@ -3312,7 +3312,7 @@ class Base( CopyContainer,
     key = ('default_reindex_parameter', id(aq_base(self)))
     tv[key] = kw
 
-  security.declareProtected(permissions.View, 'getDefaultReindexParameterDict' )
+  security.declareProtected(Permissions.View, 'getDefaultReindexParameterDict' )
   def getDefaultReindexParametersDict(self):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
