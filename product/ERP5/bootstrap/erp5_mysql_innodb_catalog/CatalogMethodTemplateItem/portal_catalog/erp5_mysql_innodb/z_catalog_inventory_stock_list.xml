@@ -156,7 +156,7 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>isInventoryLine</string> </key>
+                                <key> <string>isInventoryMovement</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -203,7 +203,7 @@
 <string>getPortalType</string>
 <string>getVariationText</string>
 <string>getSubVariationText</string>
-<string>isInventoryLine</string>
+<string>isInventoryMovement</string>
                           </list>
                         </value>
                     </item>
@@ -243,7 +243,7 @@ isAccountable\r\n
 getPortalType\r\n
 getVariationText\r\n
 getSubVariationText\r\n
-isInventoryLine</string> </value>
+isInventoryMovement</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -269,7 +269,7 @@ WHERE\n
 \n
 <dtml-let row_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if expr="isInventoryLine[loop_item] and isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
+    <dtml-if expr="isInventoryMovement[loop_item] and isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
       <dtml-if "getDestinationUid[loop_item]">\n
         <dtml-call expr="row_list.append([\n
                     uid[loop_item], \n
@@ -393,7 +393,7 @@ WHERE\n
 \n
 <dtml-let row_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if expr="isInventoryLine[loop_item] and isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
+    <dtml-if expr="isInventoryMovement[loop_item] and isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
       <dtml-if "getDestinationUid[loop_item]">\n
         <dtml-call expr="row_list.append([\n
                     uid[loop_item], \n
