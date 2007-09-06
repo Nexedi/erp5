@@ -4,6 +4,8 @@
  <key>category</key>
  <key>delivery</key>
  <key>full_text</key>
+ <key>inventory</key>
+ <key>inventory_stock</key>
  <key>item</key>
  <key>movement</key>
  <key>predicate</key>

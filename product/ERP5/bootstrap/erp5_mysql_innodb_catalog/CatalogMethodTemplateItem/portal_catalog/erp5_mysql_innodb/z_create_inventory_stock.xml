@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>z_create_inventory_stock</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string>CREATE TABLE `inventory_stock` (\n
+  `uid` BIGINT UNSIGNED NOT NULL,\n
+  `node_uid` BIGINT UNSIGNED,\n
+  `section_uid` BIGINT UNSIGNED,\n
+  `payment_uid` BIGINT UNSIGNED,\n
+  `function_uid` BIGINT UNSIGNED,\n
+  `project_uid` BIGINT UNSIGNED,\n
+  `mirror_section_uid` BIGINT UNSIGNED,\n
+  `mirror_node_uid` BIGINT UNSIGNED,\n
+  `resource_uid` BIGINT UNSIGNED,\n
+  `quantity` real ,\n
+  `date` datetime,\n
+  `mirror_date` datetime,\n
+  `total_price` real ,\n
+  `portal_type` VARCHAR(255),\n
+  `simulation_state` varchar(255) default \'\',\n
+  `variation_text` VARCHAR(255),\n
+  `sub_variation_text` VARCHAR(255),\n
+  KEY `uid` (`uid`),\n
+  KEY `quantity` (`quantity`),\n
+  KEY `section_uid` (`section_uid`),\n
+  KEY `mirror_section_uid` (`mirror_section_uid`),\n
+  KEY `mirror_node_uid` (`mirror_node_uid`),\n
+  KEY `node_uid` (`node_uid`),\n
+  KEY `payment_uid` (`payment_uid`),\n
+  KEY `function_uid` (`function_uid`),\n
+  KEY `project_uid` (`project_uid`),\n
+  KEY `resource_uid` (`resource_uid`),\n
+  KEY `simulation_state` (`simulation_state`),\n
+  KEY `resource_node_uid` (`resource_uid`, `node_uid`),\n
+  KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`),\n
+  KEY `date` (`date`)\n
+) TYPE = InnoDB\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="__newobj__" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string>CREATE TABLE `inventory_stock` (\n
+  `uid` BIGINT UNSIGNED NOT NULL,\n
+  `node_uid` BIGINT UNSIGNED,\n
+  `section_uid` BIGINT UNSIGNED,\n
+  `payment_uid` BIGINT UNSIGNED,\n
+  `function_uid` BIGINT UNSIGNED,\n
+  `project_uid` BIGINT UNSIGNED,\n
+  `mirror_section_uid` BIGINT UNSIGNED,\n
+  `mirror_node_uid` BIGINT UNSIGNED,\n
+  `resource_uid` BIGINT UNSIGNED,\n
+  `quantity` real ,\n
+  `date` datetime,\n
+  `mirror_date` datetime,\n
+  `total_price` real ,\n
+  `portal_type` VARCHAR(255),\n
+  `simulation_state` varchar(255) default \'\',\n
+  `variation_text` VARCHAR(255),\n
+  `sub_variation_text` VARCHAR(255),\n
+  KEY `uid` (`uid`),\n
+  KEY `quantity` (`quantity`),\n
+  KEY `section_uid` (`section_uid`),\n
+  KEY `mirror_section_uid` (`mirror_section_uid`),\n
+  KEY `mirror_node_uid` (`mirror_node_uid`),\n
+  KEY `node_uid` (`node_uid`),\n
+  KEY `payment_uid` (`payment_uid`),\n
+  KEY `function_uid` (`function_uid`),\n
+  KEY `project_uid` (`project_uid`),\n
+  KEY `resource_uid` (`resource_uid`),\n
+  KEY `simulation_state` (`simulation_state`),\n
+  KEY `resource_node_uid` (`resource_uid`, `node_uid`),\n
+  KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`),\n
+  KEY `date` (`date`)\n
+) TYPE = InnoDB\n
+</string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
