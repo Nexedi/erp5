@@ -116,7 +116,7 @@ class TestBase(ERP5TypeTestCase):
       some categories for testing them
     """
     category_list = ['testGroup1', 'testGroup2']
-    if len(self.category_tool.group.contentValues()) == 0 :
+    if 'testGroup1' not in self.category_tool.group.contentIds():
       for category_id in category_list:
         o = self.category_tool.group.newContent(portal_type='Category',
                                                 id=category_id)
@@ -982,6 +982,19 @@ class TestBase(ERP5TypeTestCase):
     obj = portal.organisation_module.newContent(portal_type='Organisation')
     obj.manage_permission('View', [], 0)
     self.assertEquals(None, obj.getViewPermissionOwner())
+
+  def test_Member_Base_download(self):
+    # tests that members can download files
+    f = self.portal.newContent(portal_type='File', id='f')
+    
+    # login as a member
+    uf = self.portal.acl_users
+    uf._doAddUser('member_user', 'secret', ['Member'], [])
+    user = uf.getUserById('member_user').__of__(uf)
+    newSecurityManager(None, user)
+
+    f.Base_download()
+    # if it didn't raise Unauthorized, Ok
 
 
 class TestERP5PropertyManager(unittest.TestCase):
