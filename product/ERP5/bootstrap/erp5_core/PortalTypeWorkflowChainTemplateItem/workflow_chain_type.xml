@@ -41,6 +41,6 @@
  </chain>
  <chain>
   <type>Simulation Movement</type>
-  <workflow>simulation_movement_interaction_workflow</workflow>
+  <workflow>simulation_movement_causality_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

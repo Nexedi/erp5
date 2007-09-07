@@ -68,18 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>movement = state_change[\'object\']\n
+            <value> <string>simulation_movement = state_change[\'object\']\n
 \n
-delivery_value = movement.getDeliveryValue()\n
+delivery_movement = simulation_movement.getDeliveryValue()\n
 \n
-#if delivery_value is not None:\n
-#  if delivery_value.getPortalType() in ("Sale Invoice Transaction Line",) :\n
-#    # XXX Sale Invoice\'s simulation is triggered upon edit, so if we edit now, we fall in an infinite loop ...\n
-#    return\n
-#  delivery_value.activate(activity=\'SQLQueue\', after_path_and_method_id=(movement.getPath(), [\'immediateReindexObject\', \'recursiveImmediateReindexObject\'])).edit()\n
-\n
-if delivery_value is not None:\n
-  delivery_value.getRootDeliveryValue().activate(after_method_id=(\'recursiveImmediateReindexObject\',\'immediateReindexObject\')).updateCausalityState()\n
+if delivery_movement is not None:\n
+  delivery = delivery_movement.getExplanationValue()\n
+  if delivery.getCausalityState() != \'draft\':\n
+    delivery.activate(\n
+        after_path_and_method_id=(movement.getPath(),\n
+        (\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))).calculate()\n
 </string> </value>
         </item>
         <item>
@@ -142,10 +140,12 @@ if delivery_value is not None:\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getitem_</string>
-                            <string>movement</string>
+                            <string>simulation_movement</string>
                             <string>_getattr_</string>
-                            <string>delivery_value</string>
+                            <string>delivery_movement</string>
                             <string>None</string>
+                            <string>delivery</string>
+                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>
@@ -162,7 +162,7 @@ if delivery_value is not None:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SimulationMovement_editDeliveryValue</string> </value>
+            <value> <string>SimulationMovement_calculateCausalityState</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

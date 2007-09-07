@@ -9,4 +9,4 @@ Predicate | rule_interaction_workflow
 Preference | preference_workflow
 Property Divergence Tester | edit_workflow
 Quantity Divergence Tester | edit_workflow
-Simulation Movement | simulation_movement_interaction_workflow
+Simulation Movement | simulation_movement_causality_interaction_workflow
