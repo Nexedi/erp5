@@ -154,7 +154,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
 #               'price_currency': transaction_line.getPriceCurrency(),
             # calculate (quantity * price) * cell_quantity
             'quantity': (context_movement.getCorrectedQuantity() *
-              context_movement.getPrice()) * transaction_line.getQuantity(),
+              context_movement.getPrice(0.0)) * transaction_line.getQuantity(),
 #               'quantity_unit': transaction_line.getQuantityUnit(),
             'force_update': 1,
             }
