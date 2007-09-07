@@ -1502,6 +1502,39 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         del chain_dict[id]
     context.portal_workflow.manage_changeWorkflows('', props=chain_dict)
 
+  def preinstall(self, context, installed_bt, **kw):
+    modified_object_list = {}
+    if context.getTemplateFormatVersion() == 1:
+      new_keys = self._objects.keys()
+      new_dict = PersistentMapping()
+      # Fix key from installed bt if necessary
+      for key in installed_bt._objects.keys():
+        if not "portal_type_workflow_chain/" in key:
+          new_key = 'portal_type_workflow_chain/%s' %key
+          new_dict[new_key] = installed_bt._objects[key]
+        else:
+          new_dict[key] = installed_bt._objects[key]
+      if len(new_dict):
+        installed_bt._objects = new_dict
+      for path in new_keys:
+        if installed_bt._objects.has_key(path):
+          # compare object to see it there is changes
+          new_object = self._objects[path]
+          old_object = installed_bt._objects[path]
+          # compare same type of object
+          if isinstance(old_object, list) or isinstance(old_object, tuple):
+            old_object = ', '.join(old_object)
+          if new_object != old_object:
+            modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+        else: # new object
+          modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+      # get removed object
+      old_keys = installed_bt._objects.keys()
+      for path in old_keys:
+        if path not in new_keys:
+          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
   def _importFile(self, file_name, file):
     # import workflow chain for portal_type
     dict = {}
@@ -1580,12 +1613,15 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     if context.getTemplateFormatVersion() == 1:
       portal = context.getPortalObject()
       new_keys = self._objects.keys()
-      if installed_bt.id == 'installed_bt_for_diff':
-        #must rename keys in dict if reinstall
-        new_dict = PersistentMapping()
-        for key in installed_bt._objects.keys():
+      new_dict = PersistentMapping()
+      # fix key if necessary in installed bt for diff
+      for key in installed_bt._objects.keys():
+        if self.class_property not in key:
           new_key = self.class_property+'/'+key
           new_dict[new_key] = installed_bt._objects[key]
+        else:
+          new_dict[key] = installed_bt._objects[key]
+      if len(new_dict):
         installed_bt._objects = new_dict
       for path in new_keys:
         if installed_bt._objects.has_key(path):
