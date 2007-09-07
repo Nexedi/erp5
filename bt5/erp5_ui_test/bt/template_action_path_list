@@ -19,5 +19,6 @@ Foo | list
 Foo | metadata
 Foo | view
 Foo | view_duration_field
+Foo | view_planning
 Foo | view_proxy_field
 Foo | view_relation_field
