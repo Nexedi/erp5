@@ -27,35 +27,12 @@
 #
 ##############################################################################
 
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
-import os
-import sys
 import unittest
-import time
 
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             noSecurityManager
-from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
-from zLOG import LOG
-from Products.ERP5Type.DateUtils import addToDate
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Type.tests.Sequence import SequenceList
 from zExceptions import BadRequest
-from Products.ERP5Type import product_path
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.ClassTool import _aq_reset
 
 class TestBase(ERP5TypeTestCase):
@@ -1074,12 +1051,8 @@ class TestERP5PropertyManager(unittest.TestCase):
     ob._setProperty('a_dummy_property', prop_value)
     self.assertEquals(ob.getProperty('a_dummy_property', 100), prop_value)
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestBase))
-        suite.addTest(unittest.makeSuite(TestERP5PropertyManager))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestBase))
+  suite.addTest(unittest.makeSuite(TestERP5PropertyManager))
+  return suite
