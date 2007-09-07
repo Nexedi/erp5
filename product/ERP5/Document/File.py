@@ -37,6 +37,7 @@ from Products.ERP5.Document.Document import Document
 from Products.ERP5.Document.Document import ConversionCacheMixin
 from Products.ERP5Type.Base import Base
 from Products.CMFDefault.File import File as CMFFile
+import OFS
 from zLOG import LOG
 from DateTime import DateTime
 
@@ -105,6 +106,15 @@ class File(Document, CMFFile, ConversionCacheMixin):
 
   # Declarative interfaces
   #__implements__ = ( , )
+  
+  def __init__(self, id, *args, **kw):
+    """Initialize the underlying File. """
+    Document.__init__(self, id, *args, **kw)
+    # We don't call CMFFile.__init__, because it calls DefaultDublinCoreImpl,
+    # which calls some setters that will not work on an ERP5Type.Base object
+    # before beeing in the database. 
+    OFS.Image.File.__init__(self, id, title=None, file='')
+    
 
   ### Special edit method
   security.declarePrivate( '_edit' )
