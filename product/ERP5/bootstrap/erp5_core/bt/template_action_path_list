@@ -90,6 +90,7 @@ Trash Tool | view
 portal_actions | bt_tool
 portal_actions | category_tool
 portal_actions | create_module
+portal_actions | manage_archive
 portal_membership | manage_members
 portal_properties | history
 portal_properties | list_ui
