@@ -51,8 +51,8 @@ class Document:
   )
 
   _categories = ('similar', 'predecessor', 'successor', 'contributor', 'classification',
-                 # Source project is set by default since project is equivalent to workspace
-                 'source_project',
+                 # Follow up is used to create document workspaces for projects or tickets
+                 'follow_up',
                  # Source is defined in DMS documentation
                  'source',
                  # Update frequency in case this document must be crawled regularly
