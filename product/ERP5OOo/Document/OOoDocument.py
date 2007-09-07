@@ -312,6 +312,11 @@ class OOoDocument(File, ConversionCacheMixin):
     If a conversion is already stored for this format, it is returned
     directly, otherwise the conversion is stored for the next time.
     """
+    #XXX if document is empty, stop to try to convert.
+    #XXX but I don't know what is a appropriate mime-type.(Yusei)
+    if self.get_size()==0:
+      return 'text/plain', ''
+    
     # Make sure we can support html and pdf by default
     is_html = 0
     original_format = format
