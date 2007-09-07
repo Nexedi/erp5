@@ -68,14 +68,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request=context.REQUEST\n
+            <value> <string>request = container.REQUEST\n
+response = request.RESPONSE\n
+\n
 if hasattr(context,\'getContentType\'):\n
-  request.RESPONSE.setHeader(\'Content-type\', context.getContentType())\n
+  response.setHeader(\'Content-type\', context.getContentType())\n
 else:\n
-  request.RESPONSE.setHeader(\'Content-type\', context.getFormat())\n
-file_name = context.getTitle() or context.getSourceReference()\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % file_name)\n
-return context.manage_FTPget()\n
+  response.RESPONSE.setHeader(\'Content-type\', context.getFormat())\n
+\n
+file_name = context.getTitle() or context.getSourceReference() or context.getId()\n
+response.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % file_name)\n
+return context.index_html(request, response)\n
 </string> </value>
         </item>
         <item>
@@ -119,9 +122,11 @@ return context.manage_FTPget()\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>container</string>
                             <string>request</string>
+                            <string>response</string>
                             <string>hasattr</string>
+                            <string>context</string>
                             <string>file_name</string>
                           </tuple>
                         </value>
