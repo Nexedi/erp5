@@ -118,10 +118,10 @@ quantity = transaction.getQuantity()\n
 if resource_one == 2:\n
   msg = Message(domain="ui", message="No Resource.")\n
   raise ValidationFailed, (msg,)\n
-elif billetage_sorti != base_price :\n
+elif billetage_entre != quantity :\n
   msg = Message(domain="ui", message="Received amount is different from input cash.")\n
   raise ValidationFailed, (msg,)\n
-elif billetage_entre != quantity :\n
+elif billetage_sorti != base_price :\n
   msg = Message(domain="ui", message="Return amount is different from output cash")\n
   raise ValidationFailed, (msg,) \n
 elif resource_one != 0 :\n
