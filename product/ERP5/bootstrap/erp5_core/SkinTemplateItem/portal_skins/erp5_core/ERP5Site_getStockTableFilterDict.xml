@@ -65,19 +65,58 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import make_query\n
+            <value> <string>from DateTime import DateTime\n
 \n
-object = brain.getObject()\n
-if object is None:\n
-  return None\n
+def getSourceAndDestinationList(instance):\n
+  return (instance.getSourceUid(), instance.getDestinationUid())\n
 \n
-url = context.absolute_url()\n
-method = \'Alarm_showReport\'\n
-kw = { \'active_process\' : \'portal_activities/%s\' % object.process_id,\n
-       \'reset\' : \'1\', \n
-     }\n
+def getSourcePaymentAndDestinationPaymentList(instance):\n
+  return (instance.getSourcePaymentUid(), instance.getDestinationPaymentUid())\n
 \n
-return url + \'/\' + method + \'?\' + make_query(kw)\n
+def getSimulationState(instance):\n
+  return instance.getSimulationState()\n
+\n
+def stripDate(date):\n
+  """\n
+    Strip everything from the given DateTime parameter,\n
+    leaving just year, month and day.\n
+  """\n
+  if not same_type(date, DateTime()):\n
+    return date\n
+  return DateTime(date.Date())\n
+\n
+def getStartDateAndStopDate(instance):\n
+  start_date = stripDate(instance.getStartDate())\n
+  stop_date = stripDate(instance.getStopDate())\n
+  return (start_date, stop_date)\n
+\n
+def getSourceSectionAndDestinationSectionList(instance):\n
+  return (instance.getSourceSectionUid(), instance.getDestinationSectionUid())\n
+\n
+def getTotalPrice(instance):\n
+  price = instance.getTotalPrice()\n
+  if price is None:\n
+    return None\n
+  return (instance.getDestinationInventoriatedTotalAssetPrice(), instance.getSourceInventoriatedTotalAssetPrice())\n
+\n
+def getQuantity(instance):\n
+  quantity = instance.getInventoriatedQuantity()\n
+  if quantity is None:\n
+    return None\n
+  return (quantity, -quantity)\n
+\n
+return {\n
+  \'node_uid\':         getSourceAndDestinationList,\n
+  \'payment_uid\':      getSourcePaymentAndDestinationPaymentList,\n
+  \'section_uid\':      getSourceSectionAndDestinationSectionList,\n
+  \'mirror_section_uid\': getSourceSectionAndDestinationSectionList,\n
+  \'date\':             getStartDateAndStopDate,\n
+  \'mirror_date\':      getStartDateAndStopDate,\n
+  \'total_price\':      getTotalPrice,\n
+  \'quantity\':         getQuantity,\n
+  \'mirror_node_uid\':  getSourceAndDestinationList,\n
+  \'simulation_state\': getSimulationState,\n
+}\n
 </string> </value>
         </item>
         <item>
@@ -94,7 +133,7 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **kwd</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,24 +153,21 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>brain</string>
-                            <string>selection</string>
-                            <string>kwd</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>_getattr_</string>
-                            <string>object</string>
-                            <string>None</string>
-                            <string>context</string>
-                            <string>url</string>
-                            <string>method</string>
-                            <string>kw</string>
+                            <string>DateTime</string>
+                            <string>getSourceAndDestinationList</string>
+                            <string>getSourcePaymentAndDestinationPaymentList</string>
+                            <string>getSimulationState</string>
+                            <string>stripDate</string>
+                            <string>getStartDateAndStopDate</string>
+                            <string>getSourceSectionAndDestinationSectionList</string>
+                            <string>getTotalPrice</string>
+                            <string>getQuantity</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,15 +179,12 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_getDescriptionUrl</string> </value>
+            <value> <string>ERP5Site_getStockTableFilterDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

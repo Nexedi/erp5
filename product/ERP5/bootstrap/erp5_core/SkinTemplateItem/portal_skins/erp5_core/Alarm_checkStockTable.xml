@@ -65,19 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import make_query\n
-\n
-object = brain.getObject()\n
-if object is None:\n
-  return None\n
-\n
-url = context.absolute_url()\n
-method = \'Alarm_showReport\'\n
-kw = { \'active_process\' : \'portal_activities/%s\' % object.process_id,\n
-       \'reset\' : \'1\', \n
-     }\n
-\n
-return url + \'/\' + method + \'?\' + make_query(kw)\n
+            <value> <string>return context.ERP5Site_checkStockTable(bundle_object_count=bundle_object_count,\n
+                                        bundle_offset=bundle_offset,\n
+                                        property_override_method_id=\'ERP5Site_getStockTableFilterDict\',\n
+                                        active_process=active_process)\n
 </string> </value>
         </item>
         <item>
@@ -94,7 +85,7 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **kwd</string> </value>
+            <value> <string>bundle_object_count=100, bundle_offset=0, active_process=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,24 +105,17 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>brain</string>
-                            <string>selection</string>
-                            <string>kwd</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
+                            <string>bundle_object_count</string>
+                            <string>bundle_offset</string>
+                            <string>active_process</string>
                             <string>_getattr_</string>
-                            <string>object</string>
-                            <string>None</string>
-                            <string>context</string>
-                            <string>url</string>
-                            <string>method</string>
-                            <string>kw</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,14 +128,15 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
+                <int>100</int>
+                <int>0</int>
                 <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_getDescriptionUrl</string> </value>
+            <value> <string>Alarm_checkStockTable</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

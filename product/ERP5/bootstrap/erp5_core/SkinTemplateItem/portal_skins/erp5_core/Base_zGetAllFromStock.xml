@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -55,8 +52,30 @@
             </value>
         </item>
         <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>limit</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -65,6 +84,14 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_zGetAllFromStock</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
@@ -80,9 +107,11 @@ LIMIT <dtml-var expr="limit[0]">, <dtml-var expr="limit[1]">
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
