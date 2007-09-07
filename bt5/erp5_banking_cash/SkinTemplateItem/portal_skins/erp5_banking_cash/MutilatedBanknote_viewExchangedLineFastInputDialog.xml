@@ -77,7 +77,8 @@
 \n
 return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                                                           , cash_detail_dict = cash_detail_dict\n
-                                                          , destination = context.getObject().absolute_url())\n
+                                                          , destination = context.getObject().absolute_url()\n
+                                                          , target_total_price = context.getDestinationTotalAssetPrice())\n
 </string> </value>
         </item>
         <item>
