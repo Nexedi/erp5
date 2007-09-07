@@ -53,6 +53,10 @@
             <value> <string>CashDetail_saveFastInputLine</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -131,6 +135,8 @@
                         <string>my_line_portal_type</string>
                         <string>my_other_parameter</string>
                         <string>my_calculated_price</string>
+                        <string>my_target_total_price</string>
+                        <string>my_fast_input_title</string>
                       </list>
                     </value>
                 </item>
@@ -161,7 +167,7 @@
         </item>
         <item>
             <key> <string>row_length</string> </key>
-            <value> <int>4</int> </value>
+            <value> <int>5</int> </value>
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>

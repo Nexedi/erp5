@@ -88,6 +88,12 @@ if listbox is None:\n
   read_only                 = cash_detail_dict[\'read_only\']\n
   currency_cash_portal_type = cash_detail_dict[\'currency_cash_portal_type\']\n
 \n
+  if fast_input_title is None:\n
+    fast_input_title = \'%s - %s\' % (context.getParentValue().getTranslatedTitle(), context.getSourceReference())\n
+  if \'target_total_price\' not in kw:\n
+    target_total_price = context.getSourceTotalAssetPrice()\n
+  else:\n
+    target_total_price = kw.pop(\'target_total_price\')\n
 \n
   # If use_inventory is passed, use that value. Otherwise, assume False.\n
   # use_inventory = cash_detail_dict.get(\'use_inventory\', False)\n
@@ -333,7 +339,7 @@ if listbox is None:\n
         currency_dict[\'column%d\' % (counter + 1)] = 0\n
       listbox.append(currency_dict)\n
       \n
-  other_parameter_list = (operation_currency, line_portal_type, read_only, column_base_category, use_inventory)\n
+  other_parameter_list = (operation_currency, line_portal_type, read_only, column_base_category, use_inventory, fast_input_title, target_total_price)\n
   context.Base_updateDialogForm(listbox=listbox\n
                                 , calculated_price=total_price\n
                                 , empty_line_number=0\n
@@ -341,6 +347,8 @@ if listbox is None:\n
                                 , emission_letter_list = emission_letter_list\n
                                 , variation_list = variation_list\n
                                 , other_parameter = other_parameter_list\n
+                                , fast_input_title=fast_input_title\n
+                                , target_total_price=target_total_price\n
                                 , )\n
 \n
   return context.asContext(  context=None\n
@@ -350,6 +358,8 @@ if listbox is None:\n
                              , emission_letter_list = emission_letter_list\n
                              , variation_list = variation_list\n
                              , other_parameter = other_parameter_list\n
+                             , fast_input_title=fast_input_title\n
+                             , target_total_price=target_total_price\n
                              ).CashDetail_viewLineFastInputForm(**kw)\n
 \n
 \n
@@ -365,6 +375,8 @@ else :\n
   read_only                 = other_parameter[2]\n
   column_base_category      = other_parameter[3]\n
   use_inventory             = other_parameter[4]\n
+  fast_input_title          = other_parameter[5]\n
+  target_total_price        = other_parameter[6]\n
 \n
   # we don\'t update anything in read only mode\n
   if read_only == "True":\n
@@ -439,11 +451,15 @@ else :\n
   listbox = new_line_list\n
   context.Base_updateDialogForm(  listbox=listbox\n
                                   , calculated_price=total_price\n
-                                  , empty_line_number=0)\n
+                                  , empty_line_number=0\n
+                                  , fast_input_title=fast_input_title\n
+                                  , target_total_price=target_total_price)\n
 \n
   return context.asContext(  context=None\n
                              , portal_type=context.getPortalType()\n
                              , calculated_price=total_price\n
+                             , fast_input_title=fast_input_title\n
+                             , target_total_price=target_total_price\n
                              ,**kw\n
                              ).CashDetail_viewLineFastInputForm(**kw)\n
 
@@ -470,7 +486,7 @@ else :\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None,cash_detail_dict=None, rendering_vault=None, **kw</string> </value>
+            <value> <string>listbox=None,cash_detail_dict=None, rendering_vault=None, fast_input_title=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -490,7 +506,7 @@ else :\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -499,6 +515,7 @@ else :\n
                             <string>listbox</string>
                             <string>cash_detail_dict</string>
                             <string>rendering_vault</string>
+                            <string>fast_input_title</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
@@ -515,6 +532,7 @@ else :\n
                             <string>column_base_category</string>
                             <string>read_only</string>
                             <string>currency_cash_portal_type</string>
+                            <string>target_total_price</string>
                             <string>False</string>
                             <string>use_inventory</string>
                             <string>list</string>
@@ -604,6 +622,7 @@ else :\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
                 <none/>
