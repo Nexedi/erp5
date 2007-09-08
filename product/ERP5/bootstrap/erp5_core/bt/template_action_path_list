@@ -95,5 +95,6 @@ portal_membership | manage_members
 portal_properties | history
 portal_properties | list_ui
 portal_properties | metadata
+portal_properties | module_view
 portal_properties | search
 portal_properties | sort_on

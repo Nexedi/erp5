@@ -1,3 +1,6 @@
+2007-09-08 yusei
+* Add Module Property action as global action.
+
 2007-09-06 alex
 * rename simulation_movement_interaction_workflow to simulation_movement_causality_interaction_workflow
 * follow style used in delivery_causality_interaction_workflow
