@@ -34,6 +34,10 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Path import Path
 
 class Career(Path):
+    """
+      Contains information about abilities, salary, grade, role... of a
+      Person at a certain career step.
+    """
     # CMF Type Definition
     meta_type = 'ERP5 Career'
     portal_type = 'Career'
