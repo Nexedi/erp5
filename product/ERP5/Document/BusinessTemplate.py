@@ -372,19 +372,28 @@ class BaseTemplateItem(Implicit, Persistent):
     pass
 
   def preinstall(self, context, installed_bt, **kw):
+    """
+      Build a list of added/removed/changed files between the BusinessTemplate
+      being installed (self) and the installed one (installed_bt).
+      Note : we compare files between BTs, *not* between the installed BT and
+      the objects in the DataFS.
+
+      XXX: -12 used here is -len('TemplateItem')
+    """
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       for path in new_keys:
         if installed_bt._objects.has_key(path):
-          # compare object to see it there is changes
+          # compare objects to see it there are changes
           new_obj_xml = self.generateXml(path=path)
           old_obj_xml = installed_bt.generateXml(path=path)
           if new_obj_xml != old_obj_xml:
             modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+          # else, compared versions are identical, don't overwrite the old one
         else: # new object
           modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
-      # get removed object
+      # list removed objects
       old_keys = installed_bt._objects.keys()
       for path in old_keys:
         if path not in new_keys:
@@ -398,6 +407,12 @@ class BaseTemplateItem(Implicit, Persistent):
     pass
 
   def remove(self, context, **kw):
+    """
+      If 'remove' is chosen on an object containing subobjects, all the
+      subobjects will be removed too, even if 'backup' or 'keep' was chosen for
+      the subobjects.
+      Likewise, for 'save_and_remove' : subobjects will get saved too.
+    """
     remove_dict = kw.get('remove_object_dict', {})
     keys = self._objects.keys()
     keys.sort()
@@ -477,6 +492,10 @@ class ObjectTemplateItem(BaseTemplateItem):
           self._archive["%s/%s" % (tool_id, id)] = None
 
   def export(self, context, bta, **kw):
+    """
+      Export the business template : fill the BusinessTemplateArchive with
+      objects exported as XML, hierarchicaly organised.
+    """
     if len(self._objects.keys()) == 0:
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
@@ -498,6 +517,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       bta.addObject(obj=f.getvalue(), name=id, path=path)
 
   def build_sub_objects(self, context, id_list, url, **kw):
+    # XXX duplicates code from build
     p = context.getPortalObject()
     sub_list = {}
     for id in id_list:
@@ -505,9 +525,9 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
       obj = self.removeProperties(obj)
-      id_list = obj.objectIds()
-      if hasattr(aq_base(obj), 'groups'):
-        # we must keep groups because it's ereased when we delete subobjects
+      id_list = obj.objectIds() # FIXME duplicated variable name
+      if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
+        # we must keep groups because they are deleted along with subobjects
         groups = deepcopy(obj.groups)
       if id_list:
         self.build_sub_objects(context, id_list, relative_url)
@@ -534,8 +554,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       _recursiveRemoveUid(obj)
       obj = self.removeProperties(obj)
       id_list = obj.objectIds()
-      if hasattr(aq_base(obj), 'groups'):
-        # we must keep groups because it's erased when we delete subobjects
+      if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
+        # we must keep groups because they are deleted along with subobjects
         groups = deepcopy(obj.groups)
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
@@ -561,6 +581,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_bt, **kw):
+    #XXX -12 used here is -len('TemplateItem')
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       portal = context.getPortalObject()
