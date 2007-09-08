@@ -28,6 +28,11 @@
 
 from DateTime import DateTime
 
+"""
+  Define the types available in property sheets and a typecasting method for
+  each.
+"""
+
 # By setting ATTRIBUTE_PREFIX to '_', properties become private
 # which allows to force users to use accessors only.
 ATTRIBUTE_PREFIX = ''
@@ -37,6 +42,9 @@ def identity(value):
   return value
 
 def asFloat(value):
+  """
+    Return the value as a float or a type-specific default value if it fails.
+  """
   try:
     result = float(value)
   except TypeError:
@@ -44,6 +52,9 @@ def asFloat(value):
   return result
 
 def asDate(value):
+  """
+    Return the value as a date or a type-specific default value if it fails.
+  """
   try:
     if isinstance(value,DateTime):
       result = value
@@ -54,6 +65,9 @@ def asDate(value):
   return result
 
 def asInt(value):
+  """
+    Return the value as an int or a type-specific default value if it fails.
+  """
   try:
     result = int(value)
   except TypeError:
@@ -61,6 +75,9 @@ def asInt(value):
   return result
 
 def asLong(value):
+  """
+    Return the value as a long or a type-specific default value if it fails.
+  """
   try:
     result = long(value)
   except TypeError:
@@ -68,6 +85,9 @@ def asLong(value):
   return result
 
 def asString(value):
+  """
+    Return the value as a string or a type-specific default value if it fails.
+  """
   try:
     if value is None:
       result = ''
@@ -78,6 +98,9 @@ def asString(value):
   return result
 
 def asList(value):
+  """
+    Return the value as a list or a type-specific default value if it fails.
+  """
   if type(value) in (type([]), type(())):
     result = list(value)
   elif type(value) is type('a'):
