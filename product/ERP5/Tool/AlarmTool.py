@@ -61,7 +61,7 @@ class AlarmTool(BaseTool):
 
     It is used as a central managment point for all alarms.
 
-    Inside this tool we have a way to retrieve all reports comings
+    Inside this tool we have a way to retrieve all reports coming
     from Alarms,...
   """
   id = 'portal_alarms'

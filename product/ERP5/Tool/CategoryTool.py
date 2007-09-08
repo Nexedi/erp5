@@ -27,7 +27,7 @@
 ##############################################################################
 
 """\
-ERP portal_categories tool.
+ERP5 portal_categories tool.
 """
 
 from Products.CMFCategory.CategoryTool import CategoryTool as CMFCategoryTool
