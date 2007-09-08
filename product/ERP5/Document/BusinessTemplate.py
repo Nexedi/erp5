@@ -499,8 +499,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     if len(self._objects.keys()) == 0:
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
-    for key in self._objects.keys():
-      obj = self._objects[key]
+    for key, obj in self._objects.iteritems():
       # create folder and subfolders
       folders, id = posixpath.split(key)
       encode_folders = []
