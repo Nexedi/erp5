@@ -365,7 +365,7 @@ class OOoDocument(File, ConversionCacheMixin):
         # we receive a zip file
         cs = cStringIO.StringIO()
         cs.write(_unpackData(data))
-        z = zipfile.ZipFile(cs)
+        z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
         for f in z.infolist():
           fn = f.filename
           if fn.endswith('html'):
@@ -378,7 +378,7 @@ class OOoDocument(File, ConversionCacheMixin):
       if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
         self.setConversion(data, mime, format=format)
       else:
-        self.portal_contributions.newContent(
+        temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
                                        temp_object=1)
         temp_image._setData(data)
