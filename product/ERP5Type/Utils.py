@@ -1634,7 +1634,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
   elif prop['type'] in list_types or prop.get('multivalued', 0):
     # The base accessor returns the first item in a list
     # and simulates a simple property
-    # The default value is the first elelement of prop.get('default') is it exists
+    # The default value is the first element of prop.get('default') if it exists
     default = prop.get('default')
     try:
       default = default[0]
