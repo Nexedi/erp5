@@ -44,7 +44,7 @@
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>allowed_content_types</string> </key>
@@ -98,6 +98,10 @@ Once the period is closed (ie. the Accounting Period Delimiter is in delivered s
         <item>
             <key> <string>init_script</string> </key>
             <value> <string>AccountingPeriod_init</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>property_sheet_list</string> </key>
