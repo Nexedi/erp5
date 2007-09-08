@@ -26,6 +26,10 @@
 #
 ##############################################################################
 
+"""
+  Default values for ERP5Site._getPortalConfiguration.
+"""
+
 portal_default_section_category = 'group/Coramy'
 
 portal_resource_type_list = ('Resource', 'MetaResource', 'Composant', 'Tissu',
