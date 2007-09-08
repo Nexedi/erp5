@@ -37,7 +37,7 @@ from Products.ERP5.Document.MappedValue import MappedValue
 
 class PortalTest(MappedValue, XMLMatrix):
     """
-      Un element de tarif est un prix pour un ensemble de conditions d'application...
+      Container for test descriptions (funtionnal test scenarii,...).
     """
 
     meta_type = 'ERP5 Portal Test'
