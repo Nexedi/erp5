@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_business_field</string> </value>
+            <value> <string>my_business_application</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -251,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Business Field</string> </value>
+                    <value> <string>Business Application</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/business_field/getCategoryChildTitleItemList|python:()</string> </value>
+            <value> <string>here/portal_categories/business_application/getCategoryChildTitleItemList|python:()</string> </value>
         </item>
       </dictionary>
     </pickle>
