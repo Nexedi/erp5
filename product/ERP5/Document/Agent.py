@@ -36,7 +36,8 @@ from Products.ERP5Type.Core.Folder import Folder
 
 class Agent(Folder, Image):
   """
-    An Agent is a Person who is permitted to perform some actions on the bank account according to Privileges.
+    An Agent is a Person who is permitted to perform some actions on the bank
+    account according to Privileges.
   """
   # CMF Type Definition
   meta_type = 'ERP5 Agent'
@@ -66,7 +67,9 @@ class Agent(Folder, Image):
   viewImage = Image.index_html
   
   def importSignature(self, import_file=None, form_id=None, REQUEST=None, **kw):
-
+    """
+      Imports a scan of a signature.
+    """
     if REQUEST is None:
       REQUEST = getattr(self, 'REQUEST', None)
         
