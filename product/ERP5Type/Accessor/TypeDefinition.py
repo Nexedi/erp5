@@ -101,9 +101,9 @@ def asList(value):
   """
     Return the value as a list or a type-specific default value if it fails.
   """
-  if type(value) in (type([]), type(())):
+  if isinstance(value, (list, tuple)):
     result = list(value)
-  elif type(value) is type('a'):
+  elif isinstance(value, str):
     result = value.split()
   else:
     result = [value]
