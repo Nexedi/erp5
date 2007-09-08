@@ -69,7 +69,7 @@ class CashCurrency(Resource):
   security.declareProtected(Permissions.View, 'getTitle')
   def getTitle(self, **kw):
     """
-      The title will depend on the Portal Type and the value, for example :
+      The title depends on the Portal Type and the value, for example :
         Piece de 500
     """
     former = getattr(self, 'former', 0)
@@ -87,7 +87,7 @@ class CashCurrency(Resource):
   security.declareProtected(Permissions.View, 'getTranslatedTitle')
   def getTranslatedTitle(self,**kw):
     """
-      The title will depend on the Portal Type and the value, for example :
+      The title depends on the Portal Type and the value, for example :
         Piece de 500
     """
     former = getattr(self, 'former', 0)
