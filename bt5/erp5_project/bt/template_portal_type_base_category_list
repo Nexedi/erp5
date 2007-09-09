@@ -1,13 +1,17 @@
 Project Line | predecessor
 Project Milestone | predecessor
+Project Module | business_application
 Project | predecessor
 Requirement Document | destination_decision
 Requirement Document | source_decision
+Requirement Module | business_application
 Requirement | destination_decision
 Requirement | source_decision
 Sale Order Line | predecessor
 Sale Order Milestone | predecessor
 Sale Packing List Line | predecessor
+Task Module | business_application
+Task Report Module | business_application
 Task Report | aggregate
 Task Report | predecessor
 Task | predecessor

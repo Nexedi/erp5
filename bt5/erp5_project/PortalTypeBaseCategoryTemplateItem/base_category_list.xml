@@ -8,6 +8,9 @@
  <portal_type id="Project Milestone">
   <item>predecessor</item>
  </portal_type>
+ <portal_type id="Project Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Requirement">
   <item>destination_decision</item>
   <item>source_decision</item>
@@ -15,6 +18,9 @@
  <portal_type id="Requirement Document">
   <item>source_decision</item>
   <item>destination_decision</item>
+ </portal_type>
+ <portal_type id="Requirement Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Sale Order Line">
   <item>predecessor</item>
@@ -28,8 +34,14 @@
  <portal_type id="Task">
   <item>predecessor</item>
  </portal_type>
+ <portal_type id="Task Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Task Report">
   <item>aggregate</item>
   <item>predecessor</item>
+ </portal_type>
+ <portal_type id="Task Report Module">
+  <item>business_application</item>
  </portal_type>
 </base_category_list>
