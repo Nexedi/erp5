@@ -5,10 +5,16 @@
   <item>predecessor</item>
   <item>similar</item>
  </portal_type>
+ <portal_type id="Web Page Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Web Section">
   <item>aggregate</item>
  </portal_type>
  <portal_type id="Web Site">
   <item>aggregate</item>
+ </portal_type>
+ <portal_type id="Web Site Module">
+  <item>business_application</item>
  </portal_type>
 </base_category_list>
