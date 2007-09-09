@@ -1,8 +1,14 @@
 <base_category_list>
+ <portal_type id="Document Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Image Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Web Page">
-  <item>group</item>
   <item>site</item>
-  <item>follow_up</item>
   <item>function</item>
+  <item>follow_up</item>
+  <item>group</item>
  </portal_type>
 </base_category_list>
