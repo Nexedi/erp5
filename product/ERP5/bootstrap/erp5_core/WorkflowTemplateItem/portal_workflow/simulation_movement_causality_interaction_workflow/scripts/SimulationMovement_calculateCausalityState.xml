@@ -76,7 +76,7 @@ if delivery_movement is not None:\n
   delivery = delivery_movement.getExplanationValue()\n
   if delivery.getCausalityState() != \'draft\':\n
     delivery.activate(\n
-        after_path_and_method_id=(movement.getPath(),\n
+        after_path_and_method_id=(delivery_movement.getPath(),\n
         (\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))).calculate()\n
 </string> </value>
         </item>
@@ -145,7 +145,6 @@ if delivery_movement is not None:\n
                             <string>delivery_movement</string>
                             <string>None</string>
                             <string>delivery</string>
-                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>
