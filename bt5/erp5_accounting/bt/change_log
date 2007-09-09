@@ -1,3 +1,6 @@
+2007-09-09 Kazuhiko
+* rename edit to calculate in invoice_causality_workflow.
+
 2007-08-29 Yusei
 * Added new view action for module.
 
