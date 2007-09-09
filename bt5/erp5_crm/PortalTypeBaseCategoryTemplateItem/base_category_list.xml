@@ -1,0 +1,17 @@
+<base_category_list>
+ <portal_type id="Campaign Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Event Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Meeting Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Sale Opportunity Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Support Request Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>

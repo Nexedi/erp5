@@ -1,6 +1,15 @@
 <base_category_list>
+ <portal_type id="Bug Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Glossary Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Glossary Term">
   <item>language</item>
   <item>business_field</item>
+ </portal_type>
+ <portal_type id="Upload Module">
+  <item>business_application</item>
  </portal_type>
 </base_category_list>
