@@ -73,6 +73,8 @@
   contribute widget.\n
 \n
   **kw -- remaining params passed to the constructor\n
+\n
+  TODO: rename source_project to follow_up (everywhere)\n
 """\n
 \n
 from Products.ERP5.Document.Document import ConversionError\n
@@ -84,7 +86,7 @@ if contribute_classification:\n
   kw[\'classification\'] = contribute_classification\n
 \n
 if contribute_source_project:\n
-  kw[\'source_project\'] = contribute_source_project\n
+  kw[\'follow_up\'] = contribute_source_project\n
 \n
 if contribute_portal_type:\n
   kw[\'portal_type\'] = contribute_portal_type\n
