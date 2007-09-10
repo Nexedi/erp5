@@ -127,6 +127,7 @@ CREATE TABLE `catalog` (\n
   `has_cell_content` bool,\n
   `creation_date` datetime,\n
   `modification_date` datetime,\n
+  `indexation_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n
   PRIMARY KEY  (`uid`),\n
   KEY `security_uid` (`security_uid`),\n
   KEY `owner` (`owner`),\n
@@ -214,6 +215,7 @@ CREATE TABLE `catalog` (\n
   `has_cell_content` bool,\n
   `creation_date` datetime,\n
   `modification_date` datetime,\n
+  `indexation_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n
   PRIMARY KEY  (`uid`),\n
   KEY `security_uid` (`security_uid`),\n
   KEY `owner` (`owner`),\n

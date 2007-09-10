@@ -344,6 +344,11 @@ getModificationDate</string> </value>
 
 REPLACE INTO\n
   catalog\n
+  (`uid`, `security_uid`, `owner`, `path`, `relative_url`, `parent_uid`, `id`, `description`, `title`, `meta_type`,\n
+   `portal_type`, `opportunity_state`, `corporate_registration_code`, `ean13_code`, `validation_state`, `simulation_state`,\n
+   `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`,\n
+   `source_reference`, `destination_reference`, `string_index`, `int_index`, `float_index`, `has_cell_content`, `creation_date`,\n
+   `modification_date`)\n
 VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
 (\n
@@ -421,6 +426,11 @@ VALUES\n
 
 REPLACE INTO\n
   catalog\n
+  (`uid`, `security_uid`, `owner`, `path`, `relative_url`, `parent_uid`, `id`, `description`, `title`, `meta_type`,\n
+   `portal_type`, `opportunity_state`, `corporate_registration_code`, `ean13_code`, `validation_state`, `simulation_state`,\n
+   `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`,\n
+   `source_reference`, `destination_reference`, `string_index`, `int_index`, `float_index`, `has_cell_content`, `creation_date`,\n
+   `modification_date`)\n
 VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
 (\n
