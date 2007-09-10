@@ -1324,7 +1324,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     catalog = self.getCatalogTool().getSQLCatalog()
     # modify method related configuration
-    catalog.sql_getitem_by_uid = 'z_search_results'
+    copy_data = catalog.manage_copyObjects(ids=["z_getitem_by_uid"])
+    ids = catalog.manage_pasteObjects(copy_data)
+    new_id = ids[0]['new_id']    
+    new_method = catalog._getOb(new_id)
+    catalog.manage_renameObjects([new_id,], ["z_getitem_by_uid_2",])
+    new_method = catalog._getOb("z_getitem_by_uid_2")
+    self.assertNotEqual(new_method, None)
+    catalog.sql_getitem_by_uid = 'z_getitem_by_uid_2'
     # modify table related configuration
     catalog.sql_search_tables = tuple( list(catalog.sql_search_tables) +
                                      ['translation'] )
@@ -1339,7 +1346,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     catalog = self.getCatalogTool().getSQLCatalog()
     # method related configuration
-    self.assertEquals(catalog.sql_getitem_by_uid, 'z_search_results')
+    self.assertEquals(catalog.sql_getitem_by_uid, 'z_getitem_by_uid_2')
     # table related configuration
     self.failUnless('translation' in catalog.sql_search_tables)
     # column related configuration
