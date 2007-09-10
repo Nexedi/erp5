@@ -711,10 +711,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
 
     security.declarePrivate('unindexObject')
-    def unindexObject(self, object, path=None, uid=None,sql_catalog_id=None):
+    def unindexObject(self, object=None, path=None, uid=None,sql_catalog_id=None):
         """
           Remove from catalog.
         """
+        if path is None and uid is None and object is None:
+          raise TypeError, 'One of uid, path and object parameters must not be None'
         if path is None and uid is None:
           path = self.__url(object)
         self.uncatalog_object(path=path,uid=uid, sql_catalog_id=sql_catalog_id)
