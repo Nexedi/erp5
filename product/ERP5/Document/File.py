@@ -153,10 +153,10 @@ class File(Document, CMFFile, ConversionCacheMixin):
     """
     has to be overwritten here, otherwise WebDAV fails
     """
-    try:
-      return len(self.data)
-    except (AttributeError, TypeError):
-      return 0
+    data_len = len(getattr(self, 'data', ''))
+    if not data_len:
+      data_len = len(self.getBaseData() or '')
+    return data_len
 
   getcontentlength = get_size
 

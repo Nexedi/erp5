@@ -425,6 +425,21 @@ class TestDocument(ERP5TypeTestCase):
     # for REFVER: (3)
     # for REFVERLANG: (3)
 
+  def testOOoDocument_get_size(self):
+    # test get_size on OOoDocument
+    doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
+    doc.edit(file=makeFileUpload('import_data_list.ods'))
+    self.assertEquals(len(makeFileUpload('import_data_list.ods').read()),
+                      doc.get_size())
+
+  def testTempOOoDocument_get_size(self):
+    # test get_size on temporary OOoDocument
+    from Products.ERP5Type.Document import newTempOOoDocument
+    doc = newTempOOoDocument(self.portal, 'tmp')
+    doc.edit(base_data='OOo')
+    self.assertEquals(len('OOo'), doc.get_size())
+
+
 if __name__ == '__main__':
     framework()
 else:
