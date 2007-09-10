@@ -25,10 +25,10 @@
  </chain>
  <chain>
   <type>Task Report</type>
-  <workflow>task_report_interaction_workflow, edit_workflow, task_report_causality_workflow, task_report_workflow</workflow>
+  <workflow>task_report_interaction_workflow, task_report_causality_workflow, edit_workflow, delivery_causality_interaction_workflow, task_report_workflow</workflow>
  </chain>
  <chain>
   <type>Task Report Line</type>
-  <workflow>task_report_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, task_report_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

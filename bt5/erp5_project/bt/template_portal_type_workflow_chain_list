@@ -6,8 +6,10 @@ Requirement | edit_workflow
 Requirement | requirement_analysis_workflow
 Task Line | edit_workflow
 Task Line | order_movement_simulation_interaction_workflow
+Task Report Line | delivery_movement_causality_interaction_workflow
 Task Report Line | edit_workflow
 Task Report Line | task_report_interaction_workflow
+Task Report | delivery_causality_interaction_workflow
 Task Report | edit_workflow
 Task Report | task_report_causality_workflow
 Task Report | task_report_interaction_workflow

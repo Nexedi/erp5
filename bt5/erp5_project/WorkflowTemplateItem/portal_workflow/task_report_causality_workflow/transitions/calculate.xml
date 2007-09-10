@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>PackingList_afterEdit</string> </value>
+            <value> <string>PackingList_calculate</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>edit</string> </value>
+            <value> <string>calculate</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>

@@ -40,10 +40,16 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>calculate</string>
                 <string>diverge</string>
-                <string>edit</string>
                 <string>start_building</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>
