@@ -519,7 +519,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string:Base_viewListMode?proxy_form_id=${form/getId}</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getId}
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
