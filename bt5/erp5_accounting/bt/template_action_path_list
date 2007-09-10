@@ -4,7 +4,6 @@ Account Module | bank_accounts_report
 Account Module | general_ledger_report
 Account Module | journal_report
 Account Module | jump_active_accounting_pref
-Account Module | module_view
 Account Module | profit_and_loss_report
 Account Module | third_parties_report
 Account Module | trial_balance_report
@@ -30,7 +29,6 @@ Accounting Transaction Module | journal_from_selection
 Accounting Transaction Module | journal_report
 Accounting Transaction Module | jump_active_accounting_pref
 Accounting Transaction Module | jump_bank_accounts
-Accounting Transaction Module | module_view
 Accounting Transaction Module | plan_transactions
 Accounting Transaction Module | profit_and_loss_report
 Accounting Transaction Module | third_parties_report
