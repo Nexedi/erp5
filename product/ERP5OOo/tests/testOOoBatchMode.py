@@ -55,7 +55,8 @@ class TestOoodResponse(ERP5TypeTestCase):
     self.login()
     portal_skins = self.getSkinsTool()
     import_file_path = os.path.join(os.path.dirname(__file__),
-                                    'PersonSpreadsheetStylesheet')
+                                    'test_document',
+                                    'PersonSpreadsheetStylesheet.ods')
     import_file = open(import_file_path, 'rb')
     custom = portal_skins.custom
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
