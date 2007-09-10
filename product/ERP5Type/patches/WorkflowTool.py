@@ -46,6 +46,8 @@ def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, method_id, args=None, kw
     if not self._checkTransitionGuard(tdef, ob):
         raise Unauthorized(method_id)
     self._changeStateOf(ob, tdef)
+    if getattr(ob, 'reindexObject', None) is not None:
+        ob.reindexObject()
 
 def DCWorkflowDefinition_notifyBefore(self, ob, action, args=None, kw=None, transition_list=None):
     '''
