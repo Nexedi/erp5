@@ -44,8 +44,6 @@
                 <string>assign_action</string>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>delete</string>
-                <string>delete_action</string>
                 <string>expire</string>
                 <string>expire_action</string>
                 <string>mark_responded_action</string>
