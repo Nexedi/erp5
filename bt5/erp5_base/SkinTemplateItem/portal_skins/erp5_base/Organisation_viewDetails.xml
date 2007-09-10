@@ -94,7 +94,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>listbox_int_index</string>
@@ -110,7 +110,6 @@
                         <string>my_social_capital</string>
                         <string>my_start_date</string>
                         <string>my_skill_list</string>
-                        <string>my_economical_class</string>
                       </list>
                     </value>
                 </item>
@@ -124,7 +123,6 @@
                         <string>my_ean13_code</string>
                         <string>my_activity_code</string>
                         <string>my_social_code</string>
-                        <string>my_destination_section_title</string>
                       </list>
                     </value>
                 </item>
