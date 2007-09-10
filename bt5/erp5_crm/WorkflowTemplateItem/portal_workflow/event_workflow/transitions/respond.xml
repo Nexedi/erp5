@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Event_createRespondEvent</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
