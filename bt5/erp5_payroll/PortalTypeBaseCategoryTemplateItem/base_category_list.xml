@@ -1,7 +1,10 @@
 <base_category_list>
+ <portal_type id="Organisation">
+  <item>destination_section</item>
+ </portal_type>
  <portal_type id="Pay Sheet Cell">
-  <item>tax_category</item>
   <item>product_line</item>
+  <item>tax_category</item>
   <item>salary_range</item>
  </portal_type>
  <portal_type id="Pay Sheet Line">
