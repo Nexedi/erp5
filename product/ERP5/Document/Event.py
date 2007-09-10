@@ -84,8 +84,9 @@ class Event(EmailDocument, Movement):
       """
       return 1
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'defQuantity')
-    def defQuantity(self):
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getQuantity')
+    def getQuantity(self):
       """
         Quantity is set automatically on Events.
       """
