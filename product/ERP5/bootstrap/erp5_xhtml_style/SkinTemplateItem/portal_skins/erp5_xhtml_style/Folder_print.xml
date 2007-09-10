@@ -71,7 +71,8 @@
             <value> <string>kw.update(context.REQUEST.form)\n
 context.ERP5Site_prepareAction(**kw)\n
 \n
-print_action_list = context.portal_actions.listFilteredActionsFor(context)[\'object_print\']\n
+print_action_list = context.Base_filterDuplicateActions(\n
+             context.portal_actions.listFilteredActionsFor(context))[\'object_print\']\n
 if len(print_action_list) == 0:\n
   return\n
 if len(print_action_list) == 1:\n
