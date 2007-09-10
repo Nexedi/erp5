@@ -89,7 +89,15 @@ if listbox is None:\n
   currency_cash_portal_type = cash_detail_dict[\'currency_cash_portal_type\']\n
 \n
   if fast_input_title is None:\n
-    fast_input_title = \'%s - %s\' % (context.getParentValue().getTranslatedTitle(), context.getSourceReference())\n
+    # Module getTranslatedTitle does not return a translated string.\n
+    # Borrow code from ERP5Site_getModuleItemList to achieve hand translation.\n
+    # XXX: Pass title value as a list to work around an encoding bug in TextWidget:\n
+    #  It renders given value as a list of str, and casting to str throws an error when\n
+    #  encountering UTF-8 chars. This cast is not called when provided value is a tuple\n
+    # or a list...\n
+    fast_input_title = [\'%s - %s\' % \\\n
+      (context.getPortalObject().Localizer.erp5_ui.gettext(context.getParentValue().getTitle()),\n
+       context.getSourceReference())]\n
   if \'target_total_price\' not in kw:\n
     target_total_price = context.getSourceTotalAssetPrice()\n
   else:\n
