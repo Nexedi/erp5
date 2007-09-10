@@ -70,6 +70,7 @@ class Event(EmailDocument, Movement):
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
                       , PropertySheet.Event
+                      , PropertySheet.Delivery
                       , PropertySheet.ItemAggregation
                      )
 
