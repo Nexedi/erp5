@@ -3,7 +3,7 @@
 
 2006-11-28 Kevin
 * Fix "prevoyance" calculation.
-* Add free text zone (based on description property) to add more detailled info on PaySheets.
+* Add free text zone (based on description property) to add more detailed info on PaySheets.
 * Fix new gross salary calculation on update.
 
 2006-11-27 Kevin
