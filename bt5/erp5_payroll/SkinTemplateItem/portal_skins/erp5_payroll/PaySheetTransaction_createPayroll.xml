@@ -80,7 +80,7 @@ payment_date   = kw[\'payment_condition_payment_date\']\n
 currency       = kw[\'resource\']\n
 \n
 kw = {\'skip_redirect\': True}\n
-for line_index in range(len(listbox)):\n
+for line_index in xrange(len(listbox)):\n
   line = listbox[line_index]\n
 \n
   # Ignore employee without gross salary\n
@@ -186,7 +186,7 @@ context.REQUEST.RESPONSE.redirect("%s?portal_status_message=%s" % ( context.getP
                             <string>currency</string>
                             <string>True</string>
                             <string>_getiter_</string>
-                            <string>range</string>
+                            <string>xrange</string>
                             <string>len</string>
                             <string>line_index</string>
                             <string>line</string>

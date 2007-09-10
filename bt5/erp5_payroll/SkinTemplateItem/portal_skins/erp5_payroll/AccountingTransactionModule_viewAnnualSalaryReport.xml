@@ -176,7 +176,7 @@ monthly_total = {}\n
 for ((person_path, person_title), person_dict) in gathered_data:\n
   person_total = 0\n
   print "<tr><td><a href=\\"%s\\">%s</a></td>" % (person_path, person_title)\n
-  for month in range(12) :\n
+  for month in xrange(12) :\n
     print "<td>"\n
     if person_dict.has_key(month) :\n
       person_total += person_dict[month]["salary"]\n
@@ -194,7 +194,7 @@ for ((person_path, person_title), person_dict) in gathered_data:\n
 \n
 print "<th class=\'total\'>%s</th>" % (N_(\'Total\'))\n
 check_total = 0\n
-for month in range(12):\n
+for month in xrange(12):\n
   print "<td>"\n
   if monthly_total.has_key(month):\n
     print monthly_total[month]\n
@@ -293,7 +293,7 @@ return printed\n
                             <string>monthly_total</string>
                             <string>person_dict</string>
                             <string>person_total</string>
-                            <string>range</string>
+                            <string>xrange</string>
                             <string>dup_ps</string>
                             <string>check_total</string>
                           </tuple>

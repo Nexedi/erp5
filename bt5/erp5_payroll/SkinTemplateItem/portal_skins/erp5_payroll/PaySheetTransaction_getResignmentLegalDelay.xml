@@ -108,7 +108,7 @@ total_time = int(total_time + (DateTime() - current_start_date))\n
 \n
 \n
 # Get the legal resignment delay\n
-for i in range(len(legal_delays)):\n
+for i in xrange(len(legal_delays)):\n
   if i < len(legal_delays)-1:\n
     if legal_delays[i][\'days\'] >= total_time:\n
       return legal_delays[i][\'delay\']\n
@@ -176,7 +176,7 @@ for i in range(len(legal_delays)):\n
                             <string>TypeError</string>
                             <string>int</string>
                             <string>DateTime</string>
-                            <string>range</string>
+                            <string>xrange</string>
                             <string>len</string>
                             <string>i</string>
                           </tuple>
