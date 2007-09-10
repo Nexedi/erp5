@@ -69,37 +69,18 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># this script allows to create a new follow up ticket for a given event\n
-\n
-event_object = context.getObject()\n
-\n
-if follow_up_ticket_type == "Meeting" :\n
-  ticket_module = context.getPortalObject().meeting_module\n
-elif follow_up_ticket_type == "Support Request" :\n
-  ticket_module = context.getPortalObject().support_request_module\n
-elif follow_up_ticket_type == "Campaign" :\n
-  ticket_module = context.getPortalObject().campaign_module\n
-else :\n
-  ticket_module = context.getPortalObject().sale_opportunity_module\n
-  follow_up_ticket_type == "Sale Opportunity"\n
+evnet = context\n
+ticket_module = context.getPortalObject().getDefaultModule(follow_up_ticket_type)\n
 \n
 # Create a new object\n
-new_id = str(ticket_module.generateNewId())\n
-context.portal_types.constructContent(type_name = follow_up_ticket_type,\n
-        container = ticket_module,\n
-        id = new_id\n
-)\n
-new_object = ticket_module[new_id]\n
-\n
-\n
-# If we do this before, each added line will take 20 times more time\n
-# because of programmable acquisition\n
-new_object.edit(\n
-        title = follow_up_ticket_title,\n
-        destination_decision_value_list = event_object.getSourceValueList()\n
+new_object = ticket_module.newContent(\n
+     portal_type=follow_up_ticket_type,\n
+     title=follow_up_ticket_title,\n
+     destination_decision_list=event_object.getSourceList()\n
 )\n
 \n
 # Now create the relation between the event object and the new follow up ticket\n
-event_object.setFollowUpValueList([new_object])\n
+event.setFollowUpValueList([new_object])\n
 </string> </value>
         </item>
         <item>
@@ -122,7 +103,7 @@ event_object.setFollowUpValueList([new_object])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up_ticket_title="", follow_up_ticket_type</string> </value>
+            <value> <string>follow_up_ticket_title="Sale Opportunity", follow_up_ticket_type</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -150,14 +131,13 @@ event_object.setFollowUpValueList([new_object])\n
                           <tuple>
                             <string>follow_up_ticket_title</string>
                             <string>follow_up_ticket_type</string>
-                            <string>_getattr_</string>
                             <string>context</string>
-                            <string>event_object</string>
+                            <string>evnet</string>
+                            <string>_getattr_</string>
                             <string>ticket_module</string>
-                            <string>str</string>
-                            <string>new_id</string>
-                            <string>_getitem_</string>
+                            <string>event_object</string>
                             <string>new_object</string>
+                            <string>event</string>
                           </tuple>
                         </value>
                     </item>
@@ -170,7 +150,7 @@ event_object.setFollowUpValueList([new_object])\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string></string>
+                <string>Sale Opportunity</string>
               </tuple>
             </value>
         </item>
