@@ -715,10 +715,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         """
           Remove from catalog.
         """
-        if path is None and uid is None and object is None:
-          raise TypeError, 'One of uid, path and object parameters must not be None'
         if path is None and uid is None:
           path = self.__url(object)
+        if object is None:
+          raise TypeError, 'One of uid, path and object parameters must not be None'
         self.uncatalog_object(path=path,uid=uid, sql_catalog_id=sql_catalog_id)
 
     security.declarePrivate('beforeUnindexObject')
