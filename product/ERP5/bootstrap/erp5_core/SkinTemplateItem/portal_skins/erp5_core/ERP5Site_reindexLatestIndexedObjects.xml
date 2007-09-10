@@ -72,7 +72,7 @@
 \n
 portal = context.getPortalObject()\n
 catalog = portal.portal_catalog.getSQLCatalog()\n
-candidate_list = context.ERP5Site_zGetLatedtIndexedObjectList(delta=delta)\n
+candidate_list = context.ERP5Site_zGetLatestIndexedObjectList(delta=delta)\n
 \n
 reindex_count = 0\n
 unindex_count = 0\n
