@@ -129,7 +129,9 @@ class CopyContainer:
       """
       uid = getattr(aq_base(obj), 'uid', None)
       if uid is not None:
-        obj.setDefaultActivateParameters(after_tag = str(uid))
+        activate_kw = obj.getDefaultActivateParameterDict()
+        activate_kw["after_tag"] = str(uid)
+        obj.setDefaultActivateParameters(**activate_kw)
       for sub_obj in obj.objectValues():
         self._recursiveSetActivityAfterTag(sub_obj)
 
