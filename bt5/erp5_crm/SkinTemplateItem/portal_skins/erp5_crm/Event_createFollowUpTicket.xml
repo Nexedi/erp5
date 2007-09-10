@@ -68,10 +68,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># this script allow to create a new object from this current one\n
+            <value> <string># this script allows to create a new follow up ticket for a given event\n
 \n
-object = state_change[\'object\']\n
-object.Event_createSaleOpportunity()\n
+event_object = context.getObject()\n
+\n
+if follow_up_ticket_type == "Meeting" :\n
+  ticket_module = context.getPortalObject().meeting_module\n
+elif follow_up_ticket_type == "Support Request" :\n
+  ticket_module = context.getPortalObject().support_request_module\n
+elif follow_up_ticket_type == "Campaign" :\n
+  ticket_module = context.getPortalObject().campaign_module\n
+else :\n
+  ticket_module = context.getPortalObject().sale_opportunity_module\n
+  follow_up_ticket_type == "Sale Opportunity"\n
+\n
+# Create a new object\n
+new_id = str(ticket_module.generateNewId())\n
+context.portal_types.constructContent(type_name = follow_up_ticket_type,\n
+        container = ticket_module,\n
+        id = new_id\n
+)\n
+new_object = ticket_module[new_id]\n
+\n
+\n
+# If we do this before, each added line will take 20 times more time\n
+# because of programmable acquisition\n
+new_object.edit(\n
+        title = follow_up_ticket_title,\n
+        destination_decision_value_list = event_object.getSourceValueList()\n
+)\n
+\n
+# Now create the relation between the event object and the new follow up ticket\n
+event_object.setFollowUpValueList([new_object])\n
 </string> </value>
         </item>
         <item>
@@ -87,8 +115,14 @@ object.Event_createSaleOpportunity()\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>follow_up_ticket_title="", follow_up_ticket_type</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -108,16 +142,22 @@ object.Event_createSaleOpportunity()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>object</string>
+                            <string>follow_up_ticket_title</string>
+                            <string>follow_up_ticket_type</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>event_object</string>
+                            <string>ticket_module</string>
+                            <string>str</string>
+                            <string>new_id</string>
+                            <string>_getitem_</string>
+                            <string>new_object</string>
                           </tuple>
                         </value>
                     </item>
@@ -129,18 +169,14 @@ object.Event_createSaleOpportunity()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string></string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_createSaleOpportunity</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Event_createFollowUpTicket</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

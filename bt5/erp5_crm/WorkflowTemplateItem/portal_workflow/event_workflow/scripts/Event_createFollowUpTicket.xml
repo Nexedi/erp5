@@ -68,10 +68,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># this script allow to create a new object from this current one\n
+            <value> <string># this script allows to create a new follow up ticket for\n
+# the current event if the event isn\'t already linked with\n
+# an existing ticket\n
 \n
-object = state_change[\'object\']\n
-object.Event_createSupportRequest()\n
+event = state_change[\'object\']\n
+\n
+if not(len(event.getFollowUpValueList())):\n
+  history = event.portal_workflow.getInfoFor(event, \'history\', wf_id=\'event_workflow\')\n
+\n
+  for history_item in history[::-1]:\n
+    if history_item[\'action\'] == \'assign_action\':\n
+      follow_up_ticket_type = history_item[\'follow_up_ticket_type\']\n
+      follow_up_ticket_title = history_item[\'follow_up_ticket_title\']\n
+      break\n
+\n
+  event.Event_createFollowUpTicket(follow_up_ticket_title, follow_up_ticket_type)\n
 </string> </value>
         </item>
         <item>
@@ -82,6 +94,12 @@ object.Event_createSupportRequest()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -116,8 +134,14 @@ object.Event_createSupportRequest()\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getitem_</string>
-                            <string>object</string>
+                            <string>event</string>
+                            <string>len</string>
                             <string>_getattr_</string>
+                            <string>history</string>
+                            <string>_getiter_</string>
+                            <string>history_item</string>
+                            <string>follow_up_ticket_type</string>
+                            <string>follow_up_ticket_title</string>
                           </tuple>
                         </value>
                     </item>
@@ -134,7 +158,7 @@ object.Event_createSupportRequest()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_createSupportRequest</string> </value>
+            <value> <string>Event_createFollowUpTicket</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

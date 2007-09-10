@@ -44,8 +44,6 @@
                 <string>acknowledge_action</string>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>receive</string>
-                <string>receive_action</string>
               </tuple>
             </value>
         </item>

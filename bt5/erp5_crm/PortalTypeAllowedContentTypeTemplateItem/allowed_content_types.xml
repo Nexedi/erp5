@@ -9,20 +9,11 @@
   <item>Mail Message</item>
   <item>Fax Message</item>
  </portal_type>
- <portal_type id="Meeting">
-  <item>Role Definition</item>
- </portal_type>
  <portal_type id="Meeting Module">
   <item>Meeting</item>
  </portal_type>
- <portal_type id="Sale Opportunity">
-  <item>Role Definition</item>
- </portal_type>
  <portal_type id="Sale Opportunity Module">
   <item>Sale Opportunity</item>
- </portal_type>
- <portal_type id="Support Request">
-  <item>Role Definition</item>
  </portal_type>
  <portal_type id="Support Request Module">
   <item>Support Request</item>

@@ -24,19 +24,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Reset</string> </value>
+            <value> <string>Receive</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=reset_action</string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=receive_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>receive</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Reset action resets to new the state of an incoming event which was mistakenly assigned.</string> </value>
+            <value> <string>The Receive action defines an event as an incoming event an sets it in "new" state</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Reset</string> </value>
+            <value> <string>Receive</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

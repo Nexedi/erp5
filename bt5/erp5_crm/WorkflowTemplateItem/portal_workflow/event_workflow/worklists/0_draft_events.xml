@@ -19,24 +19,30 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>New Events (%(count)s)</string> </value>
+            <value> <string>Draft Events (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-event_module?simulation_state=new&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
+event_module?simulation_state=draft&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>New Events</string> </value>
+            <value> <string>Draft Events</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,7 +52,7 @@ event_module?simulation_state=new&portal_type=%(portal_type)s&local_roles=%(loca
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>new_events</string> </value>
+            <value> <string>0_draft_events</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -73,7 +79,7 @@ event_module?simulation_state=new&portal_type=%(portal_type)s&local_roles=%(loca
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -100,7 +106,7 @@ event_module?simulation_state=new&portal_type=%(portal_type)s&local_roles=%(loca
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>new</string>
+                        <string>draft</string>
                       </tuple>
                     </value>
                 </item>

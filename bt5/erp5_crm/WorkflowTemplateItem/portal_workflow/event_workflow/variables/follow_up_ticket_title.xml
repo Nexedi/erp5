@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Variables</string>
+          <string>VariableDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_expr</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_value</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Stores the title of the ticket wich is automatically created when the event is assigned</string> </value>
+        </item>
+        <item>
+            <key> <string>for_catalog</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>for_status</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>follow_up_ticket_title</string> </value>
+        </item>
+        <item>
+            <key> <string>info_guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>update_always</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

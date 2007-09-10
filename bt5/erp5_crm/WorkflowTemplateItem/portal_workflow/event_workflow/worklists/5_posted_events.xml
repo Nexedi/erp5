@@ -19,24 +19,30 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assigned Events (%(count)s)</string> </value>
+            <value> <string>Posted Events (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-event_module?simulation_state=assigned&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
+event_module?simulation_state=started&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Assigned Events</string> </value>
+            <value> <string>Posted Events</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,7 +52,7 @@ event_module?simulation_state=assigned&portal_type=%(portal_type)s&local_roles=%
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>assigned_events</string> </value>
+            <value> <string>5_posted_events</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -101,7 +107,7 @@ event_module?simulation_state=assigned&portal_type=%(portal_type)s&local_roles=%
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>assigned</string>
+                        <string>started</string>
                       </tuple>
                     </value>
                 </item>

@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
+          <string>Products.DCWorkflow.Worklists</string>
+          <string>WorklistDefinition</string>
         </tuple>
         <none/>
       </tuple>
@@ -20,27 +20,23 @@
         </item>
         <item>
             <key> <string>actbox_category</string> </key>
-            <value> <string>workflow</string> </value>
+            <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Create Sale Opportunity</string> </value>
+            <value> <string>Assigned Events (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=create_sale_opportunity_action&button_title=Create+Sale+Opportunity
+event_module?simulation_state=assigned&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>after_script_name</string> </key>
-            <value> <string>create_sale_opportunity</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>The Create Sale Opportunity action creates a sale opportunity based on and related to the current event.</string> </value>
+            <value> <string>Assigned Events</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -50,23 +46,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>create_sale_opportunity_action</string> </value>
+            <value> <string>2_assigned_events</string> </value>
         </item>
         <item>
-            <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Create Sale Opportunity</string> </value>
-        </item>
-        <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -87,10 +73,39 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Owner</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
               </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>assigned</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>

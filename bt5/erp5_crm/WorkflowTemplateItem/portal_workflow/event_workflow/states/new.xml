@@ -42,22 +42,15 @@
               <tuple>
                 <string>assign</string>
                 <string>assign_action</string>
-                <string>create_sale_opportunity</string>
-                <string>create_sale_opportunity_action</string>
-                <string>create_support_request</string>
-                <string>create_support_request_action</string>
+                <string>cancel</string>
+                <string>cancel_action</string>
                 <string>delete</string>
                 <string>delete_action</string>
                 <string>expire</string>
                 <string>expire_action</string>
-                <string>mark_responded</string>
                 <string>mark_responded_action</string>
                 <string>respond</string>
                 <string>respond_action</string>
-                <string>spam</string>
-                <string>spam_action</string>
-                <string>user_assign</string>
-                <string>user_assign_action</string>
               </tuple>
             </value>
         </item>
@@ -101,7 +94,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -112,7 +104,6 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -125,7 +116,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

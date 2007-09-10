@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
+          <string>Products.DCWorkflow.Worklists</string>
+          <string>WorklistDefinition</string>
         </tuple>
         <none/>
       </tuple>
@@ -19,28 +19,30 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
-            <value> <string>workflow</string> </value>
+            <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Create Support Request</string> </value>
+            <value> <string>Outgoing Events (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=create_support_request_action&button_title=Create_Support_Request
+event_module?simulation_state=planned&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>after_script_name</string> </key>
-            <value> <string>create_support_request</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>The Create Support Request action creates a sale opportunity based on and related to the current event.</string> </value>
+            <value> <string>Outgoing events</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -50,23 +52,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>create_support_request_action</string> </value>
+            <value> <string>3_outgoing_events</string> </value>
         </item>
         <item>
-            <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Create Support Request</string> </value>
-        </item>
-        <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -87,10 +79,38 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Owner</string>
-                <string>Assignee</string>
                 <string>Assignor</string>
               </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>planned</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>

@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
+          <string>Products.DCWorkflow.Worklists</string>
+          <string>WorklistDefinition</string>
         </tuple>
         <none/>
       </tuple>
@@ -20,23 +20,23 @@
         </item>
         <item>
             <key> <string>actbox_category</string> </key>
-            <value> <string>workflow</string> </value>
+            <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>This is Spam</string> </value>
+            <value> <string>New Incoming Events (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=spam_action</string> </value>
-        </item>
-        <item>
-            <key> <string>after_script_name</string> </key>
-            <value> <string>spam</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+event_module?simulation_state=new&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Use the This is Spam action to mark the event as spam.</string> </value>
+            <value> <string>New Incoming Events</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,23 +46,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>spam_action</string> </value>
+            <value> <string>1_new_events</string> </value>
         </item>
         <item>
-            <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>This is Spam</string> </value>
-        </item>
-        <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -85,6 +75,36 @@
               <tuple>
                 <string>Assignor</string>
               </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>new</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>
