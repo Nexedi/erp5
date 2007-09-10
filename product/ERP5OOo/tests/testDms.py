@@ -165,12 +165,11 @@ class TestDocument(ERP5TypeTestCase):
   def getNeededCategoryList(self):
     return ()
 
-  def tearDown(self):
+  def beforeTearDown(self):
     """
       Do some stuff after each test:
       - clear document module
     """
-    # XXX Is it safe to overwrite tearDown?
     self.clearDocumentModule()
 
   def clearDocumentModule(self):
@@ -178,6 +177,8 @@ class TestDocument(ERP5TypeTestCase):
       Remove everything after each run
     """
     printAndLog("clearing document module...")
+    get_transaction().abort()
+    self.tic()
     doc_module = self.getDocumentModule()
     ids = [i for i in doc_module.objectIds()]
     doc_module.manage_delObjects(ids)
