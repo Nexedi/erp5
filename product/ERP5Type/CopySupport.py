@@ -121,7 +121,7 @@ class CopyContainer:
       if changed != 0:
           object.setCategoryList(category_list)
 
-  def _recursiveSetActivityAfterTag(self, obj):
+  def _recursiveSetActivityAfterTag(self, obj, activate_kw=None):
       """
       Make sure to set an after tag on each object
       so that it is possible to unindex before doing
@@ -129,14 +129,15 @@ class CopyContainer:
       """
       uid = getattr(aq_base(obj), 'uid', None)
       if uid is not None:
-        activate_kw = obj.getDefaultActivateParameterDict()
+        if activate_kw is None:
+          activate_kw = obj.getDefaultActivateParameterDict()
         try:
           activate_kw["after_tag"] = str(uid)
         except TypeError:
           activate_kw = {"after_tag":str(uid),}
         obj.setDefaultActivateParameters(**activate_kw)
       for sub_obj in obj.objectValues():
-        self._recursiveSetActivityAfterTag(sub_obj)
+        self._recursiveSetActivityAfterTag(sub_obj, activate_kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'manage_renameObject' )
   def manage_renameObject(self, id=None, new_id=None, REQUEST=None):
