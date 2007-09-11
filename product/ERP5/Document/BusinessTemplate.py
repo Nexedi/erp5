@@ -699,7 +699,11 @@ class ObjectTemplateItem(BaseTemplateItem):
             groups[path] = deepcopy(obj.groups)
           # copy the object
           obj = obj._getCopy(container)
-          container._setObject(object_id, obj)
+          try:
+            container._setObject(object_id, obj)
+          except AttributeError:
+            LOG("BT, install", 0, object_id)
+            raise
           obj = container._getOb(object_id)
           # mark a business template installation so in 'PortalType_afterClone' scripts
           # we can implement logical for reseting or not attributes (i.e reference).
@@ -1637,7 +1641,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       # fix key if necessary in installed bt for diff
       for key in installed_bt._objects.keys():
         if self.class_property not in key:
-          new_key = self.class_property+'/'+key
+          new_key = '%s/%s' % (self.class_property, key)
           new_dict[new_key] = installed_bt._objects[key]
         else:
           new_dict[key] = installed_bt._objects[key]
@@ -2611,20 +2615,33 @@ class DocumentTemplateItem(BaseTemplateItem):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
+      new_dict = PersistentMapping()
+      # fix key if necessary in installed bt for diff
+      for key in installed_bt._objects.keys():
+        if self.__class__.__name__ in key:
+          new_key = key[len('%s/' % self.__class__.__name__):]
+          new_dict[new_key] = installed_bt._objects[key]
+        else:
+          new_dict[key] = installed_bt._objects[key]
+      if len(new_dict):
+        installed_bt._objects = new_dict
       for path in new_keys:
         if installed_bt._objects.has_key(path):
           # compare object to see if there is changes
           new_obj_code = self._objects[path]
           old_obj_code = installed_bt._objects[path]
           if new_obj_code != old_obj_code:
-            modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+            modified_object_list.update(
+                {path : ['Modified', self.__class__.__name__[:-12]]})
         else: # new object
-          modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+          modified_object_list.update(
+                {path : ['New', self.__class__.__name__[:-12]]})
           # get removed object
       old_keys = installed_bt._objects.keys()
       for path in old_keys:
         if path not in new_keys:
-          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+          modified_object_list.update(
+                {path : ['Removed', self.__class__.__name__[:-12]]})
     return modified_object_list
 
   def install(self, context, trashbin, **kw):
@@ -4157,7 +4174,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(
                                                            self.getTitle())
-      if installed_bt is not None:
+      # When reinstalling, installation state should not change to replaced
+      if installed_bt not in [None, self]:
         if installed_bt.getTemplateFormatVersion() == 0:
           force = 1
         installed_bt.replace(self)
