@@ -104,8 +104,6 @@ def initialize( context ):
                                 'www/StringField.gif')
     FieldRegistry.registerField(ImageField.ImageField,
                                 'www/StringField.gif')
-    FieldRegistry.registerField(ParallelListField.ParallelListField,
-                                'www/StringField.gif')
     FieldRegistry.registerField(StandardFields.StringField,
                                 'www/StringField.gif')
     FieldRegistry.registerField(StandardFields.CheckBoxField,
@@ -121,6 +119,8 @@ def initialize( context ):
     FieldRegistry.registerField(StandardFields.ListField,
                                 'www/ListField.gif')
     FieldRegistry.registerField(StandardFields.MultiListField,
+                                'www/MultiListField.gif')
+    FieldRegistry.registerField(ParallelListField.ParallelListField,
                                 'www/MultiListField.gif')
     FieldRegistry.registerField(StandardFields.RadioField,
                                 'www/RadioField.gif')
