@@ -90,5 +90,5 @@ class Event(EmailDocument, Movement):
       """
         Quantity is set automatically on Events.
       """
-      return 1 # Provide opportunity to script this
-
+      # Provide opportunity to script this
+      return 1.
