@@ -74,11 +74,11 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
                                  destination_trade_value=self.bank_account_2,
                                  aggregate_value=self.check_1,
                                  )
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'plan_action', 
-                                   wf_id='checkbook_vault_transfer_workflow')
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_to_deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action', 
+                                   wf_id='checkbook_vault_transfer_workflow')
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'deliver_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
 
   def createCheckbookVaultTransferWithTravelerCheck(self, sequence=None, 
@@ -100,11 +100,11 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
                              aggregate_value=self.traveler_check,
                              price_currency_value=self.currency_2
                              )
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'plan_action', 
-                                   wf_id='checkbook_vault_transfer_workflow')
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_to_deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action', 
+                                   wf_id='checkbook_vault_transfer_workflow')
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'deliver_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
 
 class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCashTransferMixin,
