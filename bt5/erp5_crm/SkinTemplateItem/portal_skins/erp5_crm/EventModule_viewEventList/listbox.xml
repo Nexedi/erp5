@@ -66,6 +66,18 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>all_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -74,7 +86,29 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key>                 <string>portal_types</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>search_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -89,7 +123,7 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>all_columns</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -130,7 +164,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -165,7 +199,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -196,7 +230,7 @@
                     <value> <string>ORGANISATION_LIST</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_types</string> </key>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -227,7 +261,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>search_columns</string> </key>
+                    <key> <string>search_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -262,11 +296,11 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>event_module_selection</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>sort</string> </key>
+                    <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -281,7 +315,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Events</string> </value>
                 </item>
                 <item>
@@ -290,6 +324,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:map(lambda x: (x, here.Localizer.erp5_ui.gettext(x)), here.getPortalEventTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>
