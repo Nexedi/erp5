@@ -62,7 +62,9 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_set.*</string>
+                <string>_setSourceTrade.*</string>
+                <string>_setSourceDecision.*</string>
+                <string>_setSource.*</string>
               </list>
             </value>
         </item>

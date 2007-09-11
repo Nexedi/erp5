@@ -62,7 +62,9 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_set.*</string>
+                <string>_setSource.*</string>
+                <string>_setDestination.*</string>
+                <string>_setFollowUp.*</string>
               </list>
             </value>
         </item>
