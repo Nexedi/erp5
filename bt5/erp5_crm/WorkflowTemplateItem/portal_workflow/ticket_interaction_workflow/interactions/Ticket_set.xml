@@ -62,12 +62,7 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_setSourceValue</string>
-                <string>_setSourceValueList</string>
-                <string>_setSourceDecisionValue</string>
-                <string>_setSourceDecisionValueList</string>
-                <string>_setSourceTradeValue</string>
-                <string>_setSourceTradeValueList</string>
+                <string>_set.*</string>
               </list>
             </value>
         </item>
@@ -78,12 +73,7 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Campaign</string>
-                <string>Meeting</string>
-                <string>Sale Opportunity</string>
-                <string>Support Request</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
