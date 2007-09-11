@@ -109,7 +109,6 @@ class Inventory(Delivery):
                                     , group_by_sub_variation = 1
                                     , group_by_variation = 1
                                     , group_by_resource = 1
-                                    , group_by_payment = 1
                                     , connection_id = connection_id
                                     )
       current_inventory_dict = {}
@@ -143,7 +142,7 @@ class Inventory(Delivery):
               resource_relative_url=resource_path,
               variation_text=variation_text)
           movement_sub_variation_text = movement.getSubVariationText()
-          # Check wath is the quantity difference 
+          # Check wath is the quantity difference
           if movement_sub_variation_text in inventory_by_subvariation_dict.keys():
               total_quantity = inventory_by_subvariation_dict.pop(movement_sub_variation_text)
               # Put remaining subvariation in a dict to know which one to removed at end
@@ -183,27 +182,26 @@ class Inventory(Delivery):
       for resource_and_variation_key in not_used_inventory_dict.keys():
         inventory_by_subvariation_dict = not_used_inventory_dict[resource_and_variation_key]
         for sub_variation_text in inventory_by_subvariation_dict.keys():
-            if sub_variation_text not in (None, ""): # XXX maybe also need to removed those one
-                category_list = self.getCategoryList()
-                quantity = inventory_by_subvariation_dict[sub_variation_text]
-                resource_path, variation_text = resource_and_variation_key
-                kwd = {'uid':inventory_uid,
-                       'start_date': start_date}
-                if variation_text is not None:
-                    variation_list = variation_text.split('\n')
-                else:
-                    variation_list = []                
-                sub_variation_list = sub_variation_text.split('\n')
-                diff_quantity = - quantity                    
-                temp_delivery_line = temp_constructor(self,
-                                                      inventory_id)
-                kwd['quantity'] = diff_quantity
-                category_list.append('resource/%s' % resource_path)
-                category_list.extend(variation_list)
-                category_list.extend(sub_variation_list)
-                kwd['category_list'] = category_list
-                temp_delivery_line.edit(**kwd)
-                stock_append(temp_delivery_line)
+            category_list = self.getCategoryList()
+            quantity = inventory_by_subvariation_dict[sub_variation_text]
+            resource_path, variation_text = resource_and_variation_key
+            kwd = {'uid':inventory_uid,
+                   'start_date': start_date}
+            if variation_text is not None:
+                variation_list = variation_text.split('\n')
+            else:
+                variation_list = []                
+            sub_variation_list = sub_variation_text.split('\n')
+            diff_quantity = - quantity                    
+            temp_delivery_line = temp_constructor(self,
+                                                  inventory_id)
+            kwd['quantity'] = diff_quantity
+            category_list.append('resource/%s' % resource_path)
+            category_list.extend(variation_list)
+            category_list.extend(sub_variation_list)
+            kwd['category_list'] = category_list
+            temp_delivery_line.edit(**kwd)
+            stock_append(temp_delivery_line)
 
       # Reindex objects
       object_list = [self]
