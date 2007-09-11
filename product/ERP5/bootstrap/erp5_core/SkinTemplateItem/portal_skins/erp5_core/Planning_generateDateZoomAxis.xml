@@ -1,0 +1,394 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Message import Message\n
+\n
+# get current zoom_level.\n
+current_zoom_level = context.REQUEST.get(\'zoom_level\', \'30\')\n
+# Dictionary with the expect zoom for current zoom_level\n
+zoom_level_index_list = { \'365\' : \'30\', \n
+                                      \'30\' : \'7\', \n
+                                      \'7\': \'1\' , \n
+                                      \'1\': \'1\' }\n
+\n
+new_zoom_level =  zoom_level_index_list[current_zoom_level]\n
+\n
+# In all cases, return list structure containing dictionaries.\n
+# 1 dictionary == 1 group\n
+# Optional value \'link\'is accept to create special link on secondary axis.\n
+\n
+if isinstance(axis_start, DateTime):\n
+  # testing delimiter_type to apply (day, week, month, year)\n
+  # from smallest type to biggest\n
+  type_list = [(\'month\', 30),\n
+                    (\'3days\', 3),\n
+                    (\'day\', 1),\n
+                    (\'2hours\', 0.25),\n
+]\n
+\n
+  default_link_url =\'setZoomLevel?form_id=%s&list_selection_name=%s\' %(\n
+                              form_id, selection_name)\n
+\n
+\n
+  # default good_type is last one (if nothing else matches)\n
+  good_type = type_list[-1]\n
+  for date_type in type_list:\n
+    # iterating each delimiter_type and testing if it matches the delimitation\n
+    # number definition\n
+    if float(axis_stop - axis_start) / date_type[1] >= delimiter_min_number:\n
+      good_type = date_type\n
+      break\n
+\n
+  # Definning date order using user Preference Options\n
+  try:\n
+    date_order = context.portal_preferences.getActivePreference().getPreferredDateOrder()\n
+    if (date_order is None) or date_order not in [ \'dmy\', \'ymd\' , \'mdy\' ]:\n
+      date_order = \'ymd\'\n
+  except AttributeError:\n
+    date_order = \'ymd\'\n
+\n
+  delimiter = 0\n
+  delimiter_list = []\n
+  translated_Day = Message(domain=\'erp5_ui\', message=axis_start.Day(),\n
+                           mapping=None)\n
+  # First delimiter\n
+  delimiter_list.append({ \'relative_position\' : int(axis_start), \n
+                                   \'title\': \'\', \n
+                                   \'tooltip\' : \'%s %s\' % (translated_Day, str(DateTime(axis_start))), \n
+                                   \'delimiter_type\' : 0})\n
+\n
+  ## 2 Hours ##\n
+  if good_type[0] == \'2hours\':\n
+    # recovering first valid date\n
+    if axis_start.hour() > 21:\n
+      #need to use the next day\n
+      current_date = DateTime((axis_start + 1).Date())\n
+    elif axis_start.hour() == 0:\n
+      current_date = DateTime(axis_start.Date())\n
+    else:\n
+      hours = 12\n
+      current_date = DateTime( \'%s/%s/%s %s:0:0\' % (str(axis_start.year()),\n
+                                                  str(axis_start.month()),\n
+                                                  str(axis_start.day()),\n
+                                                  hours))\n
+    while current_date < axis_stop:\n
+      if current_date.hour() == 0 :\n
+        delimiter = 2\n
+      elif current_date.hour() == 12:\n
+        delimiter = 1\n
+      else:\n
+        delimiter = 0\n
+      # defining date order\n
+      date_order_list = []\n
+      for i in date_order:\n
+        if i == \'d\': date_order_list.append(current_date.day())\n
+        if i == \'m\': date_order_list.append(current_date.month())\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': \'%s %s/%s %s:00\' % (Message(domain=\'erp5_ui\', \n
+                                                                          message=current_date.Day(),\n
+                                                                          mapping=None),\n
+                                                          str(date_order_list[0]),\n
+                                                          str(date_order_list[1]),\n
+                                                          str(current_date.hour())),\n
+                                       \'tooltip\' : \'%s %s\' %  ( Message(domain=\'erp5_ui\', \n
+                                                                                        message=current_date.Day(), \n
+                                                                                        mapping=None), \n
+                                                                                        str(current_date)),\n
+                                       \'delimiter_type\' : delimiter })\n
+      if current_date.hour() == 21:\n
+        #need to use the next day\n
+        current_date = DateTime((current_date + 1).Date())\n
+      else:\n
+        hours = current_date.hour() + 3\n
+        current_date = DateTime(\'%s/%s/%s %s:0:0\' % (str(current_date.year()),\n
+                                                    str(current_date.month()),\n
+                                                    str(current_date.day()),\n
+                                                    hours))\n
+\n
+\n
+  ##### DAY ####\n
+  elif good_type[0] == \'day\':\n
+    # recovering first date displayed, without time:\n
+    current_date = DateTime(axis_start.Date())\n
+    # first date is used to get list of compliant dates\n
+    while current_date < axis_stop:\n
+      if current_date.day() == 1:\n
+        delimiter = 2\n
+      elif current_date.day() == 15:\n
+        delimiter = 1\n
+      else:\n
+        delimiter = 0\n
+      # defining date order\n
+      date_order_list = []\n
+      for i in date_order:\n
+        if i == \'d\': date_order_list.append(current_date.day())\n
+        if i == \'m\': date_order_list.append(current_date.month())\n
+        if i == \'y\': date_order_list.append(current_date.year())\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                        \'title\': \'%s   %s/%s/%s\' % (Message(domain=\'erp5_ui\', \n
+                                                                                  message=current_date.Day(),\n
+                                                                                  mapping=None),\n
+                                                               str(date_order_list[0]), \n
+                                                               str(date_order_list[1]),\n
+                                                               str(date_order_list[2])),\n
+                                       \'tooltip\' : \'%s %s\' %  ( Message(domain=\'erp5_ui\', \n
+                                                                                        message=current_date.Day(), \n
+                                                                                        mapping=None), \n
+                                                                                        str(current_date)),\n
+                                       \'delimiter_type\' : delimiter, \n
+                                       \'link\':\'%s&zoom_date_start=%s&zoom_level=%s\' % ( default_link_url,current_date,new_zoom_level)  })       \n
+   \n
+      # go to next date\n
+      current_date = current_date + 1\n
+\n
+  ##### 3 DAYs ####\n
+  elif good_type[0] == \'3days\':\n
+    # recovering first date displayed, without time:\n
+    current_date = DateTime(axis_start.Date())\n
+    # first date is used to get list of compliant dates\n
+    while current_date < axis_stop:\n
+      if current_date.day() == 1:\n
+        delimiter = 2\n
+      elif current_date.day() == 15:\n
+        delimiter = 1\n
+      else:\n
+        delimiter = 0\n
+      date_order_list = []\n
+      for i in date_order:\n
+        if i == \'d\': date_order_list.append(current_date.day())\n
+        if i == \'m\': date_order_list.append(current_date.month())\n
+        if i == \'y\': date_order_list.append(current_date.year())\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': \'%s/%s/%s\' % (str(date_order_list[0]), str(date_order_list[1]),str(date_order_list[2])),\n
+                                       \'tooltip\' : \'%s %s\' %  ( Message(domain=\'erp5_ui\', \n
+                                                                                        message=current_date.Day(), \n
+                                                                                        mapping=None), \n
+                                                                                        str(current_date)),\n
+                                       \'delimiter_type\' : delimiter, \n
+                                       \'link\':\'%s&zoom_date_start=%s&zoom_level=%s\' % ( default_link_url,current_date,new_zoom_level)  })       \n
+      # go to next date\n
+      current_date = current_date + 3\n
+\n
+\n
+  #### MONTH ####\n
+  elif good_type[0] == \'month\':\n
+    # getting first valid date\n
+    if axis_start.month() == 12:\n
+      # need to go to the next year\n
+      current_date = DateTime(str(axis_start.year()) + \'/1/1\' )\n
+    else:\n
+      current_date = DateTime(str(axis_start.year()) + \'/\' + str((axis_start.month())) + \'/1\')\n
+\n
+    # getting list of months\n
+    while current_date < axis_stop:\n
+      if current_date.month() == 1:\n
+        delimiter = 2\n
+      elif current_date.month() == 7:\n
+        delimiter = 1\n
+      else:\n
+        delimiter = 0\n
+      date_order_list = []\n
+      for i in date_order:\n
+        if i == \'m\': date_order_list.append(current_date.month())\n
+        if i == \'y\': date_order_list.append(current_date.year())\n
+      delimiter_list.append({ \'relative_position\' : int(current_date),\n
+                                       \'title\': str(date_order_list[0]) + \'/\' + str(date_order_list[1]),\n
+                                       \'tooltip\' : \'%s %s\' %  ( Message(domain=\'erp5_ui\', \n
+                                                                                        message=current_date.Day(), \n
+                                                                                        mapping=None), \n
+                                                                                        str(current_date)),\n
+                                       \'delimiter_type\' : delimiter, \n
+                                       \'link\':\'%s&zoom_date_start=%s&zoom_level=%s\' % ( default_link_url,current_date,new_zoom_level)  })       \n
+      if current_date.month() == 12:\n
+        # need to go to the next year\n
+        current_date = DateTime(str(current_date.year() + 1) + \'/1/1\' )\n
+      else:\n
+        current_date = DateTime(str(current_date.year()) + \'/\' + str((current_date.month() +1)) + \'/1\')\n
+\n
+  return delimiter_list\n
+\n
+\n
+return [ ]\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>axis_start, axis_stop, delimiter_min_number, form_id=None, selection_name=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>axis_start</string>
+                            <string>axis_stop</string>
+                            <string>delimiter_min_number</string>
+                            <string>form_id</string>
+                            <string>selection_name</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>current_zoom_level</string>
+                            <string>zoom_level_index_list</string>
+                            <string>_getitem_</string>
+                            <string>new_zoom_level</string>
+                            <string>isinstance</string>
+                            <string>DateTime</string>
+                            <string>type_list</string>
+                            <string>default_link_url</string>
+                            <string>good_type</string>
+                            <string>_getiter_</string>
+                            <string>date_type</string>
+                            <string>float</string>
+                            <string>date_order</string>
+                            <string>None</string>
+                            <string>AttributeError</string>
+                            <string>delimiter</string>
+                            <string>delimiter_list</string>
+                            <string>translated_Day</string>
+                            <string>int</string>
+                            <string>str</string>
+                            <string>current_date</string>
+                            <string>hours</string>
+                            <string>date_order_list</string>
+                            <string>i</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Planning_generateDateZoomAxis</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
