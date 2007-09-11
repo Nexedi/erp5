@@ -309,6 +309,17 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     """
     self.assertEqual(self.check_1.getSimulationState(),'confirmed')
 
+  def stepCheckConfirmedWorklist(self, sequence=None, sequence_list=None, **kw):
+    """
+    """
+    actions = self.getPortal().portal_actions.listFilteredActionsFor(self.stop_payment)
+    found = 0
+    for action in actions['global']:
+      if action.get('workflow_id', None) == 'stop_payment_workflow':
+        if action.get('title', None) == 'Stop Payment To Confirm (1)':
+          found = 1
+    self.assertEquals(found, 1)
+
   ##################################
   ##  Tests
   ##################################
@@ -325,6 +336,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
                     + 'CreateStopPayment Tic ' \
                     + 'SetStopPaymentDebit Tic ' \
                     + 'ConfirmStopPayment Tic ' \
+                    + 'CheckConfirmedWorklist Tic ' \
                     + 'CheckLineCreated Tic ' \
                     + 'CheckConfirmedCheckbookInventory ' \
                     + 'StartStopPayment Tic ' \
