@@ -279,11 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: here.realm.replace(">", "&gt;").replace("<", "&lt;")
-
-]]></string> </value>
+            <value> <string>here/realm</string> </value>
         </item>
       </dictionary>
     </pickle>
