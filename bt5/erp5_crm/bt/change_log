@@ -1,5 +1,6 @@
 2007-09-11 Romain
 * Add Visit portal type
+* Remove hardcoded values
 
 2007-09-11 Thierry
 * Improve Ticket workflow (add worklists)

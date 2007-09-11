@@ -70,15 +70,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
+                    <key>                 <string>base_category</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>catalog_index</string> </key>
+                    <key>                 <string>catalog_index</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
+                    <key>                 <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -90,15 +94,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
+                    <key>                 <string>portal_type</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -168,24 +174,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Mail Message</string>
-                          <string>Mail Message</string>
-                        </tuple>
-                        <tuple>
-                          <string>Fax Message</string>
-                          <string>Fax Message</string>
-                        </tuple>
-                        <tuple>
-                          <string>Letter</string>
-                          <string>Letter</string>
-                        </tuple>
-                        <tuple>
-                          <string>Phone Call</string>
-                          <string>Phone Call</string>
-                        </tuple>
-                        <tuple>
-                          <string>Note</string>
-                          <string>Note</string>
+                          <string>Event</string>
+                          <string>Event</string>
                         </tuple>
                       </list>
                     </value>
@@ -200,6 +190,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(x, x) for x in here.getPortalEventTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

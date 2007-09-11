@@ -232,28 +232,7 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Mail Message</string>
-                          <string>Email</string>
-                        </tuple>
-                        <tuple>
-                          <string>Phone Call</string>
-                          <string>Phone Call</string>
-                        </tuple>
-                        <tuple>
-                          <string>Fax Message</string>
-                          <string>Fax</string>
-                        </tuple>
-                        <tuple>
-                          <string>Letter</string>
-                          <string>Letter</string>
-                        </tuple>
-                        <tuple>
-                          <string>Note</string>
-                          <string>Note</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -342,7 +321,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:map(lambda x: (x, here.Localizer.erp5_ui.gettext(x)), here.getPortalEventTypeList())</string> </value>
+            <value> <string>python: [(x, x) for x in here.getPortalEventTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
