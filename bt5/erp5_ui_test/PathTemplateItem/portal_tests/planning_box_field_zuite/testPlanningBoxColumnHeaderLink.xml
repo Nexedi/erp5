@@ -82,7 +82,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=3</td>\n
+  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=1</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -132,109 +132,138 @@
 </tr>\n
 <tr>\n
   <td>assertTextNotPresent</td>\n
-  <td>PlanningBoxError</td>\n
+  <td>Site Error</td>\n
   <td></td>\n
 </tr>\n
+<!-- Make sure that we are working with currently date -->\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//img[@name=\'JumpToCurrentDay\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_2"]</td>\n
-  <td>[+] Title 1</td>\n
+\t<td>selectAndWait</td>\n
+\t<td>zoom_level</td>\n
+\t<td>label=Year</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_3"]</td>\n
-  <td>[+] Title 0</td>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_1"]</td>\n
-  <td>[+] Title 2</td>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_1"]</td>\n
+  <td tal:content="python: \'%s/1\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_2_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
-  <td>Title 1</td>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_2"]</td>\n
+  <td tal:content="python: \'%s/2\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_3"]</td>\n
+  <td tal:content="python: \'%s/3\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_4"]</td>\n
+  <td tal:content="python: \'%s/4\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_5"]</td>\n
+  <td tal:content="python: \'%s/5\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_6"]</td>\n
+  <td tal:content="python: \'%s/6\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_7"]</td>\n
+  <td tal:content="python: \'%s/7\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_8"]</td>\n
+  <td tal:content="python: \'%s/8\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_9"]</td>\n
+  <td tal:content="python: \'%s/9\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_10"]</td>\n
+  <td tal:content="python: \'%s/10\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_11"]</td>\n
+  <td tal:content="python: \'%s/11\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_12"]</td>\n
+  <td tal:content="python: \'%s/12\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
-  <td>Title 2</td>\n
+  <td>.</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td tal:content="python: \'//div[@id=\\\'Group_sec_%s\\\']//a\' % (str(DateTime().month())) " ></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>.</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td tal:content="python: \'//div[@id=\\\'Group_sec_%s\\\']//a\' % (str((DateTime().day()/3)+1)) " ></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
   <td>Title 0</td>\n
 </tr>\n
 <tr>\n
+  <td>clickAndWait</td>\n
+  <td tal:content="python: \'//div[@id=\\\'Group_sec_%s\\\']//a\' % (str(DateTime().dow()+1)) " ></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_topright"]</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
   <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_2_Activity_1_Block_1"]/a[@class="planning_box_topright"]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_topright"]</td>\n
-  <td>Title 2</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_topleft"]</td>\n
-  <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_2_Activity_1_Block_1"]/a[@class="planning_box_topleft"]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_topleft"]</td>\n
-  <td>Title 2</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_botright"]</td>\n
-  <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_2_Activity_1_Block_1"]/a[@class="planning_box_botright"]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_botright"]</td>\n
-  <td>Title 2</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_botleft"]</td>\n
-  <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_2_Activity_1_Block_1"]/a[@class="planning_box_botleft"]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_botleft"]</td>\n
-  <td>Title 2</td>\n
 </tr>\n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></string> </value>
         </item>
@@ -248,7 +277,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testPlanningBoxDataInfo</string> </value>
+            <value> <string>testPlanningBoxColumnHeaderLink</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
