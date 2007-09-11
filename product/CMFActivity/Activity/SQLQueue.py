@@ -302,7 +302,6 @@ class SQLQueue(RAMQueue):
     return message_list
 
   def distribute(self, activity_tool, node_count):
-    processing_node = 1
     readMessageList = getattr(activity_tool, 'SQLQueue_readMessageList', None)
     if readMessageList is not None:
       now_date = DateTime()
