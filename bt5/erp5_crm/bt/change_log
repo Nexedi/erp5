@@ -1,3 +1,6 @@
+2007-09-11 Yusei
+* Add two interaction workflows for ticket and event to update local roles after editing.
+
 2007-09-11 Romain
 * Add Visit portal type
 * Remove hardcoded values

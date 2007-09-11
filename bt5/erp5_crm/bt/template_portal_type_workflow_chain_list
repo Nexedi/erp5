@@ -1,20 +1,30 @@
 Campaign | edit_workflow
+Campaign | ticket_interaction_workflow
 Campaign | ticket_workflow
 Fax Message | edit_workflow
+Fax Message | event_interaction_workflow
 Fax Message | event_workflow
 Letter | edit_workflow
+Letter | event_interaction_workflow
 Letter | event_workflow
 Mail Message | edit_workflow
+Mail Message | event_interaction_workflow
 Mail Message | event_workflow
 Meeting | edit_workflow
+Meeting | ticket_interaction_workflow
 Meeting | ticket_workflow
 Note | edit_workflow
+Note | event_interaction_workflow
 Note | event_workflow
 Phone Call | edit_workflow
+Phone Call | event_interaction_workflow
 Phone Call | event_workflow
 Sale Opportunity | edit_workflow
 Sale Opportunity | sale_opportunity_workflow
+Sale Opportunity | ticket_interaction_workflow
 Support Request | edit_workflow
+Support Request | ticket_interaction_workflow
 Support Request | ticket_workflow
 Visit | edit_workflow
+Visit | event_interaction_workflow
 Visit | event_workflow
