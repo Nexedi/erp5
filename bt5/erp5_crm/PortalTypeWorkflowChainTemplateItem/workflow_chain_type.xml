@@ -35,4 +35,8 @@
   <type>Support Request</type>
   <workflow>ticket_workflow, edit_workflow</workflow>
  </chain>
+ <chain>
+  <type>Visit</type>
+  <workflow>edit_workflow, event_workflow</workflow>
+ </chain>
 </workflow_chain>
