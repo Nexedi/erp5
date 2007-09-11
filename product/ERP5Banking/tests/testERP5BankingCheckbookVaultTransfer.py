@@ -294,33 +294,16 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
                                  aggregate_value=self.check_1
                                  )
 
-  def stepPlanCheckbookVaultTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    plan the checkbook vault tranfer
-    """
-    state = self.checkbook_vault_transfer.getSimulationState()
-    self.assertEqual(state, 'draft')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 
-             'plan_action', wf_id='checkbook_vault_transfer_workflow')
-    self.assertEqual(self.checkbook_vault_transfer.getSimulationState(), 'planned')
-    workflow_history = self.workflow_tool.getInfoFor(
-                  ob=self.checkbook_vault_transfer, name='history', 
-                  wf_id='checkbook_vault_transfer_workflow')
-    self.assertEqual(len(workflow_history), 3)
 
   def stepOrderCheckbookVaultTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     order the checkbook vault transfer
     """
     state = self.checkbook_vault_transfer.getSimulationState()
-    self.assertEqual(state, 'planned')
+    self.assertEqual(state, 'draft')
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 
                'order_action', wf_id='checkbook_vault_transfer_workflow')
     self.assertEqual(self.checkbook_vault_transfer.getSimulationState(), 'ordered')
-    workflow_history = self.workflow_tool.getInfoFor(
-                   ob=self.checkbook_vault_transfer, name='history', 
-                   wf_id='checkbook_vault_transfer_workflow')
-    self.assertEqual(len(workflow_history), 5)
 
   def stepConfirmCheckbookVaultTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -330,8 +313,6 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     self.assertEqual(state, 'ordered')
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action', wf_id='checkbook_vault_transfer_workflow')
     self.assertEqual(self.checkbook_vault_transfer.getSimulationState(), 'confirmed')
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_vault_transfer, name='history', wf_id='checkbook_vault_transfer_workflow')
-    self.assertEqual(len(workflow_history), 7)
 
 
   def stepCheckConfirmedCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
@@ -350,17 +331,12 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     """
     state = self.checkbook_vault_transfer.getSimulationState()
     # check that state is draft
-    self.assertEqual(state, 'ordered')
+    self.assertEqual(state, 'confirmed')
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 
-                                   'order_to_deliver_action', 
+                                   'deliver_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
-    # get state of cash sorting
     state = self.checkbook_vault_transfer.getSimulationState()
-    # check that state is delivered
     self.assertEqual(state, 'delivered')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_vault_transfer, 
-                            name='history', wf_id='checkbook_vault_transfer_workflow')
 
 
   def stepCheckFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
@@ -390,7 +366,7 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     Try if we get Insufficient balance
     """
     message = self.assertWorkflowTransitionFails(self.checkbook_vault_transfer,
-              'checkbook_vault_transfer_workflow','order_to_deliver_action')
+              'checkbook_vault_transfer_workflow','deliver_action')
     self.failUnless(message.find('Sorry, the item with reference')>=0)
     self.failUnless(message.find('is not available any more')>=0)
 
@@ -408,15 +384,14 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     sequence_string = 'Tic CheckObjects Tic CheckInitialCheckbookInventory ' \
                     + 'CreateCheckbookVaultTransfer Tic ' \
                     + 'CreateCheckAndCheckbookLineList Tic ' \
-                    + 'PlanCheckbookVaultTransfer Tic ' \
                     + 'OrderCheckbookVaultTransfer Tic ' \
+                    + 'ConfirmCheckbookVaultTransfer Tic ' \
                     + 'CheckConfirmedCheckbookInventory Tic ' \
                     + 'ChangePreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookVaultTransferFails Tic ' \
                     + 'PutBackPreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookVaultTransfer Tic ' \
                     + 'CheckFinalCheckbookInventory'
-                    #+ 'ConfirmCheckbookVaultTransfer Tic ' \
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
