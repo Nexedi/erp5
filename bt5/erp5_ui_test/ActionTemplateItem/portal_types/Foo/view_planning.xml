@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/planningbox.png</string> </value>
+            <value> <string>string:${object_url}/images/planningbox.png</string> </value>
         </item>
       </dictionary>
     </pickle>
