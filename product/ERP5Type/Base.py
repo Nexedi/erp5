@@ -2876,13 +2876,16 @@ class Base( CopyContainer,
     wf = portal_workflow.getWorkflowById('edit_workflow')
     wf_list = list(portal_workflow.getWorkflowsFor(self))
     if wf is not None: wf_list = [wf] + wf_list
+    max_date = None
     for wf in wf_list:
       history = wf.getInfoFor(self, 'history', None)
       if history is not None:
         if len(history):
+          date = history[-1].get('time', None)
           # Then get the last line of edit_workflow
-          return history[-1].get('time', None)
-    return None
+          if date > max_date:
+            max_date = date
+    return max_date
 
   # Layout management
   security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
