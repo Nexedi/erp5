@@ -39,7 +39,10 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>edit</string>
+                <string>extract</string>
+              </tuple>
             </value>
         </item>
         <item>
