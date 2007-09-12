@@ -171,9 +171,12 @@ class AccountingTestCase(ERP5TypeTestCase):
         doc.validate()
     
     # and the preference enabled
-    self.portal.portal_preferences.accounting_zuite_preference\
-                      .manage_addLocalRoles(self.username, ('Auditor', ))
-    self.portal.portal_preferences.accounting_zuite_preference.enable()
+    preference = self.portal.portal_preferences.accounting_zuite_preference
+    pref.manage_addLocalRoles(self.username, ('Auditor', ))
+    # Make sure _aq_dynamic is called before calling the workflow method
+    # otherwise .enable might not been wrapped yet. This happen in --load
+    pref._aq_dynamic('hack')
+    pref.enable()
     
     # and all this available to catalog
     get_transaction().commit()
