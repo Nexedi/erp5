@@ -6,8 +6,6 @@ Bar | metadata
 Bar | performance
 Bar | print
 Bar | view
-Foo Line | history
-Foo Line | metadata
 Foo Line | view
 Foo Module | list
 Foo Module | list_ui
