@@ -825,7 +825,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         except KeyError:
           continue
         catalog_id = archive.getCatalogId()
-        archive.activate(priority=archive.getPriority()).uncatalogObject(uid=uid,path=path,
+        self.activate(priority=archive.getPriority()).uncatalogObject(uid=uid,path=path,
                                                                          sql_catalog_id=catalog_id)
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None and catalog_id is None:
