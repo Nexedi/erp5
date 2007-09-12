@@ -1116,8 +1116,9 @@ class XMLSyncUtilsMixin(SyncCode):
           # Then store the xml of this new subobject
           reset = 0
           if object is None:
-            add_data = conduit.addNode(xml=data_subnode, 
-                object=destination, object_id=object_id)
+            add_data = conduit.addNode(xml=data_subnode,
+                                       object=destination,
+                                       object_id=object_id)
             if add_data['conflict_list'] not in ('', None, []):
               conflict_list += add_data['conflict_list']
             # Retrieve directly the object from addNode
@@ -1435,7 +1436,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
         string_io = StringIO()
         PrettyPrint(remote_xml,stream=string_io)
         remote_xml = string_io.getvalue()
-      domain.activate(activity='SQLQueue').SyncModifActivity(
+      domain.activate(activity='SQLQueue',
+                           tag=domain.getId()).activateSyncModif(
                       domain_relative_url = domain.getRelativeUrl(),
                       remote_xml = remote_xml,
                       subscriber_relative_url = subscriber.getRelativeUrl(),
@@ -1451,7 +1453,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       result = self.getSyncMLData(domain=domain,
                              remote_xml=remote_xml,
                              subscriber=subscriber,
-                             cmd_id=cmd_id,xml_confirmation=xml_confirmation,
+                             cmd_id=cmd_id,
+                             xml_confirmation=xml_confirmation,
                              conduit=conduit,
                              max=None)
       syncml_data = result['syncml_data']
@@ -1462,7 +1465,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                 remote_xml, xml_list, has_status_list,
                                 has_response)
 
-  def SyncModifActivity(self, **kw):
+  def activateSyncModif(self, **kw):
     domain = self.unrestrictedTraverse(kw['domain_relative_url'])
     subscriber = self.unrestrictedTraverse(kw['subscriber_relative_url'])
     conduit = subscriber.getConduit()
@@ -1478,7 +1481,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     kw['cmd_id'] = cmd_id
     finished = result['finished']
     if not finished:
-      domain.activate(activity='SQLQueue').SyncModifActivity(**kw)
+      domain.activate(activity='SQLQueue',
+                           tag=domain.getId()).activateSyncModif(**kw)
     else:
       xml_confirmation = result['xml_confirmation']
       cmd_id = result['cmd_id']
