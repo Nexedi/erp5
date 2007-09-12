@@ -1,3 +1,6 @@
+2007-09-12 Yusei
+* Removed module_view action from modules's type information. Now the action is provided by erp5_core as global action.
+
 2007-09-11 yo
 * New script, Currency_asNumericCode.
 
