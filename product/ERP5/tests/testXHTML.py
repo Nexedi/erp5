@@ -130,7 +130,7 @@ class TestXHTML(ERP5TypeTestCase):
     skins_tool = self.portal.portal_skins
     for field_path, field in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['ProxyField'], search_sub=1):
-      self.assertNotEqual(None, field.getRecursiveTemplateField(),
+      self.assertNotEqual(None, field.getTemplateField(),
           '%s\nform_id:%s\nfield_id:%s\n' % (field_path,
                                              field.get_value('form_id'),
                                              field.get_value('field_id')))
