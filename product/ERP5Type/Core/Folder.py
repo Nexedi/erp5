@@ -64,7 +64,7 @@ from random import randint
 
 import os
 
-from zLOG import LOG, PROBLEM
+from zLOG import LOG, PROBLEM, WARNING
 import warnings
 
 REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
@@ -435,14 +435,19 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     if self._plugin is None:
       if self._isHBTree:
         self._plugin = CMFHBTreeFolder
+        self._generatePluginMethod()
       elif self._isBTree:
         self._plugin = CMFBTreeFolder
       else:
-        raise ValueError, "No plugin defined"
-      self._generatePluginMethod()
+        raise ValueError, 'No plugin defined'
       self._plugin.__init__(self, self.id)
     return FolderMixIn.newContent(self, *args, **kw)
 
+  security.declareProtected( Permissions.ManagePortal, 'migrateToHBTree' )
+  def resetPlugin(self):
+    """ reset plugin attribute """
+    self._plugin = None
+    
   security.declareProtected(Permissions.View, 'isBTree')
   def isBTree(self):
     """ Return if folder is a BTree or not """
@@ -925,12 +930,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     def _getVisibleAllowedContentTypeList():
       hidden_type_list = portal.portal_types.getTypeInfo(self)\
                                               .getHiddenContentTypeList()
-      try:
-        return [ ti.id for ti in self._plugin.allowedContentTypes(self)
-                 if ti.id not in hidden_type_list ]
-      except AttributeError:
-        return [ ti.id for ti in CMFBTreeFolder.allowedContentTypes(self)
-                 if ti.id not in hidden_type_list ]
+      return [ ti.id for ti in CMFBTreeFolder.allowedContentTypes(self)
+               if ti.id not in hidden_type_list ]
 
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
@@ -974,10 +975,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       # account i18n into consideration.
       # XXX So sorting should be done in skins, after translation is performed.
       def compareTypes(a, b): return cmp(a.title or a.id, b.title or b.id)
-      try:
-        type_list = self._plugin.allowedContentTypes(self)
-      except AttributeError:
-        type_list = CMFBTreeFolder.allowedContentTypes(self)
+      type_list = CMFBTreeFolder.allowedContentTypes(self)
       type_list.sort(compareTypes)
       return ['/'.join(x.getPhysicalPath()) for x in type_list]
 
