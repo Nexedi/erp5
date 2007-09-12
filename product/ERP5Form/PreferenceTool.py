@@ -124,7 +124,7 @@ class PreferenceMethod(Method):
     self._null = (None, '', (), [])
 
   def __call__(self, instance, *args, **kw):
-    def _getPreference(user_name=None, *args, **kw):
+    def _getPreference(*args, **kw):
       value = None
       for pref in instance._getSortedPreferenceList(*args, **kw):
         value = getattr(pref, self._preference_name, _marker)
@@ -136,10 +136,10 @@ class PreferenceMethod(Method):
             break
       return value
     _getPreference = CachingMethod(_getPreference,
-            id=self._preference_cache_id,
+            id='%s.%s' % (self._preference_cache_id,
+                          getSecurityManager().getUser().getId()),
             cache_factory='erp5_ui_short')
-    user_name = getSecurityManager().getUser().getId()
-    value = _getPreference(user_name=user_name, *args, **kw)
+    value = _getPreference(*args, **kw)
     # XXX Preference Tool has a strange assumption that, even if
     # all values are null values, one of them must be returned.
     # Therefore, return a default value, only if explicitly specified,
@@ -210,7 +210,7 @@ class PreferenceTool(BaseTool):
     #                  or better solution
     user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
     user_is_manager = 'Manager' in user.getRolesInContext(self)
-    for pref in self.searchFolder(portal_type='Preference', *args, **kw) :
+    for pref in self.searchFolder(portal_type='Preference', **kw) :
       pref = pref.getObject()
       if pref is not None and pref.getProperty('preference_state',
                                 'broken') in ('enabled', 'global'):
