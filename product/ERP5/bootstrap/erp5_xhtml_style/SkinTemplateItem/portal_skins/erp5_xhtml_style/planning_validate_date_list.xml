@@ -88,21 +88,23 @@
 #    finish 0h of the next year\'s first day.\n
 #  \n
 \n
+zoom = context.portal_categories.zoom\n
+\n
 # Normalize Day.\n
 bound_start = DateTime(DateTime(bound_begin).strftime("%Y/%m/%d"))\n
 bound_stop = bound_start\n
-if int(zoom_level) == 1:\n
+if int(zoom_level) == zoom.first_zoom_level.getIntIndex():\n
   bound_start = bound_start + zoom_variation\n
   bound_stop = bound_start + 1\n
 \n
-if int(zoom_level) == 7:\n
+if int(zoom_level) == zoom.second_zoom_level.getIntIndex():\n
   # Normalize Week.\n
   while bound_start.Day() is not \'Sunday\':\n
     bound_start = bound_start - 1\n
   bound_start = bound_start + 7 * zoom_variation\n
   bound_stop = bound_start + 7\n
  \n
-if int(zoom_level) == 30:\n
+if int(zoom_level) == zoom.third_zoom_level.getIntIndex():\n
   # Normalize Month.\n
   month = bound_start.month() + zoom_variation\n
   year = bound_start.year() + (month - 1) / 12\n
@@ -117,7 +119,7 @@ if int(zoom_level) == 30:\n
     month = month + 1\n
   bound_stop = DateTime(year, month, 1)\n
 \n
-if int(zoom_level) == 365:\n
+if int(zoom_level) == zoom.fourth_zoom_level.getIntIndex():\n
   # Normalize Year.\n
   year = bound_start.year() + zoom_variation\n
   bound_start = DateTime(year, 1, 1)\n
@@ -177,8 +179,10 @@ return [bound_start , bound_stop]\n
                             <string>bound_begin</string>
                             <string>zoom_level</string>
                             <string>zoom_variation</string>
-                            <string>DateTime</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>zoom</string>
+                            <string>DateTime</string>
                             <string>bound_start</string>
                             <string>bound_stop</string>
                             <string>int</string>

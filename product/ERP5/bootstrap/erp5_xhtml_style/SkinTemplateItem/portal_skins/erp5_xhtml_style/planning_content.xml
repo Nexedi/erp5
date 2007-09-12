@@ -220,7 +220,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <tal:block tal:condition="python:basic.field.get_value(\'use_date_zoom\')">\n
         <!-- Defining Date Zoom Level -->\n
           <!-- XXX This part has to be improved -->\n
-          <tal:block tal:repeat="current_zoom_level python:[[\'Day\',1],[\'Week\',7],[\'Month\',30],[\'Year\',365]]">\n
+          <tal:block tal:repeat="current_zoom_level python:[ [i.getTitle() , i.getIntIndex() ] for i in context.portal_categories.zoom.contentValues() ]">\n
             <tal:block tal:condition="python:current_zoom_level[1]==basic.secondary_axis_info[\'zoom_level\']">\n
               <b tal:replace="nothing"> current zoom level is selected </b>\n
               <option selected="selected" value="None"\n
