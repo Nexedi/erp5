@@ -1005,9 +1005,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
                             'getObjectIds')
   def getObjectIds(self, *args, **kw):
     try:
-      self._plugin.objectIds(args, kw)
+      self._plugin.objectIds(self, args, kw)
     except AttributeError:
-      CMFBTreeFolder.objectIds(args, kw)
+      CMFBTreeFolder.objectIds(self, args, kw)
         
     
   # Overloading
