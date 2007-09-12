@@ -859,7 +859,9 @@ class SynchronizationTool( SubscriptionSynchronization,
           #use activities to send send an http response
           #LOG('sendResponse, will start sendHttpResponse, xml', DEBUG, '')
           activity = self.getActivityType(domain=domain)
-          self.activate(activity=activity).sendHttpResponse(sync_id=sync_id,
+          self.activate(activity=activity,
+                          tag = domain.getId()).sendHttpResponse(
+                                           sync_id=sync_id,
                                            to_url=to_url,
                                            xml=xml,
                                            domain_path=domain.getPath(),
@@ -938,7 +940,8 @@ class SynchronizationTool( SubscriptionSynchronization,
       result = url_file.read()
     except socket.error, msg:
       activity = self.getActivityType(domain=domain)
-      self.activate(activity=activity).sendHttpResponse(
+      self.activate(activity=activity,
+                        tag = domain.getId()).sendHttpResponse(
                                               to_url=to_url,
                                               sync_id=sync_id,
                                               xml=xml,
@@ -974,7 +977,9 @@ class SynchronizationTool( SubscriptionSynchronization,
         user = uf.getUserById(user_id).__of__(uf)
         newSecurityManager(None, user)
         activity = self.getActivityType(domain=subscription)
-        subscription.activate(activity=activity).SubSync(subscription.getPath())
+        subscription.activate(activity=activity,
+                                  tag = subscription.getId()
+                                  ).SubSync(subscription.getPath())
 
   security.declarePublic('readResponse')
   def readResponse(self, text='', sync_id=None, to_url=None, from_url=None):
@@ -1033,7 +1038,9 @@ class SynchronizationTool( SubscriptionSynchronization,
         publication.getTitle()==sync_id:
           if publication.getActivityEnabled():
             #use activities to send SyncML data.
-            publication.activate(activity='SQLDict').PubSync(
+            activity = self.getActivityType(domain=publication)
+            publication.activate(activity=activity,
+                                      tag=publication.getId()).PubSync(
                                                         publication.getPath(),
                                                         text)
             return ' '
@@ -1050,8 +1057,10 @@ class SynchronizationTool( SubscriptionSynchronization,
             subscription.getTitle() == sync_id:
               subscription_path = subscription.getPath()
               activity = self.getActivityType(domain=subscription)
-              self.activate(activity=activity).SubSync(subscription_path,
-                                                         text)
+              self.activate(activity=activity,
+                                 tag=subscription.getId()).SubSync(
+                                                      subscription_path,
+                                                      text)
               return ' '
 
     # we use from only if we have a file

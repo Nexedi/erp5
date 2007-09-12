@@ -221,16 +221,15 @@ class Publication(Subscription):
     """
       Delete a subscriber for this publication
     """
-    for o in self.getSubscriberList():
-      if o.getSubscriptionUrl() == subscription_url:
-        self.activate().manage_delObjects(o.id)
+    if subscription_url in [o.getSubscriptionUrl() for o in self.getSubscriberList()]:
+      self.manage_delObjects(o.id)
 
   def resetAllSubscribers(self):
     """
       Reset all subscribers
     """
     for o in self.getSubscriberList():
-      self.activate(activity='SQLQueue').manage_delObjects(o.id)
+      self.activate(activity='SQLQueue', tag=self.getId()).manage_delObjects(o.id)
 
   def getConflictList(self):
     """
