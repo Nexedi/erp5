@@ -318,7 +318,9 @@ class SQLQueue(RAMQueue):
                                       validation_text_dict)
 
       # XXX probably this below can be optimized by assigning multiple messages at a time.
+      path_dict = {}
       assignMessage = activity_tool.SQLQueue_assignMessage
+      processing_node = 1
       id_tool = activity_tool.getPortalObject().portal_ids
       for message in message_dict.itervalues():
         path = '/'.join(message.object_path)
@@ -345,6 +347,17 @@ class SQLQueue(RAMQueue):
                                                   tag=tag)
           get_transaction().commit()
         else:
+          # Select a processing node. If the same path appears again, dispatch the message to
+          # the same node, so that object caching is more efficient. Otherwise, apply a round
+          # robin scheduling.
+          node = path_dict.get(path)
+          if node is None:
+            node = processing_node
+            path_dict[path] = node
+            processing_node += 1
+            if processing_node > node_count:
+              processing_node = 1
+
           assignMessage(processing_node=node, uid=message.uid, broadcast=0)
           get_transaction().commit() # Release locks immediately to allow processing of messages
 
