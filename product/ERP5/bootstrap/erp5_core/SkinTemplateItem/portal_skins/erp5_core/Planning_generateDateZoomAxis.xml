@@ -86,6 +86,9 @@ new_zoom_level =  zoom_level_index_list[current_zoom_level]\n
 # 1 dictionary == 1 group\n
 # Optional value \'link\'is accept to create special link on secondary axis.\n
 \n
+if not isinstance(axis_start, DateTime):\n
+  axis_start, axis_stop = context.planning_validate_date_list(DateTime(), current_zoom_level)\n
+\n
 if isinstance(axis_start, DateTime):\n
   # testing delimiter_type to apply (day, week, month, year)\n
   # from smallest type to biggest\n
@@ -343,10 +346,10 @@ return [ ]\n
                             <string>new_zoom_level</string>
                             <string>isinstance</string>
                             <string>DateTime</string>
+                            <string>_getiter_</string>
                             <string>type_list</string>
                             <string>default_link_url</string>
                             <string>good_type</string>
-                            <string>_getiter_</string>
                             <string>date_type</string>
                             <string>float</string>
                             <string>date_order</string>
