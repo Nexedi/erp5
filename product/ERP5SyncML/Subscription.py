@@ -1105,13 +1105,13 @@ class Subscription(Folder, XMLSyncUtils):
       if query_method is not None:
         query_list = query_method(**kw)
       else:
-        LOG('This Subscriber %s provide no Query with id :' % (self.getTitle()), INFO, query)
-        raise KeyError
+        raise KeyError, 'This Subscriber %s provide no Query with id: %s'\
+          % (self.getTitle(), query)
     elif callable(query): # used in the test
       query_list = query(destination)
     else:
-      LOG('This Subscriber %s provide no Query with id :' % (self.getTitle()), INFO, query)
-      raise KeyError
+      raise KeyError, 'This Subscriber %s provide no Query with id: %s'\
+        % (self.getTitle(), query)
     return [x for x in query_list
               if not getattr(x, '_conflict_resolution', False)]
 
