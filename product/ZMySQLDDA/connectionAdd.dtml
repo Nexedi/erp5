@@ -49,7 +49,7 @@
     The connection string used for Z MySQL Database Connection
     is of the form:
 <pre>
-    [*lock] [+/-][database][@host[:port]] [user [password [unix_socket]]]
+    [~] [*lock] [+/-][database][@host[:port]] [user [password [unix_socket]]]
 </pre>
     or typically:
 <pre>
@@ -76,7 +76,10 @@
     supports TSTs, use '-'. If you require transactions, use '+'. If
     you aren't sure, don't use either.
 <p>
-    *<em>lock</em> at the begining of the connection string means to
+    A '~' at the begining of the connection string enables client-server
+    exchange compression (if supported by both client and server).
+<p>
+    *<em>lock</em> means to
     psuedo-transactional. When the transaction begins, it will acquire
     a lock on the server named <em>lock</em> (i.e. MYLOCK). When the
     transaction commits, the lock will be released. If the transaction
