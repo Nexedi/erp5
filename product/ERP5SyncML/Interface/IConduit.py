@@ -70,6 +70,21 @@ class IConduit(Interface):
     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   """
 
+  def constructContent(self, object, object_id, portal_type):
+    """
+    This allows to specify how to construct a new content.
+    This is really usefull if you want to write your
+    own Conduit.
+
+    object: from where new content is created
+
+    object_id: id of the new object
+
+    portal_type: portal_type of the new object
+
+    return newObject, reset_local_roles boolean, reset_workflow boolean
+    """
+
   def addNode(self, xml=None, object=None, previous_xml=None,
               object_id=None, sub_object=None, force=0, simulate=0, **kw):
     """

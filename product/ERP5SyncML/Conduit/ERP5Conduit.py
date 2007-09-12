@@ -128,8 +128,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     [conflict1,conflict2,...] where conclict1 is of the form :
     [object.getPath(),keyword,local_and_actual_value,subscriber_value]
     """
-    reset_local_roles = 1
-    reset_workflow = 1
     conflict_list = []
     xml = self.convertToXml(xml)
     if xml is None:
@@ -140,32 +138,32 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if self.isHistoryAdd(xml)!=-1: # bad hack XXX to be removed
         for element in self.getXupdateElementList(xml):
           xml = self.getElementFromXupdate(element)
-          conflict_list += self.addNode(xml=xml,object=object,
-                          previous_xml=previous_xml, force=force,
-                          simulate=simulate, **kw)['conflict_list']
+          conflict_list += self.addNode(
+                                  xml=xml,
+                                  object=object,
+                                  previous_xml=previous_xml,
+                                  force=force,
+                                  simulate=simulate,
+                                  **kw)['conflict_list']
     elif xml.nodeName == 'object':
       if object_id is None:
-        object_id = self.getAttribute(xml,'id')
-      docid = self.getObjectDocid(xml)
+        object_id = self.getAttribute(xml, 'id')
       if object_id is not None:
         if sub_object is None:
           try:
             sub_object = object._getOb(object_id)
           except (AttributeError, KeyError, TypeError):
             sub_object = None
-        else:
-          #We prevent reset_workflow an reset_local_roles
-          reset_local_roles = 0
-          reset_workflow = 0
         if sub_object is None: # If so, it doesn't exist
           portal_type = ''
           if xml.nodeName == 'object':
             portal_type = self.getObjectType(xml)
           elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD: # Deprecated ???
             portal_type = self.getXupdateObjectType(xml) # Deprecated ???
-          sub_object = self.constructContent(object, object_id, docid, 
-              portal_type)
-          reset_local_roles = 0
+          sub_object, reset_local_roles, reset_workflow = self.constructContent(
+                                                                  object,
+                                                                  object_id,
+                                                                  portal_type)
         self.newObject(
                   object=sub_object,
                   xml=xml,
@@ -628,7 +626,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     xml = self.convertToXml(xml)
     for subnode in self.getElementNodeList(xml):
-      if subnode.nodeName==self.xml_object_tag:
+      if subnode.nodeName == self.xml_object_tag:
         if object_id == self.getAttribute(subnode,'id'):
           return subnode
     return None
@@ -642,17 +640,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if attribute.nodeName == param:
         data = attribute.value
         return self.convertXmlValue(data,data_type='string')
-    return None
-
-  security.declareProtected(Permissions.AccessContentsInformation,'getObjectDocid')
-  def getObjectDocid(self, xml):
-    """
-    Retrieve the docid
-    """
-    for subnode in self.getElementNodeList(xml):
-      if subnode.nodeName == 'docid':
-        data = subnode.childNodes[0].value
-        return self.convertXmlValue(data)
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation,'getObjectProperty')
@@ -830,7 +817,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       #xml_string = xml_string.getvalue()
       #xml_string = unicode(xml_string,encoding='utf-8')
       xml_string = self.nodeToString(xml)
-      xml_string = unicode(xml_string,encoding='utf-8')
+      xml_string = unicode(xml_string, encoding='utf-8')
       #if type(xml_string) is type (u'a'):
       #  xml_string = xml_string.encode('utf-8')
       maxi = max(xml_string.find('>')+1,\
@@ -1014,33 +1001,18 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return addable
 
   security.declareProtected(Permissions.ModifyPortalContent, 'constructContent')
-  def constructContent(self, object, object_id, docid, portal_type):
+  def constructContent(self, object, object_id, portal_type):
     """
     This allows to specify how to construct a new content.
     This is really usefull if you want to write your
     own Conduit.
     """
-    portal_types = getToolByName(object,'portal_types')
+    portal_types = getToolByName(object, 'portal_types')
     #LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
-    if docid==None: # ERP5 content
-      object.newContent(portal_type=portal_type,id=object_id)
-    else: # CPS content
-      # This is specific to CPS, we will call the proxy tool
-      px_tool= getToolByName(object,'portal_proxies')
-      trees_tool= getToolByName(object,'portal_trees')
-      proxy_type = 'document'
-      if portal_type in ('Workspace','Section'):
-        proxy_type = 'folder'
-      proxy = px_tool.createEmptyProxy(proxy_type,
-                                object,portal_type,object_id,docid=docid)
-      proxy.isIndexable = 0 # So it will not be reindexed, this prevent errors
-      # Calculate rpath
-      utool = getToolByName(object, 'portal_url')
-      rpath = utool.getRelativeUrl(proxy)
-      px_tool._modifyProxy(proxy,rpath)
-      trees_tool.notify_tree('sys_modify_object',proxy,rpath)
+
+    object.newContent(portal_type=portal_type, id=object_id)
     subobject = object._getOb(object_id)
-    return subobject
+    return subobject, 1, 1
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addWorkflowNode')
   def addWorkflowNode(self, object, xml, simulate):
@@ -1136,28 +1108,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return object.getProperty(kw)
 
-
-    # This doesn't works fine because all workflows variables
-    # are not set the same way
-#    if status.has_key('action'):
-#      action_name = status['action']
-#      authorized = 0
-#      authorized_actions = wf_tool.getActionsFor(object)
-#      LOG('isWorkflowActionAddable, status:',0,status)
-#      LOG('isWorkflowActionAddable, authorized_actions:',0,authorized_actions)
-#      for action in authorized_actions:
-#        if action['id']==action_name:
-#          authorized = 1
-#      if not authorized:
-#        string_io = StringIO()
-#        PrettyPrint(xml,stream=string_io)
-#        conflict = Conflict(object_path=object.getPhysicalPath(),
-#                            keyword=self.history_tag)
-#        conflict.setXupdate(string_io.getvalue())
-#        conflict.setRemoteValue(status)
-#        conflict_list += [conflict]
-#    return conflict_list
-
   def nodeToString(self, node):
     """
     return an xml string corresponding to the node
@@ -1165,7 +1115,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     buf = cStringIO.StringIO()
     Print(node, stream=buf, encoding='utf-8')
     xml_string = buf.getvalue()
-    buf.close() 
+    buf.close()
     return xml_string
 
   def getGidFromObject(self, object):
