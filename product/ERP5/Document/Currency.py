@@ -71,3 +71,8 @@ class Currency(Resource):
     if to_currency is self:
       return quantity
     return quantity
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'asNumericCode')
+  def asNumericCode(self):
+    """Return a numeric code defined in ISO 4217."""
+    return self.Base_convertCurrencyCodeToNumericCode(self.getReference())
