@@ -47,10 +47,14 @@ try:
 except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
 
-from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
+try:
+  from Products.HBTreeFolder2.CMFHBTreeFolder import CMFHBTreeFolder
+except ImportError:
+  class CMFHBTreeFolder:
 
-from Products.HBTreeFolder2.CMFHBTreeFolder import CMFHBTreeFolder
-from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2Base
+    def __init__(self, *args, **kw):
+      raise ValueError, 'You must install the HBTreeFolder2 Product'
+
 
 from AccessControl import getSecurityManager
 from Products.ERP5Type import Permissions
