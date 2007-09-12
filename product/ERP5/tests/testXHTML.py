@@ -111,7 +111,7 @@ class TestXHTML(ERP5TypeTestCase):
     self.login()
     self.enableDefaultSitePreference()
 
-  def login(self, quiet=0, run=run_all_test):
+  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
@@ -123,6 +123,18 @@ class TestXHTML(ERP5TypeTestCase):
     portal_workflow = getToolByName(self.portal, 'portal_workflow')
     default_site_preference = portal_preferences.default_site_preference
     portal_workflow.doActionFor(default_site_preference, 'enable_action')
+
+  def test_deadProxyFields(self):
+    # check that all proxy fields defined in business templates have a valid
+    # target
+    skins_tool = self.portal.portal_skins
+    for field_path, field in skins_tool.ZopeFind(
+              skins_tool, obj_metatypes=['ProxyField'], search_sub=1):
+      self.assertNotEqual(None, field.getRecursiveTemplateField(),
+          '%s\nform_id:%s\nfield_id:%s\n' % (field_path,
+                                             field.get_value('form_id'),
+                                             field.get_value('field_id')))
+
 
 
 def validate_xhtml(source):
