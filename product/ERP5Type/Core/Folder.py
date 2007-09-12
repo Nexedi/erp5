@@ -46,9 +46,16 @@ try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
 except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
+
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
+
+from Products.HBTreeFolder2.CMFHBTreeFolder import CMFHBTreeFolder
+from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2Base
+
 from AccessControl import getSecurityManager
 from Products.ERP5Type import Permissions
+from MethodObject import Method
+from DateTime import DateTime
 from random import randint
 
 import os
@@ -139,6 +146,22 @@ class FolderMixIn(ExtensionClass.Base):
     else:
       raise TypeError, 'deleteContent only accepts string or list, '\
                        'not %s' % type(id)
+
+  def _generatePerDayId(self):
+    """
+    Generate id base on date, useful for HBTreeFolder
+    """
+    current_date = str(DateTime().Date()).replace("/", "")
+    try:
+      my_id = int(self.getLastId())
+    except TypeError:
+      my_id = 1
+    while self.hasContent("%s-%s" %(current_date, my_id)):
+      my_id = my_id + 1
+    my_id = str(my_id)
+    self._setLastId(my_id) # Make sure no reindexing happens
+    return "%s-%s" %(current_date, my_id)
+    
 
   def _generateRandomId(self):
     """
@@ -234,7 +257,7 @@ class FolderMixIn(ExtensionClass.Base):
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_report'] = kw['selection_report'].asDomainDict()
-      if kw['selection_report'].has_key('parent'):
+      if kw['selection_report'].has_key('parent'): 
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
@@ -295,7 +318,23 @@ class FolderMixIn(ExtensionClass.Base):
     """
     return self.countFolder(**kw)[0][0]
 
-class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
+class FolderMethodWrapper(Method):
+  """
+  This a wrapper between folder method and folder type method
+  """
+  def __init__(self, method_id):
+    self.method_id = method_id
+
+  def __call__(self, folder, *args, **kw):
+    try:
+      method = getattr(folder._plugin, self.method_id)
+      return method(folder, *args, **kw)
+    except AttributeError:
+      LOG("Folder call %s" %self.method_id, WARNING, "raise AttributeError on %s with plugin %s" %(folder, folder._plugin))
+      pass
+
+
+class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, WebDAVFolder):
   """
   A Folder is a subclass of Base but not of XMLObject.
   Folders are not considered as documents and are therefore
@@ -358,13 +397,165 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
   # XXX Prevent inheritance from PortalFolderBase
   description = None
 
-
+  # Per default we use BTree folder
+  _isHBTree = False
+  _isBTree = True
+  _plugin = None # plugin store the folder type class use by the folder
+  
   # Overload __init__ so that we do not take into account title
   # This is required for test_23_titleIsNotDefinedByDefault
   def __init__(self, id):
     self.id = id
-    BTreeFolder2Base.__init__(self, id)
+    # do not do any other initialisation here,
+    # wait for new content call to do init
 
+  method_id_list = ["initBTrees", "manage_fixCount", "manage_cleanup",
+                    "getBatchObjectListing", "manage_object_workspace",
+                    "tpValues", "objectCount", "has_key", "objectIds",
+                    "objectItems", "objectMap", "objectIds_d", "objectMap_d",
+                    "keys", "values", "items", "hasObject", "get", "generateId",
+                    "__len__", "allowedContentTypes", "_delOb",
+                    "_getOb", "_setObject", "_initBTrees", "_populateFromFolder",
+                    "_fixCount", "_cleanup", "_setOb", "_checkId", "_delObject",]
+
+  def _generatePluginMethod(self):
+    """ Will generate alias to Tree method depending
+    on configuration """
+    for method_id in self.method_id_list:
+      method_wrapper = FolderMethodWrapper(method_id)
+      setattr(self, method_id, method_wrapper)
+      
+  def newContent(self, *args, **kw):
+    """ Create a new content """
+    # Create data structure if none present
+    if self._plugin is None:
+      if self._isHBTree:
+        self._plugin = CMFHBTreeFolder
+      elif self._isBTree:
+        self._plugin = CMFBTreeFolder
+      else:
+        raise ValueError, "No plugin defined"
+      self._generatePluginMethod()
+      self._plugin.__init__(self, self.id)
+    return FolderMixIn.newContent(self, *args, **kw)
+
+  security.declareProtected(Permissions.View, 'isBTree')
+  def isBTree(self):
+    """ Return if folder is a BTree or not """
+    return self._isBTree
+
+  security.declareProtected(Permissions.View, 'isHBTree')
+  def isHBTree(self):
+    """ Return if folder is a HBTree or not """
+    return self._isHBTree
+
+  def _setHBTree(self,):
+    """ Define this folder use HBTree stucture """
+    self._isHBTree = True
+    self._isBTree = False
+    
+  def _setBTree(self,):
+    """ Define this folder use BTree stucture """
+    self._isHBTree = False
+    self._isBTree = True
+  
+  def hashId(self, id):
+    """ id hashing can be override with a script """
+    script = self._getTypeBasedMethod('hashId')
+    if script is not None:
+      return script(self, id)    
+    return self._plugin.hashId(self, id)
+
+  security.declareProtected( Permissions.ManagePortal, 'migrateToHBTree' )
+  def migrateToHBTree(self, migration_generate_id_method=None, new_generate_id_method=None, REQUEST=None):
+    """
+    Function to migrate from a BTree folder to HBTree folder.
+    It will first call setId on all folder objects to have right id
+    to be used with an hbtreefolder.
+    Then it will migrate foder from btree to hbtree.
+    """    
+    if self._plugin is None:
+      # make sure to have all method right defined
+      self._plugin = CMFBTreeFolder
+      self._generatePluginMethod()
+    
+    BUNDLE_COUNT = 10
+    # we may want to change all objects ids before migrating to new folder type
+    if migration_generate_id_method not in (None, ''):
+      # set new id generator here so that object created while migration
+      # got a right id
+      self.setIdGenerator(new_generate_id_method)
+      tag = "%s/%s/migrate" %(self.getId(),migration_generate_id_method) 
+      id_list  = list(self.objectIds())
+      # set new id by bundle
+      for x in xrange(len(self) / BUNDLE_COUNT):
+        self.activate(activity="SQLQueue", tag=tag).ERP5Site_setNewIdPerBundle(
+          self.getPath(),
+          id_list[x*BUNDLE_COUNT:(x+1)*BUNDLE_COUNT],
+          migration_generate_id_method, tag)
+
+      remaining_id_count = len(self) % BUNDLE_COUNT
+      if remaining_id_count:
+        self.activate(activity="SQLQueue", tag=tag).ERP5Site_setNewIdPerBundle(
+          self.getPath(),
+          id_list[-remaining_id_count:],
+          migration_generate_id_method, tag)
+    else:
+      tag = ''
+    # copy from btree to hbtree
+    self.activate(activity="SQLQueue", after_tag=tag)._launchCopyObjectToHBTree(tag)
+    
+    if REQUEST is not None:
+      psm = N_('Migration to HBTree is running.',)
+      ret_url = '%s/%s?portal_status_message=%s' % \
+                (self.absolute_url(),
+                 REQUEST.get('form_id', 'view'), psm)
+      return REQUEST.RESPONSE.redirect( ret_url )
+
+  def _finishCopyObjectToHBTree(self):
+    """
+    Remove remaining attributes from previous btree
+    and migration
+    """
+    delattr(self, "_tree")
+    delattr(self, "_former_plugin")
+
+  def _launchCopyObjectToHBTree(self, tag):
+    """
+    Launch activity per bundle to move object
+    from a btree to an hbtree
+    """    
+    # migrate folder from btree to hbtree
+    id_list = list(self.objectIds())
+    self._former_plugin = self._plugin
+    self._setHBTree()
+    self._plugin = CMFHBTreeFolder
+    self._generatePluginMethod()
+    self._plugin.__init__(self, self.id)
+    # launch activity per bundle to copy/paste to hbtree
+    BUNDLE_COUNT = 100
+    for x in xrange(len(id_list) / BUNDLE_COUNT):
+      self.activate(activity="SQLQueue", tag=tag)._copyObjectToHBTree(
+        id_list=id_list[x*BUNDLE_COUNT:(x+1)*BUNDLE_COUNT],)        
+    
+    remaining_id_count = len(id_list) % BUNDLE_COUNT
+    if remaining_id_count:
+      self.activate(activity="SQLQueue", tag=tag)._copyObjectToHBTree(
+        id_list=id_list[-remaining_id_count:],)
+    # remove uneeded attribute
+    self.activate(activity="SQLQueue", after_tag=tag)._finishCopyObjectToHBTree()
+    
+  def _copyObjectToHBTree(self, id_list=None,):
+    """
+    Move object from a btree container to
+    a hbtree one
+    """
+    getOb = self._former_plugin._getOb
+    setOb = self._setOb
+    for id in id_list:
+      obj = getOb(self, id)
+      setOb(id, obj)
+                         
   # Override Zope default by folder id generation
   def _get_id(self, id):
     if self._getOb(id, None) is None :
@@ -394,8 +585,11 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
 
   security.declareProtected(Permissions.View, 'hasContent')
   def hasContent(self,id):
-    return self.hasObject(id)
-
+    try:
+      return self._plugin.hasObject(self, id)
+    except AttributeError:
+      return False
+    
   security.declareProtected( Permissions.ModifyPortalContent, 'exportAll' )
   def exportAll(self,dir=None):
     """
@@ -727,8 +921,12 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
     def _getVisibleAllowedContentTypeList():
       hidden_type_list = portal.portal_types.getTypeInfo(self)\
                                               .getHiddenContentTypeList()
-      return [ ti.id for ti in CMFBTreeFolder.allowedContentTypes(self)
-               if ti.id not in hidden_type_list ]
+      try:
+        return [ ti.id for ti in self._plugin.allowedContentTypes(self)
+                 if ti.id not in hidden_type_list ]
+      except AttributeError:
+        return [ ti.id for ti in CMFBTreeFolder.allowedContentTypes(self)
+                 if ti.id not in hidden_type_list ]
 
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
@@ -772,7 +970,10 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
       # account i18n into consideration.
       # XXX So sorting should be done in skins, after translation is performed.
       def compareTypes(a, b): return cmp(a.title or a.id, b.title or b.id)
-      type_list = CMFBTreeFolder.allowedContentTypes(self)
+      try:
+        type_list = self._plugin.allowedContentTypes(self)
+      except AttributeError:
+        type_list = CMFBTreeFolder.allowedContentTypes(self)
       type_list.sort(compareTypes)
       return ['/'.join(x.getPhysicalPath()) for x in type_list]
 
@@ -796,8 +997,15 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
   view = Base.view
 
   # Aliases
-  getObjectIds = CMFBTreeFolder.objectIds
-
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getObjectIds')
+  def getObjectIds(self, *args, **kw):
+    try:
+      self._plugin.objectIds(args, kw)
+    except AttributeError:
+      CMFBTreeFolder.objectIds(args, kw)
+        
+    
   # Overloading
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentSQLExpression' )
@@ -862,7 +1070,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'objectValues' )
   def objectValues(self, spec=None, meta_type=None, portal_type=None,
-                   sort_on=None, sort_order=None, **kw):
+                   sort_on=None, sort_order=None, base_id=None,**kw):
     """
     Returns a list containing object contained in this folder.
     """
@@ -876,7 +1084,13 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
       except AttributeError:
         from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
         BTreeFolder2Base.__init__(self, self.getId())
-    object_list = CMFBTreeFolder.objectValues(self, spec=spec)
+    try:
+      if self.isBTree():
+        object_list = self._plugin.objectValues(self, spec=spec)
+      else:
+        object_list = self._plugin.objectValues(self, base_id=base_id)        
+    except AttributeError:
+      object_list = CMFBTreeFolder.objectValues(self, spec=spec)
     if portal_type is not None:
       if type(portal_type) == type(''):
         portal_type = (portal_type,)
@@ -899,7 +1113,10 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn, WebDAVFolder):
       kw['portal_type'] = portal_type
     filter = kw.pop('filter', {}) or {}
     kw.update(filter)
-    object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter=kw)
+    try:
+      object_list = self._plugin.contentValues(self, spec=spec, filter=kw)
+    except AttributeError:
+      object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter=kw)
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
     return object_list
 
