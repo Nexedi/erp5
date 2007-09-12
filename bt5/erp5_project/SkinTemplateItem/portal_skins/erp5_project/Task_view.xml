@@ -84,7 +84,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                         <string>my_task_line_requirement_logical_path_list</string>
                       </list>
                     </value>

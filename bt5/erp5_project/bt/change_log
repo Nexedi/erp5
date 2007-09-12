@@ -1,3 +1,6 @@
+2007-09-12 Jerome
+* Replace comment by description on Task & Task Report
+
 2007-04-06 Romain
 * Remove source_project from Sale Invoice Transaction base categories, as erp5_project is not dependant from erp5_accounting.
 
