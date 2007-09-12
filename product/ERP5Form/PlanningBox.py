@@ -1980,6 +1980,12 @@ class BasicGroup:
           else:
             info = None
             info = {}
+            info['info_center'] = ''
+            info['info_topright'] = ''
+            info['info_topleft'] = ''
+            info['info_botleft'] = ''
+            info['info_botright'] = ''
+            
             # getting info text from activity itself if exists
             info_center_method = getattr(activity_content,info_center,None)
             info_topright_method = getattr(activity_content,info_topright,None)
@@ -2001,12 +2007,7 @@ class BasicGroup:
                  info['info_botleft'] =str(info_botleft_method())
               if info_botright_method is not None:
                  info['info_botright']=str(info_botright_method())
-            else:
-              info['info_center'] = ''
-              info['info_topright'] = ''
-              info['info_topleft'] = ''
-              info['info_botleft'] = ''
-              info['info_botright'] = ''
+
             if info_tooltip_method is not None:
                info['info_tooltip']=str(info_tooltip_method())
 
@@ -2355,18 +2356,22 @@ class PlanningStructure:
       position_secondary.absolute_end = 1
       position_secondary.absolute_range= 1
 
-
     for axis_group_element in self.secondary_axis.axis_group:
       position_secondary = axis_group_element.position_secondary
-      position_secondary.absolute_begin = (
-           float(position_secondary.relative_begin) /
-           self.secondary_axis.axis_size)
-      position_secondary.absolute_end = (
-           float(position_secondary.relative_end) /
-           self.secondary_axis.axis_size)
-      position_secondary.absolute_range = (
-           float(position_secondary.relative_range) /
-           self.secondary_axis.axis_size)
+      try:
+        position_secondary.absolute_begin = (
+             float(position_secondary.relative_begin) /
+             self.secondary_axis.axis_size)
+        position_secondary.absolute_end = (
+             float(position_secondary.relative_end) /
+             self.secondary_axis.axis_size)
+        position_secondary.absolute_range = (
+             float(position_secondary.relative_range) /
+             self.secondary_axis.axis_size)
+      except ZeroDivisionError:
+        position_secondary.absolute_range = 1
+        position_secondary.absolute_end = 1
+        position_secondary.absolute_begin = 0
       position_main = axis_group_element.position_main
       position_main.absolute_begin = 0
       position_main.absolute_end = 1
