@@ -65,7 +65,189 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.Base_convertCurrencyCodeToNumericCode(context.getReference())\n
+            <value> <string>code_dict = {\n
+  "AED": "784",\n
+  "AFN": "971",\n
+  "ALL": "008",\n
+  "AMD": "051",\n
+  "ANG": "532",\n
+  "AOA": "973",\n
+  "ARS": "032",\n
+  "AUD": "036",\n
+  "AWG": "533",\n
+  "AZN": "944",\n
+  "BAM": "977",\n
+  "BBD": "052",\n
+  "BDT": "050",\n
+  "BGN": "975",\n
+  "BHD": "048",\n
+  "BIF": "108",\n
+  "BMD": "060",\n
+  "BND": "096",\n
+  "BOB": "068",\n
+  "BOV": "984",\n
+  "BRL": "986",\n
+  "BSD": "044",\n
+  "BTN": "064",\n
+  "BWP": "072",\n
+  "BYR": "974",\n
+  "BZD": "084",\n
+  "CAD": "124",\n
+  "CDF": "976",\n
+  "CHE": "947",\n
+  "CHF": "756",\n
+  "CHW": "948",\n
+  "CLF": "990",\n
+  "CLP": "152",\n
+  "CNY": "156",\n
+  "COP": "170",\n
+  "COU": "970",\n
+  "CRC": "188",\n
+  "CUP": "192",\n
+  "CVE": "132",\n
+  "CYP": "196",\n
+  "CZK": "203",\n
+  "DJF": "262",\n
+  "DKK": "208",\n
+  "DOP": "214",\n
+  "DZD": "012",\n
+  "EEK": "233",\n
+  "EGP": "818",\n
+  "ERN": "232",\n
+  "ETB": "230",\n
+  "EUR": "978",\n
+  "FJD": "242",\n
+  "FKP": "238",\n
+  "GBP": "826",\n
+  "GEL": "981",\n
+  "GHS": "288",\n
+  "GIP": "292",\n
+  "GMD": "270",\n
+  "GNF": "324",\n
+  "GTQ": "320",\n
+  "GYD": "328",\n
+  "HKD": "344",\n
+  "HNL": "340",\n
+  "HRK": "191",\n
+  "HTG": "332",\n
+  "HUF": "348",\n
+  "IDR": "360",\n
+  "ILS": "376",\n
+  "INR": "356",\n
+  "IQD": "368",\n
+  "IRR": "364",\n
+  "ISK": "352",\n
+  "JMD": "388",\n
+  "JOD": "400",\n
+  "JPY": "392",\n
+  "KES": "404",\n
+  "KGS": "417",\n
+  "KHR": "116",\n
+  "KMF": "174",\n
+  "KPW": "408",\n
+  "KRW": "410",\n
+  "KWD": "414",\n
+  "KYD": "136",\n
+  "KZT": "398",\n
+  "LAK": "418",\n
+  "LBP": "422",\n
+  "LKR": "144",\n
+  "LRD": "430",\n
+  "LSL": "426",\n
+  "LTL": "440",\n
+  "LVL": "428",\n
+  "LYD": "434",\n
+  "MAD": "504",\n
+  "MDL": "498",\n
+  "MGA": "969",\n
+  "MKD": "807",\n
+  "MMK": "104",\n
+  "MNT": "496",\n
+  "MOP": "446",\n
+  "MRO": "478",\n
+  "MTL": "470",\n
+  "MUR": "480",\n
+  "MVR": "462",\n
+  "MWK": "454",\n
+  "MXN": "484",\n
+  "MXV": "979",\n
+  "MYR": "458",\n
+  "MZN": "943",\n
+  "NAD": "516",\n
+  "NGN": "566",\n
+  "NIO": "558",\n
+  "NOK": "578",\n
+  "NPR": "524",\n
+  "NZD": "554",\n
+  "OMR": "512",\n
+  "PAB": "590",\n
+  "PEN": "604",\n
+  "PGK": "598",\n
+  "PHP": "608",\n
+  "PKR": "586",\n
+  "PLN": "985",\n
+  "PYG": "600",\n
+  "QAR": "634",\n
+  "RON": "946",\n
+  "RSD": "941",\n
+  "RUB": "643",\n
+  "RWF": "646",\n
+  "SAR": "682",\n
+  "SBD": "090",\n
+  "SCR": "690",\n
+  "SDG": "938",\n
+  "SEK": "752",\n
+  "SGD": "702",\n
+  "SHP": "654",\n
+  "SKK": "703",\n
+  "SLL": "694",\n
+  "SOS": "706",\n
+  "SRD": "968",\n
+  "STD": "678",\n
+  "SYP": "760",\n
+  "SZL": "748",\n
+  "THB": "764",\n
+  "TJS": "972",\n
+  "TMM": "795",\n
+  "TND": "788",\n
+  "TOP": "776",\n
+  "TRY": "949",\n
+  "TTD": "780",\n
+  "TWD": "901",\n
+  "TZS": "834",\n
+  "UAH": "980",\n
+  "UGX": "800",\n
+  "USD": "840",\n
+  "USN": "997",\n
+  "USS": "998",\n
+  "UYU": "858",\n
+  "UZS": "860",\n
+  "VEB": "862",\n
+  "VND": "704",\n
+  "VUV": "548",\n
+  "WST": "882",\n
+  "XAF": "950",\n
+  "XAG": "961",\n
+  "XAU": "959",\n
+  "XBA": "955",\n
+  "XBB": "956",\n
+  "XBC": "957",\n
+  "XBD": "958",\n
+  "XCD": "951",\n
+  "XDR": "960",\n
+  "XOF": "952",\n
+  "XPD": "964",\n
+  "XPF": "953",\n
+  "XPT": "962",\n
+  "XTS": "963",\n
+  "XXX": "999",\n
+  "YER": "886",\n
+  "ZAR": "710",\n
+  "ZMK": "894",\n
+  "ZWD": "716",\n
+}\n
+\n
+return code_dict.get(code)\n
 </string> </value>
         </item>
         <item>
@@ -81,8 +263,14 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>code, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -102,15 +290,16 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>code</string>
                             <string>kw</string>
+                            <string>code_dict</string>
                             <string>_getattr_</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -127,7 +316,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Currency_asNumericCode</string> </value>
+            <value> <string>Base_convertCurrencyCodeToNumericCode</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
