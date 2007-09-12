@@ -1106,12 +1106,14 @@ class Subscription(Folder, XMLSyncUtils):
         query_list = query_method(**kw)
       else:
         LOG('This Subscriber %s provide no Query with id :' % (self.getTitle()), INFO, query)
+        raise KeyError
     elif callable(query): # used in the test
       query_list = query(destination)
     else:
       LOG('This Subscriber %s provide no Query with id :' % (self.getTitle()), INFO, query)
+      raise KeyError
     return [x for x in query_list
-              if not getattr(x,'_conflict_resolution', False)]
+              if not getattr(x, '_conflict_resolution', False)]
 
   def generateNewIdWithGenerator(self, object=None, gid=None):
     """
@@ -1342,7 +1344,8 @@ class Subscription(Folder, XMLSyncUtils):
     object_list_len = len(object_id_list)
     for i in xrange(0, object_list_len, 100):
       current_id_list = object_id_list[i:i+100]
-      self.activate(activity='SQLQueue').manage_delObjects(current_id_list)
+      self.activate(activity='SQLQueue',
+                          tag = self.getId()).manage_delObjects(current_id_list)
 
   def getConflictList(self):
     """
