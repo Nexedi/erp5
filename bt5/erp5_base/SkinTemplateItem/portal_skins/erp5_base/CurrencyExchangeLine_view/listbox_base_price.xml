@@ -79,7 +79,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_currency_value</string> </value>
+                    <value> <string>my_money_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -90,7 +90,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Base Price</string> </value>
                 </item>
               </dictionary>

@@ -88,27 +88,27 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>display_maxwidth</string> </key>
+                    <key> <string>display_maxwidth</string> </key>
                     <value> <int>6</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>display_width</string> </key>
+                    <key> <string>display_width</string> </key>
                     <value> <int>6</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_currency_value</string> </value>
+                    <value> <string>my_money_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>input_style</string> </key>
+                    <key> <string>input_style</string> </key>
                     <value> <string>-1234.5</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>required</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -116,7 +116,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Precision</string> </value>
                 </item>
               </dictionary>
