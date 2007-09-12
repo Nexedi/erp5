@@ -960,7 +960,7 @@ class Catalog( Folder,
 
   def _clearSecurityCache(self):
     self.security_uid_dict = OIBTree()
-    self.security_uid_index = Length()
+    self.security_uid_index = None
 
   security.declarePrivate('getSecurityUid')
   def getSecurityUid(self, wrapped_object):
@@ -981,8 +981,31 @@ class Catalog( Folder,
       self._clearSecurityCache()
     if self.security_uid_dict.has_key(allowed_roles_and_users):
       return (self.security_uid_dict[allowed_roles_and_users], None)
-    self.security_uid_index.change(1)
-    security_uid = self.security_uid_index()
+    # If the id_tool is there, it is better to use it, it allows
+    # to create many new security uids by the same time
+    # because with this tool we are sure that we will have 2 different
+    # uids if two instances are doing this code in the same time
+    id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
+    if id_tool is not None:
+      default = 1
+      # We must keep compatibility with existing sites
+      if getattr(self, 'security_uid_index', None) is not None:
+        # At some point, it was a Length
+        if isinstance(previous_security_uid, Length):
+          default = previous_security_uid() + 1
+        else:
+          default = self.security_uid_index
+      security_uid = id_tool.generateNewLengthId(id_group='security_uid_index',
+                                        default=default)
+    else:
+      previous_security_uid = getattr(self, 'security_uid_index', None)
+      if previous_security_uid is None:
+        previous_security_uid = 0
+      # At some point, it was a Length
+      if isinstance(previous_security_uid, Length):
+        previous_security_uid = previous_security_uid()
+      security_uid = previous_security_uid + 1
+      self.security_uid_index = security_uid
     self.security_uid_dict[allowed_roles_and_users] = security_uid
     return (security_uid, allowed_roles_and_users)
 
