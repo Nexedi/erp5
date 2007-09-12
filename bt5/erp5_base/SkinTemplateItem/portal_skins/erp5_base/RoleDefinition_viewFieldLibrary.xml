@@ -107,6 +107,9 @@
                       <list>
                         <string>my_role_name</string>
                         <string>my_agent_title_list</string>
+                        <string>my_function</string>
+                        <string>my_group</string>
+                        <string>my_site</string>
                       </list>
                     </value>
                 </item>
