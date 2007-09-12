@@ -221,8 +221,10 @@ class Publication(Subscription):
     """
       Delete a subscriber for this publication
     """
-    if subscription_url in [o.getSubscriptionUrl() for o in self.getSubscriberList()]:
-      self.manage_delObjects(o.id)
+    for o in self.getSubscriberList():
+      if o.getSubscriptionUrl() == subscription_url:
+        self.manage_delObjects(o.id)
+        break
 
   def resetAllSubscribers(self):
     """
