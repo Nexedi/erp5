@@ -67,35 +67,5 @@ class CMFHBTreeFolder(HBTreeFolder2Base, PortalFolder):
         HBTreeFolder2Base._checkId(self, id, allow_dup)
 
 
-    def allowedContentTypes(self):
-      """
-      List type info objects for types which can be added in
-      this folder.
-      """
-      result = []
-      portal_types = getToolByName(self, 'portal_types')
-      myType = portal_types.getTypeInfo(self)
-
-      if myType is not None:
-        allowed_types_to_check = []
-        if myType.filter_content_types:
-          for portal_type in myType.allowed_content_types:
-            contentType = portal_types.getTypeInfo(portal_type)
-            if contentType is None:
-              raise AttributeError, "Portal type '%s' does not exist " \
-                                    "and should not be allowed in '%s'" % \
-                                    (portal_type, self.getPortalType())
-            result.append(contentType)
-        else:
-          for contentType in portal_types.listTypeInfo(self):
-            if myType.allowType(contentType.getId()):
-              result.append(contentType)
-      else:
-          result = portal_types.listTypeInfo()
-
-      return filter(
-          lambda typ, container=self: typ.isConstructionAllowed(container),
-          result)
-
 
 InitializeClass(CMFHBTreeFolder)
