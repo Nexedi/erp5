@@ -15,7 +15,7 @@ def changeObjectClass(self, object_id, new_class):
   """Creates a copy of object_id inside self, changing its class to
   new_class"""
   old_obj = self._getOb(object_id)
-  self.manage_delObjects([object_id])
+  self._delObject(object_id)
   new_obj = new_class(object_id)
   new_obj.__dict__.update(old_obj.__dict__)
   self._setObject(object_id, new_obj)
