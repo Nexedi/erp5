@@ -11,4 +11,5 @@ portal_caches/erp5_ui_medium
 portal_caches/erp5_ui_medium/default_ram_cache
 portal_caches/erp5_ui_short
 portal_caches/erp5_ui_short/default_ram_cache
+portal_categories/zoom/**
 portal_preferences/default_site_preference
