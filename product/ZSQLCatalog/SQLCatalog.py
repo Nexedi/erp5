@@ -989,12 +989,13 @@ class Catalog( Folder,
     if id_tool is not None:
       default = 1
       # We must keep compatibility with existing sites
-      if getattr(self, 'security_uid_index', None) is not None:
+      previous_security_uid = getattr(self, 'security_uid_index', None)
+      if previous_security_uid is not None:
         # At some point, it was a Length
         if isinstance(previous_security_uid, Length):
           default = previous_security_uid() + 1
         else:
-          default = self.security_uid_index
+          default = previous_security_uid
       security_uid = id_tool.generateNewLengthId(id_group='security_uid_index',
                                         default=default)
     else:
