@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Assign this docu\xc3\xb9ment for translation to translator</string> </value>
+            <value> <string>Assign this docu\xc3\xb9ment for translation to translator.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
