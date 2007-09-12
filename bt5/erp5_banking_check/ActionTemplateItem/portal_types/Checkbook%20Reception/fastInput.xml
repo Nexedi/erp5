@@ -95,7 +95,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:object.getSimulationState() in (\'empty\', \'rejected\')</string> </value>
+            <value> <string>python:object.getSimulationState() in (\'empty\', \'rejected\') and not object.isImport()</string> </value>
         </item>
       </dictionary>
     </pickle>

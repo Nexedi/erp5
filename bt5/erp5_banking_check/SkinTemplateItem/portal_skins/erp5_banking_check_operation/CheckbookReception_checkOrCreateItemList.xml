@@ -97,7 +97,7 @@ if check == 1:\n
 if create==1:\n
   for line in line_list:\n
     line.activate(tag=checkbook_reception_tag).\\\n
-        CheckbookReceptionLine_checkOrCreateItemList(create=1, tag=checkbook_reception_tag)\n
+        CheckbookReceptionLine_checkOrCreateItemList(create=1, tag=checkbook_reception_tag, confirm_check=confirm_check)\n
 </string> </value>
         </item>
         <item>
@@ -120,7 +120,7 @@ if create==1:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>check=0, create=0</string> </value>
+            <value> <string>check=0, create=0, confirm_check=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -140,7 +140,7 @@ if create==1:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -148,6 +148,7 @@ if create==1:\n
                           <tuple>
                             <string>check</string>
                             <string>create</string>
+                            <string>confirm_check</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
@@ -174,6 +175,7 @@ if create==1:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <int>0</int>
                 <int>0</int>
                 <int>0</int>
               </tuple>

@@ -15,6 +15,9 @@
   <item>Amount</item>
   <item>Price</item>
  </portal_type>
+ <portal_type id="Checkbook Reception">
+  <item>CheckbookReception</item>
+ </portal_type>
  <portal_type id="Checkbook Usual Cash Transfer">
   <item>Price</item>
   <item>Amount</item>

@@ -233,6 +233,8 @@ for i in xrange(quantity):\n
       item.setTitle(\'%s - %s\' % (reference_range_min, reference_range_max))\n
       item.setCheckAmount(check_amount)\n
       destination_section = item.getDestinationSection()\n
+      if confirm_check:\n
+        item.confirm()\n
       for j in reference_list:\n
         #tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, j)\n
         #encountered_check_identifiers_dict[tag] = None\n
@@ -241,6 +243,8 @@ for i in xrange(quantity):\n
         check.setStartDate(start_date)\n
         check.setReference(j)\n
         check.setResource(model)\n
+        if confirm_check:\n
+          check.confirm()\n
   else:\n
     last_reference_value = reference_to_int(reference_range_min)\n
     if check == 1:\n
@@ -253,6 +257,9 @@ for i in xrange(quantity):\n
         item_type = line.getCheckTypeValue()\n
         item.setPrice(item_type.getPrice())\n
         item.setPriceCurrency(line.getPriceCurrency())\n
+      if confirm_check:\n
+        item.setStartDate(start_date)\n
+        item.confirm()\n
       #tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference_range_min)\n
       #encountered_check_identifiers_dict[tag] = None\n
   # update reference_range_min for the next pass\n
@@ -293,7 +300,7 @@ return encountered_check_identifiers_dict\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>check=0, create=0, tag=None, encountered_check_identifiers_dict=None</string> </value>
+            <value> <string>check=0, create=0, tag=None, confirm_check=0, encountered_check_identifiers_dict=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -321,7 +328,7 @@ return encountered_check_identifiers_dict\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -330,6 +337,7 @@ return encountered_check_identifiers_dict\n
                             <string>check</string>
                             <string>create</string>
                             <string>tag</string>
+                            <string>confirm_check</string>
                             <string>encountered_check_identifiers_dict</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
@@ -401,6 +409,7 @@ return encountered_check_identifiers_dict\n
                 <int>0</int>
                 <int>0</int>
                 <none/>
+                <int>0</int>
                 <none/>
               </tuple>
             </value>

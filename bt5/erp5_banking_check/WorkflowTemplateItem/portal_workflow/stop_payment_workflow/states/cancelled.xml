@@ -36,7 +36,10 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>delete</string>
+                <string>delete_action</string>
+              </tuple>
             </value>
         </item>
         <item>

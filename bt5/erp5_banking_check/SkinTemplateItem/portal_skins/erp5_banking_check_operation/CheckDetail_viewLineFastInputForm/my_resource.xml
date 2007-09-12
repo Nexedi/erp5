@@ -335,7 +335,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: ((request.get(\'resource\', False)) and (None, ) or (\'Type\', ))[0]</string> </value>
+            <value> <string>python: ((request.get(\'resource\', \'\')) and (\'\', ) or (\'Type\', ))[0]</string> </value>
         </item>
       </dictionary>
     </pickle>

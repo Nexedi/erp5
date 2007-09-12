@@ -104,6 +104,7 @@
                       <list>
                         <string>my_source_reference</string>
                         <string>my_destination</string>
+                        <string>my_imported</string>
                       </list>
                     </value>
                 </item>

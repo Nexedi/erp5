@@ -81,6 +81,7 @@ for line in line_list:\n
   for aggregate in aggregate_list:\n
     if aggregate.getPortalType()==\'Checkbook\':\n
       aggregate.setStartDate(transaction.getStartDate())\n
+      aggregate.confirm()\n
       for check in aggregate.objectValues(portal_type=\'Check\'):\n
         check.confirm()\n
         check.setStartDate(transaction.getStartDate())\n

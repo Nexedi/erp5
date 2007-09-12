@@ -18,6 +18,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
     check_quantity = str(item.xpath("string(./check_quantity)"))
     reference_min = str(item.xpath("string(./reference_min)"))
     reference_max = str(item.xpath("string(./reference_max)"))
+    quantity = str(item.xpath("string(./quantity)"))
     internal_account_number = item.xpath("string(./numero_interne)")
     checkbook_type = item.xpath("string(./checkbook_type)")
     type = str(item.xpath("string(./checkbook_type)"))
@@ -28,6 +29,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
     item_dict['reference_min'] = reference_min
     item_dict['reference_max'] = reference_max
     item_dict['check_quantity'] = check_quantity
+    item_dict['quantity'] = quantity
     item_dict['internal_account_number'] = internal_account_number
 
   listbox_dict = {}
@@ -57,7 +59,8 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
         listbox_line['reference_range_min'] = item_dict['reference_min']
         listbox_line['reference_range_max'] = item_dict['reference_max']
         listbox_line['destination_payment_reference'] = item_dict['internal_account_number']
-        listbox_line['quantity'] = 1
+        #listbox_line['quantity'] = 1
+        listbox_line['quantity'] = item_dict['quantity']
         if is_checkbook:
           listbox_line['check_amount'] = resource_amount_dict[item_dict['check_quantity']]
         listbox.append(listbox_line)
@@ -88,6 +91,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
                                          REQUEST=REQUEST)
 
     message = Message(domain='ui', message='File Imported successfully')
+    self.setImported(1)
   return message
 
 

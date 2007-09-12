@@ -79,8 +79,9 @@ transaction.Base_checkBaobabSourceAndDestination()\n
 transaction.CheckbookReception_checkOrCreateItemList(check=1)\n
 \n
 # Start activities for each line\n
-transaction.CheckbookReception_checkOrCreateItemList(create=1)\n
-\n
+confirm_check = transaction.isImported()\n
+transaction.CheckbookReception_checkOrCreateItemList(create=1,\n
+                      confirm_check=confirm_check)\n
 \n
 \n
 #from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
@@ -320,6 +321,7 @@ transaction.CheckbookReception_checkOrCreateItemList(create=1)\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
+                            <string>confirm_check</string>
                           </tuple>
                         </value>
                     </item>

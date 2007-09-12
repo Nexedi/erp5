@@ -65,9 +65,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>destination = context.getDestination()\n
-if destination is not None:\n
-  destination += \'/caveau/auxiliaire/encaisse_des_billets_et_monnaies\'\n
+            <value> <string>destination = None\n
+# if import, then set destination to None\n
+if not context.isImport():\n
+  destination = context.getDestination()\n
+  if destination is not None:\n
+    destination += \'/caveau/auxiliaire/encaisse_des_billets_et_monnaies\'\n
 \n
 return destination\n
 </string> </value>
@@ -120,10 +123,11 @@ return destination\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
+                            <string>None</string>
+                            <string>destination</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>destination</string>
-                            <string>None</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
