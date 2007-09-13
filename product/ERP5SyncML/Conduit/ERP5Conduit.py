@@ -128,6 +128,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     [conflict1,conflict2,...] where conclict1 is of the form :
     [object.getPath(),keyword,local_and_actual_value,subscriber_value]
     """
+    reset_local_roles = 1
+    reset_workflow = 1
     conflict_list = []
     xml = self.convertToXml(xml)
     if xml is None:
