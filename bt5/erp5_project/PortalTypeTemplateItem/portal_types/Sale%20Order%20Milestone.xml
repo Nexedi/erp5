@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>A Sale Order Milestone</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -114,7 +114,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sale Order Milestone</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

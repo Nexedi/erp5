@@ -87,8 +87,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Folders allow to store a large number of documents (1,000,000 should not\n
-be a problem).</string> </value>
+            <value> <string>Module Containing Task Reports</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -132,7 +131,7 @@ be a problem).</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Task Report Module</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

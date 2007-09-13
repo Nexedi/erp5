@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>       BudgetCell ...\n
-</string> </value>
+            <value> <string>A Project Cell</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -102,6 +101,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
               <tuple/>
@@ -109,7 +112,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Project Cell</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
