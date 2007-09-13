@@ -155,7 +155,7 @@ for listboxline in listboxline_list:\n
     if isinstance(column_property, number):\n
       string_property = "%s+++" % (column_property)\n
     elif isinstance(column_property, DateTime):\n
-      string_property = column_property.strftime(\'%Y/%m/%d++\')\n
+      string_property = column_property.strftime(\'%Y/%m/%d+++++\')\n
     else:\n
       string_property = str(column_property or \'\')\n
     if listboxline.isStatLine():\n
