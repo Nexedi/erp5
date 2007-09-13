@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string># trigger the simulation update from the parent line\n
 line = sci[\'object\'].getParentValue()\n
-context.DeliveryLine_UpdateSimulation(sci, line)\n
+container.DeliveryLine_UpdateSimulation(sci, line)\n
 </string> </value>
         </item>
         <item>
@@ -117,7 +117,7 @@ context.DeliveryLine_UpdateSimulation(sci, line)\n
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>line</string>
-                            <string>context</string>
+                            <string>container</string>
                           </tuple>
                         </value>
                     </item>

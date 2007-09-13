@@ -74,7 +74,7 @@ if obj is None:\n
   delivery = sci[\'object\'].getParentValue()\n
 else:\n
   delivery = obj\n
-context.Delivery_UpdateSimulation(sci, delivery)\n
+container.Delivery_UpdateSimulation(sci, delivery)\n
 </string> </value>
         </item>
         <item>
@@ -123,7 +123,7 @@ context.Delivery_UpdateSimulation(sci, delivery)\n
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>delivery</string>
-                            <string>context</string>
+                            <string>container</string>
                           </tuple>
                         </value>
                     </item>
