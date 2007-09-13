@@ -1703,5 +1703,5 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
 
   def getActivityType(self, domain):
     if domain.getActivityEnabled():
-      return 'SQLDict'
+      return 'SQLQueue'
     return 'RAMQueue'
