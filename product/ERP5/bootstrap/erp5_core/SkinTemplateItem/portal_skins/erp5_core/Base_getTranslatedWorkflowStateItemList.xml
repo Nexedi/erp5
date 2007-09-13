@@ -75,8 +75,8 @@ wf = getToolByName(context, \'portal_workflow\')[wf_id]\n
 item_list = []\n
 \n
 for state in wf.states.objectValues():\n
-  if state.title:\n
-    # we hide states without titles, eg \'deleted\'.\n
+  if state.title and state.id != \'deleted\':\n
+    # we hide states without titles\n
     item_list.append((N_(state.title), state.id))\n
 \n
 return item_list\n
