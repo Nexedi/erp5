@@ -76,7 +76,8 @@ def dummyFilter(object,REQUEST=None):
 def dummyTestAfter(object,REQUEST=None):
   return []
 
-class FolderMixIn(ExtensionClass.Base):
+#class FolderMixIn(ExtensionClass.Base):
+class BrokenCode(ExtensionClass.Base):
   """A mixin class for folder operations, add content, delete content etc.
   """
 
