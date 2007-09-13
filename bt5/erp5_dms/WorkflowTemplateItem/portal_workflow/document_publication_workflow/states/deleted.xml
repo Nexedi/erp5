@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.States</string>
-          <string>StateDefinition</string>
-        </tuple>
-        <none/>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -60,17 +57,14 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -84,19 +78,25 @@
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Change local roles</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>

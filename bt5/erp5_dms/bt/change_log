@@ -1,4 +1,7 @@
 2007-09-13 yo
+* Allow more for Manager, otherwise even changing permissions does not work.
+
+2007-09-13 yo
 * Manager must be allowed for reading documents at any stage for indexing and management.
 
 2007-03-26
