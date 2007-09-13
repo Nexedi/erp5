@@ -1098,7 +1098,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     charset_list = self.charset_parser.findall(str(html)) # XXX - Not efficient is datastream 
                                                           # instance but hard to do better
     if charset_list:
-      stripped_html = unicode(stripped_html, charset_list[0]).encode('utf-8')
+      stripped_html = unicode(str(stripped_html), charset_list[0]).encode('utf-8')
     return stripped_html
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
