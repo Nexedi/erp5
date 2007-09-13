@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -90,7 +93,7 @@ shouldn\'t do anything. -->\n
   </tr>\n
   <tr>\n
     <td>assertLocation</td>\n
-    <td tal:content="string: ${here/portal_url/getPortalObject/absolute_url_path}/foo_module/1/view">/erp5/foo_module/1/view</td>\n
+    <td tal:content="python: \'%s/foo_module/1/view\' % here.portal_url.getPortalObject().absolute_url_path()">/erp5/foo_module/1/view</td>\n
     <td/>\n
   </tr>\n
   <tr>\n
