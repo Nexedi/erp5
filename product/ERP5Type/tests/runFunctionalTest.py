@@ -198,7 +198,7 @@ Following tests failed:
              body=summary,
              status=status,
              attachments=[file_content],
-             from_mail='kazuhiko@nexedi.com',
+             from_mail='nobody@svn.erp5.org',
              to_mail=[email_to_address])
   else:
     print '-' * 79
