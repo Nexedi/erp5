@@ -37,5 +37,6 @@ URL Crawler | document_publication_workflow
 URL Crawler | edit_workflow
 URL Crawler | local_permission_interaction_workflow
 Web Page | -publication_workflow
+Web Page | document_interaction_workflow
 Web Page | document_publication_workflow
 Web Page | local_permission_interaction_workflow
