@@ -84,6 +84,7 @@ class File(Document, CMFFile, ConversionCacheMixin):
 
   # Default global values
   content_type = '' # Required for WebDAV support (default value)
+  data = 'Empty File' # A hack required to use OFS.Image.index_html without calling OFS.Image.__init__
 
   # Default Properties
   property_sheets = ( PropertySheet.Base
