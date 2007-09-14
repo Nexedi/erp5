@@ -952,6 +952,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('module')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalInventoryMovementTypeList')
+  def getPortalInventoryMovementTypeList(self):
+    """
+    Return inventory movement types.
+    """
+    return self._getPortalGroupedTypeList('inventory_movement')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER):
     """

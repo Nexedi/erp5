@@ -162,13 +162,13 @@ class ERP5TypeInformation( FactoryTypeInformation,
       # Framework
       'alarm',
       # ERP5 UBM (5 Classes)
-      'resource', 'node', 'item', 
+      'resource', 'node', 'item',
       'delivery', 'delivery_movement',
       'order', 'order_movement',
       'container', 'container_line',
       # Trade
       'discount',  'payment_condition', 'payment_node',
-      'supply', 'supply_path',
+      'supply', 'supply_path', 'inventory_movement',
       # PDM
       'transformation', 'variation', 'sub_variation',
       # Accounting
