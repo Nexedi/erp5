@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   This script creates a new event with given metadata and\n
   attaches it to the current ticket.\n
 """\n
@@ -82,31 +84,49 @@ user = context.portal_membership.getAuthenticatedMember()\n
 user_person = context.portal_catalog.getResultValue(portal_type=\'Person\', reference=user)\n
 \n
 # For every person, create an event\n
-count = 0\n
-for person in person_list:\n
-  # Create a new event\n
+if not single_event:\n
+  count = 0\n
+  for person in person_list:\n
+    # Create a new event\n
+    event = module.newContent(portal_type=portal_type, \n
+                            description=description, \n
+                            title=title, \n
+                            follow_up=follow_up,\n
+                            text_content=text_content) # text_format is set by Event_init\n
+    count += 1\n
+    # Trigger appropriate workflow action\n
+    if direction == \'incoming\':\n
+      event.setSourceValue(person)\n
+      event.setDestinationValue(user_person)\n
+      event.receive()\n
+    else:\n
+      event.plan()\n
+      event.setDestinationValue(person)\n
+      event.setSourceValue(user_person)\n
+else:\n
+  if direction == \'incoming\' and len(person_list) > 1:\n
+    # This case is not possible\n
+    portal_status_message = translateString("The Single Event option can only be used with outgoing messages",\n
+                                    mapping = dict(portal_type = portal_type, count=count))\n
+    return context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message, selection_name=selection_name, selection_index=selection_index), **kw)\n
+  # Proceed to event creation\n
   event = module.newContent(portal_type=portal_type, \n
                             description=description, \n
                             title=title, \n
                             follow_up=follow_up,\n
                             text_content=text_content) # text_format is set by Event_init\n
-  count += 1\n
-  # Trigger appropriate workflow action\n
-  if direction == \'incoming\':\n
-    event.setSourceValue(person)\n
-    event.setDestinationValue(user_person)\n
-    event.receive()\n
-  else:\n
-    event.plan()\n
-    event.setDestinationValue(person)\n
-    event.setSourceValue(user_person)\n
-\n
+  event.plan()\n
+  event.setDestinationValueList(person_list)\n
+  event.setSourceValue(user_person)\n
+  count = 1\n
 \n
 # Redirect to the event module (but is this the best place to go since events are not yet indexed ?)\n
 portal_status_message = translateString("Created and associated ${count} new ${portal_type}(s) to the selected ticket.", \n
                                     mapping = dict(portal_type = portal_type, count=count))\n
 context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message, selection_name=selection_name, selection_index=selection_index), **kw)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -122,7 +142,7 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type, title, description, direction, selection_name, selection_index, follow_up, text_content, form_id, **kw</string> </value>
+            <value> <string>portal_type, title, description, direction, selection_name, selection_index, follow_up, single_event=0, text_content, form_id, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -142,7 +162,7 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -155,6 +175,7 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
                             <string>selection_name</string>
                             <string>selection_index</string>
                             <string>follow_up</string>
+                            <string>single_event</string>
                             <string>text_content</string>
                             <string>form_id</string>
                             <string>kw</string>
@@ -170,6 +191,7 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
                             <string>person</string>
                             <string>event</string>
                             <string>_inplacevar_</string>
+                            <string>len</string>
                             <string>dict</string>
                             <string>portal_status_message</string>
                             <string>_apply_</string>
@@ -184,7 +206,11 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

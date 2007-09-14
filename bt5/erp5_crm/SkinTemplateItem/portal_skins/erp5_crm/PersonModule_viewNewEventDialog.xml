@@ -103,6 +103,7 @@
                         <string>your_description</string>
                         <string>your_direction</string>
                         <string>your_follow_up</string>
+                        <string>your_single_event</string>
                       </list>
                     </value>
                 </item>

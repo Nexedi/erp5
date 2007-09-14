@@ -87,7 +87,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>width</string> </key>
+                    <key> <string>width</string> </key>
                     <value> <int>40</int> </value>
                 </item>
               </dictionary>
