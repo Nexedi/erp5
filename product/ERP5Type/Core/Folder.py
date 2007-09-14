@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_self
 from OFS.History import Historical
+from OFS.Folder import Folder as OFSFolder
 import ExtensionClass
 
 from Products.CMFCore.utils import _getAuthenticatedUser
@@ -44,16 +45,29 @@ from Products.ERP5Type.WebDAVSupport import Folder as WebDAVFolder
 
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
+  from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
 except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
 
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
+
 try:
   from Products.HBTreeFolder2.CMFHBTreeFolder import CMFHBTreeFolder
+  from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2Base
+  from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2
 except ImportError:
-  class CMFHBTreeFolder:
 
+  class CMFHBTreeFolder:
     def __init__(self, *args, **kw):
-      raise ValueError, 'You must install the HBTreeFolder2 Product'
+      pass
+
+  class HBTreeFolder2Base:
+    def __init__(self, *args, **kw):
+      pass
+
+  class HBTreeFolder2:
+    def __init__(self, *args, **kw):
+      pass
 
 
 from AccessControl import getSecurityManager
@@ -61,6 +75,7 @@ from Products.ERP5Type import Permissions
 from MethodObject import Method
 from DateTime import DateTime
 from random import randint
+
 
 import os
 
@@ -331,13 +346,82 @@ class FolderMethodWrapper(Method):
     self.method_id = method_id
 
   def __call__(self, folder, *args, **kw):
-    try:
-      method = getattr(folder._plugin, self.method_id)
-      return method(folder, *args, **kw)
-    except AttributeError:
-      LOG("Folder call %s" %self.method_id, WARNING, "raise AttributeError on %s with plugin %s" %(folder, folder._plugin))
-      pass
+    folder_handler = getattr(folder, '_folder_handler', None)
+    global folder_handler_dict
+    handler = folder_handler_dict.get(folder_handler,None)
+    if handler is None:
+      folder.initializeFolderHandler()
+      folder_handler = getattr(folder, '_folder_handler', None)
+      handler = folder_handler_dict.get(folder_handler,None)
+    return getattr(handler, self.method_id)(folder, *args, **kw)
 
+class FolderHandler:
+
+  def __init__(self):
+    pass
+
+  def __repr__(self):
+    """
+    Return a string representing the handler
+    """
+    return "FolderHandler"
+
+  def handles(self, folder):
+    """
+    Returns True if this plugin should handle this folder
+    """
+    return False
+
+class CMFBTreeFolderHandler(FolderHandler):
+
+  def __repr__(self):
+    return "CMFBTreeFolderHandler"
+
+  def __getattr__(self, id):
+    return getattr(CMFBTreeFolder, id)
+
+  def handles(self, folder):
+    result = False
+    if getattr(folder, '_tree', None) is not None:
+      result = True
+    return result
+
+class CMFHBTreeFolderHandler(FolderHandler):
+
+  def __repr__(self):
+    return "CMFHBTreeFolderHandler"
+
+  def __getattr__(self, id):
+    return getattr(CMFHBTreeFolder, id)
+
+  def handles(self, folder):
+    result = False
+    if getattr(folder, '_htree', None) is not None:
+      result = True
+    return result
+
+class OFSFolderHandler(FolderHandler):
+
+  def __repr__(self):
+    return "OFSFolderHandler"
+
+  def __getattr__(self, id):
+    return getattr(OFSFolder, id)
+
+  def handles(self, folder):
+    result = False
+    if getattr(folder, '_objects', None) is not None:
+      result = True
+    return result
+
+global folder_handler_dict
+folder_handler_dict = {}
+cmf_btree_folder_handler = CMFBTreeFolderHandler()
+folder_handler_dict["%r" % cmf_btree_folder_handler] = cmf_btree_folder_handler
+cmf_hbtree_folder_handler = CMFHBTreeFolderHandler()
+folder_handler_dict["%r" % cmf_hbtree_folder_handler] = cmf_hbtree_folder_handler
+ofs_folder_handler = OFSFolderHandler()
+folder_handler_dict["%r" % ofs_folder_handler] = ofs_folder_handler
 
 class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, WebDAVFolder):
   """
@@ -405,7 +489,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   # Per default we use BTree folder
   _isHBTree = False
   _isBTree = True
-  _plugin = None # plugin store the folder type class use by the folder
+  _folder_handler = None # plugin store the folder type class use by the folder
   
   # Overload __init__ so that we do not take into account title
   # This is required for test_23_titleIsNotDefinedByDefault
@@ -423,31 +507,36 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
                     "_getOb", "_setObject", "_initBTrees", "_populateFromFolder",
                     "_fixCount", "_cleanup", "_setOb", "_checkId", "_delObject",]
 
+
   def _generatePluginMethod(self):
     """ Will generate alias to Tree method depending
     on configuration """
     for method_id in self.method_id_list:
       method_wrapper = FolderMethodWrapper(method_id)
       setattr(self, method_id, method_wrapper)
+
+  def initializeFolderHandler(self):
+    if self._folder_handler is None:
+      global folder_handler_dict
+      plugin_list = folder_handler_dict.values()
+      for plugin in plugin_list:
+        if plugin.handles(self):
+          self._folder_handler = "%r" % plugin
+          break
+      if self._folder_handler is None:
+        raise ValueError, 'No plugin defined'
       
   def newContent(self, *args, **kw):
     """ Create a new content """
     # Create data structure if none present
-    if self._plugin is None:
-      if self._isHBTree:
-        self._plugin = CMFHBTreeFolder
-        self._generatePluginMethod()
-      elif self._isBTree:
-        self._plugin = CMFBTreeFolder
-      else:
-        raise ValueError, 'No plugin defined'
-      self._plugin.__init__(self, self.id)
+    if self._folder_handler is None:
+      self.initializeFolderHandler()
     return FolderMixIn.newContent(self, *args, **kw)
 
-  security.declareProtected( Permissions.ManagePortal, 'migrateToHBTree' )
+  security.declareProtected( Permissions.ManagePortal, 'resetPlugin' )
   def resetPlugin(self):
     """ reset plugin attribute """
-    self._plugin = None
+    self._folder_handler = None
     
   security.declareProtected(Permissions.View, 'isBTree')
   def isBTree(self):
@@ -474,7 +563,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     script = self._getTypeBasedMethod('hashId')
     if script is not None:
       return script(self, id)    
-    return self._plugin.hashId(self, id)
+    global folder_handler_dict
+    return folder_handler_dict[self._folder_handler].hashId(self, id)
 
   security.declareProtected( Permissions.ManagePortal, 'migrateToHBTree' )
   def migrateToHBTree(self, migration_generate_id_method=None, new_generate_id_method=None, REQUEST=None):
@@ -484,10 +574,10 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     to be used with an hbtreefolder.
     Then it will migrate foder from btree to hbtree.
     """    
-    if self._plugin is None:
+    if self._folder_handler is None:
       # make sure to have all method right defined
-      self._plugin = CMFBTreeFolder
-      self._generatePluginMethod()
+      self._folder_handler = CMFBTreeFolder
+      #self._generatePluginMethod()
     
     BUNDLE_COUNT = 10
     # we may want to change all objects ids before migrating to new folder type
@@ -528,7 +618,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     and migration
     """
     delattr(self, "_tree")
-    delattr(self, "_former_plugin")
+    delattr(self, "_former_folder_handler")
 
   def _launchCopyObjectToHBTree(self, tag):
     """
@@ -537,11 +627,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     """    
     # migrate folder from btree to hbtree
     id_list = list(self.objectIds())
-    self._former_plugin = self._plugin
+    self._former_folder_handler = self._folder_handler
     self._setHBTree()
-    self._plugin = CMFHBTreeFolder
-    self._generatePluginMethod()
-    self._plugin.__init__(self, self.id)
+    self._folder_handler = CMFHBTreeFolder
     # launch activity per bundle to copy/paste to hbtree
     BUNDLE_COUNT = 100
     for x in xrange(len(id_list) / BUNDLE_COUNT):
@@ -560,7 +648,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     Move object from a btree container to
     a hbtree one
     """
-    getOb = self._former_plugin._getOb
+    getOb = self._former_folder_handler._getOb
     setOb = self._setOb
     for id in id_list:
       obj = getOb(self, id)
@@ -595,10 +683,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 
   security.declareProtected(Permissions.View, 'hasContent')
   def hasContent(self,id):
-    try:
-      return self._plugin.hasObject(self, id)
-    except AttributeError:
-      return False
+    if self._folder_handler is None:
+      self.initializeFolderHandler()
+    return folder_handler_dict[self._folder_handler].hasObject(self, id)
     
   security.declareProtected( Permissions.ModifyPortalContent, 'exportAll' )
   def exportAll(self,dir=None):
@@ -1003,10 +1090,10 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getObjectIds')
   def getObjectIds(self, *args, **kw):
-    try:
-      self._plugin.objectIds(self, *args, **kw)
-    except AttributeError:
-      CMFBTreeFolder.objectIds(self, *args, **kw)
+    if self._folder_handler is None:
+      self.initializeFolderHandler()
+    global folder_handler_dict
+    folder_handler_dict[self._folder_handler].get('objectIds')(self, *args, **kw)
         
     
   # Overloading
@@ -1088,10 +1175,15 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
         BTreeFolder2Base.__init__(self, self.getId())
     try:
-      if self.isBTree():
-        object_list = self._plugin.objectValues(self, spec=spec)
+      if self._folder_handler is None:
+        self.initializeFolderHandler()
+      global folder_handler_dict
+      if self._folder_handler == 'CMFHBTreeFolderHandler':
+        object_list = folder_handler_dict[self._folder_handler]\
+                  .objectValues(self, base_id=base_id)
       else:
-        object_list = self._plugin.objectValues(self, base_id=base_id)        
+        object_list = folder_handler_dict[self._folder_handler]\
+                  .objectValues(self, spec=spec)
     except AttributeError:
       object_list = CMFBTreeFolder.objectValues(self, spec=spec)
     if portal_type is not None:
@@ -1117,7 +1209,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     filter = kw.pop('filter', {}) or {}
     kw.update(filter)
     try:
-      object_list = self._plugin.contentValues(self, spec=spec, filter=kw)
+      object_list = self._folder_handler.contentValues(self, spec=spec, filter=kw)
     except AttributeError:
       object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter=kw)
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
@@ -1194,5 +1286,18 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         raise ValueError, "The method %s was not found" % method_id
       method(*args, **kw)
 
+
 # Overwrite Zope setTitle()
 Folder.setTitle = Base.setTitle
+
+candidate_method_id_list = []
+candidate_method_id_list = ["initBTrees", "manage_fixCount", "manage_cleanup",
+                    "getBatchObjectListing", "manage_object_workspace",
+                    "tpValues", "objectCount", "has_key", "objectIds",
+                    "objectItems", "objectMap", "objectIds_d", "objectMap_d",
+                    "keys", "values", "items", "hasObject", "generateId",
+                    "__len__", "allowedContentTypes", "_delOb",
+                    "_getOb", "_setObject", "_initBTrees", "_populateFromFolder",
+                    "_fixCount", "_cleanup", "_setOb", "_checkId", "_delObject",]
+for method_id in candidate_method_id_list:
+  setattr(Folder, method_id, FolderMethodWrapper(method_id))
