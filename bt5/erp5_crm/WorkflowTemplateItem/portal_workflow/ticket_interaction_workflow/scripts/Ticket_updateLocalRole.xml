@@ -70,13 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string>object = state_change[\'object\']\n
 object.updateLocalRolesOnSecurityGroups()\n
-\n
-portal = state_change.getPortal()\n
-event_portal_type_list = (\'Fax Message\', \'Letter\', \'Mail Message\', \'Note\', \'Phone Call\', \'Visit\')\n
-\n
-for i in portal.portal_catalog(portal_type=event_portal_type_list,\n
-                                follow_up=object.getRelativeUrl()):\n
-  i.updateLocalRolesOnSecurityGroups()\n
+object.activate().Ticket_updateRelatedEventLocalRole()\n
 </string> </value>
         </item>
         <item>
@@ -131,10 +125,6 @@ for i in portal.portal_catalog(portal_type=event_portal_type_list,\n
                             <string>_getitem_</string>
                             <string>object</string>
                             <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>event_portal_type_list</string>
-                            <string>_getiter_</string>
-                            <string>i</string>
                           </tuple>
                         </value>
                     </item>
@@ -151,7 +141,7 @@ for i in portal.portal_catalog(portal_type=event_portal_type_list,\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>updateLocalRolesAndEventsLocalRoles</string> </value>
+            <value> <string>Ticket_updateLocalRole</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -40,7 +40,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>updateLocalRolesAndEventsLocalRoles</string>
+                <string>Ticket_updateLocalRole</string>
               </list>
             </value>
         </item>
@@ -62,7 +62,6 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_setSourceTrade.*</string>
                 <string>_setSourceDecision.*</string>
                 <string>_setSource.*</string>
               </list>

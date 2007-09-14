@@ -1,3 +1,6 @@
+2007-09-14 Yusei
+* Fix to use activity for updating related event local roles.
+
 2007-09-14 Thierry
 * Add missing portal type actions
 
