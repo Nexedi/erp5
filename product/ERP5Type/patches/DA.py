@@ -24,7 +24,8 @@ from App.Extensions import getBrain
 from AccessControl import getSecurityManager
 from Acquisition import aq_base
 from zLOG import LOG, INFO, ERROR
-
+from string import find
+from cStringIO import StringIO
 
 def DA_fromFile(self, filename):
   """
