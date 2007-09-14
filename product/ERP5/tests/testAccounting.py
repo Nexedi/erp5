@@ -36,7 +36,6 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-from Products.ERP5.Document.Delivery import Delivery
 from DateTime import DateTime
 
 SOURCE = 'source'
@@ -169,7 +168,7 @@ class AccountingTestCase(ERP5TypeTestCase):
                    self.person_module):
       for doc in module.objectValues():
         doc.validate()
-    
+
     # and the preference enabled
     preference = self.portal.portal_preferences.accounting_zuite_preference
     pref.manage_addLocalRoles(self.username, ('Auditor', ))
@@ -223,7 +222,7 @@ class TestClosingPeriod(AccountingTestCase):
   def test_createBalanceOnNode(self):
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
-    period.setStartDate(DateTime(2006, 12, 31))
+    period.setStopDate(DateTime(2006, 12, 31))
 
     transaction1 = self._makeOne(
         start_date=DateTime(2006, 1, 1),
@@ -309,7 +308,7 @@ class TestClosingPeriod(AccountingTestCase):
     organisation_module = self.organisation_module
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
-    period.setStartDate(DateTime(2006, 12, 31))
+    period.setStopDate(DateTime(2006, 12, 31))
 
     transaction1 = self._makeOne(
         start_date=DateTime(2006, 1, 1),
@@ -403,7 +402,7 @@ class TestClosingPeriod(AccountingTestCase):
     organisation_module = self.organisation_module
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
-    period.setStartDate(DateTime(2006, 12, 31))
+    period.setStopDate(DateTime(2006, 12, 31))
 
     bank1 = self.section.newContent(
                     id='bank1', reference='bank1',
@@ -529,7 +528,7 @@ class TestClosingPeriod(AccountingTestCase):
     organisation_module = self.organisation_module
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
-    period.setStartDate(DateTime(2006, 12, 31))
+    period.setStopDate(DateTime(2006, 12, 31))
 
     transaction1 = self._makeOne(
         start_date=DateTime(2006, 1, 1),
@@ -645,7 +644,7 @@ class TestClosingPeriod(AccountingTestCase):
     # open a period for our section
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
-    period.setStartDate(DateTime(2006, 12, 31))
+    period.setStopDate(DateTime(2006, 12, 31))
     self.assertEquals('draft', period.getSimulationState())
     self.portal.portal_workflow.doActionFor(period, 'start_action')
     self.assertEquals('started', period.getSimulationState())
@@ -702,7 +701,7 @@ class TestClosingPeriod(AccountingTestCase):
     """
     period1 = self.section.newContent(portal_type='Accounting Period')
     period1.setStartDate(DateTime(2006, 1, 1))
-    period1.setStartDate(DateTime(2006, 12, 31))
+    period1.setStopDate(DateTime(2006, 12, 31))
     period1.start()
     
     transaction1 = self._makeOne(
@@ -733,17 +732,17 @@ class TestClosingPeriod(AccountingTestCase):
     
     period2 = self.section.newContent(portal_type='Accounting Period')
     period2.setStartDate(DateTime(2007, 1, 1))
-    period2.setStartDate(DateTime(2007, 12, 31))
+    period2.setStopDate(DateTime(2007, 12, 31))
     period2.start()
 
     transaction2 = self._makeOne(
         start_date=DateTime(2007, 1, 2),
         portal_type='Accounting Transaction',
         simulation_state='delivered',
-        lines=(dict(destination_value=self.account_module.equity,
-                    destination_debit=100),
-               dict(destination_value=pl_account,
-                    destination_credit=100)))
+        lines=(dict(source_value=self.account_module.equity,
+                    source_debit=100),
+               dict(source_value=pl_account,
+                    source_credit=100)))
     transaction3 = self._makeOne(
         start_date=DateTime(2007, 1, 3),
         portal_type='Purchase Invoice Transaction',
@@ -753,7 +752,7 @@ class TestClosingPeriod(AccountingTestCase):
                     destination_debit=300),
                dict(destination_value=self.account_module.payable,
                     destination_credit=300)))
-    period2.stop()
+
     period2.AccountingPeriod_createBalanceTransaction(
                 profit_and_loss_account=pl_account.getRelativeUrl())
     balance_transaction_list = [tr for tr in 
@@ -798,7 +797,7 @@ class TestClosingPeriod(AccountingTestCase):
     """
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
-    period.setStartDate(DateTime(2006, 12, 31))
+    period.setStopDate(DateTime(2006, 12, 31))
     pl_account = self.portal.account_module.newContent(
                     portal_type='Account',
                     account_type='equity',
@@ -824,6 +823,7 @@ class TestClosingPeriod(AccountingTestCase):
                               portal_type='Balance Transaction')
     self.assertEquals(1, len(balance_transaction_list))
     balance_transaction = balance_transaction_list[0]
+    balance_transaction.alternateReindexObject()
     movement_list = balance_transaction.getMovementList()
     self.assertEquals(2, len(movement_list))
 
@@ -837,6 +837,114 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(1, len(stock_movement_list))
     self.assertEquals(500, stock_movement_list[0].getDestinationCredit())
     
+
+  def test_InventoryIndexingNodeAndMirrorSection(self):
+    # Balance Transactions are indexed as Inventories.
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Sale Invoice Transaction',
+        destination_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.receivable,
+                    source_debit=100),
+               dict(source_value=self.account_module.goods_sales,
+                    source_credit=100)))
+
+    balance = self.accounting_module.newContent(
+                          portal_type='Balance Transaction',
+                          destination_section_value=self.section,
+                          start_date=DateTime(2006, 12, 31),
+                          resource_value=self.currency_module.euro,)
+    balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.receivable,
+                source_section_value=self.organisation_module.client_1,
+                destination_debit=100,)
+    balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.stocks,
+                destination_credit=100,)
+    balance.stop()
+    balance.deliver()
+    balance.immediateReindexObject()
+
+    # now check inventory
+    stool = self.getSimulationTool()
+    # the account 'receivable' has a balance of 100
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    self.assertEquals(100, stool.getInventory(
+                    section_uid=self.section.getUid(),
+                    mirror_section_uid=self.organisation_module.client_1.getUid(),
+                    node_uid=node_uid))
+    self.assertEquals(100, stool.getInventoryAssetPrice(
+                    section_uid=self.section.getUid(),
+                    node_uid=node_uid))
+    # and only one movement is returned by getMovementHistoryList
+    self.assertEquals(1, len(stool.getMovementHistoryList(
+                    section_uid=self.section.getUid(),
+                    node_uid=node_uid)))
+    
+    # the account 'goods_sales' has a balance of -100
+    node_uid = self.account_module.goods_sales.getUid()
+    self.assertEquals(-100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+
+    # the account 'stocks' has a balance of -100
+    node_uid = self.account_module.stocks.getUid()
+    self.assertEquals(-100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+
+
+  def test_InventoryIndexingNodeDiffOnNode(self):
+    # Balance Transactions are indexed as Inventories.
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Accounting Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.receivable,
+                    source_debit=100),
+               dict(source_value=self.account_module.stocks,
+                    source_credit=100)))
+
+    balance = self.accounting_module.newContent(
+                          portal_type='Balance Transaction',
+                          destination_section_value=self.section,
+                          start_date=DateTime(2006, 12, 31),
+                          resource_value=self.currency_module.euro,)
+    balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.receivable,
+                destination_debit=150,)
+    balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.stocks,
+                destination_credit=90,)
+    balance.stop()
+    get_transaction().commit()
+    self.tic()
+    
+    stool = self.portal.portal_simulation
+    # the account 'receivable' has a balance of 150
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(150, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    # movement history list shows 2 movements, the initial with qty 100, and
+    # the balance with quantity 50
+
+    # the account 'stocks' has a balance of -100
+    node_uid = self.account_module.stocks.getUid()
+    self.assertEquals(-90, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    
+
+
 
 class TestAccounting(ERP5TypeTestCase):
   """The first test for Accounting
