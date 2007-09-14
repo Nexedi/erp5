@@ -74,6 +74,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Access contents information</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <list/>
@@ -82,7 +88,9 @@
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>
