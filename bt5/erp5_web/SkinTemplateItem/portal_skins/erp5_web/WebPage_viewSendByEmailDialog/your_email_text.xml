@@ -3,15 +3,18 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>TextAreaField</string>
-        </tuple>
-        <none/>
+        <global name="TextAreaField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>your_email_text</string> </value>
@@ -288,18 +291,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.index_html(request, None, format=\'text\')</string> </value>
+            <value> <string>python:here.asText()</string> </value>
         </item>
       </dictionary>
     </pickle>
