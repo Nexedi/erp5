@@ -172,28 +172,28 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # Here are the tests
     def testHasTemplateTool(self):
       # Test if portal_templates was created
-      self.failUnless(self.getTemplateTool()!=None)
+      self.assertTrue(self.getTemplateTool()!=None)
 
     def testHasCategoryTool(self):
       # Test if portal_categories was created
-      self.failUnless(self.getCategoryTool()!=None)
+      self.assertTrue(self.getCategoryTool()!=None)
 
     def testTemplateToolHasGetId(self):
       # Test if portal_templates has getId method (RAD)
-      self.failUnless(self.getTemplateTool().getId() == 'portal_templates')
+      self.assertTrue(self.getTemplateTool().getId() == 'portal_templates')
 
     def testCategoryToolHasGetId(self):
       # Test if portal_categories has getId method (RAD)
-      self.failUnless(self.getCategoryTool().getId() == 'portal_categories')
+      self.assertTrue(self.getCategoryTool().getId() == 'portal_categories')
 
     # erp5_common tests
     def testCommonHasParentBaseCategory(self):
       # Test if erp5_common parent base category was imported successfully
-      self.failUnless(getattr(self.getCategoryTool(), 'parent', None) != None)
+      self.assertTrue(getattr(self.getCategoryTool(), 'parent', None) != None)
 
     def testCommonHasImageType(self):
       # Test if erp5_common parent base category was imported successfully
-      self.failUnless(getattr(self.getTypeTool(), 'Image', None) != None)
+      self.assertTrue(getattr(self.getTypeTool(), 'Image', None) != None)
 
     # Business Template Tests
     def testBusinessTemplate(self):
@@ -202,11 +202,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       portal_templates = self.getTemplateTool()
       business_template = self.getTemplateTool().newContent(
                             portal_type="Business Template")
-      self.failUnless(business_template.getPortalType() == 'Business Template')
+      self.assertTrue(business_template.getPortalType() == 'Business Template')
       # Test simple string accessor
       test_string = self.getRandomString()
       business_template.setTitle(test_string)
-      self.failUnless(business_template.getTitle()==test_string)
+      self.assertTrue(business_template.getTitle()==test_string)
     
     # Test Dynamic Code Generation
     def test_02_AqDynamic(self, quiet=quiet, run=run_all_test):
@@ -216,14 +216,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person = module.newContent(id='1', portal_type='Person')
       from Products.ERP5Type import Document
       # Person class should have no method getFirstName
-      self.failUnless(not hasattr(Document.Person, 'getFirstName'))
+      self.assertTrue(not hasattr(Document.Person, 'getFirstName'))
       # Calling getFirstName should produce dynamic methods related to the
       # portal_type
       name = person.getFirstName()
       # Person class should have no method getFirstName
-      self.failUnless(not hasattr(Document.Person, 'getFirstName'))
+      self.assertTrue(not hasattr(Document.Person, 'getFirstName'))
       # Person class should now have method getFirstName
-      self.failUnless(hasattr(person, 'getFirstName'))
+      self.assertTrue(hasattr(person, 'getFirstName'))
 
     def test_03_NewTempObject(self, quiet=quiet, run=run_all_test):
       if not run: return
@@ -507,7 +507,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         self.assertEquals(obj.getId(), new_id)
 
       for obj_id in folder.objectIds():
-        self.failUnless(obj_id.endswith('_new'),
+        self.assertTrue(obj_id.endswith('_new'),
                         'bad object id: %s' % obj_id)
       for id_ in id_list:
         new_id = '%s_new' % id_
@@ -873,10 +873,10 @@ class TestPropertySheet:
                                       'mode': 'w',}''')
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       self.assertEquals('string', person.getPropertyType('dummy_ps_prop'))
-      self.failUnless(hasattr(person, 'getDummyPsProp'))
-      self.failUnless(hasattr(person, 'setDummyPsProp'))
+      self.assertTrue(hasattr(person, 'getDummyPsProp'))
+      self.assertTrue(hasattr(person, 'setDummyPsProp'))
       person.setDummyPsProp('a value')
-      self.failUnless(person.hasProperty('dummy_ps_prop'))
+      self.assertTrue(person.hasProperty('dummy_ps_prop'))
       self.assertEquals('a value', person.getDummyPsProp())
 
     def test_17_WorkflowStateAccessor(self,quiet=quiet, run=run_all_test):
@@ -888,15 +888,15 @@ class TestPropertySheet:
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       wf = self.getWorkflowTool().validation_workflow
       # those are assumptions for this test.
-      self.failUnless(wf.getId() in
+      self.assertTrue(wf.getId() in
                         self.getWorkflowTool().getChainFor('Person'))
       self.assertEquals('validation_state', wf.variables.getStateVar())
       initial_state = wf.states[wf.initial_state]
       other_state = wf.states['validated']
 
-      self.failUnless(hasattr(person, 'getValidationState'))
-      self.failUnless(hasattr(person, 'getValidationStateTitle'))
-      self.failUnless(hasattr(person, 'getTranslatedValidationStateTitle'))
+      self.assertTrue(hasattr(person, 'getValidationState'))
+      self.assertTrue(hasattr(person, 'getValidationStateTitle'))
+      self.assertTrue(hasattr(person, 'getTranslatedValidationStateTitle'))
 
       self.assertEquals(initial_state.getId(), person.getValidationState())
       self.assertEquals(initial_state.title,
@@ -954,11 +954,11 @@ class TestPropertySheet:
       # this person that will returns the organisation title.
       self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_PROP)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
-      self.failUnless(hasattr(person, 'getDefaultOrganisationTitle'))
-      self.failUnless(hasattr(person, 'setDefaultOrganisationTitle'))
+      self.assertTrue(hasattr(person, 'getDefaultOrganisationTitle'))
+      self.assertTrue(hasattr(person, 'setDefaultOrganisationTitle'))
       person.setDefaultOrganisationTitle('The organisation title')
       # XXX content generated properties are not in propertyMap. is it a bug ?
-      #self.failUnless(person.hasProperty('default_organisation_title'))
+      #self.assertTrue(person.hasProperty('default_organisation_title'))
       
       # an organisation is created inside the person.
       default_organisation = person._getOb('default_organisation', None)
@@ -1130,19 +1130,19 @@ class TestPropertySheet:
       action_tool = self.getPortal().portal_actions
       actions = action_tool.listFilteredActionsFor(obj)
       action_id_list = [x['id'] for x in actions.get('object_action',[])]
-      self.failUnless('action1' not in action_id_list)
+      self.assertTrue('action1' not in action_id_list)
       obj.setDescription('foo')
       actions = action_tool.listFilteredActionsFor(obj)
       action_id_list = [x['id'] for x in actions.get('object_action',[])]
-      self.failUnless('action1' in action_id_list)
+      self.assertTrue('action1' in action_id_list)
       addCustomAction('action2',"python: portal_url not in (None,'')")
       actions = action_tool.listFilteredActionsFor(obj)
       action_id_list = [x['id'] for x in actions.get('object_action',[])]
-      self.failUnless('action2' in action_id_list)
+      self.assertTrue('action2' in action_id_list)
       addCustomAction('action3',"python: object_url not in (None,'')")
       actions = action_tool.listFilteredActionsFor(obj)
       action_id_list = [x['id'] for x in actions.get('object_action',[])]
-      self.failUnless('action3' in action_id_list)
+      self.assertTrue('action3' in action_id_list)
 
     def test_22_securityReindex(self, quiet=quiet, run=run_all_test):
       """
@@ -1294,7 +1294,7 @@ class TestPropertySheet:
       # Create a new temporary person object.
       from Products.ERP5Type.Document import newTempPerson
       o = newTempPerson(portal, 'temp_person_1')
-      self.failUnless(o.isTempObject())
+      self.assertTrue(o.isTempObject())
 
       # This should generate a workflow method.
       self.assertEquals(o.getValidationState(), 'draft')
@@ -1334,7 +1334,7 @@ class TestPropertySheet:
 
       # Create a new temporary person object.
       o = newTempPerson(portal, 'temp_person_2')
-      self.failUnless(o.isTempObject())
+      self.assertTrue(o.isTempObject())
 
       # This should call methods generated for the persistent object.
       self.assertEquals(o.getValidationState(), 'draft')
@@ -1350,10 +1350,10 @@ class TestPropertySheet:
                         'type':       'string',
                         'mode':       'w', }''')
       obj = self.getPersonModule().newContent(portal_type='Person')
-      self.failUnless(hasattr(obj, 'hasFooBar'))
+      self.assertTrue(hasattr(obj, 'hasFooBar'))
       self.failIf(obj.hasFooBar())
       obj.setFooBar('something')
-      self.failUnless(obj.hasFooBar())
+      self.assertTrue(obj.hasFooBar())
 
 if __name__ == '__main__':
   framework()
