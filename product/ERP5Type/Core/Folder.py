@@ -1290,13 +1290,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 Folder.setTitle = Base.setTitle
 
 candidate_method_id_list = []
-candidate_method_id_list = ["initBTrees", "manage_fixCount", "manage_cleanup",
-                    "getBatchObjectListing", "manage_object_workspace",
-                    "tpValues", "objectCount", "has_key", "objectIds",
-                    "objectItems", "objectMap", "objectIds_d", "objectMap_d",
-                    "keys", "values", "items", "hasObject", "generateId",
-                    "__len__", "allowedContentTypes", "_delOb",
-                    "_getOb", "_setObject", "_initBTrees", "_populateFromFolder",
-                    "_fixCount", "_cleanup", "_setOb", "_checkId", "_delObject",]
+for folder_class in (HBTreeFolder2Base, HBTreeFolder2, CMFHBTreeFolder):
+  candidate_method_id_list.extend([x for x in folder_class.__dict__
+                            if callable(getattr(folder_class, x)) and not
+                            x in ('__getattr__','__init__', 'get')])
 for method_id in candidate_method_id_list:
   setattr(Folder, method_id, FolderMethodWrapper(method_id))
