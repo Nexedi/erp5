@@ -1288,19 +1288,41 @@ class BasicStructure:
     list_object = []
     self.nbr_groups=0
     object_list=[]
+    sec_layer_object_list=[]
     self.report_activity_dict = {}
     indic_line=0
     index_line=0
     blocks_object={}
     select_expression = ''
     self.sec_layer_uid_list = []
+    
+    
+    self.selection.edit(params = kw)
+    if self.list_method not in (None,''):
+      # valid list_method has been found
+      build_object_list = self.selection(method = self.list_method,
+                    context=self.context, REQUEST=self.REQUEST)
+    else:
+      # Reset Object List if ther is no List Method
+      build_object_list = []
+
+    # Defining the Secondary Layer Object List
+    if self.sec_layer_list_method not in (None,''):
+      build_sec_layer_object_list = self.selection(
+                      method=self.sec_layer_list_method,
+                      context=self.context,
+                      REQUEST=self.REQUEST)
+    else:
+      build_sec_layer_object_list = []
+
+
     # now iterating through report_tree_list
     for object_tree_line in report_tree_list:
       # prepare query by defining selection report object
       # defining info_dict, holding all information about the current object.
       info_dict = None
       info_dict = {}
-
+      object_list = []
       if object_tree_line.getIsPureSummary() and show_stat:
         info_dict['stat'] = 1
         # push new select_expression
@@ -1328,36 +1350,16 @@ class BasicStructure:
 
       else:
         info_dict['stat'] = 0
-
-        # processing all cases
-        self.selection.edit(params = kw)
-        # recovering object list
-        if self.list_method not in (None,''):
-          # valid list_method has been found
-          self.selection.edit(exception_uid_list= \
-             object_tree_line.getExceptionUidList())
-          object_list = self.selection(method = self.list_method,
-                        context=self.context, REQUEST=self.REQUEST)
-        else:
-          # Reset Object List if ther is no List Method
-          object_list = []
+        sec_layer_object_list = []
 
         if self.selection_report_path == 'parent':
           object_list = [object_tree_line.getObject()]
-
-        # Defining the Secondary Layer Object List
-        if self.sec_layer_list_method not in (None,''):
-          sec_layer_object_list = self.selection(
-                          method=self.sec_layer_list_method,
-                          context=self.context, 
-                          REQUEST=self.REQUEST)          
-        else:
-          sec_layer_object_list = []
 
         # recovering exeption_uid_list
         exception_uid_list = object_tree_line.getExceptionUidList()
 
         domain_obj = object_tree_line.getObject()
+        # Default Values
         new_object_list = []
         sec_new_object_list = []
         if domain_obj.getPortalType() == 'Domain':
@@ -1365,9 +1367,9 @@ class BasicStructure:
           for bc in domain_obj.getMembershipCriterionBaseCategoryList():
             if (category_obj is not None) and (bc is not None):
               category_value = category_obj.getRelativeUrl()
-              new_object_list.extend([ s_obj for s_obj in object_list \
+              new_object_list.extend([ s_obj for s_obj in build_object_list \
                    if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_value])
-              sec_new_object_list.extend([ s_obj for s_obj in sec_layer_object_list \
+              sec_new_object_list.extend([ s_obj for s_obj in build_sec_layer_object_list \
                    if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_value])
 
           object_list = new_object_list
