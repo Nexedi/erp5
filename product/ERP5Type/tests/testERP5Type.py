@@ -1341,6 +1341,20 @@ class TestPropertySheet:
       o.validate()
       self.assertEquals(o.getValidationState(), 'validated')
 
+    def test_26_hasAccessors(self):
+      """Test 'has' Accessor.
+      This accessor returns true if the property is set on the document.
+      """
+      self._addProperty('Person',
+                  ''' { 'id':         'foo_bar',
+                        'type':       'string',
+                        'mode':       'w', }''')
+      obj = self.getPersonModule().newContent(portal_type='Person')
+      self.failUnless(hasattr(obj, 'hasFooBar'))
+      self.failIf(obj.hasFooBar())
+      obj.setFooBar('something')
+      self.failUnless(obj.hasFooBar())
+
 if __name__ == '__main__':
   framework()
 else:
