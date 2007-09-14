@@ -439,6 +439,20 @@ class TestDocument(ERP5TypeTestCase):
     doc.edit(base_data='OOo')
     self.assertEquals(len('OOo'), doc.get_size())
 
+  def testOOoDocument_hasData(self):
+    # test hasData on OOoDocument
+    doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
+    self.failIf(doc.hasData())
+    doc.edit(file=makeFileUpload('import_data_list.ods'))
+    self.failUnless(doc.hasData())
+
+  def testTempOOoDocument_hasData(self):
+    # test hasData on TempOOoDocument
+    from Products.ERP5Type.Document import newTempOOoDocument
+    doc = newTempOOoDocument(self.portal, 'tmp')
+    self.failIf(doc.hasData())
+    doc.edit(file=makeFileUpload('import_data_list.ods'))
+    self.failUnless(doc.hasData())
 
 if __name__ == '__main__':
     framework()
