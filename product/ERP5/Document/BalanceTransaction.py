@@ -101,6 +101,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     """Returns movements that implies only grouping by node."""
     movement_list = []
     for movement in self.getMovementList():
+      if not getattr(movement, 'isAccountable', 1):
+        continue
       if not (movement.getSourceSection() or
                 movement.getDestinationPayment()):
         movement_list.append(movement)
@@ -110,6 +112,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     """Returns movements that implies grouping by node and payment"""
     movement_list = []
     for movement in self.getMovementList():
+      if not getattr(movement, 'isAccountable', 1):
+        continue
       if movement.getDestinationPayment():
         movement_list.append(movement)
     return movement_list
@@ -118,6 +122,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     """Returns movements that implies only grouping by node and mirror section"""
     movement_list = []
     for movement in self.getMovementList():
+      if not getattr(movement, 'isAccountable', 1):
+        continue
       if movement.getSourceSection():
         movement_list.append(movement)
     return movement_list
