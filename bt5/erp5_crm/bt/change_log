@@ -1,3 +1,6 @@
+2007-09-14 Thierry
+* Add missing portal type actions
+
 2007-09-11 Yusei
 * Add two interaction workflows for ticket and event to update local roles after editing.
 
@@ -7,7 +10,6 @@
 
 2007-09-11 Thierry
 * Improve Ticket workflow (add worklists)
-* Add missing portal type actions
 
 2007-09-10 Thierry
 * Improve Event workflow

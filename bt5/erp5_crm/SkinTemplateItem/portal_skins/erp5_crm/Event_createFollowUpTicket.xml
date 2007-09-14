@@ -69,14 +69,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># this script allows to create a new follow up ticket for a given event\n
-evnet = context\n
-ticket_module = context.getPortalObject().getDefaultModule(follow_up_ticket_type)\n
+event = context\n
+ticket_module = event.getPortalObject().getDefaultModule(follow_up_ticket_type)\n
 \n
 # Create a new object\n
 new_object = ticket_module.newContent(\n
      portal_type=follow_up_ticket_type,\n
      title=follow_up_ticket_title,\n
-     destination_decision_list=event_object.getSourceList()\n
+     destination_decision_list=event.getSourceList()\n
 )\n
 \n
 # Now create the relation between the event object and the new follow up ticket\n
@@ -132,12 +132,10 @@ event.setFollowUpValueList([new_object])\n
                             <string>follow_up_ticket_title</string>
                             <string>follow_up_ticket_type</string>
                             <string>context</string>
-                            <string>evnet</string>
+                            <string>event</string>
                             <string>_getattr_</string>
                             <string>ticket_module</string>
-                            <string>event_object</string>
                             <string>new_object</string>
-                            <string>event</string>
                           </tuple>
                         </value>
                     </item>

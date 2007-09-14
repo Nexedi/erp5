@@ -13,17 +13,21 @@ Mail Message | assessment
 Mail Message | preview
 Mail Message | view
 Meeting Module | view
+Meeting | new_event
 Meeting | view
 Note | assessment
 Note | preview
 Note | view
+Person Module | create_event_list
 Phone Call | assessment
 Phone Call | preview
 Phone Call | view
 Preference | crm_preference
 Sale Opportunity Module | view
+Sale Opportunity | new_event
 Sale Opportunity | view
 Support Request Module | view
+Support Request | new_event
 Support Request | view
 Visit | assessment
 Visit | preview
