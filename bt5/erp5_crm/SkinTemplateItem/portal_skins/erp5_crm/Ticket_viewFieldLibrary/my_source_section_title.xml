@@ -16,10 +16,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>portal_type</string>
+                <string>catalog_index</string>
               </list>
             </value>
         </item>
@@ -100,10 +100,6 @@
                     <key>                 <string>portal_type</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
-                        </tuple>
                         <tuple>
                           <string>Organisation</string>
                           <string>Organisation</string>
