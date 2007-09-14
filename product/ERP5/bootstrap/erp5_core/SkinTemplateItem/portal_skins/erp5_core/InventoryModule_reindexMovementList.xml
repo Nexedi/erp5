@@ -73,9 +73,11 @@
 # look in the catalog to all inventory movement sort on date\n
 count = 1\n
 \n
+portal = context.getPortalObject()\n
+\n
 # We have to reindex all inventory in the order of the date\n
-for o in [ x.getObject() for x in context.portal_catalog(\n
-                                     portal_type = (\'Inventory Cell\',\'Inventory Line\')\n
+for o in [ x.getObject() for x in portal.portal_catalog(\n
+                                     portal_type = portal.getPortalInventoryMovementTypeList()\n
                                    , limit       = None\n
                                    , sort_on     = [(\'movement.start_date\',\'ascending\')]\n
                                    , sql_catalog_id = sql_catalog_id\n
@@ -148,11 +150,12 @@ if final_activity_tag is not None and count > 1:\n
                             <string>final_activity_tag</string>
                             <string>kw</string>
                             <string>count</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
                             <string>_getiter_</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>None</string>
                             <string>x</string>
                             <string>o</string>
