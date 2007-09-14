@@ -172,28 +172,28 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # Here are the tests
     def testHasTemplateTool(self):
       # Test if portal_templates was created
-      self.assertTrue(self.getTemplateTool()!=None)
+      self.assertNotEquals(self.getTemplateTool(), None)
 
     def testHasCategoryTool(self):
       # Test if portal_categories was created
-      self.assertTrue(self.getCategoryTool()!=None)
+      self.assertNotEquals(self.getCategoryTool(), None)
 
     def testTemplateToolHasGetId(self):
       # Test if portal_templates has getId method (RAD)
-      self.assertTrue(self.getTemplateTool().getId() == 'portal_templates')
+      self.assertEquals(self.getTemplateTool().getId(), 'portal_templates')
 
     def testCategoryToolHasGetId(self):
       # Test if portal_categories has getId method (RAD)
-      self.assertTrue(self.getCategoryTool().getId() == 'portal_categories')
+      self.assertEquals(self.getCategoryTool().getId(), 'portal_categories')
 
     # erp5_common tests
     def testCommonHasParentBaseCategory(self):
       # Test if erp5_common parent base category was imported successfully
-      self.assertTrue(getattr(self.getCategoryTool(), 'parent', None) != None)
+      self.assertNotEquals(getattr(self.getCategoryTool(), 'parent', None), None)
 
     def testCommonHasImageType(self):
       # Test if erp5_common parent base category was imported successfully
-      self.assertTrue(getattr(self.getTypeTool(), 'Image', None) != None)
+      self.assertNotEquals(getattr(self.getTypeTool(), 'Image', None), None)
 
     # Business Template Tests
     def testBusinessTemplate(self):
@@ -202,11 +202,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       portal_templates = self.getTemplateTool()
       business_template = self.getTemplateTool().newContent(
                             portal_type="Business Template")
-      self.assertTrue(business_template.getPortalType() == 'Business Template')
+      self.assertEquals(business_template.getPortalType(), 'Business Template')
       # Test simple string accessor
       test_string = self.getRandomString()
       business_template.setTitle(test_string)
-      self.assertTrue(business_template.getTitle()==test_string)
+      self.assertEquals(business_template.getTitle(), test_string)
     
     # Test Dynamic Code Generation
     def test_02_AqDynamic(self, quiet=quiet, run=run_all_test):
@@ -216,12 +216,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person = module.newContent(id='1', portal_type='Person')
       from Products.ERP5Type import Document
       # Person class should have no method getFirstName
-      self.assertTrue(not hasattr(Document.Person, 'getFirstName'))
+      self.assertFalse(hasattr(Document.Person, 'getFirstName'))
       # Calling getFirstName should produce dynamic methods related to the
       # portal_type
       name = person.getFirstName()
       # Person class should have no method getFirstName
-      self.assertTrue(not hasattr(Document.Person, 'getFirstName'))
+      self.assertFalse(hasattr(Document.Person, 'getFirstName'))
       # Person class should now have method getFirstName
       self.assertTrue(hasattr(person, 'getFirstName'))
 
