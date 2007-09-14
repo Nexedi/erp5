@@ -455,10 +455,6 @@
                           <string>Organisation</string>
                         </tuple>
                         <tuple>
-                          <string>Category</string>
-                          <string>Category</string>
-                        </tuple>
-                        <tuple>
                           <string>Person</string>
                           <string>Person</string>
                         </tuple>
