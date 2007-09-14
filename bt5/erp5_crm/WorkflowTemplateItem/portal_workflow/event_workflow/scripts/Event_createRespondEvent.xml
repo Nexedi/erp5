@@ -72,6 +72,7 @@
 # the current event\n
 \n
 event = state_change[\'object\']\n
+respond_event_portal_type = None\n
 \n
 history = event.portal_workflow.getInfoFor(event, \'history\', wf_id=\'event_workflow\')\n
 \n
@@ -137,14 +138,14 @@ if respond_event_portal_type is not None:\n
                             <string>state_change</string>
                             <string>_getitem_</string>
                             <string>event</string>
+                            <string>None</string>
+                            <string>respond_event_portal_type</string>
                             <string>_getattr_</string>
                             <string>history</string>
                             <string>_getiter_</string>
                             <string>history_item</string>
-                            <string>respond_event_portal_type</string>
                             <string>respond_event_title</string>
                             <string>respond_event_description</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
