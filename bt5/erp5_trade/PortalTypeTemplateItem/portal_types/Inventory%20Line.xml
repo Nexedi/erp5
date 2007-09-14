@@ -93,6 +93,7 @@
             <value>
               <tuple>
                 <string>delivery_movement</string>
+                <string>inventory_movement</string>
                 <string>invoice_movement</string>
               </tuple>
             </value>
@@ -109,6 +110,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
