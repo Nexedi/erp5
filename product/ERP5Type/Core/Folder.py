@@ -58,16 +58,13 @@ try:
 except ImportError:
 
   class CMFHBTreeFolder:
-    def __init__(self, *args, **kw):
-      pass
+    pass
 
   class HBTreeFolder2Base:
-    def __init__(self, *args, **kw):
-      pass
+    pass
 
   class HBTreeFolder2:
-    def __init__(self, *args, **kw):
-      pass
+    pass
 
 
 from AccessControl import getSecurityManager
@@ -494,8 +491,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   # This is required for test_23_titleIsNotDefinedByDefault
   def __init__(self, id):
     self.id = id
-    # do not do any other initialisation here,
-    # wait for new content call to do init
+    # We must continue initializing by default to BTree,
+    # this is the default way of working of ERP5 Folder.
+    BTreeFolder2Base.__init__(self, id)
 
   method_id_list = ["initBTrees", "manage_fixCount", "manage_cleanup",
                     "getBatchObjectListing", "manage_object_workspace",
