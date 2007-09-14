@@ -495,23 +495,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     # this is the default way of working of ERP5 Folder.
     BTreeFolder2Base.__init__(self, id)
 
-  method_id_list = ["initBTrees", "manage_fixCount", "manage_cleanup",
-                    "getBatchObjectListing", "manage_object_workspace",
-                    "tpValues", "objectCount", "has_key", "objectIds",
-                    "objectItems", "objectMap", "objectIds_d", "objectMap_d",
-                    "keys", "values", "items", "hasObject", "get", "generateId",
-                    "__len__", "allowedContentTypes", "_delOb",
-                    "_getOb", "_setObject", "_initBTrees", "_populateFromFolder",
-                    "_fixCount", "_cleanup", "_setOb", "_checkId", "_delObject",]
-
-
-  def _generatePluginMethod(self):
-    """ Will generate alias to Tree method depending
-    on configuration """
-    for method_id in self.method_id_list:
-      method_wrapper = FolderMethodWrapper(method_id)
-      setattr(self, method_id, method_wrapper)
-
   def initializeFolderHandler(self):
     if self._folder_handler is None:
       global folder_handler_dict
@@ -549,6 +532,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     """ Define this folder use HBTree stucture """
     self._isHBTree = True
     self._isBTree = False
+    self._folder_handler = 'CMFHBTreeFolderHandler'
+    self.initBTrees()
     
   def _setBTree(self,):
     """ Define this folder use BTree stucture """
@@ -571,11 +556,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     to be used with an hbtreefolder.
     Then it will migrate foder from btree to hbtree.
     """    
-    if self._folder_handler is None:
-      # make sure to have all method right defined
-      self._folder_handler = CMFBTreeFolder
-      #self._generatePluginMethod()
-    
     BUNDLE_COUNT = 10
     # we may want to change all objects ids before migrating to new folder type
     if migration_generate_id_method not in (None, ''):
@@ -626,7 +606,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     id_list = list(self.objectIds())
     self._former_folder_handler = self._folder_handler
     self._setHBTree()
-    self._folder_handler = CMFHBTreeFolder
     # launch activity per bundle to copy/paste to hbtree
     BUNDLE_COUNT = 100
     for x in xrange(len(id_list) / BUNDLE_COUNT):
@@ -645,7 +624,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     Move object from a btree container to
     a hbtree one
     """
-    getOb = self._former_folder_handler._getOb
+    global folder_handler_dict
+    getOb = folder_handler_dict[self._former_folder_handler]._getOb
     setOb = self._setOb
     for id in id_list:
       obj = getOb(self, id)
@@ -1090,8 +1070,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     if self._folder_handler is None:
       self.initializeFolderHandler()
     global folder_handler_dict
-    folder_handler_dict[self._folder_handler].get('objectIds')(self, *args, **kw)
-        
+    return folder_handler_dict[self._folder_handler].objectIds(self, *args, **kw)
     
   # Overloading
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -1289,8 +1268,10 @@ Folder.setTitle = Base.setTitle
 
 candidate_method_id_list = []
 for folder_class in (HBTreeFolder2Base, HBTreeFolder2, CMFHBTreeFolder):
+  # exclude objectValues because it is redefined here
+  # exclude get because it is not defined on OFSFolder
   candidate_method_id_list.extend([x for x in folder_class.__dict__
-                            if callable(getattr(folder_class, x)) and not
-                            x in ('__getattr__','__init__', 'get')])
+               if callable(getattr(folder_class, x)) and not
+               x in ('__getattr__','__init__', 'get', 'objectValues')])
 for method_id in candidate_method_id_list:
   setattr(Folder, method_id, FolderMethodWrapper(method_id))
