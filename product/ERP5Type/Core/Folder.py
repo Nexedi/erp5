@@ -1270,8 +1270,10 @@ candidate_method_id_list = []
 for folder_class in (HBTreeFolder2Base, HBTreeFolder2, CMFHBTreeFolder):
   # exclude objectValues because it is redefined here
   # exclude get because it is not defined on OFSFolder
+  # exclude manage_main because it generates func_code attribute errors
   candidate_method_id_list.extend([x for x in folder_class.__dict__
                if callable(getattr(folder_class, x)) and not
-               x in ('__getattr__','__init__', 'get', 'objectValues')])
+               x in ('__getattr__','__init__', 'get', 'objectValues',
+                     'manage_main')])
 for method_id in candidate_method_id_list:
   setattr(Folder, method_id, FolderMethodWrapper(method_id))
