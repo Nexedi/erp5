@@ -64,15 +64,15 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Accounting Transaction</string> </value>
+            <value> <string>ERP5 Balance Transaction</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An order...</string> </value>
+            <value> <string>Balance Transaction</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addAccountingTransaction</string> </value>
+            <value> <string>addBalanceTransaction</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>

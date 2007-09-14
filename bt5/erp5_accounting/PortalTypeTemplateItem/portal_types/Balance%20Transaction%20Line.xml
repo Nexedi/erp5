@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Accounting Transaction Line</string> </value>
+            <value> <string>ERP5 Balance Transaction Line</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addAccountingTransactionLine</string> </value>
+            <value> <string>addBalanceTransactionLine</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -82,9 +82,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
+                <string>delivery_movement</string>
+                <string>inventory_movement</string>
                 <string>accounting_movement</string>
                 <string>balance_transaction_line</string>
-                <string>delivery_movement</string>
               </tuple>
             </value>
         </item>
@@ -100,6 +101,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
