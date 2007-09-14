@@ -100,23 +100,37 @@ if simulation_state is None:\n
   simulation_state = [x for x in state_list\n
                       if x not in (\'draft\', \'cancelled\', \'deleted\', \'rejected\')]\n
 \n
-if context.AccountingTransaction_isSourceView():\n
-  is_source = 1\n
-  section = context.getSourceSection()\n
-else:\n
-  is_source = 0\n
-  section = context.getDestinationSection()\n
-\n
 # remember payable / receivable lines in context.\n
 accounts_in_context = []\n
 \n
+\n
+accounting_transaction_type_list = [x for x in\n
+            portal.getPortalAccountingTransactionTypeList()\n
+              if x != \'Balance Transfer Transaction\']\n
+\n
+def getIsSourceMovementItemList(invoice):\n
+  """Returns all movements inside the invoice, and a flag to know if we are\n
+  source on this movement\n
+  Handle the (very ad hoc) case of Balance Transfer Transactions\n
+  """\n
+  if invoice.AccountingTransaction_isSourceView():\n
+    is_source = 1\n
+  else:\n
+    is_source = 0\n
+  movement_item_list = [(is_source, m) for m in invoice.getMovementList(\n
+          portal_type=portal.getPortalAccountingMovementTypeList())]\n
+  for btt in context.getCausalityRelatedValueList(\n
+                        portal_type=\'Balance Transfer Transaction\'):\n
+    btt_is_source = btt.AccountingTransaction_isSourceView()\n
+    for btt_movement in btt.getMovementList(\n
+                  portal_type=portal.getPortalAccountingMovementTypeList()):\n
+        movement_item_list.append((btt_is_source, btt_movement))\n
+\n
+  return movement_item_list\n
+\n
 # calculate the total price of this invoice (according to accounting\n
 # transaction lines)\n
-for line in context.getMovementList(\n
-          portal_type=portal.getPortalAccountingMovementTypeList()):\n
-  \n
-  if at_date is None and line.getGroupingReference():\n
-    continue\n
+for is_source, line in getIsSourceMovementItemList(context):\n
 \n
   if is_source:\n
     node_value = line.getSourceValue(portal_type=\'Account\')\n
@@ -129,6 +143,8 @@ for line in context.getMovementList(\n
     mirror_section = line.getSourceSection()\n
     amount = line.getDestinationInventoriatedTotalAssetPrice() or 0\n
 \n
+  if at_date is None and line.getGroupingReference():\n
+    continue\n
   \n
   if node_value is not None and \\\n
       node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
@@ -140,7 +156,7 @@ for line in context.getMovementList(\n
     accounts_in_context.append(node_value)\n
 \n
 related_transaction_list = context.getCausalityRelatedValueList(\n
-      portal_type=context.getPortalAccountingTransactionTypeList())\n
+                          portal_type=accounting_transaction_type_list)\n
 \n
 # substract all causalities\n
 for related_transaction in related_transaction_list:\n
@@ -150,8 +166,8 @@ for related_transaction in related_transaction_list:\n
   # if we have a payment related to multiple invoices, we cannot say the\n
   # remaining price on those invoices.\n
   for other_invoice in [ tr for tr in related_transaction.getCausalityValueList(\n
-             portal_type=context.getPortalAccountingTransactionTypeList())\n
-             if tr not in related_transaction_list + [context]]:\n
+                         portal_type=accounting_transaction_type_list)\n
+                         if tr not in related_transaction_list + [context]]:\n
     other_invoice_is_source = \\\n
                     other_invoice.AccountingTransaction_isSourceView()\n
     for other_line in other_invoice.getMovementList(\n
@@ -273,9 +289,10 @@ else:\n
                             <string>x</string>
                             <string>_getitem_</string>
                             <string>state_list</string>
-                            <string>is_source</string>
-                            <string>section</string>
                             <string>accounts_in_context</string>
+                            <string>accounting_transaction_type_list</string>
+                            <string>getIsSourceMovementItemList</string>
+                            <string>is_source</string>
                             <string>line</string>
                             <string>node_value</string>
                             <string>line_section</string>
