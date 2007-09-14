@@ -32,6 +32,7 @@ from Products.ERP5Type.Utils import convertToMixedCase
 from string import join
 import sys
 from zLOG import LOG
+from Acquisition import aq_base
 
 # Patch WorkflowUIMixin to add description on workflows
 from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
@@ -527,7 +528,7 @@ def updateRoleMappings(self, REQUEST=None):
     return self.manage_properties(REQUEST,
         manage_tabs_message='%d object(s) updated.' % object_list_len)
   else:
-    return count
+    return object_list_len
 
 DCWorkflowDefinition.updateRoleMappings = updateRoleMappings
 
