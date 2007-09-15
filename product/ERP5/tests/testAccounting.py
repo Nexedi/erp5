@@ -170,7 +170,7 @@ class AccountingTestCase(ERP5TypeTestCase):
         doc.validate()
 
     # and the preference enabled
-    preference = self.portal.portal_preferences.accounting_zuite_preference
+    pref = self.portal.portal_preferences.accounting_zuite_preference
     pref.manage_addLocalRoles(self.username, ('Auditor', ))
     # Make sure _aq_dynamic is called before calling the workflow method
     # otherwise .enable might not been wrapped yet. This happen in --load
