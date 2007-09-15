@@ -200,8 +200,10 @@ class Person:
                               , 'grade', 'grade_id', 'grade_title', 'grade_value'
                               , 'activity', 'activity_id', 'activity_title', 'activity_value'
                               , 'role', 'role_id', 'role_title', 'role_value'
+                                      , 'role_id_list', 'role_title_list', 'role_value_list'
                               , 'function', 'function_id', 'function_title', 'function_value'
-                              , 'activity', 'activity_id', 'activity_title', 'activity_value'
+                              , 'product_line', 'product_line_list', 'product_line_id_list'
+                                              , 'product_line_title_list', 'product_line_value_list'
                               )
     , 'mode'                : 'w'
     },
@@ -209,11 +211,10 @@ class Person:
 
   _categories = (  # set on the Person directly
                   'gender', 'nationality', 'marital_status',
-                  'product_line', # (product interest)
                    # acquired from address
                   'region',
                    # acquired from career
                   'group', 'subordination', 'role', 'function', 'activity',
-                  'salary_level', 'grade', 'skill',
+                  'salary_level', 'grade', 'skill', 'product_line',
                  )
 
