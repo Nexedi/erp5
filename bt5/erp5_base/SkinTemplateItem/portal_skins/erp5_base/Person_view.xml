@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -96,7 +93,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>listbox_int_index</string>
@@ -115,7 +112,7 @@
                         <string>my_career_role</string>
                         <string>my_career_function</string>
                         <string>my_career_activity</string>
-                        <string>my_product_line_list</string>
+                        <string>my_career_product_line_list</string>
                         <string>my_nationality</string>
                       </list>
                     </value>

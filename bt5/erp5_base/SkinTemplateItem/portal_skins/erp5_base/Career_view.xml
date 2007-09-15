@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -92,9 +89,9 @@
                         <string>my_title</string>
                         <string>my_subordination_title</string>
                         <string>my_role</string>
-                        <string>my_grade</string>
-                        <string>my_activity</string>
                         <string>my_function</string>
+                        <string>my_activity</string>
+                        <string>my_product_line_list</string>
                       </list>
                     </value>
                 </item>
@@ -105,8 +102,9 @@
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_collective_agreement_title</string>
-                        <string>my_salary_level</string>
+                        <string>my_grade</string>
                         <string>my_salary_coefficient</string>
+                        <string>my_salary_level</string>
                         <string>my_skill_list</string>
                         <string>my_state_title</string>
                       </list>
