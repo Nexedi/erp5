@@ -48,10 +48,8 @@ class Assignment(Path):
     },
   )
 
-  _categories = ( # Assignment categories
-                  'group', 'site', 'activity'
-                  # Career categories
-                , 'grade', 'role', 'skill', 'subordination', 'salary_level'
-                  # Dual categories
-                , 'function'
+  _categories = ( # Career categories
+                , 'grade', 'role', 'skill', 'subordination', 'salary_level', 'product_line',
+                  # Assignment and Career categories
+                , 'group', 'site', 'function', 'activity'
                 )
