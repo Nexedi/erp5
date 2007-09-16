@@ -327,7 +327,7 @@ class EmailDocument(File, TextDocument):
 
       body     - a body message If not provided, we will
                  use the text representation of the event
-                 as body
+                 as body (UTF-8)
 
       attachment_format - defines an option format
                  to convet attachments to (ex. application/pdf)
@@ -354,8 +354,8 @@ class EmailDocument(File, TextDocument):
     if reply_url is None:
       reply_url = self.portal_preferences.getPreferredEventSenderEmail()
     if to_url is None:
+      to_url = []
       for recipient in self.getDestinationValueList():
-        to_url = []
         email = recipient.getDefaultEmailText()
         if email:
           to_url.append(email)
@@ -368,12 +368,12 @@ class EmailDocument(File, TextDocument):
     message = MIMEMultipart()
     message['Subject'] = subject
     message['From'] = from_url
-    message['To'] = COMMASPACE.join(to_url)
+    message['To'] = from_url # Use this temporarily - we send messages one by one
     message['Return-Path'] = reply_url
     message.preamble = 'You will not see this in a MIME-aware mail reader.\n'
 
     # Add the body of the message
-    attached_message = MIMEText(str(body))
+    attached_message = MIMEText(str(body), _charset='UTF-8')
     message.attach(attached_message)
 
     # Attach files
@@ -409,7 +409,9 @@ class EmailDocument(File, TextDocument):
     if download:
       return message.as_string()
 
-    self.MailHost.send(message.as_string())
+    for recipient in to_url:
+      message['To'] = recipient
+      self.MailHost.send(message.as_string())
 
 ## Compatibility layer
 #from Products.ERP5Type import Document
