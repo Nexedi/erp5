@@ -26,14 +26,7 @@
 #
 ##############################################################################
 
-import os
-import sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -156,11 +149,7 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       self.failUnlessEqual(tv['toto'], 'titi')
       self.failUnlessEqual(getattr(portal, vattr, None), None)
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestTransactionalVariable))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestTransactionalVariable))
+  return suite

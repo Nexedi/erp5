@@ -32,15 +32,8 @@
 # usage: python runUnitTest.py [OPTION]... namingConventionTest.py
 #
 
-import os
-import sys
 import re
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -80,11 +73,7 @@ class TestNamingConvention(ERP5TypeTestCase):
         problems = int(problems_re.search(result).group(1))
         self.assertEquals(0, problems, result)
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestNamingConvention))
-        return suite
+def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestNamingConvention))
+    return suite

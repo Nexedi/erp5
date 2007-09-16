@@ -1,3 +1,4 @@
+# -*- coding: latin1 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,19 +27,11 @@
 #
 ##############################################################################
 
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.CMFCore.tests.base.testcase import LogInterceptor
-from Products.ERP5Type.tests.utils import createZODBPythonScript
-from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.Cache import clearCache
 
 class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
@@ -126,11 +119,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEquals(obj3.getId(), '%s-3' %date)
           
       
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestFolderMigration))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestFolderMigration))
+  return suite

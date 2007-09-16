@@ -27,21 +27,12 @@
 #
 ##############################################################################
 
-from random import randint
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5Type.Utils import cartesianProduct
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 
 try:
@@ -282,11 +273,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
       ZopeTestCase._print('\nTest Set Cell Range And Catalog Without Activities ')
     self.checkSetCellRangeAndCatalog(active=0)
   
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestXMLMatrix))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestXMLMatrix))
+  return suite

@@ -31,7 +31,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import installRealClassTool
 from zLOG import LOG
-import time
 
 try:
   from transaction import get as get_transaction

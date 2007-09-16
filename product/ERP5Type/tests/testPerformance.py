@@ -26,23 +26,13 @@
 #
 ##############################################################################
 
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
+from time import time
+import gc
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.CMFCore.tests.base.testcase import LogInterceptor
-from Products.ERP5Type.tests.utils import createZODBPythonScript
-from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from Products.ERP5Type.Cache import clearCache
-from DateTime import DateTime
-from time import time
-import gc
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
@@ -183,11 +173,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
             self.failUnless(MIN_TIC < tic_value < MAX_TIC)
         i += 1
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestPerformance))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestPerformance))
+  return suite

@@ -33,14 +33,7 @@
 #
 
 import os
-import sys
-from time import sleep
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -63,11 +56,8 @@ class TestZelenium(ERP5TypeTestCase):
     def testInformation(self):
         self.assert_(False, 'This script is intended to be used with --save option.')
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestZelenium))
-        return suite
+
+def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestZelenium))
+    return suite

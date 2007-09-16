@@ -31,10 +31,7 @@
 
 import smtplib
 import re
-from datetime import date
 from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
-from email.MIMEImage import MIMEImage
 from email.MIMEMultipart import MIMEMultipart
 from email.Message import Message
 

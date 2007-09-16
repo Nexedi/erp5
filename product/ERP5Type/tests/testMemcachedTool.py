@@ -26,8 +26,9 @@
 #
 ##############################################################################
 
+import unittest
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.Tool.MemcachedTool import MemcachedTool
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import installRealMemcachedTool
 
