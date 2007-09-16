@@ -28,23 +28,20 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
+from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Utils import asList, keepIn, rejectIn
 
 from Products.ERP5.Variated import Variated
 
 from Products.ERP5.Document.Predicate import Predicate
 
-from Globals import InitializeClass
 from Products.PythonScripts.Utility import allow_class
 
-import string
 from Products.CMFCategory.Renderer import Renderer
-from zLOG import LOG
+
 
 class Transformation(XMLObject, Predicate, Variated):
     """
