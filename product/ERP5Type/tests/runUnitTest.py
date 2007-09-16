@@ -324,4 +324,9 @@ def main():
   sys.exit(len(result.failures) + len(result.errors))
 
 if __name__ == '__main__':
+  # Force stdin, stdout and stderr to be totally unbuffered.
+  sys.stdin = os.fdopen(0, "rb", 0)
+  sys.stdout = os.fdopen(1, "wb", 0)
+  sys.stderr = os.fdopen(2, "wb", 0)
+
   main()
