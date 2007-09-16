@@ -29,6 +29,8 @@
 from Base import func_code, type_definition, list_types, \
                  ATTRIBUTE_PREFIX, Method
 from Products.ERP5Type.PsycoWrapper import psyco
+from zLOG import LOG
+from zLOG import WARNING
 
 class DefaultGetter(Method):
   """
@@ -55,7 +57,7 @@ class DefaultGetter(Method):
 
   def __call__(self, instance, *args, **kw):
     if self._warning:
-      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getDefaultRelatedValue(
                             self._key,
                             spec=kw.get('spec',()),
@@ -95,7 +97,7 @@ class ListGetter(Method):
 
   def __call__(self, instance, *args, **kw):
     if self._warning:
-      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getRelatedValueList(
                            self._key,
                            spec=kw.get('spec',()),
@@ -138,7 +140,7 @@ class DefaultIdGetter(Method):
 
   def __call__(self, instance, *args, **kw):
     if self._warning:
-      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getDefaultRelatedProperty(
                            self._key, 'id',
                            spec=kw.get('spec',()),
@@ -174,7 +176,7 @@ class IdListGetter(Method):
 
     def __call__(self, instance, *args, **kw):
       if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+        LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
       return instance._getRelatedPropertyList(
                            self._key, 'id',
                            spec=kw.get('spec',()),
@@ -217,7 +219,7 @@ class DefaultTitleGetter(Method):
 
   def __call__(self, instance, *args, **kw):
     if self._warning:
-      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getDefaultRelatedProperty(
                          self._key, 'title',
                          spec=kw.get('spec',()),
@@ -253,7 +255,7 @@ class TitleListGetter(Method):
 
   def __call__(self, instance, *args, **kw):
     if self._warning:
-      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getRelatedPropertyList(
                         self._key, 'title',
                         spec=kw.get('spec',()),
@@ -296,7 +298,7 @@ class DefaultPropertyGetter(Method):
 
   def __call__(self, instance, key, *args, **kw):
     if self._warning:
-      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getDefaultRelatedProperty(
                          self._key, key,
                          spec=kw.get('spec',()),
@@ -331,7 +333,7 @@ class PropertyListGetter(Method):
 
   def __call__(self, instance, key, *args, **kw):
     if self._warning:
-      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getRelatedPropertyList(
                            self._key, key,
                            spec=kw.get('spec',()),

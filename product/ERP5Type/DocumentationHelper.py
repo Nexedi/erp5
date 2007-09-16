@@ -12,7 +12,7 @@ class DocumentationSection(Implicit):
     self.id = id
     self.title = title
     self.class_name = class_name
-    self.uri uri
+    self.uri = uri
 
   # more API needed XXX
 

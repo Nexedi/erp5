@@ -28,14 +28,12 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 import os
-import sys
 import re
 import string
 import time
 
 from Globals import package_home
 from Globals import DevelopmentMode
-from ZPublisher.HTTPRequest import FileUpload
 from Acquisition import aq_base
 from Acquisition import aq_inner
 from Acquisition import aq_parent
@@ -51,8 +49,6 @@ from Products.ZCatalog.Lazy import LazyMap
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import Constraint
-from Products.ERP5Type import Interface
-from Products.ERP5Type import PropertySheet
 
 from zLOG import LOG, BLATHER, PROBLEM
 
@@ -61,7 +57,8 @@ from zLOG import LOG, BLATHER, PROBLEM
 # Compatibility - XXX - BAD
 #####################################################
 
-from Accessor.TypeDefinition import *
+from Accessor.TypeDefinition import type_definition
+from Accessor.TypeDefinition import list_types
 
 #####################################################
 # Generic sort method
@@ -179,7 +176,6 @@ def cartesianProduct(list_of_list):
 # Some list operations
 def keepIn(value_list, filter_list):
   # XXX this is [x for x in value_list if x in filter_list]
-  warn()
   result = []
   for k in value_list:
     if k in filter_list:

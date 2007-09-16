@@ -71,6 +71,6 @@ class Error:
     """
     A simple getter
     """
-    return getattr(self, value, d)
+    return getattr(self, key, d)
 
 allow_class(Error)

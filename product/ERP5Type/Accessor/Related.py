@@ -28,6 +28,9 @@
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
 from Products.ERP5Type.PsycoWrapper import psyco
+from zLOG import LOG
+from zLOG import WARNING
+
 
 class DefaultGetter(Method):
   """
@@ -50,7 +53,7 @@ class DefaultGetter(Method):
 
   def __call__(self, instance, *args, **kw):
     if self._warning:
-      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getDefaultRelatedProperty(
                            self._key, 'relative_url',
                            spec=kw.get('spec',()),
@@ -83,7 +86,7 @@ class ListGetter(Method):
 
   def __call__(self, instance, *args, **kw):
     if self._warning:
-      LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getRelatedPropertyList(
                           self._key, 'relative_url',
                           spec=kw.get('spec',()),
