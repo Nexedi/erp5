@@ -364,53 +364,53 @@ class EmailDocument(File, TextDocument):
     elif type(to_url) in types.StringTypes:
       to_url = [to_url]
 
-    # Create the container (outer) email message.
-    message = MIMEMultipart()
-    message['Subject'] = subject
-    message['From'] = from_url
-    message['To'] = from_url # Use this temporarily - we send messages one by one
-    message['Return-Path'] = reply_url
-    message.preamble = 'You will not see this in a MIME-aware mail reader.\n'
-
-    # Add the body of the message
-    attached_message = MIMEText(str(body), _charset='UTF-8')
-    message.attach(attached_message)
-
-    # Attach files
-    document_type_list = self.getPortalDocumentTypeList()
-    for attachment in self.getAggregateValueList():
-      if attachment.getPortalType() in document_type_list:
-        # If this is a document, use 
-        mime_type = attachment.getContentType() # WARNING - this could fail since getContentType
-                                                # is not (yet) part of Document API
-        mime_type, attached_data = attachment.convert(mime_type)
-      else:
-        mime_type = 'application/pdf'
-        attached_data = attachment.asPDF() # XXX - Not implemented yet
-                                               # should provide a default printout
-      if not mime_type:
-        mime_type = 'application/octet-stream'
-      # Use appropriate class based on mime_type
-      maintype, subtype = mime_type.split('/', 1)
-      if maintype == 'text':
-        attached_message = MIMEText(attached_data, _subtype=subtype)
-      elif maintype == 'image':
-        attached_message = MIMEImage(attached_data, _subtype=subtype)
-      elif maintype == 'audio':
-        attached_message = MIMEAudio(attached_data, _subtype=subtype)
-      else:
-        attached_message = MIMEBase(maintype, subtype)
-        attached_message.set_payload(attached_data)
-        Encoders.encode_base64(attached_message)
-      attached_message.add_header('Content-Disposition', 'attachment', filename=attachment.getReference())
-      message.attach(attached_message)
-
-    # Send the message
-    if download:
-      return message.as_string()
-
+    # Not efficient but clean
     for recipient in to_url:
+      # Create the container (outer) email message.
+      message = MIMEMultipart()
+      message['Subject'] = subject
+      message['From'] = from_url
       message['To'] = recipient
+      message['Return-Path'] = reply_url
+      message.preamble = 'You will not see this in a MIME-aware mail reader.\n'
+  
+      # Add the body of the message
+      attached_message = MIMEText(str(body), _charset='UTF-8')
+      message.attach(attached_message)
+  
+      # Attach files
+      document_type_list = self.getPortalDocumentTypeList()
+      for attachment in self.getAggregateValueList():
+        if attachment.getPortalType() in document_type_list:
+          # If this is a document, use 
+          mime_type = attachment.getContentType() # WARNING - this could fail since getContentType
+                                                  # is not (yet) part of Document API
+          mime_type, attached_data = attachment.convert(mime_type)
+        else:
+          mime_type = 'application/pdf'
+          attached_data = attachment.asPDF() # XXX - Not implemented yet
+                                                # should provide a default printout
+        if not mime_type:
+          mime_type = 'application/octet-stream'
+        # Use appropriate class based on mime_type
+        maintype, subtype = mime_type.split('/', 1)
+        if maintype == 'text':
+          attached_message = MIMEText(attached_data, _subtype=subtype)
+        elif maintype == 'image':
+          attached_message = MIMEImage(attached_data, _subtype=subtype)
+        elif maintype == 'audio':
+          attached_message = MIMEAudio(attached_data, _subtype=subtype)
+        else:
+          attached_message = MIMEBase(maintype, subtype)
+          attached_message.set_payload(attached_data)
+          Encoders.encode_base64(attached_message)
+        attached_message.add_header('Content-Disposition', 'attachment', filename=attachment.getReference())
+        message.attach(attached_message)
+  
+      # Send the message
+      if download:
+        return message.as_string() # Only for debugging purpose
+
       self.MailHost.send(message.as_string())
 
 ## Compatibility layer
