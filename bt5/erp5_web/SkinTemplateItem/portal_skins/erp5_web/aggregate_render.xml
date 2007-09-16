@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -99,7 +96,7 @@ Example of macro use (similar to \'erp5_web_default_template\' use):\n
                                    id    python: \'fieldset_\' + gid.replace(\' \', \'_\');"\n
              tal:condition="python:len(field_list)">\n
           <fieldset class="widget">\n
-            <legend tal:content="python: gtitle" class="group_title"/>\n
+            <legend i18n:translate="" i18n:domain="ui" tal:content="python: gtitle" class="group_title"/>\n
             <tal:block tal:repeat="field field_list">\n
               <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
             </tal:block>\n
