@@ -70,6 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 """ This scripts validate that this transaction fits in the defined budget. It requires erp5_budget.\n
 """\n
 transaction = state_change[\'object\']\n

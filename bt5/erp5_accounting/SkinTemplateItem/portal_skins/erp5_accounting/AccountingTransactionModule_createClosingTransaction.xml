@@ -88,7 +88,7 @@ N_ = portal.Base_translateString\n
 # FIXME: maybe it is not good to use a Organisation here and not\n
 # a category ...\n
 if section is None:\n
-  section = portal_preferences.getPreferredSourceSection()\n
+  section = portal.portal_preferences.getPreferredSourceSection()\n
   if section is None:\n
     raise ValueError, N_(\'Section must be defined in Preferences\')\n
 \n
