@@ -275,7 +275,7 @@
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>width</string> </key>
