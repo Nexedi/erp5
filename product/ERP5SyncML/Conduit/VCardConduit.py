@@ -62,28 +62,28 @@ class VCardConduit(ERP5Conduit, SyncCode):
     add a new person corresponding to the vcard
     if the person already exist, she's updated
     """
-    LOG('VCardConduit',0,'addNode, object=%s, object_id=%s, sub_object:%s, \
-        xml:\n%s' % (str(object), str(object_id), str(sub_object), xml))
+    #LOG('VCardConduit',0,'addNode, object=%s, object_id=%s, sub_object:%s, \
+        #xml:\n%s' % (str(object), str(object_id), str(sub_object), xml))
     if not isinstance(xml, str):
       xml = self.nodeToString(xml)
     portal_type = 'Person' #the VCard can just use Person
     if sub_object is None: 
 
-      new_object = ERP5Conduit.constructContent(self, object, object_id , 
-          None, portal_type)
+      new_object = ERP5Conduit.constructContent(self, object, object_id,
+      portal_type)
     else: #if the object exist, it juste must be update
       new_object=sub_object
-    LOG('addNode', 0, 'new_object:%s, sub_object:%s' % (new_object, sub_object)) 
-    self.updateNode(xml=xml, 
-                    object=new_object, 
-                    force=force, 
+    #LOG('addNode', 0, 'new_object:%s, sub_object:%s' % (new_object, sub_object)) 
+    self.updateNode(xml=xml,
+                    object=new_object,
+                    force=force,
                     simulate=simulate,
                     **kw)
     #in a first time, conflict are not used
     return {'conflict_list':None, 'object': new_object}
 
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
-  def deleteNode(self, xml=None, object=None, object_id=None, force=None, 
+  def deleteNode(self, xml=None, object=None, object_id=None, force=None,
       simulate=0, **kw):
     """
     A node is deleted
