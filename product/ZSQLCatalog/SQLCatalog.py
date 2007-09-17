@@ -2537,6 +2537,8 @@ class Catalog( Folder,
             'isMovement':   ob.isMovement, # XXX
             'isPredicate':  ob.isPredicate, # XXX
             'isDocument':   ob.isDocument, # XXX
+            'isInventory':  ob.isInventory, # XXX
+            'isInventoryMovement': ob.isInventoryMovement, # XXX
             }
         return getEngine().getContext(data)
 
