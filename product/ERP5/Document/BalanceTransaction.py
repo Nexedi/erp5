@@ -101,31 +101,28 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     """Returns movements that implies only grouping by node."""
     movement_list = []
     for movement in self.getMovementList():
-      if not getattr(movement, 'isAccountable', 1):
-        continue
-      if not (movement.getSourceSection() or
+      if getattr(movement, 'isAccountable', 1):
+        if not (movement.getSourceSection() or
                 movement.getDestinationPayment()):
-        movement_list.append(movement)
+          movement_list.append(movement)
     return movement_list
 
   def _getGroupByPaymentMovementList(self):
     """Returns movements that implies grouping by node and payment"""
     movement_list = []
     for movement in self.getMovementList():
-      if not getattr(movement, 'isAccountable', 1):
-        continue
-      if movement.getDestinationPayment():
-        movement_list.append(movement)
+      if getattr(movement, 'isAccountable', 1):
+        if movement.getDestinationPayment():
+          movement_list.append(movement)
     return movement_list
 
   def _getGroupByMirrorSectionMovementList(self):
     """Returns movements that implies only grouping by node and mirror section"""
     movement_list = []
     for movement in self.getMovementList():
-      if not getattr(movement, 'isAccountable', 1):
-        continue
-      if movement.getSourceSection():
-        movement_list.append(movement)
+      if getattr(movement, 'isAccountable', 1):
+        if movement.getSourceSection():
+          movement_list.append(movement)
     return movement_list
 
 
@@ -395,11 +392,10 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       add_obj(temp_object_factory(**diff))
 
     # Catalog this transaction as a standard document
-    object_list = [self]
-    self.portal_catalog.catalogObjectList(object_list)
+    self.portal_catalog.catalogObjectList([self])
     
     # Catalog differences calculated from lines
     self.portal_catalog.catalogObjectList(stock_object_list,
          method_id_list=('z_catalog_stock_list',),
          disable_cache=1, check_uid=0)
-
+    
