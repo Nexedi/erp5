@@ -166,15 +166,10 @@ class FolderMixIn(ExtensionClass.Base):
   def _generatePerDayId(self):
     """
     Generate id base on date, useful for HBTreeFolder
+    We also append random id
     """
     current_date = str(DateTime().Date()).replace("/", "")
-    try:
-      my_id = int(self.getLastId())
-    except TypeError:
-      my_id = 1
-    while self.hasContent("%s-%s" %(current_date, my_id)):
-      my_id = my_id + 1
-    my_id = str(my_id)
+    my_id = self._generateRandomId()
     self._setLastId(my_id) # Make sure no reindexing happens
     return "%s-%s" %(current_date, my_id)
     
@@ -339,7 +334,7 @@ class FolderMethodWrapper(Method):
   This a wrapper between folder method and folder type method
   """
   def __init__(self, method_id):
-    self.method_id = method_id
+    self.__name__ = method_id
 
   def __call__(self, folder, *args, **kw):
     folder_handler = getattr(folder, '_folder_handler', None)
@@ -349,7 +344,8 @@ class FolderMethodWrapper(Method):
       folder.initializeFolderHandler()
       folder_handler = getattr(folder, '_folder_handler', None)
       handler = folder_handler_dict.get(folder_handler,None)
-    return getattr(handler, self.method_id)(folder, *args, **kw)
+    return getattr(handler, self.__name__)(folder, *args, **kw)
+  
 
 class FolderHandler:
 
