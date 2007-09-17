@@ -72,7 +72,7 @@
 event_portal_type_list = portal.getPortalEventTypeList()\n
 \n
 for i in portal.portal_catalog(portal_type=event_portal_type_list,\n
-                               follow_up=context.getRelativeUrl()):\n
+                               follow_up_uid=context.getUid()):\n
   i.activate().updateLocalRolesOnSecurityGroups()\n
 </string> </value>
         </item>
