@@ -29,13 +29,7 @@
   Tests VAT for invoices.
 """
 
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ.setdefault('EVENT_LOG_FILE', 'zLOG.log')
-os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
+import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -509,12 +503,8 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     self._checkInvoiceVAT(invoice, total_price, vat_ratio,
                           total_vat_amount)
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestInvoiceVAT))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestInvoiceVAT))
+  return suite
 

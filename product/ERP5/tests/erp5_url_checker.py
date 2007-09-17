@@ -13,15 +13,15 @@
 # user: user2    password: user2
 
 from threading import Thread
-from threading import Timer
 from time import sleep
-from urllib import urlopen
-from urllib import URLopener
 from urllib import addinfourl
+from urllib import splithost
+from urllib import splituser
+from urllib import unquote
+from urllib import splittype
 import string
 
-
-from urllib import *
+from urllib import FancyURLopener
 from Cookie import SimpleCookie
 
 def main():

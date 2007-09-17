@@ -26,29 +26,12 @@
 #
 ##############################################################################
 
+import unittest
 
-
-#
-# Skeleton ZopeTestCase
-#
-
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5.Document.Organisation import Organisation
-from DateTime import DateTime
-from Products.ERP5.Document.Person import Person
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-from zLOG import LOG
-import time
+from AccessControl.SecurityManagement import newSecurityManager
 
 class TestInteractionWorkflow(ERP5TypeTestCase):
 
@@ -442,12 +425,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     # - interaction:setVatCode(bara)
     self.assertEquals(organisation.getVatCode(),'bara')
     
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestInteractionWorkflow))
-        return suite
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestInteractionWorkflow))
+  return suite
 

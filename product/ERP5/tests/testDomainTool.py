@@ -26,31 +26,12 @@
 #
 ##############################################################################
 
+import unittest
 
-
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
-from Products.ERP5.Document.Person import Person
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
-from Products.ERP5SyncML.SyncCode import SyncCode
+from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
-import time
 
 class TestDomainTool(ERP5TypeTestCase):
 
@@ -418,12 +399,8 @@ class TestDomainTool(ERP5TypeTestCase):
                      'variation/%s/blue' % self.resource.getRelativeUrl()]),
                      sort_method=sort_method),45)
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestDomainTool))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestDomainTool))
+  return suite
 

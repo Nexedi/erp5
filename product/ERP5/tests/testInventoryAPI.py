@@ -32,12 +32,9 @@ TODO: test variation
 
 """
 
-import sys
-import random
 import os
-
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
+import random
+import unittest
 
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
@@ -46,10 +43,6 @@ from Testing import ZopeTestCase
 from Products.ERP5.Document.OrderRule import OrderRule
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-
-# Needed in order to have a log file inside the current folder
-os.environ.setdefault('EVENT_LOG_FILE', 'zLOG.log')
-os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -1829,20 +1822,16 @@ class TestInventoryDocument(InventoryAPITestCase):
     self._checkInventoryList(inventory, reference_inventory,
                              ordered_check=True)
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestInventory))
-    suite.addTest(unittest.makeSuite(TestInventoryList))
-    suite.addTest(unittest.makeSuite(TestMovementHistoryList))
-    suite.addTest(unittest.makeSuite(TestInventoryStat))
-    suite.addTest(unittest.makeSuite(TestNextNegativeInventoryDate))
-    suite.addTest(unittest.makeSuite(TestInventoryStat))
-    suite.addTest(unittest.makeSuite(TestTrackingList))
-    suite.addTest(unittest.makeSuite(TestInventoryDocument))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestInventory))
+  suite.addTest(unittest.makeSuite(TestInventoryList))
+  suite.addTest(unittest.makeSuite(TestMovementHistoryList))
+  suite.addTest(unittest.makeSuite(TestInventoryStat))
+  suite.addTest(unittest.makeSuite(TestNextNegativeInventoryDate))
+  suite.addTest(unittest.makeSuite(TestInventoryStat))
+  suite.addTest(unittest.makeSuite(TestTrackingList))
+  suite.addTest(unittest.makeSuite(TestInventoryDocument))
+  return suite
 
 # vim: foldmethod=marker

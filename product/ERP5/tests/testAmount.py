@@ -25,13 +25,9 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 ##############################################################################
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
 
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
+import os
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager, \
@@ -392,13 +388,9 @@ class TestAccountingTransactionLine(TestMovement):
   # TODO: more asset price tests
 
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestAmount))
-    suite.addTest(unittest.makeSuite(TestMovement))
-    suite.addTest(unittest.makeSuite(TestAccountingTransactionLine))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestAmount))
+  suite.addTest(unittest.makeSuite(TestMovement))
+  suite.addTest(unittest.makeSuite(TestAccountingTransactionLine))
+  return suite

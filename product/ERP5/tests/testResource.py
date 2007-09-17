@@ -26,29 +26,14 @@
 #
 ##############################################################################
 
-from random import randint
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             noSecurityManager
-from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
+from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
-from Products.ERP5Type.DateUtils import addToDate
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-import time
-import os
-from Products.ERP5Type import product_path
-from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.tests.Sequence import SequenceList
+
 
 class TestResource(ERP5TypeTestCase):
   """
@@ -760,11 +745,8 @@ class TestResource(ERP5TypeTestCase):
     resource.setBaseUnitQuantity(0.001)
     self.assertEquals(3, resource.getQuantityPrecision())
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestResource))
-    return suite
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestResource))
+  return suite

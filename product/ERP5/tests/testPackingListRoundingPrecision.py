@@ -26,6 +26,7 @@
 #
 ##############################################################################
     
+import unittest
 from testPackingList import TestPackingList
 
 class TestPackingListRoundingPrecision(TestPackingList):
@@ -38,11 +39,7 @@ class TestPackingListRoundingPrecision(TestPackingList):
   def getTitle(self):
     return "Packing List Rounding Precision"
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestPackingListRoundingPrecision))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestPackingListRoundingPrecision))
+  return suite

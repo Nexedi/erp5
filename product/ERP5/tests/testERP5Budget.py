@@ -25,32 +25,13 @@
 #
 ##############################################################################
 
-#
-# ZopeTestCase Skeleton
-#
+import unittest
 
-
-import os
 from zLOG import LOG
 from Testing import ZopeTestCase
-from DateTime import DateTime
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.Sequence import SequenceList
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.CMFCore.utils import getToolByName
-
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-
-from Products.ERP5.Document.Person import Person
-from Products.ERP5.Document.Organisation import Organisation
 
 
 
@@ -555,13 +536,7 @@ class TestBudget(ERP5TypeTestCase):
       LOG('Testing budget transaction 2... ',0,message)
 
 
-
-
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestBudget))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestBudget))
+  return suite

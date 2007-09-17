@@ -27,31 +27,13 @@
 ##############################################################################
 
 
-
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
+import unittest
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
+from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
 from zLOG import LOG
 from testOrder import TestOrderMixin
-import time
 from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD
 
 try:
@@ -3863,14 +3845,8 @@ class TestImmobilisation(TestImmobilisationMixin):
     sequence_list.play(self)    
 
 
-
-
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestImmobilisation))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestImmobilisation))
+  return suite
 

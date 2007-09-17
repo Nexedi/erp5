@@ -27,15 +27,7 @@
 #
 ##############################################################################
 
-import os
-import sys
-
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
@@ -250,12 +242,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
         module_portal_type,
         self.portal.getDefaultModule(module_portal_type).getPortalType())
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestERP5Core))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestERP5Core))
+  return suite
 

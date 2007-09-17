@@ -26,24 +26,10 @@
 #
 ##############################################################################
 
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-from Testing import ZopeTestCase
+import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
-import time
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 
 class TestPerson(ERP5TypeTestCase):
 
@@ -134,11 +120,7 @@ class TestPerson(ERP5TypeTestCase):
             title='title' )
     # no infinite loop :) but there's no guarantee on the behaviour
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestPerson))
-        return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestPerson))
+  return suite

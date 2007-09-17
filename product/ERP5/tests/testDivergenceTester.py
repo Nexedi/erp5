@@ -26,33 +26,10 @@
 #
 ##############################################################################
 
-#
-# Skeleton ZopeTestCase
-#
+import unittest
 
-from random import randint
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             noSecurityManager
-from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
-from zLOG import LOG
-from Products.ERP5Type.DateUtils import addToDate
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-import time
-import os
-from Products.ERP5Type import product_path
-from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.tests.Sequence import SequenceList
 from testPackingList import TestPackingListMixin
 
 class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
@@ -359,11 +336,9 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=self.quiet)
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestDivergenceTester))
-        return suite
+
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestDivergenceTester))
+  return suite

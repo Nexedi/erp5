@@ -40,13 +40,9 @@ way it is used in the invoice related simulation.
 #   * test removing cells for a line 
 #
 
-import os, sys, random
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
+import unittest
+import os
+import random
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
@@ -1776,12 +1772,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     #   quantity from sum of receivable movement
     #   link to sale invoice
  
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestAccountingRules))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestAccountingRules))
+  return suite
 

@@ -28,12 +28,7 @@
 
 """Test suite for erp5_accounting_l10n_m9
 """
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-os.environ.setdefault('EVENT_LOG_FILE', 'zLOG.log')
-os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
+import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
@@ -249,12 +244,8 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     self.assertEquals(1, len(account.checkConsistency(fixit=1)))
     self.assertEquals('liability/payable', account.getAccountType())
     
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestAccounting_l10n_M9))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestAccounting_l10n_M9))
+  return suite
 

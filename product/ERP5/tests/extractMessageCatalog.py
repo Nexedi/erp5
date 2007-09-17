@@ -37,15 +37,7 @@ then erp5_content.pot and erp5_ui.pot will be made in the current directory.
 
 """
 
-
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
+import unittest
 try:
   from transaction import get as get_transaction
 except ImportError:
@@ -79,11 +71,8 @@ class ExtractMessageCatalog(TestXHTML):
       for msgid in result[i].keys():
         f.write('msgid "%s"\nmsgstr ""\n\n' % msgid)
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(ExtractMessageCatalog))
-        return suite
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(ExtractMessageCatalog))
+  return suite
