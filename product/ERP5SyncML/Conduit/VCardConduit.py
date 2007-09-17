@@ -42,21 +42,21 @@ class VCardConduit(ERP5Conduit, SyncCode):
   """
   A conduit is in charge to read data from a particular structure,
   and then to save this data in another structure.
-  
+
   VCardConduit is a peace of code to update VCards from text stream
   """
 
 
   # Declarative security
   security = ClassSecurityInfo()
-      
-  security.declareProtected(Permissions.AccessContentsInformation,'__init__')
+
+  security.declareProtected(Permissions.AccessContentsInformation, '__init__')
   def __init__(self):
     self.args = {}
 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
-  def addNode(self, xml=None, object=None, previous_xml=None, 
+  def addNode(self, xml=None, object=None, previous_xml=None,
       object_id=None, sub_object=None, force=0, simulate=0, **kw):
     """
     add a new person corresponding to the vcard
@@ -67,12 +67,12 @@ class VCardConduit(ERP5Conduit, SyncCode):
     if not isinstance(xml, str):
       xml = self.nodeToString(xml)
     portal_type = 'Person' #the VCard can just use Person
-    if sub_object is None: 
+    if sub_object is None:
 
-      new_object = ERP5Conduit.constructContent(self, object, object_id,
+      new_object, reset_local_roles, reset_workflow = ERP5Conduit.constructContent(self, object, object_id,
       portal_type)
     else: #if the object exist, it juste must be update
-      new_object=sub_object
+      new_object = sub_object
     #LOG('addNode', 0, 'new_object:%s, sub_object:%s' % (new_object, sub_object)) 
     self.updateNode(xml=xml,
                     object=new_object,
@@ -88,7 +88,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
     """
     A node is deleted
     """
-    LOG('deleteNode :', 0, 'object:%s, object_id:%s' % (str(object), str(object_id)))
+    #LOG('deleteNode :', 0, 'object:%s, object_id:%s' % (str(object), str(object_id)))
     conflict_list = []
     try:
       object._delObject(object_id)
@@ -102,7 +102,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
     """
     A node is updated
     """
-    LOG('updateNode :',0, 'xml:%s, object:%s, previous_xml:%s, force:%s,simulate:%s, kw:%s' % (xml, object, previous_xml, force, simulate, kw))
+    #LOG('updateNode :',0, 'xml:%s, object:%s, previous_xml:%s, force:%s,simulate:%s, kw:%s' % (xml, object, previous_xml, force, simulate, kw))
     vcard_dict = self.vcard2Dict(xml)
     object.edit(**vcard_dict)
     return []
