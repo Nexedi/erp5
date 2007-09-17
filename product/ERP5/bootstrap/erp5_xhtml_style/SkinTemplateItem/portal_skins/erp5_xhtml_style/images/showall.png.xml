@@ -3,15 +3,16 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>Image</string>
-        </tuple>
-        <none/>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts89265820.19</string> </value>
+        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
@@ -28,13 +29,15 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGOfPtRkwAAACBjSFJN
-AAB6JQAAgIMAAPn/AACA6AAAdTAAAOpgAAA6lwAAF2+XqZnUAAABE0lEQVR4nGL4//8/Azpex5BV
-DsTG2OSIxQABhFUQaOgqIJ5JicEAAYTN0DSQa4H4HRALoihmYPhPCMPUAgQQ1mCA0jNhbHIwQACh
-G+oCMxCIO4D4LrkGAwQQVtci8XeDgoacoAAIIPSwnQkLVxAN5Z8BYiVSXQwQQGTHOiEMEEAkxTgp
-QQEQQDRzMUAA0cxggACiWVAABBDNXAwQQCRrgCZDFxwYniwBAojooEAyGGRAKJqB5dCyBV4iAgQQ
-OS42xuIDUCYKRRYHCCCKwxJaxGIUVgABRHJQoBnagavcBgggSlyaBg0CQWzyAAFErqGgiuAuvsIJ
-IIDISRWC6CkAOcXA2AABRI5rz0BxORruQDYYIMAAyNim+GLVHL8AAAAASUVORK5CYII=</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
+AAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFaSURB
+VDiN1ZSvS0NhFIafd16YY8UoyGyWNYPBIQgiDNNAmQrClvYHGATbuIqwZrBYTTqTUQxis/g/CLJg
+UYP1bsdwvdt11x93u1vwha+cAw/nfb/vfDIzxiGnvyAd1MB2gBez+saw4FS0ZHvAMrAuuYWRgKXD
+RWAOOAUMqPZ6sjjnh4k7VR/oNIB7YFNyJwHMTHFOBCydpIEt4Am8eeARmAKVhokidHmvJR9EFrjo
+1a0CNMM2f1MwdfhVVIAOMGtWf/ZduDdAUXKnwzbjKJxxA1KFAOrLqQGrgDcIFEDBgsS1+pcCZxrX
+5n2zIKNR9/L+TRSRTyiuJLcFzPSVW2b13BfwIFH4drULlv0sbQNF4LLLSxqF5C4Bt8Ad5NfMyu3E
+YOkoB94D8A7pBbP9t6A3dBTScQa8KyADqZUwNNHEknuOn20TuO516mdmWBKwB0xEO3nHrNwe2zv+
+AFhKphRNzy/bAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -46,7 +49,7 @@ IIDISRWC6CkAOcXA2AABRI5rz0BxORruQDYYIMAAyNim+GLVHL8AAAAASUVORK5CYII=</string> </
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>392</int> </value>
+            <value> <int>477</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

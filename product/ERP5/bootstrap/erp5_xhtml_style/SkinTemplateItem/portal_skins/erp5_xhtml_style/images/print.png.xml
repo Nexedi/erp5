@@ -3,15 +3,16 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>Image</string>
-        </tuple>
-        <none/>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts89195277.09</string> </value>
+        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
@@ -28,28 +29,24 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dE
-AO4A7gDuimnwFAAAAAlwSFlzAAALEAAACxABrSO9dQAAAAd0SU1FB9ALEhQ7CQ1rRLoAAAQ4SURB
-VHicnZVNbFRVGIafe+femd5p7dDEaadAaANJLabpz8LAip9BMO3CkpAMgZBI40ITUhNiwBIWbLQx
-MTYNC1xYXNUQSUVrcIzQtCxw0TQoFaukVq2J1bQ2bWHo3Lk/53wuCiMISPVdnOTe3PO+z/edc8+B
-VSqTyUhzc7McaN8tq/neWq3x5OQkQ5+8f+9RpmdvUVuV4NzgZWO1Hg+pvbVe5n8elXxuSVzXFdd1
-Jb+ck/lfxuRA++5HVvJE4rY9jcSeqideWY8RsTGMu4CmRbyynrMfDqC8ZbzbM0z+Ni9165/m3OBl
-44lltLfWywfv9VOaanjgvWiFhB4iGuXn8ZbnEXeBys3PAxj/SnyP9p+mABL6aBWAKEI/TxgEqNz8
-k1vRtqcRO+LL2TPvooICZsTCwEAQRCtUWABR6NBH+XlEeRx76yyA8ZCxiJhbtmxRSikKYYJUMklw
-Z56ICjGjJRiYK9O0Bh2ilY/28xgI+vbvDHw+THtrvQBE7jdta2tTJ0+epKWlhe/Hv6HnjQxmaQWC
-gaFX6EQHaOWhggI6KOC7d5BgmddPnaYj8wevdr7E0NDNFWIRie7du9c7evQoc3NzXLt2jYISbnw7
-Rsszc3il64mnnl0pOyggWgCFBD4GiqBwi3ODlzn8chtdXZ8y+MVNwwTYunWrd+TIEWZnZ/E8j6am
-JjZu3EjrK6d57cwoN77+Cv+nSxT+/BFRPigXnb8NwR0kVBx7s4/eU6VsqGksttVYARZc1yWbzbK0
-tEQYhsX9GovFuHr1Kn19fezfn+Hwrmqa6zagSlIgGqwo65/bz5eftfHCi9ni4hnpdFr6+/uxLItk
-MomIUCgUyGazzM7OopQqBtwfkslk6NiV4p2PvmN4eJgfxrvY3PR2EdjIZDLS3d2NbduYponWGsuy
-WLt2LVprPM8jm80yMzMDgO/7lJeXE4vFyGaznD9/nu3bt1NbW0tFRQXxeJzu7m6sxcVFFhYWsG2b
-kpISlFKYpkk+n0dEiMVi7Nu3D6DYrqmpKbTWNDY20tDQgO/7OI5DWVkZFy5c+LvHPT091NbWkkwm
-0VoTjUaxbRulFJZlEY1GMU2TWCzGpk2bHgiZmJggCAISiQQXL17Etm2Ghoa4d1YIwIkTJ6iuriaZ
-TLJmzRqUUsTjcSKRCEqpYlW2beM4DnV1dbiuy/Xr1zl+/DiO4xCGISMjI8U/zwAYHR2V4eFhADo7
-O0mlUqxbt45EIkEQBJSWlpLL5VBK4TgOc3NzaK0ZHx/HcRxyuRy+77Nt2zYee7ql0+liSEdHBzU1
-NVRWVlJWVoZlWRz89SB0wcDHA1y6dInp6WkWFxcZGxtb2RWPM75fO3fulJGREQAOHTpETU0NVVVV
-2LaN7/tMTEwwNTXFXRCjOPwX7dixQ65cuVIMKS8vJxqN0tvb+7/8Hql0Oi2sLPxDF+xfkQUOhFrx
-738AAAAASUVORK5CYII=</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADsklEQVQ4jZWU22/URRTHP/O7ddvd
+pV2M27QgCk1LW9MoRBSjCEVo2tgQYqQSDb7yN8CDxFdfiaQPPmGiMaJPPtkS3gistISygaQsUO1l
+09KtLN3L79ffXHzoBbbtcvkmk8mcc+YzJzNnjqCKhodT2WQykajmB7hzJ5M6ebLvk818TrVN27Yl
+k+3tb1rr7UobtDEYA3NzuZ2AAMxLg43ZEIvSBqUNUmmEEGitqm2vDlZKVoUqbRAWhGH46mApn4LX
+Q6Uy2KYy5hUyVlWhSmu0Nki5VBW84XEAenp62qUMq0J9P0RLhe/70c7OzrrnZtzb2/uZUurD48dP
+fN7c3NymtbZWofIZaOCHKClRwsbz3MTZs+fmb90avTEy8vdflmX9Pjw8fAdA9Pf32/v3fzQ+MPD1
+Ls/zAJiZ+YeiD3vee4dQrUINfrACDRW1nsOVy0McPXwAIWyMMeTzeQYHz/8yOPjDV3ZLS8vpM2e+
+PRWJ1GBZFpZlce/hBLs63qW8pAlCTSg1ShmEEFi2jeO6KCyIN6MLswSBYbFUwrU92to6usbGRoac
+Awe6T0ciNRX387AQodGNrq2lhmJoKEnwlUHqZXvgeoj/7tP4+hauZ+/xfmMHDQ0NRKPRL5yurq63
+HMdeqQRNueyTCRM48xbFEMbzhtkSLH+w9bLZv2A48YbH4Z171qzbt+/Y7QTBkue6DlJKgmAJz3OZ
+0K9x457g+lw14FMVCjFORdy1tevaJJPJRieVGgkjkSRNTQmSyQSOA//O13H7/nN5a5q3txCNRigU
+yszMLJDLPWFubl45QlBUStdPTeWYmsohhOD8vjiBPU9ROjz2BbmSIfNIE6sR7EgIErVQH4FaEeKp
+ElevzlYcprV67ARBOReNRpqXTYahoT83zaxhZZ5ZGRW+hgT79n28TDCafH5hxikWn0xFo7VdAEtL
+PteuXaG1tZXW1taXuopUKkVdXZxDh44CsLj4BN/3J51c7tHPQqi+WCyO7xv6+vo5cuRTtm5teAFy
+WR0dXWSzWeLxCGAxPf3ATE5O/uHEYrFfx8dv/9jdfbSmvj7KwYN97N37NuL5xQCAlIpksom7dyeo
+r48DkE6PZjKZTNq5ePFimE6n227eHP0uFovtPnZs4AMhNm9O66FSKhzH5sGD+/6lSz9dz2anxy5f
+Hv4eqOynFy781ru4WDIvUhhKUy4HplAom3y+aNLpcdPd3d/5LKuiH9fVed/Mzi4wW1k9G2SMQUqJ
+UssjDENc1/0SOLca8z+F1x6G4i/k6gAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -61,7 +58,7 @@ NVRWVlJWVoZlWRz89SB0wcDHA1y6dInp6WkWFxcZGxtb2RWPM75fO3fulJGREQAOHTpETU0NVVVV
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1211</int> </value>
+            <value> <long>1003</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

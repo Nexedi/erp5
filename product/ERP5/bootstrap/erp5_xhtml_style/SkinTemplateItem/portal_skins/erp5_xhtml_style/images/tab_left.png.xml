@@ -3,15 +3,16 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>Image</string>
-        </tuple>
-        <none/>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts89632904.64</string> </value>
+        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
@@ -28,12 +29,12 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAoAAADICAYAAADREnACAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBI
-WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH1gYbBAo5ogi48gAAAOBJREFUaN7tzq0KwmAYxfGzvbMN
-gxoUNchgFzCDYQabBqOX4HV4JSbBOxBW1hdsy2MMQUTE4MdAg74mB36+Zjn//OM5jyalxLvGvifD
-OMFivcHumEJ7hmPfk7NgjmqpCMe20KiUUcibj3A0nchoucKg48KuVx8OZHA0ncjt/oBhv4ucIV5e
-0e9z0XL1EWVwFswx6LgfEQCIWrsl09MZvVYT39LDOIFjW1ClL9YbNCplNdwdUxTyphperlcYQqgh
-foyQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQ8P/hDZ46R41Ult0JAAAAAElFTkSuQmCC</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAoAAADICAYAAADREnACAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
+WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH1wkHFSAZuCoxBgAAANlJREFUaN7tzjEKgnAYxuE3u0BQ
+k9mi6NZSQ4MN7g01dIJO0Ak6SVPQDQIXdwc3ZwkJQkQaKoUa8t+UYFQ6x/ubH773awgh8Km1Ywt/
+H+IQJzinGRrvcO3YYud66HbaGBgaVFmG0tLLcLXdiOAYYW6Z6PeGpQMFXG034nS5YjlbfHxFes0F
+x+grKuDO9TC3TPyqqYxHIrvdMR1NfkLJ34cYGBqqkg5xAlWWq+E5zaC09Gr4yHPUSULNCAkJCQkJ
+CQkJCQkJCQkJCQkJCQkJCQkJCQkJCQn/Hz4BJRlIRVBhcE0AAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -45,7 +46,7 @@ foyQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQ8P/hDZ46R41Ult0JAAAAAElFTkSuQmCC</string
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>339</int> </value>
+            <value> <int>332</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

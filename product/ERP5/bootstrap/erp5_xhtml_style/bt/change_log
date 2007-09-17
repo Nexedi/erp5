@@ -1,3 +1,6 @@
+2007-09-17 Kazuhiko
+* Revise design.
+
 2007-09-06 yo
 * Obtain a listbox with Form_getListbox instead of from a fixed localtion in configure_list_dialog and sort_list_dialog.
 

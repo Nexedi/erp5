@@ -3,15 +3,16 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>Image</string>
-        </tuple>
-        <none/>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts89282444.12</string> </value>
+        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
@@ -28,28 +29,23 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAgRQTFRF
-AAAAO4O6O4G5OX22NXWyMnOyL3G0MHa3NX25NHu4O4K5OHqzMWaoKlqjKF+cKmeRKXm5HGO5Gmi+
-Gm3DFWvHFmnDN3OuLVieKFWgJVimJ2KWOKzqI3/PFmrFE27LEHLSDnTVEW7MOXu0LVedKVSfIlys
-JWOaK26TLYGvHXrOEHLRDXXYCnneCXrgEW/MMmipJlimI1ysHV+yGmG2HmmzG3HEEHHRDXXXB3zk
-BIDqBX3lOX63K1qiJlilI1usGWC0GE2dF2jCEnzWEHXUAYTwCWfCJlmlI1urIF+yG2G1GDF3ExtV
-D1iiDKP2DIHgCnndAYPwAIb0DF2zMnGyIF+xHWO4Gma+FkmYEBVGBSdJDKX5CnreB3zjDVyxMXO0
-HWK3F2rEEm/MET2JARIiC5DqBIDpD2G5MHW2Gma9FG3KEHHQEUeYARAdCofnBX/pAYPvAIXzFVio
-L3a4F2nEEXHQDnPVEFWrBlGWCIfqAoPvHEOIGWvCD3PTD3LSEUWWA2KzBortAIbzC3TVIzh0DnTW
-C3faCnfbEUqdAoHtCY7sC5DrBH/oIkWIKTt4F2jBD3LTC3jcCHviA3/pB2zOCnPOCI7tAojyA4Hs
-GVKfLDt4KzZvEm3KCXneBX/oAoPuBnzlHFSiKDl1Nzt1Em7KBnzkAoLuBXHTC1uvEVuuMESFIjdz
-LzdxzRxIYAAAAKx0Uk5TACGG3/3////InHLu////tOb////bKvj////aK/n////1Pen////1WJ78
-////4hX///////L8/////4vj/////vRvqvv/+v////3sQgMd6////v//////+VkQK+f5////2/+s
-EEn///////+oBlH+////8////6cBaf//////ogF0+f/w////vQ478P//bir1/////tPj8///rwc9
-4v////+5GRWK+P///+yKCd0IVlMAAAABYktHRIRi0FpxAAAACXBIWXMAAAsQAAALEAGtI711AAAB
-BElEQVR42mNgYGBkZGJmYWVj5+BkZAABRi5uHl4+fgFBIWERUTBfTFxCUopBWkZWTl5BESigpKwi
-qaqmrqEpp6Wto6vHwKSvYmBoZGxiKmdmrmNhacVgbWNrZ2Tv4OjkDOK7uDKwuLl7eHp5+/j6+VtY
-BgQGMQS7h4SGhUdERkXHAPmBsQxxIfFhCYlJySkxqUB+YBpDenxGQmZWdk5uXj6QX1DIUJRRnFlS
-WlZeUQnkB7pUMXBUZ5bU1NbVNzSCBJqaGRgTSlpa29o7OruA/O6eXgaGvv4JEydNnjJ1WmDg9Bkz
-ZwF9M3vO3Hkg5YHzFyxcBPbv4iVLAwOXLV+xctVqBgYANZtKND90h34AAABHdEVYdFNvZnR3YXJl
-AEAoIylJbWFnZU1hZ2ljayA1LjEuMCAwMC8wMS8wMSBROjggY3Jpc3R5QG15c3RpYy5lcy5kdXBv
-bnQuY29thlvN6wAAACp0RVh0U2lnbmF0dXJlADUxOWY0MGQ1MDg3Mjk5Y2UxOTUyYWNlMDQ0ZGVl
-YjU1C208jgAAAAl0RVh0RGVsYXkAMTAwXBmEDwAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
+WXMAAAsRAAALEQF/ZF+RAAAAB3RJTUUH0woJFhclOeocGQAAAB10RVh0Q29tbWVudABDcmVhdGVk
+IHdpdGggVGhlIEdJTVDvZCVuAAADDElEQVR42mWTTWhcZRiFn+/vzp07M8mkScykRo1NjKRaU6vW
+VlAnSguVulDThS6kRYRuAkXrwpWrbBQJCCKIXRQRS7RS1GA2xWC1uCitRYUUWkOmTTohfzNNJpm5
+c+/3uUgTWj2rl8Ph8HI4R/AffDEyfuTsxdn+3JbkQC2MkgBKKxbL1a+e3bHlzNE39n17p15sHDdu
+zueOffTj14/1duUH9vVh4/Au42okOPXTZSanCl+eHj785gavAG4UF1oHPxwbOzKQ3/vczg7iOCJh
+NFtbU1gHYT1GK3iytx3lZ/tMbvfAxO9nPts0KNhHR1964am9TSnN0nKd0kpIzwNZsukEKd9w6coc
+tyoxpeWQ5oxHjdQ9XTuez186991J/fGJsVf/nBGPC+e4PrcKgENw+eoiex5p5e9/FijMVVBKg3MA
+dObSXJzI5L8ZPd8uXn731Cc93d2D6YRcT0QIYutwgFESay1SSgCiKKa4sMZEocTSSkhQu35cp1P+
+YHm1zlLFIoTEAXt6W9m/K0fga7QUvPP5BYpLdaaKy9SjGOkcCMmDPV1v68L8Kpn6GlasfyClZOS3
+GWIERw9soxrGXLhWInIKtEZLibMO5xyhkA/rEMF0uQ5SIKQEIUAIrtzcyAOcUkjhgbU4a8FZsA7h
+KWSuLXO1bjSxVMRSYZUGrUGpzaIYT6M9gzAGYTRSa1zCkFZxQTbL6HurBFIbPGNI+x6Nvkc6oTer
+lvU1jYFHOjB4Ce+2EdybcKPy8Is9H3Q1RGQCj2zK0BQYsoFH6raBFJANDE2pdb7B16SShu0trnLs
+9aeHZP6Z7StPtPBeW8bRmPRoDDz6Oht4bXcLc+U1yishx195iCZfkE16NCdqbAuWEYW/Dubamqc3
+tzB04peRayvJQw2ZRmxskS5CivXuxNYRIzAJn8X5IpXScv/poQPjd40JYPjkzweny/KH9q33oYyH
+VgpwRJGlHtWYn50hvFXsH37/0Pj/1riBycnJ7nN/zL41NVvdn0kHuwCqtdqvHa3mbH5n7tOO+zvn
+7tT/CxVVH2++pqsXAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -61,7 +57,7 @@ YjU1C208jgAAAAl0RVh0RGVsYXkAMTAwXBmEDwAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1237</int> </value>
+            <value> <int>936</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
