@@ -21,15 +21,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Go back to Issued</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=deliver_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=undeliver_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>deliver</string> </value>
+            <value> <string>undeliver</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>deliver_action</string> </value>
+            <value> <string>undeliver_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Deliver</string> </value>
+            <value> <string>Go back to Issued</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -78,7 +78,6 @@
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignee</string>
               </tuple>
             </value>
         </item>

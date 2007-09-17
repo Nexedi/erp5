@@ -65,10 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if site is not None:\n
-  site_uid = site.getUid()\n
-else:\n
-  site_uid = context.getSiteUid()\n
+            <value> <string>if site is None:\n
+  site = context.getSiteValue()\n
+site_uid = site.getUid()\n
+site_url = site.getRelativeUrl()\n
 operation_list = []\n
 exception_portal_type_list = [\'Paper Money Deposit\']\n
 if site_uid is not None:\n
@@ -85,15 +85,22 @@ if site_uid is not None:\n
     # Mutilated Banknotes in planned state or in finished state with siege as source must nogt block either.\n
     portal_type = document.getPortalType()\n
     simulation_state = document.getSimulationState()\n
-    if not (   (portal_type in (\'Stop Payment\', \'Cash Movement\') and simulation_state == \'started\')\n
+    if (portal_type in (\'Stop Payment\', ) and simulation_state == \'started\')  \\\n
             or (portal_type == \'Mutilated Banknote\' and \n
                  (simulation_state == \'planned\' or \n
                    (simulation_state == \'finished\' and \'siege\' in here.getSource(\'\'))\n
                  )\n
-               )\n
-            or (portal_type == \'Monetary Destruction\' and simulation_state == \'ordered\')\n
+               ) \\\n
+            or (portal_type == \'Monetary Destruction\' and simulation_state == \'ordered\'):\n
+       continue\n
+    if portal_type in (\'Cash Movement\', \'Cash Movement New Not Emmited\'):\n
+       if not (\n
+              ((simulation_state in (\'confirmed\') and site_url in document.getSource()) \n
+                or \n
+              (simulation_state in (\'stopped\') and site_url in document.getDestination()))\n
            ):\n
-      append(document)\n
+        continue\n
+    append(document)\n
 \n
 def operation_sort(a,b):\n
   result = cmp(a.getPortalType(),b.getPortalType())\n
@@ -162,8 +169,9 @@ return operation_list\n
                             <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
-                            <string>site_uid</string>
                             <string>context</string>
+                            <string>site_uid</string>
+                            <string>site_url</string>
                             <string>operation_list</string>
                             <string>exception_portal_type_list</string>
                             <string>not_closed_state_list</string>

@@ -36,7 +36,10 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>undeliver</string>
+                <string>undeliver_action</string>
+              </tuple>
             </value>
         </item>
         <item>

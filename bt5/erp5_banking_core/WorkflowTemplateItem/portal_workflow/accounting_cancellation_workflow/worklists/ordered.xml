@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sent To Second Validation Level (%(count)s)</string> </value>
+            <value> <string>Sent To First Validation Level (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=ordered&portal_type=Account Transfer&reset=1
+Base_viewWorklist?simulation_state=ordered&portal_type=Accounting Cancellation&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Sent To Second Validation Level</string> </value>
+            <value> <string>Sent To First Validation Level</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -68,8 +68,7 @@ Base_viewWorklist?simulation_state=ordered&portal_type=Account Transfer&reset=1
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignor</string>
-                <string>DestinationAssignee</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>
@@ -93,7 +92,7 @@ Base_viewWorklist?simulation_state=ordered&portal_type=Account Transfer&reset=1
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Account Transfer</string>
+                        <string>Accounting Cancellation</string>
                       </tuple>
                     </value>
                 </item>

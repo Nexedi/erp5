@@ -254,8 +254,10 @@ elif import_type == \'create_subvaults\' :\n
         subvault_dict[vault].append([counter_subvault, subvault_code])\n
         if subvault == \'Encaisse des Billets et Monnaies\' :\n
           if counter_name in two_way_counter_list:\n
-            subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, "entrante"), None])\n
-            subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, "sortante"), None])\n
+            if counter_name != \'gros_paiement\':\n
+              subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, "entrante"), None])\n
+            if counter_name != \'gros_versement\':\n
+              subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, "sortante"), None])\n
         elif subvault == \'Encaisse des Externes\' :\n
           subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, "transit"), \'TRA\'])\n
         elif subvault == \'Encaisse des Devises\' :\n

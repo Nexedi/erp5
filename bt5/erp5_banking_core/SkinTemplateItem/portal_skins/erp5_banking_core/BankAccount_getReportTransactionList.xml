@@ -161,12 +161,21 @@ if transaction_list:\n
     tmp_dict[\'document_reference\'] = document_reference\n
     total_price = inventory.total_quantity\n
     tmp_dict[\'total_price\'] = total_price\n
+    cancellation_amount = movement.isCancellationAmount()\n
+    tmp_dict[\'cancellation_amount\'] = cancellation_amount\n
     tmp_dict[\'debit\'] = None\n
     tmp_dict[\'credit\'] = None\n
-    if total_price is not None and total_price >= 0:\n
-      tmp_dict[\'debit\'] = total_price\n
-    elif total_price is not None and total_price < 0:\n
-      tmp_dict[\'credit\'] = - total_price\n
+    if total_price is not None:\n
+      if not cancellation_amount:\n
+        if total_price >= 0:\n
+          tmp_dict[\'debit\'] = total_price\n
+        elif total_price < 0:\n
+          tmp_dict[\'credit\'] = - total_price\n
+      else:\n
+        if total_price < 0:\n
+          tmp_dict[\'debit\'] = total_price\n
+        elif total_price >= 0:\n
+          tmp_dict[\'credit\'] = - total_price\n
 \n
     description = delivery.getDescription()\n
     if description is None:\n
@@ -289,6 +298,7 @@ return inv_account_dict.values()\n
                             <string>delivery</string>
                             <string>document_reference</string>
                             <string>total_price</string>
+                            <string>cancellation_amount</string>
                             <string>description</string>
                             <string>_inplacevar_</string>
                             <string>sort_date</string>

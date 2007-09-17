@@ -76,7 +76,7 @@ transaction = state_change[\'object\']\n
 \n
 site = transaction.getSite()\n
 date = transaction.getStartDate()\n
-transaction.Baobab_checkCounterDateOpen(site=site, date=date)\n
+# No need to check counter date, only accounting date\n
 transaction.Baobab_checkAccountingDateOpen(site=site, date=date)\n
 \n
 # Check some properties of document\n
@@ -93,31 +93,6 @@ if transaction.getResource() is None:\n
 \n
 # Check the source bank account.\n
 source_bank_account = transaction.getSourcePaymentValue()\n
-#accounting_code = transaction.getSourceSection()\n
-#if source_bank_account is None and accounting_code is None:\n
-#  msg = Message(domain=\'ui\', message="Source account is not defined.")\n
-#  raise ValidationFailed, (msg,)\n
-#elif source_bank_account is not None and accounting_code is not None:\n
-#  msg = Message(domain=\'ui\', message="You can\'t defined account and accounting code on document")\n
-#  raise ValidationFailed, (msg,)\n
-\n
-# Specific check to bank account\n
-if source_bank_account is not None:\n
-  if context.BankAccount_isMessagePending(source_bank_account):\n
-    msg = Message(domain=\'ui\', message="There are operations pending for this account that prevent form calculating its position. Please try again later.")\n
-    raise ValidationFailed, (msg,)\n
-  source_bank_account.serialize()\n
-  # Test if the account balance is sufficient.\n
-  error = context.BankAccount_checkBalance(source_bank_account.getRelativeUrl(), transaction.getSourceTotalAssetPrice())\n
-  #  if error[\'error_code\'] == 1:\n
-  #    msg = Message(domain=\'ui\', message="Source bank account is not sufficient.")\n
-  #    raise ValidationFailed, (msg,)\n
-  if error[\'error_code\'] == 2:\n
-    msg = Message(domain=\'ui\', message="Source bank account is not valid.")\n
-    raise ValidationFailed, (msg,)\n
-  elif error[\'error_code\'] != 0:\n
-    msg = Message(domain=\'ui\', message="Unknown error code.")\n
-    raise ValidationFailed, (msg,)\n
 \n
 # test we have account transfer line defined\n
 nb_transfer_line = len(transaction.objectValues(portal_type=\'Accounting Cancellation Line\'))\n
@@ -140,13 +115,13 @@ for line in transaction.objectValues(portal_type=\'Accounting Cancellation Line\
     msg = Message(domain=\'ui\', message="No account defined on line.")\n
     raise ValidationFailed, (msg,)\n
   # check we don\'t have both account and accounting code defined\n
-  if line.getDestinationPaymentReference(None) is not None \\\n
+  if line.getDestinationPayment(None) is not None \\\n
         and line.getDestinationSection() is not None:\n
     msg = Message(domain=\'ui\', message="You can\'t defined account and accounting code on line.")\n
     raise ValidationFailed, (msg,)\n
   # check that at least destination_payment or destination_section is defined\n
   if line.getDestinationPayment() is None and \\\n
-      line.getBaobabDestinationSection() is None:\n
+      line.getDestinationSection() is None:\n
     msg = Message(domain=\'ui\', message="Destination account is not defined.")\n
     raise ValidationFailed, (msg,)\n
   # Index the banking operation line so it impacts account position\n
@@ -222,14 +197,13 @@ if total_line_price != transaction.getSourceTotalAssetPrice():\n
                             <string>None</string>
                             <string>msg</string>
                             <string>source_bank_account</string>
-                            <string>context</string>
-                            <string>error</string>
                             <string>len</string>
                             <string>nb_transfer_line</string>
                             <string>total_line_price</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>_inplacevar_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

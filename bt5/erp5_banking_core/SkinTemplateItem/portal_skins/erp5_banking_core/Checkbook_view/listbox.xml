@@ -352,6 +352,10 @@
                           <string>stop_date</string>
                           <string>Operation Date</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -394,7 +398,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>stop_date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

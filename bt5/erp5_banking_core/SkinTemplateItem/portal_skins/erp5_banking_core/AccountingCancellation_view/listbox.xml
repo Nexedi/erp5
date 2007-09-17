@@ -348,7 +348,7 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>source_payment_reference</string>
+                          <string>getSourcePaymentInternalBankAccountNumber</string>
                           <string>Source Account</string>
                         </tuple>
                         <tuple>
@@ -364,7 +364,7 @@
                           <string>Credit</string>
                         </tuple>
                         <tuple>
-                          <string>destination_payment_reference</string>
+                          <string>getDestinationPaymentInternalBankAccountNumber</string>
                           <string>Destination Account</string>
                         </tuple>
                         <tuple>

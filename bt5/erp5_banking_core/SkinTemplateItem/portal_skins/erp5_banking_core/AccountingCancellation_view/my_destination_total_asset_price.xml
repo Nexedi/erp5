@@ -261,7 +261,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Delivery_getTotalDestinationTotalAssetPrice(portal_type="Account Transfer Line")</string> </value>
+            <value> <string>python: here.Delivery_getTotalDestinationTotalAssetPrice(portal_type="Accounting Cancellation Line")</string> </value>
         </item>
       </dictionary>
     </pickle>

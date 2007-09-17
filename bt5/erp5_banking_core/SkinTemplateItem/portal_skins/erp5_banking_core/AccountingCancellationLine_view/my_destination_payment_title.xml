@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Bank Account Name</string> </value>
+                    <value> <string>Destination Bank Account Name</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

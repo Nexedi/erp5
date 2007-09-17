@@ -27,7 +27,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=draft&portal_type=Account Transfer&reset=1
+Base_viewWorklist?simulation_state=draft&portal_type=Accounting Cancellation&reset=1
 
 ]]></string> </value>
         </item>
@@ -57,11 +57,8 @@ Base_viewWorklist?simulation_state=draft&portal_type=Account Transfer&reset=1
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -81,24 +78,21 @@ Base_viewWorklist?simulation_state=draft&portal_type=Account Transfer&reset=1
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Account Transfer</string>
+                        <string>Accounting Cancellation</string>
                       </tuple>
                     </value>
                 </item>

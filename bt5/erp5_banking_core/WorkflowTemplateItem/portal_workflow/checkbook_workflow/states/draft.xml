@@ -37,6 +37,7 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>confirm</string>
                 <string>delete</string>
                 <string>delete_action</string>
               </tuple>
