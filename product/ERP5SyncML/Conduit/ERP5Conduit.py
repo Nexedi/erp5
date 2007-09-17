@@ -128,8 +128,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     [conflict1,conflict2,...] where conclict1 is of the form :
     [object.getPath(),keyword,local_and_actual_value,subscriber_value]
     """
-    reset_local_roles = 1
-    reset_workflow = 1
+    reset_local_roles = 0
+    reset_workflow = 0
     conflict_list = []
     xml = self.convertToXml(xml)
     if xml is None:
@@ -279,8 +279,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #LOG('ERP5Conduit.updateNode, force: ', DEBUG, force)
     # we have an xupdate xml
     if xml.nodeName == 'xupdate:modifications':
-      conflict_list += self.applyXupdate(object=object, xupdate=xml, 
-          conduit=self,previous_xml=previous_xml, force=force, 
+      conflict_list += self.applyXupdate(object=object,
+                                         xupdate=xml,
+                                         conduit=self,
+                                         previous_xml=previous_xml,
+                                         force=force,
           simulate=simulate, **kw)
     # we may have only the part of an xupdate
     else:
@@ -344,9 +347,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           #last synchronization
           #   - current_data : the data actually on this box
           isConflict = 0
-          if (previous_xml is not None) and (not force): 
+          if (previous_xml is not None) and (not force):
           # if no previous_xml, no conflict
-            old_data = self.getObjectProperty(keyword, previous_xml, 
+            old_data = self.getObjectProperty(keyword, previous_xml,
                 data_type=data_type)
             #current_data = object.getProperty(keyword)
             current_data = self.getProperty(object, keyword)
@@ -380,8 +383,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
         if keyword == 'object':
           # This is the case where we have to call addNode
-          conflict_list += self.addNode(xml=xml, object=object, force=force, 
-              simulate=simulate, **kw)['conflict_list']
+          conflict_list += self.addNode(xml=xml,
+                                        object=object,
+                                        force=force,
+                                        simulate=simulate,
+                                        **kw)['conflict_list']
         elif keyword == self.history_tag and not simulate:
           # This is the case where we have to call addNode
           conflict_list += self.addNode(xml=subnode,object=object,force=force,
