@@ -1842,7 +1842,7 @@ else:
     suite.addTest(unittest.makeSuite(TestNextNegativeInventoryDate))
     suite.addTest(unittest.makeSuite(TestInventoryStat))
     suite.addTest(unittest.makeSuite(TestTrackingList))
-    #suite.addTest(unittest.makeSuite(TestInventoryDocument))
+    suite.addTest(unittest.makeSuite(TestInventoryDocument))
     return suite
 
 # vim: foldmethod=marker
