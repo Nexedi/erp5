@@ -59,6 +59,10 @@ class DummyMovement(Movement):
                     , PropertySheet.ItemAggregation
                     )
 
+  def isAccountable(self):
+    """Our dummy movement are always accountable."""
+    return getattr(self, 'is_accountable', 1)
+
   def getSimulationState(self):
     """Directly returns a simulation state."""
     return getattr(self, 'simulation_state', 'draft')
@@ -67,7 +71,17 @@ class DummyMovement(Movement):
     """Directly sets a simulation state."""
     self.simulation_state = state
 
-  def isAccountable(self):
-    """Our dummy movement are always accountable."""
-    return getattr(self, 'is_accountable', 1)
+  def getCausalityState(self):
+    """Directly returns a causality state."""
+    return getattr(self, 'simulation_state', 'draft')
+  
+  def setCausalityState(self, state):
+    """Directly sets a causality state."""
+    self.causality_state = state
+    
+  def getDeliveryValue(self):
+    """A dummy movement doesn't have a delivery relation, so return self as delivery.
+    """
+    return self
+
 
