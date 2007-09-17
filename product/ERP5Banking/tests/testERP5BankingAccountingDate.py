@@ -140,32 +140,3 @@ class TestERP5BankingAccountingDate(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string_1)
     sequence_list.play(self)
 
-#  def test_01_checkNoAccountingDateOpen(self, quiet=QUIET,
-#      run=RUN_ALL_TEST):
-#    """
-#      Today is implicitely opened.
-#      Today and future are valid.
-#      Past is invalid.
-#    """
-#    self.nowSucceeds()
-#
-#  def test_02_checkTodayOpen(self, quiet=QUIET, run=RUN_ALL_TEST):
-#    """
-#      Explicitely open current day.
-#      Today and future are valid.
-#      Past is invalid.
-#    """
-#    self.openAccountingDate(date=self.now, site=self.accounting_date_site)
-#    self.tic()
-#    self.todaySucceeds()
-#    
-#  def test_03_checkPastOpened(self, quiet=QUIET, run=RUN_ALL_TEST):
-#    """
-#      Explicitely open past day.
-#      From that day on dates are valid.
-#      Dates prior to that day are invalid.
-#    """
-#    self.openAccountingDate(date=self.past_day, site=self.accounting_date_site)
-#    self.tic()
-#    self.pastDaySucceeds()
-#
