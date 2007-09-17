@@ -411,7 +411,15 @@ class EmailDocument(File, TextDocument):
       if download:
         return message.as_string() # Only for debugging purpose
 
-      self.MailHost.send(message.as_string())
+      # Use activities
+      self.activate(activity="SQLQueue").sendMailHostMessage(message.as_string())
+
+  security.declareProtected(Permissions.UseMailhostServices, 'sendMailHostMessage')
+  def sendMailHostMessage(self, message):
+    """
+      Send one by one
+    """
+    self.MailHost.send(message)
 
 ## Compatibility layer
 #from Products.ERP5Type import Document
