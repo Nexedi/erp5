@@ -584,7 +584,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             portal = portal_url.getPortalObject()
             portal_skins = getToolByName(self, 'portal_skins')
 
-            default_field_library_path = portal.getProperty('erp5_default_field_library_path', None)
+            default_field_library_path = portal.getProperty(
+                                  'erp5_default_field_library_path',
+                                  'erp5_core.Base_viewFieldLibrary')
             if (not default_field_library_path or
                 len(default_field_library_path.split('.'))!=2):
                 return
@@ -595,21 +597,24 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             default_field_library = getattr(skinfolder, form_id, None)
             if default_field_library is None:
                 return
-
-            if not default_field_library_path in form_order:
-                for i in default_field_library.objectValues():
-                    field_meta_type, proxy_flag = get_field_meta_type_and_proxy_flag(i)
-                    if meta_type==field_meta_type:
-                        if proxy_flag:
-                            field_meta_type = '%s(Proxy' % field_meta_type
-                        matched_item = {'form_id':form_id,
-                                        'field_type':field_meta_type,
-                                        'field_object':i,
-                                        'proxy_flag':proxy_flag,
-                                        'matched_rate':0
-                                        }
+            for i in default_field_library.objectValues():
+                field_meta_type, proxy_flag = get_field_meta_type_and_proxy_flag(i)
+                if meta_type==field_meta_type:
+                    if proxy_flag:
+                        field_meta_type = '%s(Proxy)' % field_meta_type
+                    matched_item = {'form_id':form_id,
+                                    'field_type':field_meta_type,
+                                    'field_object':i,
+                                    'proxy_flag':proxy_flag,
+                                    'matched_rate':0
+                                    }
+                    if not default_field_library_path in form_order:
                         matched_append(default_field_library_path,
                                        matched_item)
+                    if not default_field_library_path in \
+                                          perfect_matched_form_order:
+                        perfect_matched_append(default_field_library_path,
+                                               matched_item)
 
         id_ = field.getId()
         meta_type = field.meta_type
@@ -649,6 +654,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
         if perfect_matched:
             perfect_matched_form_order.sort()
+            add_default_field_library()
             return perfect_matched_form_order, perfect_matched
 
         form_order.sort()
@@ -783,7 +789,8 @@ def get_field_meta_type_and_proxy_flag(field):
         try:
             return field.getRecursiveTemplateField().meta_type, True
         except AttributeError:
-            raise AttributeError, 'The proxy target of %s field does not exists. Please check the field setting.' % field.getId()
+            raise AttributeError, 'The proxy target of %s field does not '\
+                  'exists. Please check the field setting.' % field.getId()
     else:
         return field.meta_type, False
 
