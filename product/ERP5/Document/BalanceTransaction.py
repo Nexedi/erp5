@@ -100,7 +100,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
   def _getGroupByNodeMovementList(self):
     """Returns movements that implies only grouping by node."""
     movement_list = []
-    for movement in self.getMovementList():
+    for movement in self.getMovementList(
+              portal_type=self.getPortalAccountingMovementTypeList()):
       if getattr(movement, 'isAccountable', 1):
         if not (movement.getSourceSection() or
                 movement.getDestinationPayment()):
@@ -110,7 +111,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
   def _getGroupByPaymentMovementList(self):
     """Returns movements that implies grouping by node and payment"""
     movement_list = []
-    for movement in self.getMovementList():
+    for movement in self.getMovementList(
+              portal_type=self.getPortalAccountingMovementTypeList()):
       if getattr(movement, 'isAccountable', 1):
         if movement.getDestinationPayment():
           movement_list.append(movement)
@@ -119,7 +121,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
   def _getGroupByMirrorSectionMovementList(self):
     """Returns movements that implies only grouping by node and mirror section"""
     movement_list = []
-    for movement in self.getMovementList():
+    for movement in self.getMovementList(
+              portal_type=self.getPortalAccountingMovementTypeList()):
       if getattr(movement, 'isAccountable', 1):
         if movement.getSourceSection():
           movement_list.append(movement)
