@@ -1485,9 +1485,8 @@ class Catalog( Folder,
 
     site_root = self.getSiteRoot()
 
-    # Reminder about optimization: This below calls one or two small SQL
-    # queries for every object. This is extremely inefficient. It is
-    # far more efficient to send one or two queries for all objects.
+    # Reminder about optimization: It might be possible to issue just one
+    # query to get enought results to check uid & path consistency.
     path_uid_dict = {}
     uid_path_dict = {}
 
