@@ -219,6 +219,13 @@ class AccountingTestCase(ERP5TypeTestCase):
 class TestClosingPeriod(AccountingTestCase):
   """Various tests for closing the period.
   """
+  def beforeTearDown(self):
+    # we manually remove the content of stock table, because unindexObject
+    # might not work correctly on Balance Transaction, and we don't want
+    # leave something in stock table that will change the next test.
+    self.portal.erp5_sql_connection.manage_test('truncate stock')
+    get_transaction().commit()
+
   def test_createBalanceOnNode(self):
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
@@ -944,7 +951,116 @@ class TestClosingPeriod(AccountingTestCase):
                               node_uid=node_uid))
     
 
+  def test_BalanceTransactionLineBrainGetObject(self):
+    # Balance Transaction Line can be retrieved using Brain.getObject
+    balance = self.accounting_module.newContent(
+                          portal_type='Balance Transaction',
+                          destination_section_value=self.section,
+                          start_date=DateTime(2006, 12, 31),
+                          resource_value=self.currency_module.euro,)
+    balance_line = balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.receivable,
+                destination_debit=100,)
+    balance_line2 = balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.payable,
+                destination_credit=100,)
+    balance.stop()
+    get_transaction().commit()
+    self.tic()
+    
+    stool = self.portal.portal_simulation
+    # the account 'receivable' has a balance of 100
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    # there is one line in getMovementHistoryList:
+    mvt_history_list = stool.getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(mvt_history_list[0].getObject(),
+                      balance_line)
 
+    # There is also one line on payable account
+    node_uid = self.account_module.payable.getUid()
+    mvt_history_list = stool.getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(mvt_history_list[0].getObject(),
+                      balance_line2)
+
+  def test_BalanceTransactionDate(self):
+    # check that dates are correctly used for Balance Transaction indexing
+    balance = self.accounting_module.newContent(
+                          portal_type='Balance Transaction',
+                          destination_section_value=self.section,
+                          start_date=DateTime(2006, 12, 31),
+                          resource_value=self.currency_module.euro,)
+    balance_line = balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.receivable,
+                destination_debit=100,)
+    balance.stop()
+    get_transaction().commit()
+    self.tic()
+    
+    stool = self.portal.portal_simulation
+    # the account 'receivable' has a balance of 100 after 2006/12/31
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(100, stool.getInventory(
+                              at_date=DateTime(2006, 12, 31),
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    self.assertEquals(1, len(stool.getMovementHistoryList(
+                              at_date=DateTime(2006, 12, 31),
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid)))
+    # and 0 before
+    self.assertEquals(0, stool.getInventory(
+                              at_date=DateTime(2005, 12, 31),
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    self.assertEquals(0, len(stool.getMovementHistoryList(
+                              at_date=DateTime(2005, 12, 31),
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid)))
+
+
+  def test_BalanceTransactionLineInventoryAPIParentPortalType(self):
+    # related keys like parent_portal_type= can be used in inventory API to get
+    # balance transaction lines
+    balance = self.accounting_module.newContent(
+                          portal_type='Balance Transaction',
+                          destination_section_value=self.section,
+                          start_date=DateTime(2006, 12, 31),
+                          resource_value=self.currency_module.euro,)
+    balance_line = balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.receivable,
+                destination_debit=100,)
+    balance.stop()
+    get_transaction().commit()
+    self.tic()
+    
+    stool = self.portal.portal_simulation
+    # the account 'receivable' has a balance of 100
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(100, stool.getInventory(
+                              parent_portal_type='Balance Transaction',
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    # there is one line in getMovementHistoryList:
+    mvt_history_list = stool.getMovementHistoryList(
+                              parent_portal_type='Balance Transaction',
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid)
+    self.assertEquals(1, len(mvt_history_list))
+
+  # TODO : test deletion ?
 
 class TestAccounting(ERP5TypeTestCase):
   """The first test for Accounting

@@ -227,6 +227,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    resource_uid=movement.getResourceUid(),
+                   uid=movement.getUid(),
+                   relative_url=movement.getRelativeUrl(),
                    quantity=movement.getQuantity(),
                    total_price=movement\
                     .getDestinationInventoriatedTotalAssetPrice(), ))
@@ -246,6 +248,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    destination_section_uid=section_uid,
                    source_section_uid=mirror_section_uid,
                    resource_uid=movement.getResourceUid(),
+                   uid=movement.getUid(),
+                   relative_url=movement.getRelativeUrl(),
                    quantity=movement.getQuantity(),
                    total_price=movement\
                     .getDestinationInventoriatedTotalAssetPrice(), ))
@@ -265,6 +269,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    destination_section_uid=section_uid,
                    destination_payment_uid=payment_uid,
                    resource_uid=movement.getResourceUid(),
+                   uid=movement.getUid(),
+                   relative_url=movement.getRelativeUrl(),
                    quantity=movement.getQuantity(),
                    total_price=movement\
                     .getDestinationInventoriatedTotalAssetPrice(), ))
@@ -288,7 +294,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
         matching_diff = None
         for diff in stock_diff_list:
           for prop in [k for k in diff.keys() if k not in ('quantity',
-                          'total_price')]:
+                          'total_price', 'uid', 'relative_url')]:
             if diff[prop] != new_stock.get(prop):
               break
           else:
@@ -347,10 +353,26 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     def factory(*args, **kw):
       doc = newTempBalanceTransactionLine(self, self.getId(),
                                          uid=self.getUid())
+      relative_url = kw.pop('relative_url', None)
       destination_total_asset_price = kw.pop('total_price', None)
       if destination_total_asset_price is not None:
         kw['destination_total_asset_price'] = destination_total_asset_price
       doc._edit(*args, **kw)
+
+      if relative_url:
+        
+        def URLGetter(url):
+          def getRelativeUrl():
+            return url
+          return getRelativeUrl
+        doc.getRelativeUrl = URLGetter(relative_url)
+        
+        def PathGetter(path):
+          def getPath():
+            return path
+          return getPath
+        doc.getPath = PathGetter(relative_url)
+
       return doc
 
     return factory
@@ -396,6 +418,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     
     # Catalog differences calculated from lines
     self.portal_catalog.catalogObjectList(stock_object_list,
-         method_id_list=('z_catalog_stock_list',),
+         method_id_list=('z_catalog_stock_list',
+                         'z_catalog_object_list',
+                         'z_catalog_movement_category_list'),
          disable_cache=1, check_uid=0)
     
