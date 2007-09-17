@@ -241,6 +241,8 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       return self.app[self.getPortalName()]
 
+    getPortalObject = getPortal
+
     def enableLightInstall(self):
       """
       You can override this. Return if we should do a light install (1) or not (0)
