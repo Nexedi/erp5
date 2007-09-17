@@ -352,7 +352,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
             after_script_name=('afterEditB',))
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
-           "context.log('InteractionWF.test_10 in script', 'a')\n" +\
+           "context.log('InteractionWF.test_11 in script', 'a')\n" +\
            "description = context.getDescription()\n" +\
            "context.setDescription(description + 'a')"
     self.scriptA.ZPythonScript_edit(params, body)
@@ -387,7 +387,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
             after_script_name=('afterEditB',))
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
-           "context.log('InteractionWF.test_10 in script', 'a')\n" +\
+           "context.log('InteractionWF.test_12 in script', 'a')\n" +\
            "vat_code = context.getVatCode()\n" +\
            "if vat_code is None:\n" +\
            "  vat_code = ''\n" +\
