@@ -71,6 +71,7 @@ class Resource(XMLMatrix, Variated):
                       , PropertySheet.FlowCapacity
                       , PropertySheet.VariationRange
                       , PropertySheet.DefaultSupply
+                      , PropertySheet.Aggregated
                       )
 
     # Is it OK now ?
