@@ -31,6 +31,12 @@
   for themselves, so we use GMT time.
   This test assumes the person running the test is in the same time zone as me, which is usually true.
   It will be fixed some day.
+  
+  I have been investigating this a little, DateTime module caches the timezone
+  very early in the initialisation process, so changing os.environ['TZ'] has
+  no effect. For now, the easiest is to set TZ environ variable to something
+  like 'Europe/France'
+
 """
 
 import unittest
@@ -53,7 +59,8 @@ class TestICal(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """  """
-    return ('erp5_base', 'erp5_trade', 'erp5_project', 'erp5_crm', 'erp5_ical_style')
+    return ('erp5_base', 'erp5_trade', 'erp5_project', 'erp5_crm',
+            'erp5_ical_style')
 
   def afterSetUp(self):
     self.portal = self.getPortal()
@@ -116,7 +123,8 @@ class TestICal(ERP5TypeTestCase):
     feed_dict = self.getICalFeed(module)
     self.assertTrue('BEGIN:VEVENT' in feed_dict.keys())
     self.assertEquals(feed_dict['SUMMARY'], 'Event One')
-    self.assertEquals(feed_dict['DTSTART'], '20070815T083000Z')
+    self.assertEquals( # if this fail for you, try to set $TZ to Europe/Paris
+        feed_dict['DTSTART'], '20070815T083000Z')
     self.assertEquals(feed_dict['DTEND'], '20070815T093000Z')
     self.assertEquals(feed_dict['CREATED'], event.getCreationDate().HTML4().replace('-','').replace(':',''))
     self.assertEquals(feed_dict['UID'], 'uuid%s' % event.getUid())
