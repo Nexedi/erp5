@@ -87,7 +87,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseItem_FieldLibrary</string> </value>
+                    <value> <string>Item_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>
