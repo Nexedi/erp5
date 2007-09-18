@@ -2,4 +2,12 @@
  <item key="sql_uncatalog_object" type="int">
   <value>1</value>
  </item>
+ <item key="_is_filtered_archive" type="int">
+  <value>1</value>
+ </item>
+ <item key="_filter_expression_archive" type="str">
+  <value>python: isInventoryMovement</value>
+ </item>
+ <item key="_filter_type_archive" type="tuple">
+ </item>
 </catalog_method>
