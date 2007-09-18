@@ -143,6 +143,21 @@ class TypeInteractorExample(Interactor):
       pass
       # do whatever
 
+class InteractorOfInteractor(Interactor)
+
+  def __init__(self, interactor):
+    self.interactor = interactor
+
+  def install(self):
+    self.on(interactor.doSomething).doAfter(self.doSomething)
+
+  def doSomething(self, method_call_object):
+    pass
+
 
 test = AqDynamicInteractor()
 test.install()
+
+
+#interactor_of_interactor = InteractorOfInteractor(test)
+#interactor_of_interactor.install()
