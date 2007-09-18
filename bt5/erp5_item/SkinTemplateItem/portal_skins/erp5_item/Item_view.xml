@@ -83,7 +83,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -99,6 +99,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_resource_title</string>
+                        <string>my_comment</string>
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>
                       </list>
