@@ -63,6 +63,17 @@
                                   <dictionary/>
                                 </value>
                             </item>
+                            <item>
+                                <key> <string>simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string>\'delivered\'</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
                           </dictionary>
                         </value>
                     </item>
@@ -74,6 +85,7 @@
 <string>column_id_list</string>
 <string>group_by_expression</string>
 <string>date</string>
+<string>simulation_state</string>
                           </list>
                         </value>
                     </item>
@@ -93,7 +105,8 @@
             <value> <string>column_value_list_list:list\r\n
 column_id_list:list\r\n
 group_by_expression\r\n
-date</string> </value>
+date\r\n
+simulation_state=\'delivered\'</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -114,6 +127,9 @@ FROM\n
   inventory\n
 WHERE\n
   is_full_inventory = TRUE\n
+  <dtml-if simulation_state>\n
+    AND simulation_state = <dtml-sqlvar simulation_state type="string">\n
+  </dtml-if>\n
   <dtml-in prefix="loop" expr="_.range(_.len(column_id_list))">\n
     AND <dtml-var expr="column_id_list[loop_item]"> IN (\n
     <dtml-in expr="column_value_list_list[loop_item]">\n
@@ -174,6 +190,9 @@ FROM\n
   inventory\n
 WHERE\n
   is_full_inventory = TRUE\n
+  <dtml-if simulation_state>\n
+    AND simulation_state = <dtml-sqlvar simulation_state type="string">\n
+  </dtml-if>\n
   <dtml-in prefix="loop" expr="_.range(_.len(column_id_list))">\n
     AND <dtml-var expr="column_id_list[loop_item]"> IN (\n
     <dtml-in expr="column_value_list_list[loop_item]">\n
