@@ -17,9 +17,9 @@
             <value>
               <list>
                 <string>title</string>
-                <string>editable</string>
-                <string>display_width</string>
                 <string>default</string>
+                <string>display_width</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
@@ -68,6 +68,14 @@
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -79,6 +87,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -87,11 +99,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>display_width</string> </key>
+                    <key>                 <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
                     <value> <int>20</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -107,7 +123,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Resource</string> </value>
                 </item>
               </dictionary>

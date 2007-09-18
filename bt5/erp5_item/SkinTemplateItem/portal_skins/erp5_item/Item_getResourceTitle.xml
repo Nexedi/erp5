@@ -75,9 +75,11 @@
 \n
 # movement list should not be empty, as Item should always be created\n
 # from movement\n
-last_movement = movement_list[0]\n
-resource_uid = last_movement.resource_uid\n
-return context.portal_catalog(uid=resource_uid)[0].title\n
+# But, if it raises an error, ProxyField may be broken\n
+if len(movement_list) == 1:\n
+  last_movement = movement_list[0]\n
+  resource_uid = last_movement.resource_uid\n
+  return context.portal_catalog(uid=resource_uid)[0].title\n
 </string> </value>
         </item>
         <item>
@@ -124,6 +126,7 @@ return context.portal_catalog(uid=resource_uid)[0].title\n
                             <string>context</string>
                             <string>DateTime</string>
                             <string>movement_list</string>
+                            <string>len</string>
                             <string>_getitem_</string>
                             <string>last_movement</string>
                             <string>resource_uid</string>
