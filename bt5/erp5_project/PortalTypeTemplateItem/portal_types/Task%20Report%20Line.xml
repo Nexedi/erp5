@@ -82,7 +82,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>order_movement</string>
+                <string>delivery_movement</string>
               </tuple>
             </value>
         </item>
