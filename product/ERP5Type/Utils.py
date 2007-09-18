@@ -1397,14 +1397,6 @@ from Base import Base as BaseClass
 from Accessor import Base, List, Acquired, Content,\
                      AcquiredProperty, ContentProperty, \
                      Alias
-import types
-
-# Compile accessors
-for accessor in [Base, List, Acquired, Content]:
-  for a_class in accessor.__dict__.items():
-    if type(a_class) is types.ClassType:
-      if hasattr(a_class, '__call__'):
-        bind(getattr(a_class, '__call__'))
 
 def createDefaultAccessors(property_holder, id, prop = None,
     read_permission=Permissions.AccessContentsInformation,
