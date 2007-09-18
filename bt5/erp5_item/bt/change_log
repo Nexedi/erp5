@@ -1,3 +1,6 @@
+2007-09-18 Romain
+* Remove portal type actions that are now defined as global actions
+
 2006-06-29 Romain
 * Use proxy field.
 
