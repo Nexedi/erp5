@@ -78,7 +78,7 @@ from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getResourceItemList():\n
   result = []\n
-  url_list = context.portal_preferences.getPreferredEventResourceList()\n
+  url_list = context.portal_preferences.getPreferredSupportRequestResourceList()\n
   for url in url_list:\n
     resource_value = context.getPortalObject().restrictedTraverse(url)\n
     result.append((resource_value.getTranslatedTitle(), resource_value.getRelativeUrl()))\n
