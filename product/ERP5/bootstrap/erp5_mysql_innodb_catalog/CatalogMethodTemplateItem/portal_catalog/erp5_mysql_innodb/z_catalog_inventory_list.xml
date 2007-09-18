@@ -48,6 +48,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getSimulationState</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getStartDate</string> </key>
                                 <value>
                                   <dictionary/>
@@ -85,6 +91,7 @@
 <string>getDestinationPaymentUid</string>
 <string>getStartDate</string>
 <string>isFullInventory</string>
+<string>getSimulationState</string>
                           </list>
                         </value>
                     </item>
@@ -107,7 +114,8 @@ getDestinationUid\r\n
 getDestinationSectionUid\r\n
 getDestinationPaymentUid\r\n
 getStartDate\r\n
-isFullInventory</string> </value>
+isFullInventory\r\n
+getSimulationState</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -132,7 +140,8 @@ isFullInventory</string> </value>
          getDestinationSectionUid[loop_item],\n
          getDestinationPaymentUid[loop_item],\n
          getStartDate[loop_item],\n
-         isFullInventory[loop_item]))">\n
+         isFullInventory[loop_item],\n
+         getSimulationState[loop_item]))">\n
     </dtml-if>\n
   </dtml-if>\n
 </dtml-in>\n
@@ -140,7 +149,7 @@ isFullInventory</string> </value>
 <dtml-if expr="len(row_list)">\n
 REPLACE INTO\n
   inventory\n
-  (`uid`, `node_uid`, `section_uid`, `payment_uid`, `date`, `is_full_inventory`)\n
+  (`uid`, `node_uid`, `section_uid`, `payment_uid`, `date`, `is_full_inventory`, `simulation_state`)\n
 VALUES\n
 <dtml-in prefix="row" expr="row_list">\n
   (<dtml-sqlvar expr="row_item[0]" type="int">,\n
@@ -148,7 +157,8 @@ VALUES\n
    <dtml-sqlvar expr="row_item[2]" type="int" optional>,\n
    <dtml-sqlvar expr="row_item[3]" type="int" optional>,\n
    <dtml-sqlvar expr="row_item[4]" type="datetime">,\n
-   <dtml-sqlvar expr="row_item[5] or 0" type="int">\n
+   <dtml-sqlvar expr="row_item[5] or 0" type="int">,\n
+   <dtml-sqlvar expr="row_item[6]" type="string">\n
   )<dtml-if sequence-end><dtml-else>,</dtml-if>\n
 </dtml-in>\n
 </dtml-if>\n
@@ -203,7 +213,8 @@ VALUES\n
          getDestinationSectionUid[loop_item],\n
          getDestinationPaymentUid[loop_item],\n
          getStartDate[loop_item],\n
-         isFullInventory[loop_item]))">\n
+         isFullInventory[loop_item],\n
+         getSimulationState[loop_item]))">\n
     </dtml-if>\n
   </dtml-if>\n
 </dtml-in>\n
@@ -211,7 +222,7 @@ VALUES\n
 <dtml-if expr="len(row_list)">\n
 REPLACE INTO\n
   inventory\n
-  (`uid`, `node_uid`, `section_uid`, `payment_uid`, `date`, `is_full_inventory`)\n
+  (`uid`, `node_uid`, `section_uid`, `payment_uid`, `date`, `is_full_inventory`, `simulation_state`)\n
 VALUES\n
 <dtml-in prefix="row" expr="row_list">\n
   (<dtml-sqlvar expr="row_item[0]" type="int">,\n
@@ -219,7 +230,8 @@ VALUES\n
    <dtml-sqlvar expr="row_item[2]" type="int" optional>,\n
    <dtml-sqlvar expr="row_item[3]" type="int" optional>,\n
    <dtml-sqlvar expr="row_item[4]" type="datetime">,\n
-   <dtml-sqlvar expr="row_item[5] or 0" type="int">\n
+   <dtml-sqlvar expr="row_item[5] or 0" type="int">,\n
+   <dtml-sqlvar expr="row_item[6]" type="string">\n
   )<dtml-if sequence-end><dtml-else>,</dtml-if>\n
 </dtml-in>\n
 </dtml-if>\n

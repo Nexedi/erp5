@@ -69,10 +69,11 @@
   `payment_uid`       BIGINT(20) UNSIGNED NULL,\n
   `date`              DATETIME            NOT NULL,\n
   `is_full_inventory` BOOL                NOT NULL DEFAULT FALSE,\n
+  `simulation_state`  VARCHAR(255) NOT NULL DEFAULT \'\',\n
   PRIMARY KEY `uid` (`uid`),\n
-  KEY `node_index` (`is_full_inventory`, `node_uid`),\n
-  KEY `section_index` (`is_full_inventory`, `section_uid`),\n
-  KEY `payment_index` (`is_full_inventory`, `payment_uid`)\n
+  KEY `node_index` (`is_full_inventory`, `simulation_state`, `node_uid`),\n
+  KEY `section_index` (`is_full_inventory`, `simulation_state`, `section_uid`),\n
+  KEY `payment_index` (`is_full_inventory`, `simulation_state`, `payment_uid`)\n
 ) ENGINE=InnoDB</string> </value>
         </item>
         <item>
@@ -116,10 +117,11 @@
   `payment_uid`       BIGINT(20) UNSIGNED NULL,\n
   `date`              DATETIME            NOT NULL,\n
   `is_full_inventory` BOOL                NOT NULL DEFAULT FALSE,\n
+  `simulation_state`  VARCHAR(255) NOT NULL DEFAULT \'\',\n
   PRIMARY KEY `uid` (`uid`),\n
-  KEY `node_index` (`is_full_inventory`, `node_uid`),\n
-  KEY `section_index` (`is_full_inventory`, `section_uid`),\n
-  KEY `payment_index` (`is_full_inventory`, `payment_uid`)\n
+  KEY `node_index` (`is_full_inventory`, `simulation_state`, `node_uid`),\n
+  KEY `section_index` (`is_full_inventory`, `simulation_state`, `section_uid`),\n
+  KEY `payment_index` (`is_full_inventory`, `simulation_state`, `payment_uid`)\n
 ) ENGINE=InnoDB</string> </value>
                     </item>
                   </dictionary>
