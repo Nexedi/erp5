@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Item</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, item_workflow</workflow>
  </chain>
  <chain>
   <type>Service Report</type>

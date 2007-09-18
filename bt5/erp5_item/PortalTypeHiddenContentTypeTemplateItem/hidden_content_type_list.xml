@@ -1,4 +1,7 @@
 <hidden_content_type_list>
+ <portal_type id="Item Module">
+  <item>Item</item>
+ </portal_type>
  <portal_type id="Service Report Module">
   <item>Service Report</item>
  </portal_type>
