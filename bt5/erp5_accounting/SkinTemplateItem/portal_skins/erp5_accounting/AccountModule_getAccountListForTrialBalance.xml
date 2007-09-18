@@ -79,7 +79,12 @@ getInventoryList = portal.portal_simulation.getInventoryList\n
 getInventory = portal.portal_simulation.getInventoryAssetPrice\n
 N_ = portal.Base_translateString\n
 \n
-balance_movement_type_list = [\'Balance Transaction Line\']\n
+inventory_movement_type_list = portal.getPortalInventoryMovementTypeList()\n
+# Balance Movement Type list is all movements that are both inventory movement\n
+# and accounting movement\n
+balance_movement_type_list = [ t for t in\n
+                               portal.getPortalAccountingMovementTypeList()\n
+                               if t in inventory_movement_type_list ]\n
 accounting_movement_type_list = [ t for t in\n
                                   portal.getPortalAccountingMovementTypeList()\n
                                   if t not in balance_movement_type_list ]\n
@@ -659,11 +664,12 @@ return line_list\n
                             <string>getInventoryList</string>
                             <string>getInventory</string>
                             <string>N_</string>
-                            <string>balance_movement_type_list</string>
+                            <string>inventory_movement_type_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>t</string>
+                            <string>balance_movement_type_list</string>
                             <string>accounting_movement_type_list</string>
                             <string>dict</string>
                             <string>inventory_params</string>
