@@ -303,32 +303,32 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>selection</string>
-                            <string>selection_name</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>selection_params</string>
-                            <string>select_expression</string>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>to_date</string>
-                            <string>node</string>
-                            <string>resource</string>
-                            <string>entity</string>
-                            <string>stat</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>amount</string>
-                            <string>amount_range_min</string>
-                            <string>amount_range_max</string>
-                            <string>creation_date_range_min</string>
-                            <string>creation_date_range_max</string>
-                            <string>section_category</string>
-                            <string>count</string>
-                            <string>transaction_uid</string>
-                            <string>specific_reference</string>
-                            <string>no_limit</string>
-                            <string>search_result_keys</string>
+<string>selection</string>
+<string>selection_name</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>selection_params</string>
+<string>select_expression</string>
+<string>from_date</string>
+<string>at_date</string>
+<string>to_date</string>
+<string>node</string>
+<string>resource</string>
+<string>entity</string>
+<string>stat</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>amount</string>
+<string>amount_range_min</string>
+<string>amount_range_max</string>
+<string>creation_date_range_min</string>
+<string>creation_date_range_max</string>
+<string>section_category</string>
+<string>count</string>
+<string>transaction_uid</string>
+<string>specific_reference</string>
+<string>no_limit</string>
+<string>search_result_keys</string>
                           </list>
                         </value>
                     </item>
@@ -410,8 +410,7 @@ search_result_keys=\'\'</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-comment>global stat ignores security (which is not always good, eg when using worklists with local_roles</dtml-comment>\n
-<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), **selection_params)">\n
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), **selection_params)">\n
 <dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
 \n
@@ -596,8 +595,7 @@ WHERE\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-comment>global stat ignores security (which is not always good, eg when using worklists with local_roles</dtml-comment>\n
-<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**selection_params) or portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), **selection_params)">\n
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), **selection_params)">\n
 <dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
 \n
