@@ -48,7 +48,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Add portal content</string>
               </tuple>
             </value>
         </item>
