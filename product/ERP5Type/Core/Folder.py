@@ -854,7 +854,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       if activate_kw is None:
         activate_kw = {}
 
-      reindex_kw = self.getDefaultReindexParametersDict()
+      reindex_kw = self.getDefaultReindexParameterDict()
       if reindex_kw is not None:
         kw.update(reindex_kw)
 

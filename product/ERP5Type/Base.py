@@ -2480,8 +2480,6 @@ class Base( CopyContainer,
     portal_workflow = self.portal_workflow
     return portal_workflow.getInfoFor(self, name, wf_id=wf_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'objectCount')
   # Hide Acquisition to prevent loops (ex. in cells)
   # Another approach is to use XMLObject everywhere
   # DIRTY TRICK XXX
@@ -2530,7 +2528,7 @@ class Base( CopyContainer,
       if activate_kw is None:
         activate_kw = {}
 
-      reindex_kw = self.getDefaultReindexParametersDict()
+      reindex_kw = self.getDefaultReindexParameterDict()
       if reindex_kw is not None:
         kw.update(reindex_kw)
       
@@ -3313,7 +3311,7 @@ class Base( CopyContainer,
     tv[key] = kw
 
   security.declareProtected(Permissions.View, 'getDefaultReindexParameterDict' )
-  def getDefaultReindexParametersDict(self):
+  def getDefaultReindexParameterDict(self):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
     tv = getTransactionalVariable(self)
