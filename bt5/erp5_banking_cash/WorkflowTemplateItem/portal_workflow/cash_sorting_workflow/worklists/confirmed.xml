@@ -74,7 +74,7 @@ Base_viewWorklist?simulation_state=confirmed&portal_type=Cash Sorting&reset=1
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignee</string>
+                <string>DestinationAssignor</string>
               </tuple>
             </value>
         </item>
