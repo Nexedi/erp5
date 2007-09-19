@@ -68,7 +68,7 @@ def initializeInstanceHome(tests_framework_home,
     path = os.path.join(instance_home, d)
     if not os.path.exists(path):
       os.mkdir(path)
-  for d in ('Extensions', 'Products', 'bt5', 'svn'):
+  for d in ('Extensions', 'Products', 'bt5', 'svn', 'lib'):
     src = os.path.join(real_instance_home, d)
     dst = os.path.join(instance_home, d)
     if not os.path.exists(dst):
