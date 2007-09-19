@@ -1215,19 +1215,19 @@ class TestAccountingReports(AccountingTestCase):
     self._makeOne(
               portal_type='Balance Transaction',
               title='Transaction 0',
-              source_reference='0',
+              destination_reference='0',
               simulation_state='delivered',
               start_date=DateTime(2006, 1, 1),
-              lines=(dict(source_value=account_module.payable,
-                          source_credit=600.0,
-                          destination_section_value=
+              lines=(dict(destination_value=account_module.payable,
+                          destination_credit=600.0,
+                          source_section_value=
                               self.organisation_module.client_1,),
-                     dict(source_value=account_module.receivable,
-                          source_debit=400.0,
-                          destination_section_value=
+                     dict(destination_value=account_module.receivable,
+                          destination_debit=400.0,
+                          source_section_value=
                               self.organisation_module.client_2,),
-                     dict(source_value=account_module.equity,
-                          source_debit=200)))
+                     dict(destination_value=account_module.equity,
+                          destination_debit=200)))
     
     # one more transaction in the period, because our testing data does not
     # include the sales
@@ -1257,7 +1257,7 @@ class TestAccountingReports(AccountingTestCase):
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
- 
+    
     self.assertEquals(5, len(data_line_list))
 
     # account are sorted by GAP Id
