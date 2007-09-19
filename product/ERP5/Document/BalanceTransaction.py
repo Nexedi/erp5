@@ -137,7 +137,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     getInventoryList = self.getPortalObject()\
                             .portal_simulation.getInventoryList
     default_inventory_params = dict(
-                        at_date=self.getStartDate(),
+                        to_date=self.getStartDate().earliestTime(),
                         section_uid=self.getDestinationSectionUid(),
                         simulation_state=('delivered', ))
 

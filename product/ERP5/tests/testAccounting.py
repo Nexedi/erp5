@@ -994,8 +994,80 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(mvt_history_list[0].getObject(),
                       balance_line2)
 
+
   def test_BalanceTransactionDate(self):
     # check that dates are correctly used for Balance Transaction indexing
+    organisation_module = self.organisation_module
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 12, 31),
+        destination_section_value=organisation_module.client_1,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=100),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=100)))
+
+    balance = self.accounting_module.newContent(
+                          portal_type='Balance Transaction',
+                          destination_section_value=self.section,
+                          start_date=DateTime(2007, 1, 1),
+                          resource_value=self.currency_module.euro,)
+    balance_line = balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.equity,
+                destination_debit=100,)
+    balance_line = balance.newContent(
+                portal_type='Balance Transaction Line',
+                source_section_value=organisation_module.client_1,
+                destination_value=self.account_module.receivable,
+                destination_credit=100,)
+    balance.stop()
+    balance.deliver()
+    get_transaction().commit()
+    self.tic()
+
+    stool = self.portal.portal_simulation
+    # the account 'receivable' has a balance of -100
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(-100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    self.assertEquals(1, len(stool.getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid)))
+
+    # this is a transaction with the same date as the balance transaction, but
+    # this transaction should not be taken into account when we reindex the
+    # Balance Transaction.
+    transaction2 = self._makeOne(
+        start_date=DateTime(2007, 1, 1),
+        destination_section_value=organisation_module.client_1,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=50),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=50)))
+    get_transaction().commit()
+    self.tic()
+    # let's try to reindex and check if values are still OK
+    balance.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals(-150, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    self.assertEquals(2, len(stool.getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid)))
+
+
+  def test_BalanceTransactionDateInInventoryAPI(self):
+    # check that dates are correctly used for Balance Transaction when making
+    # reports using inventory API
     balance = self.accounting_module.newContent(
                           portal_type='Balance Transaction',
                           destination_section_value=self.section,
