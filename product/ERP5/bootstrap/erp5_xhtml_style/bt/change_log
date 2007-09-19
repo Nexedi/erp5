@@ -1,3 +1,6 @@
+2007-09-19 yo
+* Use absolute_url instead of absolute_url_path.
+
 2007-09-17 Kazuhiko
 * Revise design.
 
