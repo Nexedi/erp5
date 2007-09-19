@@ -1,2 +1,2 @@
-2007-09-04 Kazuhiko
-* use portal_url.getPortalObject().absolute_url_path() instead of portal_url.getPortalPath() for better virtual host support.
+2007-09-19 Kazuhiko
+* use portal_url.getPortalObject().absolute_url() instead of portal_url.getPortalPath() for better virtual host support.
