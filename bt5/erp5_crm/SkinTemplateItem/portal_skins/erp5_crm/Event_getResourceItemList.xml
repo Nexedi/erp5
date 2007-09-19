@@ -85,7 +85,7 @@ def getResourceItemList():\n
   return result\n
 \n
 getResourceItemList = CachingMethod(getResourceItemList, \n
-      id=(\'Event_getResourceItemList\', context.Localizer.get_selected_language()), \n
+      id=(script.id, context.Localizer.get_selected_language()), \n
       cache_factory=\'erp5_ui_long\')\n
                                  \n
 return getResourceItemList()\n
@@ -135,6 +135,7 @@ return getResourceItemList()\n
                             <string>CachingMethod</string>
                             <string>getResourceItemList</string>
                             <string>_getattr_</string>
+                            <string>script</string>
                             <string>context</string>
                           </tuple>
                         </value>
