@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Drafts to Validate (%(count)s)</string> </value>
+            <value> <string>Empty to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=draft&portal_type=Cash Movement&reset=1
+Base_viewWorklist?simulation_state=empty&portal_type=Cash Movement&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Drafts to Validate</string> </value>
+            <value> <string>Empty to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ Base_viewWorklist?simulation_state=draft&portal_type=Cash Movement&reset=1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>empty</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -69,6 +69,7 @@ Base_viewWorklist?simulation_state=draft&portal_type=Cash Movement&reset=1
               <tuple>
                 <string>Manager</string>
                 <string>Assignor</string>
+                <string>Assistant</string>
               </tuple>
             </value>
         </item>
@@ -100,7 +101,7 @@ Base_viewWorklist?simulation_state=draft&portal_type=Cash Movement&reset=1
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>draft</string>
+                        <string>empty</string>
                       </tuple>
                     </value>
                 </item>
