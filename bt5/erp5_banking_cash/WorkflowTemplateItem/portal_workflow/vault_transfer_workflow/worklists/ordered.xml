@@ -33,7 +33,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Vault Transfer
+Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Vault Transfer
 
 ]]></string> </value>
         </item>
@@ -63,11 +63,8 @@ Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Vault Transfer
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -87,17 +84,14 @@ Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Vault Transfer
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>

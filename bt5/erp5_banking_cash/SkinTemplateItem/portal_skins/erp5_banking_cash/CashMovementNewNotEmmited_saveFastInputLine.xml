@@ -65,58 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-transaction = state_change[\'object\']\n
-\n
-caisse = transaction.getSource()\n
-\n
-\n
-if (\'encaisse_des_billets_et_monnaies\'  not in caisse):\n
-   msg = Message(domain="ui", message="Invalid source.")\n
-   raise ValidationFailed, (msg,)\n
-\n
-# check again that we are in the good accounting date\n
-transaction.Baobab_checkCounterDateOpen(site=caisse, date=transaction.getStartDate())\n
-\n
-\n
-resource_one = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Incoming Cash Balance Regulation Line\')\n
-resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, \n
-                               portal_type=\'Outgoing Cash Balance Regulation Line\', \n
-                               same_source=1,\n
-                               no_balance_check=1)\n
-#resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Outgoing Cash Balance Regulation Line\')\n
-\n
-#context.log(\'resource_one\', resource_one)\n
-#context.log(\'resource_two\', resource_two)\n
-\n
-# Get total_price.\n
-amount = transaction.getSourceTotalAssetPrice()\n
-incoming_total = transaction.getTotalPrice(portal_type =[\'Incoming Cash Balance Regulation Line\',\'Cash Delivery Cell\'],fast=0)\n
-outgoing_total = transaction.getTotalPrice(portal_type =[\'Outgoing Cash Balance Regulation Line\',\'Cash Delivery Cell\'],fast=0)\n
-\n
-#context.log(\'incoming_total\', incoming_total)\n
-#context.log(\'outgoing_total\', outgoing_total)\n
-\n
-if amount != incoming_total:\n
-  msg = Message(domain="ui", message="Amount differ from total price.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-if resource_one == 2:\n
-  msg = Message(domain="ui", message="No resource.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource_one == 1:\n
-  msg = Message(domain="ui", message="Insufficient Balance.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-if resource_two == 2:\n
-  msg = Message(domain="ui", message="No resource.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-if incoming_total != outgoing_total:\n
-  msg = Message(domain="ui", message="No same balance.")\n
-  raise ValidationFailed, (msg,)\n
+            <value> <string>return context.Delivery_saveContainerFastInputLine(listbox=listbox,\n
+                                                   line_portal_type=\'Cash Movement New Not Emmited Line\',\n
+                                                   container_line_portal_type=\'Cash Movement New Not Emmited Container\')\n
 </string> </value>
         </item>
         <item>
@@ -132,8 +83,14 @@ if incoming_total != outgoing_total:\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>listbox=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -159,21 +116,10 @@ if incoming_total != outgoing_total:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
+                            <string>listbox</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-                            <string>caisse</string>
-                            <string>msg</string>
-                            <string>resource_one</string>
-                            <string>resource_two</string>
-                            <string>amount</string>
-                            <string>incoming_total</string>
-                            <string>outgoing_total</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -185,12 +131,14 @@ if incoming_total != outgoing_total:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validateVaultBalance</string> </value>
+            <value> <string>CashMovementNewNotEmmited_saveFastInputLine</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -75,39 +75,52 @@ transaction = state_change[\'object\']\n
 vault = transaction.getSource()\n
 vaultDestination = transaction.getDestination()\n
 \n
-if transaction.isCurrencyHandover() and vaultDestination is not None:\n
-  msg = Message(domain="ui", \n
-         message="Sorry, you must not set a destination in case of currency handover.")\n
-  raise ValidationFailed, (msg,)\n
-\n
 if vault is None:\n
   msg = Message(domain="ui", \n
          message="Sorry, you must define a source.")\n
   raise ValidationFailed, (msg,)\n
 \n
-if not transaction.isCurrencyHandover() and vaultDestination is not None:\n
+if transaction.isCurrencyHandover() and vaultDestination is not None:\n
+  msg = Message(domain="ui", \n
+         message="Sorry, you must not set a destination in case of currency handover.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# if not transaction.isCurrencyHandover() and vaultDestination is not None:\n
+#   msg = Message(domain="ui", \n
+#          message="Sorry, you must define a destination.")\n
+#   raise ValidationFailed, (msg,)\n
+\n
+if not transaction.isCurrencyHandover() and vaultDestination is None:\n
   msg = Message(domain="ui", \n
          message="Sorry, you must define a destination.")\n
+  raise ValidationFailed, (msg,)\n
+\n
 \n
 # use of the constraint : Test source and destination\n
-vliste = transaction.checkConsistency()\n
-transaction.log(\'vliste\', vliste)\n
-if len(vliste) != 0:\n
-  raise ValidationFailed, (vliste[0].getMessage(),)\n
+# (Seb) : there is already everything in the checkpath script\n
+#vliste = transaction.checkConsistency()\n
+#transaction.log(\'vliste\', vliste)\n
+#if len(vliste) != 0:\n
+#  raise ValidationFailed, (vliste[0].getMessage(),)\n
 \n
 portal_type_with_no_space = transaction.getPortalType().replace(\' \',\'\')\n
 check_path_script = getattr(transaction,\'%s_checkPath\' % portal_type_with_no_space,None)\n
 \n
-# check again that we are in the good accounting date\n
-transaction.Baobab_checkCounterDateOpen(site=vault, date=transaction.getStartDate())\n
-if check_path_script is not None:\n
-  message = check_path_script()\n
-  transaction.log(\'check_path_script\',\'found\')\n
-  if message is not None:    \n
-    raise ValidationFailed, (message,)\n
 \n
+if not transaction.isCurrencyHandover():\n
+  # check again that we are in the good accounting date\n
+  transaction.Baobab_checkCounterDateOpen(site=vault, date=transaction.getStartDate())\n
+  if check_path_script is not None:\n
+    message = check_path_script()\n
+    transaction.log(\'check_path_script\',\'found\')\n
+    if message is not None:\n
+      raise ValidationFailed, (message,)\n
+else:\n
+  if \'devise\' not in vault:\n
+    msg = Message(domain="ui", message="Sorry, you must define a currency source.")\n
+    raise ValidationFailed, (msg,)\n
+  \n
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
-\n
 \n
 \n
 # Get price and total_price.\n
@@ -179,8 +192,6 @@ elif resource <> 0 :\n
                             <string>vaultDestination</string>
                             <string>None</string>
                             <string>msg</string>
-                            <string>vliste</string>
-                            <string>len</string>
                             <string>portal_type_with_no_space</string>
                             <string>getattr</string>
                             <string>check_path_script</string>

@@ -65,58 +65,51 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
+            <value> <string>from DateTime import DateTime\n
 \n
-transaction = state_change[\'object\']\n
+container_portal_type_list = ["Monetary Reception",]\n
 \n
-caisse = transaction.getSource()\n
+if listbox is None:\n
 \n
+  node = context.getSource()\n
+  if node is None:\n
+    request = context.REQUEST\n
+    redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                                  , \'view\'\n
+                                  , \'portal_status_message=Please+select+a+source.\'\n
+                                  )\n
+    return request.RESPONSE.redirect( redirect_url )\n
+  \n
+  reference_date = DateTime()\n
+  container_list = []\n
+  listbox = []\n
+  for o in context.portal_simulation.getCurrentTrackingList(at_date= reference_date, node = node):\n
+    if o.getObject().getParentValue().getPortalType()  in container_portal_type_list:\n
+      cash_container = o.getObject()\n
+      # get one line in order to know some properties of the cash container\n
+      container_dict = {}\n
+      container_lines = cash_container.searchFolder(portal_type=\'Container Line\')\n
+      if len(container_lines) == 0:\n
+        context.log("CashMovementNewNotEmmited_generateCashContainerInputDialog", "No container line finf for cash container %s" %(cash_container.getRelativeUrl(),))\n
+        continue\n
+      container_line = container_lines[0].getObject()\n
+      container_dict[\'reference\'] = cash_container.getReference()\n
+      container_dict[\'cash_number_range_start\'] = cash_container.getCashNumberRangeStart()\n
+      container_dict[\'cash_number_range_stop\'] = cash_container.getCashNumberRangeStop()\n
+      container_dict[\'resource_translated_title\'] = container_line.getResourceTranslatedTitle()\n
+      container_dict[\'quantity\'] = container_line.getQuantity()\n
+      container_dict[\'total_price\'] = container_line.getTotalPrice()\n
+      container_dict[\'selection\'] = 0\n
+      container_dict[\'uid\'] = \'new_%s\' %(cash_container.getUid(),)   #cash_container.getReference().replace(\'/\', \'_\'),)\n
 \n
-if (\'encaisse_des_billets_et_monnaies\'  not in caisse):\n
-   msg = Message(domain="ui", message="Invalid source.")\n
-   raise ValidationFailed, (msg,)\n
+      listbox.append(container_dict)\n
 \n
-# check again that we are in the good accounting date\n
-transaction.Baobab_checkCounterDateOpen(site=caisse, date=transaction.getStartDate())\n
+  context.Base_updateDialogForm(listbox=listbox\n
+                                )\n
 \n
-\n
-resource_one = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Incoming Cash Balance Regulation Line\')\n
-resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, \n
-                               portal_type=\'Outgoing Cash Balance Regulation Line\', \n
-                               same_source=1,\n
-                               no_balance_check=1)\n
-#resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Outgoing Cash Balance Regulation Line\')\n
-\n
-#context.log(\'resource_one\', resource_one)\n
-#context.log(\'resource_two\', resource_two)\n
-\n
-# Get total_price.\n
-amount = transaction.getSourceTotalAssetPrice()\n
-incoming_total = transaction.getTotalPrice(portal_type =[\'Incoming Cash Balance Regulation Line\',\'Cash Delivery Cell\'],fast=0)\n
-outgoing_total = transaction.getTotalPrice(portal_type =[\'Outgoing Cash Balance Regulation Line\',\'Cash Delivery Cell\'],fast=0)\n
-\n
-#context.log(\'incoming_total\', incoming_total)\n
-#context.log(\'outgoing_total\', outgoing_total)\n
-\n
-if amount != incoming_total:\n
-  msg = Message(domain="ui", message="Amount differ from total price.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-if resource_one == 2:\n
-  msg = Message(domain="ui", message="No resource.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource_one == 1:\n
-  msg = Message(domain="ui", message="Insufficient Balance.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-if resource_two == 2:\n
-  msg = Message(domain="ui", message="No resource.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-if incoming_total != outgoing_total:\n
-  msg = Message(domain="ui", message="No same balance.")\n
-  raise ValidationFailed, (msg,)\n
+  return context.asContext(context=None\n
+                           , portal_type=context.getPortalType()\n
+                           ).CashMovementNewNotEmmited_fastInputForm(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -132,8 +125,14 @@ if incoming_total != outgoing_total:\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>listbox=None, cash_detail_dict=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -153,27 +152,35 @@ if incoming_total != outgoing_total:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
+                            <string>listbox</string>
+                            <string>cash_detail_dict</string>
+                            <string>kw</string>
+                            <string>DateTime</string>
+                            <string>container_portal_type_list</string>
+                            <string>None</string>
                             <string>_getattr_</string>
-                            <string>caisse</string>
-                            <string>msg</string>
-                            <string>resource_one</string>
-                            <string>resource_two</string>
-                            <string>amount</string>
-                            <string>incoming_total</string>
-                            <string>outgoing_total</string>
+                            <string>context</string>
+                            <string>node</string>
+                            <string>request</string>
+                            <string>redirect_url</string>
+                            <string>reference_date</string>
+                            <string>container_list</string>
+                            <string>_getiter_</string>
+                            <string>o</string>
+                            <string>cash_container</string>
+                            <string>container_dict</string>
+                            <string>container_lines</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>container_line</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -185,12 +192,15 @@ if incoming_total != outgoing_total:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validateVaultBalance</string> </value>
+            <value> <string>CashMovementNewNotEmmited_viewCashContainerInputDialog</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

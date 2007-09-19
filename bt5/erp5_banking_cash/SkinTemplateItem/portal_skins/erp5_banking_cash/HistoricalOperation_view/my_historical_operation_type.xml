@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_categories.historical_operation_type.getCategoryChildTitleItemList()</string> </value>
+            <value> <string>python: here.portal_categories.historical_operation_type.getCategoryChildTranslatedTitleItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>

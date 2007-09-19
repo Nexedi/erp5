@@ -33,7 +33,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=draft&portal_type=Cash To Currency Sale&reset=1
+Base_viewWorklist?simulation_state=draft&reset=1&portal_type=Cash To Currency Sale&reset=1
 
 ]]></string> </value>
         </item>
@@ -94,14 +94,6 @@ Base_viewWorklist?simulation_state=draft&portal_type=Cash To Currency Sale&reset
             <key> <string>data</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>check_payment_state</string> </key>
-                    <value>
-                      <tuple>
-                        <string>draft</string>
-                      </tuple>
-                    </value>
-                </item>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>

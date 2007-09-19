@@ -10,6 +10,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -42,6 +48,10 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -184,6 +194,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -309,28 +323,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>source_reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>site_title</string>
-                          <string>Site</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_total_asset_price</string>
-                          <string>Total</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -348,24 +341,28 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>source_reference</string>
-                          <string>Reference</string>
+                          <string>resource_translated_title</string>
+                          <string>Denomination</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>site_title</string>
-                          <string>Site</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_total_asset_price</string>
-                          <string>Total</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
+                          <string>cash_status_translated_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>emission_letter_title</string>
+                          <string>Letter</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_title</string>
+                          <string>Issuing Year</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Amount</string>
                         </tuple>
                       </list>
                     </value>
@@ -411,12 +408,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>start_date</string>
-                          <string>start_date</string>
+                          <string>quantity</string>
+                          <string>Number</string>
                         </tuple>
                         <tuple>
-                          <string>source_total_asset_price</string>
-                          <string>price</string>
+                          <string>total_price</string>
+                          <string>Amount</string>
                         </tuple>
                       </list>
                     </value>
@@ -430,18 +427,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>float_rounding</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>force_alignment</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>
@@ -453,11 +438,11 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>15</int> </value>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>HistoricalOperationModule_viewHistoricalOperationList</string> </value>
+                    <value> <string>Folder_viewCashCurrencyList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -473,15 +458,19 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>EmptyByDefaultListBox_asHTML</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Historical Operation</string>
-                          <string>Historical Operation</string>
+                          <string>Cash Movement New Not Emmited Line</string>
+                          <string>Cash Movement New Not Emmited Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>Cash Delivery Cell</string>
+                          <string>Cash Delivery Cell</string>
                         </tuple>
                       </list>
                     </value>
@@ -498,7 +487,7 @@
                 </item>
                 <item>
                     <key> <string>search</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -508,11 +497,11 @@
                 </item>
                 <item>
                     <key> <string>select</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>historical_operation_list_selection</string> </value>
+                    <value> <string>cash_movement_new_not_emitted_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -523,20 +512,7 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>source_reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -551,7 +527,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Historical Operations</string> </value>
+                    <value> <string>Cash Details</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -576,7 +552,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
+            <value> <string>Delivery_getMovementList</string> </value>
         </item>
       </dictionary>
     </pickle>

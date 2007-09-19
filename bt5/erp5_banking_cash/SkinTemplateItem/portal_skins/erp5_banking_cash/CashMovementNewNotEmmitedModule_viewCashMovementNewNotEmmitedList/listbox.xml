@@ -10,6 +10,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -311,23 +317,31 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>id</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
                           <string>source_reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>site_title</string>
-                          <string>Site</string>
+                          <string>destination_logical_path</string>
+                          <string>Destination Vault</string>
                         </tuple>
                         <tuple>
                           <string>source_total_asset_price</string>
-                          <string>Total</string>
+                          <string>Amount</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -356,15 +370,19 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>site_title</string>
-                          <string>Site</string>
+                          <string>destination_logical_path</string>
+                          <string>Destination Vault</string>
                         </tuple>
                         <tuple>
                           <string>source_total_asset_price</string>
-                          <string>Total</string>
+                          <string>Amount</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -372,7 +390,9 @@
                 </item>
                 <item>
                     <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -395,12 +415,21 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>source_site_domain</string>
+                          <string>Source Vault</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_site_domain</string>
+                          <string>Destination Vault</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -412,11 +441,11 @@
                       <list>
                         <tuple>
                           <string>start_date</string>
-                          <string>start_date</string>
+                          <string>Date</string>
                         </tuple>
                         <tuple>
                           <string>source_total_asset_price</string>
-                          <string>price</string>
+                          <string>Amount</string>
                         </tuple>
                       </list>
                     </value>
@@ -430,18 +459,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>float_rounding</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>force_alignment</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>
@@ -453,16 +470,16 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>15</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>HistoricalOperationModule_viewHistoricalOperationList</string> </value>
+                    <value> <string>CashMovementNewNotEmmitedModule_viewCashMovementNewNotEmmitedList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -480,8 +497,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Historical Operation</string>
-                          <string>Historical Operation</string>
+                          <string>Cash Movement New Not Emmited</string>
+                          <string>Cash Movement New Not Emmited</string>
                         </tuple>
                       </list>
                     </value>
@@ -512,7 +529,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>historical_operation_list_selection</string> </value>
+                    <value> <string>monetray_issue_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -533,7 +550,7 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state_title</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -551,7 +568,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Historical Operations</string> </value>
+                    <value> <string>Cash Movement New Not Emmited</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -566,6 +583,22 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>countFolder</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>

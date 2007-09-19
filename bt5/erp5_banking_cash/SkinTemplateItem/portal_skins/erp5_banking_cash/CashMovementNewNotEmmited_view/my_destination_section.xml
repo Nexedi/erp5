@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_source</string> </value>
+            <value> <string>my_destination_section</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -241,28 +241,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>z</string>
-                          <string>z</string>
-                        </tuple>
-                        <tuple>
-                          <string>e</string>
-                          <string>e</string>
-                        </tuple>
-                        <tuple>
-                          <string>r</string>
-                          <string>r</string>
-                        </tuple>
-                        <tuple>
-                          <string>t</string>
-                          <string>t</string>
-                        </tuple>
-                        <tuple>
-                          <string>y</string>
-                          <string>y</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -275,7 +254,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Source Vault</string> </value>
+                    <value> <string>Destination Site</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -302,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_sortItemList(here.Delivery_getVaultItemList(vault_type = (\'site/caveau/auxiliaire\',\'site/surface/caisse_courante\',), exclude_vault_type=(\'site/caveau/auxiliaire/externe/transit\',),user_site = 1)+here.Delivery_getVaultItemList(vault_type = (\'site/caveau/auxiliaire/encaisse_des_externes\',), user_site = 1,leaf_node=0,strict_membership=1))</string> </value>
+            <value> <string>python:here.Delivery_getVaultItemList(vault_type = \'site\', user_site = None, leaf_node = 0, strict_membership = 1,main_agency=1,exclude_user_site=1,current_url=here.getDestinationSection())</string> </value>
         </item>
       </dictionary>
     </pickle>
