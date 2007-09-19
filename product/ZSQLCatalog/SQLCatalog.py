@@ -69,7 +69,7 @@ except ImportError:
     """
     def __init__(self, callable, **kw):
       self.function = callable
-    def __call__(*opts, **kw):
+    def __call__(self, *opts, **kw):
       return self.function(*opts, **kw)
   enableReadOnlyTransactionCache = doNothing
   disableReadOnlyTransactionCache = doNothing
@@ -1795,7 +1795,7 @@ class Catalog( Folder,
       for uid in uid_list:
         search_result = method(uid = uid)
         if len(search_result) > 0:
-          uid_path__dict[uid] = search_result[0].path
+          uid_path_dict[uid] = search_result[0].path
     return uid_path_dict
 
   def hasPath(self, path):
