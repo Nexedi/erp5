@@ -1812,6 +1812,30 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                          owner='somebody else')])
 
 
+  def test_SubDocumentsSecurityIndexing(self):
+    # make sure indexing of security on sub-documents works as expected
+    uf = self.getPortal().acl_users
+    uf._doAddUser('bob', '', ['Member'], [])
+    obj = self._makeOrganisation(title='The Document')
+    obj2 = obj.newContent(portal_type='Bank Account')
+    obj2.manage_addLocalRoles('bob', ['Auditor'])
+    get_transaction().commit()
+    self.tic()
+
+    PortalTestCase.login(self, 'bob')
+    self.assertEquals([obj2], [x.getObject() for x in
+                               obj.searchFolder(portal_type='Bank Account')])
+    # now if we pass the bank account in deleted state, it's no longer returned
+    # by searchFolder.
+    # This will work as long as Bank Account are associated to a workflow that
+    # allow deletion.
+    obj2.delete()
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals([], [x.getObject() for x in
+                           obj.searchFolder(portal_type='Bank Account')])
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
