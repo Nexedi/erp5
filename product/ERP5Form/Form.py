@@ -35,7 +35,6 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.CMFCore.utils import _checkPermission, getToolByName
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet, Permissions
-from Products.ERP5Type.Cache import CachingMethod
 
 from urllib import quote
 from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
