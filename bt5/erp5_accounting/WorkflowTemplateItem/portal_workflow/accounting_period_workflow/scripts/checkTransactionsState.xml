@@ -78,7 +78,7 @@ portal = period.getPortalObject()\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
 \n
-valid_simulation_state_list = [\'cancelled\', \'delivered\', \'delivered\']\n
+valid_simulation_state_list = [\'cancelled\', \'delivered\', \'deleted\', \'rejected\']\n
 all_state_list = [x[1] for x in\n
   portal.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n
 invalid_simulation_state_list = [state for state in all_state_list\n
