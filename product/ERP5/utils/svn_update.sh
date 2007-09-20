@@ -29,7 +29,8 @@ for p in $PRODUCTS
 # Get latests Business Templates
 echo ""
 echo "----- Updating Business Templates -----"
-wget -nv -N --no-host-directories -r --cut-dirs=2 --level=2 --relative --no-parent --accept=bt5,bt5list http://torrent.erp5.org/dists/snapshot/bt5/
+wget -nv -N --no-host-directories -r --cut-dirs=2 --level=2 --relative \
+  --no-parent --accept=bt5,bt5list http://www.erp5.org/dists/snapshot/bt5/
 rm -f robots.txt
 
 # Restore good right
