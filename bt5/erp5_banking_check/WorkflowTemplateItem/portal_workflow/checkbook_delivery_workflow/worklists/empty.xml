@@ -27,7 +27,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=confirmed&portal_type=Checkbook Delivery&reset=1
+Base_viewWorklist?simulation_state=empty&portal_type=Checkbook Delivery&reset=1
 
 ]]></string> </value>
         </item>
