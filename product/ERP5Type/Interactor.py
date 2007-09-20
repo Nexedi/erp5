@@ -88,27 +88,61 @@ class Interactor:
     """
     return InteractorSource(method)
 
-class AqDynamicInteractor(Interactor):
 
-  def install(self):
-    """
-      Installs interactions
-    """
-    from Products.ERP5.Interaction import InteractionDefinition
-    self.on(InteractionDefinition.setProperties).doAfter(self.resetAqDynamic, 1, 2, toto="foo")
-    self.on(InteractionDefinition.addVariable).doAfter(self.resetAqDynamic, 1, 2, toto="foo")
+## #
+## # Experimental part
+## #
+## class AqDynamicInteractor(Interactor):
 
-  def uninstall(self):
-    """
-      Uninstall interactions
-    """
+##   def install(self):
+##     """
+##       Installs interactions
+##     """
+##     from Products.ERP5.Interaction import InteractionDefinition
+##     self.on(InteractionDefinition.setProperties).doAfter(self.resetAqDynamic, 1, 2, toto="foo")
+##     self.on(InteractionDefinition.addVariable).doAfter(self.resetAqDynamic, 1, 2, toto="foo")
 
-  # Interaction example
-  def resetAqDynamic(self, method_call_object, a, b, toto=None):
-    """
-      Reset _aq_dynamic
-    """
-    _aq_reset()
+##   def uninstall(self):
+##     """
+##       Uninstall interactions
+##     """
+
+##   # Interaction example
+##   def resetAqDynamic(self, method_call_object, a, b, toto=None):
+##     """
+##       Reset _aq_dynamic
+##     """
+##     _aq_reset()
+
+
+## class TypeInteractorExample(Interactor):
+##   def __init__(self, portal_type):
+##     self.portal_type = portal_type
+
+##   def install(self):
+##     from Products.CMFCore.TypesTool import TypesTool
+##     self.on(TypesTool.manage_edit).doAfter(self.doSomething)
+
+##   def doSomething(self, method_call_object):
+##     if self.portal_type == method_call_object.instance.portal_type:
+##       pass
+##       # do whatever
+
+
+## class InteractorOfInteractor(Interactor):
+
+##   def __init__(self, interactor):
+##     self.interactor = interactor
+
+##   def install(self):
+##     self.on(interactor.doSomething).doAfter(self.doSomething)
+
+##   def doSomething(self, method_call_object):
+##     pass
+
+## test = AqDynamicInteractor()
+## test.install()
+
 
 class FieldValueInteractor(Interactor):
   
@@ -117,7 +151,14 @@ class FieldValueInteractor(Interactor):
       Installs interactions
     """
     from Products.Formulator.Field import ZMIField
+    from Products.ERP5Form.ProxyField import ProxyField
     self.on(ZMIField.manage_edit).doAfter(self.purgeFieldValueCache)
+    self.on(ZMIField.manage_edit_xmlrpc).doAfter(self.purgeFieldValueCache)
+    self.on(ZMIField.manage_tales).doAfter(self.purgeFieldValueCache)
+    self.on(ZMIField.manage_tales_xmlrpc).doAfter(self.purgeFieldValueCache)
+    self.on(ProxyField.manage_edit).doAfter(self.purgeFieldValueCache)
+    self.on(ProxyField.manage_edit_target).doAfter(self.purgeFieldValueCache)
+    self.on(ProxyField.manage_tales).doAfter(self.purgeFieldValueCache)
 
   def uninstall(self):
     """
@@ -127,37 +168,10 @@ class FieldValueInteractor(Interactor):
   def purgeFieldValueCache(self, method_call_object):
     """
     """
-    # here call something
+    from Products.ERP5Form import Form, ProxyField
+    Form.purgeFieldValueCache()
+    ProxyField.purgeFieldValueCache()
 
-
-class TypeInteractorExample(Interactor):
-  def __init__(self, portal_type):
-    self.portal_type = portal_type
-
-  def install(self):
-    from Products.CMFCore.TypesTool import TypesTool
-    self.on(TypesTool.manage_edit).doAfter(self.doSomething)
-
-  def doSomething(self, method_call_object):
-    if self.portal_type == method_call_object.instance.portal_type:
-      pass
-      # do whatever
-
-class InteractorOfInteractor(Interactor)
-
-  def __init__(self, interactor):
-    self.interactor = interactor
-
-  def install(self):
-    self.on(interactor.doSomething).doAfter(self.doSomething)
-
-  def doSomething(self, method_call_object):
-    pass
-
-
-test = AqDynamicInteractor()
-test.install()
-
-
-#interactor_of_interactor = InteractorOfInteractor(test)
-#interactor_of_interactor.install()
+# This is used in ERP5Form and install method is called in ERP5Form
+fielf_value_interactor = FieldValueInteractor()
+#fielf_value_interactor.install()
