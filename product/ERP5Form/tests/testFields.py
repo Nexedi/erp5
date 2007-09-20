@@ -51,9 +51,12 @@ ZopeTestCase.installProduct('ERP5Form')
 
 from Products.Formulator.StandardFields import FloatField
 from Products.Formulator.StandardFields import StringField
+from Products.Formulator.MethodField import Method
 
 from Products.ERP5Type.Core.Folder import Folder
-from Products.ERP5Form.Form import ERP5Form, purgeFieldValueCache
+from Products.ERP5Form.Form import ERP5Form
+from Products.ERP5Form.Form import purgeFieldValueCache
+from Products.ERP5Form.Form import getFieldValue
 
 
 class TestFloatField(unittest.TestCase):
@@ -218,10 +221,27 @@ class TestProxyField(unittest.TestCase):
     self.assertEquals('Base_view', proxy_field.get_value('title'))
 
 
+class TestFieldValueCache(unittest.TestCase):
+  """Tests field value caching system
+  """
+  def setUp(self):
+    self.form = ERP5Form('form', 'Form')
+    self.form.field = StringField('test_field')
+    # method field
+    self.form.field.values['external_validator'] = Method('this_is_a_method')
+
+  def test_method_field(self):
+    field = self.form.field
+    value = getFieldValue(field, field, 'external_validator')
+    self.assertEqual(False, value.value is field.values['external_validator'])
+    self.assertEqual(True, type(value.value) is Method)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestFloatField))
   suite.addTest(unittest.makeSuite(TestStringField))
   suite.addTest(unittest.makeSuite(TestProxyField))
+  suite.addTest(unittest.makeSuite(TestFieldValueCache))
   return suite
 

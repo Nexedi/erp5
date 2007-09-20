@@ -40,6 +40,7 @@ from urllib import quote
 from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from ZODB.POSException import ConflictError
+from Acquisition import aq_base
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ERP5Type.Utils import UpperCase
 
@@ -53,6 +54,7 @@ def purgeFieldValueCache():
 # Patch the fiels methods to provide improved namespace handling
 
 from Products.Formulator.Field import Field
+from Products.Formulator.MethodField import Method
 from Products.Formulator.TALESField import TALESMethod
 
 from zLOG import LOG, PROBLEM
@@ -64,6 +66,8 @@ class StaticValue:
     value as is)
   """
   def __init__(self, value):
+    if type(aq_base(value)) is  Method:
+      value = Method(value.method_name)
     self.value = value
 
   def __call__(self, field, id, **kw):
@@ -143,6 +147,8 @@ class TALESValue(StaticValue):
 
 class OverrideValue(StaticValue):
   def __init__(self, override):
+    if type(aq_base(override)) is  Method:
+      override = Method(override.method_name)
     self.override = override
 
   def __call__(self, field, id, **kw):
@@ -151,6 +157,8 @@ class OverrideValue(StaticValue):
 class DefaultValue(StaticValue):
   def __init__(self, field_id, value):
     self.key = field_id[3:]
+    if type(aq_base(value)) is  Method:
+      value = Method(value.method_name)
     self.value = value
 
   def __call__(self, field, id, **kw):
