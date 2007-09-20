@@ -902,7 +902,7 @@ class Base( CopyContainer,
   def _getDefaultAcquiredProperty(self, key, default_value, null_value,
         base_category=None, portal_type=None, copy_value=0, mask_value=0, sync_value=0,
         accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
-        is_list_type=0, is_tales_type=0):
+        is_list_type=0, is_tales_type=0, checked_permission=None):
     """
       This method implements programmable acquisition of values in ERP5.
 
@@ -961,7 +961,8 @@ class Base( CopyContainer,
       portal_type = tuple(portal_type)
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
-                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type)
+                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type,
+                       checked_permission)
     if acquisition_key in tv:
       return null_value
 
@@ -992,7 +993,8 @@ class Base( CopyContainer,
       #LOG("Get Acquired Property portal_type",0,str(portal_type))
       #LOG("Get Acquired Property base_category",0,str(base_category))
       #super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
-      super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # Full acquisition
+      super_list = self._getAcquiredValueList(base_category, portal_type=portal_type,
+                                              checked_permission=checked_permission) # Full acquisition
       super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
       #LOG("Get Acquired Property super_list",0,str(super_list))
       #LOG("Get Acquired Property accessor_id",0,str(accessor_id))
@@ -1064,7 +1066,7 @@ class Base( CopyContainer,
   def _getAcquiredPropertyList(self, key, default_value, null_value,
      base_category, portal_type=None, copy_value=0, mask_value=0, sync_value=0, append_value=0,
      accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
-     is_list_type=0, is_tales_type=0):
+     is_list_type=0, is_tales_type=0, checked_permission=None):
     """
       Default accessor. Implements the default
       attribute accessor.
@@ -1080,7 +1082,8 @@ class Base( CopyContainer,
       portal_type = tuple(portal_type)
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
-                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type)
+                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type,
+                       checked_permission)
     if acquisition_key in tv:
       return null_value
 
@@ -1096,7 +1099,8 @@ class Base( CopyContainer,
           return expression(econtext)
         else:
           return value
-      super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # Full acquisition
+      super_list = self._getAcquiredValueList(base_category, portal_type=portal_type,
+                                              checked_permission=checked_permission) # Full acquisition
       super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
       if len(super_list) > 0:
         value = []
@@ -1720,7 +1724,8 @@ class Base( CopyContainer,
   # Private accessors for the implementation of relations based on
   # categories
   security.declareProtected( Permissions.ModifyPortalContent, '_setValue' )
-  def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1):
+  def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1,
+                                  checked_permission=None):
     start_string = "%s/" % id
     start_string_len = len(start_string)
     if target is None :
@@ -1746,21 +1751,23 @@ class Base( CopyContainer,
       path = target.getRelativeUrl()
       if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
     self._setCategoryMembership(id, path, spec=spec, filter=filter, portal_type=portal_type,
-                                base=0, keep_default=keep_default)
+                                base=0, keep_default=keep_default,
+                                checked_permission=checked_permission)
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setValueList' )
   _setValueList = _setValue
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setValue' )
-  def setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1):
-    self._setValue(id, target, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default)
+  def setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1, checked_permission=None):
+    self._setValue(id, target, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default,
+                       checked_permission=checked_permission)
     self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setValueList' )
   setValueList = setValue
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultValue' )
-  def _setDefaultValue(self, id, target, spec=(), filter=None, portal_type=()):
+  def _setDefaultValue(self, id, target, spec=(), filter=None, portal_type=(), checked_permission=None):
     start_string = "%s/" % id
     start_string_len = len(start_string)
     if target is None :
@@ -1775,18 +1782,21 @@ class Base( CopyContainer,
       path = target.getRelativeUrl()
       if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
     self._setDefaultCategoryMembership(id, path, spec=spec, filter=filter,
-                                       portal_type=portal_type, base=0)
+                                       portal_type=portal_type, base=0,
+                                       checked_permission=checked_permission)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultValue' )
   def setDefaultValue(self, id, target, spec=(), filter=None, portal_type=()):
-    self._setDefaultValue(id, target, spec=spec, filter=filter, portal_type=portal_type)
+    self._setDefaultValue(id, target, spec=spec, filter=filter, portal_type=portal_type,
+                              checked_permission=None)
     self.reindexObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             '_getDefaultValue')
-  def _getDefaultValue(self, id, spec=(), filter=None, portal_type=()):
+  def _getDefaultValue(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
     path = self._getDefaultCategoryMembership(id, spec=spec, filter=filter,
-                                      portal_type=portal_type,base=1)
+                                      portal_type=portal_type,base=1,
+                                      checked_permission=checked_permission)
     if path is None:
       return None
     else:
@@ -1797,10 +1807,11 @@ class Base( CopyContainer,
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             '_getValueList')
-  def _getValueList(self, id, spec=(), filter=None, portal_type=()):
+  def _getValueList(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
     ref_list = []
     for path in self._getCategoryMembershipList(id, spec=spec, filter=filter,
-                                                  portal_type=portal_type, base=1):
+                                                  portal_type=portal_type, base=1,
+                                                  checked_permission=checked_permission):
       # LOG('_getValueList',0,str(path))
       try:
         value = self._getCategoryTool().resolveCategory(path)
@@ -1818,9 +1829,10 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.AccessContentsInformation, 
                             '_getDefaultAcquiredValue')
   def _getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
-                               evaluate=1):
+                               evaluate=1, checked_permission=None):
     path = self._getDefaultAcquiredCategoryMembership(id, spec=spec, filter=filter,
-                                                  portal_type=portal_type, base=1)
+                                                  portal_type=portal_type, base=1, 
+                                                  checked_permission=checked_permission)
     # LOG("_getAcquiredDefaultValue",0,str(path))
     if path is None:
       return None
@@ -1924,9 +1936,10 @@ class Base( CopyContainer,
   getRelatedPropertyList = _getRelatedPropertyList
 
   security.declareProtected( Permissions.View, 'getValueUidList' )
-  def getValueUidList(self, id, spec=(), filter=None, portal_type=()):
+  def getValueUidList(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
     uid_list = []
-    for o in self._getValueList(id, spec=spec, filter=filter, portal_type=portal_type):
+    for o in self._getValueList(id, spec=spec, filter=filter, portal_type=portal_type,
+                                    checked_permission=checked_permission):
       uid_list.append(o.getUid())
     return uid_list
 
@@ -1934,7 +1947,8 @@ class Base( CopyContainer,
   getValueUids = getValueUidList # DEPRECATED
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setValueUidList' )
-  def _setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1):
+  def _setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1,
+                                       checked_permission=None):
     # We must do an ordered list so we can not use the previous method
     # self._setValue(id, self.portal_catalog.getObjectList(uids), spec=spec)
     references = []
@@ -1942,67 +1956,80 @@ class Base( CopyContainer,
       uids = [uids]
     for uid in uids:
       references.append(self.portal_catalog.getObject(uid))
-    self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default)
+    self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type,
+                                   keep_default=keep_default, checked_permission=checked_permission)
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setValueUidList' )
   _setValueUids = _setValueUidList # DEPRECATED
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' )
-  def setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1):
-    self._setValueUids(id, uids, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default)
+  def setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1, checked_permission=None):
+    self._setValueUids(id, uids, spec=spec, filter=filter, portal_type=portal_type, 
+                                 keep_default=keep_default, checked_permission=checked_permission)
     self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' )
   setValueUids = setValueUidList # DEPRECATED
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultValueUid' )
-  def _setDefaultValueUid(self, id, uid, spec=(), filter=None, portal_type=()):
+  def _setDefaultValueUid(self, id, uid, spec=(), filter=None, portal_type=(),
+                                         checked_permission=None):
     # We must do an ordered list so we can not use the previous method
     # self._setValue(id, self.portal_catalog.getObjectList(uids), spec=spec)
     references = self.portal_catalog.getObject(uid)
-    self._setDefaultValue(id, references, spec=spec, filter=filter, portal_type=portal_type)
+    self._setDefaultValue(id, references, spec=spec, filter=filter, portal_type=portal_type,
+                                          checked_permission=checked_permission)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setDefaultValueUid' )
-  def setDefaultValueUid(self, id, uid, spec=(), filter=None, portal_type=()):
-    self._setDefaultValueUid(id, uid, spec=spec, filter=filter, portal_type=portal_type)
+  def setDefaultValueUid(self, id, uid, spec=(), filter=None, portal_type=(), checked_permission=None):
+    self._setDefaultValueUid(id, uid, spec=spec, filter=filter, portal_type=portal_type,
+                                      checked_permission=checked_permission)
     self.reindexObject()
 
   # Private accessors for the implementation of categories
   security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryMembership' )
   def _setCategoryMembership(self, category, node_list, spec=(),
-                                             filter=None, portal_type=(), base=0, keep_default=1):
+                                             filter=None, portal_type=(), base=0, keep_default=1,
+                                             checked_permission=None):
     self._getCategoryTool().setCategoryMembership(self, category, node_list,
-                       spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default=keep_default)
+                       spec=spec, filter=filter, portal_type=portal_type, base=base, 
+                       keep_default=keep_default, checked_permission=checked_permission)
     #self.activate().edit() # Do nothing except call workflow method
     # XXX This is a problem - it is used to circumvent a lack of edit
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryMembership' )
-  def setCategoryMembership(self, category, node_list, spec=(), portal_type=(), base=0, keep_default=1):
+  def setCategoryMembership(self, category, node_list, spec=(), portal_type=(), base=0, keep_default=1,
+                                                       checked_permission=None):
     self._setCategoryMembership(category,
-                      node_list, spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default=keep_default)
+                      node_list, spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default=keep_default, checked_permission=checked_permission)
     self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultCategoryMembership' )
   def _setDefaultCategoryMembership(self, category, node_list,
-                                    spec=(), filter=None, portal_type=(), base=0):
+                                    spec=(), filter=None, portal_type=(), base=0,
+                                    checked_permission=None):
     self._getCategoryTool().setDefaultCategoryMembership(self, category,
-                     node_list, spec=spec, filter=filter, portal_type=portal_type, base=base)
+                     node_list, spec=spec, filter=filter, portal_type=portal_type, base=base,
+                                checked_permission=checked_permission)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setDefaultCategoryMembership' )
   def setDefaultCategoryMembership(self, category, node_list,
-                                           spec=(), filter=None, portal_type=(), base=0):
+                                           spec=(), filter=None, portal_type=(), base=0,
+                                           checked_permission=None):
     self._setDefaultCategoryMembership(category, node_list, spec=spec, filter=filter,
-                                       portal_type=portal_type, base=base)
+                                       portal_type=portal_type, base=base,
+                                       checked_permission=checked_permission)
     self.reindexObject()
 
   security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryMembershipList' )
-  def _getCategoryMembershipList(self, category, spec=(), filter=None, portal_type=(), base=0, keep_default=1):
+  def _getCategoryMembershipList(self, category, spec=(), filter=None, portal_type=(), base=0, 
+                                                 keep_default=1, checked_permission=None):
     """
       This returns the list of categories for an object
     """
     return self._getCategoryTool().getCategoryMembershipList(self, category, spec=spec,
                                                    filter=filter, portal_type=portal_type, base=base,
-                                                   keep_default=keep_default)
+                                                   keep_default=keep_default, checked_permission=checked_permission)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMembershipList' )
   getCategoryMembershipList = _getCategoryMembershipList
@@ -2022,26 +2049,31 @@ class Base( CopyContainer,
   getAcquiredCategoryMembershipList = _getAcquiredCategoryMembershipList
 
   security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryMembershipItemList' )
-  def _getCategoryMembershipItemList(self, category, spec=(), filter=None, portal_type=(), base=0):
+  def _getCategoryMembershipItemList(self, category, spec=(), filter=None, portal_type=(), base=0,
+                                                     checked_permission=None):
     membership_list = self._getCategoryMembershipList(category,
-                            spec = spec, filter=filter, portal_type=portal_type, base=base)
+                            spec=spec, filter=filter, portal_type=portal_type, base=base,
+                            checked_permission=checked_permission)
     return [(x, x) for x in membership_list]
 
   security.declareProtected( Permissions.AccessContentsInformation,
                                           '_getAcquiredCategoryMembershipItemList' )
   def _getAcquiredCategoryMembershipItemList(self, category, spec=(),
-             filter=None, portal_type=(), base=0, method_id=None, sort_id='default'):
+             filter=None, portal_type=(), base=0, method_id=None, sort_id='default',
+             checked_permission=None):
     # Standard behaviour - should be OK
     # sort_id should be None for not sort - default behaviour in other methods
     if method_id is None and sort_id in (None, 'default'):
       membership_list = self._getAcquiredCategoryMembershipList(category,
-                           spec = spec, filter=filter, portal_type=portal_type, base=base)
+                           spec = spec, filter=filter, portal_type=portal_type, base=base,
+                           checked_permission=checked_permission)
       if sort_id == 'default':
         membership_list.sort()
       return [(x, x) for x in membership_list]
     # Advanced behaviour XXX This is new and needs to be checked
     membership_list = self._getAcquiredCategoryMembershipList(category,
-                           spec = spec, filter=filter, portal_type=portal_type, base=1)
+                           spec = spec, filter=filter, portal_type=portal_type, base=1,
+                           checked_permission=checked_permission)
     result = []
     for path in membership_list:
       value = self._getCategoryTool().resolveCategory(path)
@@ -2053,9 +2085,11 @@ class Base( CopyContainer,
     return map(lambda x: (x,getattr(x, method_id)()), membership_list)
 
   security.declareProtected( Permissions.View, '_getDefaultCategoryMembership' )
-  def _getDefaultCategoryMembership(self, category, spec = (), filter=None, portal_type=(), base = 0 ):
+  def _getDefaultCategoryMembership(self, category, spec=(), filter=None, portal_type=(), base=0,
+                                                    checked_permission=None ):
     membership = self._getCategoryTool().getCategoryMembershipList(self,
-                     category, spec = spec, filter=filter, portal_type=portal_type, base = base)
+                     category, spec=spec, filter=filter, portal_type=portal_type, base=base,
+                               checked_permission=checked_permission)
     if len(membership) > 0:
       return membership[0]
     else:
@@ -2063,9 +2097,11 @@ class Base( CopyContainer,
 
   security.declareProtected( Permissions.View, '_getDefaultAcquiredCategoryMembership' )
   def _getDefaultAcquiredCategoryMembership(self, category,
-                                        spec=(), filter=None, portal_type=(), base=0, default=None):
+                                        spec=(), filter=None, portal_type=(), base=0, default=None,
+                                        checked_permission=None):
     membership = self._getAcquiredCategoryMembershipList(category,
-                spec=spec, filter=filter, portal_type=portal_type, base=base)
+                spec=spec, filter=filter, portal_type=portal_type, base=base,
+                checked_permission=checked_permission)
     if len(membership) > 0:
       return membership[0]
     else:

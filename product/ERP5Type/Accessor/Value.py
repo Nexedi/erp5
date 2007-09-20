@@ -51,10 +51,11 @@ class SetSetter(Method):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
       instance._setValue(self._key, args[0],
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 keep_default=1)
+                                                spec=kw.get('spec',()),
+                                                filter=kw.get('filter', None),
+                                                portal_type=kw.get('portal_type',()),
+                                                keep_default=1,
+                                                checked_permission=kw.get('checked_permission', None))
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",
@@ -76,7 +77,8 @@ class ListSetter(SetSetter):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
-                                                 keep_default=0)
+                                                 keep_default=0,
+                                                 checked_permission=kw.get('checked_permission', None))
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",
@@ -99,7 +101,8 @@ class DefaultSetter(SetSetter):
       instance._setDefaultValue(self._key, args[0],
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",
@@ -256,7 +259,8 @@ class DefaultTranslatedTitleGetter(Method):
       o = instance._getDefaultAcquiredValue(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
       if o is None:
         return None
       return o.getTranslatedTitle()
@@ -285,7 +289,8 @@ class TranslatedTitleListGetter(Method):
       return [x.getTranslatedTitle() for x in instance._getAcquiredValueList(self._key,
                                                     spec=kw.get('spec',()),
                                                     filter=kw.get('filter', None),
-                                                    portal_type=kw.get('portal_type',()))
+                                                    portal_type=kw.get('portal_type',()),
+                                                    checked_permission=kw.get('checked_permission', None))
                                                   ]
 
     psyco.bind(__call__)
@@ -323,7 +328,8 @@ class DefaultReferenceGetter(Method):
       o = instance._getDefaultAcquiredValue(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
       if o is None:
         return None
       return o.getReference()
@@ -352,7 +358,8 @@ class ReferenceListGetter(Method):
       return [x.getReference() for x in instance._getAcquiredValueList(self._key,
                                                     spec=kw.get('spec',()),
                                                     filter=kw.get('filter', None),
-                                                    portal_type=kw.get('portal_type',()))
+                                                    portal_type=kw.get('portal_type',()),
+                                                    checked_permission=kw.get('checked_permission', None))
                                                   ]
 
     psyco.bind(__call__)
@@ -390,7 +397,8 @@ class DefaultUidGetter(Method):
       value = instance._getDefaultAcquiredValue(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
       if value is not None:
         return value.getUid()
       else:
@@ -422,7 +430,8 @@ class UidListGetter(Method):
       return [x.getUid() for x in instance._getAcquiredValueList(self._key,
                                                     spec=kw.get('spec',()),
                                                     filter=kw.get('filter', None),
-                                                    portal_type=kw.get('portal_type',()))
+                                                    portal_type=kw.get('portal_type',()),
+                                                    checked_permission=kw.get('checked_permission', None))
                                                   ]
 
     psyco.bind(__call__)
@@ -460,7 +469,8 @@ class UidSetSetter(Method):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
-                                                 keep_default=1)
+                                                 keep_default=1,
+                                                 checked_permission=kw.get('checked_permission', None))
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",
@@ -480,7 +490,8 @@ class UidListSetter(UidSetSetter):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
-                                                 keep_default=0)
+                                                 keep_default=0,
+                                                 checked_permission=kw.get('checked_permission', None))
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",
@@ -501,7 +512,8 @@ class UidDefaultSetter(UidSetSetter):
       instance._setDefaultValueUid(self._key, args[0],
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",
@@ -527,7 +539,10 @@ class DefaultIdGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      value = instance._getDefaultAcquiredValue(self._key, spec=kw.get('spec',()))
+      value = instance._getDefaultAcquiredValue(self._key, spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
       if value is not None:
         return value.getId()
       else:
@@ -556,7 +571,10 @@ class DefaultTitleOrIdGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      value = instance._getDefaultAcquiredValue(self._key, spec=kw.get('spec',()))
+      value = instance._getDefaultAcquiredValue(self._key, spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
       if value is not None:
         return value.getTitleOrId()
       else:
@@ -585,7 +603,10 @@ class DefaultLogicalPathGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      value = instance._getDefaultAcquiredValue(self._key, spec=kw.get('spec',()))
+      value = instance._getDefaultAcquiredValue(self._key, spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
       if value is not None:
         return value.getLogicalPath()
       else:
@@ -617,7 +638,8 @@ class IdListGetter(Method):
       return [x.getId() for x in instance._getAcquiredValueList(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
                                                   ]
 
     psyco.bind(__call__)
@@ -655,7 +677,8 @@ class LogicalPathListGetter(Method):
       return [x.getLogicalPath() for x in instance._getAcquiredValueList(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
                                                   ]
 
 class LogicalPathSetGetter(LogicalPathListGetter):
@@ -691,7 +714,8 @@ class DefaultPropertyGetter(Method):
       value = instance._getDefaultAcquiredValue(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
       if value is not None:
         return value.getProperty(key)
       else:
@@ -723,7 +747,8 @@ class PropertyListGetter(Method):
       return [x.getProperty(key) for x in instance._getAcquiredValueList(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 checked_permission=kw.get('checked_permission', None))
                                                   ]
 
     psyco.bind(__call__)
@@ -737,4 +762,3 @@ class PropertySetGetter(PropertyListGetter):
            self, instance, *args, **kw)
       result_set = dict([(x, 0) for x in result_list]).keys()
       return result_set
-

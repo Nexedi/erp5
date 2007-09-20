@@ -714,7 +714,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                                         'getSingleCategoryMembershipList' )
     def getSingleCategoryMembershipList(self, context, base_category, base=0,
-                                          spec=(), filter=None, **kw):
+                                          spec=(), filter=None, checked_permission=None, **kw):
       """
         Returns the local membership of the context for a single base category
         represented as a list of relative URLs
@@ -733,15 +733,28 @@ class CategoryTool( UniqueObject, Folder, Base ):
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type
 
+      # Build the ckecked_permission filter
+      if checked_permission is None:
+        permissionFilter = lambda x: x
+      else:
+        def permissionFilter(category_list):
+          filtered_category_list = []
+          checkPermission = self.portal_membership.checkPermission
+          for category in category_list:
+            object = self.unrestrictedTraverse(category)
+            if object is not None and checkPermission(checked_permission, object):
+              filtered_category_list.append(category)
+          return filtered_category_list
+
       # We must treat parent in a different way
       #LOG('getSingleCategoryMembershipList', 0, 'base_category = %s, spec = %s, base = %s, context = %s, context.aq_inner.aq_parent = %s' % (repr(base_category), repr(spec), repr(base), repr(context), repr(context.aq_inner.aq_parent)))
       if base_category == 'parent':
         parent = context.aq_inner.aq_parent # aq_inner is required to make sure we use containment
         if parent.portal_type in spec:
           if base:
-            return ['parent/' + parent.getRelativeUrl()]
+            return permissionFilter(['parent/' + parent.getRelativeUrl()])
           else:
-            return [parent.getRelativeUrl()]
+            return permissionFilter([parent.getRelativeUrl()])
         #LOG('getSingleCategoryMembershipList', 0, 'not in spec: parent.portal_type = %s, spec = %s' % (repr(parent.portal_type), repr(spec)))
         return []
 
@@ -777,7 +790,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                     append(category_url)
                   else:
                     append(category_url[len(my_base_category)+1:])
-      return result
+      return permissionFilter(result)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                       'getSingleCategoryAcquiredMembershipList' )
@@ -819,6 +832,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
         base          --    if set to 1, returns relative URLs to portal_categories
                             if set to 0, returns relative URLs to the base category
+
+        checked_permission        --    a string which defined the permission 
+                                        to filter the object on
 
         acquired_object_dict      --    this is the list of object used by acquisition, so
                                         we can check if we already have used this object

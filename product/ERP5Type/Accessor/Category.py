@@ -57,7 +57,8 @@ class ListSetter(Method):
                                       filter=kw.get('filter', None),
                                       portal_type=kw.get('portal_type',()),
                                       base=kw.get('base', 0),
-                                      keep_default=0)
+                                      keep_default=0,
+                                      checked_permission=kw.get('checked_permission', None))
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",
@@ -90,7 +91,8 @@ class DefaultSetter(Method):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
-                                                 base=kw.get('base', 0))
+                                                 base=kw.get('base', 0),
+                                                 checked_permission=kw.get('checked_permission', None))
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",
@@ -133,7 +135,8 @@ class SetSetter(Method):
                                       filter=kw.get('filter', None),
                                       portal_type=kw.get('portal_type',()),
                                       base=kw.get('base', 0),
-                                      keep_default=1)
+                                      keep_default=1,
+                                      checked_permission=kw.get('checked_permission', None))
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",
@@ -168,7 +171,8 @@ class DefaultGetter(Method):
                                                       spec=kw.get('spec',()),
                                                       filter=kw.get('filter', None),
                                                       portal_type=kw.get('portal_type',()),
-                                                      base=kw.get('base',0), default=default)
+                                                      base=kw.get('base',0), default=default,
+                                                      checked_permission=kw.get('checked_permission', None))
     psyco.bind(__call__)
 
 class ListGetter(Method):

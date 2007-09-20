@@ -94,6 +94,7 @@ class Getter(Method):
             alt_accessor_id=self._alt_accessor_id,
             is_list_type=self._is_list_type,
             is_tales_type=self._is_tales_type,
+            checked_permission=kw.get('checked_permission', None)
             )
       if value is not None:
         return value.getProperty(self._acquired_property, default, **kw)
