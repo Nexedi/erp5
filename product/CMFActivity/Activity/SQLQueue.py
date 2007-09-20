@@ -85,9 +85,8 @@ class SQLQueue(RAMQueue):
     now_date = DateTime()
     # Next processing date in case of error
     next_processing_date = now_date + float(VALIDATION_ERROR_DELAY)/86400
-    result = readMessage(processing_node=processing_node, to_date=now_date)
-    if len(result) > 0:
-      line = result[0]
+    message_list = readMessage(processing_node=processing_node, to_date=now_date)
+    for line in message_list:
       path = line.path
       method_id = line.method_id
       # Make sure message can not be processed anylonger
@@ -110,7 +109,7 @@ class SQLQueue(RAMQueue):
             # Lower priority
             activity_tool.SQLQueue_setPriority(uid=line.uid, priority=line.priority + 1)
             get_transaction().commit() # Release locks before starting a potentially long calculation
-          return 0
+          continue
 
         # Try to invoke
         activity_tool.invoke(m) # Try to invoke the message
@@ -135,7 +134,7 @@ class SQLQueue(RAMQueue):
           LOG('SQLQueue', ERROR, 'SQLQueue.dequeueMessage raised, and cannot even set processing to zero due to an exception',
               error=sys.exc_info())
           raise
-        return 0
+        continue
 
       try:
         if m.is_executed:
@@ -170,9 +169,8 @@ class SQLQueue(RAMQueue):
             'SQLQueue.dequeueMessage raised an exception during checking for the results of processed messages',
             error=sys.exc_info())
         raise
-      return 0
     get_transaction().commit() # Release locks before starting a potentially long calculation
-    return 1
+    return len(message_list) == 0
 
   def hasActivity(self, activity_tool, object, **kw):
     hasMessage = getattr(activity_tool, 'SQLQueue_hasMessage', None)
