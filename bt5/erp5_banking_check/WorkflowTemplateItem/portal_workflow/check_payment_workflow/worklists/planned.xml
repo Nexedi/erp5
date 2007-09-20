@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Checkbook Vault Transfers To Validate (%(count)s)</string> </value>
+            <value> <string>Consistency Verified (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Checkbook Vault Transfer
+Base_viewWorklist?simulation_state=planned&portal_type=Check Payment&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Checkbook Vault Transfers To Validate By Destination Controler</string> </value>
+            <value> <string>Consistency Verified</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Checkbook Vault
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirmed</string> </value>
+            <value> <string>planned</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -68,7 +68,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Checkbook Vault
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignor</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>
@@ -92,7 +92,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Checkbook Vault
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Checkbook Vault Transfer</string>
+                        <string>Check Payment</string>
                       </tuple>
                     </value>
                 </item>
@@ -100,7 +100,7 @@ Base_viewWorklist?simulation_state=confirmed&reset=1&portal_type=Checkbook Vault
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>confirmed</string>
+                        <string>planned</string>
                       </tuple>
                     </value>
                 </item>

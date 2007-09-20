@@ -75,7 +75,6 @@ transaction = state_change[\'object\']\n
 \n
 site = transaction.getSite()\n
 date = transaction.getStartDate()\n
-transaction.Baobab_checkCounterDateOpen(site=site, date=date)\n
 transaction.Baobab_checkAccountingDateOpen(site=site, date=date)\n
 \n
 # Check the amount.\n

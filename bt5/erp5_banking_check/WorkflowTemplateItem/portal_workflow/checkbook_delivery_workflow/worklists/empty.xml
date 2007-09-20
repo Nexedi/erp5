@@ -16,45 +16,39 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Draft to Validate (%(count)s)</string> </value>
+            <value> <string>Empty to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=draft&reset=1&portal_type=Checkbook Delivery
+Base_viewWorklist?simulation_state=confirmed&portal_type=Checkbook Delivery&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Draft to Validate</string> </value>
+            <value> <string>Empty to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkbook_delivery_worklist</string> </value>
+            <value> <string>empty</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -63,17 +57,36 @@ Base_viewWorklist?simulation_state=draft&reset=1&portal_type=Checkbook Delivery
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assistant</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -88,7 +101,7 @@ Base_viewWorklist?simulation_state=draft&reset=1&portal_type=Checkbook Delivery
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>draft</string>
+                        <string>empty</string>
                       </tuple>
                     </value>
                 </item>
