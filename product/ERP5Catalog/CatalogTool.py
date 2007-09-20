@@ -155,13 +155,18 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             # we may sometimes catalog the owner user ID whenever the Owner
             # has view permission (see getAllowedRolesAndUsers bellow
             # as well as getViewPermissionOwner method in Base)
-            if role != 'Owner': 
+            if role != 'Owner':
               if withnuxgroups:
                 allowed[user + ':' + role] = 1
               else:
                 allowed['user:' + user + ':' + role] = 1
+            elif 'Owner' in allowed:
+              ob._v_view_permission_owner = user
+
         if allowed.has_key('Owner'):
           del allowed['Owner']
+        else:
+          ob._v_view_permission_owner = None
         return list(allowed.keys())
 
 class RelatedBaseCategory(Method):
