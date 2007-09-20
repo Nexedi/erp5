@@ -424,3 +424,4 @@ class EmailDocument(File, TextDocument):
 ## Compatibility layer
 #from Products.ERP5Type import Document
 #Document.MailMessage = EmailDocument
+
