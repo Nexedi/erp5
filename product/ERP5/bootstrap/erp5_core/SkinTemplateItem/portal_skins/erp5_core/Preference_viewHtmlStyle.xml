@@ -78,7 +78,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
                         <string>my_preferred_text_editor</string>

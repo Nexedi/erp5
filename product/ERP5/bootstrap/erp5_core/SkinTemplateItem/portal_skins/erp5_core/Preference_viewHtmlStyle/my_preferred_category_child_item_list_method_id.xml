@@ -17,7 +17,8 @@
             <value>
               <list>
                 <string>title</string>
-                <string>enabled</string>
+                <string>description</string>
+                <string>items</string>
               </list>
             </value>
         </item>
@@ -74,7 +75,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key>                 <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -85,23 +96,29 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <key>                 <string>description</string> </key>
+                    <value> <string>The style used to display categories in drop-down lists.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key>                 <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Category Item List Method</string> </value>
                 </item>
               </dictionary>
@@ -125,6 +142,25 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python:here.getPortalObject().portal_membership.checkPermission("Manage portal", here)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/Preference_getCategoryChildItemListMethodItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
