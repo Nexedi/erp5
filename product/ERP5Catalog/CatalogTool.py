@@ -30,6 +30,7 @@ from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Cache import CachingMethod
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
@@ -675,17 +676,41 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           vars = {}
         #LOG('catalog_object vars', 0, str(vars))
 
-        w = IndexableObjectWrapper(vars, object)
+        # This functions tells which portal_types should acquire 
+        # from their parent. The behaviour is the same as
+        # in previous implementations but is capable of covering
+        # more cases. Only those portal types which View permission
+        # is not managed by a workflow and which acquire local
+        # roles acquire their permission
+        def isViewPermissionAcquired(portal_type):
+          if portal_type:
+            types_tool = getToolByName(self, 'portal_types')
+            type_definition = getattr(types_tool, portal_type, None)
+            if type_definition and getattr(type_definition, 'acquire_local_roles', 0):
+              for workflow in wf.getChainFor(portal_type):
+                workflow = getattr(wf, workflow, None)
+                if workflow is not None:
+                  if 'View' in getattr(workflow, 'permissions', ()):
+                    return 0
+              # No workflow manages View and roles are acquired
+              return 1
+          return 0
 
-        object_path = object.getPhysicalPath()
-        portal_path = object.portal_url.getPortalObject().getPhysicalPath()
-        if len(object_path) > len(portal_path) + 2 and getattr(object, 'isRADContent', 0):
-          # This only applied to ERP5 Contents (not CPS)
-          # We are now in the case of a subobject of a root document
-          # We want to return single security information
-          document_object = aq_inner(object)
-          for i in range(0, len(object_path) - len(portal_path) - 2):
+        isViewPermissionAcquired = CachingMethod(isViewPermissionAcquired, 
+                                                 id='CatalogTool_isViewPermissionAcquired',
+                                                 cache_factory='erp5_content_long')
+
+        # Find the parent definition for security
+        document_object = aq_inner(object)
+        is_acquired = 0
+        w = IndexableObjectWrapper(vars, document_object)
+        while getattr(document_object, 'isRADContent', 0):
+          if isViewPermissionAcquired(getattr(document_object, 'portal_type', None)):
             document_object = document_object.aq_parent
+            is_acquired = 1
+          else:
+            break
+        if is_acquired:
           document_w = IndexableObjectWrapper({}, document_object)
         else:
           document_w = w
@@ -724,7 +749,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           if object is None:
             raise TypeError, 'One of uid, path and object parameters must not be None'
           path = self.__url(object)
-        self.uncatalog_object(path=path,uid=uid, sql_catalog_id=sql_catalog_id)
+        self.uncatalog_object(path=path, uid=uid, sql_catalog_id=sql_catalog_id)
 
     security.declarePrivate('beforeUnindexObject')
     def beforeUnindexObject(self, object, path=None, uid=None,sql_catalog_id=None):
@@ -861,9 +886,5 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           return aq_base_name
       return aq_base_name
-
-
-
-
 
 InitializeClass(CatalogTool)
