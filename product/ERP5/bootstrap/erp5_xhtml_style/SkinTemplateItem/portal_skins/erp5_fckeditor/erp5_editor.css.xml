@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-        <tuple/>
+        <tuple>
+          <string>OFS.DTMLDocument</string>
+          <string>DTMLDocument</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
