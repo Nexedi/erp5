@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -71,7 +77,7 @@
       </option>\n
     </select>\n
   </div>\n
-  <div>\n
+  <div tal:condition="here/Base_hasProjectModuleViewPermission">\n
     <label for="source_project" value="" i18n:translate="" i18n:domain="ui">Programme</label>\n
     <select size="1" id="source_project" name="source_project"\n
                      tal:attributes="name string:${contribute_prefix}source_project">\n
