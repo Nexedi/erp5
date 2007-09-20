@@ -244,7 +244,7 @@ class PreferenceTool(BaseTool):
 
     # We must set the user_id as a parameter to make sure each
     # user can get a different cache
-    def _getDocumentTemplateList(user_id,portal_type=None):
+    def _getDocumentTemplateList(user_id, portal_type=None):
       acceptable_templates = []
       for pref in self._getSortedPreferenceList() :
         for doc in pref.contentValues() :
