@@ -85,6 +85,7 @@ def roundCurrency(value, resource_relative_url):\n
   qty_precision = precision_cache[resource_relative_url]\n
   return round(value, qty_precision)\n
 \n
+\n
 at_date = context.getStopDate()\n
 assert at_date\n
 \n
@@ -175,8 +176,8 @@ for inventory in getInventoryList(\n
         group_by_resource=1,\n
         **inventory_param_dict):\n
 \n
-  total_price = roundCurrency(inventory.total_price, section_currency)\n
-  quantity = roundCurrency(inventory.total_quantity,\n
+  total_price = roundCurrency(inventory.total_price or 0, section_currency)\n
+  quantity = roundCurrency(inventory.total_quantity or 0,\n
                            inventory.resource_relative_url)\n
   profit_and_loss_quantity += total_price\n
 \n
@@ -206,8 +207,8 @@ for inventory in getInventoryList(\n
         group_by_resource=1,\n
         **inventory_param_dict):\n
 \n
-  total_price = roundCurrency(inventory.total_price, section_currency)\n
-  quantity = roundCurrency(inventory.total_quantity,\n
+  total_price = roundCurrency(inventory.total_price or 0, section_currency)\n
+  quantity = roundCurrency(inventory.total_quantity or 0,\n
                            inventory.resource_relative_url)\n
   profit_and_loss_quantity += total_price\n
 \n
