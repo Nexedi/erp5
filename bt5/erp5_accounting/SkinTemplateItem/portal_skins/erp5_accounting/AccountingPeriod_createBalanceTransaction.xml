@@ -142,6 +142,9 @@ for inventory in getInventoryList(\n
   total_price = roundCurrency(inventory.total_price or 0, section_currency)\n
   quantity = roundCurrency(inventory.total_quantity or 0,\n
                            inventory.resource_relative_url)\n
+  \n
+  if not total_price and not quantity:\n
+    continue\n
 \n
   if inventory.resource_uid != section_currency_uid:\n
     if inventory.node_relative_url == profit_and_loss_account:\n
@@ -179,6 +182,9 @@ for inventory in getInventoryList(\n
   total_price = roundCurrency(inventory.total_price or 0, section_currency)\n
   quantity = roundCurrency(inventory.total_quantity or 0,\n
                            inventory.resource_relative_url)\n
+  \n
+  if not total_price and not quantity:\n
+    continue\n
   profit_and_loss_quantity += total_price\n
 \n
   if inventory.resource_uid != section_currency_uid:\n
@@ -210,6 +216,9 @@ for inventory in getInventoryList(\n
   total_price = roundCurrency(inventory.total_price or 0, section_currency)\n
   quantity = roundCurrency(inventory.total_quantity or 0,\n
                            inventory.resource_relative_url)\n
+  \n
+  if not total_price and not quantity:\n
+    continue\n
   profit_and_loss_quantity += total_price\n
 \n
   if inventory.resource_uid != section_currency_uid:\n
