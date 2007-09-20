@@ -130,6 +130,8 @@ class TestProxyField(unittest.TestCase):
                       'my_title', 'Not Title', 'ProxyField')
     proxy_field = self.container.Base_view.my_title
     self.assertEquals(None, proxy_field.getTemplateField())
+    self.assertEquals(None, proxy_field.get_value('enable'))
+    self.assertEquals(None, proxy_field.get_value('default'))
 
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))

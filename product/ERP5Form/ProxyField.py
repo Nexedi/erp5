@@ -513,7 +513,10 @@ class ProxyField(ZMIField):
     """
       Return a callable expression
     """
-    tales_expr = self.get_tales_expression(id)
+    try:
+      tales_expr = self.get_tales_expression(id)
+    except ValueError:
+      return None
     if tales_expr:
       return TALESValue(tales_expr)
 
