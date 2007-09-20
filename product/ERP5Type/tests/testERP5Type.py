@@ -1347,6 +1347,254 @@ class TestPropertySheet:
       obj.setFooBar('something')
       self.assertTrue(obj.hasFooBar())
 
+    def test_27_categoryAccessors(self, quiet=quiet, run=run_all_test):
+      """
+      The purpose of this test is to make sure that category
+      accessors work as expected.
+
+      The test is implemented for both Category and Value
+      accessors.
+
+      Test that checked_permission is well configured 
+      for View permission
+      """
+      if not run: return
+
+      if not quiet:
+        message = 'Test Category Accessors'
+        ZopeTestCase._print('\n '+message)
+        LOG('Testing... ', 0, message)
+
+      # Create a few categories
+      region_category = self.getPortal().portal_categories.region
+      beta_id = "beta"
+      beta_title = "Beta System"
+      beta = region_category.newContent(
+              portal_type = "Category",
+              id =          beta_id,
+              title =       beta_title, )
+      beta_path = beta.getCategoryRelativeUrl()
+
+      checked_permission = 'View'
+      beta.manage_permission(checked_permission, roles=[], acquire=0)
+
+      # Make sure categories are reindexed
+      get_transaction().commit()
+      self.tic() 
+
+      self.assertEquals(beta.getRelativeUrl(), 'region/beta')
+
+      # Create a new person
+      module = self.getPersonModule()
+      foo = module.newContent(portal_type='Person', title='Foo')
+
+      # Check getDefaultCategory accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertEquals(beta_path, foo.getDefaultRegion())
+      self.assertEquals(
+          '',
+          foo.getDefaultRegion(checked_permission=checked_permission))
+
+      # Check getCategory accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertEquals(beta_path, foo.getRegion())
+      self.assertEquals(
+          '',
+          foo.getRegion(checked_permission=checked_permission))
+
+      # Check getCategoryId accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertEquals(beta_id, foo.getRegionId())
+      self.assertEquals(
+          '',
+          foo.getRegionId(checked_permission=checked_permission))
+
+      # Check getCategoryTitle accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertEquals(beta_title, foo.getRegionTitle())
+      self.assertEquals(
+          '',
+          foo.getRegionTitle(checked_permission=checked_permission))
+
+      # Check getCategoryValue accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertEquals(beta, foo.getRegionValue())
+      self.assertEquals(
+          None,
+          foo.getRegionValue(checked_permission=checked_permission))
+
+      # Check getCategoryList accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertSameSet([beta_path], foo.getRegionList())
+      self.assertSameSet(
+          [],
+          foo.getRegionList(checked_permission=checked_permission))
+
+      # Check getCategoryIdList accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertSameSet([beta_id], foo.getRegionIdList())
+      self.assertSameSet(
+          [],
+          foo.getRegionIdList(checked_permission=checked_permission))
+
+      # Check getCategoryTitleList accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertSameSet([beta_id], foo.getRegionTitleList())
+      self.assertSameSet(
+          [],
+          foo.getRegionTitleList(
+            checked_permission=checked_permission))
+
+      # Check getCategoryValueList accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertSameSet([beta_id], foo.getRegionValueList())
+      self.assertSameSet(
+          [],
+          foo.getRegionValueList(
+            checked_permission=checked_permission))
+
+      # Check getCategorySet accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertSameSet(set(beta_path), foo.getRegionSet())
+      self.assertSameSet(
+          set(),
+          foo.getRegionSet(checked_permission=checked_permission))
+
+      # Check getCategoryIdSet accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertSameSet(set(beta_id), foo.getRegionIdSet())
+      self.assertSameSet(
+          set(),
+          foo.getRegionIdSet(checked_permission=checked_permission))
+
+      # Check getCategoryTitleSet accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertSameSet(set(beta_id), foo.getRegionTitleSet())
+      self.assertSameSet(
+          set(),
+          foo.getRegionTitleSet(
+            checked_permission=checked_permission))
+
+      # Check getCategoryValueSet accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertSameSet(set(beta_id), foo.getRegionValueSet())
+      self.assertSameSet(
+          set(),
+          foo.getRegionValueSet(
+            checked_permission=checked_permission))
+
+      foo.setRegionValue(None)
+      self.assertEquals('', foo.getRegion())
+      # Check setCategoryValue accessor
+      foo.setRegionValue(beta)
+      self.assertEquals(beta_path, foo.getRegion())
+      foo.setRegionValue(None)
+      foo.setRegionValue(beta, 
+                         checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+      foo.setRegionValue(beta)
+      foo.setRegionValue(beta, 
+                         checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+
+      foo.setRegionValue(None)
+      self.assertEquals('', foo.getRegion())
+      # Check setDefaultCategoryValue accessor
+      foo.setDefaultRegionValue(beta)
+      self.assertEquals(beta_path, foo.getRegion())
+      foo.setDefaultRegionValue(None)
+      foo.setDefaultRegionValue(beta, 
+                         checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+      foo.setDefaultRegionValue(beta_path)
+      foo.setDefaultRegionValue(beta_path, 
+                         checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+
+      foo.setRegionValue(None)
+      self.assertEquals('', foo.getRegion())
+      # Check setCategory accessor
+      foo.setRegion(beta_path)
+      self.assertEquals(beta_path, foo.getRegion())
+      foo.setRegion('')
+      foo.setRegion(beta_path, 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+      foo.setRegion(beta_path)
+      foo.setRegion(beta_path, 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+
+      foo.setRegionValue(None)
+      self.assertEquals('', foo.getRegion())
+      # Check setDefaultCategory accessor
+      foo.setDefaultRegion(beta_path)
+      self.assertEquals(beta_path, foo.getRegion())
+      foo.setDefaultRegion('')
+      foo.setDefaultRegion(beta_path, 
+                         checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+      foo.setDefaultRegion(beta_path)
+      foo.setDefaultRegion(beta_path, 
+                         checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+
+      foo.setRegionValue(None)
+      self.assertEquals('', foo.getRegion())
+      # Check setCategoryList accessor
+      foo.setRegionList([beta_path])
+      self.assertEquals(beta_path, foo.getRegion())
+      foo.setRegionList([])
+      foo.setRegionList([beta_path], 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+      foo.setRegionList([beta_path])
+      foo.setRegionList([beta_path], 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+
+      foo.setRegionValue(None)
+      self.assertEquals('', foo.getRegion())
+      # Check setCategoryValueList accessor
+      foo.setRegionValueList([beta])
+      self.assertEquals(beta, foo.getRegion())
+      foo.setRegionList([])
+      foo.setRegionValueList([beta], 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+      foo.setRegionValueList([beta])
+      foo.setRegionValueList([beta], 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+
+      foo.setRegionValue(None)
+      self.assertEquals('', foo.getRegion())
+      # Check setCategorySet accessor
+      foo.setRegionSet(set(beta_path))
+      self.assertEquals(beta_path, foo.getRegion())
+      foo.setRegionSet(set())
+      foo.setRegionSet(set(beta_path), 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+      foo.setRegionSet(set(beta_path))
+      foo.setRegionSet(set(beta_path), 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+
+      foo.setRegionValue(None)
+      self.assertEquals('', foo.getRegion())
+      # Check setCategoryValueSet accessor
+      foo.setRegionValueSet(set(beta))
+      self.assertEquals(beta, foo.getRegion())
+      foo.setRegionSet(set())
+      foo.setRegionValueSet(set(beta), 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+      foo.setRegionValueSet(set(beta))
+      foo.setRegionValueSet(set(beta), 
+                    checked_permission=checked_permission)
+      self.assertEquals('', foo.getRegion())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Type))
