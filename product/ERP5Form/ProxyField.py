@@ -593,4 +593,6 @@ class ProxyField(ZMIField):
     getTransactionalVariable(self)[self._getCacheId()] = field
 
   def _getTemplateFieldCache(self):
+    if self.aq_parent:
+      raise KeyError
     return getTransactionalVariable(self)[self._getCacheId()].__of__(self.aq_parent)

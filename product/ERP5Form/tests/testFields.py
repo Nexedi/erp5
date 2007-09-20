@@ -129,6 +129,8 @@ class TestProxyField(unittest.TestCase):
     self.container.Base_view.manage_addField(
                       'my_title', 'Not Title', 'ProxyField')
     proxy_field = self.container.Base_view.my_title
+    self.assertEquals(None, proxy_field.getTemplateField())
+
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
     self.assertEquals(original_field, proxy_field.getTemplateField())
