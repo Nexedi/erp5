@@ -65,83 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = context\n
-\n
-# First, copy Order properties\n
-packing_list.PackingList_copyOrderProperties()\n
-\n
-packing_list = context\n
-related_order = packing_list.getCausalityValue()\n
-\n
-if packing_list.getSimulationState() == \'draft\':\n
-  packing_list.edit(\n
-    comment=related_order.getComment(),\n
-    delivery_mode=related_order.getDeliveryMode(),\n
-    incoterm=related_order.getIncoterm(),\n
-    source_administration_value=related_order.getSourceAdministrationValue(),\n
-    title=related_order.getTitle()\n
-  )\n
-\n
-  # Copy Source Project only if all Task Report Lines share the same value.\n
-  marker = source_project_value = []\n
-  for packing_list_line in packing_list.contentValues(filter={\'portal_type\': \'Task Report Line\'}):\n
-    if source_project_value is marker:\n
-      source_project_value = packing_list_line.getSourceProjectValue()\n
-    elif source_project_value != packing_list_line.getSourceProjectValue():\n
-      source_project_value = marker\n
-      break\n
-  if source_project_value is not marker:\n
-    packing_list.setSourceProjectValue(source_project_value)\n
-\n
-# If security definitions are implemented on the packing list, it is time to apply them\n
-packing_list.assignRoleToSecurityGroup()\n
-\n
-# Notify assignee\n
-source_person = context.getSourceValue(portal_type="Person")\n
-destination_decision_person = context.getDestinationDecisionValue(portal_type="Person")\n
-if destination_decision_person is None:\n
-  destination_decision_person = context.getDestinationValue(portal_type="Person")\n
-if source_person is not None:\n
-  if destination_decision_person is not None:\n
-    from_email = destination_decision_person.getDefaultEmailText()\n
-  else:\n
-    from_email = getattr(context, \'email_from_address\', None)\n
-  email = source_person.getDefaultEmailValue()\n
-  if email is not None:\n
-    msg = """\n
-A new task has been assigned to you by %(assignor)s.\n
-\n
-This task is named: %(title)s\n
-\n
-Description: \n
-%(comment)s\n
-\n
-Start Date: %(start_date)s\n
-Stop Date: %(stop_date)s\n
-\n
-Please wisit ERP5: %(url)s\n
-""" % {\n
-       \'assignor\': destination_decision_person.getTitle(),\n
-       \'title\'   : packing_list.getTitle(),\n
-       \'url\'     : \'%s/%s\' % (packing_list.ERP5Site_getAbsoluteUrl(),\n
-                              packing_list.getRelativeUrl()),\n
-       \'comment\' : packing_list.getComment(),\n
-       \'start_date\': packing_list.getStartDate().Date(),\n
-       \'stop_date\': packing_list.getStopDate().Date(),\n
-      }\n
-    email.activate().send(from_url = from_email, subject="New Task Assigned to You", msg = msg)\n
-\n
-# Then, modify state\n
-activity = packing_list.activate(\n
-                   after_method_id=[\'immediateReindexObject\',\n
-                                    \'recursiveImmediateReindexObject\'])\n
-activity.Delivery_confirm()\n
-\n
-# First set the packing_list in the building state\n
-packing_list.startBuilding()\n
-# Then an activity should put the causality state in diverged or solved\n
-# XXX after_method_id is not good, it should be after_group_id, but not yet implemented\n
-packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImmediateReindexObject\',\'Delivery_confirm\')).updateCausalityState()\n
+            <value> <string>task_report = context.getCausalityRelatedValue(portal_type=\'Task Report\')\n
+if task_report is not None:\n
+  return task_report.getTranslatedSimulationStateTitle()\n
 </string> </value>
         </item>
         <item>
@@ -152,6 +78,12 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -184,22 +116,10 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>context</string>
-                            <string>packing_list</string>
                             <string>_getattr_</string>
-                            <string>related_order</string>
-                            <string>marker</string>
-                            <string>source_project_value</string>
-                            <string>_getiter_</string>
-                            <string>packing_list_line</string>
-                            <string>source_person</string>
-                            <string>destination_decision_person</string>
+<string>context</string>
+                            <string>task_report</string>
                             <string>None</string>
-                            <string>from_email</string>
-                            <string>getattr</string>
-                            <string>email</string>
-                            <string>msg</string>
-                            <string>activity</string>
                           </tuple>
                         </value>
                     </item>
@@ -216,7 +136,7 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TaskReport_copyOrderPropertiesAndNotifyAssignee</string> </value>
+            <value> <string>Task_getTaskReportTranslatedSimulationStateTitle</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

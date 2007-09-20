@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -322,7 +319,48 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_project_title</string>
+                          <string>Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Starting</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Due</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Deliverable to</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Assigned to</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>Total</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_line_quantity_unit_title</string>
+                          <string>Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>Task_getTaskReportTranslatedSimulationStateTitle</string>
+                          <string>Report State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -562,11 +600,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -581,11 +616,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

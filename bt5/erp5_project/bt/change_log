@@ -1,4 +1,10 @@
 2007-09-20 yo
+* Set Source Project on Task Report, if all lines share the same Source Project.
+* Show Source Project in Task Report Module.
+* Enable Report Tree Mode in Task Report Module.
+* Add an optional column into Task_viewTaskList to show the state of a Task Report corresponding to each Task.
+
+2007-09-20 yo
 * Fix an undefined symbol.
 
 2007-09-12 Jerome
