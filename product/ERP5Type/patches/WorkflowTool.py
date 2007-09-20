@@ -47,7 +47,11 @@ def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, method_id, args=None, kw
         raise Unauthorized(method_id)
     self._changeStateOf(ob, tdef, kw)
     if getattr(ob, 'reindexObject', None) is not None:
-        ob.reindexObject(activate_kw=kw.get('activate_kw', {}))
+        if kw is not None:
+            activate_kw = kw.get('activate_kw', {})
+        else:
+            activate_kw = {}
+        ob.reindexObject(activate_kw=activate_kw)
 
 def DCWorkflowDefinition_notifyBefore(self, ob, action, args=None, kw=None, transition_list=None):
     '''
