@@ -31,7 +31,9 @@ from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Errors import ValidationError
+from Products.Formulator import MethodField
 from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.CMFCore.utils import getToolByName
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -44,10 +46,17 @@ from Products.PythonScripts.standard import url_quote_plus
 from AccessControl import ClassSecurityInfo
 from MethodObject import Method
 
-from zLOG import LOG, WARNING, DEBUG
+from zLOG import LOG, WARNING, DEBUG, PROBLEM
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 from Globals import DTMLFile
 
+from Products.Formulator.TALESField import TALESMethod
+from Products.ERP5Form.ListBox import ListBox
+from Products.ERP5Form.Form import StaticValue, TALESValue, OverrideValue, DefaultValue, EditableValue
+
+_field_value_cache = {}
+def purgeFieldValueCache():
+  _field_value_cache.clear()
 
 class WidgetDelegatedMethod(Method):
   """Method delegated to the proxied field's widget.
@@ -324,6 +333,11 @@ class ProxyField(ZMIField):
     """
     Return template field of the proxy field.
     """
+    try:
+      return self._getTemplateFieldCache()
+    except KeyError:
+      pass
+
     form = self.aq_parent
     object = form.aq_parent
     try:
@@ -335,6 +349,7 @@ class ProxyField(ZMIField):
           'Could not get a field from a proxy field %s in %s' % \
               (self.id, object.id))
       proxy_field = None
+    self._setTemplateFieldCache(proxy_field)
     return proxy_field
 
   def getRecursiveTemplateField(self):
@@ -342,11 +357,13 @@ class ProxyField(ZMIField):
     Return template field of the proxy field.
     This result must not be a ProxyField.
     """
-    template_field = self.getTemplateField()
-    if template_field.__class__ == ProxyField:
-      return template_field.getRecursiveTemplateField()
-    else:
-      return template_field
+    field = self
+    while True:
+      template_field = field.getTemplateField()
+      if template_field.__class__ != ProxyField:
+        break
+      field = template_field
+    return template_field
 
   security.declareProtected('Access contents information', 
                             'is_delegated')
@@ -439,26 +456,6 @@ class ProxyField(ZMIField):
       # ("form_id and field_id don't define a valid template")
       pass
 
-  security.declareProtected('Access contents information', 'get_value')
-  def get_value(self, id, **kw):
-    """Get value for id.
-
-    Optionally pass keyword arguments that get passed to TALES
-    expression.
-    """
-    result = None
-    if (id in self.widget.property_names) or \
-       (not self.is_delegated(id)):
-      result = ZMIField.get_value(self, id, **kw)
-    else:
-      proxy_field = self.getTemplateField()
-      if proxy_field is not None:
-        REQUEST = get_request()
-        REQUEST.set('field__proxyfield_%s_%s' % (proxy_field.id, id),
-                    REQUEST.get('field__proxyfield_%s_%s' % (self.id, id), self))
-        result = proxy_field.get_value(id, **kw)
-    return result
-
   security.declareProtected('Access contents information', 'has_value')
   def has_value(self, id):
     """
@@ -485,3 +482,115 @@ class ProxyField(ZMIField):
     else:
       result = ZMIField._get_user_input_value(self, key, REQUEST)
     return result
+
+
+  #
+  # Performance improvement
+  #
+  def get_tales_expression(self, id):
+    field = self
+    while True:
+      if (id in field.widget.property_names or
+          not field.is_delegated(id)):
+        tales = field.get_tales(id)
+        if tales:
+          return TALESMethod(tales._text)
+        else:
+          return None
+      proxied_field = field.getTemplateField()
+      if proxied_field.__class__ == ProxyField:
+        field = proxied_field
+      elif proxied_field is None:
+        raise ValueError, "Can't find the template field of %s" % self.id
+      else:
+        tales = proxied_field.get_tales(id)
+        if tales:
+          return TALESMethod(tales._text)
+        else:
+          return None
+
+  def getFieldValue(self, field, id, **kw):
+    """
+      Return a callable expression
+    """
+    tales_expr = self.get_tales_expression(id)
+    if tales_expr:
+      return TALESValue(tales_expr)
+
+    # FIXME: backwards compat hack to make sure overrides dict exists
+    if not hasattr(self, 'overrides'):
+        self.overrides = {}
+
+    override = self.overrides.get(id, "")
+    if override:
+      return OverrideValue(override)
+
+    # Get a normal value.
+    try:
+      template_field = self.getRecursiveTemplateField()
+      # Old ListBox instance might have default attribute. so we need to check it.
+      if id=='default' and isinstance(aq_base(template_field), ListBox):
+        return self._get_value(id, **kw)
+      value = self.get_recursive_orig_value(id)
+    except KeyError:
+      # For ListBox
+      return self._get_value(id, **kw)
+
+    field_id = field.id
+
+    if id == 'default' and field_id.startswith('my_'):
+      return DefaultValue(field_id, value)
+
+    # For the 'editable' value, we try to get a default value
+    if id == 'editable':
+      return EditableValue(value)
+
+    # Return default value in non callable mode
+    if callable(value):
+      return StaticValue(value)
+
+    # Return default value in non callable mode
+    return StaticValue(value)(field, id, **kw)
+
+  security.declareProtected('Access contents information', 'get_value')
+  def get_value(self, id, **kw):
+    REQUEST = get_request()
+    if ((id in self.widget.property_names) or
+        (not self.is_delegated(id))):
+      return ZMIField.get_value(self, id, **kw)
+
+    field = self
+    proxy_field = self.getTemplateField()
+    if proxy_field is not None and REQUEST is not None:
+      field = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id), self)
+      REQUEST.set('field__proxyfield_%s_%s' % (proxy_field.id, id), field)
+
+    cache_id = ('ProxyField.get_value',
+                self._p_oid or repr(self),
+                field._p_oid or repr(field),
+                id)
+
+    try:
+      value = _field_value_cache[cache_id]
+    except KeyError:
+      # either returns non callable value (ex. "Title")
+      # or a FieldValue instance of appropriate class
+      value = _field_value_cache[cache_id] = self.getFieldValue(field, id, **kw)
+
+    if callable(value):
+      return value(field, id, **kw)
+    return value
+
+  def _get_value(self, id, **kw):
+    proxy_field = self.getTemplateField()
+    if proxy_field is not None:
+      return proxy_field.get_value(id, **kw)
+
+  def _getCacheId(self):
+    return '%s%s' % ('ProxyField', self._p_oid or repr(self))
+
+  def _setTemplateFieldCache(self, field):
+    getTransactionalVariable(self)[self._getCacheId()] = field
+
+  def _getTemplateFieldCache(self):
+    return getTransactionalVariable(self)[self._getCacheId()].__of__(self.aq_parent)

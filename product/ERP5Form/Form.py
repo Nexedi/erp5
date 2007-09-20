@@ -35,6 +35,7 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.CMFCore.utils import _checkPermission, getToolByName
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet, Permissions
+from Products.ERP5Type.Cache import CachingMethod
 
 from urllib import quote
 from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
@@ -46,133 +47,209 @@ from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.PsycoWrapper import psyco
 import sys
 
+_field_value_cache = {}
+def purgeFieldValueCache():
+  _field_value_cache.clear()
+
 # Patch the fiels methods to provide improved namespace handling
 
 from Products.Formulator.Field import Field
+from Products.Formulator.TALESField import TALESMethod
 
 from zLOG import LOG, PROBLEM
 
-def get_value(self, id, **kw):
-    """Get value for id."""
-    # FIXME: backwards compat hack to make sure tales dict exists
-    if not hasattr(self, 'tales'):
-        self.tales = {}
+class StaticValue:
+  """
+    Encapsulated a static value in a class
+    (quite heavy, would be faster to store the
+    value as is)
+  """
+  def __init__(self, value):
+    self.value = value
 
-    tales_expr = self.tales.get(id, "")
-    if tales_expr:
-        REQUEST = get_request()
-        if REQUEST is not None:
-          # Proxyfield stores the "real" field in the request. Look if the
-          # corresponding field exists in request, and use it as field in the
-          # TALES context 
-          field = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id), self)
-        else:
-          field = self
+  def __call__(self, field, id, **kw):
+    return self.returnValue(field, id, self.value)
 
-        kw['field'] = field
-
-        form = field.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check
-        obj = getattr(form, 'aq_parent', None)
-        if obj is not None:
-            container = obj.aq_inner.aq_parent
-        else:
-            container = None
-
-        kw['form'] = form
-        kw['request'] = REQUEST
-        kw['here'] = obj
-        kw['context'] = obj
-        kw['modules'] = SecureModuleImporter
-        kw['container'] = container
-        try :
-            kw['preferences'] = obj.getPortalObject().portal_preferences
-        except AttributeError :
-            LOG('ERP5Form', PROBLEM,
-              'portal_preferences not put in TALES context (not installed?)')
-        # This allows to pass some pointer to the local object
-        # through the REQUEST parameter. Not very clean.
-        # Used by ListBox to render different items in a list
-        if kw.has_key('REQUEST') and kw.get('cell', None) is None:
-          if getattr(kw['REQUEST'],'cell', None) is not None:
-            kw['cell'] = getattr(kw['REQUEST'],'cell')
-          else:
-            kw['cell'] = kw['REQUEST']
-        elif kw.get('cell', None) is None:
-          if getattr(REQUEST, 'cell', None) is not None:
-            kw['cell'] = getattr(REQUEST, 'cell')
-        try:
-            value = tales_expr.__of__(self)(**kw)
-        except (ConflictError, RuntimeError):
-            raise
-        except:
-            # We add this safety exception to make sure we always get
-            # something reasonable rather than generate plenty of errors
-            LOG('ERP5Form', PROBLEM,
-                'Field.get_value ( %s/%s [%s]), exception on tales_expr: ' %
-                ( form.getId(), self.getId(), id), error=sys.exc_info())
-            value = self.get_orig_value(id)
-    else:
-        # FIXME: backwards compat hack to make sure overrides dict exists
-        if not hasattr(self, 'overrides'):
-            self.overrides = {}
-
-        override = self.overrides.get(id, "")
-        if override:
-            # call wrapped method to get answer
-            value = override.__of__(self)()
-        else:
-            # Get a normal value.
-            value = self.get_orig_value(id)
-
-            # For the 'default' value, we try to get a property value
-            # stored in the context, only if the field is prefixed with my_.
-            REQUEST = get_request()
-            if REQUEST is not None:
-              field_id = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id),
-                                      self).id
-            else:
-              field_id = self.id
-
-            if id == 'default' and field_id.startswith('my_'):
-              try:
-                form = self.aq_parent
-                ob = getattr(form, 'aq_parent', None)
-                key = field_id[3:]
-                if value not in (None, ''):
-                  # If a default value is defined on the field, it has precedence
-                  value = ob.getProperty(key, d=value)
-                else:
-                  # else we should give a chance to the accessor to provide
-                  # a default value (including None)
-                  value = ob.getProperty(key)
-              except (KeyError, AttributeError):
-                value = None
-            # For the 'editable' value, we try to get a default value
-            elif id == 'editable':
-                # By default, pages are editable and
-                # fields are editable if they are set to editable mode
-                # However, if the REQUEST defines editable_mode to 0
-                # then all fields become read only.
-                # This is useful to render ERP5 content as in a web site (ECommerce)
-                # editable_mode should be set for example by the page template
-                # which defines the current layout
-                if kw.has_key('REQUEST'):
-                  if not getattr(kw['REQUEST'], 'editable_mode', 1):
-                    value = 0
-
+  def returnValue(self, field, id, value):
     # if normal value is a callable itself, wrap it
     if callable(value):
-        value = value.__of__(self)
-        #value=value() # Mising call ??? XXX Make sure compatible with listbox methods
+      value = value.__of__(field)
+      #value=value() # Mising call ??? XXX Make sure compatible with listbox methods
 
     if id == 'default':
-        # We make sure we convert values to empty strings
-        # for most fields (so that we do not get a 'value'
-        # message on screen)
-        # This can be overriden by using TALES in the field
-        if value is None: value = ''
+      # We make sure we convert values to empty strings
+      # for most fields (so that we do not get a 'value'
+      # message on screen)
+      # This can be overriden by using TALES in the field
+      if value is None: value = ''
 
     return value
+
+class TALESValue(StaticValue):
+  def __init__(self, tales_expr):
+    self.tales_expr = tales_expr
+
+  def __call__(self, field, id, **kw):
+    REQUEST = get_request()
+    if REQUEST is not None:
+      # Proxyfield stores the "real" field in the request. Look if the
+      # corresponding field exists in request, and use it as field in the
+      # TALES context 
+      field = REQUEST.get('field__proxyfield_%s_%s' % (field.id, id), field)
+
+    kw['field'] = field
+
+    form = field.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check
+    obj = getattr(form, 'aq_parent', None)
+    if obj is not None:
+        container = obj.aq_inner.aq_parent
+    else:
+        container = None
+
+    kw['form'] = form
+    kw['request'] = REQUEST
+    kw['here'] = obj
+    kw['context'] = obj
+    kw['modules'] = SecureModuleImporter
+    kw['container'] = container
+    try :
+      kw['preferences'] = obj.getPortalObject().portal_preferences
+    except AttributeError :
+      LOG('ERP5Form', PROBLEM,
+          'portal_preferences not put in TALES context (not installed?)')
+    # This allows to pass some pointer to the local object
+    # through the REQUEST parameter. Not very clean.
+    # Used by ListBox to render different items in a list
+    if kw.has_key('REQUEST') and kw.get('cell', None) is None:
+      if getattr(kw['REQUEST'],'cell', None) is not None:
+        kw['cell'] = getattr(kw['REQUEST'],'cell')
+      else:
+        kw['cell'] = kw['REQUEST']
+    elif kw.get('cell', None) is None:
+      if getattr(REQUEST, 'cell', None) is not None:
+        kw['cell'] = getattr(REQUEST, 'cell')
+    try:
+      value = self.tales_expr.__of__(field)(**kw)
+    except (ConflictError, RuntimeError):
+      raise
+    except:
+      # We add this safety exception to make sure we always get
+      # something reasonable rather than generate plenty of errors
+      LOG('ERP5Form', PROBLEM,
+          'Field.get_value ( %s/%s [%s]), exception on tales_expr: ' %
+          ( form.getId(), field.getId(), id), error=sys.exc_info())
+      value = field.get_orig_value(id)
+
+    return self.returnValue(field, id, value)
+
+class OverrideValue(StaticValue):
+  def __init__(self, override):
+    self.override = override
+
+  def __call__(self, field, id, **kw):
+    return self.returnValue(field, id, self.override.__of__(field)())
+
+class DefaultValue(StaticValue):
+  def __init__(self, field_id, value):
+    self.key = field_id[3:]
+    self.value = value
+
+  def __call__(self, field, id, **kw):
+    try:
+      form = field.aq_parent
+      ob = getattr(form, 'aq_parent', None)
+      value = self.value
+      if value not in (None, ''):
+        # If a default value is defined on the field, it has precedence
+        value = ob.getProperty(self.key, d=value)
+      else:
+        # else we should give a chance to the accessor to provide
+        # a default value (including None)
+        value = ob.getProperty(self.key)
+    except (KeyError, AttributeError):
+      value = None
+    return self.returnValue(field, id, value)
+
+class EditableValue(StaticValue):
+
+  def __call__(self, field, id, **kw):
+    # By default, pages are editable and
+    # fields are editable if they are set to editable mode
+    # However, if the REQUEST defines editable_mode to 0
+    # then all fields become read only.
+    # This is useful to render ERP5 content as in a web site (ECommerce)
+    # editable_mode should be set for example by the page template
+    # which defines the current layout
+    if kw.has_key('REQUEST'):
+      if not getattr(kw['REQUEST'], 'editable_mode', 1):
+        self.value = 0
+    return self.value
+
+def getFieldValue(self, field, id, **kw):
+  """
+    Return a callable expression
+  """
+  # FIXME: backwards compat hack to make sure tales dict exists
+  if not hasattr(self, 'tales'):
+    self.tales = {}
+
+  tales_expr = self.tales.get(id, "")
+  if tales_expr:
+    # TALESMethod is persistent object, so that we cannot cache original one.
+    # Becase if connection which original talesmethod uses is closed,
+    # RuntimeError must occurs in __setstate__.
+    clone = TALESMethod(tales_expr._text)
+    return TALESValue(clone)
+
+  # FIXME: backwards compat hack to make sure overrides dict exists
+  if not hasattr(self, 'overrides'):
+      self.overrides = {}
+
+  override = self.overrides.get(id, "")
+  if override:
+    return OverrideValue(override)
+
+  # Get a normal value.
+  value = self.get_orig_value(id)
+
+  field_id = field.id
+
+  if id == 'default' and field_id.startswith('my_'):
+    return DefaultValue(field_id, value)
+
+  # For the 'editable' value, we try to get a default value
+  if id == 'editable':
+    return EditableValue(value)
+
+  # Return default value in non callable mode
+  if callable(value):
+    return StaticValue(value)
+
+  # Return default value in non callable mode
+  return StaticValue(value)(field, id, **kw)
+
+def get_value(self, id, **kw):
+  REQUEST = get_request()
+  if REQUEST is not None:
+    field = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id), self)
+  else:
+    field = self
+
+  cache_id = ('Form.get_value',
+              self._p_oid or repr(self),
+              field._p_oid or repr(field),
+              id)
+
+  try:
+    value = _field_value_cache[cache_id]
+  except KeyError:
+    # either returns non callable value (ex. "Title")
+    # or a FieldValue instance of appropriate class
+    value = _field_value_cache[cache_id] = getFieldValue(self, field, id, **kw)
+
+  if callable(value):
+    return value(field, id, **kw)
+  return value
 
 psyco.bind(get_value)
 
@@ -584,9 +661,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             portal = portal_url.getPortalObject()
             portal_skins = getToolByName(self, 'portal_skins')
 
-            default_field_library_path = portal.getProperty(
-                                  'erp5_default_field_library_path',
-                                  'erp5_core.Base_viewFieldLibrary')
+            default_field_library_path = portal.getProperty('erp5_default_field_library_path', None)
             if (not default_field_library_path or
                 len(default_field_library_path.split('.'))!=2):
                 return
@@ -597,24 +672,21 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             default_field_library = getattr(skinfolder, form_id, None)
             if default_field_library is None:
                 return
-            for i in default_field_library.objectValues():
-                field_meta_type, proxy_flag = get_field_meta_type_and_proxy_flag(i)
-                if meta_type==field_meta_type:
-                    if proxy_flag:
-                        field_meta_type = '%s(Proxy)' % field_meta_type
-                    matched_item = {'form_id':form_id,
-                                    'field_type':field_meta_type,
-                                    'field_object':i,
-                                    'proxy_flag':proxy_flag,
-                                    'matched_rate':0
-                                    }
-                    if not default_field_library_path in form_order:
+
+            if not default_field_library_path in form_order:
+                for i in default_field_library.objectValues():
+                    field_meta_type, proxy_flag = get_field_meta_type_and_proxy_flag(i)
+                    if meta_type==field_meta_type:
+                        if proxy_flag:
+                            field_meta_type = '%s(Proxy' % field_meta_type
+                        matched_item = {'form_id':form_id,
+                                        'field_type':field_meta_type,
+                                        'field_object':i,
+                                        'proxy_flag':proxy_flag,
+                                        'matched_rate':0
+                                        }
                         matched_append(default_field_library_path,
                                        matched_item)
-                    if not default_field_library_path in \
-                                          perfect_matched_form_order:
-                        perfect_matched_append(default_field_library_path,
-                                               matched_item)
 
         id_ = field.getId()
         meta_type = field.meta_type
@@ -654,7 +726,6 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
         if perfect_matched:
             perfect_matched_form_order.sort()
-            add_default_field_library()
             return perfect_matched_form_order, perfect_matched
 
         form_order.sort()
@@ -782,6 +853,37 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     psyco.bind(__call__)
     psyco.bind(_exec)
 
+    # Overload of the Form method
+    #   Use the include_disabled parameter since
+    #   we should consider all fields to render the group tab
+    #   moreoever, listbox rendering fails whenever enabled
+    #   is based on the cell parameter.
+    security.declareProtected('View', 'get_largest_group_length')
+    def get_largest_group_length(self):
+        """Get the largest group length available; necessary for
+        'order' screen user interface.
+        XXX - Copyright issue
+        """
+        max = 0
+        for group in self.get_groups(include_empty=1):
+            fields = self.get_fields_in_group(group, include_disabled=1)
+            if len(fields) > max:
+                max = len(fields)
+        return max
+
+    security.declareProtected('View', 'get_groups')
+    def get_groups(self, include_empty=0):
+        """Get a list of all groups, in display order.
+
+        If include_empty is false, suppress groups that do not have
+        enabled fields.
+        XXX - Copyright issue
+        """
+        if include_empty:
+            return self.group_list
+        return [group for group in self.group_list
+                if self.get_fields_in_group(group, include_disabled=1)]
+
 
 # utility function
 def get_field_meta_type_and_proxy_flag(field):
@@ -789,8 +891,7 @@ def get_field_meta_type_and_proxy_flag(field):
         try:
             return field.getRecursiveTemplateField().meta_type, True
         except AttributeError:
-            raise AttributeError, 'The proxy target of %s field does not '\
-                  'exists. Please check the field setting.' % field.getId()
+            raise AttributeError, 'The proxy target of %s field does not exists. Please check the field setting.' % field.getId()
     else:
         return field.meta_type, False
 
@@ -811,3 +912,7 @@ psyco.bind(Field.get_value)
 
 #from Products.CMFCore.ActionsTool import ActionsTool
 #psyco.bind(ActionsTool.listFilteredActionsFor)
+
+# install interactor
+from Products.ERP5Type.Interactor import fielf_value_interactor
+fielf_value_interactor.install()

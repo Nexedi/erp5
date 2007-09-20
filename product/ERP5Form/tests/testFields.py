@@ -53,7 +53,7 @@ from Products.Formulator.StandardFields import FloatField
 from Products.Formulator.StandardFields import StringField
 
 from Products.ERP5Type.Core.Folder import Folder
-from Products.ERP5Form.Form import ERP5Form
+from Products.ERP5Form.Form import ERP5Form, purgeFieldValueCache
 
 
 class TestFloatField(unittest.TestCase):
@@ -75,6 +75,7 @@ class TestFloatField(unittest.TestCase):
     self.field.values['precision'] = 0
     self.assertEquals('12', self.widget.format_value(self.field, 12.34))
 
+    purgeFieldValueCache() # call this before changing internal field values.
     self.field.values['precision'] = 2
     self.assertEquals('0.01', self.widget.format_value(self.field, 0.011))
     # value is rounded

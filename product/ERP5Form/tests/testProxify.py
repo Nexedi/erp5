@@ -50,6 +50,7 @@ ZopeTestCase.installProduct('ERP5Form')
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import ERP5Form
+from Products.ERP5Form.ProxyField import purgeFieldValueCache
 
 
 class TestProxify(unittest.TestCase):
@@ -103,6 +104,7 @@ class TestProxify(unittest.TestCase):
     self.assertEqual(field.is_delegated('description'), True)
     self.assertEqual(field.get_value('description'), '')
 
+    purgeFieldValueCache() # must purge cache before changing internal field value.
     template_field = self.base_view.my_string_field
     template_field.values['description'] = 'Description'
     self.assertEqual(field.get_value('description'), 'Description')
@@ -131,6 +133,7 @@ class TestProxify(unittest.TestCase):
 
     self.assertEqual(field.has_value('scrap_variable'), 0)
 
+    purgeFieldValueCache() # must purge cache before changing internal field value.
     template_field = self.address_view.my_region
     template_field.values['title'] = 'Region'
     self.assertEqual(field.get_value('title'), 'Region')
