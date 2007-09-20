@@ -116,7 +116,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         default = self.storage_list[0]
       storage = getattr(self, 'storage', default)
       if storage is not default and storage not in self.storage_list:
-        storage = storage_list[0]
+        storage = self.storage_list[0]
       return storage
 
     def isMemcachedUsed(self):
