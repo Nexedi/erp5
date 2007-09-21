@@ -79,7 +79,18 @@ div.adminToolbox input, textarea {\n
   padding: 1px;\n
 }\n
 \n
-div.adminToolbox label {display: none}\n
+div.adminToolbox.field label {\n
+  display: none!important;\n
+}\n
+\n
+div.adminToolbox div.adminSection label {\n
+  display: block!important;\n
+  width: 6em!important;\n
+}\n
+\n
+div.adminToolbox div.hiddenLabel label {\n
+  display: none!important;\n
+}\n
 \n
 /* Sub section title */\n
 div.adminToolbox h3 {\n
