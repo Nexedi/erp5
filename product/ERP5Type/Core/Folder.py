@@ -80,6 +80,8 @@ from zLOG import LOG, PROBLEM, WARNING
 import warnings
 
 REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
+from Products.ERP5Type.Message import Message
+N_ = lambda msgid, **kw: Message('ui', msgid, **kw)
 
 # Dummy Functions for update / upgrade
 def dummyFilter(object,REQUEST=None):
@@ -1266,10 +1268,11 @@ candidate_method_id_list = []
 for folder_class in (HBTreeFolder2Base, HBTreeFolder2, CMFHBTreeFolder):
   # exclude objectValues because it is redefined here
   # exclude get because it is not defined on OFSFolder
-  # exclude manage_main because it generates func_code attribute errors
+  # exclude manage_main/manage_object_workspace because it
+  # generates func_code attribute errors
   candidate_method_id_list.extend([x for x in folder_class.__dict__
                if callable(getattr(folder_class, x)) and not
                x in ('__getattr__','__init__', 'get', 'objectValues',
-                     'manage_main')])
+                     'manage_main', 'manage_object_workspace')])
 for method_id in candidate_method_id_list:
   setattr(Folder, method_id, FolderMethodWrapper(method_id))
