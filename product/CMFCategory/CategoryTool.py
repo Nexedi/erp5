@@ -587,7 +587,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation, 'setCategoryMembership' )
     def setCategoryMembership(self, context, base_category_list, category_list, base=0, keep_default=1,
-                                 spec=(), filter=None, **kw ):
+                                 spec=(), filter=None,
+                                 checked_permission=None, **kw ):
       """
         Sets the membership of the context on the specified base_category
         list and for the specified portal_type spec
@@ -601,28 +602,46 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
         spec               --    a list or a tuple of portal types
 
+        checked_permission        --    a string which defined the permission 
+                                        to filter the object on
+
       """
-      #LOG("set Category 1",0,str(category_list))
+#       LOG("CategoryTool, setCategoryMembership", 0 ,
+#           'category_list: %s' % str(category_list))
       # XXX We must use filters in the future
       # where_expression = self._buildQuery(spec, filter, kw)
-      portal_type = kw.get('portal_type', ())
-      if isinstance(portal_type, str):
-        portal_type = (portal_type,)
       if spec is ():
+        portal_type = kw.get('portal_type', ())
+        if isinstance(portal_type, str):
+          portal_type = (portal_type,)
         spec = portal_type
-      default_dict = {}
+
       self._cleanupCategories(context)
+
       if isinstance(category_list, str):
-        category_list = (category_list,)
+        category_list = (category_list, )
       elif category_list is None:
         category_list = ()
       elif isinstance(category_list, (list, tuple)):
         pass
       else:
-        raise TypeError, 'Category must be of string, tuple of string or list of string type.'
+        raise TypeError, 'Category must be of string, tuple of string ' \
+                         'or list of string type.'
+
       if isinstance(base_category_list, str):
-        base_category_list = [base_category_list]
+        base_category_list = (base_category_list, )
+
+      # Build the ckecked_permission filter
+      if checked_permission is not None:
+        checkPermission = self.portal_membership.checkPermission
+        def permissionFilter(obj):
+          if checkPermission(checked_permission, obj):
+            return 0
+          else:
+            return 1
+
       new_category_list = []
+      default_dict = {}
       for path in self._getCategoryList(context):
         my_base_id = self.getBaseCategoryId(path)
         if my_base_id not in base_category_list:
@@ -630,17 +649,19 @@ class CategoryTool( UniqueObject, Folder, Base ):
           # specified list of base_category ids
           new_category_list.append(path)
         else:
-          if spec is ():
-            # If spec is (), then we should keep nothing
-            # Everything will be replaced
-            keep_it = 0
-          else:
-            # Only keep this if not in our spec
-            try:
-              my_type = self.unrestrictedTraverse(path).portal_type
-              keep_it = (my_type not in spec)
-            except (KeyError, AttributeError):
-              keep_it = 0
+          keep_it = 0
+          if (spec is not ()) or (checked_permission is not None):
+            obj = self.unrestrictedTraverse(path, None)
+            if obj is not None:
+              if spec is not ():
+                # If spec is (), then we should keep nothing
+                # Everything will be replaced
+                # If spec is not (), Only keep this if not in our spec
+                  my_type = obj.portal_type
+                  keep_it = (my_type not in spec)
+              if (not keep_it) and (checked_permission is not None):
+                keep_it = permissionFilter(obj)
+
           if keep_it:
             new_category_list.append(path)
           elif keep_default:
@@ -669,12 +690,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 default_path_found[path] = 1
                 new_category_list.append(path)
           else:
-            new_path = base_category_list[0] + '/' + path
+            new_path = '%s/%s' % (base_category_list[0], path)
             if new_path not in default_new_category_list:
               new_category_list.append(new_path)
-      #LOG("set Category",0,str(new_category_list))
-      #LOG("set Category",0,str(default_new_category_list))
+#       LOG("CategoryTool, setCategoryMembership", 0 ,
+#           'new_category_list: %s' % str(new_category_list))
+#       LOG("CategoryTool, setCategoryMembership", 0 ,
+#           'default_new_category_list: %s' % str(default_new_category_list))
       self._setCategoryList(context, tuple(default_new_category_list + new_category_list))
+
 
     security.declareProtected( Permissions.AccessContentsInformation, 'setDefaultCategoryMembership' )
     def setDefaultCategoryMembership(self, context, base_category, default_category,
@@ -693,6 +717,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
         category_list      --    a single category (string) or a list of categories
 
         spec               --    a list or a tuple of portal types
+
+        checked_permission        --    a string which defined the permission 
+                                        to filter the object on
 
       """
       self._cleanupCategories(context)
