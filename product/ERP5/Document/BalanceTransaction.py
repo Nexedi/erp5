@@ -64,6 +64,17 @@ class InventoryKey(UserDict):
   def __hash__(self):
     return hash(tuple(self.items()))
 
+  def __cmp__(self, other):
+    # this is basically here so that we can see if two inventory keys are
+    # equals.
+    if tuple(self.keys()) != tuple(other.keys()):
+      return -1
+    for k, v in self.items():
+      if v != other[k]:
+        return -1
+    return 0
+
+
 
 class BalanceTransaction(AccountingTransaction, Inventory):
   """Balance Transaction 
@@ -96,6 +107,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                     , PropertySheet.Reference
                     , PropertySheet.PaymentCondition
                     )
+  
 
   def _getGroupByNodeMovementList(self):
     """Returns movements that implies only grouping by node."""
@@ -136,15 +148,18 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     current_stock = dict()
     getInventoryList = self.getPortalObject()\
                             .portal_simulation.getInventoryList
+    section_uid = self.getDestinationSectionUid()
     default_inventory_params = dict(
                         to_date=self.getStartDate().earliestTime(),
-                        section_uid=self.getDestinationSectionUid(),
+                        section_uid=section_uid,
+                        portal_type=self.getPortalAccountingMovementTypeList(),
                         simulation_state=('delivered', ))
 
     # node
     for movement in self._getGroupByNodeMovementList():
       node_uid = movement.getDestinationUid()
-      section_uid = movement.getDestinationSectionUid()
+      if not node_uid:
+        raise ValueError, "No destination uid for %s" % movement
 
       stock_list = current_stock.setdefault(
                          InventoryKey(node_uid=node_uid,
@@ -154,7 +169,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                               group_by_node=1,
                               group_by_resource=1,
                               **default_inventory_params):
-        stock_list.append(
+        if inventory.total_price and inventory.total_quantity:
+          stock_list.append(
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    resource_uid=inventory.resource_uid,
@@ -164,7 +180,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     # mirror section
     for movement in self._getGroupByMirrorSectionMovementList():
       node_uid = movement.getDestinationUid()
-      section_uid = movement.getDestinationSectionUid()
+      if not node_uid:
+        raise ValueError, "No destination uid for %s" % movement
       mirror_section_uid = movement.getSourceSectionUid()
 
       stock_list = current_stock.setdefault(
@@ -178,7 +195,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                               group_by_mirror_section=1,
                               group_by_resource=1,
                               **default_inventory_params):
-        stock_list.append(
+        if inventory.total_price and inventory.total_quantity:
+          stock_list.append(
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    source_section_uid=mirror_section_uid,
@@ -189,8 +207,9 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     # payment
     for movement in self._getGroupByPaymentMovementList():
       node_uid = movement.getDestinationUid()
+      if not node_uid:
+        raise ValueError, "No destination uid for %s" % movement
       payment_uid = movement.getDestinationPaymentUid()
-      section_uid = movement.getDestinationSectionUid()
 
       stock_list = current_stock.setdefault(
                          InventoryKey(node_uid=node_uid,
@@ -198,11 +217,13 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                                       payment_uid=payment_uid), [])
       for inventory in getInventoryList(
                               node_uid=node_uid,
+                              payment_uid=payment_uid,
                               group_by_node=1,
                               group_by_payment=1,
                               group_by_resource=1,
                               **default_inventory_params):
-        stock_list.append(
+        if inventory.total_price and inventory.total_quantity:
+          stock_list.append(
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    destination_payment_uid=payment_uid,
@@ -221,6 +242,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     # node
     for movement in self._getGroupByNodeMovementList():
       node_uid = movement.getDestinationUid()
+      if not node_uid:
+        raise ValueError, "No destination uid for %s" % movement
       section_uid = movement.getDestinationSectionUid()
 
       stock_list = new_stock.setdefault(
@@ -230,6 +253,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    resource_uid=movement.getResourceUid(),
+                   id=movement.getId(),
                    uid=movement.getUid(),
                    relative_url=movement.getRelativeUrl(),
                    quantity=movement.getQuantity(),
@@ -239,6 +263,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     # mirror section
     for movement in self._getGroupByMirrorSectionMovementList():
       node_uid = movement.getDestinationUid()
+      if not node_uid:
+        raise ValueError, "No destination uid for %s" % movement
       section_uid = movement.getDestinationSectionUid()
       mirror_section_uid = movement.getSourceSectionUid()
 
@@ -251,6 +277,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    destination_section_uid=section_uid,
                    source_section_uid=mirror_section_uid,
                    resource_uid=movement.getResourceUid(),
+                   id=movement.getId(),
                    uid=movement.getUid(),
                    relative_url=movement.getRelativeUrl(),
                    quantity=movement.getQuantity(),
@@ -260,6 +287,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     # payment
     for movement in self._getGroupByPaymentMovementList():
       node_uid = movement.getDestinationUid()
+      if not node_uid:
+        raise ValueError, "No destination uid for %s" % movement
       section_uid = movement.getDestinationSectionUid()
       payment_uid = movement.getDestinationPaymentUid()
 
@@ -272,6 +301,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    destination_section_uid=section_uid,
                    destination_payment_uid=payment_uid,
                    resource_uid=movement.getResourceUid(),
+                   id=movement.getId(),
                    uid=movement.getUid(),
                    relative_url=movement.getRelativeUrl(),
                    quantity=movement.getQuantity(),
@@ -286,6 +316,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     _getNewStockDict. Returns a list of dictionnaries with similar keys that
     the ones on inventory brains (node, section, mirror_section ...)
     """
+    precision = self.getResourceValue().getQuantityPrecision()
+
     def computeStockDifference(current_stock_list, new_stock_list):
       # helper function to compute difference between two stock lists.
       if not current_stock_list:
@@ -297,7 +329,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
         matching_diff = None
         for diff in stock_diff_list:
           for prop in [k for k in diff.keys() if k not in ('quantity',
-                          'total_price', 'uid', 'relative_url')]:
+                          'total_price', 'id', 'uid', 'relative_url')]:
             if diff[prop] != new_stock.get(prop):
               break
           else:
@@ -305,18 +337,20 @@ class BalanceTransaction(AccountingTransaction, Inventory):
         
         # matching_diff are negated later
         if matching_diff:
-          matching_diff['quantity'] -= new_stock['quantity']
+          matching_diff['quantity'] -= round(new_stock['quantity'], precision)
           # Matching_diff and new_stock must be consistent.
           # both with total price or none.
           if matching_diff['total_price'] and new_stock['total_price']:
             matching_diff['total_price'] -= new_stock['total_price']
         else:
           stock_diff_list.append(new_stock)
-
+      
+      
       # we were doing with reversed calculation, so negate deltas again.
       # Also we remove stocks that have 0 quantity and price.
       return [negateStock(s) for s in stock_diff_list
-              if s['quantity'] and s['total_price']]
+              if round(s['quantity'], precision) and
+                 round(s['total_price'], precision)]
 
     def negateStock(stock):
       negated_stock = stock.copy()
@@ -352,9 +386,9 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     arguments and returns a temp object edited with those properties.
     """
     from Products.ERP5Type.Document import newTempBalanceTransactionLine
-
+    
     def factory(*args, **kw):
-      doc = newTempBalanceTransactionLine(self, self.getId(),
+      doc = newTempBalanceTransactionLine(self, kw.pop('id', self.getId()),
                                          uid=self.getUid())
       relative_url = kw.pop('relative_url', None)
       destination_total_asset_price = kw.pop('total_price', None)
@@ -409,7 +443,6 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     diff_list = self._computeStockDifferenceList(
                                     current_stock_dict,
                                     new_stock_dict)
-
     temp_object_factory = self._getTempObjectFactory()
     stock_object_list = []
     add_obj = stock_object_list.append
