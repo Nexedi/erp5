@@ -141,7 +141,11 @@ class TALESValue(StaticValue):
       LOG('ERP5Form', PROBLEM,
           'Field.get_value ( %s/%s [%s]), exception on tales_expr: ' %
           ( form.getId(), field.getId(), id), error=sys.exc_info())
-      value = field.get_orig_value(id)
+      # field may be ProxyField
+      try:
+        value = field.get_recursive_orig_value(id)
+      except AttributeError:
+        value = field.get_orig_value(id)
 
     return self.returnValue(field, id, value)
 
