@@ -1064,7 +1064,7 @@ class XMLSyncUtilsMixin(SyncCode):
         signature.setRid(rid)
       #LOG('gid == rid ?', DEBUG, 'gid=%s, rid=%s' % (gid, rid))
       object = subscriber.getObjectFromGid(gid)
-      if object == None and not(domain.getSynchronizeWithERP5Sites()):
+      if object is None and not domain.getSynchronizeWithERP5Sites():
         #if the object is None, that could mean two things :
         # - the object to synchronize don't exists
         # - the id is not a gid but a rid
@@ -1533,19 +1533,19 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       has_response = 1
     elif domain.domain_type == self.SUB:
       if self.checkAlert(remote_xml) or \
-          (xml_confirmation,syncml_data) != ('',''):
+          (xml_confirmation, syncml_data) != ('', ''):
         subscriber.setLastSentMessage(xml_a)
         self.sendResponse(
                   from_url=domain.subscription_url,
                   to_url=domain.publication_url,
                   sync_id=domain.getTitle(),
-                  xml=xml_a,domain=domain,
+                  xml=xml_a, domain=domain,
                   content_type=domain.getSyncContentType())
         has_response = 1
       else:
         LOG('this is the end of the synchronisation session !!!', INFO, '')
         domain.setAuthenticated(False)
-    return {'has_response':has_response,'xml':xml_a}
+    return {'has_response':has_response, 'xml':xml_a}
 
   def xml2wbxml(self, xml):
     """
