@@ -4194,6 +4194,56 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+    
+  def stepSetSkinFolderRegistredSelections(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._setProperty(
+          'business_template_registered_skin_selections', ('Foo',),
+          type='tokens')
+    
+  def stepCheckSkinSelectionAdded(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_paths = ps.getSkinPaths()
+    # a new skin selection is added
+    self.assertTrue('Foo' in ps.getSkinSelections())
+    # and it contains good layers
+    layers = ps.getSkinPath('Foo').split(',')
+    self.assertTrue(skin_id in layers, layers)
+    self.assertTrue('erp5_core' in layers, layers)
+    self.assertFalse('erp5_xhtml_style' in layers, layers)
+
+
+  def test_33_BusinessTemplateWithNewSkinSelection(self, quiet=quiet,
+                                                        run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With New Skin Selection'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateSkinFolder \
+                       SetSkinFolderRegistredSelections \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveSkinFolder \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       \
+                       CheckSkinSelectionAdded \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+    
 
   def test_getInstalledBusinessTemplate(self):
     self.assertNotEquals(None, self.getPortal()\

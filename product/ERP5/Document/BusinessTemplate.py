@@ -1179,8 +1179,42 @@ class SkinTemplateItem(ObjectTemplateItem):
       for obj in folder.objectValues(spec=('Z SQL Method',)):
         fixZSQLMethod(p, obj)
 
-    # Add new folders into skin paths.
     ps = p.portal_skins
+    # Add new skin selection if not already existing
+    for relative_url in self._archive.keys():
+      if context.getTemplateFormatVersion() == 1:
+        if update_dict.has_key(relative_url) or force:
+          if not force:
+            if update_dict[relative_url] == 'nothing':
+              continue
+        obj = self._objects[relative_url]
+      else:
+        obj = self._archive[relative_url]
+      selection_list = obj.getProperty(
+          'business_template_registered_skin_selections', [])
+      if isinstance(selection_list, basestring):
+        selection_list = selection_list.split()
+      for skin_selection in selection_list:
+        if skin_selection not in ps.getSkinSelections():
+          # This skin selection does not exist, so we create a new one.
+          # We'll initialize it with all skin folders, unless:
+          #  - they explictly define a list of
+          #    "business_template_registered_skin_selections", and we
+          #    are not in this list.
+          #  - they are not registred in the default skin selection
+          skin_path = ''
+          for skin_folder in ps.objectValues():
+            if skin_selection in skin_folder.getProperty(
+                     'business_template_registered_skin_selections',
+                     (skin_selection, )):
+              if skin_folder.getId() in ps.getSkinPath(ps.getDefaultSkin()):
+                if skin_path:
+                  skin_path = '%s,%s' % (skin_path, skin_folder.getId())
+                else:
+                  skin_path= skin_folder.getId()
+          ps.addSkinSelection(skin_selection, skin_path)
+
+    # Add new folders into skin paths.
     for skin_name, selection in ps.getSkinPaths():
       new_selection = []
       selection = selection.split(',')
