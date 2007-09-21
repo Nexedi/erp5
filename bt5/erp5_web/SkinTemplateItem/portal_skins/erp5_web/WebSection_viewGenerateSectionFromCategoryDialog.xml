@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -103,6 +100,7 @@
                       <list>
                         <string>your_category</string>
                         <string>your_section_id</string>
+                        <string>your_depth</string>
                         <string>your_update_existing</string>
                         <string>your_remove_missing</string>
                       </list>

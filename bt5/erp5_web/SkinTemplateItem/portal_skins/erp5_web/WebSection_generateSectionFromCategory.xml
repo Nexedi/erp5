@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   This scripts browses recursively a to generate a mirror structure\n
   within the current Web Section. It sets predicate parameters\n
   on all categories excluding itself.\n
@@ -94,7 +93,7 @@ def getNiceID(s):\n
   s = s.replace(\'_\', \'-\')\n
   return s\n
 \n
-def createWebSectionFromCategoryValue(container, category, section_id=None):\n
+def createWebSectionFromCategoryValue(container, category, depth, section_id=None):\n
   global section_count\n
   if section_id is None:\n
     try:\n
@@ -155,8 +154,9 @@ def createWebSectionFromCategoryValue(container, category, section_id=None):\n
   if new_section is not None:\n
     # It is possible to browse objects which are not categories\n
     # ex. Projects\n
-    for sub_category in category.contentValues():\n
-      createWebSectionFromCategoryValue(new_section, sub_category)\n
+    if depth > 0:\n
+      for sub_category in category.contentValues():\n
+        createWebSectionFromCategoryValue(new_section, sub_category, depth - 1)\n
   # Remove sections which have no counterpart in categories\n
   if remove_missing:\n
     # XXX Not implemented yet\n
@@ -165,7 +165,7 @@ def createWebSectionFromCategoryValue(container, category, section_id=None):\n
 # Call the recursive section generator for each category\n
 my_category_value = category_tool.restrictedTraverse(category)\n
 base_category_id = my_category_value.getBaseCategory().getId()\n
-createWebSectionFromCategoryValue(context, my_category_value, section_id=section_id)\n
+createWebSectionFromCategoryValue(context, my_category_value, depth, section_id=section_id)\n
 \n
 # Warn about failures if any\n
 if failed_list:\n
@@ -178,7 +178,9 @@ if failed_list:\n
 return context.Base_redirect(form_id,\n
   keep_items = dict(portal_status_message = translateString("Generated ${section_count} sections for the Web Site.",\n
     mapping = dict(section_count = section_count))))\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -200,7 +202,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>category, section_id, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
+            <value> <string>category, section_id, depth=1, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -220,7 +222,7 @@ return context.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -228,6 +230,7 @@ return context.Base_redirect(form_id,\n
                           <tuple>
                             <string>category</string>
                             <string>section_id</string>
+                            <string>depth</string>
                             <string>update_existing</string>
                             <string>remove_missing</string>
                             <string>form_id</string>
@@ -259,6 +262,7 @@ return context.Base_redirect(form_id,\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <int>1</int>
                 <int>0</int>
                 <int>0</int>
                 <string>view</string>
