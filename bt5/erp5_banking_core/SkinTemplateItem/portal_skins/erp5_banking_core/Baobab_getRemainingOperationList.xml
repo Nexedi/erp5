@@ -71,15 +71,19 @@ if simulation_state is None:\n
   simulation_state = [\'confirmed\']\n
 kwd_source = {\'default_source_uid\' : site_uid,\'simulation_state\' : simulation_state}\n
 kwd_destination = {\'default_destination_uid\' : site_uid,\'simulation_state\' : simulation_state}\n
+kwd_site = {\'default_site_uid\' : site_uid,\'simulation_state\' : simulation_state}\n
 if date is not None:\n
   kwd_source[\'delivery.start_date\']=date\n
   kwd_destination[\'delivery.start_date\']=date\n
+  kwd_site[\'delivery.start_date\']=date\n
 if portal_type is not None:\n
   kwd_source[\'portal_type\'] = portal_type\n
   kwd_destination[\'portal_type\'] = portal_type\n
+  kwd_site[\'portal_type\'] = portal_type\n
 # as destination\n
 operation_list = list(context.portal_catalog(**kwd_source)) + \\\n
-                      list(context.portal_catalog(**kwd_destination))\n
+                 list(context.portal_catalog(**kwd_destination)) + \\\n
+                      list(context.portal_catalog(**kwd_site))\n
 operation_list_object = [x.getObject() for x in operation_list]\n
 \n
 return operation_list_object\n
@@ -138,6 +142,7 @@ return operation_list_object\n
                             <string>None</string>
                             <string>kwd_source</string>
                             <string>kwd_destination</string>
+                            <string>kwd_site</string>
                             <string>_write_</string>
                             <string>list</string>
                             <string>_apply_</string>
