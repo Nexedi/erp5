@@ -65,6 +65,7 @@
                 <string>_setSourceDecision.*</string>
                 <string>_setSourceTrade.*</string>
                 <string>_setSource.*</string>
+                <string>_setDestinationDecision.*</string>
               </list>
             </value>
         </item>
