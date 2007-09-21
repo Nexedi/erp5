@@ -1,3 +1,6 @@
+2007-09-21 Yusei
+* Add open and closed states to order_workflow.
+
 2007-09-05 Kazuhiko
 * Remove packing_list.edit() from Delivery_confirm because expansion will be invoked from interaction workflow.
 
