@@ -1344,6 +1344,10 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       LOG('SyncModif, no correct message:', INFO, "sending again...")
       last_xml = subscriber.getLastSentMessage()
       LOG("SyncModif last_xml :", INFO, last_xml)
+      string_io = StringIO()
+      PrettyPrint(remote_xml, stream=string_io)
+      remote_xml = string_io.getvalue()
+      LOG("SyncModif remote_xml :", INFO, remote_xml)
       if last_xml != '':
         has_response = 1
         if domain.domain_type == self.PUB: # We always reply
@@ -1527,7 +1531,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                 domain=domain,
                 content_type=domain.getSyncContentType())
       if syncml_data == '':
-        LOG('this is the end of the synchronisation session !!!', INFO, '')
+        LOG('this is the end of the synchronisation session !!!', INFO, domain.getId())
         subscriber.setAuthenticated(False)
         domain.setAuthenticated(False)
       has_response = 1
@@ -1543,7 +1547,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                   content_type=domain.getSyncContentType())
         has_response = 1
       else:
-        LOG('this is the end of the synchronisation session !!!', INFO, '')
+        LOG('this is the end of the synchronisation session !!!', INFO, domain.getId())
         domain.setAuthenticated(False)
     return {'has_response':has_response, 'xml':xml_a}
 
