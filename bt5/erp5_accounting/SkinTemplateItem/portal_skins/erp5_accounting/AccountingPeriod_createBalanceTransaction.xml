@@ -85,6 +85,7 @@ def roundCurrency(value, resource_relative_url):\n
   qty_precision = precision_cache[resource_relative_url]\n
   return round(value, qty_precision)\n
 \n
+activity_tag = \'BalanceTransactionCreation\'\n
 \n
 at_date = context.getStopDate()\n
 assert at_date\n
@@ -94,6 +95,7 @@ section_uid = context.getParentUid()\n
 section_currency = section.getPriceCurrency()\n
 \n
 balance_transaction = portal.accounting_module.newContent(\n
+                        activate_kw=dict(tag=activity_tag),\n
                         portal_type=\'Balance Transaction\',\n
                         start_date=(at_date + 1).earliestTime(),\n
                         title=context.getTitle() or N_(\'Balance Transaction\'),\n
@@ -132,6 +134,7 @@ inventory_param_dict = dict(section_uid=section_uid,\n
 section_currency_uid = context.getParentValue().getPriceCurrencyUid()\n
 \n
 profit_and_loss_quantity = 0\n
+line_count = 0\n
 \n
 for inventory in getInventoryList(\n
         node_category_strict_membership=group_by_node_node_category_list,\n
@@ -145,13 +148,15 @@ for inventory in getInventoryList(\n
   \n
   if not total_price and not quantity:\n
     continue\n
-\n
+  \n
+  line_count += 1\n
   if inventory.resource_uid != section_currency_uid:\n
     if inventory.node_relative_url == profit_and_loss_account:\n
       raise ValueError(\'Using multiple currencies on profit and loss account \'\n
                        \'is not supported\')\n
     profit_and_loss_quantity += total_price\n
     balance_transaction.newContent(\n
+        id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
         destination=inventory.node_relative_url,\n
         resource=inventory.resource_relative_url,\n
@@ -167,6 +172,7 @@ for inventory in getInventoryList(\n
     if inventory.node_relative_url != profit_and_loss_account:\n
       profit_and_loss_quantity += total_price\n
       balance_transaction.newContent(\n
+        id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
         destination=inventory.node_relative_url,\n
         quantity=total_price)\n
@@ -186,9 +192,11 @@ for inventory in getInventoryList(\n
   if not total_price and not quantity:\n
     continue\n
   profit_and_loss_quantity += total_price\n
+  line_count += 1\n
 \n
   if inventory.resource_uid != section_currency_uid:\n
     balance_transaction.newContent(\n
+      id=\'%03d\' % line_count,\n
       portal_type=\'Balance Transaction Line\',\n
       destination=inventory.node_relative_url,\n
       source_section_uid=inventory.mirror_section_uid,\n
@@ -200,6 +208,7 @@ for inventory in getInventoryList(\n
       raise ValueError(\'Different price: %s != %s \' % (\n
                         total_price, quantity))\n
     balance_transaction.newContent(\n
+      id=\'%03d\' % line_count,\n
       portal_type=\'Balance Transaction Line\',\n
       destination=inventory.node_relative_url,\n
       source_section_uid=inventory.mirror_section_uid,\n
@@ -220,9 +229,12 @@ for inventory in getInventoryList(\n
   if not total_price and not quantity:\n
     continue\n
   profit_and_loss_quantity += total_price\n
+  \n
+  line_count += 1\n
 \n
   if inventory.resource_uid != section_currency_uid:\n
     balance_transaction.newContent(\n
+      id=\'%03d\' % line_count,\n
       portal_type=\'Balance Transaction Line\',\n
       destination=inventory.node_relative_url,\n
       resource=inventory.resource_relative_url,\n
@@ -234,6 +246,7 @@ for inventory in getInventoryList(\n
       raise ValueError(\'Different price: %s != %s \' % (\n
                         total_price, quantity))\n
     balance_transaction.newContent(\n
+      id=\'%03d\' % line_count,\n
       portal_type=\'Balance Transaction Line\',\n
       destination=inventory.node_relative_url,\n
       destination_payment_uid=inventory.payment_uid,\n
@@ -241,6 +254,7 @@ for inventory in getInventoryList(\n
 \n
 # add a final line for p&l\n
 balance_transaction.newContent(\n
+          id=\'%03d\' % (line_count + 1),\n
           portal_type=\'Balance Transaction Line\',\n
           destination=profit_and_loss_account,\n
           quantity=-profit_and_loss_quantity)\n
@@ -248,6 +262,10 @@ balance_transaction.newContent(\n
 # and go to delivered state directly (the user is not supposed to edit this document)\n
 balance_transaction.stop()\n
 balance_transaction.deliver()\n
+\n
+# make sure this Accounting Period has an activity pending during the indexing\n
+# of the balance transaction.\n
+context.activate(after_tag=activity_tag).getTitle()\n
 
 
 ]]></string> </value>
@@ -272,7 +290,7 @@ balance_transaction.deliver()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>profit_and_loss_account=None</string> </value>
+            <value> <string>profit_and_loss_account</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -306,6 +324,7 @@ balance_transaction.deliver()\n
                             <string>dict</string>
                             <string>precision_cache</string>
                             <string>roundCurrency</string>
+                            <string>activity_tag</string>
                             <string>at_date</string>
                             <string>AssertionError</string>
                             <string>section</string>
@@ -324,6 +343,7 @@ balance_transaction.deliver()\n
                             <string>inventory_param_dict</string>
                             <string>section_currency_uid</string>
                             <string>profit_and_loss_quantity</string>
+                            <string>line_count</string>
                             <string>_apply_</string>
                             <string>inventory</string>
                             <string>total_price</string>
@@ -340,9 +360,7 @@ balance_transaction.deliver()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
