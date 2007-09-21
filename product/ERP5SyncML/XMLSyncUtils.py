@@ -33,15 +33,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from StringIO import StringIO
 from xml.dom.ext import PrettyPrint
 from ERP5Diff import ERP5Diff
-import random
-from zLOG import LOG, INFO, DEBUG, TRACE
-try:
-  from Products.CMFActivity.ActiveObject import ActiveObject
-except ImportError:
-  LOG('XMLSyncUtils', INFO, "Can't import ActiveObject")
-  class ActiveObject:
-    pass
-import commands
+from zLOG import LOG, INFO
 
 try:
   from Ft.Xml import Parse
