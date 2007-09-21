@@ -682,30 +682,30 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # more cases. Only those portal types which View permission
         # is not managed by a workflow and which acquire local
         # roles acquire their permission
+        types_tool = getToolByName(self, 'portal_types')
         def isViewPermissionAcquired(portal_type):
-          if portal_type:
-            types_tool = getToolByName(self, 'portal_types')
-            type_definition = getattr(types_tool, portal_type, None)
-            if type_definition and getattr(type_definition, 'acquire_local_roles', 0):
-              for workflow in wf.getChainFor(portal_type):
-                workflow = getattr(wf, workflow, None)
-                if workflow is not None:
-                  if 'View' in getattr(workflow, 'permissions', ()):
-                    return 0
-              # No workflow manages View and roles are acquired
-              return 1
+          type_definition = types_tool.getTypeInfo(portal_type)
+          if getattr(aq_base(type_definition), 'acquire_local_roles', 0):
+            for workflow in wf.getWorkflowsFor(portal_type):
+              if 'View' in getattr(aq_base(workflow), 'permissions', ()):
+                return 0
+            # No workflow manages View and roles are acquired
+            return 1
           return 0
 
-        isViewPermissionAcquired = CachingMethod(isViewPermissionAcquired, 
-                                                 id='CatalogTool_isViewPermissionAcquired',
-                                                 cache_factory='erp5_content_long')
+        # This below is commented out, because caching has tremendous
+        # side effect, and the performance seems to be not so different. -yo
+        # 
+        # isViewPermissionAcquired = CachingMethod(isViewPermissionAcquired, 
+        #                                          id='CatalogTool_isViewPermissionAcquired',
+        #                                          cache_factory='erp5_content_long')
 
         # Find the parent definition for security
         document_object = aq_inner(object)
         is_acquired = 0
         w = IndexableObjectWrapper(vars, document_object)
         while getattr(document_object, 'isRADContent', 0):
-          if isViewPermissionAcquired(getattr(document_object, 'portal_type', None)):
+          if isViewPermissionAcquired(getattr(aq_base(document_object), 'portal_type', None)):
             document_object = document_object.aq_parent
             is_acquired = 1
           else:
