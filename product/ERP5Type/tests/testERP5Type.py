@@ -1378,6 +1378,14 @@ class TestPropertySheet:
       checked_permission = 'View'
       beta.manage_permission(checked_permission, roles=[], acquire=0)
 
+      gamma_id = "gamma"
+      gamma_title = "Gamma System"
+      gamma = region_category.newContent(
+              portal_type = "Category",
+              id =          gamma_id,
+              title =       gamma_title, )
+      gamma_path = gamma.getCategoryRelativeUrl()
+
       # Make sure categories are reindexed
       get_transaction().commit()
       self.tic() 
@@ -1488,120 +1496,119 @@ class TestPropertySheet:
       # Check setCategoryValue accessor
       foo.setRegionValue(beta)
       self.assertEquals(beta_path, foo.getRegion())
-      # XXX Not yet implemented
-#       foo.setRegionValue(None)
-#       foo.setRegionValue(beta, 
-#                          checked_permission=checked_permission)
-#       self.assertEquals(None, foo.getRegion())
-#       foo.setRegionValue(beta)
-#       foo.setRegionValue(beta, 
-#                          checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
+      foo.setRegionValue(None)
+      foo.setRegionValue(gamma, 
+                         checked_permission=checked_permission)
+      self.assertSameSet([gamma_path], foo.getRegionList())
+      foo.setRegionValue(beta)
+      foo.setRegionValue(gamma, 
+                         checked_permission=checked_permission)
+      self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
       self.assertEquals(None, foo.getRegion())
       # Check setDefaultCategoryValue accessor
       foo.setDefaultRegionValue(beta)
       self.assertEquals(beta_path, foo.getRegion())
-      # XXX Not yet implemented
+      # XXX setDefaultValue seems buggy when passing None
 #       foo.setDefaultRegionValue(None)
-#       foo.setDefaultRegionValue(beta, 
-#                          checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
-#       foo.setDefaultRegionValue(beta_path)
-#       foo.setDefaultRegionValue(beta_path, 
-#                          checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
+      foo.setRegionValue(None)
+      foo.setDefaultRegionValue(gamma, 
+                                checked_permission=checked_permission)
+      self.assertEquals(gamma_path, foo.getRegion())
+      foo.setDefaultRegionValue(beta_path)
+      foo.setDefaultRegionValue(gamma_path, 
+                                checked_permission=checked_permission)
+      self.assertEquals(gamma_path, foo.getDefaultRegion())
+      self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
       self.assertEquals(None, foo.getRegion())
       # Check setCategory accessor
       foo.setRegion(beta_path)
       self.assertEquals(beta_path, foo.getRegion())
-      # XXX Not yet implemented
-#       foo.setRegion('')
-#       foo.setRegion(beta_path, 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
-#       foo.setRegion(beta_path)
-#       foo.setRegion(beta_path, 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
+      foo.setRegion(None)
+      foo.setRegion(gamma_path, 
+                    checked_permission=checked_permission)
+      self.assertEquals(gamma_path, foo.getRegion())
+      foo.setRegion(beta_path)
+      foo.setRegion(gamma_path, 
+                    checked_permission=checked_permission)
+      self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
+      self.assertEquals(gamma_path,
+                        foo.getRegion(checked_permission=checked_permission))
 
       foo.setRegionValue(None)
       self.assertEquals(None, foo.getRegion())
       # Check setDefaultCategory accessor
       foo.setDefaultRegion(beta_path)
       self.assertEquals(beta_path, foo.getRegion())
-      # XXX Not yet implemented
-#       foo.setDefaultRegion('')
-#       foo.setDefaultRegion(beta_path, 
-#                          checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
-#       foo.setDefaultRegion(beta_path)
-#       foo.setDefaultRegion(beta_path, 
-#                          checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
+      foo.setRegion(None)
+      foo.setDefaultRegion(gamma_path, 
+                    checked_permission=checked_permission)
+      self.assertEquals(gamma_path, foo.getRegion())
+      foo.setDefaultRegion(beta_path)
+      foo.setDefaultRegion(gamma_path, 
+                    checked_permission=checked_permission)
+      self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
+      self.assertEquals(gamma_path,
+                        foo.getDefaultRegion())
 
       foo.setRegionValue(None)
       self.assertEquals(None, foo.getRegion())
       # Check setCategoryList accessor
       foo.setRegionList([beta_path])
       self.assertEquals(beta_path, foo.getRegion())
-      # XXX Not yet implemented
-#       foo.setRegionList([])
-#       foo.setRegionList([beta_path], 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
-#       foo.setRegionList([beta_path])
-#       foo.setRegionList([beta_path], 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
+      foo.setRegionList([])
+      foo.setRegionList([gamma_path], 
+                    checked_permission=checked_permission)
+      self.assertEquals(gamma_path, foo.getRegion())
+      foo.setRegionList([beta_path])
+      foo.setRegionList([gamma_path], 
+                    checked_permission=checked_permission)
+      self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
       self.assertEquals(None, foo.getRegion())
       # Check setCategoryValueList accessor
       foo.setRegionValueList([beta])
       self.assertEquals(beta_path, foo.getRegion())
-      # XXX Not yet implemented
-#       foo.setRegionList([])
-#       foo.setRegionValueList([beta], 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
-#       foo.setRegionValueList([beta])
-#       foo.setRegionValueList([beta], 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
+      foo.setRegionList([])
+      foo.setRegionValueList([gamma], 
+                    checked_permission=checked_permission)
+      self.assertEquals(gamma_path, foo.getRegion())
+      foo.setRegionValueList([beta])
+      foo.setRegionValueList([gamma], 
+                    checked_permission=checked_permission)
+      self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
       self.assertEquals(None, foo.getRegion())
       # Check setCategorySet accessor
       foo.setRegionSet([beta_path])
       self.assertEquals(beta_path, foo.getRegion())
-      # XXX Not yet implemented
-#       foo.setRegionSet(set())
-#       foo.setRegionSet(set(beta_path), 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
-#       foo.setRegionSet(set(beta_path))
-#       foo.setRegionSet(set(beta_path), 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
+      foo.setRegionSet([])
+      foo.setRegionSet([gamma_path],
+                    checked_permission=checked_permission)
+      self.assertEquals(gamma_path, foo.getRegion())
+      foo.setRegionSet([beta_path])
+      foo.setRegionSet([gamma_path], 
+                    checked_permission=checked_permission)
+      self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
       self.assertEquals(None, foo.getRegion())
       # Check setCategoryValueSet accessor
       foo.setRegionValueSet([beta])
       self.assertEquals(beta_path, foo.getRegion())
-      # XXX Not yet implemented
-#       foo.setRegionSet(set())
-#       foo.setRegionValueSet(set(beta), 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
-#       foo.setRegionValueSet(set(beta))
-#       foo.setRegionValueSet(set(beta), 
-#                     checked_permission=checked_permission)
-#       self.assertEquals('', foo.getRegion())
+      foo.setRegionSet([])
+      foo.setRegionValueSet([gamma], 
+                    checked_permission=checked_permission)
+      self.assertEquals(gamma_path, foo.getRegion())
+      foo.setRegionValueSet([beta])
+      foo.setRegionValueSet([gamma], 
+                    checked_permission=checked_permission)
+      self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
 def test_suite():
   suite = unittest.TestSuite()
