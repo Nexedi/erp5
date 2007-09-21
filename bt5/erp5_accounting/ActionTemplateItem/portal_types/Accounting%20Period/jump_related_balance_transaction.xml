@@ -85,7 +85,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}Base_jumpToRelatedObject?base_category=causality&portal_type:list=Balance+Transaction
+string:${object_url}/Base_jumpToRelatedObject?base_category=causality&portal_type:list=Balance+Transaction
 
 ]]></string> </value>
         </item>
