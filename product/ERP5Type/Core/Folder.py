@@ -920,7 +920,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   security.declareProtected( Permissions.AccessContentsInformation,
                              '_getCategoryMembershipList' )
   def _getCategoryMembershipList(self, category,
-                          spec=(), filter=None, portal_type=(), base=0 ):
+                                 spec=(), filter=None, portal_type=(), base=0,
+                                 keep_default=None, checked_permission=None):
     if category == 'content':
       content_list = self.searchFolder(portal_type=spec)
       return map(lambda x: x.relative_url, content_list)
