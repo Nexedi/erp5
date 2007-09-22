@@ -101,7 +101,8 @@ Description:\n
     </div>\n
   \n
     <div class="tabbertab"\n
-         tal:define="section_list python:here.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\');\n
+         tal:define="section_list python:here.contentValues(portal_type=\'Web Section\',\n
+                                                    checked_permission=\'View\',sort_on=\'int_index\');\n
                      section_list python:filter(lambda x:x.isVisible(), section_list);\n
                      half_count python:len(section_list) / 2">\n
       <h2 value="" i18n:translate="" i18n:domain="ui">Browse</h2>\n
@@ -112,7 +113,7 @@ Description:\n
           <li value="" i18n:translate=""\n
               i18n:domain="ui" tal:content="section/getTitle">Departments and Divisions:</li>\n
           <ul>\n
-            <li tal:repeat="root_section section/contentValues">\n
+            <li tal:repeat="root_section python:section.contentValues(checked_permission=\'View\')">\n
               <a    tal:content="root_section/getTitle"\n
                     tal:condition="python:not len(root_section.contentValues())"\n
                     tal:attributes="href root_section/absolute_url"/>\n

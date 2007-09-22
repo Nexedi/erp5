@@ -73,7 +73,7 @@
   This script is used to generate the memus.\n
 """\n
 site = context.getWebSiteValue()\n
-section_list = site.objectValues(portal_type = \'Web Section\', sort_on=\'int_index\')\n
+section_list = site.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\', checked_permission=\'View\')\n
 return filter(lambda x: x.isVisible(), section_list)\n
 </string> </value>
         </item>
