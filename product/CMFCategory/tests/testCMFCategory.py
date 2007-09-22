@@ -31,6 +31,7 @@ import unittest
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import noSecurityManager
 from zLOG import LOG
 
 try:
@@ -898,6 +899,61 @@ class TestCMFCategory(ERP5TypeTestCase):
                       bc.getCategoryChildTitleItemList(base=1))
     self.assertEquals([['', ''], ['C', 'bar/foo/1']],
                       bc.getCategoryChildTitleItemList(base='bar'))
+
+    
+  def test_getSingleCategoryAcquiredMembershipList(self):
+    pc = self.getCategoriesTool()
+    obj = self.portal.person_module.newContent(portal_type='Person')
+    region_url = self.region1
+    obj.setRegion(region_url)
+
+    self.assertEquals([region_url],
+          pc.getSingleCategoryMembershipList(obj, 'region'))
+
+    self.assertEquals([region_url],
+          pc.getSingleCategoryMembershipList(obj, 'region',
+                        portal_type='Category'))
+    self.assertEquals([],
+          pc.getSingleCategoryMembershipList(obj, 'region',
+                        portal_type='Organisation'))
+
+    self.assertEquals(['region/%s' % region_url],
+          pc.getSingleCategoryMembershipList(obj, 'region', base=1))
+
+    self.assertEquals([region_url],
+          pc.getSingleCategoryMembershipList(obj, 'region',
+                                checked_permission='View'))
+    noSecurityManager()
+    self.assertEquals([],
+          pc.getSingleCategoryMembershipList(obj, 'region',
+                                checked_permission='Manage portal'))
+
+
+  def test_getSingleCategoryAcquiredMembershipListOnParent(self):
+    pc = self.getCategoriesTool()
+    obj = self.portal.person_module.newContent(portal_type='Person')
+    parent_url = self.portal.person_module.getRelativeUrl()
+
+    self.assertEquals([parent_url],
+          pc.getSingleCategoryMembershipList(obj, 'parent'))
+
+    self.assertEquals([parent_url],
+          pc.getSingleCategoryMembershipList(obj, 'parent',
+                        portal_type='Person Module'))
+    self.assertEquals([],
+          pc.getSingleCategoryMembershipList(obj, 'parent',
+                        portal_type='Organisation'))
+
+    self.assertEquals(['parent/%s' % parent_url],
+          pc.getSingleCategoryMembershipList(obj, 'parent', base=1))
+
+    self.assertEquals([parent_url],
+          pc.getSingleCategoryMembershipList(obj, 'parent',
+                                checked_permission='View'))
+    noSecurityManager()
+    self.assertEquals([],
+          pc.getSingleCategoryMembershipList(obj, 'parent',
+                                checked_permission='Manage portal'))
 
 
 def test_suite():
