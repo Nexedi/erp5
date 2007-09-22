@@ -1135,7 +1135,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'objectValues' )
   def objectValues(self, spec=None, meta_type=None, portal_type=None,
-                   sort_on=None, sort_order=None, base_id=None,**kw):
+                   sort_on=None, sort_order=None, base_id=None,
+                   checked_permission=None, **kw):
     """
     Returns a list containing object contained in this folder.
     """
@@ -1166,13 +1167,16 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         portal_type = (portal_type,)
       object_list = filter(lambda x: x.getPortalType() in portal_type,
                            object_list)
+    if checked_permission is not None:
+      checkPermission = getSecurityManager().checkPermission
+      object_list = [o for o in object_list if checkPermission(checked_permission, o)]
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
     return object_list
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'contentValues' )
   def contentValues(self, spec=None, meta_type=None, portal_type=None,
-                    sort_on=None, sort_order=None, **kw):
+                    sort_on=None, sort_order=None, checked_permission=None, **kw):
     """
     Returns a list containing object contained in this folder.
     Filter objects with appropriate permissions (as in contentValues)
@@ -1187,6 +1191,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       object_list = self._folder_handler.contentValues(self, spec=spec, filter=kw)
     except AttributeError:
       object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter=kw)
+    if checked_permission is not None:
+      checkPermission = getSecurityManager().checkPermission
+      object_list = [o for o in object_list if checkPermission(checked_permission, o)]
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
     return object_list
 
