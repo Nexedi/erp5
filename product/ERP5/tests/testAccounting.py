@@ -250,7 +250,8 @@ class TestClosingPeriod(AccountingTestCase):
                dict(source_value=self.account_module.goods_purchase,
                     source_credit=100)))
 
-    period.AccountingPeriod_createBalanceTransaction()
+    period.AccountingPeriod_createBalanceTransaction(
+                               profit_and_loss_account=None)
     accounting_transaction_list = self.accounting_module.contentValues()
     self.assertEquals(3, len(accounting_transaction_list))
     balance_transaction_list = self.accounting_module.contentValues(
@@ -338,7 +339,8 @@ class TestClosingPeriod(AccountingTestCase):
                dict(source_value=self.account_module.receivable,
                     source_credit=200)))
 
-    period.AccountingPeriod_createBalanceTransaction()
+    period.AccountingPeriod_createBalanceTransaction(
+                             profit_and_loss_account=None)
     accounting_transaction_list = self.accounting_module.contentValues()
     self.assertEquals(3, len(accounting_transaction_list))
     balance_transaction_list = self.accounting_module.contentValues(
@@ -445,7 +447,8 @@ class TestClosingPeriod(AccountingTestCase):
                dict(destination_value=self.account_module.goods_purchase,
                     destination_credit=200)))
 
-    period.AccountingPeriod_createBalanceTransaction()
+    period.AccountingPeriod_createBalanceTransaction(
+                             profit_and_loss_account=None)
     accounting_transaction_list = self.accounting_module.contentValues()
     self.assertEquals(3, len(accounting_transaction_list))
     balance_transaction_list = self.accounting_module.contentValues(
@@ -566,7 +569,8 @@ class TestClosingPeriod(AccountingTestCase):
                     source_asset_credit=2.2,
                     source_credit=200)))
 
-    period.AccountingPeriod_createBalanceTransaction()
+    period.AccountingPeriod_createBalanceTransaction(
+                              profit_and_loss_account=None)
     accounting_transaction_list = self.accounting_module.contentValues()
     self.assertEquals(3, len(accounting_transaction_list))
     balance_transaction_list = self.accounting_module.contentValues(
@@ -1329,9 +1333,11 @@ class TestAccounting(ERP5TypeTestCase):
   def stepDeliverAccountingPeriod(self, sequence, **kw):
     """Deliver the Accounting Period."""
     accounting_period = sequence.get('accounting_period')
+    # take any account for profit and loss account, here we don't care
+    profit_and_loss_account = self.portal.account_module.contentValues()[0]
     self.getPortal().portal_workflow.doActionFor(
-                        accounting_period,
-                        'deliver_action' )
+           accounting_period, 'deliver_action',
+           profit_and_loss_account=profit_and_loss_account.getRelativeUrl())
     self.assertEquals(accounting_period.getSimulationState(),
                       'delivered')
     
@@ -2223,8 +2229,8 @@ class TestAccounting(ERP5TypeTestCase):
 
   def test_AccountingPeriodRefusesWrongDateTransactionValidation(
         self, quiet=QUIET, run=RUN_ALL_TESTS):
-    """Accounting Periods prevents transactions to be validated
-        when there is no oppened accounting period"""
+    """Accounting Periods prevents transactions from being validated when there
+    is no oppened accounting period"""
     if not run : return
     self.playSequence("""
       stepCreateCurrencies
