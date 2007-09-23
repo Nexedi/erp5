@@ -166,7 +166,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
       return module.test_suite()
     return unittest.TestLoader.loadTestsFromModule(self, module)
 
-def runUnitTestList(test_list) :
+def runUnitTestList(test_list):
   if len(test_list) == 0 :
     print "No test to run, exiting immediately."
     return
@@ -212,12 +212,15 @@ def runUnitTestList(test_list) :
   TestRunner = unittest.TextTestRunner
   suite = unittest.TestSuite()
 
-  os.chdir(tests_home)
-
-  # allow unit tests of our Products to be reached.
+  # allow unit tests of our Products or business templates to be reached.
   from glob import glob
-  product_test_list = glob(products_home + os.sep + '*' + os.sep + 'tests')
+  product_test_list = glob(os.path.join(
+                products_home, os.sep, '*', os.sep, 'tests'))
   sys.path.extend(product_test_list)
+  bt5_path = os.environ.get('erp5_tests_bt5_path',
+                            os.path.join(instance_home, 'bt5'))
+  bt5_test_list = glob(os.path.join(bt5_path, '*', 'TestTemplateItem'))
+  sys.path.extend(bt5_test_list)
   sys.path.extend((real_tests_home, tests_home))
 
   # Make sure that locally overridden python modules are used
@@ -243,8 +246,11 @@ def runUnitTestList(test_list) :
     unittest.makeSuite = dummy_makeSuite
     PortalTestCase.setUp = dummy_setUp
     PortalTestCase.tearDown = dummy_tearDown
-
+  
   suite = ERP5TypeTestLoader(save=save).loadTestsFromNames(test_list)
+  
+  # change current directory to the test home, to create zLOG.log in this dir.
+  os.chdir(tests_home)
   return TestRunner().run(suite)
 
 def usage(stream, msg=None):
