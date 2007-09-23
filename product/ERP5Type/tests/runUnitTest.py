@@ -214,8 +214,7 @@ def runUnitTestList(test_list):
 
   # allow unit tests of our Products or business templates to be reached.
   from glob import glob
-  product_test_list = glob(os.path.join(
-                products_home, os.sep, '*', os.sep, 'tests'))
+  product_test_list = glob(os.path.join(products_home, '*', 'tests'))
   sys.path.extend(product_test_list)
   bt5_path = os.environ.get('erp5_tests_bt5_path',
                             os.path.join(instance_home, 'bt5'))
