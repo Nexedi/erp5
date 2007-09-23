@@ -715,19 +715,19 @@ fieldset.bottom .field .input {\n
 }\n
 \n
 #favourites button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/favourite.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/favourite.png\');\n
 }\n
 \n
 #modules button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/appearance.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/appearance.png\');\n
 }\n
 \n
 #language button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/language.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/language.png\');\n
 }\n
 \n
 #search button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/search.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/search.png\');\n
 }\n
 \n
 #status,\n
@@ -770,11 +770,11 @@ fieldset.bottom .field .input {\n
 }\n
 \n
 #main_bar .separator {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sepafon.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/sepafon.png\');\n
 }\n
 \n
 #context_bar .separator {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sepacla.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/sepacla.png\');\n
 }\n
 \n
 #context_bar .tool_buttons a .image,\n
@@ -789,100 +789,100 @@ fieldset.bottom .field .input {\n
 }\n
 \n
 #context_bar #jump button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/jump22.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/jump22.png\');\n
 }\n
 \n
 #context_bar #action button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/exec.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/exec.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .list_mode .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/text_block.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/text_block.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .new .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filenew.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/filenew.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .jump_first .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/2leftarrowb.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/2leftarrowb.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .jump_previous .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/1leftarrowb.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/1leftarrowb.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .jump_next .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/1rightarrowb.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/1rightarrowb.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .jump_last .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/2rightarrowb.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/2rightarrowb.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .import_export .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/imp-exp.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/imp-exp.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .jump_help .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/userhelp.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/userhelp.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .find .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/find.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/find.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .print .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/print.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/print.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .report .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/report.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/report.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .cut .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcut.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/editcut.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .copy .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcopy.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/editcopy.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .paste .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editpaste.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/editpaste.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .delete .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editdelete.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/editdelete.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .show_all .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/showall.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/showall.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .filter .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/filter.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .filter_on .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter_on.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/filter_on.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .sort .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sort.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/sort.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .configure .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/configure.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/configure.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .activity_pending .image {\n
   width: 26px;\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/activity_busy.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/activity_busy.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .inspect_object .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/inspect.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/inspect.png\');\n
 }\n
 \n
 /* Status */\n
@@ -934,7 +934,7 @@ fieldset.bottom .field .input {\n
 }\n
 \n
 .dialog_selector button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/exec16.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/exec16.png\');\n
 }\n
 \n
 .document .actions {\n
@@ -956,7 +956,7 @@ fieldset.bottom .field .input {\n
 .document .actions button.save span.image {\n
   width: 48px;\n
   height: 50px;\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/save2.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/save2.png\');\n
 }\n
 \n
 .document .actions ul {\n
@@ -971,13 +971,13 @@ fieldset.bottom .field .input {\n
 .document .actions li {\n
   float: left;\n
   color: inherit;\n
-  background: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/tab_left.png\') top left no-repeat;\n
+  background: url(\'<dtml-var expr="portal_url()">/images/tab_left.png\') top left no-repeat;\n
   margin: 0;\n
   padding: 0 0 0 10px;\n
 }\n
 \n
 .document .actions li.selected {\n
-  background: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/tab_left_selected.png\') top left no-repeat;\n
+  background: url(\'<dtml-var expr="portal_url()">/images/tab_left_selected.png\') top left no-repeat;\n
 }\n
 \n
 .document .actions li a {\n
@@ -985,14 +985,14 @@ fieldset.bottom .field .input {\n
   padding: 5px 15px 4px 5px;\n
   color: inherit;\n
   background-color: inherit;\n
-  background: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/tab_right.png\') top right no-repeat;\n
+  background: url(\'<dtml-var expr="portal_url()">/images/tab_right.png\') top right no-repeat;\n
 /*   font-size: 90%; */\n
 }\n
 \n
 .document .actions li.selected a {\n
   font-weight: bold;\n
   padding-bottom: 5px;\n
-  background: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/tab_right_selected.png\') top right no-repeat;\n
+  background: url(\'<dtml-var expr="portal_url()">/images/tab_right_selected.png\') top right no-repeat;\n
 }\n
 \n
 .document .actions li a:hover {\n
@@ -1016,7 +1016,7 @@ fieldset.bottom .field .input {\n
   - hardcoded images in html which are inly used for rendering style\n
   */\n
 .ListSummary {\n
-  background: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/tab_left_selected.png\') top left no-repeat;\n
+  background: url(\'<dtml-var expr="portal_url()">/images/tab_left_selected.png\') top left no-repeat;\n
   color: #000;\n
   background-color: <dtml-var document_background_color>;\n
   padding-left: 10px;\n

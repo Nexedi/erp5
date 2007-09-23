@@ -92,7 +92,7 @@
 <!-- ============================================================== -->\n
 \n
 <tal:block metal:define-macro="http_definitions">\n
-  <tal:block tal:replace="structure python: modules[\'ZTUtils\'].make_hidden_input(**http_parameter_list)"/>\n
+  <tal:block tal:replace="structure python: modules[\'ZTUtils\'].make_hidden_input(**http_parameter_list).replace(\'>\', \' />\')"/>\n
 </tal:block>\n
 
 

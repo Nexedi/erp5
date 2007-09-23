@@ -1,3 +1,7 @@
+2007-09-23 Kazuhiko
+* Add favicon
+* Output better XHTML/1.0
+
 2007-09-19 yo
 * Use absolute_url instead of absolute_url_path.
 

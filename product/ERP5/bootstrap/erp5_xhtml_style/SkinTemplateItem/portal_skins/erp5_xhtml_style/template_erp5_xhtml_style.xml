@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -59,7 +56,7 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
 <!--\n
-Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.\n
                    Vincent Pelletier <vincent@nexedi.com>\n
                    Christophe Dumez <christophe@nexedi.com>\n
 \n
@@ -90,6 +87,8 @@ IDEAS:\n
     <base tal:attributes="href python: \'%s/\' % (url, )"/>\n
     <meta name="generator" content="ERP5"/>\n
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />\n
+    <meta http-equiv="Content-Style-Type" content="text/css" />\n
     <title tal:define="title title | string:ERP5"\n
            tal:content="python: \'%s | %s\' % (title, here.getPortalObject().title_or_id())"/>\n
     <tal:block tal:repeat="css css_list">\n
@@ -121,6 +120,8 @@ IDEAS:\n
     <tal:block tal:repeat="js js_list">\n
       <script tal:attributes="src js" type="text/javascript"></script>\n
     </tal:block>\n
+    <link rel="icon" tal:attributes="href python: \'%s/images/favicon.ico\' % here.portal_url()" type="image/x-icon" />\n
+    <link rel="shortcut icon" tal:attributes="href python: \'%s/images/favicon.ico\' % here.portal_url()" type="image/x-icon" />\n
   </head>\n
   <body>\n
     <form id="main_form"\n

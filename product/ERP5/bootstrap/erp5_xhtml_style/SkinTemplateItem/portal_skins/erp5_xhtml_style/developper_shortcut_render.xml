@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -59,7 +56,7 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
 <!--\n
-Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.\n
                    Vincent Pelletier <vincent@nexedi.com>\n
                    Christophe Dumez <christophe@nexedi.com>\n
 \n
@@ -81,7 +78,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
 \n
 <tal:block metal:define-macro="edit_link">\n
-  <a disabled="disabled" tal:condition="python: hasattr(object, \'meta_type\')"\n
+  <a tal:condition="python: hasattr(object, \'meta_type\')"\n
      tal:attributes="href python: \'%s/manage_main\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):])) # XXX: quick hack to get path;\n
                      title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
                                                        alt info;"/></a>\n
