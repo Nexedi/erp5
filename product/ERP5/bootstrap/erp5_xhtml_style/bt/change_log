@@ -1,3 +1,7 @@
+2007-09-23 yo
+* Remove the links to the favicon, as it breaks existing settings.
+* Ignore an error if form is None. This may happen when standard_error_message is called.
+
 2007-09-23 Kazuhiko
 * Add favicon
 * Output better XHTML/1.0

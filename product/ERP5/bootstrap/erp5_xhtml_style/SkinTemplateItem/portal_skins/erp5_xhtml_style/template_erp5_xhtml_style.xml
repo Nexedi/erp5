@@ -120,8 +120,6 @@ IDEAS:\n
     <tal:block tal:repeat="js js_list">\n
       <script tal:attributes="src js" type="text/javascript"></script>\n
     </tal:block>\n
-    <link rel="icon" tal:attributes="href python: \'%s/images/favicon.ico\' % here.portal_url()" type="image/x-icon" />\n
-    <link rel="shortcut icon" tal:attributes="href python: \'%s/images/favicon.ico\' % here.portal_url()" type="image/x-icon" />\n
   </head>\n
   <body>\n
     <form id="main_form"\n
