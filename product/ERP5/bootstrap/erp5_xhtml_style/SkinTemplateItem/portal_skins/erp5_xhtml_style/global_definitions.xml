@@ -54,7 +54,7 @@
 <tal:block metal:define-macro="header_definitions">\n
   <tal:block tal:define="\n
     global portal              here/portal_url/getPortalObject;\n
-    global portal_path         portal/absolute_url_path;\n
+    global portal_path         portal/absolute_url;\n
            local_parameter_list  local_parameter_list | python: {};\n
 \n
     global actions          python: here.Base_filterDuplicateActions(portal.portal_actions.listFilteredActionsFor(here));\n
