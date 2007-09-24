@@ -1617,6 +1617,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
         subscriber.setXMLMapping(publication.getXMLMapping())
         subscriber.setConduit(publication.getConduit())
         publication.addSubscriber(subscriber)
+        subscriber = subscriber.__of__(publication)
         # first synchronization
         result = self.PubSyncInit(publication,xml_client,subscriber=subscriber,
             sync_type=self.SLOW_SYNC)
