@@ -233,7 +233,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testFoldAndUnfold</string> </value>
+            <value> <string>testPlanningBoxFoldAndUnfold</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
