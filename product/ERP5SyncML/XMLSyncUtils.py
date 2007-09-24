@@ -1613,21 +1613,25 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       # Get the subscriber or create it if not already in the list
       subscriber = publication.getSubscriber(subscription_url)
       if subscriber == None:
-        subscriber = Subscriber(publication.generateNewId(),subscription_url)
+        subscriber = Subscriber(publication.generateNewId(), subscription_url)
         subscriber.setXMLMapping(publication.getXMLMapping())
         subscriber.setConduit(publication.getConduit())
         publication.addSubscriber(subscriber)
         subscriber = subscriber.__of__(publication)
         # first synchronization
-        result = self.PubSyncInit(publication,xml_client,subscriber=subscriber,
-            sync_type=self.SLOW_SYNC)
+        result = self.PubSyncInit(publication=publication,
+                                  xml_client=xml_client,
+                                  subscriber=subscriber,
+                                  sync_type=self.SLOW_SYNC)
       elif self.checkAlert(xml_client) and \
           alert_code in (self.TWO_WAY, self.SLOW_SYNC, \
           self.ONE_WAY_FROM_SERVER):
         subscriber.setXMLMapping(publication.getXMLMapping())
         subscriber.setConduit(publication.getConduit())
-        result = self.PubSyncInit(publication=publication, 
-            xml_client=xml_client, subscriber=subscriber, sync_type=alert_code)
+        result = self.PubSyncInit(publication=publication,
+                                  xml_client=xml_client,
+                                  subscriber=subscriber,
+                                  sync_type=alert_code)
       else:
         #we log the user authenticated to do the synchronization with him
         if self.checkMap(xml_client) :
@@ -1642,9 +1646,10 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     elif subscriber is not None:
       # This looks like we are starting a synchronization after
       # a conflict resolution by the user
-      result = self.PubSyncInit(publication=publication, xml_client=None,
-          subscriber=subscriber, sync_type=self.TWO_WAY)
-
+      result = self.PubSyncInit(publication=publication,
+                                xml_client=None,
+                                subscriber=subscriber,
+                                sync_type=self.TWO_WAY)
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
     elif result is not None:
