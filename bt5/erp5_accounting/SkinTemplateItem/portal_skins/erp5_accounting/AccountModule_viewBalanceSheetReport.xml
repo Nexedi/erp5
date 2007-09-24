@@ -604,7 +604,7 @@ dQEAAAAA</string> </value>
                   -->\n
                   <tal:block tal:condition=\'python: cat_level_2.getId() == "net_profit"\'>\n
                     <table:table-cell\n
-                      tal:define=\'value python: -getInventory(node_category=[node_category, "financial_section/income", "financial_section/expense"]);\n
+                      tal:define=\'value python: -getInventory(node_category=[node_category]) - getInventoryIncomeAccount(node_category=["financial_section/income", "financial_section/expense"]);\n
                                   global total_current_period python: total_current_period + value;\'\n
                       tal:attributes=\'office:value value;\n
                                       office:value-type python:value and "float" or "text";\'\n
@@ -656,7 +656,7 @@ dQEAAAAA</string> </value>
                   -->\n
                   <tal:block tal:condition=\'python: cat_level_3.getId() == "net_profit"\'>\n
                     <table:table-cell\n
-                      tal:define=\'value python: -getInventory(node_category=[node_category, "financial_section/income", "financial_section/expense"]);\n
+                      tal:define=\'value python: -getInventory(node_category=[node_category]) - getInventoryIncomeAccount(node_category=["financial_section/income", "financial_section/expense"]);\n
                                   global total_current_period python: total_current_period + value;\'\n
                       tal:attributes=\'office:value value;\n
                                       office:value-type python:value and "float" or "text";\'\n
