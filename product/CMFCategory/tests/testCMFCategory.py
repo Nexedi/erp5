@@ -934,26 +934,41 @@ class TestCMFCategory(ERP5TypeTestCase):
     obj = self.portal.person_module.newContent(portal_type='Person')
     parent_url = self.portal.person_module.getRelativeUrl()
 
-    self.assertEquals([parent_url],
+    self.assertEquals([],
           pc.getSingleCategoryMembershipList(obj, 'parent'))
 
     self.assertEquals([parent_url],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                         portal_type='Person Module'))
+
     self.assertEquals([],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                         portal_type='Organisation'))
 
-    self.assertEquals(['parent/%s' % parent_url],
+    self.assertEquals([],
           pc.getSingleCategoryMembershipList(obj, 'parent', base=1))
+
+    self.assertEquals(['parent/%s' % parent_url],
+          pc.getSingleCategoryMembershipList(obj, 'parent', base=1,
+                        portal_type='Person Module'))
+
+    self.assertEquals([],
+          pc.getSingleCategoryMembershipList(obj, 'parent',
+                                checked_permission='View'))
 
     self.assertEquals([parent_url],
           pc.getSingleCategoryMembershipList(obj, 'parent',
-                                checked_permission='View'))
+                                checked_permission='View',
+                                portal_type='Person Module'))
+
     noSecurityManager()
     self.assertEquals([],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                                 checked_permission='Manage portal'))
+    self.assertEquals([],
+          pc.getSingleCategoryMembershipList(obj, 'parent',
+                                checked_permission='Manage portal',
+                                portal_type='Person Module'))
 
 
 def test_suite():

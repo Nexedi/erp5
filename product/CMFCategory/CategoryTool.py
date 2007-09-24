@@ -781,7 +781,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       #LOG('getSingleCategoryMembershipList', 0, 'base_category = %s, spec = %s, base = %s, context = %s, context.aq_inner.aq_parent = %s' % (repr(base_category), repr(spec), repr(base), repr(context), repr(context.aq_inner.aq_parent)))
       if base_category == 'parent':
         parent = context.aq_inner.aq_parent # aq_inner is required to make sure we use containment
-        if not spec or parent.portal_type in spec:
+        if parent.portal_type in spec:
           parent_relative_url = parent.getRelativeUrl()
           if (checked_permission is None) or \
             (permissionFilter(parent_relative_url) is not None):
