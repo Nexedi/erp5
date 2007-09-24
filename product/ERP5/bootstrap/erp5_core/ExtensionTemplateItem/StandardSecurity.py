@@ -96,3 +96,9 @@ def getSecurityCategoryFromAssignmentParentGroup(self, base_category_list,
                                        user_name, object, portal_type):
   return getSecurityCategoryFromAssignment(self, base_category_list,
                                        user_name, object, portal_type, child_category_list=('group',))
+ 
+def getSecurityCategoryFromAssignmentParentFunction(self, base_category_list,
+                                       user_name, object, portal_type):
+  return getSecurityCategoryFromAssignment(self, base_category_list,
+                                       user_name, object, portal_type, child_category_list=('function',))
+
