@@ -157,13 +157,14 @@ for listboxline in listboxline_list:\n
     elif isinstance(column_property, DateTime):\n
       string_property = column_property.strftime(\'%Y/%m/%d+++++\')\n
     else:\n
-      string_property = str(column_property or \'\')\n
+      string_property = str(column_property or \'\')[:50]\n
     if listboxline.isStatLine():\n
       string_property = "%s+++++" % string_property\n
     elif listboxline.isTitleLine():\n
-      string_property = "%s++++++++" % str(N_(string_property))\n
+      string_property = ("%s++++++++" % str(N_(string_property)))[:30]\n
     new_column_max_len = max(len(string_property),\n
                              max_line_len.get(column_id, 0))\n
+                         \n
     update_dict = {}\n
     update_dict[column_id] = new_column_max_len\n
     max_line_len.update(update_dict)\n
