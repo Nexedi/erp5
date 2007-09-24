@@ -144,24 +144,27 @@ if is_domain_tree_mode or is_report_tree_mode : \n
 \n
 \n
 # 0.5 is too small and can crash pdf generation\n
-min_column_width = 1\n
+min_column_width = 1.2\n
 \n
 max_line_len = {}\n
 number = (int, float, long)\n
+col_count = 0\n
+if listboxline_list:\n
+  col_count = len(listboxline_list[0].getColumnItemList())\n
+max_column_property_len = 50 - (2 * col_count)\n
+max_title_property_len = 35 - (2 * col_count)\n
 for listboxline in listboxline_list:\n
-  col_count = 0\n
   for column_id, column_property in listboxline.getColumnItemList():\n
-    col_count += 1\n
     if isinstance(column_property, number):\n
-      string_property = "%s+++" % (column_property)\n
+      string_property = "%0.2f+++++++" % (column_property)\n
     elif isinstance(column_property, DateTime):\n
-      string_property = column_property.strftime(\'%Y/%m/%d+++++\')\n
+      string_property = column_property.strftime(\'%Y/%m/%d++++++\')\n
     else:\n
-      string_property = str(column_property or \'\')[:50]\n
+      string_property = str(column_property or \'\')[:max_column_property_len]\n
     if listboxline.isStatLine():\n
       string_property = "%s+++++" % string_property\n
     elif listboxline.isTitleLine():\n
-      string_property = ("%s++++++++" % str(N_(string_property)))[:30]\n
+      string_property = ("%s+++++" % str(N_(string_property)))[:max_title_property_len]\n
     new_column_max_len = max(len(string_property),\n
                              max_line_len.get(column_id, 0))\n
                          \n
@@ -174,9 +177,8 @@ result = {}\n
 for column_id, max_len in max_line_len.items() :\n
   result[column_id] = min(\n
                        max((max(max_len, 1) / total_max_len) * frame_width,\n
-                          min_column_width),\n
+                           min_column_width),\n
                        frame_width / col_count + 5)\n
-\n
 return result\n
 </string> </value>
         </item>
@@ -259,6 +261,8 @@ return result\n
                             <string>float</string>
                             <string>long</string>
                             <string>number</string>
+                            <string>max_column_property_len</string>
+                            <string>max_title_property_len</string>
                             <string>isinstance</string>
                             <string>new_column_max_len</string>
                             <string>update_dict</string>
