@@ -121,6 +121,8 @@ def getIsSourceMovementItemList(invoice):\n
           portal_type=portal.getPortalAccountingMovementTypeList())]\n
   for btt in context.getCausalityRelatedValueList(\n
                         portal_type=\'Balance Transfer Transaction\'):\n
+    if simulation_state and btt.getSimulationState() not in simulation_state:\n
+      continue\n
     btt_is_source = btt.AccountingTransaction_isSourceView()\n
     for btt_movement in btt.getMovementList(\n
                   portal_type=portal.getPortalAccountingMovementTypeList()):\n
