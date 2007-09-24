@@ -78,7 +78,8 @@ class PublicationSynchronization(XMLSyncUtils):
       subscriber.setTargetURI(self.getSourceURI(xml_client))
 
       # If slow sync, then resend everything
-      if alert_code == self.SLOW_SYNC:
+      if alert_code == self.SLOW_SYNC and \
+         subscriber.getNextAnchor() != self.NULL_ANCHOR:
         LOG('Warning !!!, reseting client synchronization for subscriber:', WARNING,
             subscriber.getPath())
         subscriber.resetAllSignatures()
