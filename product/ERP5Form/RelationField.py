@@ -178,3 +178,7 @@ class RelationStringField(ZMIField):
     else:
       result = ZMIField.get_value(self, id, REQUEST=REQUEST, **kw)
     return result
+
+# Register get_value
+from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
+registerOriginalGetValueClassAndArgument(RelationStringField, 'items')

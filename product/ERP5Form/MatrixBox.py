@@ -488,3 +488,7 @@ class MatrixBox(ZMIField):
 from Products.ERP5Type.PsycoWrapper import psyco
 psyco.bind(MatrixBoxWidget.render)
 psyco.bind(MatrixBoxValidator.validate)
+
+# Register get_value
+from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
+registerOriginalGetValueClassAndArgument(MatrixBox, 'default')

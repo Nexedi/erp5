@@ -51,7 +51,6 @@ from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 from Globals import DTMLFile
 
 from Products.Formulator.TALESField import TALESMethod
-from Products.ERP5Form.ListBox import ListBox
 from Products.ERP5Form.Form import StaticValue, TALESValue, OverrideValue, DefaultValue, EditableValue
 
 _field_value_cache = {}
@@ -532,11 +531,11 @@ class ProxyField(ZMIField):
     try:
       template_field = self.getRecursiveTemplateField()
       # Old ListBox instance might have default attribute. so we need to check it.
-      if id=='default' and isinstance(aq_base(template_field), ListBox):
+      if checkOriginalGetValue(template_field, id):
         return self._get_value(id, **kw)
       value = self.get_recursive_orig_value(id)
     except KeyError:
-      # For ListBox
+      # For ListBox and other exceptional fields.
       return self._get_value(id, **kw)
 
     field_id = field.id
@@ -599,3 +598,38 @@ class ProxyField(ZMIField):
     if self.aq_parent:
       raise KeyError
     return getTransactionalVariable(self)[self._getCacheId()].__of__(self.aq_parent)
+
+
+#
+# get_value exception dict
+#
+_get_value_exception_dict = {}
+
+def registerOriginalGetValueClassAndArgument(class_, argument_name_list=()):
+  """
+  if field class has its own get_value implementation and
+  must use it rather than ProxyField's one, then register it.
+
+  if argument_name_list is '*' , original get_value is
+  applied for all arguments.
+  """
+  if not isinstance(argument_name_list, (list, tuple)):
+    argument_name_list = (argument_name_list,)
+  _get_value_exception_dict[class_] = argument_name_list
+
+def checkOriginalGetValue(instance, argument_name):
+  """
+  if exception data is registered, then return True
+  """
+  class_ = aq_base(instance).__class__
+  argument_name_list = _get_value_exception_dict.get(class_)
+
+  if argument_name_list is None:
+    return False
+  
+  if len(argument_name_list)==1 and argument_name_list[0]=='*':
+    return True
+
+  if argument_name in argument_name_list:
+    return True
+  return False

@@ -283,3 +283,8 @@ def generateSubForm(self, value, REQUEST):
   if hasattr(self, 'sub_form'):
      delattr(self, 'sub_form')
   return hash_list
+
+
+# Register get_value
+from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
+registerOriginalGetValueClassAndArgument(ParallelListField, '*')

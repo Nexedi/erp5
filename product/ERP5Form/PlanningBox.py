@@ -3212,3 +3212,7 @@ for klass in (PlanningBoxWidget, BasicStructure, BasicGroup,
               Info):
   InitializeClass(klass)
   allow_class(klass)
+
+# Register get_value
+from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
+registerOriginalGetValueClassAndArgument(PlanningBox, 'default')

@@ -3322,4 +3322,6 @@ from Products.ERP5Type.PsycoWrapper import psyco
 #psyco.bind(ListBoxWidget.render)
 psyco.bind(ListBoxValidator.validate)
 
-
+# Register get_value
+from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
+registerOriginalGetValueClassAndArgument(ListBox, 'default')
