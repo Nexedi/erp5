@@ -46,7 +46,7 @@ class PublicationSynchronization(XMLSyncUtils):
     Receive the first XML message from the client
   """
 
-  def PubSyncInit(self, publication=None, xml_client=None, subscriber=None, 
+  def PubSyncInit(self, publication=None, xml_client=None, subscriber=None,
       sync_type=None):
     """
       Read the client xml message
@@ -84,16 +84,17 @@ class PublicationSynchronization(XMLSyncUtils):
         subscriber.resetAllSignatures()
 
       # Check if the last time synchronization is the same as the client one
-      mess='\nsubscriber.getNextAnchor:\t%s\nsubscriber.getLastAnchor:\t%s\
-        \nlast_anchor:\t\t\t%s\nnext_anchor:\t\t\t%s' % \
-        (subscriber.getNextAnchor(), subscriber.getLastAnchor(), last_anchor, \
-        next_anchor)
       if subscriber.getNextAnchor() != last_anchor:
         if last_anchor in (None, ''):
           LOG('PubSyncInit', INFO, 'anchor null')
         else:
-          message = "bad anchors in PubSyncInit! " + \
-              subscriber.getNextAnchor() + " and " + last_anchor
+          mess = '\nsubscriber.getNextAnchor:\t%s\nsubscriber.getLastAnchor:\t%s\
+                 \nlast_anchor:\t\t\t%s\nnext_anchor:\t\t\t%s' % \
+                 (subscriber.getNextAnchor(),
+                  subscriber.getLastAnchor(),
+                  last_anchor,
+                  next_anchor)
+          LOG('PubSyncInit Anchors', INFO, mess)
       else:
         subscriber.setNextAnchor(next_anchor)
 
@@ -185,7 +186,7 @@ class PublicationSynchronization(XMLSyncUtils):
       raise ValueError, "the syncml message is None. Maybe a synchronisation \
           has been started from the server (forbiden)"
       # a synchronisation is always starded from a client and can't be from
-      # a server ! 
+      # a server !
 
     xml('  <Final/>\n')
     xml(' </SyncBody>\n')
