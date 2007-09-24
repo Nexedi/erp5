@@ -96,9 +96,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     block_moved_string = REQUEST.get('block_moved','')
     block_previous_string = REQUEST.get('previous_block_moved','')
 
-    ##################################################
     ############## REBUILD STRUCTURE #################
-    ##################################################
     # build structure
     basic, planning = PlanningBoxWidgetInstance.render_structure(field=field,
                           REQUEST= REQUEST,
@@ -110,9 +108,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     planning_coordinates = planning_coordinates_method(basic=basic,
                                                        planning=planning)
 
-    ##################################################
     ########## RECOVERING BLOCK MOVED DICTS ##########
-    ##################################################
     #  converting string to a structure
     block_moved_list = self.getBlockPositionFromString(block_moved_string)
     # block_moved_list now holds a list of structure recovered from the REQUEST
@@ -170,9 +166,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     error_block_list = []
     error_info_dict = {}
 
-    ##################################################
     ########## GETTING BLOCK INFORMATIONS ############
-    ##################################################
     # iterating each block_moved element and recovering all usefull properties
     # BEWARE : no update is done here as an activity can be composed of several
     # blocks and so we need first to check all the blocks moved
@@ -278,14 +272,11 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         activity_dict[final_block['activity_origin'].name] = [final_block]
 
 
-    ##################################################
     # getting object_dict to update object properties once activities are up to
     # date. Activities values will be updated directly on the
     object_dict = self.getObjectDict(basic=basic, planning=planning)
 
-    ##################################################
     ############# UPDATING ACTIVITIES ################
-    ##################################################
     # if activity is composed of several blocks, then check if it is needed to
     # update activity itself depending on blocks moved. Beware this part only
     # deals with activities (i.e task object) : an object can be represented by
@@ -331,9 +322,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
             activity_desc['axis_start'] = start_value
             activity_desc['axis_stop'] = stop_value
 
-    ##################################################
     ############### UPDATING OBJECTS #################
-    ##################################################
     # using result from updated activities to process update on objects.
     update_dict = {}
     # first building a dict with all informations for each object.
@@ -1166,9 +1155,7 @@ class BasicStructure:
     portal_categories = getattr(self.form,'portal_categories',None)
     portal_domains = getattr(self.form,'portal_domains',None)
 
-    ##################################################
     ############### BUILDING QUERY ###################
-    ##################################################
     kw = self.params
     # remove selection_expression if present
     # This is necessary for now, because the actual selection expression in
@@ -1180,8 +1167,7 @@ class BasicStructure:
       del kw['select_expression']
 
     if getattr(self.sec_layer_list_method, 'method_name', None) is not None:
-       self.sec_layer_list_method = getattr(
-                                      self.context,
+       self.sec_layer_list_method = getattr( self.context,
                                       self.sec_layer_list_method.method_name)
     if getattr(self.list_method, 'method_name', None) is not None:
       if self.list_method.method_name == 'ObjectValues':
@@ -1213,9 +1199,7 @@ class BasicStructure:
       # use current selection
       self.list_method = None
 
-    ##################################################
     ############## DEFINING STAT METHOD ##############
-    ##################################################
     stat_method = self.field.get_value('stat_method')
     stat_method = getattr(self.context, stat_method, None)
     if stat_method is None:
@@ -1223,9 +1207,7 @@ class BasicStructure:
     else:
       show_stat = 1
 
-    ##################################################
     ############ BUILDING REPORT_TREE ################
-    ##################################################
     # assuming result is report tree, building it
     # When building the body, need to go through all report lines
     # each report line is a tuple of the form :
@@ -1241,10 +1223,9 @@ class BasicStructure:
     self.selection_report_path = self.selection.getReportPath(
                                   default=default_selection_report_path)
 
-    # XXX use LOG instead Raise
-    #if self.selection_report_path in (None, ()):
-    #  raise PlanningBoxError, 'report path is empty or not valid on %s' % \
-    #    self.field.absolute_url()
+    if self.selection_report_path in (None, ()):
+      LOG("BasicStructure",0 ,"report path is empty or not valid on  %s" % \
+                      self.field.absolute_url())
 
     # testing report_depth value
     if report_depth is not None:
@@ -1267,14 +1248,23 @@ class BasicStructure:
                                     sort_on=self.selection.sort_on,
                                     form_id=self.form.id)
 
-    #if report_tree_list == []:
-      #raise PlanningBoxError, "Report tree list is empty on %s" % \
-      #  self.field.absolute_url()
+    if report_tree_list == []:
+      LOG("BasicStructure",0 ,"Report tree list is empty on %s" % 
+                      self.field.absolute_url())
 
+    ########### GETTING MAIN AXIS BOUNDS #############
+    # before building group_object structure, need to recover axis begin & end
+    # for main to be able to generate a 'smart' structure taking into account
+    # only the area that need to be rendered. This prevents from useless
+    # processing
+    # calculating main axis bounds
+    self.getMainAxisInfo(self.main_axis_info, report_tree_list)
+    # applying main axis selection
+    if report_tree_list != []:
+      report_tree_list=report_tree_list[self.main_axis_info['bound_start']:
+                                         self.main_axis_info['bound_stop']]
 
-    ##################################################
     ########### BUILDING REPORT_GROUPS ###############
-    ##################################################
     # report_groups is another structure based on report_tree but
     # taking care of the object activities.
     # build two structures :
@@ -1289,22 +1279,20 @@ class BasicStructure:
     self.nbr_groups=0
     object_list=[]
     sec_layer_object_list=[]
+    build_object_list = []
+    build_sec_layer_object_list = []
     self.report_activity_dict = {}
     indic_line=0
     index_line=0
     blocks_object={}
     select_expression = ''
     self.sec_layer_uid_list = []
-    
-    
+
     self.selection.edit(params = kw)
     if self.list_method not in (None,''):
       # valid list_method has been found
       build_object_list = self.selection(method = self.list_method,
                     context=self.context, REQUEST=self.REQUEST)
-    else:
-      # Reset Object List if ther is no List Method
-      build_object_list = []
 
     # Defining the Secondary Layer Object List
     if self.sec_layer_list_method not in (None,''):
@@ -1312,9 +1300,6 @@ class BasicStructure:
                       method=self.sec_layer_list_method,
                       context=self.context,
                       REQUEST=self.REQUEST)
-    else:
-      build_sec_layer_object_list = []
-
 
     # now iterating through report_tree_list
     for object_tree_line in report_tree_list:
@@ -1351,12 +1336,8 @@ class BasicStructure:
       else:
         info_dict['stat'] = 0
         sec_layer_object_list = []
-
         if self.selection_report_path == 'parent':
           object_list = [object_tree_line.getObject()]
-
-        # recovering exeption_uid_list
-        exception_uid_list = object_tree_line.getExceptionUidList()
 
         domain_obj = object_tree_line.getObject()
         # Default Values
@@ -1375,6 +1356,8 @@ class BasicStructure:
           object_list = new_object_list
           sec_layer_object_list = sec_new_object_list
 
+        # recovering exeption_uid_list
+        exception_uid_list = object_tree_line.getExceptionUidList()
         if exception_uid_list not in ([], None, ()) :
           # Filter folders if parent tree :
           # build new object_list for current line
@@ -1398,13 +1381,8 @@ class BasicStructure:
             # this represents the second duplicated object
             # display object content in report tree with stat
             # stats are displayed in the first object present
-            #
             self.report_groups += [(object_tree_line,object_list, info_dict)]
             self.nbr_groups += 1
-          else:
-            # do nothing
-            # case of parent tree unfolded (second object and no stats)
-            pass
         else:
           # object is pure summary !
           if len(object_list) and object_tree_line.is_open:
@@ -1443,30 +1421,12 @@ class BasicStructure:
       self.selection.edit(report_list=unfolded_list)
 
 
-    ##################################################
     ############## CHECKING CONSTRAINTS ##############
-    ##################################################
     # XXX Constraints checking should be called here
     # and results saved in a list (list of url corresponding to objects not
     # validated)
 
-    ##################################################
-    ########### GETTING MAIN AXIS BOUNDS #############
-    ##################################################
-    # before building group_object structure, need to recover axis begin & end
-    # for main to be able to generate a 'smart' structure taking into account
-    # only the area that need to be rendered. This prevents from useless
-    # processing
-    # calculating main axis bounds
-    self.getMainAxisInfo(self.main_axis_info)
-    # applying main axis selection
-    if self.report_groups != []:
-      self.report_groups=self.report_groups[self.main_axis_info['bound_start']:
-                                            self.main_axis_info['bound_stop']]
-
-    ##################################################
     ############ GETTING SEC AXIS BOUNDS #############
-    ##################################################
     # now that our report_group structure has been cut need to get secondary
     # axis bounds to add only the blocs needed afterwards
     # getting secondary_axis_occurence to define begin and end secondary_axis
@@ -1480,28 +1440,20 @@ class BasicStructure:
     # rendering)
     self.getSecondaryAxisInfo(self.secondary_axis_info)
 
-    ##################################################
     ####### SAVING NEW PROPERTIES INTO REQUEST #######
-    ##################################################
     if self.list_method is not None and self.render_format != 'list':
      self.selection.edit(params = self.params)
      self.context.portal_selections.setSelectionFor(self.selection_name,
                                                  self.selection,
                                                  REQUEST = self.REQUEST)
 
-    ##################################################
     ######### BUILDING GROUP_OBJECT STRUCTURE ########
-    ##################################################
     # building group_object structure using sub lines depth (in case of a
     # report tree) by doing this.
     # taking into account page bounds to generate only the structure needed
     # instanciate BasicGroup class in BasicStructure so that the structure can
     # be built
-    status = self.buildGroupStructure()
-    if status != 1:
-      # ERROR
-      # Found errors while setting group structure
-      return status
+    self.buildGroupStructure()
     # everything is fine
     return 1
 
@@ -1527,11 +1479,8 @@ class BasicStructure:
     start_property_id = self.field.get_value('x_start_bloc')
     stop_property_id= self.field.get_value('x_stop_bloc')
     for (object_tree_group, object_list, info_dict) in self.report_groups:
-
       # defining empty list for each kind of occurence.
-      group_list = None
       group_list = []
-      item_list = None
       item_list = []
 
       # recovering group_properties
@@ -1698,7 +1647,7 @@ class BasicStructure:
     return 1
 
 
-  def getMainAxisInfo(self, axis_dict):
+  def getMainAxisInfo(self, axis_dict, report_tree_list):
     """
     Getting main axis properties (total pages, current page, groups per page)
     and setting selection bounds (start & stop).
@@ -1708,13 +1657,10 @@ class BasicStructure:
     example).
     """
     axis_dict['bound_axis_groups'] = self.field.get_value('main_axis_groups')
-    if axis_dict['bound_axis_groups'] is None:
-      #XXX raise exception : no group nb/page defined
-      pass
 
     # setting begin & end bounds
     axis_dict['bound_begin'] = 0
-    axis_dict['bound_end'] = len(self.report_groups)
+    axis_dict['bound_end'] = len(report_tree_list)
     if self.render_format == 'list':
       axis_dict['bound_start'] = 0
       axis_dict['bound_stop'] = axis_dict['bound_end']
@@ -1732,7 +1678,8 @@ class BasicStructure:
         axis_dict['bound_start'] = self.params.get('list_start',0)
         if type(axis_dict['bound_start']) is type([]):
           axis_dict['bound_start'] = axis_dict['bound_start'][0]
-        axis_dict['bound_start'] = int(axis_dict['bound_start'])
+        if axis_dict['bound_start'] is not None:
+          axis_dict['bound_start'] = int(axis_dict['bound_start'])
       axis_dict['bound_start'] = max(axis_dict['bound_start'],0)
 
       if axis_dict['bound_start'] > axis_dict['bound_end']:
@@ -1798,9 +1745,8 @@ class BasicStructure:
           group_start = report_group_object.getObject().start_date
           group_stop  = report_group_object.getObject().stop_date -1
           # build dict to fix BasicActivity bounds
-          secondary_axis_bounds = {}
-          secondary_axis_bounds['bound_start'] = group_start
-          secondary_axis_bounds['bound_stop']  = group_stop
+          secondary_axis_bounds = { 'bound_start': group_start,
+                                    'bound_stop' : group_stop }
         else:
           secondary_axis_bounds = self.secondary_axis_info
 
@@ -1819,11 +1765,7 @@ class BasicStructure:
                                          self.list_error,
                                          secondary_axis_bounds)
 
-        try:
-          self.basic_group_list.append(child_group)
-        except (AttributeError):
-          self.basic_group_list = []
-          self.basic_group_list.append(child_group)
+        self.basic_group_list.append(child_group)
 	
       return 1
 
@@ -1966,7 +1908,6 @@ class BasicGroup:
           current_color=''
 
           if self.property_dict['stat'] == 1:
-            info = None
             info = {}
             info['info_center'] = ''
             info['info_topright'] = ''
@@ -1980,7 +1921,6 @@ class BasicGroup:
             height = \
                  getattr(activity_content.getObject(),object_property_height)
           else:
-            info = None
             info = {}
             info['info_center'] = ''
             info['info_topright'] = ''
@@ -2000,18 +1940,18 @@ class BasicGroup:
             if obj.getUid() not in self.sec_layer_uid_list:
               # if value recovered is not null, then updating
               if info_center_method is not None:
-                 info['info_center']=str(info_center_method())
+                info['info_center']=str(info_center_method())
               if info_topright_method is not None:
-                 info['info_topright']=str(info_topright_method())
+                info['info_topright']=str(info_topright_method())
               if info_topleft_method is not None:
-                 info['info_topleft']=str(info_topleft_method())
+                info['info_topleft']=str(info_topleft_method())
               if info_botleft_method is not None:
-                 info['info_botleft'] =str(info_botleft_method())
+                info['info_botleft'] =str(info_botleft_method())
               if info_botright_method is not None:
-                 info['info_botright']=str(info_botright_method())
+                info['info_botright']=str(info_botright_method())
 
             if info_tooltip_method is not None:
-               info['info_tooltip']=str(info_tooltip_method())
+              info['info_tooltip']=str(info_tooltip_method())
 
             title = info['info_center']
             color_script = getattr(activity_content.getObject(),
@@ -2241,24 +2181,16 @@ class PlanningStructure:
     # call method to build secondary axis structure
     # need start_bound, stop_bound and number of groups to build
     # used in non calendar mode
-    status = self.buildSecondaryAxis(basic_structure, field)
-    if status != 1:
-      # XXX Hidding error is not a good solution generally
-      # ERROR while building secondary axis
-      return status
+    self.buildSecondaryAxis(basic_structure, field)
+
     # completing axisgroup informations according to their bounds
-    status = self.completeAxis()
-    if status != 1:
-      # ERROR while completing axis
-      return status
+    self.completeAxis()
+
     # the whole structure is almost completed : axis_groups are defined, as
     # axis_elements with their activities. Just need to create blocks related
     # to the activities (special process only for Calendar mode) with their
     # BlockPosition
-    status = self.buildBlocs(basic_structure=basic_structure, REQUEST=REQUEST)
-    if status != 1:
-      # ERROR while building blocks
-      return status
+    self.buildBlocs(basic_structure=basic_structure, REQUEST=REQUEST)
     # everything is fine, returning 'true' flag.
     return 1
 
@@ -2289,12 +2221,7 @@ class PlanningStructure:
                                  delimiter_min_number=delimiter_min_number,
                                  form_id = basic_structure.form.id,
                                  selection_name = basic_structure.selection_name)
-    #except (ArithmeticError, LookupError, AttributeError, TypeError):
-      # XXX Seems that too many error are catched
-      # XXX Shouldn't planning box failed in this case, because of bad config ?
-    #  message =  'error raised in secondary axis generation script : please \
-    #        check "%s"'% field.get_value('sec_axis_script')
-    #  return [(Message(domain='erp5_ui', message=message,mapping=None))]
+
     axis_stop = int(axis_stop)
     axis_start = int(axis_start)
     axis_range = axis_stop - axis_start
@@ -2517,22 +2444,19 @@ class PlanningStructure:
             axis_start = basic_structure.secondary_axis_info['bound_start']
             axis_stop  = basic_structure.secondary_axis_info['bound_stop']
             axis_range = axis_stop - axis_start
-          status = activity.addBlocs(main_axis_start=0,
-                                main_axis_stop=self.main_axis.size,
-                                secondary_axis_start = axis_start,
-                                secondary_axis_stop  = axis_stop,
-                                secondary_axis_range = axis_range,
-                                planning=self, warning=warning,
-                                error_block_list=error_block_list,
-                                error_info_dict=error_info_dict)
-          if status != 1: 
-            return status
+          activity.addBlocs(main_axis_start=0,
+                            main_axis_stop=self.main_axis.size,
+                            secondary_axis_start = axis_start,
+                            secondary_axis_stop  = axis_stop,
+                            secondary_axis_range = axis_range,
+                            planning=self, warning=warning,
+                            error_block_list=error_block_list,
+                            error_info_dict=error_info_dict)
+
         if axis_group_object.property_dict['stat'] == 1:
           # case stat group_object, need to update block size to display
           # stats informations
-          status = axis_group_object.updateStatBlocks()
-          if status != 1: 
-            return status
+          axis_group_object.updateStatBlocks()
     # no problem during process, returning 'true' flag
     return 1
 
