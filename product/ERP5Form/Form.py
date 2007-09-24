@@ -191,9 +191,9 @@ class EditableValue(StaticValue):
     # This is useful to render ERP5 content as in a web site (ECommerce)
     # editable_mode should be set for example by the page template
     # which defines the current layout
-    if kw.has_key('REQUEST'):
+    if kw.get('REQUEST', None) is not None:
       if not getattr(kw['REQUEST'], 'editable_mode', 1):
-        self.value = 0
+        return 0
     return self.value
 
 def getFieldValue(self, field, id, **kw):
