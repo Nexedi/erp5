@@ -1357,6 +1357,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
 
     def _getUserId(self):
       return self.portal_membership.getAuthenticatedMember().getUserName()
+      # XXX It would be good to add somthing here
+      # So that 2 anonymous users do not share the same selection
 
     def _getSelectionFromContainer(self, selection_name):
       user_id = self._getUserId()
