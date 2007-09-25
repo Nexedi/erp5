@@ -328,7 +328,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                         self.getDeliveryPortalType():
             delivery = delivery_to_update
             break
-      if delivery == None:
+      if delivery is None:
         # Create delivery
         new_delivery_id = str(delivery_module.generateNewId())
         delivery = delivery_module.newContent(
@@ -376,7 +376,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           delivery_line = delivery_line_to_update
           update_existing_line = 1
           break
-      if delivery_line == None:
+      if delivery_line is None:
         # Create delivery line
         new_delivery_line_id = str(delivery.generateNewId())
         delivery_line = delivery.newContent(
