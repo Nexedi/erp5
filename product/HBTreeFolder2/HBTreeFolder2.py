@@ -582,7 +582,7 @@ class HBTreeFolder2Base (Persistent):
         # to subitems, and __bobo_traverse__ hooks don't work with
         # restrictedTraverse() unless __getattr__() is also present.
         # Oh well.
-        res = self._htree.get(name)
+        res = self._getOb(name, None)
         if res is None:
             raise AttributeError, name
         return res
