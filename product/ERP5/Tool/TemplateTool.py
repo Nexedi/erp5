@@ -45,6 +45,7 @@ from OFS.Traversable import NotFound
 from difflib import unified_diff
 from cStringIO import StringIO
 from zLOG import LOG
+from warning import warn
 from urllib import pathname2url, urlopen, splittype, urlretrieve
 import re
 from xml.dom.minidom import parse
@@ -127,9 +128,14 @@ class TemplateTool (BaseTool):
           return bt
       return None
         
-    # Christophe Dumez <christophe@nexedi.com>
     def getInstalledBusinessTemplatesList(self):
-      """Get list of installed business templates
+      """Deprecated.
+      """
+      DeprecationWarning('getInstalledBusinessTemplatesList is deprecated; Use getInstalledBusinessTemplateList instead.', DeprecationWarning)
+      return self.getInstalledBusinessTemplateList()
+
+    def getInstalledBusinessTemplateList(self):
+      """Get the list of installed business templates.
       """
       installed_bts = []
       for bt in self.contentValues(filter={'portal_type':'Business Template'}):
@@ -137,9 +143,14 @@ class TemplateTool (BaseTool):
           installed_bts.append(bt)
       return installed_bts
         
-    # Christophe Dumez <christophe@nexedi.com>
     def getBuiltBusinessTemplatesList(self):
-      """Get list of built and not_installed business templates
+      """Deprecated.
+      """
+      DeprecationWarning('getBuiltBusinessTemplatesList is deprecated; Use getBuiltBusinessTemplateList instead.', DeprecationWarning)
+      return self.getBuiltBusinessTemplateList()
+
+    def getBuiltBusinessTemplateList(self):
+      """Get the list of built and not installed business templates.
       """
       built_bts = []
       for bt in self.contentValues(filter={'portal_type':'Business Template'}):
