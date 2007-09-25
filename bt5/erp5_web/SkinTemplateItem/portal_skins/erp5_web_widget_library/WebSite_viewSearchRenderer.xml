@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -139,7 +136,7 @@ Description:\n
           <li value="" i18n:translate=""\n
               i18n:domain="ui" tal:content="section/getTitle">Departments and Divisions:</li>\n
           <ul>\n
-            <li tal:repeat="root_section section/contentValues">\n
+            <li tal:repeat="root_section python:section.contentValues(checked_permission=\'View\')">\n
               <a    tal:content="root_section/getTitle"\n
                     tal:condition="python:not len(root_section.contentValues())"\n
                     tal:attributes="href root_section/absolute_url"/>\n

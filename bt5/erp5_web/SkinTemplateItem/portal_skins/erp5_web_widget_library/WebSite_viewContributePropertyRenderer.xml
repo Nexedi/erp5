@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -82,7 +79,9 @@
     <select size="1" id="source_project" name="source_project"\n
                      tal:attributes="name string:${contribute_prefix}source_project">\n
       <option value="" value="" i18n:translate="" i18n:domain="ui">-- Select Programme --</option>\n
-      <option tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) for o in here.project_module.searchFolder()]" tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
+      <option tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) for o in \n
+                                       here.project_module.searchFolder(sort_on=\'title\')]"\n
+              tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
         Agricultural Development\n
       </option>\n
     </select>\n

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -45,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -52,7 +55,8 @@
   This widget displays the list of Sections contained in the current context.\n
 --></tal:block>\n
 \n
-<ul><tal:block tal:repeat="section python:here.contentValues(portal_type=\'Web Section\')">\n
+<ul><tal:block tal:repeat="section python:here.contentValues(portal_type=\'Web Section\', \n
+                                                             checked_permission=\'View\')">\n
   <li>\n
     <a tal:attributes="href python: section.absolute_url_path()"\n
        tal:content="python: section.getProperty(\'translated_short_title\', None)\n
