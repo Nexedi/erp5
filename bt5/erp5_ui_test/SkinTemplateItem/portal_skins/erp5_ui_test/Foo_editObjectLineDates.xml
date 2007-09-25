@@ -70,9 +70,10 @@
             <key> <string>_body</string> </key>
             <value> <string># This script is used initially by PlanningBox tests currently\n
 for i in context.searchFolder():\n
-  i.edit(start_date=DateTime(DateTime().strftime("%Y/%m/%d"))+0.4,\n
-           stop_date=DateTime(DateTime().strftime("%Y/%m/%d"))+0.8)\n
+  i.setStartDate(DateTime(DateTime().strftime("%Y/%m/%d"))+0.4)\n
+  i.setStopDate(DateTime(DateTime().strftime("%Y/%m/%d"))+0.8)\n
   i.newContent(id = str(0), title = \'Title 4\', portal_type=\'Foo Line\' )\n
+  i.setFooCategory(\'foo_category/a\')\n
 \n
 return \'Modified Successfully.\'\n
 </string> </value>

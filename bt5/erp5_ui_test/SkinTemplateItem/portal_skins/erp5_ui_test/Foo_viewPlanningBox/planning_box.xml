@@ -510,7 +510,12 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Foo Line</string>
+                          <string>Foo Line</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -520,6 +525,10 @@
                         <tuple>
                           <string>parent</string>
                           <string>parent</string>
+                        </tuple>
+                        <tuple>
+                          <string>foo_domain</string>
+                          <string>foo_domain</string>
                         </tuple>
                       </list>
                     </value>
