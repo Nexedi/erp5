@@ -145,13 +145,14 @@ class Interactor:
 
 
 class FieldValueInteractor(Interactor):
-  
+
   def install(self):
     """
       Installs interactions
     """
     from Products.Formulator.Field import ZMIField
     from Products.ERP5Form.ProxyField import ProxyField
+    from Products.Formulator.Form import ZMIForm
     self.on(ZMIField.manage_edit).doAfter(self.purgeFieldValueCache)
     self.on(ZMIField.manage_edit_xmlrpc).doAfter(self.purgeFieldValueCache)
     self.on(ZMIField.manage_tales).doAfter(self.purgeFieldValueCache)
@@ -159,6 +160,7 @@ class FieldValueInteractor(Interactor):
     self.on(ProxyField.manage_edit).doAfter(self.purgeFieldValueCache)
     self.on(ProxyField.manage_edit_target).doAfter(self.purgeFieldValueCache)
     self.on(ProxyField.manage_tales).doAfter(self.purgeFieldValueCache)
+    self.on(ZMIForm.manage_renameObject).doAfter(self.purgeFieldValueCache)
 
   def uninstall(self):
     """
