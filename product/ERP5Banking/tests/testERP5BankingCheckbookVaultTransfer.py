@@ -370,6 +370,9 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     self.failUnless(message.find('Sorry, the item with reference')>=0)
     self.failUnless(message.find('is not available any more')>=0)
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.checkbook_vault_transfer)
+
   ##################################
   ##  Tests
   ##################################
@@ -384,12 +387,15 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     sequence_string = 'Tic CheckObjects Tic CheckInitialCheckbookInventory ' \
                     + 'CreateCheckbookVaultTransfer Tic ' \
                     + 'CreateCheckAndCheckbookLineList Tic ' \
+                    + 'CheckWorklist Tic ' \
                     + 'OrderCheckbookVaultTransfer Tic ' \
+                    + 'CheckWorklist Tic ' \
                     + 'ConfirmCheckbookVaultTransfer Tic ' \
                     + 'CheckConfirmedCheckbookInventory Tic ' \
                     + 'ChangePreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookVaultTransferFails Tic ' \
                     + 'PutBackPreviousDeliveryDate Tic ' \
+                    + 'CheckWorklist Tic ' \
                     + 'DeliverCheckbookVaultTransfer Tic ' \
                     + 'CheckFinalCheckbookInventory'
     sequence_list.addSequenceString(sequence_string)

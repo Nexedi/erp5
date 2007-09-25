@@ -140,7 +140,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
 
 
   def stepCreateCheckbookReception(self, sequence=None, sequence_list=None, 
-                                   id='checkbook_reception', **kwd):
+                                   id='checkbook_reception', imported=0, **kwd):
     """
     Create a checkbook reception document and check it
     """
@@ -150,16 +150,20 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                      source_value=None, destination_value=self.destination_site,
                      resource_value=self.currency_1,
                      description='test',
-                     start_date=self.date)
+                     start_date=self.date, 
+                     imported=imported)
     setattr(self, id, checkbook_reception)
     # get the checkbook reception document
-    self.checkbook_reception = getattr(self.checkbook_reception_module, 'checkbook_reception')
+    self.checkbook_reception = getattr(self.checkbook_reception_module, id)
     # check its portal type
     self.assertEqual(self.checkbook_reception.getPortalType(), 'Checkbook Reception')
     # check that its source is caisse_1
     self.assertEqual(self.checkbook_reception.getSource(), None)
     # check that its destination is caisse_2
-    self.assertEqual(self.checkbook_reception.getBaobabDestination(), 
+    if imported:
+      self.assertEqual(self.checkbook_reception.getBaobabDestination(), None)
+    else:
+      self.assertEqual(self.checkbook_reception.getBaobabDestination(), 
                      'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
     return self.checkbook_reception
 
@@ -171,6 +175,10 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepCreateCheckbookReception4(self, sequence=None, sequence_list=None, **kwd):
     self.stepCreateCheckbookReception(id='checkbook_reception4')
+
+  def stepCreateCheckbookReception5(self, sequence=None, sequence_list=None, **kwd):
+    self.stepCreateCheckbookReception(id='checkbook_reception5',
+                                      imported=1)
 
   def stepCreateCheckAndCheckbookLineList2(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -212,6 +220,22 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                                  destination_payment_value=self.bank_account_1,
                                  reference_range_min='0000101',
                                  reference_range_max='0000150',
+                                 )
+
+  def stepCreateCheckAndCheckbookLineList5(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create the checkbook
+    """
+    # This is not required to create checkbook items, they will be
+    # automatically created with the confirm action worfklow transition
+
+    # Add a line for check and checkbook
+    self.line_1 = self.checkbook_reception5.newContent(quantity=1,
+                                 resource_value=self.checkbook_model_1,
+                                 check_amount_value=self.checkbook_model_1.variant_1,
+                                 destination_payment_value=self.bank_account_1,
+                                 reference_range_min='0000200',
+                                 reference_range_max='0000249',
                                  )
 
   def stepCreateCheckAndCheckbookLineList(self, sequence=None, sequence_list=None, **kwd):
@@ -299,6 +323,14 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                                    wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception4.getSimulationState(), 'confirmed')
 
+  def stepConfirmCheckbookReception5(self, sequence=None, sequence_list=None, **kwd):
+    """
+    confirm the monetary reception
+    """
+    self.workflow_tool.doActionFor(self.checkbook_reception5, 'confirm_action', 
+                                   wf_id='checkbook_reception_workflow')
+    self.assertEqual(self.checkbook_reception5.getSimulationState(), 'confirmed')
+
   def stepDeliverCheckbookReception2Fails(self, sequence=None, sequence_list=None, **kwd):
     """
     confirm the monetary reception
@@ -326,6 +358,14 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.failUnless(msg.find('The following references are already allocated')
                     >=0)
     self.failUnless(msg.find('150')>=0)
+
+  def stepDeliverCheckbookReception5(self, sequence=None, sequence_list=None, **kwd):
+    """
+    confirm the monetary reception
+    """
+    self.workflow_tool.doActionFor(self.checkbook_reception5, 'deliver_action', 
+                                   wf_id='checkbook_reception_workflow')
+    self.assertEqual(self.checkbook_reception3.getSimulationState(), 'delivered')
 
   def stepDeliverCheckbookReception(self, sequence=None, sequence_list=None, **kw):
     """
@@ -358,6 +398,18 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.failIfDifferentSet(checkbook_object_list,[self.checkbook_1,self.check_1])
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(node=self.reception.getRelativeUrl())), 2)
 
+  def stepCheckConfirmedCheckbookForImport(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check cash checkbook in item table
+    """
+    checkbook = self.checkbook_reception5.objectValues()[0].getAggregateValue()
+    self.assertEqual(checkbook.getValidationState(), 'confirmed')
+    check = checkbook.objectValues()[0]
+    self.assertEqual(check.getSimulationState(), 'confirmed')
+
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.checkbook_reception)
+
   ##################################
   ##  Tests
   ##################################
@@ -372,7 +424,9 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string = 'Tic CheckObjects Tic CheckInitialCheckbookInventory ' \
                     + 'CreateCheckbookReception Tic ' \
                     + 'CreateCheckAndCheckbookLineList Tic ' \
+                    + 'CheckWorklist Tic ' \
                     + 'ConfirmCheckbookReception Tic ' \
+                    + 'CheckWorklist Tic ' \
                     + 'DeliverCheckbookReception Tic ' \
                     + 'CheckItemsCreated  ' \
                     + 'CheckFinalCheckbookInventory'
@@ -399,6 +453,16 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'ConfirmCheckbookReception4 Tic ' \
                     + 'DeliverCheckbookReception3 Tic ' \
                     + 'DeliverCheckbookReception4Fails '
+    sequence_list.addSequenceString(sequence_string)
+
+    # Make sure that if we have an import, then everything
+    # will be confirmed automatically
+    sequence_string = 'Tic ' \
+                    + 'CreateCheckbookReception5 Tic ' \
+                    + 'CreateCheckAndCheckbookLineList5 Tic ' \
+                    + 'ConfirmCheckbookReception5 Tic ' \
+                    + 'DeliverCheckbookReception5 Tic ' \
+                    + 'CheckConfirmedCheckbookForImport Tic ' 
     sequence_list.addSequenceString(sequence_string)
 
 

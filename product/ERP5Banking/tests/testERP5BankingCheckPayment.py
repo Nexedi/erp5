@@ -474,6 +474,24 @@ class TestERP5BankingCheckPaymentMixin:
               'check_payment_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
+  def stepCheckCheckIsDelivered(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure that the check is in delivered state
+    """
+    check = self.check_payment.getAggregateValue()
+    self.assertEquals(check, self.check_1)
+    self.assertEquals(check.getSimulationState(), 'delivered')
+
+  def stepCheckUndeliverCheck(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure that the check is in delivered state
+    """
+    check = self.check_payment.getAggregateValue()
+    self.assertEquals(check, self.check_1)
+    self.workflow_tool.doActionFor(check, 'undeliver_action', 
+        wf_id='check_workflow')
+    self.assertEquals(check.getSimulationState(), 'confirmed')
+
 class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
                                   TestERP5BankingMixin, ERP5TypeTestCase):
 
@@ -501,6 +519,8 @@ class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
                       'PayCheckPaymentFails Tic ' \
                       'DeleteResetInventory Tic ' \
                       'Pay Tic ' \
+                      'CheckCheckIsDelivered Tic ' \
+                      'CheckUndeliverCheck Tic ' \
                       'CheckFinalInventory Cleanup Tic'
     # sequence 2 : check if validating with non-exiting check fail if
     # automatic check creation is disabled.

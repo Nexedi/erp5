@@ -1120,3 +1120,23 @@ class TestERP5BankingMixin:
     to_delete_id_list = [x for x in inventory_module.objectIds() 
                          if x.find('reset')>=0]
     inventory_module.manage_delObjects(ids=to_delete_id_list)
+
+  def checkWorklist(self, document):
+    """
+    """
+    document.portal_caches.clearAllCache()
+    portal_type = document.getPortalType()
+    state = document.getSimulationState()
+    workflow_id = '%s_workflow' % portal_type.lower().replace(' ', '_')
+    actions = self.getPortal().portal_actions.listFilteredActionsFor(document)
+    found = 0
+    for action in actions['global']:
+      if action.get('workflow_id', None) == workflow_id:
+        url = action.get('url', None)
+        if url is not None:
+          if url.find(state)>=0 and url.find(portal_type)>=0:
+            found = 1
+    if not found:
+      import pdb; pdb.set_trace()
+    self.assertEquals(found, 1)
+

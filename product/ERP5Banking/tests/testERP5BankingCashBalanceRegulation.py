@@ -136,7 +136,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     self.guichet_1 = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=self.guichet_1, destination=self.guichet_1, currency=self.currency_1, line_list=line_list)
     
-    self.guichet_caveau = self.paris.caveau.serre.encaisse_des_billets_retires_de_la_circulation
+    self.guichet_caveau = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=self.guichet_caveau, destination=self.guichet_caveau, currency=self.currency_1, line_list=line_list)
     
     self.guichet_salletri = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
@@ -278,7 +278,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     self.assertEqual(len(self.cash_balance_regulation_module.objectValues()), 1)
     self.cash_balance_regulation = getattr(self.cash_balance_regulation_module, 'cash_balance_regulation_1')
     self.assertEqual(self.cash_balance_regulation.getPortalType(), 'Cash Balance Regulation')
-    self.assertEqual(self.cash_balance_regulation.getSource(), 'site/testsite/paris/caveau/serre/encaisse_des_billets_retires_de_la_circulation')
+    self.assertEqual(self.cash_balance_regulation.getSource(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
     self.assertEqual(self.cash_balance_regulation.getDestination(), None)
   
   def stepCreateCashBalanceRegulationSalleTri(self, sequence=None, sequence_list=None, **kwd):
@@ -696,7 +696,8 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
 
 
 
-
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.cash_balance_regulation)
 
   def stepDelCashBalanceRegulation(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -723,8 +724,10 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckInitialInventory ' \
+                    + 'Tic CheckWorklist ' \
                     + 'ConfirmCashBalanceRegulation Tic ' \
                     + 'CheckConfirmedInventory ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventory'
     sequence_list.addSequenceString(sequence_string)
@@ -736,8 +739,10 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckInitialInventoryCaveau ' \
+                    + 'Tic CheckWorklist ' \
                     + 'ConfirmCashBalanceRegulation Tic ' \
                     + 'CheckConfirmedInventoryCaveau ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventoryCaveau'
     sequence_list.addSequenceString(sequence_caveau)
@@ -750,6 +755,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'CheckInitialInventorySalleTri ' \
                     + 'ConfirmCashBalanceRegulation Tic ' \
                     + 'CheckConfirmedInventorySalleTri ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventorySalleTri'
     sequence_list.addSequenceString(sequence_salletri)
@@ -762,6 +768,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'CheckInitialInventorySurface ' \
                     + 'ConfirmCashBalanceRegulation Tic ' \
                     + 'CheckConfirmedInventorySurface ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventorySurface'
     sequence_list.addSequenceString(sequence_surface)

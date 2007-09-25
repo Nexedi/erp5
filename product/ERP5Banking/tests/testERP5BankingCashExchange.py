@@ -498,6 +498,9 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
               'cash_exchange_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.cash_exchange)
+
 
   ##################################
   ##  Tests
@@ -520,6 +523,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'ResetInventory Tic ' \
                     + 'DeliverFails Tic ' \
                     + 'DeleteResetInventory Tic ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashExchange Tic ' \
 		    + 'CheckFinalInventoryGuichet_1 ' \
                     + 'CheckFinalInventoryGuichet_2'

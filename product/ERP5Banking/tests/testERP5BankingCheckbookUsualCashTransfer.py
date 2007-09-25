@@ -373,6 +373,9 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     self.failUnless(message.find('Sorry, the item with reference')>=0)
     self.failUnless(message.find('is not available any more')>=0)
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.checkbook_usual_cash_transfer)
+
   ##################################
   ##  Tests
   ##################################
@@ -389,11 +392,13 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
                     + 'CreateCheckAndCheckbookLineList Tic ' \
                     + 'CheckConfirmCheckbookUsualCashTransferRaiseError Tic ' \
                     + 'ChangeCheckbookUsualCashTransferStartDate Tic ' \
+                    + 'CheckWorklist Tic ' \
                     + 'ConfirmCheckbookUsualCashTransfer Tic ' \
                     + 'CheckConfirmedCheckbookInventory Tic ' \
                     + 'ChangePreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookUsualCashTransferFails Tic ' \
                     + 'PutBackPreviousDeliveryDate Tic ' \
+                    + 'CheckWorklist Tic ' \
                     + 'DeliverCheckbookUsualCashTransfer Tic ' \
                     + 'CheckFinalCheckbookInventory'
     sequence_list.addSequenceString(sequence_string)

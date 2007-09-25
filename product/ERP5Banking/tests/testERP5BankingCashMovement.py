@@ -143,9 +143,13 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
 
     self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.vault_source = self.paris.caveau.auxiliaire.encaisse_des_externes
+    self.currency_handover_vault_source = self.paris.caveau.auxiliaire.encaisse_des_devises.usd
     self.vault_destination = self.madrid.caveau.reserve.encaisse_des_billets_et_monnaies
 
     self.createCashInventory(source=None, destination=self.vault_source, currency=self.currency_1,
+                             line_list=line_list)
+    self.createCashInventory(source=None, destination=self.currency_handover_vault_source, 
+                             currency=self.currency_1,
                              line_list=line_list)
     # Create an Organisation that will be used for users assignment
     self.checkUserFolderType()
@@ -188,6 +192,24 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # check we have 12 coin of 200 in vault_source
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    # check we don't have banknotes of 10000
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_destination.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_destination.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we don't have coins of 200
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+
+  def stepCheckCurrencyHandoverInitialInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check we have 5 banknotes of 10000 in vault_source
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    # check we have 12 coin of 200 in vault_source
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     # check we don't have banknotes of 10000
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_destination.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_destination.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
@@ -258,7 +280,10 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
       # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
       # check the source vault is vault_source
-      self.assertEqual(cell.getSourceValue(), self.vault_source)
+      if cell.getExplanationValue().isCurrencyHandover():
+        self.assertEqual(cell.getSourceValue(), self.currency_handover_vault_source)
+      else:
+        self.assertEqual(cell.getSourceValue(), self.vault_source)
       # check the destination vault is vault_destination
       if cell.getId() == 'movement_0_0_0':
         # check the quantity of banknote for year 1992 is 2
@@ -482,6 +507,19 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # check we will have 0 coin of 200 after deliver
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
+  def stepCheckCurrencyHandoverSourceDebitStarted(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check that computaion of inventory at vault vault_source is right after start and before stop
+    """
+    # check we have 0 banknotes of 10000 currently
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we will have 0 banknote of 10000 after deliver
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we have 0 coins of 200 currently
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    # check we will have 0 coin of 200 after deliver
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+
   def stepCheckDestinationCreditStarted(self, sequence=None, sequence_list=None, **kwd):
     """
     Check that compution of inventory at vault vault_destination is right after start and before stop
@@ -516,6 +554,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
   def stepSetCashMovementCurrencyHandover(self, sequence=None, sequence_list=None, **kwd):
     self.cash_movement.setCurrencyHandover(True)
     self.cash_movement.setDestination(None)
+    self.cash_movement.setSourceValue(self.currency_handover_vault_source)
 
   def stepDeliverCashMovement(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -543,7 +582,16 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
-
+  def stepCheckCurrencyHandoverSourceDebit(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check inventory at source (vault vault_source) after deliver of the cash_movement
+    """
+    # check we have 0 banknote of 10000
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we have 0 coin of 200
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.currency_handover_vault_source.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
   def stepCheckDestinationCredit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -588,6 +636,9 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
               'cash_movement_workflow','start_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.cash_movement)
+
 
   def test_01_ERP5BankingCashMovement(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -602,14 +653,18 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidLine2 CheckTotal ' \
                     + 'CheckInitialInventory ' \
                     + 'CreateInvalidLine ' \
+                    + 'Tic CheckWorklist ' \
                     + 'TryConfirmCashMovementWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'ConfirmCashMovement ' \
                     + 'ResetSourceInventory Tic ' \
+                    + 'Tic CheckWorklist ' \
                     + 'StartCashMovementFails DeleteResetInventory Tic ' \
                     + 'StartCashMovement ' \
+                    + 'Tic CheckWorklist ' \
                     + 'CheckSourceDebitStarted CheckDestinationCreditStarted ' \
                     + 'StopCashMovement ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashMovement ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
 
@@ -617,19 +672,24 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
 
     # Another sequence in order to test that the currency handover
     # is working
-    sequence_string = 'Tic DelCashMovement Tic CheckInitialInventory ' \
+    sequence_string = 'Tic DelCashMovement Tic CheckCurrencyHandoverInitialInventory ' \
                     + 'CreateCashMovement ' \
                     + 'SetCashMovementCurrencyHandover ' \
                     + 'CreateValidLine1 CheckSubTotal ' \
                     + 'CreateValidLine2 CheckTotal ' \
-                    + 'CheckInitialInventory ' \
+                    + 'CheckCurrencyHandoverInitialInventory ' \
                     + 'Tic CheckTotal ' \
+                    + 'Tic CheckWorklist ' \
                     + 'ConfirmCashMovement ' \
+                    + 'Tic CheckWorklist ' \
                     + 'StartCashMovement ' \
-                    + 'CheckSourceDebitStarted CheckDestinationHasNotChanged ' \
+                    + 'CheckCurrencyHandoverSourceDebitStarted ' \
+                    + 'CheckDestinationHasNotChanged ' \
+                    + 'Tic CheckWorklist ' \
                     + 'StopCashMovement ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashMovement ' \
-                    + 'CheckSourceDebit CheckDestinationHasNotChanged '
+                    + 'CheckCurrencyHandoverSourceDebit CheckDestinationHasNotChanged '
 
     sequence_list.addSequenceString(sequence_string)
 

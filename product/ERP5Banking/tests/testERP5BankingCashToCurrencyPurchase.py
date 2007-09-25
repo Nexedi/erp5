@@ -444,15 +444,14 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_sortante.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_sortante.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
-
-
   def stepDelCashToCurrencyPurchase(self, sequence=None, sequence_list=None, **kwd):
     """
     Delete the invalid vault_transfer line previously create
     """
     self.cash_to_currency_purchase_module.deleteContent('cash_to_currency_purchase_1')
 
-
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.cash_to_currency_purchase)
 
   ##################################
   ##  Tests
@@ -471,6 +470,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
                     + 'CreateValidIncomingLine CheckSubTotal ' \
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashToCurrencyPurchase Tic ' \
                     + 'CheckFinalInventoryGuichet_Entrante ' \
                     + 'CheckFinalInventoryGuichet_Sortante'

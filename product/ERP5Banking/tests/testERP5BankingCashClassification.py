@@ -704,6 +704,8 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_100.getRelativeUrl()), 10.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_100.getRelativeUrl()), 10.0)
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.cash_sorting)
 
   ##################################
   ##  Tests
@@ -725,7 +727,9 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidOutgoingLineForMixed ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckSource CheckDestination ' \
+                    + 'Tic CheckWorklist ' \
                     + 'ConfirmCashSorting Tic ' \
+                    + 'Tic CheckWorklist ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'DeliverCashSorting Tic ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
