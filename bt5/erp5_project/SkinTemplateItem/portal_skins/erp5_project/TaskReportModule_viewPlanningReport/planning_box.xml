@@ -374,6 +374,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>calendar_view</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>color_script</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -388,6 +392,10 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>delimiter</string> </key>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -434,6 +442,10 @@
                     <value> <string>getTitle</string> </value>
                 </item>
                 <item>
+                    <key> <string>info_tooltip</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>info_topleft</string> </key>
                     <value> <string>getStartDate</string> </value>
                 </item>
@@ -442,10 +454,18 @@
                     <value> <string>getStopDate</string> </value>
                 </item>
                 <item>
+                    <key> <string>js_enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>main_axis_groups</string> </key>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>max_y</string> </key>
@@ -460,7 +480,12 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Task Report</string>
+                          <string>Task Report</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -468,8 +493,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>nexedi_staff</string>
-                          <string>Nexedi Staff</string>
+                          <string>parent</string>
+                          <string>parent</string>
                         </tuple>
                       </list>
                     </value>
@@ -479,12 +504,58 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>round_script</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sec_axis_script</string> </key>
+                    <value> <string>Planning_generateDateZoomAxis</string> </value>
+                </item>
+                <item>
+                    <key> <string>second_layer_list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>security_index</string> </key>
                     <value> <int>2</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>task_report_planning_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>size_border_width_left</string> </key>
+                    <value> <int>10</int> </value>
+                </item>
+                <item>
+                    <key> <string>size_header_height</string> </key>
+                    <value> <int>80</int> </value>
+                </item>
+                <item>
+                    <key> <string>size_planning_height</string> </key>
+                    <value> <int>800</int> </value>
+                </item>
+                <item>
+                    <key> <string>size_planning_width</string> </key>
+                    <value> <int>800</int> </value>
+                </item>
+                <item>
+                    <key> <string>size_x_axis_height</string> </key>
+                    <value> <int>50</int> </value>
+                </item>
+                <item>
+                    <key> <string>size_x_axis_space</string> </key>
+                    <value> <int>10</int> </value>
+                </item>
+                <item>
+                    <key> <string>size_y_axis_space</string> </key>
+                    <value> <int>10</int> </value>
+                </item>
+                <item>
+                    <key> <string>size_y_axis_width</string> </key>
+                    <value> <int>150</int> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -497,12 +568,24 @@
                     <value> <int>10</int> </value>
                 </item>
                 <item>
+                    <key> <string>split_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>stat_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>planning_box</string> </value>
+                    <value> <string>Task Planning</string> </value>
                 </item>
                 <item>
                     <key> <string>title_line</string> </key>
                     <value> <string>getTitle</string> </value>
+                </item>
+                <item>
+                    <key> <string>use_date_zoom</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -511,6 +594,10 @@
                 <item>
                     <key> <string>width_line</string> </key>
                     <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>x_axis_position</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>x_axis_script_id</string> </key>
@@ -522,15 +609,19 @@
                 </item>
                 <item>
                     <key> <string>x_start_bloc</string> </key>
-                    <value> <string>getStartDate</string> </value>
+                    <value> <string>start_date</string> </value>
                 </item>
                 <item>
                     <key> <string>x_stop_bloc</string> </key>
-                    <value> <string>getStopDate</string> </value>
+                    <value> <string>stop_date</string> </value>
                 </item>
                 <item>
                     <key> <string>y_axis_method</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>y_axis_position</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>y_axis_width</string> </key>
@@ -539,6 +630,10 @@
                 <item>
                     <key> <string>y_range</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>y_size_block</string> </key>
+                    <value> <string>quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>y_unity</string> </key>
@@ -564,7 +659,26 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Base_searchFolderTest</string> </value>
+            <value> <string>searchFolder</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>getCausalityValueList</string> </value>
         </item>
       </dictionary>
     </pickle>
