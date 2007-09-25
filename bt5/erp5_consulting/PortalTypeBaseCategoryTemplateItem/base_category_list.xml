@@ -9,10 +9,6 @@
   <item>lexicon_item_type</item>
   <item>lexicon_item_ubm</item>
  </portal_type>
- <portal_type id="Feature">
-  <item>feature_state</item>
-  <item>feature_group</item>
- </portal_type>
  <portal_type id="Test Case">
   <item>specialise</item>
   <item>source</item>

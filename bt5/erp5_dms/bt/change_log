@@ -1,3 +1,6 @@
+2007-09-25 yo
+* Set module group on portal types.
+
 2007-09-13 yo
 * Allow more for Manager, otherwise even changing permissions does not work.
 

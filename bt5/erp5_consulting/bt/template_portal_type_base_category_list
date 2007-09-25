@@ -2,8 +2,6 @@ Document Analysis Document | document_analysis_document_type
 Document Analysis Lexicon Item | lexicon_item_type
 Document Analysis Lexicon Item | lexicon_item_ubm
 Document Analysis Lexicon | lexicon_source_type
-Feature | feature_group
-Feature | feature_state
 Test Case Actor | group
 Test Case Actor | site
 Test Case Actor | use_case_actor_role
