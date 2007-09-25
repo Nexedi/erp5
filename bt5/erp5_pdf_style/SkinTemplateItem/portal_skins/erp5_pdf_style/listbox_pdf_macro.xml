@@ -73,7 +73,7 @@
                  is_report_tree_mode selection/report_tree_mode | nothing;" >\n
 \n
 \n
-    <tal:block tal:condition="python: len(listboxline_list) > 1" >\n
+    <tal:block tal:condition="python: listboxline_list is not None and len(listboxline_list) > 1" >\n
 \n
       <tal:block tal:condition="python: is_domain_tree_mode">\n
         <tal:block tal:define="domain_list python: selection.getDomainList()"\n
