@@ -375,7 +375,10 @@ class CMFBTreeFolderHandler(FolderHandler):
     return getattr(CMFBTreeFolder, id)
 
   def isApplicable(self, folder):
-    return '_tree' in getattr(folder, '__dict__', tuple())
+    result = False
+    if getattr(folder, '_tree', None) is not None:
+      result = True
+    return result
 
 class CMFHBTreeFolderHandler(FolderHandler):
 
@@ -386,7 +389,10 @@ class CMFHBTreeFolderHandler(FolderHandler):
     return getattr(CMFHBTreeFolder, id)
 
   def isApplicable(self, folder):
-    return '_htree' in getattr(folder, '__dict__', tuple())
+    result = False
+    if getattr(folder, '_htree', None) is not None:
+      result = True
+    return result
 
 class OFSFolderHandler(FolderHandler):
 
@@ -397,7 +403,10 @@ class OFSFolderHandler(FolderHandler):
     return getattr(OFSFolder, id)
 
   def isApplicable(self, folder):
-    return '_objects' in getattr(folder, '__dict__', tuple())
+    result = False
+    if getattr(folder, '_objects', None) is not None:
+      result = True
+    return result
 
 global folder_handler_dict
 folder_handler_dict = {}
