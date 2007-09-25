@@ -1122,12 +1122,21 @@ class XMLSyncUtilsMixin(SyncCode):
             reset = 1
             #Object was retrieve but need to be updated without recreated
             #usefull when an object is only deleted by workflow.
-            add_data = conduit.addNode(xml=data_subnode,
-                                       object=destination,
-                                       object_id=object_id,
-                                       sub_object=object)
-            if add_data['conflict_list'] not in ('', None, []):
-              conflict_list += add_data['conflict_list']
+            actual_xml = subscriber.getXMLFromObject(object = object, force=1)
+            if data_subnode is not None:
+              if type(data_subnode) != type(''):
+                string_io = StringIO()
+                PrettyPrint(data_subnode, stream=string_io)
+                xml_string = string_io.getvalue()
+              data_subnode = self.getXupdateObject(xml_string, actual_xml)
+            conflict_list += conduit.updateNode(
+                                        xml=data_subnode,
+                                        object=object,
+                                        previous_xml=signature.getXML(),
+                                        force=force,
+                                        simulate=simulate)
+            xml_object = domain.getXMLFromObject(object)
+            signature.setTempXML(xml_object)
           if object is not None:
             #LOG('applyActionList', DEBUG, 'addNode, found the object')
             if reset:
@@ -1612,7 +1621,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       subscription_url = self.getSubscriptionUrlFromXML(client_header)
       # Get the subscriber or create it if not already in the list
       subscriber = publication.getSubscriber(subscription_url)
-      if subscriber == None:
+      if subscriber is None:
         subscriber = Subscriber(publication.generateNewId(), subscription_url)
         subscriber.setXMLMapping(publication.getXMLMapping())
         subscriber.setConduit(publication.getConduit())

@@ -274,6 +274,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                          when we have sub objects
     """
     conflict_list = []
+    if xml is None:
+      return {'conflict_list':conflict_list, 'object':object}
     xml = self.convertToXml(xml)
     #LOG('ERP5Conduit.updateNode', DEBUG, 'xml.nodeName: %s' % xml.nodeName)
     #LOG('ERP5Conduit.updateNode, force: ', DEBUG, force)

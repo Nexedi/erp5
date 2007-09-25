@@ -812,7 +812,7 @@ class Subscription(Folder, XMLSyncUtils):
 
     return True if the message id was not seen, False if already seen
     """
-    last_message_id = getattr(self,'last_message_id',None)
+    last_message_id = getattr(self, 'last_message_id', None)
     #LOG('checkCorrectRemoteMessageId  last_message_id = ', DEBUG, last_message_id)
     #LOG('checkCorrectRemoteMessageId  message_id = ', DEBUG, message_id)
     if last_message_id == message_id:
@@ -832,7 +832,7 @@ class Subscription(Folder, XMLSyncUtils):
     """
     return getattr(self, 'last_sent_message', '')
 
-  def setLastSentMessage(self,xml):
+  def setLastSentMessage(self, xml):
     """
     This is the setter for the last message we have sent
     """
