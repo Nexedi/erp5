@@ -360,7 +360,7 @@ class FolderHandler:
     """
     return "FolderHandler"
 
-  def handles(self, folder):
+  def isApplicable(self, folder):
     """
     Returns True if this plugin should handle this folder
     """
@@ -374,7 +374,7 @@ class CMFBTreeFolderHandler(FolderHandler):
   def __getattr__(self, id):
     return getattr(CMFBTreeFolder, id)
 
-  def handles(self, folder):
+  def isApplicable(self, folder):
     result = False
     if getattr(folder, '_tree', None) is not None:
       result = True
@@ -388,7 +388,7 @@ class CMFHBTreeFolderHandler(FolderHandler):
   def __getattr__(self, id):
     return getattr(CMFHBTreeFolder, id)
 
-  def handles(self, folder):
+  def isApplicable(self, folder):
     result = False
     if getattr(folder, '_htree', None) is not None:
       result = True
@@ -402,7 +402,7 @@ class OFSFolderHandler(FolderHandler):
   def __getattr__(self, id):
     return getattr(OFSFolder, id)
 
-  def handles(self, folder):
+  def isApplicable(self, folder):
     result = False
     if getattr(folder, '_objects', None) is not None:
       result = True
@@ -498,7 +498,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       global folder_handler_dict
       plugin_list = folder_handler_dict.values()
       for plugin in plugin_list:
-        if plugin.handles(self):
+        if plugin.isApplicable(self):
           self._folder_handler = "%r" % plugin
           break
       if self._folder_handler is None:
