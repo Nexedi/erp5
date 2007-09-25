@@ -45,7 +45,7 @@ from OFS.Traversable import NotFound
 from difflib import unified_diff
 from cStringIO import StringIO
 from zLOG import LOG
-from warning import warn
+from warnings import warn
 from urllib import pathname2url, urlopen, splittype, urlretrieve
 import re
 from xml.dom.minidom import parse
