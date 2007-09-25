@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.DTMLDocument</string>
-          <string>DTMLDocument</string>
-        </tuple>
-        <none/>
+        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -376,7 +373,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*\n
-Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.\n
                    Vincent Pelletier <vincent@nexedi.com>\n
                    Christophe Dumez <christophe@nexedi.com>\n
 \n
@@ -849,7 +846,7 @@ fieldset.bottom .field .input {\n
 }\n
 \n
 #context_bar .tool_buttons .delete .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/edittrash.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.absolute_url_path()">/images/editdelete.png\');\n
 }\n
 \n
 #context_bar .tool_buttons .show_all .image {\n
