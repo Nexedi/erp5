@@ -1122,12 +1122,12 @@ class XMLSyncUtilsMixin(SyncCode):
             reset = 1
             #Object was retrieve but need to be updated without recreated
             #usefull when an object is only deleted by workflow.
-            actual_xml = subscriber.getXMLFromObject(object = object, force=1)
             if data_subnode is not None:
               if type(data_subnode) != type(''):
                 string_io = StringIO()
                 PrettyPrint(data_subnode, stream=string_io)
                 xml_string = string_io.getvalue()
+              actual_xml = subscriber.getXMLFromObject(object = object, force=1)
               data_subnode = self.getXupdateObject(xml_string, actual_xml)
             conflict_list += conduit.updateNode(
                                         xml=data_subnode,
