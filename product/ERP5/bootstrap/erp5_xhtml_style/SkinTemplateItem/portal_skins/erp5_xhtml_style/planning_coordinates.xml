@@ -163,12 +163,13 @@ else:\n
     main_axis_step = float(size_planning_width) / float(basic.main_axis_info[\'bound_axis_groups\'])\n
 \n
 # defining planning area CSS class\n
-planning_dict= {\n
+# XXX it can be moved to globals\n
+planning_dict = {\n
   \'position\': \'relative\',\n
   \'border-style\': \'solid\',\n
-  \'border-color\': \'#d5e6de\',\n
+  \'border-color\':  \'inherit\',\n
   \'border-width\': 0,\n
-  \'background\': \'#d5e6de\',\n
+  \'background\': \'inherit\',\n
   \'width\': size_planning_width + size_border_width_left + size_y_axis_width + size_y_axis_space + 20,\n
   \'height\': size_header_height + size_x_axis_height + size_x_axis_space + size_planning_height + 100,\n
   \'margin-top\': 0,\n
@@ -186,9 +187,9 @@ for axis in (planning.Y, planning.X):\n
   axis_dict= {\n
     \'position\': \'absolute\',\n
     \'border-style\': \'solid\',\n
-    \'border-color\': \'#53676e\',\n
+    \'border-color\': \'inherit\',\n
     \'border-width\': 0,\n
-    \'background\': \'#d5e6de\',\n
+    \'background\': \'inherit\',\n
   }\n
   # adding cursors position informations\n
   axis_previous = {\n
@@ -457,10 +458,10 @@ for axis_group in planning.main_axis.axis_group:\n
 for sec_axis_group in planning.secondary_axis.axis_group:\n
   sec_axis_group_dict={\n
     \'position\': \'absolute\',\n
-    \'border-color\': \'#53676e\',\n
+    \'border-color\': \'inherit\',\n
     \'border-style\': \'solid\',\n
     \'border-width\': 1,\n
-    \'background\': \'#d5e6de\',\n
+    \'background\': \'inherit\',\n
   }\n
   # info definition\n
   sec_axis_info_dict= {\n

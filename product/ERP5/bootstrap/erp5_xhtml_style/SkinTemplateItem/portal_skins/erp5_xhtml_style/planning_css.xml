@@ -91,17 +91,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
 """\n
 This script is aimed to generate the CSS code needed to display correctly the\n
-PlaningBox in HTML style (i.e using HTML code + CSS class for positionning).\n
+PlanningBox in HTML style (i.e using HTML code + CSS class for positionning).\n
 The process is based on the strucutre passed in parameter (i.e \'structure\').\n
 \n
 Beware this only generates CSS code, and need to use the \'planning_coordinates\'\n
 script (\'planning_css\') to have CSS compliant code, no HTML generation is\n
 done in this script.\n
 """\n
-\n
-\n
 properties_structure = context.planning_coordinates(basic, planning)\n
-\n
 """\n
 - the properties_structure returned from the planning_coordinates script is somehow\n
 special : it is a dict defined by the areas of data\n
@@ -146,8 +143,6 @@ if block_string != \'\':\n
 else:\n
   # no unvalidated block, using actual properties\n
   pass\n
-\n
-\n
 \n
 # build list from dictionnary structure\n
 # this list will e converted to a string afterwards\n
