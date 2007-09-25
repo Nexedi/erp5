@@ -1166,9 +1166,12 @@ class BasicStructure:
     if 'select_expression' in kw:
       del kw['select_expression']
 
+    sec_layer_method_name = None
     if getattr(self.sec_layer_list_method, 'method_name', None) is not None:
-       self.sec_layer_list_method = getattr( self.context,
-                                      self.sec_layer_list_method.method_name)
+         sec_layer_method_name = self.sec_layer_list_method.method_name
+         self.sec_layer_list_method = getattr( self.context,
+                                          sec_layer_method_name, None)
+
     if getattr(self.list_method, 'method_name', None) is not None:
       if self.list_method.method_name == 'ObjectValues':
         # list_method is available
@@ -1287,7 +1290,6 @@ class BasicStructure:
     blocks_object={}
     select_expression = ''
     self.sec_layer_uid_list = []
-
     self.selection.edit(params = kw)
     if self.list_method not in (None,''):
       # valid list_method has been found
@@ -1335,11 +1337,14 @@ class BasicStructure:
 
       else:
         info_dict['stat'] = 0
+        domain_obj = object_tree_line.getObject()
         sec_layer_object_list = []
         if self.selection_report_path == 'parent':
           object_list = [object_tree_line.getObject()]
-
-        domain_obj = object_tree_line.getObject()
+          if sec_layer_method_name not in (None,''):
+            sec_layer_object_list = getattr(domain_obj,\
+                            sec_layer_method_name)()
+           
         # Default Values
         new_object_list = []
         sec_new_object_list = []
