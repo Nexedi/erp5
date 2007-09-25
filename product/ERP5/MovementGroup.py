@@ -983,13 +983,13 @@ class AggregateMovementGroup(RootMovementGroup):
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     aggregate = self.getAggregateList(movement)
-    self.aggregate = aggregate
+    self.aggregate_list = aggregate
     self.setGroupEdit(
-        aggregate=aggregate
+        aggregate_list=aggregate
     )
 
   def test(self,movement):
-    if self.getAggregateList(movement) == self.aggregate :
+    if self.getAggregateList(movement) == self.aggregate_list:
       return 1
     else :
       return 0
