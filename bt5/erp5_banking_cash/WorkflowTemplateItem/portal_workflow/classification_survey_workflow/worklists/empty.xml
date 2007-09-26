@@ -16,24 +16,30 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Usual Cash Rendering To Validate (%(count)s)</string> </value>
+            <value> <string>Empty Classification Survey (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Usual Cash Rendering
+Base_viewWorklist?simulation_state=empty&portal_type=Classification Survey&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Usual Cash rendering To Validate</string> </value>
+            <value> <string>Empty Classification Survey</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +49,7 @@ Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Usual Cash Render
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ordered</string> </value>
+            <value> <string>empty</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -68,7 +74,8 @@ Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Usual Cash Render
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignor</string>
+                <string>Assistant</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -92,7 +99,7 @@ Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Usual Cash Render
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Usual Cash Rendering</string>
+                        <string>Classification Survey</string>
                       </tuple>
                     </value>
                 </item>
@@ -100,7 +107,7 @@ Base_viewWorklist?simulation_state=ordered&reset=1&portal_type=Usual Cash Render
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>ordered</string>
+                        <string>empty</string>
                       </tuple>
                     </value>
                 </item>

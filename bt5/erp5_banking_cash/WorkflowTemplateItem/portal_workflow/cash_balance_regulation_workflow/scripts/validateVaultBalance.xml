@@ -70,23 +70,22 @@ from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
 \n
-caisse = transaction.getSource()\n
+vault = transaction.getSource()\n
 \n
 \n
-if (\'encaisse_des_billets_et_monnaies\'  not in caisse):\n
+if (\'encaisse_des_billets_et_monnaies\'  not in vault):\n
    msg = Message(domain="ui", message="Invalid source.")\n
    raise ValidationFailed, (msg,)\n
 \n
 # check again that we are in the good accounting date\n
-transaction.Baobab_checkCounterDateOpen(site=caisse, date=transaction.getStartDate())\n
+transaction.Baobab_checkCounterDateOpen(site=vault, date=transaction.getStartDate())\n
 \n
 \n
-resource_one = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Incoming Cash Balance Regulation Line\')\n
-resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, \n
+resource_one = transaction.CashDelivery_checkCounterInventory(source = vault, portal_type=\'Incoming Cash Balance Regulation Line\')\n
+resource_two = transaction.CashDelivery_checkCounterInventory(source = vault, \n
                                portal_type=\'Outgoing Cash Balance Regulation Line\', \n
                                same_source=1,\n
                                no_balance_check=1)\n
-#resource_two = transaction.CashDelivery_checkCounterInventory(source = caisse, portal_type=\'Outgoing Cash Balance Regulation Line\')\n
 \n
 #context.log(\'resource_one\', resource_one)\n
 #context.log(\'resource_two\', resource_two)\n
@@ -167,7 +166,7 @@ if incoming_total != outgoing_total:\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>caisse</string>
+                            <string>vault</string>
                             <string>msg</string>
                             <string>resource_one</string>
                             <string>resource_two</string>

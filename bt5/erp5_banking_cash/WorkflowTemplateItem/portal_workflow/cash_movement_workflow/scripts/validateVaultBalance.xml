@@ -110,15 +110,12 @@ check_path_script = getattr(transaction,\'%s_checkPath\' % portal_type_with_no_s
 if not transaction.isCurrencyHandover():\n
   # check again that we are in the good accounting date\n
   transaction.Baobab_checkCounterDateOpen(site=vault, date=transaction.getStartDate())\n
-  if check_path_script is not None:\n
-    message = check_path_script()\n
-    transaction.log(\'check_path_script\',\'found\')\n
-    if message is not None:\n
-      raise ValidationFailed, (message,)\n
-else:\n
-  if \'devise\' not in vault:\n
-    msg = Message(domain="ui", message="Sorry, you must define a currency source.")\n
-    raise ValidationFailed, (msg,)\n
+\n
+if check_path_script is not None:\n
+  message = check_path_script()\n
+  transaction.log(\'check_path_script\',\'found\')\n
+  if message is not None:\n
+    raise ValidationFailed, (message,)\n
   \n
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
 \n
