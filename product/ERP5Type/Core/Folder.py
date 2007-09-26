@@ -375,10 +375,7 @@ class CMFBTreeFolderHandler(FolderHandler):
     return getattr(CMFBTreeFolder, id)
 
   def isApplicable(self, folder):
-    result = False
-    if getattr(folder, '_tree', None) is not None:
-      result = True
-    return result
+    return '_tree' in getattr(folder, '__dict__', tuple())
 
 class CMFHBTreeFolderHandler(FolderHandler):
 
@@ -389,10 +386,7 @@ class CMFHBTreeFolderHandler(FolderHandler):
     return getattr(CMFHBTreeFolder, id)
 
   def isApplicable(self, folder):
-    result = False
-    if getattr(folder, '_htree', None) is not None:
-      result = True
-    return result
+    return '_htree' in getattr(folder, '__dict__', tuple())
 
 class OFSFolderHandler(FolderHandler):
 
@@ -403,10 +397,22 @@ class OFSFolderHandler(FolderHandler):
     return getattr(OFSFolder, id)
 
   def isApplicable(self, folder):
-    result = False
-    if getattr(folder, '_objects', None) is not None:
-      result = True
-    return result
+    """
+      XXX: until folder handlers are prioritized and OFS Folder Handler is
+      made last, OR if OFS Folder Handler is the default fallback, the
+      definition of an OFS Folder is only possible as "not a BTreeFolder2 nor
+      a HBTreeFolder2'.
+      This is very dirty, but will be sufficient to fix current folder format
+      detection code.
+
+      Original idea is:
+        return '_objects' in getattr(folder, '__dict__', tuple())
+      But this code is invalid because existing empty folders contain no
+      '_object' property (it's actually defined on the class, not on the
+      instance).
+    """
+    return not('_tree' in getattr(folder, '__dict__', tuple())) \
+       and not('_htree' in getattr(folder, '__dict__', tuple()))
 
 global folder_handler_dict
 folder_handler_dict = {}
