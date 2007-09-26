@@ -118,7 +118,7 @@ class Inventory(Delivery):
     for line in current_inventory_list:
       current_inventory_key = tuple(
           [line[x] for x in current_inventory_key_id_list])
-      if current_inventory_key[1] == None:
+      if current_inventory_key[1] is None:
         # To be consistent
         current_inventory_key = (current_inventory_key[0], "")
       try:
