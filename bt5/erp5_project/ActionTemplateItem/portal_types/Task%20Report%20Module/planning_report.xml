@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_report</string> </value>
+            <value> <string>object_button</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -38,7 +38,9 @@
         </item>
         <item>
             <key> <string>icon</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -82,6 +84,25 @@
         <item>
             <key> <string>text</string> </key>
             <value> <string>string:${object_url}/TaskReportModule_viewPlanningReport</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/images/planningbox.png</string> </value>
         </item>
       </dictionary>
     </pickle>
