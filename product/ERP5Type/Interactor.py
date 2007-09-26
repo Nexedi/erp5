@@ -1,16 +1,17 @@
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Base import _aq_reset
-
+import Acquisition
+from Acquisition import aq_parent
 """
   Current implementation uses callable objects.
   Using decorator would be more modern and consistent with
   recent evolution of python. But we have 2.3 ERP5 users
   so we should, at least, provide both implementations.
-  
+
   Code structure should be changed so that Interactors
   because a new "type" of ERP5 class such Document
   with a modular plugin structure.
-  
+
   TODO: multiple instances of interactors could
   use different parameters. This way, interactions
   can be defined on "instances" or can be
@@ -19,15 +20,18 @@ from Products.ERP5Type.Base import _aq_reset
 
 
 class InteractorMethodCall:
-  
+
   def __init__(self, method, instance, *args, **kw):
     self.instance = instance
     self.args = args
     self.kw = kw
     self.method = method
-    
+
   def __call__(self):
-    return self.method(self.instance, *self.args, **self.kw)
+    # We use self.__dict__['instance'] to prevent inserting the
+    # InteractorMethodCall instance in the acquisition chain
+    # which has some side effects
+    return self.method(self.__dict__['instance'], *self.args, **self.kw)
 
 class InteractorMethod(Method):
 
@@ -174,6 +178,37 @@ class FieldValueInteractor(Interactor):
     Form.purgeFieldValueCache()
     ProxyField.purgeFieldValueCache()
 
+class TypeInteractorExample(Interactor):
+  def __init__(self, portal_type):
+    self.portal_type = portal_type
+
+  def install(self):
+    from Products.CMFCore.TypesTool import TypesTool
+    self.on(TypesTool.manage_edit).doAfter(self.doSomething)
+
+  def doSomething(self, method_call_object):
+    if self.portal_type == method_call_object.instance.portal_type:
+      pass
+      # do whatever
+
+class InteractorOfInteractor(Interactor):
+
+  def __init__(self, interactor):
+    self.interactor = interactor
+
+  def install(self):
+    self.on(interactor.doSomething).doAfter(self.doSomething)
+
+  def doSomething(self, method_call_object):
+    pass
+
+
+#test = AqDynamicInteractor()
+#test.install()
+
+
+#interactor_of_interactor = InteractorOfInteractor(test)
+#interactor_of_interactor.install()
 # This is used in ERP5Form and install method is called in ERP5Form
 fielf_value_interactor = FieldValueInteractor()
-#fielf_value_interactor.install()
+fielf_value_interactor.install()
