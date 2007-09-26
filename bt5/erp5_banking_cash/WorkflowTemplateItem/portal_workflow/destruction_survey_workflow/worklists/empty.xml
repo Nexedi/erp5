@@ -16,24 +16,31 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Destruction Survey To Confirmed (%(count)s)</string> </value>
+            <value> <string>Empty To Validate (%(count)s)\r\n
+</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=confirmed&portal_type=Destruction Survey&reset=1
+Base_viewWorklist?simulation_state=empty&portal_type=Destruction Survey&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Destruction Survey To Confirm</string> </value>
+            <value> <string>Empty To Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +50,7 @@ Base_viewWorklist?simulation_state=confirmed&portal_type=Destruction Survey&rese
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirmed</string> </value>
+            <value> <string>empty</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -68,7 +75,8 @@ Base_viewWorklist?simulation_state=confirmed&portal_type=Destruction Survey&rese
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Assignee</string>
+                <string>Assistant</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -100,7 +108,7 @@ Base_viewWorklist?simulation_state=confirmed&portal_type=Destruction Survey&rese
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>confirmed</string>
+                        <string>empty</string>
                       </tuple>
                     </value>
                 </item>
