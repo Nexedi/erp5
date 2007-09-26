@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>destination = context.getDestination()\n
 if destination is not None:\n
-  return destination+\'/encaisse_des_billets_et_monnaies/entrante\'\n
+  return destination\n
 # calculate the destination\n
 # must use owner to know site letter\n
 site_list = context.Baobab_getUserAssignedSiteList(user_id=context.Base_getOwnerId())\n
