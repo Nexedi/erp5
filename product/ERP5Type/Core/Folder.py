@@ -508,7 +508,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
           self._folder_handler = "%r" % plugin
           break
       if self._folder_handler is None:
-        raise ValueError, 'No plugin defined'
+        raise ValueError, 'No plugin defined on %r' % (self, )
       
   def newContent(self, *args, **kw):
     """ Create a new content """
