@@ -506,7 +506,7 @@
                 </item>
                 <item>
                     <key> <string>sec_axis_script</string> </key>
-                    <value> <string>Planning_generateAxis</string> </value>
+                    <value> <string>Planning_generateDateZoomAxis</string> </value>
                 </item>
                 <item>
                     <key> <string>second_layer_list_method</string> </key>
