@@ -1664,7 +1664,8 @@ class Catalog( Folder,
       if not disable_cache:
         disableReadOnlyTransactionCache(self)
 
-  if psyco is not None: psyco.bind(catalogObjectList)
+  if psyco is not None:
+    psyco.bind(_catalogObjectList)
 
   def beforeUncatalogObject(self, path=None,uid=None):
     """
