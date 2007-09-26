@@ -17,7 +17,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>items</string>
               </list>
             </value>
         </item>
@@ -68,7 +67,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
