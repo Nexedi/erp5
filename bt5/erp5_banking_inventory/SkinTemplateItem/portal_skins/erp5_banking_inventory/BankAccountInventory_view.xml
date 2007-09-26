@@ -105,7 +105,7 @@
                         <string>my_id</string>
                         <string>my_title</string>
                         <string>my_destination</string>
-                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
                       </list>
                     </value>
                 </item>
