@@ -27,19 +27,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Waiting for correction (%(count)s)</string> </value>
+            <value> <string>Waiting for second validation (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=started&portal_type=Check Deposit&reset=1
+Base_viewWorklist?simulation_state=planned&portal_type=Check Deposit&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Waiting for correction</string> </value>
+            <value> <string>Waiting for second validation</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@ Base_viewWorklist?simulation_state=started&portal_type=Check Deposit&reset=1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>started</string> </value>
+            <value> <string>planned</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -63,11 +63,8 @@ Base_viewWorklist?simulation_state=started&portal_type=Check Deposit&reset=1
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -77,7 +74,7 @@ Base_viewWorklist?simulation_state=started&portal_type=Check Deposit&reset=1
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>DestinationAssignee</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>
@@ -87,17 +84,14 @@ Base_viewWorklist?simulation_state=started&portal_type=Check Deposit&reset=1
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -112,7 +106,7 @@ Base_viewWorklist?simulation_state=started&portal_type=Check Deposit&reset=1
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>started</string>
+                        <string>planned</string>
                       </tuple>
                     </value>
                 </item>

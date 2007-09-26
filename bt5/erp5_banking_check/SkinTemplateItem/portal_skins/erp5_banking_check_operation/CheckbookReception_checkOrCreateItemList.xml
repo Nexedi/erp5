@@ -96,7 +96,7 @@ if check == 1:\n
 \n
 if create==1:\n
   for line in line_list:\n
-    line.activate(tag=checkbook_reception_tag).\\\n
+    line.activate(priority=4, tag=checkbook_reception_tag).\\\n
         CheckbookReceptionLine_checkOrCreateItemList(create=1, tag=checkbook_reception_tag, confirm_check=confirm_check)\n
 </string> </value>
         </item>

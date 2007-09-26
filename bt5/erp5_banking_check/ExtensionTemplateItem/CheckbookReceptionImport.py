@@ -6,6 +6,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
   reference_dict = {}
   reference_dict['CHEQUIER_COMPTE_COURANT_ORDINAIRE'] = 'CHCCO'
   reference_dict['CHEQUIER_COMPTE_ORDINAIRE_DU_PERSONNEL'] = 'CHCOP'
+  reference_dict['CARNET_BON_VIREMENT'] = 'CABV'
   reference_dict['BON_VIREMENT'] = 'BV'
   # We will build a several listbox like it is already done into the user interface
   # A listbox will be build for every resource
@@ -13,6 +14,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
   file_item_list = xml_content.xpath('//object')
   # First, construct a dictionnary for every resource
   import_dict = {}
+  self.log("import checkbook", "file_item_list = %s" %(file_item_list,))
   for item in file_item_list:
     checkbook_id = item.xpath("string(@id)")
     check_quantity = str(item.xpath("string(./check_quantity)"))
@@ -31,9 +33,10 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
     item_dict['check_quantity'] = check_quantity
     item_dict['quantity'] = quantity
     item_dict['internal_account_number'] = internal_account_number
-
+  #self.log("import checkbook", "item_dict = %s" %(item_dict,))
   listbox_dict = {}
   for (checkbook_type, checkbook_dict) in import_dict.items():
+    self.log("checkbook_type %s, checkbook_dict %s" %(checkbook_type, checkbook_dict), "")
     listbox = []
     i = 0
     resource_list = self.portal_catalog(portal_type=['Checkbook Model',
@@ -54,6 +57,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
                                                        amount.getRelativeUrl()
     for  (account, account_dict) in checkbook_dict.items():
       for (gid, item_dict) in account_dict.items():
+        self.log("is checkbook ? %s" %is_checkbook, "will fill value %s" %(item_dict,))
         listbox_line = {}
         listbox_line['listbox_key'] = '%05i' % i
         listbox_line['reference_range_min'] = item_dict['reference_min']

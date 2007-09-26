@@ -186,6 +186,10 @@ else:\n
          (reference_range_max - reference_range_min + 1 != check_quantity * quantity\n
           or\n
           reference_range_max < reference_range_min):\n
+        context.log("Range is not valid",\n
+                    "range max %s, range min %s, check quantity %s, quanityt %s" %(reference_range_max,\n
+                                                                                   reference_range_min,\n
+                                                                                   check_quantity, quantity))\n
         message = \'The range is not valid\'\n
         generate_error(line,\'reference_range_min\',message)\n
         generate_error(line,\'reference_range_max\',message)\n
