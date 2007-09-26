@@ -98,14 +98,14 @@ module_portal_type_value.manage_changeProperties(\n
                allowed_content_types = (object_portal_type_id, ))\n
 \n
 action_list = module_portal_type_value.listActions()\n
-module_portal_type_value.deleteActions(selections=range(0,len(action_list)))\n
+module_portal_type_value.deleteActions(selections=range(0, len(action_list)))\n
 module_portal_type_value.addAction( "view"\n
                                   , "View"\n
                                   # FIXME: isn\'t it better to create a form for the module?\n
                                   , "string:${object_url}/Folder_viewContentList"\n
                                   , ""\n
                                   , "View"\n
-                                  , "object_view"\n
+                                  , "object_list"\n
                                   , priority=1.0\n
                                   )\n
 \n
