@@ -222,7 +222,8 @@ class Inventory(Delivery):
 
     # Reindex objects
     object_list = [self]
-    self.portal_catalog.catalogObjectList(object_list, 
+    self.portal_catalog.catalogObjectList(object_list,
+                                          sql_catalog_id = sql_catalog_id,
                                           disable_archive=disable_archive)
     if len(stock_object_list)==0:
       # Make sure to remove all lines
@@ -230,5 +231,6 @@ class Inventory(Delivery):
       stock_append(temp_constructor(self, inventory_id, uid=inventory_uid))
     self.portal_catalog.catalogObjectList(
            stock_object_list, method_id_list=('z_catalog_stock_list', ),
+           sql_catalog_id = sql_catalog_id,
            disable_cache=1, check_uid=0, disable_archive=disable_archive)
 
