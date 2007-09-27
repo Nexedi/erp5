@@ -38,7 +38,8 @@ from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import convertDateToHour, number_of_hours_in_day, number_of_hours_in_year
-from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
+from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
 from AccessControl import Unauthorized
@@ -1176,6 +1177,12 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       links (in combindation with populate).
     """
     raise NotImplementedError
+
+  def convertFile(self, msg=None):
+    """
+    Workflow transition invoked when conversion occurs.
+    """
+  convertFile = WorkflowMethod(convertFile)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
   def updateBaseMetadata(self, **kw):
