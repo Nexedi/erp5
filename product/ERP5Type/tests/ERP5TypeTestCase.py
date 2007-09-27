@@ -660,16 +660,22 @@ def setupERP5Site( business_template_list=(),
               ZopeTestCase._print('Data.fs created\n')
             get_transaction().commit()
             ZopeTestCase.close(app)
-            if not quiet:
-              ZopeTestCase._print('Dumping MySQL database ... ')
             instance_home = os.environ['INSTANCE_HOME']
-            os.system('mysqldump %s > %s/dump.sql' % (
-                      getMySQLArguments(), instance_home))
+            command = 'mysqldump %s > %s/dump.sql' \
+                        % (getMySQLArguments(), instance_home)
             if not quiet:
-              ZopeTestCase._print('Dumping static files ... ')
+              ZopeTestCase._print('Dumping MySQL database with %s... ' \
+                                    % command)
+            os.system(command)
+            if not quiet:
+              ZopeTestCase._print('done\n')
+            if not quiet:
+              ZopeTestCase._print('Dumping static files... ')
             for dir in ('Constraint', 'Document', 'PropertySheet'):
               os.system('rm -rf %s/%s.bak' % (instance_home, dir))
               os.system('cp -ar %s/%s %s/%s.bak' % (instance_home, dir, instance_home, dir))
+            if not quiet:
+              ZopeTestCase._print('done\n')
  
           # Log out
           if not quiet:
