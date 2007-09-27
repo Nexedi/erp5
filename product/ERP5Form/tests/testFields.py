@@ -62,6 +62,10 @@ from Products.ERP5Form.Form import getFieldValue
 class TestFloatField(unittest.TestCase):
   """Tests Float field
   """
+
+  def getTitle(self):
+    return "Float Field"
+
   def setUp(self):
     self.field = FloatField('test_field')
     self.widget = self.field.widget
@@ -106,6 +110,10 @@ class TestFloatField(unittest.TestCase):
 class TestStringField(unittest.TestCase):
   """Tests string field
   """
+
+  def getTitle(self):
+    return "String Field"
+
   def setUp(self):
     self.field = StringField('test_field')
     self.widget = self.field.widget
@@ -116,6 +124,10 @@ class TestStringField(unittest.TestCase):
 
 
 class TestProxyField(unittest.TestCase):
+
+  def getTitle(self):
+    return "Proxy Field"
+
   def setUp(self):
     self.container = Folder('container').__of__(Folder('root'))
     self.container._setObject('Base_viewProxyFieldLibrary',
@@ -224,6 +236,10 @@ class TestProxyField(unittest.TestCase):
 class TestFieldValueCache(unittest.TestCase):
   """Tests field value caching system
   """
+
+  def getTitle(self):
+    return "Field Value Cache"
+
   def setUp(self):
     self.form = ERP5Form('form', 'Form')
     self.form.field = StringField('test_field')
