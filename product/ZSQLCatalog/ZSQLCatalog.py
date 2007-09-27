@@ -826,7 +826,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           continue
         catalog_id = archive.getCatalogId()
         self.activate(activity="SQLQueue",
-                      priority=archive.getPriority()).uncatalogObject(uid=uid,path=path,
+                      priority=archive.getPriority()).uncatalog_object(uid=uid,path=path,
                                                                       sql_catalog_id=catalog_id)
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None and catalog_id is None:
