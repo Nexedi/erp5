@@ -110,7 +110,6 @@ class TestPlanningBox(ERP5TypeTestCase):
     planning = sequence.get('planning')  
     self.assertEquals(len(planning.content), 1)
     bloc = planning.content[0]
-    import pdb;pdb.set_trace()
     self.assertEquals(bloc.name , 'Group_1_Activity_1_Block_1')
     self.assertEquals(bloc.title , 'Title 0')
     for info in bloc.info.values():
