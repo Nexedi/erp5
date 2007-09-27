@@ -923,7 +923,3 @@ psyco.bind(Field.get_value)
 
 #from Products.CMFCore.ActionsTool import ActionsTool
 #psyco.bind(ActionsTool.listFilteredActionsFor)
-
-# install interactor
-from Products.ERP5Type.Interactor import fielf_value_interactor
-fielf_value_interactor.install()
