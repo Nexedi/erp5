@@ -448,4 +448,7 @@ def WorkflowTool_listActions(self, info=None, object=None):
     actions.extend(_getWorklistActionList())
   return actions 
 
-WorkflowTool.listActions = WorkflowTool_listActions
+# Disable this monkey patch, because some cases are not correctly handled.
+# I (vincent) will keep on working on this, but it will now be disaled by
+# default.
+#WorkflowTool.listActions = WorkflowTool_listActions
