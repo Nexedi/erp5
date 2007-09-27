@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_categories[field.getId().replace(\'my_\', \'\', 1).replace(\'_list\', \'\')].getCategoryChildCompactLogicalPathItemList(local_sort_id="int_index")</string> </value>
+            <value> <string>python: here.portal_categories[field.getId().replace(\'my_\', \'\', 1).replace(\'_list\', \'\')].getCategoryChildCompactLogicalPathItemList(local_sort_id="int_index", checked_permission=\'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
