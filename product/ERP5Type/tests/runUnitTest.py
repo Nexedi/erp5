@@ -52,6 +52,9 @@ Options:
                              dependency provider (ie, the name of the BT
                              containing ZSQLMethods matching the desired
                              catalog storage).
+  --run_only=STRING
+                             Run only specified test methods delimited with
+                             commas (e.g. testFoo,testBar).
 """
 
 def getUnitTestFile():
@@ -247,7 +250,17 @@ def runUnitTestList(test_list):
     PortalTestCase.tearDown = dummy_tearDown
   
   suite = ERP5TypeTestLoader(save=save).loadTestsFromNames(test_list)
-  
+
+  # Hack the TestCase to run only specified test methods.
+  run_only = os.environ.get('run_only')
+  if run_only:
+    test_method_list = run_only.split(',')
+    run_orig = unittest.TestCase.run
+    def run(self, **kw):
+      if id(self).rsplit('.', 1)[-1] in test_method_list:
+        return run_orig(self, **kw)
+    unittest.TestCase.run = run
+
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
   return TestRunner().run(suite)
@@ -270,7 +283,8 @@ def main():
         "erp5_catalog_storage=",
         "save",
         "load",
-        "email_from_address="] )
+        "email_from_address=",
+        "run_only="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
@@ -317,6 +331,8 @@ def main():
       os.environ["erp5_load_data_fs"] = "1"
     elif opt == "--erp5_catalog_storage":
       os.environ["erp5_catalog_storage"] = arg
+    elif opt == "--run-only":
+      os.environ["run_only"] = arg
 
   test_list = args
   if not test_list:
@@ -330,8 +346,11 @@ def main():
 
 if __name__ == '__main__':
   # Force stdin, stdout and stderr to be totally unbuffered.
-  sys.stdin = os.fdopen(0, "rb", 0)
-  sys.stdout = os.fdopen(1, "wb", 0)
-  sys.stderr = os.fdopen(2, "wb", 0)
+  try:
+    sys.stdin = os.fdopen(0, "rb", 0)
+    sys.stdout = os.fdopen(1, "wb", 0)
+    sys.stderr = os.fdopen(2, "wb", 0)
+  except OSError:
+    pass
 
   main()
