@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import sys
+
 from Products.PythonScripts.Utility import allow_class
 from ZPublisher.HTTPRequest import FileUpload
 from xml.dom.ext.reader import PyExpat
@@ -42,6 +44,7 @@ import imghdr
 import random
 from Products.ERP5Type import Permissions
 from zLOG import LOG
+from zLOG import PROBLEM
 
 from OFS.Image import Pdata
 
@@ -242,6 +245,7 @@ class OOoParser:
     try:
       oo_unzipped = ZipFile(file_descriptor, mode="r")
     except:
+      LOG('ERP5OOo', PROBLEM, 'Error in openFile', error=sys.exc_info())
       raise CorruptedOOoFile()
     # Test the integrity of the file
     if oo_unzipped.testzip() != None:
