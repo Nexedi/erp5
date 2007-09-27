@@ -55,6 +55,9 @@ from Products.ERP5Form.ProxyField import purgeFieldValueCache
 
 class TestProxify(unittest.TestCase):
 
+  def getTitle(self):
+    return "Proxify"
+
   def setUp(self):
     # base field library
     self.container = Folder('container').__of__(Folder('root'))

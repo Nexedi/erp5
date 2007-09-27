@@ -36,6 +36,10 @@ from Products.ERP5.Document.Document import Document
 class TestPDFForm(unittest.TestCase):
   """Tests PDF Form
   """
+
+  def getTitle(self):
+    return "PDF Form"
+
   def setUp(self):
     """Creates a PDFForm, and a document on which the PDF form is rendered.
     """
