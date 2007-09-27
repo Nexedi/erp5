@@ -53,6 +53,7 @@ from Products.ERP5Type.patches import copy_reg_patch
 from Products.ERP5Type.patches import PersistencePatch
 from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
+from Products.ERP5Type.patches import PythonScript
 
 # for python2.3 compatibility
 import threading
