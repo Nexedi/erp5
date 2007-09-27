@@ -13,14 +13,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>text_content</string> </value>
+            <value> <string>iframe_content</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -221,7 +215,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>page hiddenLabel</string> </value>
+                    <value> <string>page</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -272,10 +266,6 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string>text_area</string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string>Page Content</string> </value>
                 </item>
@@ -311,7 +301,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/asStrippedHTML</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+python:\'<iframe width="100%%" height="600" src="%s/asHTML"></iframe>\' % here.absolute_url()
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -330,7 +324,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not:here/getUrlString</string> </value>
+            <value> <string>here/isExternalDocument</string> </value>
         </item>
       </dictionary>
     </pickle>
