@@ -16,7 +16,7 @@ elif os.environ.get('erp5_load_data_fs'):
   if os.environ.get('erp5_force_data_fs'):
     Storage = FileStorage(new_data_fs_path)
   else:
-    Storage = DemoStorage(base=FileStorage(new_data_fs_path), quota=(1<<20))
+    Storage = DemoStorage(base=FileStorage(new_data_fs_path), quota=(2<<20))
   print("Restoring MySQL database ... ")
   os.system("mysql %s < %s/dump.sql" % (getMySQLArguments(), instance_home))
   print("Restoring static files ... ")
