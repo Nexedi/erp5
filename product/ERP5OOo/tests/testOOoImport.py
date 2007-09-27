@@ -30,16 +30,14 @@
 import unittest
 import os
 import sys
+
 from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 
-
 ooodoc_coordinates = ('127.0.0.1', 8008)
-
-testrun = ()
 
 def shout(msg):
   msg = str(msg)
@@ -170,9 +168,7 @@ class TestOOoImport(ERP5TypeTestCase):
       Simulate import of OOo file true ERP5Site_importObjectFromOOoFastInput
       For Person Module.
     """
-    if testrun and 12 not in testrun:return
     if not run: return
-    if not quiet: shout('test_12_ImportObjectOOoInActivities')
     sequence_list = SequenceList()
     step_list = [ 'stepImportRawDataFile'
                  ,'stepCheckActivitiesCount'
@@ -182,6 +178,25 @@ class TestOOoImport(ERP5TypeTestCase):
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+
+  def test_CategoryTool_importCategoryFile(self):
+    # tests simple use of CategoryTool_importCategoryFile script
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category.sxc'))
+    get_transaction().commit()
+    self.tic()
+    region = self.portal.portal_categories.region
+    self.assertEqual(2, len(region))
+    self.assertTrue('europe' in region.objectIds())
+    self.assertTrue('germany' in region.europe.objectIds())
+    self.assertTrue('france' in region.europe.objectIds())
+    france = region.europe.france
+    self.assertEquals('France', france.getTitle())
+    self.assertEquals('A Country', france.getDescription())
+    self.assertEquals('FR', france.getCodification())
+    self.assertEquals(1, france.getIntIndex())
+
 
 def test_suite():
   suite = unittest.TestSuite()
