@@ -1142,21 +1142,51 @@ class TestPropertySheet:
       """
       if not run: return
       from AccessControl import getSecurityManager
-      user = getSecurityManager().getUser()
       portal = self.getPortal()
+
+      # Make a plain user.
+      uf = portal.acl_users
+      uf._doAddUser('yo', '', [], [])
+      user = uf.getUserById('yo').__of__(uf)
+
       person_module = self.getPersonModule()
       person = person_module.newContent(portal_type='Person', title='foo')
       person.manage_permission('View', roles=['Auditor'], acquire=0)
 
+      # The user may not view the person object.
       get_transaction().commit() ; self.tic()
       self.assertTrue('Auditor' not in user.getRolesInContext(person))
-      self.assertEquals(len(person_module.searchFolder()), 0)
+      self.logout()
+      newSecurityManager(None, user)
+      self.assertEquals(len(person_module.searchFolder(id=person.getId())), 0)
+      self.logout()
+      self.login()
 
+      # Now allow him to view it.
       person_module.manage_addLocalRoles(user.getId(), ['Auditor'])
 
+      # This might look odd (indeed it is), but the catalog should not
+      # reflect the security change, until the affected objects are
+      # reindexed, and Jean-Paul believes that this should not be
+      # automatic.
       get_transaction().commit() ; self.tic()
       self.assertTrue('Auditor' in user.getRolesInContext(person))
-      self.assertEquals(len(person_module.searchFolder()), 1)
+      self.logout()
+      newSecurityManager(None, user)
+      self.assertEquals(len(person_module.searchFolder(id=person.getId())), 0)
+      self.logout()
+      self.login()
+
+      # Now invoke the reindexing explicitly, so the catalog should be
+      # synchronized.
+      person_module.recursiveReindexObject()
+      get_transaction().commit() ; self.tic()
+      self.assertTrue('Auditor' in user.getRolesInContext(person))
+      self.logout()
+      newSecurityManager(None, user)
+      self.assertEquals(len(person_module.searchFolder(id=person.getId())), 1)
+      self.logout()
+      self.login()
 
     def test_23_titleIsNotDefinedByDefault(self, quiet=quiet, run=run_all_test):
       """
