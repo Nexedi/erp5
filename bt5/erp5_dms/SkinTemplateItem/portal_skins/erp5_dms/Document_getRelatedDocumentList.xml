@@ -68,14 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX results should be cached as volatile attributes\n
-\n
-"""\n
+            <value> <string>"""\n
 Get a list of related documents; wiki relations use API methods, explicit relations\n
 (predecessor etc) get a list of related docs and return the newest (default)\n
 version of each of them.\n
 \'all\' returns a combined set of all related docs.\n
+\n
 """\n
+# XXX results should be cached as volatile attributes\n
 # XXX-JPS should probably be moved to core API of document\n
 # with dynamic method selection\n
 # getWikiSuccessorValueList = get + upperCase(wiki_successor) + ValueList\n

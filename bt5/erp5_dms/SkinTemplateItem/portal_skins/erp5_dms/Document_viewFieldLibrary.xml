@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>OOoDocument_getSnapshot</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -67,7 +67,12 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>left (Document Reference)</string>
+                <string>right (Publication Information)</string>
                 <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -76,9 +81,65 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list>
+                        <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_contributor_title_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left (Document Reference)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_short_title</string>
+                        <string>my_reference</string>
+                        <string>my_version</string>
+                        <string>my_language</string>
+                        <string>my_int_index</string>
+                        <string>my_file</string>
+                        <string>my_source_reference</string>
+                        <string>my_translated_portal_type</string>
+                        <string>my_translated_external_processing_state_title</string>
+                        <string>my_revision</string>
+                        <string>my_follow_up_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>my_subject_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right (Publication Information)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_classification</string>
+                        <string>my_group_list</string>
+                        <string>my_site_list</string>
+                        <string>my_function_list</string>
+                        <string>my_publication_section_list</string>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -86,7 +147,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_viewSnapshotDialog</string> </value>
+            <value> <string>Document_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -94,11 +155,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>OOoDocument_getSnapshotDialog</string> </value>
+            <value> <string>Base_viewClassification</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -110,7 +171,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Download Document Snapshot</string> </value>
+            <value> <string>Document</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
