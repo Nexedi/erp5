@@ -44,7 +44,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.ImmobilisableItem import ImmobilisationValidityError
 
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 
 NEGLIGEABLE_PRICE = 10e-8
@@ -78,11 +78,22 @@ class ImmobilisationDelivery(XMLObject):
                       )
 
     def validate_immobilisation(self, **kw):
-      pass
+      LOG("ImmobilisationDelivery", WARNING, 
+          "validate_immobilisation is deprecated. " \
+          "Use validateImmobilisation instead")
+      self.validateImmobilisation()
+
     def invalidate_immobilisation(self, **kw):
-      pass
+      LOG("ImmobilisationDelivery", WARNING, 
+          "invalidate_immobilisation is deprecated. " \
+          "Use invalidateImmobilisation instead")
+      self.invalidateImmobilisation()
+
     def calculate_immobilisation_validity(self, **kw):
-      pass
+      LOG("ImmobilisationDelivery", WARNING, 
+          "calculate_immobilisation_validity is deprecated. " \
+          "Use calculateImmobilisationValidity instead")
+      self.calculateImmobilisationValidity()
     
     validate_immobilisation = WorkflowMethod(validate_immobilisation)
     invalidate_immobilisation = WorkflowMethod(invalidate_immobilisation)
