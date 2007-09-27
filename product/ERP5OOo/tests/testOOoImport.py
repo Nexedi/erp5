@@ -27,31 +27,15 @@
 ##############################################################################
 
 
+import unittest
 import os
 import sys
-import cStringIO
-from xml.dom.minidom import parseString
-import zipfile
-from cgi import FieldStorage
 from zLOG import LOG
-from zExceptions import BadRequest
 from Testing import ZopeTestCase
-from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.Cache import clearCache
-from Products.ERP5OOo.Document.OOoDocument import ConversionError
 
-
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 ooodoc_coordinates = ('127.0.0.1', 8008)
 
@@ -116,21 +100,18 @@ class TestOOoImport(ERP5TypeTestCase):
     """
     return ('erp5_base',)
 
-  def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def afterSetUp(self):
     """
       Initialize the ERP5 site.
     """
     self.login()
-    self.datetime          = DateTime()
-    self.portal            = self.getPortal()
     self.portal_categories = self.getCategoryTool()
-    self.portal_catalog    = self.getCatalogTool()
 
   ##################################
   ##  Useful methods
   ##################################
 
-  def login(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def login(self):
     """
       Create a new manager user and login.
     """
@@ -202,11 +183,7 @@ class TestOOoImport(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestOOoImport))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestOOoImport))
+  return suite
