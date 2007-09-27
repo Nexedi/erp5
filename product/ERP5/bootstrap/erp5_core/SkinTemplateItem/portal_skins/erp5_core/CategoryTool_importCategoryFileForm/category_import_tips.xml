@@ -217,7 +217,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<ul><li>An OpenOffice file is available at <a href="portal_skins/erp5_core/erp5_import_category_tree_examples.sxc">/portal_skins/erp5_core/erp5_import_category_tree_examples.sxc</a> . It contain different examples of how to input a tree of categories. Each sheet title will be used as Base Category.</li><li>Rename every tab of the spreadsheet with the ID of the corrsponding base category ID (ex. group).</li><li>Do not merge cells in the uploaded spreadsheet: this will confuse the parser and produce unpredictible results.</li><li><b>Do not use category IDs which are defined in Property Sheets as property</b>. ERP5 is not able to make the difference between a subobject ID and a property ID.</li><li>Even if this tool was designed to import OpenOffice v1.x documents, OASIS OpenDocument files seems to work as well.</li><li>This tool is not intrusive: if an existing category tree is found, it will update each category but will not try to remove any one.</li></ul>
+<ul><li>An OpenOffice file is available at <a href="portal_skins/erp5_core/erp5_import_category_tree_examples.sxc">/portal_skins/erp5_core/erp5_import_category_tree_examples.sxc</a> . It contain different examples of how to input a tree of categories. Each sheet title will be used as Base Category.</li><li>Rename every tab of the spreadsheet with the ID of the corresponding base category ID (ex. group).</li><li>Do not merge cells in the uploaded spreadsheet: this will confuse the parser and produce unpredictible results.</li><li><b>Do not use category IDs which are defined in Property Sheets as property</b>. ERP5 is not able to make the difference between a subobject ID and a property ID.</li><li>Even if this tool was designed to import OpenOffice v1.x documents, OASIS OpenDocument files seems to work as well.</li><li>This tool is not intrusive: if an existing category tree is found, it will update each category but will not try to remove any one.</li></ul>
 
 ]]></string> </value>
                 </item>
@@ -264,6 +264,10 @@
                 <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string>text_area</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

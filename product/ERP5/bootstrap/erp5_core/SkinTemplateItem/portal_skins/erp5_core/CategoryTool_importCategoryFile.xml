@@ -299,7 +299,6 @@ for table_name in spreadsheets.keys():\n
           if isValidID(category_id):\n
             base_path_obj.newContent( portal_type       = category_type\n
                                     , id                = category_id\n
-                                    , immediate_reindex = 1\n
                                     )\n
             detailed_report_append(\'Created new %s with  URL %s\' % (category_type,\n
                                   base_path_obj[category_id].getRelativeUrl()))\n
@@ -376,7 +375,7 @@ if detailed_report:\n
 # Import is a success, go back to the portal_categories tool\n
 return context.REQUEST.RESPONSE.redirect(\n
     # TODO translate\n
-  "%s/view?portal_status_message=%s+categories+found+in+%s:+%s+created,+%s+updated,+%s+untouched,+%s+invalid+ID.+%s+existing+categories:+%s+deleted,+%skept."\n
+  "%s/view?portal_status_message=%s+categories+found+in+%s:+%s+created,+%s+updated,+%s+untouched,+%s+invalid+ID.+%s+existing+categories:+%s+deleted,+%s+kept."\n
   % ( context.portal_categories.absolute_url()\n
     , total_category_counter\n
     , filename\n
