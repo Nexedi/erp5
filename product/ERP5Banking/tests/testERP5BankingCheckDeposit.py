@@ -220,7 +220,6 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
         quantity_unit_value=self.unit)
     self.assertNotEqual(self.check_operation_line_1, None)
     self.assertEqual(len(self.check_deposit.objectIds()), 1)
-    import pdb; pdb.set_trace()
 
 
   def stepAddWrongCheckOperationLine(self, sequence=None, sequence_list=None, **kwd):
