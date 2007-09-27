@@ -236,6 +236,10 @@ class OOoParser:
     self.ns = {}
     self.filename = None
 
+  security.declareProtected(Permissions.ImportExportObjects, 'openFromString')
+  def openFromString(self, text_content):
+    return self.openFile(StringIO(text_content))
+
   security.declareProtected(Permissions.ImportExportObjects, 'openFile')
   def openFile(self, file_descriptor):
     """

@@ -36,6 +36,7 @@ from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5OOo.OOoUtils import OOoParser
 
 ooodoc_coordinates = ('127.0.0.1', 8008)
 
@@ -196,6 +197,28 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertEquals('A Country', france.getDescription())
     self.assertEquals('FR', france.getCodification())
     self.assertEquals(1, france.getIntIndex())
+
+
+  # simple OOoParser tests
+  def test_getSpreadSheetMapping(self):
+    parser = OOoParser()
+    parser.openFile(open(makeFilePath('import_data_list.ods'), 'rb'))
+    mapping = parser.getSpreadsheetsMapping()
+    self.assertEquals(['Person'], mapping.keys())
+    person_mapping = mapping['Person']
+    self.assertTrue(isinstance(person_mapping, list))
+    self.assertTrue(102, len(person_mapping))
+    self.assertEquals(person_mapping[0],
+       ['Title', 'First Name', 'Last Name', 'Default Email Text'])
+    self.assertEquals(person_mapping[1],
+       ['John Doe 0', 'John', 'Doe 0', 'john.doe0@foo.com'])
+  
+  def test_openFromString(self):
+    parser = OOoParser()
+    parser.openFromString(
+        open(makeFilePath('import_data_list.ods'), 'rb').read())
+    mapping = parser.getSpreadsheetsMapping()
+    self.assertEquals(['Person'], mapping.keys())
 
 
 def test_suite():
