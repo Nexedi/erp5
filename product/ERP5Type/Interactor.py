@@ -210,5 +210,5 @@ class InteractorOfInteractor(Interactor):
 #interactor_of_interactor = InteractorOfInteractor(test)
 #interactor_of_interactor.install()
 # This is used in ERP5Form and install method is called in ERP5Form
+# Don't install this interactor here.
 fielf_value_interactor = FieldValueInteractor()
-fielf_value_interactor.install()
