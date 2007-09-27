@@ -178,7 +178,6 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
     self.internal_money_deposit = self.internal_money_deposit_module.newContent(
                                     id='internal_money_deposit', 
                                     portal_type='Internal Money Deposit', 
-                                    destination_value=self.bi_counter,
                                     resource_value = self.currency_1,
                                     source_total_asset_price=20000.0,
                                     grouping_reference="lettering",
@@ -264,7 +263,8 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
     """
     self.internal_money_deposit_module.deleteContent('internal_money_deposit_1')
 
-
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.internal_money_deposit)
 
   ##################################
   ##  Tests
@@ -280,6 +280,7 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateInternalMoneyDeposit ' \
                     + 'InputCashDetails  Tic ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverInternalMoneyDeposit Tic ' \
                     + 'CheckFinalInventory'
     sequence_list.addSequenceString(sequence_string)

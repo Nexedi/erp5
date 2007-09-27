@@ -492,6 +492,9 @@ class TestERP5BankingCheckPaymentMixin:
         wf_id='check_workflow')
     self.assertEquals(check.getSimulationState(), 'confirmed')
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.check_payment)
+
 class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
                                   TestERP5BankingMixin, ERP5TypeTestCase):
 
@@ -508,11 +511,14 @@ class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                       'CreateCheckPayment Tic ' \
+                      'Tic CheckWorklist ' \
                       'CheckConsistency Tic ' \
+                      'Tic CheckWorklist ' \
                       'stepValidateAnotherCheckPaymentWorks Tic ' \
                       'SendToCounter ' \
                       'stepValidateAnotherCheckPaymentFails Tic ' \
                       'CheckConfirmedInventory ' \
+                      'Tic CheckWorklist ' \
                       'stepValidateAnotherCheckPaymentFailsAgain Tic ' \
                       'InputCashDetails Tic ' \
                       'ResetInventory Tic ' \

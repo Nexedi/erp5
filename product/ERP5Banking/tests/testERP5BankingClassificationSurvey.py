@@ -510,6 +510,9 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
               'classification_survey_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.classification_survey)
+
   ##################################
   ##  Tests
   ##################################
@@ -526,6 +529,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
                     + 'CreateTwoValidIncomingLine CheckSubTotal ' \
                     + 'CreateValidOutgoingLineForInternalBanknote ' \
                     + 'CreateValidOutgoingLineForExternalBanknote ' \
+                    + 'Tic CheckWorklist ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckSource CheckDestination ' \
                     + 'ConfirmClassificationSurvey Tic ' \
@@ -533,6 +537,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
                     + 'ResetSourceInventory Tic ' \
                     + 'DeliverClassificationSurveyFails Tic ' \
                     + 'DeleteResetInventory Tic ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverClassificationSurvey Tic ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)

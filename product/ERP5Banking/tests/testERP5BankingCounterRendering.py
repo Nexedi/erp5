@@ -498,6 +498,8 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
               'counter_rendering_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.counter_rendering)
 
   ##################################
   ##  Tests
@@ -519,12 +521,14 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateInvalidLine ' \
                     + 'TryConfirmCounterRenderingWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
+                    + 'Tic CheckWorklist ' \
                     + 'ConfirmCounterRendering ' \
                     + 'Tic CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'ResetInventory Tic ' \
                     + 'DeliverFails ' \
                     + 'DeleteResetInventory Tic ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverCounterRendering ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)

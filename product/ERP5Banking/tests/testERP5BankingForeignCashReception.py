@@ -357,6 +357,9 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.reception.getRelativeUrl(), resource = self.usd_billet_20.getRelativeUrl()), 5.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.reception.getRelativeUrl(), resource = self.usd_billet_20.getRelativeUrl()), 5.0)
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.foreign_cash_reception)
+
   ##################################
   ##  Tests
   ##################################
@@ -375,8 +378,10 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase
                     + 'CreateValidLine2 Tic ' \
                     + 'CheckValidLine1 ' \
                     + 'CheckValidLine2 ' \
+                    + 'Tic CheckWorklist ' \
                     + 'ConfirmForeignCashReception Tic ' \
                     + 'CheckConfirmedInventory ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverForeignCashReception Tic ' \
                     + 'CheckFinalInventory'
     sequence_list.addSequenceString(sequence_string)

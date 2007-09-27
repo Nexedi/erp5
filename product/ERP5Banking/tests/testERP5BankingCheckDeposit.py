@@ -220,6 +220,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
         quantity_unit_value=self.unit)
     self.assertNotEqual(self.check_operation_line_1, None)
     self.assertEqual(len(self.check_deposit.objectIds()), 1)
+    import pdb; pdb.set_trace()
 
 
   def stepAddWrongCheckOperationLine(self, sequence=None, sequence_list=None, **kwd):
@@ -319,6 +320,9 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     if hasattr(self, 'check_deposit'):
       self.check_deposit_module.manage_delObjects([self.check_deposit.getId(),])
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.check_deposit)
+
   def test_01_ERP5BankingCheckDeposit(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
     Define the sequence of step that will be play
@@ -328,8 +332,12 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     # define the sequence
     sequence_string1 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                        + 'CreateCheckDepositOperation Tic ' \
+                       + 'CheckWorklist Tic ' \
                        + 'AddCheckOperationLine Tic ' \
-                       + 'PlanCheckDepositOperation Tic OrderCheckDepositOperation ' \
+                       + 'PlanCheckDepositOperation Tic ' \
+                       + 'CheckWorklist Tic ' \
+                       + 'OrderCheckDepositOperation Tic ' \
+                       + 'CheckWorklist Tic ' \
                        + 'Tic DeliverCheckDepositOperation Tic ' \
                        + 'CheckBankAccountInventoryAfterCheckDepositDelivered'
     # one to test reject

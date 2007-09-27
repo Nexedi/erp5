@@ -433,6 +433,9 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
               'destruction_survey_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
+  def stepCheckWorklist(self, **kw):
+    self.checkWorklist(self.destruction_survey)
+
   ##################################
   ##  Tests
   ##################################
@@ -452,10 +455,12 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateInvalidLine ' \
                     + 'TryConfirmDestructionSurveyWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
+                    + 'Tic CheckWorklist ' \
                     + 'ConfirmDestructionSurvey ' \
                     + 'ResetSourceInventory Tic ' \
                     + 'DeliverDestructionSurveyFails Tic ' \
                     + 'DeleteResetInventory Tic ' \
+                    + 'Tic CheckWorklist ' \
                     + 'DeliverDestructionSurvey ' \
                     + 'CheckSourceFinal CheckDestinationFinal '
     sequence_list.addSequenceString(sequence_string)
