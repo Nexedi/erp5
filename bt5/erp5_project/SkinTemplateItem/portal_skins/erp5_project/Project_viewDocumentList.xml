@@ -103,7 +103,6 @@
                         <string>my_reference</string>
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
-                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -115,6 +114,7 @@
                         <string>my_stop_date</string>
                         <string>my_requirement_title</string>
                         <string>my_source_title_list</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
