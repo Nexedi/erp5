@@ -31,7 +31,6 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
 from Products.ERP5Type.Log import log as unrestrictedLog
-
 import ERP5Defaults
 
 from zLOG import LOG, INFO
@@ -1021,6 +1020,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                                        id=id,
                                        ) # **kw) removed due to CMF bug
     new_instance = self[id]
+
     if kw is not None:
       new_instance._edit(force_update=1, **kw)
     if immediate_reindex:
@@ -1278,6 +1278,14 @@ class ERP5Generator(PortalGenerator):
     # Add an error_log
     if 'error_log' not in p.objectIds():
       manage_addErrorLog(p)
+    
+    # Add 'mimetypes_registry' and 'portal_transforms' (order of adding is important)
+    addTool = p.manage_addProduct['MimetypesRegistry'].manage_addTool
+    if not p.hasObject('mimetypes_registry'):
+      addTool('MimeTypes Registry', None)
+    addTool = p.manage_addProduct['PortalTransforms'].manage_addTool
+    if not p.hasObject('portal_transforms'):
+      addTool('Portal Transforms', None)
 
   def setupMembersFolder(self, p):
     """
@@ -1481,7 +1489,6 @@ class ERP5Generator(PortalGenerator):
 
     if 'Member' not in getattr(p, '__ac_roles__', ()):
       self.setupRoles(p)
-
     if not update:
       self.setupPermissions(p)
       self.setupDefaultSkins(p)
