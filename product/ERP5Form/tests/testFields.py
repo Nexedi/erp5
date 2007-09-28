@@ -53,11 +53,14 @@ ZopeTestCase.installProduct('ERP5Form')
 from Products.Formulator.StandardFields import FloatField
 from Products.Formulator.StandardFields import StringField
 from Products.Formulator.MethodField import Method
+from Products.Formulator.TALESField import TALESMethod
 
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.Form import purgeFieldValueCache
 from Products.ERP5Form.Form import getFieldValue
+from Products.ERP5Form import Form
+from Products.ERP5Form import ProxyField
 
 
 class TestFloatField(unittest.TestCase):
@@ -256,17 +259,58 @@ class TestFieldValueCache(unittest.TestCase):
     return "Field Value Cache"
 
   def setUp(self):
-    self.form = ERP5Form('form', 'Form')
-    self.form.field = StringField('test_field')
-    self.form.field._p_oid = makeDummyOid()
+    self.root = Folder('root')
+    self.root.form = ERP5Form('form', 'Form')
+
+    form = self.root.form
+    form.field = StringField('test_field')
+    form.field._p_oid = makeDummyOid()
     # method field
-    self.form.field.values['external_validator'] = Method('this_is_a_method')
+    form.field.values['external_validator'] = Method('this_is_a_method')
+    # on-memory field (not in zodb)
+    form.on_memory_field = StringField('test_on_memory_field')
+    form.on_memory_field._p_oid = None
+    # proxy field
+    form.proxy_field = ProxyField.ProxyField('test_proxy_field')
+    form.proxy_field._p_oid = makeDummyOid()
+    form.proxy_field.values['form_id'] = 'form'
+    form.proxy_field.values['field_id'] = 'field'
+    # proxy field with tales
+    form.proxy_field_tales = ProxyField.ProxyField('test_proxy_field')
+    form.proxy_field_tales._p_oid = makeDummyOid()
+    form.proxy_field_tales.tales['form_id'] = TALESMethod('string:form')
+    form.proxy_field_tales.tales['field_id'] = TALESMethod('string:field')
 
   def test_method_field(self):
-    field = self.form.field
+    field = self.root.form.field
     value = getFieldValue(field, field, 'external_validator')
     self.assertEqual(False, value.value is field.values['external_validator'])
     self.assertEqual(True, type(value.value) is Method)
+
+  def test_using_cache_or_not(self):
+    # check standard field in zodb
+    # make sure that this will use cache.
+    cache_size = len(Form._field_value_cache)
+    self.root.form.field.get_value('title')
+    self.assertEqual(True, cache_size < len(Form._field_value_cache))
+
+    # check on-memory field
+    # make sure that this will not use cache.
+    cache_size = len(Form._field_value_cache)
+    self.root.form.on_memory_field.get_value('title')
+    self.assertEqual(True, cache_size == len(Form._field_value_cache))
+
+    # check proxy field
+    # make sure that this will use cache.
+    cache_size = len(ProxyField._field_value_cache)
+    self.root.form.proxy_field.get_value('title')
+    self.assertEqual(True, cache_size < len(ProxyField._field_value_cache))
+
+    # check proxy field with tales
+    # make sure that this will not use cache.
+    cache_size = len(ProxyField._field_value_cache)
+    self.root.form.proxy_field_tales.get_value('title')
+    self.assertEqual(True, cache_size == len(ProxyField._field_value_cache))
 
 
 def makeDummyOid():
@@ -281,4 +325,3 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestProxyField))
   suite.addTest(unittest.makeSuite(TestFieldValueCache))
   return suite
-
