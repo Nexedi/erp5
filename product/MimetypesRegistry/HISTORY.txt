@@ -1,0 +1,221 @@
+1.4.0-final - 2006-06-16
+========================
+
+  * Use zope.contenttype in favor of zope.app.content_types if available.
+    [hannosch]
+
+1.4.0-beta2 - 2006-05-12
+========================
+
+  * Use zope.app.content_types in favor of OFS.content_types if available.
+    [stefan]
+
+  * Spring-cleaning of tests infrastructure.
+    [hannosch]
+
+1.4.0-beta1 - 2006-03-26
+========================
+
+  * fixed Plone #5027: MimeTypeRegistry.classify doesn't handle 
+    "no mimetype" gracefully. Returns 'None' now.
+    [jensens]
+
+  * fixed http://dev.plone.org/archetypes/ticket/622
+    [jensens] 
+
+1.4.0-alpha02 - 2006-02-23
+==========================
+
+  * ensured that the key gotten back from windows_mimetypes.py existed
+    mark says the best way is to examine each key to ensure its valid but
+    would be slower.
+    [runyaga]
+
+  * removed odd archetypes 1.3 style version checking
+    [jensens]
+
+  * Removed BBB code for CMFCorePermissions import location.
+    [hannosch]
+
+  * removed deprecation warning for ToolInit.
+    [jensens]
+
+  * skip backward compatibility to the times where MTR where part of 
+    PortalTransforms.
+    [jensens]
+
+1.3.8-final02 - 2006-01-15
+==========================
+
+  * nothing - the odd version checking needs a version change to stick to
+    Archetypes version again.
+    [yenzenz]
+
+1.3.8-RC1 - 2005-12-29
+======================
+
+  * Split yet another part of register() into a separate
+    method. Cleanup smi_mimetypes initialize a little bit to to use
+    the new method when adding new mimetypes to a already-registered
+    entry.
+    [dreamcatcher]
+
+  * Include aliases in the list of mimetypes for a entry. Based on
+    patch by Jean Jordaan
+    [dreamcatcher]
+
+  * Use a SAX-based parser instead of minidom to improve Zope startup
+    time (by 17 seconds on my Pismo) and memory footprint.
+    [dreamcatcher]
+
+  * Augment known mimetypes with Windows mimetypes, if available.
+    [dreamcatcher]
+
+1.3.7-final01 - 2005-10-11
+==========================
+
+  * For the sake of sanity, include a 'mime.types' with
+    MimetypesRegistry to minimize the platform-specific differences in
+    mime detection when the python 'mimetypes' module is involved.
+    [dreamcatcher]
+
+  * globs from freedesktop.org shared-mime-info were incorrectly
+    mapped to 'extensions' and never really worked because the code
+    tried to strip a leading dot, where the globs normally had '*.'.
+
+    The side-effect of this is that in *nix, the Python 'mimetypes'
+    module would happily read '/etc/mime.types' and gracefully work
+    (/etc/mime.types has most of the extensions of shared-mime-info
+    but a few), where on Windows it would fail to detect mimetypes by
+    extension.
+    [dreamcatcher]
+
+  * Added support for real globs, using fnmatch.translate and
+    re.compile and a migration function that will be run from Plone
+    2.1.1 migration, with some tests specific for globs read from
+    shared-mime-info.
+    [dreamcatcher]
+
+1.3.6-final01 - 2005-08-30
+==========================
+
+  * after one night sleeping over it I removed the yesterday added method.
+    therefore I added according to some heuristics and OOo-Documentation
+    some magic bytes to magic.py and made better tests.
+    [yenzenz]
+
+  * added a method to detect mimetypes of zipped files,
+    here specialy for OOo now all Openofice files and zip
+    files are detected properly.  my simple tests are working:
+    a OOo-Writer and a simpe zipfile are detected.
+    [yenzenz]
+
+  * updated freedesktop.org.xml file to latest CVS version rev 1.57 from
+    http://cvs.freedesktop.org/mime/shared-mime-info/freedesktop.org.xml
+    [yenzenz]
+
+1.3.5-final03 - 2005-08-07
+==========================
+
+  * nothing - the odd version checking needs a version change to stick to
+    Archetypes version again.
+    [yenzenz]
+
+1.3.5-final02 - 2005-08-01
+==========================
+
+ * nothing again, need to stick to Archetypes version
+   [yenzenz]
+
+
+1.3.5-final - 2005-07-17
+========================
+
+  * Added Five/Zope3 interface bridges and implements
+    [tiran]
+
+1.3.4-final - 2005-07-06
+========================
+
+  * added icons for openoffice.org files
+    [yenzenz]
+
+1.3.3-final06 - 2005-05-20
+==========================
+
+  * nothing (I hate to write this. But the odd version checking needs it).
+    [yenzenz]
+
+1.3.3-final-02 - 2005-03-25
+===========================
+
+  * nothing
+
+1.3.3-final - 2005-03-05
+========================
+
+ * More a workaround than a fix for [ 1056252 ] Content type algorithm
+   can be confused.
+   [tiran]
+
+ * workaround for [ 1068001 ] BaseUnit Encoding Error: macintosh
+   [yenzenz]
+
+ * In the case all else fails, try to resort to guess_content_type so
+   that at least we don't get 'text/plain' when the file is in fact a
+   binary file.
+   [dreamcatcher]
+
+1.3.2-5 - 2004-09-30
+====================
+
+ * nothing
+
+1.3.2-4 - 2004-09-30
+====================
+
+ * nothing
+
+1.3.2-3 - 2004-09-25
+====================
+
+ * nothing
+
+1.3.2-2 - 2004-09-17
+====================
+
+ * nothing
+
+1.3.2-1 - 2004-09-04
+====================
+
+ * Cleaned up major parts of PT by removing the python only implementation which
+   was broken anyway
+   [tiran]
+
+1.3.1-1 - 2004-08-16
+====================
+
+ * Added text/x-html-safe mime type for new transformation
+   [tiran]
+
+ * Don't return acquisition wrapped mimetype items beause they may lead to
+   memory leaks.
+   [tiran]
+
+1.3.0-3 - 2004-08-06
+====================
+
+ * Added text/wiki mime type
+   [tiran]
+
+ * Don't log redefine warning if the currrent and the new object are equal
+   [tiran]
+
+ * initialize() MTR on __setstate__ aka when the MTR is loaded from ZODB.
+   [tiran]
+
+1.3.0-2 - 2004-07-29
+====================
+
+ * Nothing changed

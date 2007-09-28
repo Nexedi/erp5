@@ -1,0 +1,10 @@
+<h1 tal:replace="structure here/manage_page_header|nothing">Header</h1>
+<h2 tal:define="manage_tabs_message options/manage_tabs_message | nothing"
+    tal:replace="structure here/manage_tabs">Tabs</h2>
+  
+
+  <p tal:define="dummy here/reload">Transformation reloaded <span
+  tal:condition="exists:here/module" tal:omit-tag="">(module <b tal:content="here/module"/>)</span>
+  </p>
+    
+<tal:footer tal:replace="structure here/manage_page_footer|nothing">footer</tal:footer>

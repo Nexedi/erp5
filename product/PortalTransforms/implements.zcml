@@ -1,0 +1,47 @@
+<configure
+    xmlns="http://namespaces.zope.org/five"
+    >
+
+  <implements
+      class=".chain.chain"
+      interface=".z3.interfaces.IChain"
+      />   
+
+  <implements
+      class=".chain.chain"
+      interface=".z3.interfaces.ITransform"
+      />   
+
+  <implements
+      class=".data.datastream"
+      interface=".z3.interfaces.IDataStream"
+      />   
+
+  <implements
+      class=".Transform.Transform"
+      interface=".z3.interfaces.ITransform"
+      />   
+
+  <implements
+      class=".TransformEngine.TransformTool"
+      interface=".z3.interfaces.IEngine"
+      />   
+
+  <implements
+      class=".libtransforms.commandtransform.commandtransform"
+      interface=".z3.interfaces.ITransform"
+      />   
+
+  <implements
+      class=".libtransforms.commandtransform.popentransform"
+      interface=".z3.interfaces.ITransform"
+      />  
+
+  <implements
+      class=".libtransforms.retransform.retransform"
+      interface=".z3.interfaces.ITransform"
+      />   
+
+  <!-- TODO: more -->
+
+</configure>

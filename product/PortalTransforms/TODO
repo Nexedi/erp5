@@ -1,0 +1,10 @@
+TODO list for the Portal Transforms product
+-------------------------------------------
+
+* enhance unsafe_transforms/build_transforms to provide a bunch of
+  transformations using command/xml with various configuration
+
+* iencoding_classifier ?
+
+* make more transforms :)
+

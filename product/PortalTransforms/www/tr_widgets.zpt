@@ -1,0 +1,45 @@
+<div metal:define-macro="int_widget">
+  <input tal:attributes="name param;
+			 value python:here.get_parameter_value(param);"/>
+</div>
+
+<div metal:define-macro="string_widget">
+  <input size="80"
+         tal:attributes="name param;
+			 value python:here.get_parameter_value(param);"/>
+</div>
+
+<div metal:define-macro="list_widget">
+  <textarea tal:attributes="name string:${param}:lines;"
+            tal:content="python: '\n'.join(here.get_parameter_value(param))"/>
+</div>
+
+<div metal:define-macro="dict_widget">
+              <table tal:define="titles python:meta[3];">
+                <tr> 
+                  <th tal:content="python:titles[0]"/>
+                  <th tal:content="python:titles[1]"/>
+                </tr><tr tal:define="values python:here.get_parameter_value(param).items();
+                                     dummy python:values.sort()"
+                         tal:repeat="key_val values">
+               
+                   <td><input type='text' size="30"
+                        tal:attributes="name python:param + '_key';
+                                        value python:key_val[0]"/></td>
+                   <td><input type='text' size="50"
+                        tal:attributes="name python:param + '_value';
+                                        value python:key_val[1]"/></td>
+                </tr><tr>
+                   <td><input type='text' size="30"
+                        tal:attributes="name python:param + '_key'"/></td>
+                   <td><input type='text' size="50" 
+                        tal:attributes="name python:param + '_value'"/></td>
+                </tr><tr>
+                   <td><input type='text' size="30"
+                        tal:attributes="name python:param + '_key'"/></td>
+                   <td><input type='text' size="50"
+                        tal:attributes="name python:param + '_value'"/></td>
+                </tr>
+
+              </table>
+</div>

@@ -1,0 +1,60 @@
+<h1 tal:replace="structure here/manage_page_header|nothing">Header</h1>
+<h2 tal:define="manage_tabs_message options/manage_tabs_message | nothing"
+    tal:replace="structure here/manage_tabs">Tabs</h2>
+
+<tal:block tal:define="mimetypes here/list_mimetypes">
+
+  <div class="form-title">
+    Registered MIME types (<span tal:replace="python:len(mimetypes)"/>).
+  </div>
+
+  <div align="right">
+    <form method="POST" action="manage_addMimeTypeForm">
+      <input type="submit" value="Add a new MIME type"/>
+    </form>
+  </div>
+
+  <div tal:define="status python:request.get('portal_status', '')"
+       tal:condition="status" class="error"
+       tal:content="status" />
+
+  <form method="POST" action="manage_delObjects"
+        tal:define="dummy mimetypes/sort">
+
+    <table width="90%">
+      <tr class="form-label">
+        <th colspan="3">Name</th>
+        <th>Mime-types</th>
+        <th>Extensions</th>
+        <th>Globs</th>
+        <th>Binary?</th>
+      </tr>
+
+      <tr class="form-element" tal:repeat="mt_id mimetypes">
+        <tal:block tal:define="mt python:here.lookup(mt_id)[0];">
+          <td>
+            <input type="checkbox" name="ids:list"
+                   tal:attributes="value mt/normalized"/>
+          </td>
+          <td>
+            <img tal:attributes="src string:${here/portal_url}/${mt/icon_path}"/>
+          </td>
+          <td>
+            <a tal:content="mt/name"
+               tal:attributes="href string:${here/absolute_url}/manage_editMimeTypeForm?mt_name=${mt/normalized}"/>
+          </td>
+          <td tal:content="python:', '.join(mt.mimetypes)"/>
+          <td tal:content="python:', '.join(mt.extensions)"/>
+          <td tal:content="python:', '.join(mt.globs)"/>
+          <td tal:content="python: mt.binary and 'yes' or 'no'"/>
+        </tal:block>
+      </tr>
+    </table>
+
+    <input type="submit" value="Delete Selected Items" />
+
+  </form>
+
+</tal:block>
+
+<tal:footer tal:replace="structure here/manage_page_footer|nothing">footer</tal:footer>

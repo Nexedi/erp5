@@ -1,0 +1,5 @@
+DONT USE ChangeLog use HISTORY.txt instead.
+
+ 2004-07-24  Christian Heimes <heimes@faho.rwth-aachen.de>
+
+    * Changed version to stick to Archetypes version.
