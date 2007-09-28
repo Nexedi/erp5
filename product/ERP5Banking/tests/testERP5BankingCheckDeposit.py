@@ -217,6 +217,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
         source_payment_value = self.bank_account_2,
         price=2000,
         quantity=1,
+        description='aa',
         quantity_unit_value=self.unit)
     self.assertNotEqual(self.check_operation_line_1, None)
     self.assertEqual(len(self.check_deposit.objectIds()), 1)
@@ -235,6 +236,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
           source_payment_value = self.bank_account_2,
           price=2000,
           quantity=1,
+          description='aa',
           quantity_unit_value=self.unit)
     self.assertNotEqual(self.check_operation_line_1, None)
     self.assertEqual(len(self.check_deposit.objectIds()), 1)
