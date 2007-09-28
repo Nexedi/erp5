@@ -36,6 +36,8 @@ from Products.ERP5.Document.Movement import Movement
 
 from zLOG import LOG
 
+from Acquisition import aq_base
+
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready
 
 parent_to_movement_simulation_state = {
@@ -131,7 +133,7 @@ class SimulationMovement(Movement):
     """
       Returns the current state in causality
     """
-    return getattr(self, 'causality_state', 'solved')
+    return getattr(aq_base(self), 'causality_state', 'solved')
 
   security.declareProtected( Permissions.ModifyPortalContent,
                              'setCausalityState')
