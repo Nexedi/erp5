@@ -1,3 +1,6 @@
+2007-09-28 Yusei
+* Add Web Message portal type for representing online forum posting or instant message.
+
 2007-09-14 Yusei
 * Fix to use activity for updating related event local roles.
 

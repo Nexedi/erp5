@@ -39,4 +39,8 @@
   <type>Visit</type>
   <workflow>edit_workflow, event_interaction_workflow, event_workflow</workflow>
  </chain>
+ <chain>
+  <type>Web Message</type>
+  <workflow>event_interaction_workflow, event_workflow, edit_workflow</workflow>
+ </chain>
 </workflow_chain>

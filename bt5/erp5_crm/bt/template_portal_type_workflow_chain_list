@@ -28,3 +28,6 @@ Support Request | ticket_workflow
 Visit | edit_workflow
 Visit | event_interaction_workflow
 Visit | event_workflow
+Web Message | edit_workflow
+Web Message | event_interaction_workflow
+Web Message | event_workflow

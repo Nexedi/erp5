@@ -4,6 +4,7 @@
  </portal_type>
  <portal_type id="Event Module">
   <item>Visit</item>
+  <item>Web Message</item>
   <item>Letter</item>
   <item>Note</item>
   <item>Phone Call</item>
