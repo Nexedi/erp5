@@ -378,8 +378,6 @@ class MultiRelationEditor:
             relation_field_id = relation_key
             relation_item_id = item_key
             REQUEST.set(relation_item_id, ((display_text, uid),))
-            # XXX Is it useful ?
-            REQUEST.set(relation_field_id, uid)
         REQUEST.set(self.field_id, value_list) # XXX Dirty
       else:
         # Make sure no default value appears
