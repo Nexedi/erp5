@@ -1445,63 +1445,6 @@ class TestAccounting(ERP5TypeTestCase):
                    bank_account=self.bank_account,
                    account_list=self.account_list )
   
-  def stepCreateAccountingTransactionAndCheckMirrorAccount(self,
-                                          sequence, **kw):
-    """Check that mirror account are set automatically. """
-    account_list = sequence.get('account_list')
-    
-    for account in account_list :
-      self.assertNotEquals(account.getDestinationValue(), None)
-    
-    transaction = self.getAccountingModule().newContent(
-      portal_type = self.accounting_transaction_portal_type,
-      source_section_value = sequence.get('client'),
-      resource_value = sequence.get('EUR'),
-      created_by_builder = 1,
-    )
-    
-    # setting both source and destination shouldn't use mirror accounts
-    destination = sequence.get('receivable_account')
-    for account in account_list :
-      transaction_line = transaction.newContent(
-        portal_type = self.accounting_transaction_line_portal_type,
-        source = account.getRelativeUrl(),
-        destination = destination.getRelativeUrl(),
-      )
-      self.assertEquals( destination.getRelativeUrl(),
-                         transaction_line.getDestination() )
-    
-    # setting only a source must use mirror account as destination
-    for account in account_list :
-      transaction_line = transaction.newContent(
-        portal_type = self.accounting_transaction_line_portal_type,
-        source = account.getRelativeUrl(),
-      )
-      self.assertEquals( account.getDestination(),
-                         transaction_line.getDestination() )
-    
-    # editing the destination later should not change the source once
-    # the mirror account has been set.
-    account = sequence.get('receivable_account')
-    destination = sequence.get('bank_account')
-    another_destination = sequence.get('expense_account')
-    account.setDestinationValueList(account_list)
-    
-    transaction_line = transaction.newContent(
-      portal_type = self.accounting_transaction_line_portal_type,
-      source = account.getRelativeUrl(), )
-    automatically_set_destination = transaction_line.getDestinationValue()
-    # get another account.
-    if automatically_set_destination == destination :
-      forced_destination = destination
-    else :
-      forced_destination = another_destination
-    # set all other accounts as mirror account to this one.
-    forced_destination.setDestinationValueList(account_list)
-    
-    # change the destination and check the source didn't change.
-    transaction_line.edit(destination = forced_destination.getRelativeUrl())
-    self.assertEquals( transaction_line.getSourceValue(), account )
     
   def getInvoicePropertyList(self):
     """Returns the list of properties for invoices, stored as 
@@ -2284,16 +2227,6 @@ class TestAccounting(ERP5TypeTestCase):
       stepTic
       stepCheckAccountingPeriodDelivered
       stepCheckInvoicesAreDraft
-    """, quiet=quiet)
-
-  def test_MirrorAccounts(self, quiet=QUIET, run=RUN_ALL_TESTS):
-    """Tests using an account on one sides uses the mirror account
-    on the other size. """
-    if not run : return
-    self.playSequence("""
-      stepCreateEntities
-      stepCreateAccounts
-      stepCreateAccountingTransactionAndCheckMirrorAccount
     """, quiet=quiet)
 
   def test_Acquisition(self, quiet=QUIET, run=RUN_ALL_TESTS):
