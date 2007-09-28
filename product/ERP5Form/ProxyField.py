@@ -567,8 +567,9 @@ class ProxyField(ZMIField):
       field = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id), self)
       REQUEST.set('field__proxyfield_%s_%s' % (proxy_field.id, id), field)
 
-    # Don't use cache if field is not stored in zodb.
-    if self._p_oid is None:
+    # Don't use cache if field is not stored in zodb, or if target field is
+    # defined by a TALES
+    if self._p_oid is None or self.tales['field_id'] or self.tales['form_id']:
       return self._get_value(id, **kw)
 
     cache_id = ('ProxyField.get_value',

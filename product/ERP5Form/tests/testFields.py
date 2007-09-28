@@ -30,6 +30,7 @@ import unittest
 
 # Make it possible to use Globals.get_request
 class DummyRequest(dict):
+  __allow_access_to_unprotected_subobjects__ = 1
   def set(self, k, v):
     self[k] = v
 
@@ -225,6 +226,26 @@ class TestProxyField(unittest.TestCase):
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
     self.assertEquals('Base_view', proxy_field.get_value('title'))
+
+  def test_get_value_cache_on_TALES_target(self):
+    # If the proxy field defines its target using TALES, then no caching should
+    # happen.
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_title', 'Title', 'StringField')
+    other_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_other_field', 'Other', 'StringField')
+    proxy_field = self.addField(self.container.Base_view,
+                                'my_id', 'ID', 'ProxyField')
+    proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary'))
+    proxy_field.manage_tales_xmlrpc(dict(field_id='request/field_id'))
+
+    self.container.REQUEST.set('field_id', 'my_title')
+    self.assertEquals(original_field, proxy_field.getTemplateField())
+    self.assertEquals('Title', proxy_field.get_value('title'))
+
+    self.container.REQUEST.set('field_id', 'my_other_field')
+    self.assertEquals(other_field, proxy_field.getTemplateField())
+    self.assertEquals('Other', proxy_field.get_value('title'))
 
 
 class TestFieldValueCache(unittest.TestCase):
