@@ -84,7 +84,7 @@ class TestInvoice(TestPackingListMixin,
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
-    uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
+    uf._doAddUser('alex', 'alex', ['Manager', 'Assignee', 'Assignor',
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
@@ -149,8 +149,9 @@ class TestInvoice(TestPackingListMixin,
           id="EUR",
           base_unit_quantity=0.01,
           )
-    currency = currency_module.objectValues(id='EUR')[0]
-    sequence.edit(currency = currency)
+    else:
+      currency = currency_module.objectValues(id='EUR')[0]
+    sequence.edit(currency=currency)
 
   def stepSetOrderPriceCurrency(self, sequence, **kw) :
     """Set the price currency of the order.
@@ -207,10 +208,10 @@ class TestInvoice(TestPackingListMixin,
     for line_id, line_source_id, line_destination_id, line_ratio in \
         self.transaction_line_definition_list:
       line = cell.newContent(id=line_id,
-                             portal_type='Accounting Transaction Line')
-      line.setQuantity(line_ratio)
-      line.setSourceValue(account_module[line_source_id])
-      line.setDestinationValue(account_module[line_destination_id])
+          portal_type='Accounting Transaction Line', quantity=line_ratio,
+          resource_value=sequence.get('currency'),
+          source_value=account_module[line_source_id],
+          destination_value=account_module[line_destination_id])
 
   def modifyPackingListState(self, transition_name,
                              sequence,packing_list=None):
@@ -904,11 +905,135 @@ class TestInvoice(TestPackingListMixin,
       self.assertEquals(self.default_quantity + last_delta,
           line.getQuantity())
 
+  def stepAddInvoiceLines(self, sequence=None, sequence_list=[]):
+    """
+    add some invoice and accounting lines to the invoice
+    """
+    invoice = sequence.get('invoice')
+    invoice.newContent(portal_type='Invoice Line',
+        resource_value=sequence.get('resource'), quantity=3, price=555)
+    invoice.newContent(portal_type='Sale Invoice Transaction Line',
+        id ='receivable', source='account_module/customer',
+        destination='account_module/supplier', quantity=-1665)
+    invoice.newContent(portal_type='Sale Invoice Transaction Line',
+        id='income', source='account_module/sale',
+        destination='account_module/purchase', quantity=1665)
+
+  def stepAddWrongInvoiceLines(self, sequence=None, sequence_list=[]):
+    """
+    add some wrong invoice and accounting lines to the invoice
+    """
+    invoice = sequence.get('invoice')
+    invoice.newContent(portal_type='Sale Invoice Transaction Line',
+        id='bad_movement', source='account_module/sale',
+        destination='account_module/purchase', quantity=2, price=4)
+    invoice.newContent(portal_type='Sale Invoice Transaction Line',
+        id='counter_bad_movement', source='account_module/sale',
+        destination='account_module/purchase', quantity=-2, price=4)
+    for movement in invoice.getMovementList():
+      movement.edit(resource_value=sequence.get('resource'))
+
+  def stepCheckConfirmInvoiceFails(self, sequence=None, sequence_list=[]):
+    """
+    checks that it's not possible to confirm an invoice with really wrong
+    lines
+    """
+    try:
+      self.tic()
+    except RuntimeError, exc:
+      invoice = sequence.get('invoice')
+      it_builder = self.portal.portal_deliveries.sale_invoice_transaction_builder
+      # check which activities are failing
+      self.assertTrue(str(exc).startswith('tic is looping forever.'),
+          '%s does not start with "tic is looping forever."' % str(exc))
+      self.failIfDifferentSet(['/'.join(x.object_path) for x in
+          self.getActivityTool().getMessageList()], [invoice.getPath(),
+          it_builder.getPath()])
+      # flush failing activities
+      activity_tool = self.getActivityTool()
+      activity_tool.manageClearActivities(keep=0)
+    else:
+      self.fail("""Error: stepConfirmInvoice didn't fail, the builder script
+          InvoiceTransaction_postTransactionLineGeneration should have
+          complain that accounting movements use multiple resources""")
+
+  def stepCheckSimulationTrees(self, sequence=None, sequence_list=[]):
+    """
+    check that rules are created in the order we expect them
+    """
+    applied_rule_set = set()
+    invoice = sequence.get('invoice')
+    for movement in invoice.getMovementList():
+      for sm in movement.getDeliveryRelatedValueList():
+        applied_rule_set.add(sm.getRootAppliedRule())
+
+    rule_dict = {
+        'Order Rule': {
+          'movement_type_list': ['Sale Packing List Line', 'Sale Packing List Cell'],
+          'next_rule_list': ['Invoicing Rule'],
+          },
+        'Invoicing Rule': {
+          'movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
+          'next_rule_list': ['Invoice Transaction Rule'],
+          },
+        'Invoice Rule': {
+          'movement_type_list': invoice.getPortalInvoiceMovementTypeList() \
+              + invoice.getPortalAccountingMovementTypeList(),
+          'next_rule_list': ['Invoice Transaction Rule', 'Payment Rule'],
+          },
+        'Invoice Transaction Rule': {
+          'parent_movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
+          'movement_type_list': invoice.getPortalAccountingMovementTypeList(),
+          'next_rule_list': ['Payment Rule'],
+          },
+        'Payment Rule': {
+          'parent_movement_type_list': invoice.getPortalAccountingMovementTypeList(),
+          'parent_id_list': ['receivable'],
+          'next_rule_list': [],
+          },
+        }
+
+    def checkTree(rule):
+      """
+      checks the tree recursively
+      """
+      rule_type = rule.getSpecialiseValue().getPortalType()
+      rule_def = rule_dict.get(rule_type, {})
+      for k, v in rule_def.iteritems():
+        if k == 'movement_type_list':
+          for movement in rule.objectValues():
+            if movement.getDeliveryValue() is not None:
+              self.assertTrue(movement.getDeliveryValue().getPortalType() in v,
+                  'looking for %s in %s on %s' % (
+                  movement.getDeliveryValue().getPortalType(), v,
+                  movement.getPath()))
+        elif k == 'next_rule_list':
+          for movement in rule.objectValues():
+            for next_rule in movement.objectValues():
+              self.assertTrue(next_rule.getSpecialiseValue().getPortalType()
+                  in v, 'looking for %s in %s on %s' % (
+                  next_rule.getSpecialiseValue().getPortalType(), v,
+                  next_rule.getPath()))
+        elif k == 'parent_movement_type_list':
+          if rule.getParentValue().getDeliveryValue() is not None:
+            parent_type = rule.getParentValue().getDeliveryValue().getPortalType()
+            self.assertTrue(parent_type in v, 'looking for %s in %s on %s' % (
+                parent_type, v, rule.getParentValue().getPath()))
+        elif k == 'parent_id_list':
+          self.assertTrue(rule.getParentId() in v, 'looking for %s in %s on %s'
+              % (rule.getParentId(), v, rule.getPath()))
+      for movement in rule.objectValues():
+        for next_rule in movement.objectValues():
+          checkTree(next_rule)
+
+    for applied_rule in applied_rule_set:
+      checkTree(applied_rule)
+
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
-      stepCreateSaleInvoiceTransactionRule
       stepCreateEntities
       stepCreateCurrency
+      stepCreateSaleInvoiceTransactionRule
       stepCreateOrder
       stepSetOrderProfile
       stepSetOrderPriceCurrency
@@ -934,9 +1059,9 @@ class TestInvoice(TestPackingListMixin,
 
   # default sequence for two lines of not varianted resource.
   PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE = """
-      stepCreateSaleInvoiceTransactionRule
       stepCreateEntities
       stepCreateCurrency
+      stepCreateSaleInvoiceTransactionRule
       stepCreateOrder
       stepSetOrderProfile
       stepSetOrderPriceCurrency
@@ -968,9 +1093,9 @@ class TestInvoice(TestPackingListMixin,
 
   # default sequence for one line of not varianted resource.
   TWO_PACKING_LIST_DEFAULT_SEQUENCE = """
-      stepCreateSaleInvoiceTransactionRule
       stepCreateEntities
       stepCreateCurrency
+      stepCreateSaleInvoiceTransactionRule
       stepCreateOrder
       stepSetOrderProfile
       stepSetOrderPriceCurrency
@@ -1656,7 +1781,7 @@ class TestInvoice(TestPackingListMixin,
       sequence_list.addSequenceString(sequence)
     sequence_list.play(self, quiet=quiet)
 
-  def testCopyAndPaste(self, run=RUN_ALL_TESTS):
+  def test_15_CopyAndPaste(self, run=RUN_ALL_TESTS):
     """Test copy on paste on Invoice.
     When an invoice is copy/pasted, references should be resetted.
     """
@@ -1677,6 +1802,62 @@ class TestInvoice(TestPackingListMixin,
                          new_invoice.getSourceReference())
     self.assertNotEquals(invoice.getDestinationReference(),
                          new_invoice.getDestinationReference())
+
+  def test_16_ManuallyAddedMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
+    """
+    Checks that adding invoice lines and accounting lines to one invoice
+    generates correct simulation
+    """
+    if not run: return
+    if not quiet:
+      self.logMessage('Invoice with Manually Added Movements')
+    sequence_list = SequenceList()
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      sequence_list.addSequenceString(
+          base_sequence +
+          """
+          stepSetReadyPackingList
+          stepTic
+          stepStartPackingList
+          stepCheckInvoicingRule
+          stepTic
+          stepCheckInvoiceBuilding
+          stepRebuildAndCheckNothingIsCreated
+          stepCheckInvoicesConsistency
+          stepAddInvoiceLines
+          stepTic
+          stepConfirmInvoice
+          stepTic
+          stepCheckSimulationTrees
+          """)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_17_ManuallyAddedWrongMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
+    """
+    Checks that adding invoice lines and accounting lines to one invoice
+    generates correct simulation, even when adding very wrong movements
+    """
+    if not run: return
+    if not quiet:
+      self.logMessage('Invoice with Manually Added Movements')
+    sequence_list = SequenceList()
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      sequence_list.addSequenceString(
+          base_sequence +
+          """
+          stepSetReadyPackingList
+          stepTic
+          stepStartPackingList
+          stepCheckInvoicingRule
+          stepTic
+          stepCheckInvoiceBuilding
+          stepAddWrongInvoiceLines
+          stepTic
+          stepConfirmInvoice
+          stepCheckConfirmInvoiceFails
+          stepCheckSimulationTrees
+          """)
+    sequence_list.play(self, quiet=quiet)
 
 #class TestPurchaseInvoice(TestInvoice):
 #  order_portal_type = 'Purchase Order'

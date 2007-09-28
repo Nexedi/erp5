@@ -71,9 +71,18 @@ class PaymentRule(Rule):
       """
       if 'receivable' in movement.getId() : ### TODO: expand 'payable' too
         parent = movement.getParentValue()
-        if parent.getPortalType()=='Applied Rule' \
-          and parent.getSpecialiseId()=='default_invoice_transaction_rule':
-          #LOG('PaymentRule.test :', 0, repr(( 'applies with', movement, parent )))
+        parent_rule_value = parent.getSpecialiseValue()
+        if parent_rule_value is None:
+          return 0
+        parent_rule_type = parent_rule_value.getPortalType()
+        if parent_rule_type in ('Invoice Transaction Rule',
+            'Invoice Rule'):
+          if parent_rule_type == 'Invoice Rule':
+            delivery_movement = movement.getDeliveryValue()
+            if delivery_movement is not None:
+              if delivery_movement.getPortalType() not in \
+                  movement.getPortalAccountingMovementTypeList():
+                return 0
           return 1
       return 0
 

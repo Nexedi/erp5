@@ -67,14 +67,22 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
     """
       Tests if the rule (still) applies
     """
-    # An invoice transaction rule applies when the movement's 
+    # An invoice transaction rule applies when the movement's
     # parent is an invoice rule
+    # If the parent rule is a Invoice Rule, we must also make sure that the
+    # movement's delivery is a Invoice Movement (and not a Accounting one)
     parent = movement.getParentValue()
     parent_rule_value = parent.getSpecialiseValue()
     if parent_rule_value is None:
-      return 0        
-    if parent_rule_value.getPortalType() in (
-                      'Invoicing Rule', 'Invoice Rule'):
+      return 0
+    parent_rule_type = parent_rule_value.getPortalType()
+    if parent_rule_type in ('Invoicing Rule', 'Invoice Rule'):
+      if parent_rule_type == 'Invoice Rule':
+        delivery_movement = movement.getDeliveryValue()
+        if delivery_movement is not None:
+          if delivery_movement.getPortalType() not in \
+              movement.getPortalInvoiceMovementTypeList():
+            return 0
       if self._getMatchingCell(movement) is not None:
         return 1
     return 0
