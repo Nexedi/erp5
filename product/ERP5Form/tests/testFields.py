@@ -136,14 +136,19 @@ class TestProxyField(unittest.TestCase):
                                ERP5Form('Base_view', 'View'))
     global request
     request = DummyRequest()
+    self.container.REQUEST = request
+
+  def addField(self, form, id, title, field_type):
+    form.manage_addField(id, title, field_type)
+    field = getattr(form, id)
+    field._p_oid = makeDummyOid()
+    return field
 
   def test_get_template_field(self):
-    self.container.Base_viewProxyFieldLibrary.manage_addField(
-                        'my_title', 'Title', 'StringField')
-    original_field = self.container.Base_viewProxyFieldLibrary.my_title
-    self.container.Base_view.manage_addField(
-                      'my_title', 'Not Title', 'ProxyField')
-    proxy_field = self.container.Base_view.my_title
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_title', 'Title', 'StringField')
+    proxy_field = self.addField(self.container.Base_view,
+                                'my_title', 'Not Title', 'ProxyField')
     self.assertEquals(None, proxy_field.getTemplateField())
     self.assertEquals(None, proxy_field.get_value('enable'))
     self.assertEquals(None, proxy_field.get_value('default'))
@@ -153,28 +158,24 @@ class TestProxyField(unittest.TestCase):
     self.assertEquals(original_field, proxy_field.getTemplateField())
 
   def test_simple_surcharge(self):
-    self.container.Base_viewProxyFieldLibrary.manage_addField(
-                        'my_title', 'Title', 'StringField')
-    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_title', 'Title', 'StringField')
     self.assertEquals('Title', original_field.get_value('title'))
 
-    self.container.Base_view.manage_addField(
-                      'my_title', 'Not Title', 'ProxyField')
-    proxy_field = self.container.Base_view.my_title
+    proxy_field = self.addField(self.container.Base_view,
+                                'my_title', 'Not Title', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
     self.assert_(proxy_field.is_delegated('title'))
     self.assertEquals('Title', proxy_field.get_value('title'))
 
   def test_simple_not_surcharge(self):
-    self.container.Base_viewProxyFieldLibrary.manage_addField(
-                        'my_title', 'Title', 'StringField')
-    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_title', 'Title', 'StringField')
     self.assertEquals('Title', original_field.get_value('title'))
 
-    self.container.Base_view.manage_addField(
-                      'my_title', 'Proxy Title', 'ProxyField')
-    proxy_field = self.container.Base_view.my_title
+    proxy_field = self.addField(self.container.Base_view,
+                                'my_title', 'Proxy Title', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
     # XXX no API for this ?
@@ -186,13 +187,10 @@ class TestProxyField(unittest.TestCase):
   def test_get_value_default(self):
     # If the proxy field is named 'my_id', it will get 'id'
     # property on the context, regardless of the id of the proxified field
-    self.container.Base_viewProxyFieldLibrary.manage_addField(
-                        'my_title', 'Title', 'StringField')
-    original_field = self.container.Base_viewProxyFieldLibrary.my_title
-
-    self.container.Base_view.manage_addField(
-                      'my_id', 'ID', 'ProxyField')
-    proxy_field = self.container.Base_view.my_id
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_title', 'Title', 'StringField')
+    proxy_field = self.addField(self.container.Base_view,
+                                'my_id', 'ID', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
     self.assertEquals('container', self.container.getId())
@@ -201,15 +199,13 @@ class TestProxyField(unittest.TestCase):
   def test_field_tales_context(self):
     # in the TALES context, "field" will be the proxyfield, not the original
     # field.
-    self.container.Base_viewProxyFieldLibrary.manage_addField(
-                        'my_title', 'Title', 'StringField')
-    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_title', 'Title', 'StringField')
     original_field.manage_tales_xmlrpc(dict(title='field/getId'))
     self.assertEquals('my_title', original_field.get_value('title'))
 
-    self.container.Base_view.manage_addField(
-                      'my_reference', 'Not Title', 'ProxyField')
-    proxy_field = self.container.Base_view.my_reference
+    proxy_field = self.addField(self.container.Base_view,
+                                'my_reference', 'Not Title', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
     # 'my_reference' is the ID of the proxy field
@@ -218,16 +214,14 @@ class TestProxyField(unittest.TestCase):
   def test_form_tales_context(self):
     # in the TALES context, "form" will be the form containing the proxyfield,
     # not the original form (ie. the field library).
-    self.container.Base_viewProxyFieldLibrary.manage_addField(
-                        'my_title', 'Title', 'StringField')
-    original_field = self.container.Base_viewProxyFieldLibrary.my_title
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_title', 'Title', 'StringField')
     original_field.manage_tales_xmlrpc(dict(title='form/getId'))
     self.assertEquals('Base_viewProxyFieldLibrary',
                        original_field.get_value('title'))
 
-    self.container.Base_view.manage_addField(
-                      'my_title', 'Title', 'ProxyField')
-    proxy_field = self.container.Base_view.my_title
+    proxy_field = self.addField(self.container.Base_view,
+                                'my_title', 'Title', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
     self.assertEquals('Base_view', proxy_field.get_value('title'))
@@ -243,6 +237,7 @@ class TestFieldValueCache(unittest.TestCase):
   def setUp(self):
     self.form = ERP5Form('form', 'Form')
     self.form.field = StringField('test_field')
+    self.form.field._p_oid = makeDummyOid()
     # method field
     self.form.field.values['external_validator'] = Method('this_is_a_method')
 
@@ -251,6 +246,11 @@ class TestFieldValueCache(unittest.TestCase):
     value = getFieldValue(field, field, 'external_validator')
     self.assertEqual(False, value.value is field.values['external_validator'])
     self.assertEqual(True, type(value.value) is Method)
+
+
+def makeDummyOid():
+  import time, random
+  return '%s%s' % (time.time(), random.random())
 
 
 def test_suite():

@@ -1,4 +1,4 @@
-##############################################################################
+#############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
@@ -246,9 +246,17 @@ def get_value(self, id, **kw):
   else:
     field = self
 
+  # If field is not stored in zodb, then must use original get_value instead.
+  # Because field which is not stored in zodb must be used for editing field
+  # in ZMI and field value cache sometimes break these field settings at
+  # initialization. As the result, we will see broken field editing screen
+  # in ZMI.
+  if self._p_oid is None:
+    return self._original_get_value(id, **kw)
+
   cache_id = ('Form.get_value',
-              self._p_oid or repr(self),
-              field._p_oid or repr(field),
+              self._p_oid,
+              field._p_oid,
               id)
 
   try:
@@ -292,7 +300,9 @@ def _get_default(self, key, value, REQUEST):
 
 
 # Dynamic Patch
+original_get_value = Field.get_value
 Field.get_value = get_value
+Field._original_get_value = original_get_value
 Field._get_default = _get_default
 Field.om_icons = om_icons
 
