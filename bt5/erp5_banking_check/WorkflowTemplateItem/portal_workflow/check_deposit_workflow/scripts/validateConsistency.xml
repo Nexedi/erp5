@@ -99,6 +99,12 @@ if transaction.getTotalPrice(portal_type = \'Check Operation Line\') != transact
 \n
 # Check each check operation line.\n
 for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
+\n
+  if check_operation_line.getDescription() in (None, \'\'):\n
+    msg = Message(domain=\'ui\', message=\'The description is not defined on line $line.\'\n
+                  , mapping={"line" : check_operation_line.getId()})\n
+    raise ValidationFailed, (msg,)\n
+\n
   check_number = check_operation_line.getAggregateFreeText()\n
   if not check_number:\n
     msg = Message(domain=\'ui\', message=\'Check is not defined on line $line.\'\n

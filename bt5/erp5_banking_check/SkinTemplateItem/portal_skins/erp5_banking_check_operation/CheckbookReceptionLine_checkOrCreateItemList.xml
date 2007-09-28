@@ -71,9 +71,6 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 checkbook_reception = context.getParentValue()\n
 \n
-# Check getBaobabSource and getBaobabDestination\n
-checkbook_reception.Base_checkBaobabSourceAndDestination()\n
-\n
 portal = checkbook_reception.getPortalObject()\n
 portal_activities = portal.portal_activities\n
 if encountered_check_identifiers_dict is None:\n
@@ -130,15 +127,16 @@ def generateTravelerCheckReference(number, original_traveler_check_reference):\n
   prefix = getTravelerCheckReferencePrefix(original_traveler_check_reference)\n
   return \'%s%06d\' % (prefix, number)\n
 \n
-def assertReferenceMatchListEmpty(match_list):\n
+def assertReferenceMatchListEmpty(match_list, destination_payment_uid):\n
   """\n
     Check that the list is empty, otherwise gather all conflicting references and display them in the error message.\n
     TODO: make the error message Localizer-friendly\n
   """\n
   if len(match_list) > 0:\n
+    account = context.portal_catalog(uid=destination_payment_uid)[0].getObject()\n
     matched_reference_list = []\n
     for match in match_list:\n
-      matched_reference_list.append(match.getReference())\n
+      matched_reference_list.append(\'%s (%s)\' % (match.getReference(), account.getInternalBankAccountNumber()))\n
     message = Message(domain=\'ui\', message=\'The following references are already allocated : $reference_list\',\n
                       mapping={\'reference_list\': matched_reference_list})\n
     raise ValidationFailed, (message,)\n
@@ -151,12 +149,13 @@ def checkReferenceListUniqueness(reference_list, model, destination_payment_uid)
     match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, resource_relative_url=model)\n
   else:\n
     match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model)\n
-  assertReferenceMatchListEmpty(match_list)\n
+  assertReferenceMatchListEmpty(match_list, destination_payment_uid)\n
   for reference in reference_list:\n
     tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference)\n
     if encountered_check_identifiers_dict.has_key(tag):\n
+      account = context.portal_catalog(uid=destination_payment_uid)[0].getObject()\n
       message = Message(domain=\'ui\', message=\'The following references are already allocated : $reference_list\',\n
-                        mapping={\'reference_list\': [reference, ]})\n
+                        mapping={\'reference_list\': [\'%s (%s)\' % (reference, account.getInternalBankAccountNumber()) ]})\n
       raise ValidationFailed, (message,)\n
     encountered_check_identifiers_dict[tag] = None\n
 \n
