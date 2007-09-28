@@ -142,8 +142,20 @@ def isValidID(id):\n
   return id not in property_id_list\n
 \n
 \n
+content_type = import_file.headers.get(\'Content-Type\', \'\')\n
+# if the file is not an open office format, try to convert it using oood\n
+if not (content_type.startswith(\'application/vnd.sun.xml\')\n
+   or content_type.startswith(\'application/vnd.oasis.opendocument\')):\n
+  from Products.ERP5Type.Document import newTempOOoDocument\n
+  tmp_ooo = newTempOOoDocument(context, "_")\n
+  tmp_ooo.edit(data=import_file.read(),\n
+               content_type=content_type)\n
+  ignored, import_file_content = tmp_ooo.convert(\'sxc\')\n
+  OOoParser.openFromString(str(import_file_content))\n
+else:\n
+  OOoParser.openFile(import_file)\n
+\n
 # Extract tables from the speadsheet file\n
-OOoParser.openFile(import_file)\n
 filename = OOoParser.getFilename()\n
 spreadsheets = OOoParser.getSpreadsheetsMapping()\n
 \n
@@ -457,6 +469,14 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>None</string>
                             <string>getIDFromString</string>
                             <string>isValidID</string>
+                            <string>content_type</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempOOoDocument</string>
+                            <string>tmp_ooo</string>
+                            <string>_getiter_</string>
+                            <string>ignored</string>
+                            <string>import_file_content</string>
+                            <string>str</string>
                             <string>filename</string>
                             <string>spreadsheets</string>
                             <string>new_category_counter</string>
@@ -465,7 +485,6 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>invalid_category_id_counter</string>
                             <string>deleted_category_counter</string>
                             <string>kept_category_counter</string>
-                            <string>_getiter_</string>
                             <string>table_name</string>
                             <string>_getitem_</string>
                             <string>columns_header</string>
@@ -475,7 +494,6 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>column</string>
                             <string>column_id</string>
                             <string>path_def_started</string>
-                            <string>str</string>
                             <string>_write_</string>
                             <string>categories</string>
                             <string>base_category_name</string>
