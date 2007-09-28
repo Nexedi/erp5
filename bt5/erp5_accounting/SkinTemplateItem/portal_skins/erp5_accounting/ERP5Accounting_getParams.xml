@@ -115,7 +115,7 @@ if at_date:\n
 section_category = selection_params.get(\'section_category\',\n
                  preference.getPreferredAccountingTransactionSectionCategory())\n
 if section_category:\n
-  params[\'section_category\'] = section_category\n
+  params[\'section_uid\'] = context.Base_getSectionUidListForSectionCategory(section_category)\n
   currency = context.Base_getCurrencyForSection(section_category)\n
   # getQuantityPrecisionFromResource is defined on Base, but the portal is not \n
   # an instance of Base, so we call it on account_module.\n
