@@ -38,8 +38,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
 
-ooodoc_coordinates = ('127.0.0.1', 8008)
-
 def shout(msg):
   msg = str(msg)
   ZopeTestCase._print('\n ' + msg)
@@ -104,7 +102,24 @@ class TestOOoImport(ERP5TypeTestCase):
       Initialize the ERP5 site.
     """
     self.login()
-    self.portal_categories = self.getCategoryTool()
+
+    # Enable oood on localhost:8008
+    # This should probably become a test runner option
+    self.pref = self.portal.portal_preferences.newContent(
+                          portal_type='Preference')
+    self.pref.setPreferredOoodocServerAddress('localhost')
+    self.pref.setPreferredOoodocServerPortNumber(8008)
+    self.pref.enable()
+    get_transaction().commit()
+    self.tic()
+
+  def beforeTearDown(self):
+    region = self.portal.portal_categories.region
+    region.manage_delObjects(list(region.objectIds()))
+    self.portal.portal_preferences.manage_delObjects([self.pref.getId()])
+    get_transaction().commit()
+    self.tic()
+
 
   ##################################
   ##  Useful methods
@@ -198,6 +213,22 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertEquals('FR', france.getCodification())
     self.assertEquals(1, france.getIntIndex())
 
+  def test_CategoryTool_importCategoryFileXLS(self):
+    # tests that CategoryTool_importCategoryFile supports .xls files
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category.xls'))
+    get_transaction().commit()
+    self.tic()
+    region = self.portal.portal_categories.region
+    self.assertEqual(2, len(region))
+    self.assertTrue('europe' in region.objectIds())
+    self.assertTrue('germany' in region.europe.objectIds())
+    self.assertTrue('france' in region.europe.objectIds())
+    france = region.europe.france
+    self.assertEquals('France', france.getTitle())
+    self.assertEquals('A Country', france.getDescription())
+    self.assertEquals('FR', france.getCodification())
+    self.assertEquals(1, france.getIntIndex())
 
   # simple OOoParser tests
   def test_getSpreadSheetMapping(self):
