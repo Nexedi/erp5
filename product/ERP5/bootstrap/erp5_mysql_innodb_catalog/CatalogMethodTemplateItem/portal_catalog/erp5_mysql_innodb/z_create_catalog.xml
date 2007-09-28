@@ -96,7 +96,7 @@
 # Table: \'catalog\'\n
 #\n
 CREATE TABLE `catalog` (\n
-  `uid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,\n
+  `uid` BIGINT UNSIGNED NOT NULL,\n
   `security_uid` INT UNSIGNED,\n
   `owner` varchar(32) default \'\',\n
   `path` varchar(255) NOT NULL default \'\',\n
@@ -184,7 +184,7 @@ CREATE TABLE `catalog` (\n
 # Table: \'catalog\'\n
 #\n
 CREATE TABLE `catalog` (\n
-  `uid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,\n
+  `uid` BIGINT UNSIGNED NOT NULL,\n
   `security_uid` INT UNSIGNED,\n
   `owner` varchar(32) default \'\',\n
   `path` varchar(255) NOT NULL default \'\',\n
