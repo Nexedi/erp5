@@ -115,6 +115,7 @@
                         <string>my_aggregate_reference</string>
                         <string>my_aggregate_free_text</string>
                         <string>my_aggregate_resource</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
