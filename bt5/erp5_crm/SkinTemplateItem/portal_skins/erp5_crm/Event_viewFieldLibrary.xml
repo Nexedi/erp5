@@ -99,7 +99,6 @@
                         <string>attachment_list</string>
                         <string>my_title</string>
                         <string>my_start_date</string>
-                        <string>portal_type</string>
                         <string>my_translated_simulation_state_title</string>
                         <string>my_destination_title_list</string>
                         <string>my_source_title</string>
@@ -109,6 +108,7 @@
                         <string>my_text_content</string>
                         <string>my_text_format</string>
                         <string>my_causality_title</string>
+                        <string>my_translated_portal_type</string>
                       </list>
                     </value>
                 </item>

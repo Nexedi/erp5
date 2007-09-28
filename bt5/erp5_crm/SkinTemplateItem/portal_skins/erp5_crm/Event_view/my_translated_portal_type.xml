@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>portal_type</string> </value>
+            <value> <string>my_translated_portal_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -83,7 +83,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>portal_type</string> </value>
+                    <value> <string>my_translated_portal_type</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
