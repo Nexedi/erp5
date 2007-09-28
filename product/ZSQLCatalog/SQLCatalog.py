@@ -1245,17 +1245,28 @@ class Catalog( Folder,
     elif getattr(self, '_v_uid_buffer', None) is None:
       self._v_uid_buffer = UidBuffer()
     if len(self._v_uid_buffer) == 0:
-      method_id = self.sql_catalog_produce_reserved
-      method = getattr(self, method_id)
-      # Generate an instance id randomly. Note that there is a small possibility that this
-      # would conflict with others.
-      random_factor_list = [time.time(), os.getpid(), os.times()]
-      try:
-        random_factor_list.append(os.getloadavg())
-      except (OSError, AttributeError): # AttributeError is required under cygwin
-        pass
-      instance_id = md5.new(str(random_factor_list)).hexdigest()
-      uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
+      id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
+      if id_tool is not None:
+        if self._max_uid is None:
+          self._max_uid = Length()
+        uid_list = id_tool.generateNewLengthIdList(id_group='catalog_uid',
+                     id_count=UID_BUFFER_SIZE, default=self._max_uid())
+        # TODO: if this method is kept and former uid allocation code is
+        # discarded, self._max_uid duplicates work done by portal_ids: it
+        # already keeps track of the highest allocated number for all id
+        # generator groups.
+      else:
+        method_id = self.sql_catalog_produce_reserved
+        method = getattr(self, method_id)
+        # Generate an instance id randomly. Note that there is a small possibility that this
+        # would conflict with others.
+        random_factor_list = [time.time(), os.getpid(), os.times()]
+        try:
+          random_factor_list.append(os.getloadavg())
+        except (OSError, AttributeError): # AttributeError is required under cygwin
+          pass
+        instance_id = md5.new(str(random_factor_list)).hexdigest()
+        uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
       self._v_uid_buffer.extend(uid_list)
 
   def isIndexable(self):
