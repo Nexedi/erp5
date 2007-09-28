@@ -1136,7 +1136,7 @@ class TestERP5BankingMixin:
         if url is not None:
           if url.find(state)>=0 and url.find(portal_type)>=0:
             found = 1
-    if not found:
-      import pdb; pdb.set_trace()
+    #if not found:
+    #  import pdb; pdb.set_trace()
     self.assertEquals(found, 1)
 
