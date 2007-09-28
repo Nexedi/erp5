@@ -1178,7 +1178,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     """
     raise NotImplementedError
 
-  def convertFile(self, msg=None):
+  def convertFile(self, **kw):
     """
     Workflow transition invoked when conversion occurs.
     """
