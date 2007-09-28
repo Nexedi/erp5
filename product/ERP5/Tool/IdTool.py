@@ -169,7 +169,7 @@ class IdTool(UniqueObject, Folder):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewLengthIdList')
-  def generateNewLengthIdList(self, id_group=None, id_count=1, default=1):
+  def generateNewLengthIdList(self, id_group=None, id_count=1, default=None):
     """
       Generates a list of Ids.
       The ids are generated using mysql and then stored in a Length object in a
@@ -190,7 +190,7 @@ class IdTool(UniqueObject, Folder):
       raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
     if not isinstance(id_group, str):
       id_group = repr(id_group)
-    if not isinstance(default, int):
+    if default is None:
       default = 1
     # FIXME: A skin folder should be used to contain ZSQLMethods instead of
     # default catalog, like activity tool (anyway, it uses activity tool
