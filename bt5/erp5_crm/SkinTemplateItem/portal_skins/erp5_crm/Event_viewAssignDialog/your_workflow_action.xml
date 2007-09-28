@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_workflow_action</string> </value>
+            <value> <string>your_workflow_action</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -245,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>-</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -279,7 +285,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.REQUEST.workflow_action</string> </value>
+            <value> <string>request/workflow_action | request/field_my_workflow_action | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>
