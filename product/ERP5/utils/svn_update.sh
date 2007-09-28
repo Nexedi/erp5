@@ -3,7 +3,7 @@
 # Modules to get from the SVN
 PRODUCTS="CMFActivity CMFCategory ERP5 ERP5Banking ERP5Catalog \
           ERP5Form ERP5OOo ERP5Security ERP5Subversion ERP5SyncML \
-          ERP5Type TimerService ZMySQLDDA ZSQLCatalog MimetypesRegistry PortalTransforms"
+          ERP5Type TimerService ZMySQLDDA ZSQLCatalog"
 
 # System user and group that own Zope product files
 USER="zope"

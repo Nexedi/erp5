@@ -1279,14 +1279,6 @@ class ERP5Generator(PortalGenerator):
     if 'error_log' not in p.objectIds():
       manage_addErrorLog(p)
     
-    # Add 'mimetypes_registry' and 'portal_transforms' (order of adding is important)
-    addTool = p.manage_addProduct['MimetypesRegistry'].manage_addTool
-    if not p.hasObject('mimetypes_registry'):
-      addTool('MimeTypes Registry', None)
-    addTool = p.manage_addProduct['PortalTransforms'].manage_addTool
-    if not p.hasObject('portal_transforms'):
-      addTool('Portal Transforms', None)
-
   def setupMembersFolder(self, p):
     """
     ERP5 is not a CMS
