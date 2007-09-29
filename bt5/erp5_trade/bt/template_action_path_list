@@ -1,6 +1,5 @@
 Container Cell | view
 Container Line | view
-Container Line | view_history
 Container Line | view_quantity
 Container | view
 Delivery Cell | view
@@ -58,7 +57,6 @@ Purchase Supply Line | additional_price
 Purchase Supply Line | base_price
 Purchase Supply Line | discount_ratio
 Purchase Supply Line | exclusive_discount_ratio
-Purchase Supply Line | metadata_view
 Purchase Supply Line | non_discountable__additional_price
 Purchase Supply Line | surcharge_ratio
 Purchase Supply Line | variable_additional_price
@@ -70,7 +68,6 @@ Purchase Trade Condition Module | view
 Purchase Trade Condition Module | workflow_report
 Purchase Trade Condition | view
 Purchase Trade Condition | view_discount
-Purchase Trade Condition | view_history
 Purchase Trade Condition | view_payment
 Purchase Trade Condition | view_profile
 Returned Sale Packing List Cell | view
@@ -92,6 +89,7 @@ Sale Order | apply_trade_condition
 Sale Order | jump_to_related_sale_packing_list
 Sale Order | payment_condition
 Sale Order | profile_view
+Sale Order | reference_generate
 Sale Order | view
 Sale Order | view_discount
 Sale Order | view_stock
@@ -111,7 +109,6 @@ Sale Supply Line | additional_price
 Sale Supply Line | base_price
 Sale Supply Line | discount_ratio
 Sale Supply Line | exclusive_discount_ratio
-Sale Supply Line | metadata_view
 Sale Supply Line | non_discountable__additional_price
 Sale Supply Line | surcharge_ratio
 Sale Supply Line | variable_additional_price
@@ -123,16 +120,13 @@ Sale Trade Condition Module | view
 Sale Trade Condition Module | workflow_report
 Sale Trade Condition | view
 Sale Trade Condition | view_discount
-Sale Trade Condition | view_history
 Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
-Supply Cell | list
 Supply Cell | view
 Supply Line | additional_price
 Supply Line | base_price
 Supply Line | discount_ratio
 Supply Line | exclusive_discount_ratio
-Supply Line | metadata_view
 Supply Line | non_discountable__additional_price
 Supply Line | surcharge_ratio
 Supply Line | variable_additional_price
