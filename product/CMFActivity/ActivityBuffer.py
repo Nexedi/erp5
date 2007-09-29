@@ -186,3 +186,7 @@ class ActivityBuffer(TM):
     self._register()
     buffer = self._getBuffer()
     buffer.flushed_activity.append((activity, message))
+
+  def sortKey(self, *ignored):
+    """Activities must be finished before databases commit transactions."""
+    return -1
