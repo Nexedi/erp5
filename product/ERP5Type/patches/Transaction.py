@@ -1,168 +1,54 @@
-##############################################################################
+############################################################################
 #
-# Copyright (c) 2001, 2002 Zope Corporation and Contributors.
-# Copyright (c) 2002,2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004 Zope Corporation and Contributors.
+# Copyright (c) 2002,2005,2007 Nexedi SA and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
-# Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
 # THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
 # WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
-# FOR A PARTICULAR PURPOSE
+# FOR A PARTICULAR PURPOSE.
 #
-##############################################################################
+############################################################################
 
-import sys
-
-# Adding commit_prepare to the zodb transaction
+# Add beforeCommitHook into Transaction under Zope 2.7. This API is compatible
+# with Zope 2.8.
 try:
-    from ZODB import Transaction, POSException
-    from zLOG import LOG, ERROR
+    from ZODB.Transaction import Transaction
     
-    hosed = Transaction.hosed
-    hosed_msg = Transaction.hosed_msg
-    free_transaction = Transaction.free_transaction
-    jar_cmp = Transaction.jar_cmp
-    
+    super__commit = Transaction.commit
+    super__init = Transaction.__init__
+
+    def __init__(self, *args, **kw):
+      super__init(self, *args, **kw)
+      self._before_commit = []
+
     def commit(self, subtransaction=None):
-        """Finalize the transaction."""
-        objects = self._objects
-        
-        subjars = []
-        if subtransaction:
-            if self._sub is None:
-                # Must store state across multiple subtransactions
-                # so that the final commit can commit all subjars.
-                self._sub = {}
-        else:
-            if self._sub is not None:
-                # This commit is for a top-level transaction that
-                # has previously committed subtransactions.  Do
-                # one last subtransaction commit to clear out the
-                # current objects, then commit all the subjars.
-                if objects:
-                    self.commit(1)
-                    objects = []
-                subjars = self._sub.values()
-                subjars.sort(jar_cmp)
-                self._sub = None
-                
-                # If there were any non-subtransaction-aware jars
-                # involved in earlier subtransaction commits, we need
-                # to add them to the list of jars to commit.
-                if self._non_st_objects is not None:
-                    objects.extend(self._non_st_objects)
-                    self._non_st_objects = None
+      """Finalize the transaction."""
+      if not subtransaction:
+        self._callBeforeCommitHooks()
 
-        if (objects or subjars) and hosed:
-            # Something really bad happened and we don't
-            # trust the system state.
-            raise POSException.TransactionError, hosed_msg
+      return super__commit(self, subtransaction=subtransaction)
+   
+    def beforeCommitHook(self, hook, *args, **kws):
+        self._before_commit.append((hook, args, kws))
 
-        # It's important that:
-        #
-        # - Every object in self._objects is either committed or
-        #   aborted.
-        #
-        # - For each object that is committed we call tpc_begin on
-        #   it's jar at least once
-        #
-        # - For every jar for which we've called tpc_begin on, we
-        #   either call tpc_abort or tpc_finish. It is OK to call
-        #   these multiple times, as the storage is required to ignore
-        #   these calls if tpc_begin has not been called.
-        #
-        # - That we call tpc_begin() in a globally consistent order,
-        #   so that concurrent transactions involving multiple storages
-        #   do not deadlock.
-        try:
-            ncommitted = 0
-            jars = self._get_jars(objects, subtransaction)
-            try:
-                # Do prepare until number of jars is stable - this could
-                # create infinite loop
-                jars_len = -1
-                objects_len = len(self._objects)
-                while len(jars) != jars_len:
-                    jars_len = len(jars)
-                    self._commit_prepare(jars, subjars, subtransaction)
-                    if len(self._objects) != objects_len:
-                      objects.extend(self._objects[objects_len:])
-                      objects_len = len(self._objects)
-                    jars = self._get_jars(objects, subtransaction)
-                # If not subtransaction, then jars will be modified.
-                self._commit_begin(jars, subjars, subtransaction)
-                ncommitted += self._commit_objects(objects)
-                if not subtransaction:
-                    # Unless this is a really old jar that doesn't
-                    # implement tpc_vote(), it must raise an exception
-                    # if it can't commit the transaction.
-                    for jar in jars:
-                        try:
-                            vote = jar.tpc_vote
-                        except AttributeError:
-                            pass
-                        else:
-                            vote(self)
+    def _callBeforeCommitHooks(self):
+        # Call all hooks registered, allowing further registrations
+        # during processing.
+        while self._before_commit:
+            hook, args, kws = self._before_commit.pop(0)
+            hook(*args, **kws)
 
-                # Handle multiple jars separately.  If there are
-                # multiple jars and one fails during the finish, we
-                # mark this transaction manager as hosed.
-                if len(jars) == 1:
-                    self._finish_one(jars[0])
-                else:
-                    self._finish_many(jars)
-            except:
-                # Ugh, we got an got an error during commit, so we
-                # have to clean up.  First save the original exception
-                # in case the cleanup process causes another
-                # exception.
-                error = sys.exc_info()
-                try:
-                    self._commit_error(objects, ncommitted, jars, subjars)
-                except:
-                    LOG('ZODB', ERROR,
-                        "A storage error occured during transaction "
-                        "abort.  This shouldn't happen.",
-                        error=error)
-                raise error[0], error[1], error[2]
-        finally:
-            del objects[:] # clear registered
-            if not subtransaction and self._id is not None:
-                free_transaction()
-
-    def _commit_prepare(self, jars, subjars, subtransaction):
-        if subtransaction:
-            assert not subjars
-            for jar in jars:
-                tpc_prepare = getattr(jar, 'tpc_prepare', None)
-                if tpc_prepare is not None:
-                    try:
-                        tpc_prepare(self, subtransaction)
-                    except TypeError:
-                        # Assume that TypeError means that tpc_begin() only
-                        # takes one argument, and that the jar doesn't
-                        # support subtransactions.
-                        tpc_prepare(self)
-        else:
-            # Perform tpc_prepare for both jars and subjars.
-            # Note that it must not be executed for the same jar
-            # more than once. Also, this should not merge the jars
-            # in place, as _commit_begin will do that.
-            for jar in subjars:
-                tpc_prepare = getattr(jar, 'tpc_prepare', None)
-                if tpc_prepare is not None:
-                    tpc_prepare(self)
-
-            for jar in jars:
-                if jar not in subjars:
-                    tpc_prepare = getattr(jar, 'tpc_prepare', None)
-                    if tpc_prepare is not None:
-                        tpc_prepare(self)
-
-    Transaction.Transaction.commit = commit
-    Transaction.Transaction._commit_prepare = _commit_prepare
+    from new import instancemethod
+    Transaction.__init__ = instancemethod(__init__, None, Transaction)
+    Transaction.commit = instancemethod(commit, None, Transaction)
+    Transaction.beforeCommitHook = instancemethod(beforeCommitHook, None, 
+                                                  Transaction)
+    Transaction._callBeforeCommitHooks = instancemethod(_callBeforeCommitHooks,
+                                                        None, Transaction)
 except ImportError:
-    # On Zope 2.8, do not patch Transaction. Instead, we use a before commit hook.
+    # On Zope 2.8, do not patch Transaction.
     pass
