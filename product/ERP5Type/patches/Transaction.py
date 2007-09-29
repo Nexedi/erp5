@@ -83,13 +83,9 @@ try:
                 # Do prepare until number of jars is stable - this could
                 # create infinite loop
                 jars_len = -1
-                objects_len = len(self._objects)
                 while len(jars) != jars_len:
                     jars_len = len(jars)
                     self._commit_prepare(jars, subjars, subtransaction)
-                    if len(self._objects) != objects_len:
-                      objects.extend(self._objects[objects_len:])
-                      objects_len = len(self._objects)
                     jars = self._get_jars(objects, subtransaction)
                 # If not subtransaction, then jars will be modified.
                 self._commit_begin(jars, subjars, subtransaction)
@@ -146,27 +142,20 @@ try:
                         # support subtransactions.
                         tpc_prepare(self)
         else:
-            # Merge in all the jars used by one of the subtransactions.
-            
-            # When the top-level subtransaction commits, the tm must
-            # call commit_sub() for each jar involved in one of the
-            # subtransactions.  The commit_sub() method should call
-            # tpc_begin() on the storage object.
-            
-            # It must also call tpc_begin() on jars that were used in
-            # a subtransaction but don't support subtransactions.
-            
-            # These operations must be performed on the jars in order.
-            
-            # Modify jars inplace to include the subjars, too.
-            jars += subjars
-            jars.sort(jar_cmp)
-            # assume that subjars is small, so that it's cheaper to test
-            # whether jar in subjars than to make a dict and do has_key.
-            for jar in jars:
+            # Perform tpc_prepare for both jars and subjars.
+            # Note that it must not be executed for the same jar
+            # more than once. Also, this should not merge the jars
+            # in place, as _commit_begin will do that.
+            for jar in subjars:
                 tpc_prepare = getattr(jar, 'tpc_prepare', None)
                 if tpc_prepare is not None:
                     tpc_prepare(self)
+
+            for jar in jars:
+                if jar not in subjars:
+                    tpc_prepare = getattr(jar, 'tpc_prepare', None)
+                    if tpc_prepare is not None:
+                        tpc_prepare(self)
 
     Transaction.Transaction.commit = commit
     Transaction.Transaction._commit_prepare = _commit_prepare
