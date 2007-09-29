@@ -26,11 +26,9 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import UniqueObject
-
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
-from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName
 
@@ -38,10 +36,9 @@ from Products.ERP5 import _dtmldir
 
 import threading
 
-from zLOG import LOG
 from BTrees.Length import Length
 
-class IdTool(UniqueObject, Folder):
+class IdTool(BaseTool):
   """
     This tools handles the generation of IDs.
 
@@ -54,23 +51,8 @@ class IdTool(UniqueObject, Folder):
   # Declarative Security
   security = ClassSecurityInfo()
 
-  #
-  #   ZMI methods
-  #
-  manage_options = ( ( { 'label'      : 'Overview'
-                       , 'action'     : 'manage_overview'
-                       }
-                     ,
-                     )
-                   + Folder.manage_options
-                   )
-
   security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainIdTool', _dtmldir )
-
-  # Filter content (ZMI))
-  def __init__(self):
-    return Folder.__init__(self, IdTool.id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getLastGeneratedId')
