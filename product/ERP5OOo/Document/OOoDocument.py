@@ -1,6 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006-2007 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -45,7 +46,6 @@ dec=base64.decodestring
 
 _MARKER = []
 STANDARD_IMAGE_FORMAT_LIST = ('png', 'jpg', 'gif', )
-
 
 class TimeoutTransport(SafeTransport):
   """A xmlrpc transport with configurable timeout.
@@ -178,7 +178,7 @@ class OOoDocument(File, ConversionCacheMixin):
     address = preference_tool.getPreferredOoodocServerAddress()
     port = preference_tool.getPreferredOoodocServerPortNumber()
     if address in ('', None) or port in ('', None) :
-      raise ConversionError('[DMS] Can not proceed with conversion:'
+      raise ConversionError('OOoDocument: can not proceed with conversion:'
             ' conversion server host and port is not defined in preferences')
     return address, port
 
@@ -224,7 +224,7 @@ class OOoDocument(File, ConversionCacheMixin):
         else:
           # This is very temporary code - XXX needs to be changed
           # so that the system can retry
-          raise ConversionError("[DMS] Can not get list of allowed acceptable"
+          raise ConversionError("OOoDocument: can not get list of allowed acceptable"
                                 " formats for conversion: %s (%s)" % (
                                       response_code, response_message))
 
@@ -314,9 +314,9 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     #XXX if document is empty, stop to try to convert.
     #XXX but I don't know what is a appropriate mime-type.(Yusei)
-    if self.get_size()==0:
+    if self.get_size() == 0:
       return 'text/plain', ''
-    
+
     # Make sure we can support html and pdf by default
     is_html = 0
     original_format = format
@@ -348,7 +348,7 @@ class OOoDocument(File, ConversionCacheMixin):
         return 'text/plain', self.asTextContent()
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
-      raise ConversionError("[DMS] Target format %s is not supported" % format)
+      raise ConversionError("OOoDocument: target format %s is not supported" % format)
     # Check if we have already a base conversion
     if not self.hasBaseData():
       self.convertToBaseFormat()
@@ -449,14 +449,10 @@ class OOoDocument(File, ConversionCacheMixin):
       if metadata.get('MIMEType', None) is not None:
         self._setBaseContentType(metadata['MIMEType'])
     else:
-      # log and raise errors with converting server.
-      LOG('ERP5OOo', ERROR,
-          '[DMS] Error converting document to base format %s:%s'
-                    % (response_code, response_message))
       # Explicitly raise the exception!
       raise ConversionError(
-                "[DMS] Error converting document to base format %s:%s:" 
-                                       %(response_code, response_message))
+                "OOoDocument: Error converting document to base format %s:%s:"
+                                       % (response_code, response_message))
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getContentInformation')
@@ -484,10 +480,7 @@ class OOoDocument(File, ConversionCacheMixin):
       # successful meta data extraction
       self._setBaseData(dec(response_dict['data']))
     else:
-      # log and raise errors with converting server.
-      LOG('ERP5OOo', ERROR, "[DMS] Error getting document's metadata %s:%s"
-                        % (response_code, response_message))
       # Explicitly raise the exception!
-      raise ConversionError("[DMS] Error getting document's metadata %s:%s"
+      raise ConversionError("OOoDocument: error getting document metadata %s:%s"
                         % (response_code, response_message))
 
