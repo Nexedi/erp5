@@ -31,6 +31,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
 from Products.ERP5Type.Log import log as unrestrictedLog
+from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 
 from zLOG import LOG, INFO
@@ -207,6 +208,41 @@ class ERP5Site(FolderMixIn, CMFSite):
       Implemented for consistency
     """
     return self.index_html()
+
+  security.declareProtected( Permissions.ModifyPortalContent, 'manage_renameObject' )
+  def manage_renameObject(self, id=None, new_id=None, REQUEST=None):
+    """manage renaming an object while keeping coherency for contained
+    and linked to objects inside the renamed object.
+
+    XXX this is nearly a copy-and-paste from CopySupport.
+
+    XXX this is not good enough when the module or the objects inside
+    the module are referred to by outer objects. But addressing this problem
+    requires a full traversal of the object tree, and the current
+    implementation is not efficient enough for this.
+    """
+    ob = self.restrictedTraverse(id)
+    if getattr(aq_base(ob), '_updateInternalRelatedContent', None) is not None:
+      # Make sure there is no activities pending on that object
+      try:
+        portal_activities = getToolByName(self, 'portal_activities')
+      except AttributeError:
+        # There is no activity tool
+        portal_activities = None
+      if portal_activities is not None:
+        if portal_activities.countMessage(path=ob.getPath())>0:
+          raise ActivityPendingError, 'Sorry, pending activities prevent ' \
+                         +  'changing id at this current stage'
+
+      # Search for categories that have to be updated in sub objects.
+      ob._recursiveSetActivityAfterTag(ob)
+      path_item_list = ob.getRelativeUrl().split('/')
+      ob._updateInternalRelatedContent(object=ob,
+                                       path_item_list=path_item_list,
+                                       new_id=new_id)
+    # Rename the object
+    return CMFSite.manage_renameObject(self, id=id, new_id=new_id,
+                                       REQUEST=REQUEST)
 
   def _getAcquireLocalRoles(self):
     """
