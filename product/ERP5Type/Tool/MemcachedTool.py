@@ -38,6 +38,17 @@ try:
 except ImportError:
   memcache = None
 
+def encodeKey(key):
+  """
+    Encode the key. The current encoding is not very good
+    since it is not bijective. Implementing a bijective
+    encoding is required.
+  """
+  # Memcached refuses characters which are below ' ' (included) in
+  # ascii table. Just strip them here to avoid the raise.
+  return ''.join([x for x in key if ord(x) > \
+                              MEMCACHED_MINIMUM_KEY_CHAR_ORD])
+
 if memcache is not None:
   # Real memcache tool
   import memcache
@@ -103,9 +114,9 @@ if memcache is not None:
             self.scheduled_action_dict[key] = UPDATE_ACTION
         for key, action in self.scheduled_action_dict.iteritems():
           if action is UPDATE_ACTION:
-            self.memcached_connection.set(key, self.local_cache[key], 0)
+            self.memcached_connection.set(encodeKey(key), self.local_cache[key], 0)
           elif action is DELETE_ACTION:
-            self.memcached_connection.delete(key, 0)
+            self.memcached_connection.delete(encodeKey(key), 0)
       except:
         LOG('MemcachedDict', 0, 'An exception occured during _finish : %s' % (traceback.format_exc(), ))
       self.scheduled_action_dict.clear()
@@ -125,15 +136,12 @@ if memcache is not None:
       # We need to register in this function too to be able to flush cache at 
       # transaction end.
       self._register()
-      # Memcached refuses characters which are below ' ' (inclued) in
-      # ascii table. Just strip them here to avoid the raise.
-      stripped_key = ''.join([x for x in key if ord(x) > \
-                              MEMCACHED_MINIMUM_KEY_CHAR_ORD])
+      encoded_key = encodeKey(key)
       result = self.local_cache.get(key, MARKER)
       if result is MARKER:
-        result = self.memcached_connection.get(stripped_key)
+        result = self.memcached_connection.get(encoded_key)
         if result is None:
-          raise KeyError, 'Key %s (was %s) not found.' % (stripped_key, key)
+          raise KeyError, 'Key %s (was %s) not found.' % (encoded_key, key)
         self.local_cache[key] = result
       return result
   
@@ -172,7 +180,7 @@ if memcache is not None:
         return self.__getitem__(key)
       except KeyError:
         return default
-  
+
   class SharedDict:
     """
       Class to make possible for multiple "users" to store data in the same
