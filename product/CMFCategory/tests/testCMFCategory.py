@@ -191,9 +191,12 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(self.region1)
-    self.assertEqual(p1.getRegion(),self.region1)
-    self.assertEqual(p1.getDefaultRegion(),self.region1)
-    self.assertEqual(p1.getRegionList(),[self.region1])
+    self.assertEqual(p1.getRegion(), self.region1)
+    self.assertEqual(p1.getRegion('foo'), self.region1)
+    self.assertEqual(p1.getDefaultRegion(), self.region1)
+    self.assertEqual(p1.getDefaultRegion('foo'), self.region1)
+    self.assertEqual(p1.getRegionList(), [self.region1])
+    self.assertEqual(p1.getRegionList(['foo']), [self.region1])
 
   def test_02_MultipleCategory(self, quiet=quiet, run=run_all_test):
     # Test if multiple categories are working
