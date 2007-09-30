@@ -235,14 +235,14 @@ class Category(Folder):
 
                               WARNING: using these parameters can slow down
                               significantly, because this is written in Python
-          
+
           local_sort_method - When using the default preorder traversal, use
                               this function to sort objects of the same depth.
-          
+
           local_sort_id     - When using the default preorder traversal, sort
                               objects of the same depth by comparing their
                               'local_sort_id' property.
-          
+
           Renderer parameters are also supported here.
       """
       if is_self_excluded or (
@@ -251,7 +251,7 @@ class Category(Folder):
         value_list = []
       else:
         value_list = [self]
-      
+
       child_value_list = self.objectValues(self.allowed_types)
       if local_sort_id:
         local_sort_method = lambda a, b: cmp(a.getProperty(local_sort_id, 0),
