@@ -301,6 +301,9 @@ class CopyContainer:
         except WorkflowException:
           pass
 
+    if self.getParentValue().getPortalType() == 'Preference':
+      # Make this a template if our parent is a preference
+      self.makeTemplate()
 
     self.__recurse('manage_afterClone', item)
 
