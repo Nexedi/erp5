@@ -49,7 +49,7 @@ try:
 except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
 
-from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base, BTreeFolder2
 
 try:
   from Products.HBTreeFolder2.CMFHBTreeFolder import CMFHBTreeFolder
@@ -82,6 +82,9 @@ import warnings
 REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
 from Products.ERP5Type.Message import Message
 N_ = lambda msgid, **kw: Message('ui', msgid, **kw)
+
+# from Products.BTreeFolder2.BTreeFolder2 import _marker as BTreeMarker
+# from Products.HBTreeFolder2.HBTreeFolder2 import _marker as HBTreeMarker
 
 # Dummy Functions for update / upgrade
 def dummyFilter(object,REQUEST=None):
@@ -331,97 +334,10 @@ class FolderMixIn(ExtensionClass.Base):
     """
     return self.countFolder(**kw)[0][0]
 
-class FolderMethodWrapper(Method):
-  """
-  This a wrapper between folder method and folder type method
-  """
-  def __init__(self, method_id):
-    self.__name__ = method_id
 
-  def __call__(self, folder, *args, **kw):
-    folder_handler = getattr(folder, '_folder_handler', None)
-    global folder_handler_dict
-    handler = folder_handler_dict.get(folder_handler,None)
-    if handler is None:
-      folder.initializeFolderHandler()
-      folder_handler = getattr(folder, '_folder_handler', None)
-      handler = folder_handler_dict.get(folder_handler,None)
-    return getattr(handler, self.__name__)(folder, *args, **kw)
-  
+BTREE_HANDLER = 1
+HBTREE_HANDLER = 2
 
-class FolderHandler:
-
-  def __init__(self):
-    pass
-
-  def __repr__(self):
-    """
-    Return a string representing the handler
-    """
-    return "FolderHandler"
-
-  def isApplicable(self, folder):
-    """
-    Returns True if this plugin should handle this folder
-    """
-    return False
-
-class CMFBTreeFolderHandler(FolderHandler):
-
-  def __repr__(self):
-    return "CMFBTreeFolderHandler"
-
-  def __getattr__(self, id):
-    return getattr(CMFBTreeFolder, id)
-
-  def isApplicable(self, folder):
-    return '_tree' in getattr(folder, '__dict__', tuple())
-
-class CMFHBTreeFolderHandler(FolderHandler):
-
-  def __repr__(self):
-    return "CMFHBTreeFolderHandler"
-
-  def __getattr__(self, id):
-    return getattr(CMFHBTreeFolder, id)
-
-  def isApplicable(self, folder):
-    return '_htree' in getattr(folder, '__dict__', tuple())
-
-class OFSFolderHandler(FolderHandler):
-
-  def __repr__(self):
-    return "OFSFolderHandler"
-
-  def __getattr__(self, id):
-    return getattr(OFSFolder, id)
-
-  def isApplicable(self, folder):
-    """
-      XXX: until folder handlers are prioritized and OFS Folder Handler is
-      made last, OR if OFS Folder Handler is the default fallback, the
-      definition of an OFS Folder is only possible as "not a BTreeFolder2 nor
-      a HBTreeFolder2'.
-      This is very dirty, but will be sufficient to fix current folder format
-      detection code.
-
-      Original idea is:
-        return '_objects' in getattr(folder, '__dict__', tuple())
-      But this code is invalid because existing empty folders contain no
-      '_object' property (it's actually defined on the class, not on the
-      instance).
-    """
-    return not('_tree' in getattr(folder, '__dict__', tuple())) \
-       and not('_htree' in getattr(folder, '__dict__', tuple()))
-
-global folder_handler_dict
-folder_handler_dict = {}
-cmf_btree_folder_handler = CMFBTreeFolderHandler()
-folder_handler_dict["%r" % cmf_btree_folder_handler] = cmf_btree_folder_handler
-cmf_hbtree_folder_handler = CMFHBTreeFolderHandler()
-folder_handler_dict["%r" % cmf_hbtree_folder_handler] = cmf_hbtree_folder_handler
-ofs_folder_handler = OFSFolderHandler()
-folder_handler_dict["%r" % ofs_folder_handler] = ofs_folder_handler
 
 class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, WebDAVFolder):
   """
@@ -487,70 +403,29 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   description = None
 
   # Per default we use BTree folder
-  _isHBTree = False
-  _isBTree = True
-  _folder_handler = None # plugin store the folder type class use by the folder
+  _folder_handler = BTREE_HANDLER
   
   # Overload __init__ so that we do not take into account title
   # This is required for test_23_titleIsNotDefinedByDefault
   def __init__(self, id):
     self.id = id
-    # We must continue initializing by default to BTree,
-    # this is the default way of working of ERP5 Folder.
-    BTreeFolder2Base.__init__(self, id)
-
-  def initializeFolderHandler(self):
-    if self._folder_handler is None:
-      global folder_handler_dict
-      plugin_list = folder_handler_dict.values()
-      for plugin in plugin_list:
-        if plugin.isApplicable(self):
-          self._folder_handler = "%r" % plugin
-          break
-      if self._folder_handler is None:
-        raise ValueError, 'No plugin defined on %r' % (self, )
       
   def newContent(self, *args, **kw):
     """ Create a new content """
     # Create data structure if none present
-    if self._folder_handler is None:
-      self.initializeFolderHandler()
     return FolderMixIn.newContent(self, *args, **kw)
-
-  security.declareProtected( Permissions.ManagePortal, 'resetPlugin' )
-  def resetPlugin(self):
-    """ reset plugin attribute """
-    self._folder_handler = None
-    
-  security.declareProtected(Permissions.View, 'isBTree')
+      
   def isBTree(self):
-    """ Return if folder is a BTree or not """
-    return self._isBTree
-
-  security.declareProtected(Permissions.View, 'isHBTree')
-  def isHBTree(self):
-    """ Return if folder is a HBTree or not """
-    return self._isHBTree
-
-  def _setHBTree(self,):
-    """ Define this folder use HBTree stucture """
-    self._isHBTree = True
-    self._isBTree = False
-    self._folder_handler = 'CMFHBTreeFolderHandler'
-    self.initBTrees()
-    
-  def _setBTree(self,):
-    """ Define this folder use BTree stucture """
-    self._isHBTree = False
-    self._isBTree = True
+    """
+    Tell if we are a BTree
+    """
+    return self._folder_handler == BTREE_HANDLER
   
-  def hashId(self, id):
-    """ id hashing can be override with a script """
-    script = self._getTypeBasedMethod('hashId')
-    if script is not None:
-      return script(self, id)    
-    global folder_handler_dict
-    return folder_handler_dict[self._folder_handler].hashId(self, id)
+  def isHBTree(self):
+    """
+    Tell if we are a HBTree
+    """
+    return self._folder_handler == HBTREE_HANDLER
 
   security.declareProtected( Permissions.ManagePortal, 'migrateToHBTree' )
   def migrateToHBTree(self, migration_generate_id_method=None, new_generate_id_method=None, REQUEST=None):
@@ -599,7 +474,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     and migration
     """
     delattr(self, "_tree")
-    delattr(self, "_former_folder_handler")
 
   def _launchCopyObjectToHBTree(self, tag):
     """
@@ -608,8 +482,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     """    
     # migrate folder from btree to hbtree
     id_list = list(self.objectIds())
-    self._former_folder_handler = self._folder_handler
-    self._setHBTree()
+    self._folder_handler = HBTREE_HANDLER
+    HBTreeFolder2Base.__init__(self, self.id)
     # launch activity per bundle to copy/paste to hbtree
     BUNDLE_COUNT = 100
     for x in xrange(len(id_list) / BUNDLE_COUNT):
@@ -628,13 +502,389 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     Move object from a btree container to
     a hbtree one
     """
-    global folder_handler_dict
-    getOb = folder_handler_dict[self._former_folder_handler]._getOb
-    setOb = self._setOb
+    getOb = CMFBTreeFolder._getOb
+    setOb = CMFHBTreeFolder._setOb
     for id in id_list:
       obj = getOb(self, id)
-      setOb(id, obj)
-                         
+      setOb(self, id, obj)
+
+  # Override all BTree and HBTree methods to use if/else
+  # method to check wich method must be called
+  # We use this method instead of plugin because it make
+  # less function call and thus Folder faster
+  def _initBTrees(self):
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._initBTrees(self)
+    else:
+      return CMFBTreeFolder._initBTrees(self)
+    
+  def initBTrees(self):
+    """ """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.initBTrees(self)
+    else:
+      return CMFBTreeFolder.initBTrees(self)
+
+  def hashId(self, id):
+    """Return a hash of id
+    """    
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.hashId(self, id)
+    else:
+      return CMFBTreeFolder.hashId(self, id)
+
+  def _populateFromFolder(self, source):
+    """Fill this folder with the contents of another folder.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        HBTreeFolder2Base.__init__(self, id)
+      return CMFHBTreeFolder._populateFromFolder(self, source)
+    else:
+      if self._tree is None:
+        BTreeFolder2Base.__init__(self, id)
+      return CMFBTreeFolder._populateFromFolder(self, source)
+
+  def manage_fixCount(self):
+    """Calls self._fixCount() and reports the result as text.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.manage_fixCount(self)
+    else:
+      return CMFBTreeFolder.manage_fixCount(self)
+
+  def _fixCount(self):
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._fixCount(self)
+    else:
+      return CMFBTreeFolder._fixCount(self)
+
+  def manage_cleanup(self):
+    """Calls self._cleanup() and reports the result as text.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return 1
+      else:
+        return CMFHBTreeFolder.manage_cleanup(self)
+    else:
+      if self._tree is None:
+        return 1
+      else:
+        return CMFBTreeFolder.manage_cleanup(self)
+
+  def _cleanup(self):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return 1
+      else:
+        return CMFHBTreeFolder._cleanup(self)
+    else:
+      if self._tree is None:
+        return 1
+      else:        
+        return CMFBTreeFolder._cleanup(self)
+
+  def _getOb(self, id, *args, **kw):
+    """
+    Return the named object from the folder.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        if len(args):
+          return args[0]
+        elif kw.has_key("default"):
+          return kw["default"]
+        else:
+          raise KeyError, id
+      return CMFHBTreeFolder._getOb(self, id, *args, **kw)
+    else:
+      if self._tree is None:
+        if len(args):
+          return args[0]
+        elif kw.has_key("default"):
+          return kw["default"]
+        else:
+          raise KeyError, id
+      return CMFBTreeFolder._getOb(self, id, *args, **kw)
+
+  def _setOb(self, id, object):
+    """Store the named object in the folder.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        HBTreeFolder2Base.__init__(self, self.id)
+      return CMFHBTreeFolder._setOb(self, id, object)
+    else:
+      if self._tree is None:
+        BTreeFolder2Base.__init__(self, self.id)
+      return CMFBTreeFolder._setOb(self, id, object)
+
+  def _delOb(self, id):
+    """Remove the named object from the folder.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._delOb(self, id)
+    else:
+      return CMFBTreeFolder._delOb(self, id)
+
+  def getBatchObjectListing(self, REQUEST=None):
+    """Return a structure for a page template to show the list of objects.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.getBatchObjectListing(self, REQUEST)
+    else:
+      return CMFBTreeFolder.getBatchObjectListing(self, REQUEST)
+
+  def manage_object_workspace(self, ids=(), REQUEST=None):
+    '''Redirects to the workspace of the first object in
+    the list.'''
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.manage_object_workspace(self, ids, REQUEST)
+    else:
+      return CMFBTreeFolder.manage_object_workspace(self, ids, REQUEST)
+
+  def manage_main(self, ids=(), REQUEST=None):
+    ''' List content.'''
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.manage_main.__of__(self)(self, ids, REQUEST)
+    else:
+      return CMFBTreeFolder.manage_main.__of__(self)(self, ids, REQUEST)
+
+  def tpValues(self):
+    """Ensures the items don't show up in the left pane.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.tpValues(self)
+    else:
+      return CMFBTreeFolder.tpValues(self)
+
+  def objectCount(self):
+    """Returns the number of items in the folder."""
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return 0
+      return CMFHBTreeFolder.objectCount(self)
+    else:
+      if self._tree is None:
+        return 0
+      return CMFBTreeFolder.objectCount(self)
+    
+  def has_key(self, id):
+    """Indicates whether the folder has an item by ID.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return False
+      return CMFHBTreeFolder.has_key(self, id)
+    else:
+      if self._tree is None:
+        return False
+      return CMFBTreeFolder.has_key(self, id)
+
+  def treeIds(self, base_id=None):
+    """ Return a list of subtree ids
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.treeIds(self, base_id)
+    else:
+      return CMFBTreeFolder.treeIds(self, base_id)
+
+  def _getTree(self, base_id):
+    """ Return the tree wich has the base_id
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._getTree(self, base_id)
+    else:
+      return CMFBTreeFolder._getTree(self, base_id)
+
+  def _getTreeIdList(self, htree=None):
+    """ recursively build a list of btree ids
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._getTreeIdList(self, htree)
+    else:
+      return CMFBTreeFolder._getTreeIdList(self, htree)
+
+  def getTreeIdList(self, htree=None):
+    """ recursively build a list of btree ids
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.getTreeIdList(self, htree)
+    else:
+      return CMFBTreeFolder.getTreeIdList(self, htree)
+
+  def _treeObjectValues(self, base_id=None):
+    """ return object values for a given btree
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._treeObjectValues(self, base_id)
+    else:
+      return CMFBTreeFolder._treeObjectValues(self, base_id)    
+
+  def _treeObjectIds(self, base_id=None):
+    """ return object ids for a given btree
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._treeObjectIds(self, base_id)
+    else:
+      return CMFBTreeFolder._treeObjectIds(self, base_id)      
+
+  def _isNotBTree(self, obj):
+    """ test object is not a btree
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._isNotBTree(self, obj)
+    else:
+      return CMFBTreeFolder._isNotBTree(self, obj)
+
+  def _checkObjectId(self, id):
+    """ test id is not in btree id list
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._checkObjectId(self, id)
+    else:
+      return CMFBTreeFolder._checkObjectId(self, id)
+
+  def objectIds(self, spec=None, base_id=None):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return []
+      return CMFHBTreeFolder.objectIds(self, base_id)
+    else:
+      if self._tree is None:
+        return []
+      return CMFBTreeFolder.objectIds(self, spec)
+
+  def objectItems(self, spec=None, base_id=None):
+    if self._folder_handler == HBTREE_HANDLER:
+      if  self._htree is None:
+        return []
+      return CMFHBTreeFolder.objectItems(self, base_id)
+    else:
+      if  self._tree is None:
+        return []
+      return CMFBTreeFolder.objectItems(self, spec)
+
+  def objectMap(self):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return []
+      return CMFHBTreeFolder.objectMap(self)
+    else:
+      if self._tree is None:
+        return []
+      return CMFBTreeFolder.objectIMap(self)
+
+  def objectIds_d(self, t=None):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return {}
+      return CMFHBTreeFolder.objectIds_d(self, t)
+    else:
+      if self._tree is None:
+        return {}
+      return CMFBTreeFolder.objectIds_d(self, t)
+
+  def objectMap_d(self, t=None):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return {}
+      return CMFHBTreeFolder.objectMap_d(self, t)
+    else:
+      if self._tree is None:
+        return {}
+      return CMFBTreeFolder.objectMap_d(self, t)
+
+  def _checkId(self, id, allow_dup=0):
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._checkId(self, id, allow_dup)
+    else:
+      return CMFBTreeFolder._checkId(self, id, allow_dup)
+
+  def _setObject(self, id, object, roles=None, user=None, set_owner=1):
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder._setObject(self, id, object, roles, user, set_owner)
+    else:
+      return CMFBTreeFolder._setObject(self, id, object, roles, user, set_owner)
+
+  def get(self, id, default=None):
+    """
+    Return the named object from the folder.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.get(self, id, default)
+    else:
+      return CMFBTreeFolder.get(self, id, default)
+
+  def generateId(self, prefix='item', suffix='', rand_ceiling=999999999):
+    """Returns an ID not used yet by this folder.
+    
+    The ID is unlikely to collide with other threads and clients.
+    The IDs are sequential to optimize access to objects
+    that are likely to have some relation.
+    """
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.generateId(self, prefix, suffix, rand_ceiling)
+    else:
+      return CMFBTreeFolder.generateId(self, prefix, suffix, rand_ceiling)
+
+  def __getattr__(self, name):
+    if self._folder_handler == HBTREE_HANDLER:
+      return CMFHBTreeFolder.__getattr__(self, name)
+    else:
+      return CMFBTreeFolder.__getattr__(self, name)
+    
+  def __len__(self):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return 0
+      return CMFHBTreeFolder.__len__(self)
+    else:
+      if self._tree is None:
+        return 0
+      return CMFBTreeFolder.__len__(self)
+
+  def keys(self, *args, **kw):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return []
+      return CMFHBTreeFolder.keys(self, *args, **kw)
+    else:
+      if self._tree is None:
+        return []
+      return CMFBTreeFolder.keys(self, *args, **kw)
+    
+  def values(self, *args, **kw):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return []
+      return CMFHBTreeFolder.values(self, *args, **kw)
+    else:
+      if self._tree is None:
+        return []
+      return CMFBTreeFolder.values(self, *args, **kw)
+  
+  def items(self, *args, **kw):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return []
+      return CMFHBTreeFolder.items(self, *args, **kw)
+    else:
+      if self._tree is None:
+        return []
+      return CMFBTreeFolder.items(self, *args, **kw)
+
+  def hasObject(self, id):
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return False
+      return CMFHBTreeFolder.hasObject(self, id)
+    else:
+      if self._tree is None:
+        return False
+      return CMFBTreeFolder.hasObject(self, id)
+
   # Override Zope default by folder id generation
   def _get_id(self, id):
     if self._getOb(id, None) is None :
@@ -645,28 +895,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   #manage_delObjects = CopyContainer.manage_delObjects
 
   # Implementation
-#   security.declarePrivate('_setObject')
-#   def _setObject(self, id, object, roles=None, user=None, set_owner=1):
-#     """
-#       This method is here in order to dynamically update old
-#       folders into the new BTree folder type.
-#       This method is destructive in the sens that objects
-#       of the old folder will be lost during the update
-#     """
-#     # First make sur the folder has been initialized
-#     if not hasattr(self, '_tree'):
-#       CMFBTreeFolder.__init__(self, self.id)
-#     if not self._tree:
-#       CMFBTreeFolder.__init__(self, self.id)
-#     # Then insert the object
-#     CMFBTreeFolder._setObject(self, id, object, roles=roles, user=user, set_owner=set_owner)
-# This method destroys the title when we create new object in empty folder
-
-  security.declareProtected(Permissions.View, 'hasContent')
-  def hasContent(self,id):
-    if self._folder_handler is None:
-      self.initializeFolderHandler()
-    return folder_handler_dict[self._folder_handler].hasObject(self, id)
+  hasContent = hasObject
     
   security.declareProtected( Permissions.ModifyPortalContent, 'exportAll' )
   def exportAll(self,dir=None):
@@ -1072,10 +1301,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getObjectIds')
   def getObjectIds(self, *args, **kw):
-    if self._folder_handler is None:
-      self.initializeFolderHandler()
-    global folder_handler_dict
-    return folder_handler_dict[self._folder_handler].objectIds(self, *args, **kw)
+    return self.objectIds(*args, **kw)
     
   # Overloading
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -1150,24 +1376,23 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       spec = meta_type
     # when an object inherits from Folder after it was instanciated, it lacks
     # its BTreeFolder properties.
-    if getattr(self, '_tree', None) is None:
-      try:
-        self._initBTrees()
-      except AttributeError:
-        from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
-        BTreeFolder2Base.__init__(self, self.getId())
-    try:
-      if self._folder_handler is None:
-        self.initializeFolderHandler()
-      global folder_handler_dict
-      if self._folder_handler == 'CMFHBTreeFolderHandler':
-        object_list = folder_handler_dict[self._folder_handler]\
-                  .objectValues(self, base_id=base_id)
+#     if getattr(self, '_tree', None) is None:
+#       try:
+#         self._initBTrees()
+#       except AttributeError:
+#         from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
+#         BTreeFolder2Base.__init__(self, self.getId())
+
+    if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        object_list = []
       else:
-        object_list = folder_handler_dict[self._folder_handler]\
-                  .objectValues(self, spec=spec)
-    except AttributeError:
-      object_list = CMFBTreeFolder.objectValues(self, spec=spec)
+        object_list = CMFHBTreeFolder.objectValues(self, base_id=base_id)
+    else:
+      if self._tree is None:
+        object_list = []
+      else:
+        object_list = CMFBTreeFolder.objectValues(self, spec=spec)
     if portal_type is not None:
       if type(portal_type) == type(''):
         portal_type = (portal_type,)
@@ -1193,9 +1418,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       kw['portal_type'] = portal_type
     filter = kw.pop('filter', {}) or {}
     kw.update(filter)
-    try:
-      object_list = self._folder_handler.contentValues(self, spec=spec, filter=kw)
-    except AttributeError:
+    if self._folder_handler == HBTREE_HANDLER:
+      object_list = CMFHBTreeFolder.contentValues(self, spec=spec, filter=kw)
+    else:
       object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter=kw)
     if checked_permission is not None:
       checkPermission = getSecurityManager().checkPermission
@@ -1275,18 +1500,53 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       method(*args, **kw)
 
 
+# We browse all used class from btree and hbtree and set not implemented
+# class if one method defined on a class is not defined on other, thus if
+# new method appears in one class if will raise in the other one
+class NotImplementedClass:
+  def __init__(self, method_id):
+    self.__name__ = method_id
+
+  def __call__(self, *args, **kw):
+    raise NotImplementedError, str(self.__name__)
+  
+# Check method on HBTree but not on BTree
+hbtree_method_id_list = [x for x in HBTreeFolder2Base.__dict__
+                              if callable(getattr(HBTreeFolder2Base, x))]
+for method_id in hbtree_method_id_list:
+  if getattr(BTreeFolder2Base, method_id, None) is None:    
+    setattr(BTreeFolder2Base, method_id, NotImplementedClass(method_id))
+
+hbtree_method_id_list = [x for x in HBTreeFolder2.__dict__
+                              if callable(getattr(HBTreeFolder2, x))]
+for method_id in hbtree_method_id_list:
+  if getattr(BTreeFolder2, method_id, None) is None:    
+    setattr(BTreeFolder2, method_id, NotImplementedClass(method_id))
+
+hbtree_method_id_list = [x for x in CMFHBTreeFolder.__dict__
+                              if callable(getattr(CMFHBTreeFolder, x))]
+for method_id in hbtree_method_id_list:
+  if getattr(CMFBTreeFolder, method_id, None) is None:    
+    setattr(CMFBTreeFolder, method_id, NotImplementedClass(method_id))
+
+# Check method on BTree but not on HBTree
+btree_method_id_list = [x for x in BTreeFolder2Base.__dict__
+                             if callable(getattr(BTreeFolder2Base, x))]
+for method_id in btree_method_id_list:
+  if getattr(HBTreeFolder2Base, method_id, None) is None:    
+    setattr(HBTreeFolder2Base, method_id, NotImplementedClass(method_id))
+
+btree_method_id_list = [x for x in BTreeFolder2.__dict__
+                             if callable(getattr(BTreeFolder2, x))]
+for method_id in btree_method_id_list:
+  if getattr(HBTreeFolder2, method_id, None) is None:    
+    setattr(HBTreeFolder2, method_id, NotImplementedClass(method_id))
+
+btree_method_id_list = [x for x in CMFBTreeFolder.__dict__
+                             if callable(getattr(CMFBTreeFolder, x))]
+for method_id in btree_method_id_list:
+  if getattr(CMFHBTreeFolder, method_id, None) is None:    
+    setattr(CMFHBTreeFolder, method_id, NotImplementedClass(method_id))
+
 # Overwrite Zope setTitle()
 Folder.setTitle = Base.setTitle
-
-candidate_method_id_list = []
-for folder_class in (HBTreeFolder2Base, HBTreeFolder2, CMFHBTreeFolder):
-  # exclude objectValues because it is redefined here
-  # exclude get because it is not defined on OFSFolder
-  # exclude manage_main/manage_object_workspace because it
-  # generates func_code attribute errors
-  candidate_method_id_list.extend([x for x in folder_class.__dict__
-               if callable(getattr(folder_class, x)) and not
-               x in ('__getattr__','__init__', 'get', 'objectValues',
-                     'manage_main', 'manage_object_workspace')])
-for method_id in candidate_method_id_list:
-  setattr(Folder, method_id, FolderMethodWrapper(method_id))
