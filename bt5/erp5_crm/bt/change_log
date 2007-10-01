@@ -1,3 +1,6 @@
+2007-10-01 Yusei
+* Removed my_reference from Ticket_view.
+
 2007-09-28 Yusei
 * Add Web Message portal type for representing online forum posting or instant message.
 
