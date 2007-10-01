@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>default_task_line = context.newContent(portal_type = "Task Line", id="default_task_line")\n
+            <value> <string>pass\n
 </string> </value>
         </item>
         <item>
@@ -112,9 +112,6 @@
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>default_task_line</string>
                           </tuple>
                         </value>
                     </item>
