@@ -856,7 +856,7 @@ class XMLSyncUtilsMixin(SyncCode):
           if isinstance(xml_string, unicode):
             xml_string = xml_object.encode('utf-8')
           gid = subscriber.getGidFromObject(object)
-          signature = Signature(id=gid, object=object)
+          signature = Signature(id=gid, object=object).__of__(subscriber)
           signature.setTempXML(xml_object)
           if xml_string.count('\n') > self.MAX_LINES:
             if xml_string.find('--') >= 0: # This make comment fails, so we need to replace
@@ -875,7 +875,7 @@ class XMLSyncUtilsMixin(SyncCode):
             signature.setAction('Add')
             xml_string = '<!--' + short_string + '-->'
           gid = signature.getRid()#in fisrt, we try with rid if there is one
-          if gid == None:
+          if gid is None:
             gid = signature.getGid()
           syncml_data += self.addXMLObject(
                                   cmd_id=cmd_id,
