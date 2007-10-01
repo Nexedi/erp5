@@ -104,8 +104,16 @@ class PackingList(Delivery):
       for movement in self.getMovementList():
 
         quantity = movement.getQuantity()
-        # XXX FIXME: script name hardcoded
-        packed_quantity = movement.Movement_getPackedQuantity()
+        query_kw = {
+          'portal_type': self.getPortalContainerLineTypeList(),
+          'movement.explanation_uid': self.getUid(),
+          'movement.resource_uid': movement.getResourceUid(),
+          'movement.variation_text': movement.getVariationText(),
+          'has_cell_content': 0,
+        }
+        container_mvt_list = self.portal_catalog(**query_kw)
+        packed_quantity = sum([x.quantity for x in container_mvt_list \
+                               if x.quantity is not None])
 
         if quantity != packed_quantity:
           return 0
