@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -82,9 +79,17 @@ if "Associate" in role_list or "Assignee" in role_list or\\\n
    "Assignor" in role_list or "Manager" in role_list:\n
   return 1\n
 \n
+# Reject original format\n
+if format is None:\n
+  return 0\n
+\n
 # All users with view permission may view the document \n
 # in read only mode\n
-if format in (\'html\', \'stripped-html\', \'pdf\', \'png\', \'jpg\', \'gif\'):\n
+if format in (\'html\', \'stripped-html\', \'text\', \'txt\', \'pdf\', \'png\', \'jpg\', \'gif\'):\n
+  return 1\n
+if format.endswith(\'pdf\'):\n
+  return 1\n
+if format.endswith(\'html\'):\n
   return 1\n
 \n
 # All other formats are prohibitted\n
@@ -144,6 +149,7 @@ return 0\n
                             <string>user</string>
                             <string>context</string>
                             <string>role_list</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
