@@ -287,4 +287,5 @@ def generateSubForm(self, value, REQUEST):
 
 # Register get_value
 from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
-registerOriginalGetValueClassAndArgument(ParallelListField, '*')
+registerOriginalGetValueClassAndArgument(ParallelListField, 
+  ('title', 'required', 'size', 'default', 'first_item', 'items'))

@@ -53,6 +53,8 @@ from Globals import DTMLFile
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Form.Form import StaticValue, TALESValue, OverrideValue, DefaultValue, EditableValue
 
+_USE_ORIGINAL_GET_VALUE_MARKER = []
+
 _field_value_cache = {}
 def purgeFieldValueCache():
   _field_value_cache.clear()
@@ -532,7 +534,7 @@ class ProxyField(ZMIField):
       template_field = self.getRecursiveTemplateField()
       # Old ListBox instance might have default attribute. so we need to check it.
       if checkOriginalGetValue(template_field, id):
-        return self._get_value(id, **kw)
+        return _USE_ORIGINAL_GET_VALUE_MARKER
       value = self.get_recursive_orig_value(id)
     except KeyError:
       # For ListBox and other exceptional fields.
@@ -547,7 +549,7 @@ class ProxyField(ZMIField):
     if id == 'editable':
       return EditableValue(value)
 
-    # Return default value in non callable mode
+    # Return default value in callable mode
     if callable(value):
       return StaticValue(value)
 
@@ -583,6 +585,9 @@ class ProxyField(ZMIField):
       # either returns non callable value (ex. "Title")
       # or a FieldValue instance of appropriate class
       value = _field_value_cache[cache_id] = self.getFieldValue(field, id, **kw)
+
+    if value is _USE_ORIGINAL_GET_VALUE_MARKER:
+      return self.getTemplateField().get_value(id, **kw)
 
     if callable(value):
       return value(field, id, **kw)
