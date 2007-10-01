@@ -1023,6 +1023,7 @@ class BaobabConduit(ERP5Conduit):
                  , category_list                      = sorted_cell_category_list
                  , title                              = cell_uid
                  )
+    new_cell.getPrice()
 
 
 
