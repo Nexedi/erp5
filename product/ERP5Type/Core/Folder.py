@@ -644,12 +644,12 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     else:
       return CMFBTreeFolder.manage_object_workspace(self, ids, REQUEST)
 
-  def manage_main(self, ids=(), REQUEST=None):
+  def manage_main(self, *args, **kw):
     ''' List content.'''
     if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder.manage_main.__of__(self)(self, ids, REQUEST)
+      return CMFHBTreeFolder.manage_main.__of__(self)(self, *args, **kw)
     else:
-      return CMFBTreeFolder.manage_main.__of__(self)(self, ids, REQUEST)
+      return CMFBTreeFolder.manage_main.__of__(self)(self, *args, **kw)
 
   def tpValues(self):
     """Ensures the items don't show up in the left pane.
