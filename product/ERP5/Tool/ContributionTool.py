@@ -655,9 +655,9 @@ class ContributionTool(BaseTool):
       except urllib2.HTTPError, error:
         if repeat == 0:
           # XXX - Call the extendBadURLList method,--NOT Implemented--
-          # IDEA : ajouter l'url en question dans une list "bad_url_list"  puis lors du crawling au lieu que de boucler sur 
+          # IDEA : ajouter l'url en question dans une list "bad_url_list" puis lors du crawling au lieu que de boucler sur 
           #        la liste des url extraites de la page web on fait un test supplementaire qui verifie que l'url n'est pas 
-          #        dans la liste  bad_url_lis
+          #        dans la liste bad_url_lis
           raise urllib2.HTTPError
         content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
         return
