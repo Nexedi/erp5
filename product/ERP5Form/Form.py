@@ -232,7 +232,7 @@ def getFieldValue(self, field, id, **kw):
   if id == 'editable':
     return EditableValue(value)
 
-  # Return default value in non callable mode
+  # Return default value in callable mode
   if callable(value):
     return StaticValue(value)
 
