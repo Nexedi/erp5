@@ -69,7 +69,7 @@
                                   <dictionary>
                                     <item>
                                         <key> <string>default</string> </key>
-                                        <value> <string>\'delivered\'</string> </value>
+                                        <value> <string>delivered</string> </value>
                                     </item>
                                   </dictionary>
                                 </value>
@@ -106,7 +106,7 @@
 column_id_list:list\r\n
 group_by_expression\r\n
 date\r\n
-simulation_state=\'delivered\'</string> </value>
+simulation_state=delivered</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
