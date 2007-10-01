@@ -32,6 +32,7 @@ from xmlrpclib import Fault
 from xmlrpclib import Transport
 from xmlrpclib import SafeTransport
 from AccessControl import ClassSecurityInfo
+from AccessControl import Unauthorized
 from OFS.Image import Pdata
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -153,6 +154,14 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     # Accelerate rendering in Web mode
     _setCacheHeaders(self, {'format' : format})
+
+    # Verify that the format is acceptable (from permission point of view)
+    method = self._getTypeBasedMethod('checkConversionFormatPermission', 
+        fallback_script_id = 'Document_checkConversionFormatPermission')
+    if not method(format=format):
+      raise Unauthorized("OOoDocument: user does not have enough permission to access document"
+                         " in %s format" % format)
+
     # Return the original file by default
     if format is None:
       return File.index_html(self, REQUEST, RESPONSE)
