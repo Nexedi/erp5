@@ -76,7 +76,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       if not quiet:
         message = 'Test folderIsBtree'
         LOG('Testing... ', 0, message)
-      self.assertRaises(AttributeError, self.folder.getTreeIdList)
+      self.assertRaises(NotImplementedError, self.folder.getTreeIdList)
       self.assertEqual(self.folder.isBTree(), True)
       self.assertEqual(self.folder.isHBTree(), False)
       
