@@ -946,9 +946,10 @@ class TestInvoice(TestPackingListMixin,
       # check which activities are failing
       self.assertTrue(str(exc).startswith('tic is looping forever.'),
           '%s does not start with "tic is looping forever."' % str(exc))
-      self.failIfDifferentSet(['/'.join(x.object_path) for x in
-          self.getActivityTool().getMessageList()], [invoice.getPath(),
-          it_builder.getPath()])
+      msg_list = ['/'.join(x.object_path) for x in
+          self.getActivityTool().getMessageList()]
+      self.assertTrue(it_builder.getPath() in msg_list, '%s in %s' %
+          (it_builder.getPath(), msg_list))
       # flush failing activities
       activity_tool = self.getActivityTool()
       activity_tool.manageClearActivities(keep=0)
@@ -1354,10 +1355,46 @@ class TestInvoice(TestPackingListMixin,
     """
     self.playSequence(sequence, quiet=quiet)
 
-  def test_09_InvoiceChangeStartDate(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_09_InvoiceChangeStartDateFail(self, quiet=quiet,
+      run=RUN_ALL_TESTS):
     """
     Change the start_date of a Invoice Line,
     check that the invoice is divergent,
+    then accept decision, and check Packing list is divergent
+    """
+    if not run: return
+    if not quiet:
+      self.logMessage('Invoice Change Sart Date')
+    sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+    """
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
+    stepTic
+    stepCheckInvoiceBuilding
+
+    stepChangeInvoiceStartDate
+    stepCheckInvoiceIsDivergent
+    stepCheckInvoiceIsCalculating
+    stepAcceptDecisionInvoice
+    stepTic
+
+    stepCheckInvoiceNotSplitted
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
+
+    stepCheckPackingListIsDivergent
+    """
+    self.playSequence(sequence, quiet=quiet)
+
+  def test_09b_InvoiceChangeStartDateSucceed(self, quiet=quiet,
+      run=RUN_ALL_TESTS):
+    """
+    Change the start_date of a Invoice Line,
+    check that the invoice is divergent,
+    deliver the Packing List to make sure it's frozen,
     then accept decision, and check everything is solved
     """
     if not run: return
@@ -1372,6 +1409,10 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceTransactionRule
     stepTic
     stepCheckInvoiceBuilding
+    stepStopPackingList
+    stepTic
+    stepDeliverPackingList
+    stepTic
 
     stepChangeInvoiceStartDate
     stepCheckInvoiceIsDivergent
