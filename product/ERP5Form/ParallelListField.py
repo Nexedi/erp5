@@ -188,7 +188,6 @@ class ParallelListValidator(Validator.MultiSelectionValidator):
       except ValidationError:
         is_sub_field_required = 1
     
-    result_list = [x for x in result_list if x!='']
     if result_list == []:
       if field.get_value('required'):
         self.raise_error('required_not_found', field)
@@ -279,9 +278,6 @@ def generateSubForm(self, value, REQUEST):
         'value': value_list,
     })
     hash_list.append(default_sub_field_property_dict)
-  # XXX Clean up old ParallelListField
-  if hasattr(self, 'sub_form'):
-     delattr(self, 'sub_form')
   return hash_list
 
 
@@ -289,3 +285,4 @@ def generateSubForm(self, value, REQUEST):
 from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
 registerOriginalGetValueClassAndArgument(ParallelListField, 
   ('title', 'required', 'size', 'default', 'first_item', 'items'))
+
