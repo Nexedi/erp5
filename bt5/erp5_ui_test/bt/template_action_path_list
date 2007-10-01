@@ -1,10 +1,7 @@
 Bar Module | list
 Bar Module | view
-Bar | history
 Bar | list
-Bar | metadata
 Bar | performance
-Bar | print
 Bar | view
 Foo Line | view
 Foo Module | list
@@ -12,9 +9,7 @@ Foo Module | list_ui
 Foo Module | search
 Foo Module | sort_on
 Foo Module | view
-Foo | history
 Foo | list
-Foo | metadata
 Foo | view
 Foo | view_duration_field
 Foo | view_planning
