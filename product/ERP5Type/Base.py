@@ -393,7 +393,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
 
   id = ''
   #LOG('before aq_portal_type %s' % id, 0, str(ptype))
-  if not Base.aq_portal_type.has_key(ptype):
+  if ptype not in Base.aq_portal_type:
     # Mark as generated
     #prop_holder = Base.aq_portal_type[ptype] = PropertyHolder()
     prop_holder = PropertyHolder()
@@ -744,14 +744,10 @@ class Base( CopyContainer,
     # and per class. Other uses are possible (ex. WebSection).
     ptype = self.portal_type
 
-    #LOG('_aq_dynamic', 0, 'self = %r, id = %r, ptype = %r' % (self, id, ptype))
-    #LOG("In _aq_dynamic", 0, str((id, ptype, self)))
-
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
-    if Base.aq_portal_type.has_key(ptype):
+    if ptype in Base.aq_portal_type:
       accessor = getattr(Base.aq_portal_type[ptype], id, None)
-      #LOG('_aq_dynamic', 0, 'self = %r, id = %r, accessor = %r' % (self, id, accessor))
       if accessor is not None:
         # Clearly this below has a bad effect in CMFCategory.
         # Someone must investigate why. -yo
