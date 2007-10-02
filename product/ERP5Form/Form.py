@@ -771,7 +771,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             for key, value in _dict.items():
                 if value=='':
                     continue
-                if isinstance((value, Method):
+                if isinstance(value, Method):
                     value = Method(value.method_name)
                 elif isinstance(value, TALESMethod):
                     value = TALESMethod(value._text)
