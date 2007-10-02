@@ -1,8 +1,11 @@
-2007-02-13 rafael
-* Add planningbox_field_zuite.
+2007-10-02 Yusei
+* Fix planingbox test name.
 
 2007-09-04 Kazuhiko
 * use portal_url.getPortalObject().absolute_url() instead of portal_url.getPortalPath() for better virtual host support.
+
+2007-02-13 rafael
+* Add planningbox_field_zuite.
 
 2007-02-13 yo
 * Add datetime_field_zuite.

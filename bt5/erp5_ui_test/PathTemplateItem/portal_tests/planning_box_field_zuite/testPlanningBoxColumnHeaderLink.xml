@@ -57,7 +57,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Invalid DateTime</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Column Header Link</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
