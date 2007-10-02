@@ -204,7 +204,7 @@ class SimulationTool(BaseTool):
       simulation_state_dict = self._getSimulationStateDict(**kw)
       return self._buildSimulationStateQuery(simulation_state_dict=simulation_state_dict)
       
-    def _buildSimulationStateQuery(self, simulation_state_dict):
+    def _buildSimulationStateQuery(self, simulation_state_dict, table='stock'):
       input_simulation_state = simulation_state_dict.get(
                                  'input_simulation_state')
       output_simulation_state = simulation_state_dict.get(
@@ -212,20 +212,20 @@ class SimulationTool(BaseTool):
       simulation_state = simulation_state_dict.get('simulation_state')
       if simulation_state is not None:
         simulation_query = Query(operator='IN',
-                                 **{'stock.simulation_state':
+                                 **{'%s.simulation_state' % (table, ):
                                     simulation_state})
       elif input_simulation_state is not None:
-        input_quantity_query = Query(**{'stock.quantity': '>0'})
+        input_quantity_query = Query(**{'%s.quantity' % (table, ): '>0'})
         input_simulation_query = Query(operator='IN',
-                                       **{'stock.simulation_state':
+                                       **{'%s.simulation_state' % (table, ):
                                           input_simulation_state})
         simulation_query = ComplexQuery(input_quantity_query,
                                         input_simulation_query,
                                         operator='AND')
         if output_simulation_state is not None:
-          output_quantity_query = Query(**{'stock.quantity': '<0'})
+          output_quantity_query = Query(**{'%s.quantity' % (table, ): '<0'})
           output_simulation_query = Query(operator='IN',
-                                          **{'stock.simulation_state':
+                                          **{'%s.simulation_state' % (table, ):
                                              output_simulation_state})
           output_query = ComplexQuery(output_quantity_query,
                                       output_simulation_query,
@@ -398,7 +398,8 @@ class SimulationTool(BaseTool):
           return query_b
         def getSimulationQuery(simulation_dict, omit_dict):
           simulation_query = self._buildSimulationStateQuery(
-                               simulation_state_dict=simulation_dict)
+                               simulation_state_dict=simulation_dict,
+                               table=table)
           omit_query = self._buildOmitQuery(query_table=table,
                                             omit_dict=omit_dict)
           return joinQueriesIfNeeded(query_a=simulation_query,
