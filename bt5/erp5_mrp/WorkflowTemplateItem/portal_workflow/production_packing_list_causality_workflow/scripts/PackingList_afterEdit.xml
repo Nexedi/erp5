@@ -68,20 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = state_change[\'object\']\n
-\n
-# Create Delivery Applied Rule (if required)\n
-packing_list.updateAppliedRule()\n
-# Make sure applied rule is 100% indexed\n
-# Here, applied rule must be already cleanly created                                           \n
-\n
-# We do not use DeliverySolver, because, by default, we keep delivery_ratio\n
-# untouch\n
-packing_list.portal_simulation.solveDelivery(packing_list, None,\n
-                                             "CopyToTarget")\n
-\n
-# Automatic workflow\n
-packing_list.activate().updateCausalityState()\n
+            <value> <string>context = state_change[\'object\']\n
+if context.getSimulationState()!=\'draft\':\n
+  context.activate().updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -98,7 +87,7 @@ packing_list.activate().updateCausalityState()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,10 +114,10 @@ packing_list.activate().updateCausalityState()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>kw</string>
                             <string>_getitem_</string>
-                            <string>packing_list</string>
+                            <string>context</string>
                             <string>_getattr_</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,7 +134,7 @@ packing_list.activate().updateCausalityState()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PackingList_acceptDecision</string> </value>
+            <value> <string>PackingList_afterEdit</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

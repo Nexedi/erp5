@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>diverged</string> </value>
+            <value> <string>draft</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -34,28 +34,14 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Diverged</string> </value>
+            <value> <string>Draft</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>accept_decision</string>
-                <string>accept_decision_action</string>
-                <string>adopt_prevision</string>
-                <string>adopt_prevision_action</string>
-                <string>calculate</string>
-                <string>converge</string>
-                <string>split_prevision</string>
-                <string>split_prevision_action</string>
                 <string>start_building</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_list</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
       </dictionary>

@@ -80,13 +80,15 @@ packing_list.updateAppliedRule()\n
 \n
 # We do not use DeliverySolver, because, by default, we keep delivery_ratio\n
 # untouch\n
+tag = packing_list.getPath() + \'_split\'\n
 packing_list.portal_simulation.solveDelivery(packing_list, None, \n
                                              "SplitAndDefer",\n
                                              start_date=start_date,\n
-                                             stop_date=stop_date)\n
+                                             stop_date=stop_date,\n
+                                             activate_kw={\'tag\':tag})\n
 \n
 # Automatic workflow\n
-packing_list.edit()\n
+packing_list.activate().updateCausalityState()\n
 \n
 # Create delivery\n
 order = packing_list.getCausalityValue()\n
@@ -100,8 +102,9 @@ if order_portal_type == \'Sale Order\':\n
 elif order_portal_type == \'Purchase Order\':\n
   delivery_builder = order.portal_deliveries.purchase_packing_list_builder\n
 \n
-applied_rule_uid = applied_rule.getUid()\n
-delivery_builder.activate().build(applied_rule_uid=applied_rule_uid)\n
+\n
+explanation_uid_list = [order.getUid(),packing_list.getUid()]\n
+delivery_builder.activate(activity=\'SQLQueue\',after_tag=tag).build(explanation_uid=explanation_uid_list)\n
 </string> </value>
         </item>
         <item>
@@ -150,12 +153,13 @@ delivery_builder.activate().build(applied_rule_uid=applied_rule_uid)\n
                             <string>_getattr_</string>
                             <string>stop_date</string>
                             <string>start_date</string>
+                            <string>tag</string>
                             <string>None</string>
                             <string>order</string>
                             <string>applied_rule</string>
                             <string>order_portal_type</string>
                             <string>delivery_builder</string>
-                            <string>applied_rule_uid</string>
+                            <string>explanation_uid_list</string>
                           </tuple>
                         </value>
                     </item>

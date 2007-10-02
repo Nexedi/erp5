@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Split prevision</string> </value>
+            <value> <string>Split and Defer</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>PackingList_split</string> </value>
+            <value> <string>PackingList_callSplitPrevisionTransition</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

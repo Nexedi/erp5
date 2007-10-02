@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>PackingList_afterEdit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -46,11 +46,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>diverge</string> </value>
+            <value> <string>calculate</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>diverged</string> </value>
+            <value> <string>calculating</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>

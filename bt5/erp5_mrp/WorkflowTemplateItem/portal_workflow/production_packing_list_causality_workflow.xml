@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>initial_state</string> </key>
-            <value> <string>solved</string> </value>
+            <value> <string>draft</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>

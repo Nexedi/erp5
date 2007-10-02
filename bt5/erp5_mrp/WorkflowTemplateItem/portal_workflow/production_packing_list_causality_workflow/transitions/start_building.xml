@@ -46,11 +46,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>edit</string> </value>
+            <value> <string>start_building</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>building</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>

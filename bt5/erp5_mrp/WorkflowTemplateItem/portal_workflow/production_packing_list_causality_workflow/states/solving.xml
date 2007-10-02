@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>diverged</string> </value>
+            <value> <string>solving</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -34,28 +34,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Diverged</string> </value>
+            <value> <string>Solving</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>accept_decision</string>
-                <string>accept_decision_action</string>
-                <string>adopt_prevision</string>
-                <string>adopt_prevision_action</string>
-                <string>calculate</string>
                 <string>converge</string>
-                <string>split_prevision</string>
-                <string>split_prevision_action</string>
-                <string>start_building</string>
+                <string>diverge</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_list</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
       </dictionary>
@@ -80,35 +67,13 @@
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <list>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
-                        <string>Authenticated</string>
-                        <string>Author</string>
-                        <string>Manager</string>
-                        <string>Member</string>
-                        <string>Owner</string>
-                        <string>Reviewer</string>
-                      </list>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <list>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
-                        <string>Authenticated</string>
-                        <string>Author</string>
-                        <string>Manager</string>
-                        <string>Member</string>
-                        <string>Owner</string>
-                        <string>Reviewer</string>
-                      </list>
+                      <tuple/>
                     </value>
                 </item>
               </dictionary>

@@ -87,7 +87,7 @@ packing_list_relative_url = packing_list.getRelativeUrl()\n
 delivery_builder.updateFromSimulation(packing_list_relative_url)\n
 \n
 # Automatic workflow\n
-packing_list.edit()\n
+packing_list.activate().updateCausalityState()\n
 </string> </value>
         </item>
         <item>

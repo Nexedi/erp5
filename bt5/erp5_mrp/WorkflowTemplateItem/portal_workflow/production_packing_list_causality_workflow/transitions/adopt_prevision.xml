@@ -32,11 +32,11 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>PackingList_adoptPrevision</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Set the script before because after the transition we have no right to change the packing list</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>solving</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>PackingList_adoptPrevision</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
