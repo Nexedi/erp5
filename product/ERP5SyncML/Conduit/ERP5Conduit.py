@@ -380,7 +380,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           if args != {} and (isConflict==0 or force) and (not simulate):
             self.editDocument(object=object,**args)
             # It is sometimes required to do something after an edit
-            if hasattr(object,'manage_afterEdit'):
+            if getattr(object,'manage_afterEdit'):
               object.manage_afterEdit()
 
         if keyword == 'object':
@@ -748,7 +748,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if reset_local_roles:
       user_role_list = map(lambda x:x[0],object.get_local_roles())
       object.manage_delLocalRoles(user_role_list)
-    if hasattr(object,'workflow_history') and reset_workflow:
+    if getattr(object, 'workflow_history', None) is not None and reset_workflow:
       object.workflow_history = PersistentMapping()
     if xml.nodeName.find('xupdate')>= 0:
       xml = self.getElementNodeList(xml)[0]
@@ -771,14 +771,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     # edit the object with a dictionnary of arguments,
     # like {"telephone_number":"02-5648"}
     self.editDocument(object=object,**args)
-    if hasattr(object,'manage_afterEdit'):
+    if getattr(object, 'manage_afterEdit', None) is not None:
       object.manage_afterEdit()
-    self.afterNewObject(object = object)
+    self.afterNewObject(object)
 
     # Then we may create subobject
     for subnode in self.getElementNodeList(xml):
       if subnode.nodeName in (self.xml_object_tag,): #,self.history_tag):
-        self.addNode(object=object,xml=subnode)
+        self.addNode(object=object, xml=subnode)
 
   security.declareProtected(Permissions.AccessContentsInformation,'afterNewObject')
   def afterNewObject(self, object):
@@ -1049,7 +1049,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     # Specific CPS, try to remove duplicate lines in portal_repository._histories
     tool = getToolByName(self,'portal_repository',None)
     if tool is not None:
-      if hasattr(self,'getDocid'):
+      if getattr(self, 'getDocid', None) is not None:
         docid = self.getDocid()
         history = tool.getHistory(docid)
         new_history = ()
