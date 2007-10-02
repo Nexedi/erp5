@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-from Products.CMFCore.Expression import Expression
-
 class Amortisation:
     """
         Properties which allow to immobilise an item
@@ -42,86 +40,47 @@ class Amortisation:
         {   'id'          : 'amortisation_start_price',
             'description' : 'The value to use to calculate the accounting amortisation movements (net of tax)',
             'type'        : 'float',
-            'acquisition_base_category'     : ('parent',),
-            'acquisition_copy_value'        : 1,
-            'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getAmortisationStartPrice',
-            'acquisition_portal_type'       : Expression('python:[]'),
-            'acquisition_depends'           : None,
-            'mode'        : 'w' },
+            'mode'        : 'w'
+        },
         {   'id'          : 'extra_cost_price',
             'description' : 'The extra costs to immobilise with the main price (net of tax)',
             'type'        : 'float',
-            'acquisition_base_category'     : ('parent',),
-            'acquisition_copy_value'        : 1,
-            'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getExtraCostPrice',
-            'acquisition_portal_type'       : Expression('python:[]'),
-            'acquisition_depends'           : None,
-            'mode'        : 'w' },
+            'mode'        : 'w'
+        },
         {   'id'          : 'disposal_price',
             'description' : 'The estimated price at the end of the lifetime (net of tax)',
             'type'        : 'float',
-            'acquisition_base_category'     : ('parent',),
-            'acquisition_copy_value'        : 1,
-            'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getDisposalPrice',
-            'acquisition_portal_type'       : Expression('python:[]'),
-            'acquisition_depends'           : None,
-            'mode'        : 'w' },
+            'mode'        : 'w'
+        },
         {   'id'          : 'durability',
             'description' : 'The remaining durability of the item',
             'type'        : 'float',
-            'acquisition_base_category'     : ('parent',),
-            'acquisition_copy_value'        : 1,
-            'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getDurability',
-            'acquisition_portal_type'       : Expression('python:[]'),
-            'acquisition_depends'           : None,
-            'mode'        : 'w' },
+            'mode'        : 'w'
+        },
         {   'id'          : 'amortisation_duration',
             'description' : 'The remaining amortisation duration in months',
             'type'        : 'int',
-            'acquisition_base_category'     : ('parent',),
-            'acquisition_copy_value'        : 1,
-            'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getAmortisationDuration',
-            'acquisition_portal_type'       : Expression('python:[]'),
-            'acquisition_depends'           : None,
-            'mode'        : 'w' },
+            'mode'        : 'w'
+        },
         {   'id'          : 'immobilisation_vat',
             'description' : 'The VAT at the beginning of the immobilisation period',
             'type'        : 'float',
-            'acquisition_base_category'     : ('parent',),
-            'acquisition_copy_value'        : 1,
-            'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getImmobilisationVat',
-            'acquisition_portal_type'       : Expression('python:[]'),
-            'acquisition_depends'           : None,
-            'mode'        : 'w' },
+            'mode'        : 'w'
+        },
         {   'id'          : 'amortisation_method',
             'description' : 'The amortisation method used for this particular immobilisation period',
             'type'        : 'string',
-            'acquisition_base_category'     : ('parent',),
-            'acquisition_copy_value'        : 1,
-            'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getAmortisationMethod',
-            'acquisition_portal_type'       : Expression('python:[]'),
-            'acquisition_depends'           : None,
-            'mode'        : 'w' },
+            'mode'        : 'w'
+        },
         # Properties specific to each amortisation method
         {   'id'          : 'degressive_coefficient',
             'description' : 'The fiscal coefficient to use in degressive amortisation',
             'type'        : 'float',
-            'acquisition_base_category'     : ('parent',),
-            'acquisition_copy_value'        : 1,
-            'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getDegressiveCoefficient',
-            'acquisition_portal_type'       : Expression('python:[]'),
-            'acquisition_depends'           : None,
-            'mode'        : 'w' },
-            )
+            'mode'        : 'w'
+        },
+    )
 
-    _categories = ('input_account', 'output_account', 'immobilisation_account', 'amortisation_account',
-                   'depreciation_account', 'extra_cost_account', 'monthly_amortisation_account',
+    _categories = ('input_account', 'output_account', 'immobilisation_account',
+                   'amortisation_account', 'depreciation_account',
+                   'extra_cost_account', 'monthly_amortisation_account',
                    'immobilisation_vat_account') # XXX Some rename required
