@@ -959,6 +959,12 @@ class SimulationTool(BaseTool):
               # XXX: uggly duplicated query generation code
               # XXX: duplicates SQL variable formatting present in
               #      ERP5Type/patches/sqlvar.py about datetime SQL columns.
+              # Note: This code can generate queries like:
+              #  date = 2000/01/01 and date >= 2001/01/01
+              #  When latest full inventory is at 2000/01/01 and given
+              #  from_date is 2001/01/01.
+              #  It is not a serious problem since MySQL detects incompatible
+              #  conditions and immediately returns (with 0 rows).
               equal_date_query_list = []
               greater_than_date_query_list = []
               EQUAL_DATE_TABLE_ID = 'inventory_stock'
