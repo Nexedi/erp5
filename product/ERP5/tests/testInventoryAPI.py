@@ -1497,26 +1497,47 @@ class TestInventoryDocument(InventoryAPITestCase):
     self.INVENTORY_QUANTITY_2 = INVENTORY_QUANTITY_2 = 10000
     self.INVENTORY_DATE_1 = INVENTORY_DATE_1 = INVENTORY_DATE_2 - 10 # Oldest
     self.INVENTORY_QUANTITY_1 = INVENTORY_QUANTITY_1 = 1000
+
+    # "actual" quantities are the quantities which will end up in the stock
+    # table.
+    self.ACTUAL_INVENTORY_QUANTITY_1 = INVENTORY_QUANTITY_1 - \
+      BASE_QUANTITY
+    self.ACTUAL_INVENTORY_QUANTITY_2 = INVENTORY_QUANTITY_2 - \
+      (self.INVENTORY_QUANTITY_1 + BASE_QUANTITY)
+    self.ACTUAL_INVENTORY_QUANTITY_3 = INVENTORY_QUANTITY_3 - \
+      (self.INVENTORY_QUANTITY_2 + BASE_QUANTITY)
+    
     self.movement_uid_list = movement_uid_list = []
+    # Initial movement of 1
     movement = self._makeMovement(quantity=BASE_QUANTITY,
-      start_date=INVENTORY_DATE_1 - 1)
+      start_date=INVENTORY_DATE_1 - 1,
+      simulation_state='delivered')
     movement_uid_list.append(movement.getUid())
+    # First (partial) inventory of 1 000
     partial_inventory = self._createAutomaticInventoryAtDate(
       date=INVENTORY_DATE_1, override_inventory=INVENTORY_QUANTITY_1)
+    # Second movement of 1
     movement = self._makeMovement(quantity=BASE_QUANTITY,
-      start_date=INVENTORY_DATE_2 - 1)
+      start_date=INVENTORY_DATE_2 - 1,
+      simulation_state='delivered')
     movement_uid_list.append(movement.getUid())
+    # Second (full) inventory of 10 000
     self._createAutomaticInventoryAtDate(date=INVENTORY_DATE_2,
       override_inventory=INVENTORY_QUANTITY_2,
       full_inventory=True)
+    # Third movement of 1
     movement = self._makeMovement(quantity=BASE_QUANTITY,
-      start_date=INVENTORY_DATE_3 - 1)
+      start_date=INVENTORY_DATE_3 - 1,
+      simulation_state='delivered')
     movement_uid_list.append(movement.getUid())
+    # Third (full) inventory of 100 000
     self._createAutomaticInventoryAtDate(date=INVENTORY_DATE_3,
       override_inventory=INVENTORY_QUANTITY_3,
       full_inventory=True)
+    # Fourth movement of 1
     movement = self._makeMovement(quantity=BASE_QUANTITY,
-      start_date=INVENTORY_DATE_3 + 1)
+      start_date=INVENTORY_DATE_3 + 1,
+      simulation_state='delivered')
     movement_uid_list.append(movement.getUid())
     self.tic()
     manage_test = self.getPortal().erp5_sql_transactionless_connection.manage_test
@@ -1654,7 +1675,8 @@ class TestInventoryDocument(InventoryAPITestCase):
         self.INVENTORY_QUANTITY_1 * 2 + self.BASE_QUANTITY * 2
       would be found.
     """
-    self.assertEquals(self.INVENTORY_QUANTITY_1 + self.BASE_QUANTITY * 2,
+    self.assertEquals(self.ACTUAL_INVENTORY_QUANTITY_1 + \
+                      self.BASE_QUANTITY * 2,
                       self.getInventory(node_uid=self.node_uid,
                                    at_date=self.INVENTORY_DATE_2 - 1))
 
@@ -1717,7 +1739,7 @@ class TestInventoryDocument(InventoryAPITestCase):
        'inventory': self.BASE_QUANTITY,
        'node_uid': self.node_uid},
       {'date': self.INVENTORY_DATE_1,
-       'inventory': self.INVENTORY_QUANTITY_1,
+       'inventory': self.ACTUAL_INVENTORY_QUANTITY_1,
        'node_uid': self.node_uid},
       {'date': self.INVENTORY_DATE_2 - 1,
        'inventory': self.BASE_QUANTITY,
@@ -1767,7 +1789,7 @@ class TestInventoryDocument(InventoryAPITestCase):
      'resource_uid': self.resource.getUid(),
      'node_uid': self.node_uid,
      'date': self.INVENTORY_DATE_3 - 1},
-    {'inventory': self.INVENTORY_QUANTITY_3,
+    {'inventory': self.ACTUAL_INVENTORY_QUANTITY_3,
      'resource_uid': self.resource.getUid(),
      'node_uid': self.node_uid,
      'date': self.INVENTORY_DATE_3},
@@ -1794,7 +1816,7 @@ class TestInventoryDocument(InventoryAPITestCase):
      'resource_uid': self.resource.getUid(),
      'node_uid': self.node_uid,
      'date': self.INVENTORY_DATE_3 - 1},
-    {'inventory': self.INVENTORY_QUANTITY_3,
+    {'inventory': self.ACTUAL_INVENTORY_QUANTITY_3,
      'resource_uid': self.resource.getUid(),
      'node_uid': self.node_uid,
      'date': self.INVENTORY_DATE_3},
