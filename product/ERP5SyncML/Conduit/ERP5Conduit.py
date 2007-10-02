@@ -380,7 +380,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           if args != {} and (isConflict==0 or force) and (not simulate):
             self.editDocument(object=object,**args)
             # It is sometimes required to do something after an edit
-            if getattr(object,'manage_afterEdit'):
+            if getattr(object, 'manage_afterEdit', None) is not None:
               object.manage_afterEdit()
 
         if keyword == 'object':
