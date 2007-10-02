@@ -66,7 +66,7 @@ class StaticValue:
     value as is)
   """
   def __init__(self, value):
-    if type(aq_base(value)) is  Method:
+    if isinstance(aq_base(value), Method):
       value = Method(value.method_name)
     self.value = value
 
@@ -151,7 +151,7 @@ class TALESValue(StaticValue):
 
 class OverrideValue(StaticValue):
   def __init__(self, override):
-    if type(aq_base(override)) is  Method:
+    if isinstance(aq_base(override), Method):
       override = Method(override.method_name)
     self.override = override
 
@@ -161,7 +161,7 @@ class OverrideValue(StaticValue):
 class DefaultValue(StaticValue):
   def __init__(self, field_id, value):
     self.key = field_id[3:]
-    if type(aq_base(value)) is  Method:
+    if isinstance(aq_base(value), Method):
       value = Method(value.method_name)
     self.value = value
 
@@ -771,9 +771,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             for key, value in _dict.items():
                 if value=='':
                     continue
-                if type(value) is Method:
+                if isinstance((value, Method):
                     value = Method(value.method_name)
-                elif type(value) is TALESMethod:
+                elif isinstance(value, TALESMethod):
                     value = TALESMethod(value._text)
                 elif value is not None and not isinstance(value,
                         (str, unicode, int, long, bool, list, tuple, dict)):
