@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -74,7 +71,7 @@ delivery_movement = simulation_movement.getDeliveryValue()\n
 \n
 if delivery_movement is not None:\n
   delivery = delivery_movement.getExplanationValue()\n
-  if delivery.getCausalityState() != \'draft\':\n
+  if delivery.getCausalityState() != \'draft\' and getattr(delivery, \'calculate\', None) is not None:\n
     delivery.activate(\n
         after_path_and_method_id=(delivery_movement.getPath(),\n
         (\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))).calculate()\n
@@ -145,6 +142,7 @@ if delivery_movement is not None:\n
                             <string>delivery_movement</string>
                             <string>None</string>
                             <string>delivery</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
