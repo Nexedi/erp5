@@ -229,7 +229,7 @@ class TransformationRule(Rule):
                                                      all=1)
         if previous_ind_phase_list != []:
           # Industrial phase is a category
-          ind_phase_list = [x.getCategoryRelativeUrl() for x in \
+          ind_phase_list = [x.getRelativeUrl() for x in \
                             previous_ind_phase_list]
           consumed_mvt_id = "%s_%s" % ("mr", id_count)
           id_count += 1
@@ -246,11 +246,11 @@ class TransformationRule(Rule):
             "source": production,
             "source_section": production_section,
             "deliverable": 1,
-            "variation_category_list": category_list,
+            "variation_category_list": category_list+ind_phase_list,
             "variation_property_dict": \
                         parent_movement.getVariationPropertyDict(),
             'causality_value': current_supply_link,
-            "industrial_phase_list": ind_phase_list}
+            }
       return consumed_movement_dict
 
     def _expandConsumedRawMaterials(self, applied_rule, production,
