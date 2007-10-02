@@ -1261,7 +1261,7 @@ class BasicStructure:
     # only the area that need to be rendered. This prevents from useless
     # processing
     # calculating main axis bounds
-    self.getMainAxisInfo(self.main_axis_info, report_tree_list)
+    self.main_axis_info = self.getMainAxisInfo(report_tree_list)
     # applying main axis selection
     if report_tree_list != []:
       report_tree_list=report_tree_list[self.main_axis_info['bound_start']:
@@ -1435,14 +1435,14 @@ class BasicStructure:
     # axis bounds to add only the blocs needed afterwards
     # getting secondary_axis_occurence to define begin and end secondary_axis
     # bounds (getting absolute size)
-    self.getSecondaryAxisOccurence()
+    self.secondary_axis_occurence = self.getSecondaryAxisOccurence()
     # XXX changing point of view to handle axis occurences : their are now
     # handled by group, so that it is easy to recover group bounds in case the
     # current rendering is calendar mode.
 
     # now getting start & stop bounds (getting relative size to the current
     # rendering)
-    self.getSecondaryAxisInfo(self.secondary_axis_info)
+    self.secondary_axis_info = self.getSecondaryAxisInfo()
 
     ####### SAVING NEW PROPERTIES INTO REQUEST #######
     if self.list_method is not None and self.render_format != 'list':
@@ -1548,16 +1548,17 @@ class BasicStructure:
     # saving resulting values.
     self.calendar_mode  = calendar_mode
     self.calendar_range = calendar_range
-    self.secondary_axis_occurence = secondary_axis_occurence
+    return secondary_axis_occurence
 
 
-  def getSecondaryAxisInfo(self, axis_dict):
+  def getSecondaryAxisInfo(self):
     """
     secondary_axis_ocurence holds couples of data (begin,end) related to
     basicActivity blocks, and axis if the instance representing the sec axis.
     it is now possible to recover begin and end value of the planning and then
     apply selection informations to get start and stop.
     """
+    axis_dict = {}
     use_dz = self.field.get_value('use_date_zoom')
     # recovering zoom properties
     axis_dict['zoom_start'] = int(self.params.get('zoom_start',0))
@@ -1648,10 +1649,10 @@ class BasicStructure:
                                   axis_dict['bound_begin']
       self.params['zoom_level'] = axis_dict['zoom_level']
     # everything is OK, returning 'true' flag
-    return 1
+    return axis_dict
 
 
-  def getMainAxisInfo(self, axis_dict, report_tree_list):
+  def getMainAxisInfo(self, report_tree_list):
     """
     Getting main axis properties (total pages, current page, groups per page)
     and setting selection bounds (start & stop).
@@ -1660,55 +1661,60 @@ class BasicStructure:
     case of report tree (if the first element is a sub group of a report for
     example).
     """
-    axis_dict['bound_axis_groups'] = self.field.get_value('main_axis_groups')
+    main_axis_dict = {}
+    main_axis_dict['bound_axis_groups'] = self.field.get_value('main_axis_groups')
 
     # setting begin & end bounds
-    axis_dict['bound_begin'] = 0
-    axis_dict['bound_end'] = len(report_tree_list)
+    main_axis_dict['bound_begin'] = 0
+    # XXX rafael: this report_tree_list should be removed from here
+    main_axis_dict['bound_end'] = len(report_tree_list)
     if self.render_format == 'list':
-      axis_dict['bound_start'] = 0
-      axis_dict['bound_stop'] = axis_dict['bound_end']
-      axis_dict['bound_page_total'] = 1
-      axis_dict['bound_page_current'] = 1
-      axis_dict['bound_page_groups'] = 1
+      main_axis_dict['bound_start'] = 0
+      main_axis_dict['bound_stop'] = axis_dict['bound_end']
+      main_axis_dict['bound_page_total'] = 1
+      main_axis_dict['bound_page_current'] = 1
+      main_axis_dict['bound_page_groups'] = 1
     else:
       # recovering first group displayed on actual page
       try:
         # trying to recover from REQUEST
-        axis_dict['bound_start'] = self.REQUEST.get('list_start')
-        axis_dict['bound_start'] = int(axis_dict['bound_start'])
+        main_axis_dict['bound_start'] = self.REQUEST.get('list_start')
+        main_axis_dict['bound_start'] = int(main_axis_dict['bound_start'])
       except (AttributeError, TypeError):
         # recovering from params is case failed with REQUEST
-        axis_dict['bound_start'] = self.params.get('list_start',0)
-        if type(axis_dict['bound_start']) is type([]):
-          axis_dict['bound_start'] = axis_dict['bound_start'][0]
-        if axis_dict['bound_start'] is not None:
-          axis_dict['bound_start'] = int(axis_dict['bound_start'])
-      axis_dict['bound_start'] = max(axis_dict['bound_start'],0)
+        main_axis_dict['bound_start'] = self.params.get('list_start',0)
+        if type(main_axis_dict['bound_start']) is type([]):
+          main_axis_dict['bound_start'] = main_axis_dict['bound_start'][0]
+        if main_axis_dict['bound_start'] is not None:
+          main_axis_dict['bound_start'] = int(main_axis_dict['bound_start'])
+      main_axis_dict['bound_start'] = max(main_axis_dict['bound_start'],0)
 
-      if axis_dict['bound_start'] > axis_dict['bound_end']:
+      if main_axis_dict['bound_start'] > main_axis_dict['bound_end']:
         # new report_group is so small that previous if after the last element
-        axis_dict['bound_start'] = axis_dict['bound_end']
+        main_axis_dict['bound_start'] = main_axis_dict['bound_end']
 
       # updating start position to fit page size.
-      axis_dict['bound_start'] -= \
-               (axis_dict['bound_start'] % axis_dict['bound_axis_groups'])
+      main_axis_dict['bound_start'] -= \
+               (main_axis_dict['bound_start'] % main_axis_dict['bound_axis_groups'])
 
       # setting last group displayed on page
-      axis_dict['bound_stop'] = min (axis_dict['bound_end'],
-               axis_dict['bound_start'] + axis_dict['bound_axis_groups'])
+      main_axis_dict['bound_stop'] = min (main_axis_dict['bound_end'],
+               main_axis_dict['bound_start'] + main_axis_dict['bound_axis_groups'])
       # calculating total number of pages
-      axis_dict['bound_page_total'] = int(max(axis_dict['bound_end'] - 1,0) / \
-               axis_dict['bound_axis_groups']) + 1
+      main_axis_dict['bound_page_total'] = int(max(main_axis_dict['bound_end'] - 1,0) / \
+               main_axis_dict['bound_axis_groups']) + 1
       # calculating current page number
-      axis_dict['bound_page_current'] = int(axis_dict['bound_start'] / \
-               axis_dict['bound_axis_groups']) + 1
+      main_axis_dict['bound_page_current'] = int(main_axis_dict['bound_start'] / \
+               main_axis_dict['bound_axis_groups']) + 1
       # adjusting first group displayed on current page
-      axis_dict['bound_start'] = min(axis_dict['bound_start'], max(0,
-           (axis_dict['bound_page_total']-1) * axis_dict['bound_axis_groups']))
+      main_axis_dict['bound_start'] = min(main_axis_dict['bound_start'], max(0,
+           (main_axis_dict['bound_page_total']-1) * main_axis_dict['bound_axis_groups']))
 
-      self.params['list_lines'] = axis_dict['bound_axis_groups']
-      self.params['list_start'] = axis_dict['bound_start']
+      self.params['list_lines'] = main_axis_dict['bound_axis_groups']
+      self.params['list_start'] = main_axis_dict['bound_start']
+
+    return main_axis_dict
+
 
   def buildGroupStructure(self):
       """

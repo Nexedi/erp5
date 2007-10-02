@@ -40,7 +40,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from ZPublisher.HTTPRequest import FileUpload
 from StringIO import StringIO
 from Products.ERP5Form.Selection import Selection
-
+from DateTime import DateTime
 
 class DummyFieldStorage:
   """A dummy FieldStorage to be wrapped in a FileUpload object.
@@ -116,12 +116,27 @@ class TestPlanningBox(ERP5TypeTestCase):
       self.assertEquals(info.info,'Title 0')
       self.assertEquals(info.link , '/%s/foo_module/0/0' % self.getPortal().getId())
       
-
   def stepCheckBasic(self, sequence = None, sequence_list = None, **kw):
     basic = sequence.get('basic')
     self.assertEquals(len(basic.report_groups), 1)
+    # Note that this test use the use_date_zoom enabled
+    sec_axis_info = basic.getSecondaryAxisInfo()
+    date = DateTime()
+    today = DateTime('%s/%s/%s' % (date.year(),date.month(),date.day()))
+    self.assertEquals(sec_axis_info['zoom_begin'], today)
+    self.assertEquals(sec_axis_info['zoom_end'], today+1)
+    self.assertEquals(sec_axis_info['bound_begin'], today)
+    self.assertEquals(sec_axis_info['bound_start'], today)
+    self.assertEquals(sec_axis_info['bound_end'], today+1)
+    self.assertEquals(sec_axis_info['bound_stop'], today+1)
+    self.assertEquals(sec_axis_info['zoom_start'], 0)
+    self.assertEquals(sec_axis_info['zoom_level'], 1.0)
+    self.assertEquals(sec_axis_info['bound_range'], 1.0)
+
+
     for tree_list, activity_list,stat in basic.report_groups:
       self.assertEquals(len(activity_list), 1)
+
 
   def test_01(self, quiet=quiet, run=run_all_test):
     if not run: return
