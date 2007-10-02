@@ -112,8 +112,8 @@ class PackingList(Delivery):
           'has_cell_content': 0,
         }
         container_mvt_list = self.portal_catalog(**query_kw)
-        packed_quantity = sum([x.quantity for x in container_mvt_list \
-                               if x.quantity is not None])
+        packed_quantity = sum([x.getQuantity() for x in container_mvt_list \
+                               if x.getQuantity() is not None])
 
         if quantity != packed_quantity:
           return 0
