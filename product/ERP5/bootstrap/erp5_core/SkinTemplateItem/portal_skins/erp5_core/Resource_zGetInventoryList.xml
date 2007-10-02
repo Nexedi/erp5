@@ -278,8 +278,10 @@ SELECT\n
 </dtml-if>\n
 <dtml-if inventory_list>\n
   ,node.title AS node_title,\n
+  node.uid AS node_uid,\n
   node.relative_url AS node_relative_url,\n
   section.title AS section_title,\n
+  section.uid AS section.uid,\n
   section.relative_url AS section_relative_url,\n
   resource.title AS resource_title,\n
   resource.relative_url AS resource_relative_url,\n
@@ -399,8 +401,10 @@ SELECT\n
 </dtml-if>\n
 <dtml-if inventory_list>\n
   ,node.title AS node_title,\n
+  node.uid AS node_uid,\n
   node.relative_url AS node_relative_url,\n
   section.title AS section_title,\n
+  section.uid AS section_uid,\n
   section.relative_url AS section_relative_url,\n
   resource.title AS resource_title,\n
   resource.relative_url AS resource_relative_url,\n
