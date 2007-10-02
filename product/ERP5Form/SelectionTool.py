@@ -495,7 +495,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         default_stats = [' '] * 6
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        return getattr(selection, stats, default_stats)
+        return getattr(selection, 'stats', default_stats)
       return default_stats
 
 
