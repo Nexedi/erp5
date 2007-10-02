@@ -77,30 +77,8 @@ class ImmobilisationDelivery(XMLObject):
                       , PropertySheet.Reference
                       )
 
-    def validate_immobilisation(self, **kw):
-      LOG("ImmobilisationDelivery", WARNING, 
-          "validate_immobilisation is deprecated. " \
-          "Use validateImmobilisation instead")
-      self.validateImmobilisation()
-
-    def invalidate_immobilisation(self, **kw):
-      LOG("ImmobilisationDelivery", WARNING, 
-          "invalidate_immobilisation is deprecated. " \
-          "Use invalidateImmobilisation instead")
-      self.invalidateImmobilisation()
-
-    def calculate_immobilisation_validity(self, **kw):
-      LOG("ImmobilisationDelivery", WARNING, 
-          "calculate_immobilisation_validity is deprecated. " \
-          "Use calculateImmobilisationValidity instead")
-      self.calculateImmobilisationValidity()
-    
-    validate_immobilisation = WorkflowMethod(validate_immobilisation)
-    invalidate_immobilisation = WorkflowMethod(invalidate_immobilisation)
-    calculate_immobilisation_validity = WorkflowMethod(calculate_immobilisation_validity)
-    
     security.declareProtected(Permissions.View, 'updateImmobilisationState')
-    def updateImmobilisationState(self,**kw):
+    def updateImmobilisationState(self, **kw):
       """
       This is often called as an activity, it will check if the
       delivery is valid as an immobilisation movement, and if so
@@ -110,20 +88,11 @@ class ImmobilisationDelivery(XMLObject):
       if self.getImmobilisationState() == 'calculating':
         try:
           if self.isValidImmobilisationMovement(**kw):
-            self.validate_immobilisation()
+            self.validateImmobilisation()
           else:
-            self.invalidate_immobilisation()
+            self.invalidateImmobilisation()
         except ImmobilisationValidityError:
-          self.calculate_immobilisation_validity()
-
-    security.declareProtected(Permissions.View, 'getImmobilisationState')
-    def getImmobilisationState(self, id_only=1):
-      """
-      Returns the current state in immobilisation validity
-      """
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('immobilisation_workflow')
-      return wf._getWorkflowStateOf(self, id_only=id_only)
+          self.calculateImmobilisationValidity()
 
     security.declareProtected(Permissions.View, 'getImmobilisationMovementList')
     def getImmobilisationMovementList(self, **kw):
