@@ -107,10 +107,10 @@ class ZPyChartWidget(Widget.Widget):
 
     # Retrieve the data and set the selection if data_method is not None
     if data_method:
-      if hasattr(here, data_method):
-        data_method = getattr(here,data_method)
+      here = REQUEST.get('here', self)
+      if getattr(here, data_method, None) is not None:
+        data_method = getattr(here, data_method)
         # Retrieve selection
-        here = REQUEST.get('here', self)
         selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
         # Define the new selection data_method
         selection.edit(method_id = data_method) # XXX This is probably wrong
@@ -149,7 +149,7 @@ class ZPyChart(ZMIField, PythonScript):
         ZMIField.__init__(self, id, **kw)
         PythonScript.__init__(self, id)
 
-    def download(self, selection_name=None, data_method=None, **kw):
+    def download(self, selection_name=None, data_method=None, REQUEST=None, **kw):
         """
           This is where we actually render the chart. The main interest
           of doing like this is to accelerate initial rendering
@@ -168,6 +168,7 @@ class ZPyChart(ZMIField, PythonScript):
         
         # Get the data method if defined
         if data_method is not None:
+          here = REQUEST.get('here', self)
           data_method = getattr(here, data_method, None)
         
         # This is the default data, this is just in the case there is not method given
