@@ -56,6 +56,8 @@ from Acquisition import Implicit, aq_base
 from Products.ERP5Type.Message import Message
 import warnings
 
+_MARKER = []
+
 class SelectionError( Exception ):
     pass
 
@@ -483,18 +485,18 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection.edit(stats=stats)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionStats')
-    def getSelectionStats(self, selection_name, stats=[' ',' ',' ',' ',' ',' '], REQUEST=None):
+    def getSelectionStats(self, selection_name, stats=_MARKER, REQUEST=None):
       """
         Returns the stats in the selection
       """
+      if stats is not _MARKER:
+        default_stats = stats
+      else:
+        default_stats = [' '] * 6
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        try:
-          return selection.stats
-        except AttributeError:
-          return stats # That is really bad programming XXX
-      else:
-        return stats
+        return getattr(selection, stats, default_stats)
+      return default_stats
 
 
     security.declareProtected(ERP5Permissions.View, 'viewFirst')
