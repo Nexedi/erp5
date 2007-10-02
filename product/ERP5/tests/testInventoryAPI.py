@@ -1461,7 +1461,7 @@ class TestInventoryDocument(InventoryAPITestCase):
                                       omit_output=1)
     if full_inventory:
       inventory_list = [inventory_list[0]]
-    # TODO: Define a secon resource which will only be present in full
+    # TODO: Define a second resource which will only be present in full
     # inventories. This will allow testing getInentoryList.
     #else:
     #  inventory_list.append({'resource_relative_url': '','total_quantity': 50,'variation_text': ''})
@@ -1756,7 +1756,7 @@ class TestInventoryDocument(InventoryAPITestCase):
 
   def test_11_InventoryListAroundLatestInventoryDate(self):
     """
-      Test getInventoryList with a min and a max date around a full
+      Test getInventoryList with a min and a max date around latest full
       inventory. A full inventory is used and is not the latest.
     """
     inventory = self.getInventoryList(node_uid=self.node_uid,
