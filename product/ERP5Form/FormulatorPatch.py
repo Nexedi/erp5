@@ -140,7 +140,7 @@ def SelectionValidator_validate(self, field, key, REQUEST):
         # will remain integers.
         # XXX it is impossible with the UI currently to fill in unicode
         # items, but it's possible to do it with the TALES tab
-        if field.get_value('unicode') and type(item_value) == type(u''):
+        if field.get_value('unicode') and isinstance(item_value, unicode):
             str_value = item_value.encode(field.get_form_encoding())
         else:
             str_value = str(item_value)
@@ -186,7 +186,7 @@ def SelectionValidator_validate(self, field, key, REQUEST):
         # will remain integers.
         # XXX it is impossible with the UI currently to fill in unicode
         # items, but it's possible to do it with the TALES tab
-        if field.get_value('unicode') and type(item_value) == type(u''):
+        if field.get_value('unicode') and isinstance(item_value, unicode):
             str_value = item_value.encode(field.get_form_encoding())
         else:
             str_value = str(item_value)
@@ -207,7 +207,7 @@ def MultiSelectionValidator_validate(self, field, key, REQUEST):
       raise KeyError, 'Field %s is not present in request object (marker field default_%s not found).' % (repr(field.id), key)
     values = REQUEST.get(key, [])
     # NOTE: a hack to deal with single item selections
-    if type(values) is not type([]):
+    if not isintance(values, list):
         # put whatever we got in a list
         values = [values]
     # if we selected nothing and entry is required, give error, otherwise
@@ -232,7 +232,7 @@ def MultiSelectionValidator_validate(self, field, key, REQUEST):
             item_value = item
         value_dict[item_value] = 0
     default_value = field.get_value('default', cell=getattr(REQUEST,'cell',None))
-    if type(default_value) in (type([]), type(())):
+    if isinstance(default_value, (list, tuple)):
       for v in default_value:
         value_dict[v] = 0
     else:
@@ -359,7 +359,7 @@ class IntegerWidget(TextWidget) :
   def render(self, field, key, value, REQUEST) :
     """Render an editable integer.
     """
-    if type(value) is type(1.0):
+    if isinstance(value, float):
       value = int(value)
     display_maxwidth = field.get_value('display_maxwidth') or 0
     if display_maxwidth > 0:
@@ -425,7 +425,7 @@ def StringBaseValidator_validate(self, field, key, REQUEST):
       raise Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), )
     else:
       raise KeyError, 'Field %s is not present in request object.' % (repr(field.id), )
-  if type(value) is type('a'):
+  if isinstance(value, str):
     value = string.strip(value)
   if field.get_value('required') and value == "":
       self.raise_error('required_not_found', field)
@@ -447,7 +447,7 @@ def Widget_render_hidden(self, field, key, value, REQUEST):
     result = ''
     # We must adapt the rendering to the type of the value
     # in order to get the correct type back
-    if type(value) is type([]) or type(value) is type(()):
+    if isinstance(value, (tuple, list)):
       for v in value:
         result += render_element("input",
                           type="hidden",
@@ -485,7 +485,7 @@ from Products.Formulator.Validator import LinesValidator
 def LinesValidator_validate(self, field, key, REQUEST):
     value = StringBaseValidator.validate(self, field, key, REQUEST)
     # Added as a patch for hidden values
-    if type(value) is type([]) or type(value) is type(()):
+    if isinstance(value, (list, tuple)):
       value = string.join(value, "\n")
     # we need to add this check again
     if value == "" and not field.get_value('required'):
@@ -603,10 +603,10 @@ from Products.Formulator.Widget import MultiItemsWidget
 
 def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
   # list is needed, not a tuple
-  if type(value) is type(()):
+  if isinstance(value, tuple):
       value = list(value)
   # need to deal with single item selects
-  if type(value) is not type([]):
+  if not isinstance(value, list):
       value = [value]
 
   # XXX -yo
@@ -805,7 +805,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
       format_dict = self.format_to_sql_format_dict
       input_order = format_dict.get(self.getInputOrder(field),
                                     self.sql_format_default)
-      if type(value) == type(u''):
+      if isinstance(value, unicode):
         value = value.encode(field.get_form_encoding())
       return {'query': value,
               'format': field.get_value('date_separator').join(input_order),
@@ -832,7 +832,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
         hour   = None
         minute = None
         ampm   = None
-        if type(value) is type(DateTime()):
+        if isinstance(value, DateTime):
             year = "%04d" % value.year()
             month = "%02d" % value.month()
             day = "%02d" % value.day()
@@ -1176,7 +1176,7 @@ class FloatWidget(TextWidget):
           input_style += '5'
       else:
         input_style = input_style.split('.')[0]
-      if type(value) == type(u''):
+      if isinstance(value, unicode):
         value = value.encode(field.get_form_encoding())
       return {'query': value,
               'format': input_style,
