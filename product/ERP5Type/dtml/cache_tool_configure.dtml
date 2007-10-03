@@ -1,6 +1,9 @@
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
+<h3>Cache memory usage (in bytes)</h3>
+  <dtml-var expr="getCacheTotalMemorySize()">
+
 <h3>Cache invalidation</h3>
   <form action="clearAllCache" method="POST">
     <input type="submit" value="Clear all cache factories"/>
