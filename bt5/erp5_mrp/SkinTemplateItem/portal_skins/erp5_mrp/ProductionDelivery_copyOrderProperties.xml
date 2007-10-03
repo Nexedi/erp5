@@ -69,22 +69,25 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>packing_list = context\n
- \n
+\n
+tag = packing_list.getPath() + \'_confirm\'\n
+\n
 # First, copy Order properties\n
 related_order = packing_list.getCausalityValue()\n
 packing_list.edit(\n
-  comment = related_order.getComment(),\n
-  delivery_mode = related_order.getDeliveryMode(),\n
-  incoterm = related_order.getIncoterm(),\n
-  destination_administration_value = related_order.\\\n
-                           getDestinationAdministrationValue(),\n
-  title = related_order.getTitle()\n
+  comment=related_order.getComment(),\n
+  delivery_mode=related_order.getDeliveryMode(),\n
+  incoterm=related_order.getIncoterm(),\n
+  destination_administration_value=\\\n
+      related_order.getDestinationAdministrationValue(),\n
+  title=related_order.getTitle(),\n
+  activate_kw={\'tag\':tag},\n
 )\n
 \n
-activity = packing_list.activate(\n
-                   after_method_id=[\'immediateReindexObject\',\n
-                                    \'recursiveImmediateReindexObject\'])\n
-activity.ProductionDelivery_confirm()\n
+packing_list.startBuilding()\n
+packing_list.activate(after_tag=tag).updateCausalityState()\n
+\n
+packing_list.activate(after_tag=tag).ProductionDelivery_confirm()\n
 </string> </value>
         </item>
         <item>
@@ -130,8 +133,8 @@ activity.ProductionDelivery_confirm()\n
                             <string>context</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>
+                            <string>tag</string>
                             <string>related_order</string>
-                            <string>activity</string>
                           </tuple>
                         </value>
                     </item>

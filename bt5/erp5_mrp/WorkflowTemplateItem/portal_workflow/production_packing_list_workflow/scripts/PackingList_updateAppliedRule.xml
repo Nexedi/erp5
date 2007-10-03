@@ -70,6 +70,9 @@
             <key> <string>_body</string> </key>
             <value> <string>packing_list = state_change[\'object\']\n
 \n
+packing_list.startBuilding()\n
+packing_list.activate().updateCausalityState()\n
+\n
 packing_list.updateAppliedRule("default_production_packing_list_rule")\n
 </string> </value>
         </item>
