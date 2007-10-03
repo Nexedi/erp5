@@ -72,7 +72,7 @@
   root_applied_rule = movement.getRootAppliedRule()\n
   root_rule = root_applied_rule.getSpecialiseValue()\n
   root_movement = movement.getRootSimulationMovement()\n
-  parent_applied_rule = movement.getParent()\n
+  parent_applied_rule = movement.getParentValue()\n
   parent_rule = parent_applied_rule.getSpecialiseValue()\n
   return (\n
     root_rule.getPortalType() == "Production Order Rule" and\\\n
