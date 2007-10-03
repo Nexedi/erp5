@@ -1648,6 +1648,46 @@ class TestAccountingReports(AccountingTestCase):
     self.assertEquals(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit=2900, credit=2900)
  
+ 
+  def testProfitAndLoss(self):
+    # Simple test of profit and loss
+    self.createAccountStatementDataSet(use_two_bank_accounts=1)
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    # for now, we simply check that that the report is rendered with no error
+    # and it produces valid odf
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    odf = self.portal.account_module.AccountModule_viewProfitAndLossReport()
+    err_list = odf_validator.validate(odf)
+    if err_list:
+      self.fail(''.join(err_list))
+
+
+  def testBalanceSheet(self):
+    # Simple test of balance sheet
+    self.createAccountStatementDataSet(use_two_bank_accounts=1)
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    # for now, we simply check that that the report is rendered with no error
+    # and it produces valid odf
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    odf = self.portal.account_module.AccountModule_viewBalanceSheetReport()
+    err_list = odf_validator.validate(odf)
+    if err_list:
+      self.fail(''.join(err_list))
+
 
 def test_suite():
   suite = unittest.TestSuite()
