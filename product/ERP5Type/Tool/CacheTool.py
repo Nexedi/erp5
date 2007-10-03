@@ -213,3 +213,19 @@ class CacheTool(BaseTool):
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory scope %s cleared.' %cache_factory_id)
   
+  def getCacheTotalMemorySize(self, REQUEST=None):
+    """ Calculate total size of memory used for cache.
+    
+        Note: this method will calculate RAM memory usage for 'local'
+        (RamCache) cache plugins and will not include 
+        'shared' (DistributedRamCache and SQLCache) cache plugins."""
+    report = ''        
+    total_size = 0
+    ram_cache_root = self.getRamCacheRoot()
+    for cf_key, cf_value in ram_cache_root.items():
+      for cp in cf_value.getCachePluginList():
+        cp_total_size = cp.getCachePluginTotalMemorySize()
+        total_size += cp_total_size
+        report += '\n%s:\t%s' %(cf_key, cp_total_size)
+    report += '\nTOTAL = %s' %(total_size)        
+    return '%s;%s' %(total_size, report)
