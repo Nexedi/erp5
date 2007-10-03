@@ -80,7 +80,8 @@
     root_movement.getSimulationState() == "confirmed"\n
   )\n
 search_kw = {\n
-  \'resource_portal_type\': \'Simulation Movement\',\n
+  \'explanation_portal_type\': \'Production Order\',\n
+  \'portal_type\': \'Simulation Movement\',\n
 }\n
 \n
 if explanation_uid is not None:\n

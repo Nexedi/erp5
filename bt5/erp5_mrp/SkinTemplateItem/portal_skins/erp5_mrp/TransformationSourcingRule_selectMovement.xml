@@ -85,13 +85,13 @@
 # portal type causality of root applied rule\n
 search_kw = {\n
   \'explanation_portal_type\': \'Production Order\',\n
-  \'resource_portal_type\': \'Simulation Movement\',\n
+  \'portal_type\': \'Simulation Movement\',\n
 }\n
 if explanation_uid is not None:\n
   search_kw[\'explanation_uid\'] = explanation_uid\n
 \n
 search_kw.update(context.portal_catalog.buildSQLQuery(**search_kw))\n
-context.log(context.ProductionOrder_zSelectMovement(src__=1, **search_kw))\n
+\n
 if src__==0:\n
   movement_list = [x.getObject() for x in context.ProductionOrder_zSelectMovement(**search_kw)]\n
   movement_list = [x for x in movement_list if test(x)]\n
