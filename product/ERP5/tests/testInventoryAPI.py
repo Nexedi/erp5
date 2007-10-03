@@ -1102,6 +1102,19 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                        ('stock.uid', 'ascending'),)) ]
     self.assertEquals(movement_date_list, date_list)
 
+  def test_SortOnCatalogColumn(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=1, title='First')
+    self._makeMovement(quantity=2, title='Second')
+    
+    self.assertEquals(['First', 'Second'], [ x.getObject().getTitle() for x in
+          getMovementHistoryList(section_uid=self.section.getUid(),
+                                 sort_on=(('title', 'ascending'),)) ])
+    self.assertEquals(['Second', 'First'], [ x.getObject().getTitle() for x in
+          getMovementHistoryList(section_uid=self.section.getUid(),
+                                 sort_on=(('title', 'descending'),)) ])
+
+
   # FIXME: do we want to include it or no ?
   def test_Limit(self):
     return "is it part of this API ?" # XXX

@@ -368,6 +368,7 @@ class SimulationTool(BaseTool):
 
     def _generateSQLKeywordDictFromKeywordDict(self, table='stock', sql_kw={},
                                                new_kw={}):
+        ctool = getToolByName(self, 'portal_catalog')
         sql_kw = sql_kw.copy()
         new_kw = new_kw.copy()
         # Some columns cannot be found automatically, prepend table name to
@@ -418,16 +419,19 @@ class SimulationTool(BaseTool):
           simulation_query = regular_query
         if simulation_query is not None:
           new_kw['query'] = simulation_query
+
         # Sort on
         if 'sort_on' in new_kw:
+          table_column_list = ctool.getSQLCatalog()._getCatalogSchema(
+                                                              table=table)
           sort_on = new_kw['sort_on']
           new_sort_on = []
           for column_id, sort_direction in sort_on:
-            if '.' not in column_id:
+            if column_id in table_column_list:
               column_id = '%s.%s' % (table, column_id)
             new_sort_on.append((column_id, sort_direction))
           new_kw['sort_on'] = tuple(new_sort_on)
-        sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
+        sql_kw.update(ctool.buildSQLQuery(**new_kw))
         return sql_kw
 
     def _generateKeywordDict(self,
