@@ -875,7 +875,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       object = catalog[uid]
-      if object:
+      if object is not None:
         return object.path
       else:
         return None
