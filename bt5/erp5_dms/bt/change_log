@@ -1,4 +1,7 @@
 2007-10-03 yusei
+* Remove obsolete proxy field (Base_viewAdvancedSearchDialog.your_category_list)
+
+2007-10-03 yusei
 * Fixed broken proxy fields.
 (ExternalSource_view.my_follow_up_title and Image_view.my_follow_up_title)
 
