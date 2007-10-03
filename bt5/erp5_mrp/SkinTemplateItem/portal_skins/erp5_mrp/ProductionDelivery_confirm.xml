@@ -77,8 +77,6 @@ if packing_list_state == "draft":\n
                                   \'confirm_action\',\n
                                   wf_id=\'production_packing_list_workflow\',\n
                                   comment="Initialized by Delivery Builder")\n
-\n
-packing_list.edit()\n
 </string> </value>
         </item>
         <item>
