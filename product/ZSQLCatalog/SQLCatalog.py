@@ -1073,8 +1073,7 @@ class Catalog( Folder,
     search_result = method(uid = uid)
     if len(search_result) > 0:
       return search_result[0]
-    else:
-      return None
+    raise KeyError, uid
 
   def editSchema(self, names_list):
     """

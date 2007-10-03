@@ -501,7 +501,26 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # portal_catalog.getObject raises a ValueError if UID parameter is a string
     portal_catalog = self.getCatalogTool()
     self.assertRaises(ValueError, portal_catalog.getObject, "StringUID")
+     
+    obj = self._makeOrganisation()
+    # otherwise it returns the object
+    self.assertEquals(obj, portal_catalog.getObject(obj.getUid()).getObject())
+    # but raises KeyError if object is not in catalog
+    self.assertRaises(KeyError, portal_catalog.getObject, sys.maxint)
   
+  def test_getitem(self):
+    portal_catalog = self.getCatalogTool()
+    obj = self._makeOrganisation()
+    self.assertEquals(obj,
+        portal_catalog.getSQLCatalog()[obj.getUid()].getObject())
+    
+  def test_path(self):
+    portal_catalog = self.getCatalogTool()
+    obj = self._makeOrganisation()
+    self.assertEquals(obj.getPath(), portal_catalog.getpath(obj.getUid()))
+    self.assertRaises(KeyError, portal_catalog.getpath, sys.maxint)
+
+     
   def test_16_newUid(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
