@@ -207,7 +207,7 @@ def MultiSelectionValidator_validate(self, field, key, REQUEST):
       raise KeyError, 'Field %s is not present in request object (marker field default_%s not found).' % (repr(field.id), key)
     values = REQUEST.get(key, [])
     # NOTE: a hack to deal with single item selections
-    if not isintance(values, list):
+    if not isinstance(values, list):
         # put whatever we got in a list
         values = [values]
     # if we selected nothing and entry is required, give error, otherwise
