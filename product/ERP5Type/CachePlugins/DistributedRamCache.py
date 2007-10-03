@@ -144,3 +144,7 @@ class DistributedRamCache(BaseCache):
     ## Becasue we've explicitly called this function instead of clearing specific cache 
     ## scope we have no choice but clear whole cache.
     self.clearCache()       
+
+  def getCachePluginTotalMemorySize(self):
+    """ Calculate total RAM memory size of cache plugin. """
+    return 0    

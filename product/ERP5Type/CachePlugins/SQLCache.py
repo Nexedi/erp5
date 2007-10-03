@@ -278,3 +278,7 @@ class SQLCache(BaseCache):
       dbConn = self.getCacheStorage(force_reconnect=True)
       cursor = self._execSQLQuery(sql_query, dbConn)
     return cursor
+
+  def getCachePluginTotalMemorySize(self):
+    """ Calculate total RAM memory size of cache plugin. """
+    return 0       

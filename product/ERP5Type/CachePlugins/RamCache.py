@@ -29,10 +29,21 @@
 """
 Local RAM based cache plugin.
 """
-
-
+from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 from BaseCache import *
 import time
+
+def calcPythonObjectMemorySize(h, i):
+  """ Recursive function that will 'walk' over complex python types and caclulate
+      their RAM memory usage. """
+  s = h.iso(i).size
+  if isinstance(i, dict):
+    for k, v in i.items():
+      s += calcPythonObjectMemorySize(h, k) + calcPythonObjectMemorySize(h, v)
+  elif isinstance(i, list) or isinstance(i, tuple):
+    for v in i:
+      s += calcPythonObjectMemorySize(h, v)
+  return s
 
 class RamCache(BaseCache):
   """ RAM based cache plugin."""
@@ -73,7 +84,6 @@ class RamCache(BaseCache):
     now = time.time()
     if forceCheck or (now > (self._last_cache_expire_check_at + self.cache_expire_check_interval)):
       ## time to check for expired cache items
-      #print "EXPIRE ", self, self.cache_expire_check_interval
       self._last_cache_expire_check_at = now
       cache = self.getCacheStorage()        
       for scope in cache.keys():
@@ -109,10 +119,23 @@ class RamCache(BaseCache):
     
   def clearCache(self):
     BaseCache.clearCache(self)
-    self._cache_dict = {} 
-
+    self._cache_dict = {DEFAULT_CACHE_SCOPE: {}} 
+    
   def clearCacheForScope(self, scope):
     try:
       self.getCacheStorage()[scope] = {}
     except KeyError:
       pass
+      
+  def getCachePluginTotalMemorySize(self):
+    """ Calculate total RAM memory size of cache plugin. 
+        This function depends on guppy python module:
+        http://guppy-pe.sourceforge.net/
+        """
+    from guppy import hpy
+    h = hpy()
+    total_size = 0
+    for cache_key, cache_value in self._cache_dict[DEFAULT_CACHE_SCOPE].items():
+      cache_value = cache_value.getValue()
+      total_size += calcPythonObjectMemorySize(h, cache_value)
+    return total_size      
