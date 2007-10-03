@@ -188,8 +188,10 @@ dQEAAAAA</string> </value>
 \n
         <!-- Title {{{ -->\n
         <table:table-row table:style-name=\'ro2\'>\n
-          <table:table-cell table:number-rows-spanned=\'2\' table:number-columns-spanned=\'1\'\n
-            office:value-type=\'string\' table:style-name=\'report-title\'>\n
+          <table:table-cell table:number-rows-spanned=\'2\'\n
+                            table:number-columns-spanned=\'1\'\n
+                            office:value-type=\'string\'\n
+                            table:style-name=\'report-title\'>\n
             <text:p tal:content=\'python: context.portal_categories.restrictedTraverse(request["section_category"]).getTranslatedTitle()\'/>\n
           </table:table-cell>\n
           <table:table-cell table:number-rows-spanned=\'1\' table:number-columns-spanned=\'4\'\n
@@ -266,26 +268,41 @@ dQEAAAAA</string> </value>
                  <tal:block tal:condition="not: display_level_2"\n
                    tal:define="node_category cat_level_1/getRelativeUrl">\n
                   <!-- current period -->\n
-                  <table:table-cell\n
-                      table:style-name=\'report-content-currency1\'\n
+                  <tal:block\n
                       tal:define=\'value python:getInventory(node_category=node_category);\n
-                                  global total_current_period python: total_current_period + value;\'\n
-                      tal:attributes=\'office:value python: value;\n
-                                      office:value-type python:value and "float" or "text"\'\n
-                                    office:value-type=\'float\' office:value=\'123456.56\'>\n
-                    <text:p>123 456,56</text:p>\n
-                  </table:table-cell>\n
-                  <!-- previous period -->\n
-                  <table:table-cell\n
+                      global total_current_period python: total_current_period + value;\'>\n
+                    <table:table-cell\n
+                      tal:condition=\'value\'\n
                       table:style-name=\'report-content-currency1\'\n
+                      tal:attributes=\'office:value value\'\n
+                      office:value-type=\'float\' office:value=\'123456.56\'>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                      tal:condition=\'not: value\'\n
+                      table:style-name=\'report-content-currency1\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
+\n
+                  <!-- previous period -->\n
+                  <tal:block\n
                       tal:define=\'value python:getInventoryPreviousPeriod(node_category=node_category);\n
-                                  global total_previous_period python: total_previous_period + value;\'\n
-                      tal:attributes=\'office:value python: value;\n
-                                      office:value-type python:value and "float" or "text"\'\n
-                      office:value=\'123456.56\'\n
-                      office:value-type=\'float\'>\n
-                    <text:p>123 456,56</text:p>\n
-                  </table:table-cell>\n
+                      global total_previous_period python: total_previous_period + value;\'>\n
+                    <table:table-cell\n
+                        tal:condition=\'value\'\n
+                        table:style-name=\'report-content-currency1\'\n
+                        tal:attributes=\'office:value value\'\n
+                        office:value=\'123456.56\'\n
+                        office:value-type=\'float\'>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                        tal:condition=\'not: value\'\n
+                        table:style-name=\'report-content-currency1\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
+                 </tal:block>\n
                  </tal:block>\n
 \n
                </tal:block>\n
@@ -314,8 +331,7 @@ dQEAAAAA</string> </value>
 \n
                 <table:table-row table:style-name=\'ro4\' tal:condition=\'not:display_level_3\'>\n
                   <tal:block tal:define=\'node_category cat_level_2/getRelativeUrl;\'>\n
-                    <table:table-cell text:style-name=\'T1\'\n
-                                      table:style-name=\'report-content-heading2\'\n
+                    <table:table-cell table:style-name=\'report-content-heading2\'\n
                                       table:number-columns-spanned=\'3\'\n
                                       table:number-rows-spanned=\'1\'\n
                                       office:value-type=\'string\'>\n
@@ -327,27 +343,42 @@ dQEAAAAA</string> </value>
                   <table:covered-table-cell table:style-name="ce9"/>\n
                   \n
                   <!-- current period -->\n
-                  <table:table-cell\n
-                      table:style-name=\'report-content-currency2\'\n
+                  <tal:block\n
                       tal:define=\'value python:getInventory(node_category=node_category);\n
-                                  global total_current_period python: total_current_period + value;\'\n
-                      tal:attributes=\'office:value python: value;\n
-                                      office:value-type python:value and "float" or "text"\'\n
-                                    office:value-type=\'float\' office:value=\'123456.56\'>\n
+                      global total_current_period python: total_current_period + value;\'>\n
+                  <table:table-cell\n
+                      tal:condition=\'value\'\n
+                      table:style-name=\'report-content-currency2\'\n
+                      tal:attributes=\'office:value value\'\n
+                      office:value-type=\'float\'\n
+                      office:value=\'123456.56\'>\n
                     <text:p>123 456,56</text:p>\n
                   </table:table-cell>\n
+                  <table:table-cell\n
+                      tal:condition=\'not:value\'\n
+                      table:style-name=\'report-content-currency2\'>\n
+                    <text:p></text:p>\n
+                  </table:table-cell>\n
+                </tal:block>\n
 \n
                   <!-- previous period -->\n
-                  <table:table-cell\n
-                      table:style-name=\'report-content-currency2\'\n
+                  <tal:block\n
                       tal:define=\'value python:getInventoryPreviousPeriod(node_category=node_category);\n
-                                  global total_previous_period python: total_previous_period + value;\'\n
-                      tal:attributes=\'office:value python: value;\n
-                                      office:value-type python:value and "float" or "text"\'\n
+                      global total_previous_period python: total_previous_period + value;\'>\n
+                  <table:table-cell\n
+                      tal:condition=\'value\'\n
+                      table:style-name=\'report-content-currency2\'\n
+                      tal:attributes=\'office:value value\'\n
                       office:value=\'123456.56\'\n
                       office:value-type=\'float\'>\n
                     <text:p>123 456,56</text:p>\n
                   </table:table-cell>\n
+                  <table:table-cell\n
+                      tal:condition=\'not:value\'\n
+                      table:style-name=\'report-content-currency2\'>\n
+                    <text:p></text:p>\n
+                  </table:table-cell>\n
+                </tal:block>\n
                 </tal:block>\n
             </table:table-row>\n
           </tal:block>\n
@@ -366,27 +397,42 @@ dQEAAAAA</string> </value>
               <table:covered-table-cell table:style-name="ce9"/>\n
               \n
               <!-- current period -->\n
-              <table:table-cell\n
-                  table:style-name=\'report-content-currency3\'\n
+              <tal:block\n
                   tal:define=\'value python:getInventory(node_category=node_category);\n
-                              global total_current_period python: total_current_period + value;\'\n
-                  tal:attributes=\'office:value python: value;\n
-                                  office:value-type python:value and "float" or "text"\'\n
-                                office:value-type=\'float\' office:value=\'123456.56\'>\n
+                              global total_current_period python: total_current_period + value;\'>\n
+              <table:table-cell\n
+                  tal:condition=\'value\'\n
+                  table:style-name=\'report-content-currency3\'\n
+                  tal:attributes=\'office:value value\'\n
+                  office:value-type=\'float\'\n
+                  office:value=\'123456.56\'>\n
                 <text:p>123 456,56</text:p>\n
               </table:table-cell>\n
+              <table:table-cell\n
+                  tal:condition=\'not:value\'\n
+                  table:style-name=\'report-content-currency3\'>\n
+                  <text:p></text:p>\n
+              </table:table-cell>\n
+            </tal:block>\n
 \n
               <!-- previous period -->\n
-              <table:table-cell\n
-                  table:style-name=\'report-content-currency3\'\n
+              <tal:block\n
                   tal:define=\'value python:getInventoryPreviousPeriod(node_category=node_category);  \n
-                              global total_previous_period python: total_previous_period + value;\'\n
-                  tal:attributes=\'office:value python: value;\n
-                                  office:value-type python:value and "float" or "text"\'\n
-                                office:value=\'123456.56\'\n
-                                office:value-type=\'float\'>\n
+                  global total_previous_period python: total_previous_period + value;\'>\n
+              <table:table-cell\n
+                  tal:condition=\'value\'\n
+                  table:style-name=\'report-content-currency3\'\n
+                  tal:attributes=\'office:value value\'\n
+                  office:value=\'123456.56\'\n
+                  office:value-type=\'float\'>\n
                 <text:p>123 456,56</text:p>\n
               </table:table-cell>\n
+              <table:table-cell\n
+                  tal:condition=\'not:value\'\n
+                  table:style-name=\'report-content-currency3\'>\n
+                <text:p></text:p>\n
+              </table:table-cell>\n
+            </tal:block>\n
              </tal:block>\n
            </table:table-row>\n
 \n
@@ -447,7 +493,7 @@ dQEAAAAA</string> </value>
           <table:table-cell table:style-name=\'report-stat-currency2\'\n
             tal:attributes="office:value python: net_income_previous_period"\n
             tal:define="global grand_total_previous_period python: grand_total_previous_period + net_income_previous_period"\n
-            office:value=\'\' office:value-type=\'string\'><text:p></text:p></table:table-cell>\n
+            office:value=\'\' office:value-type=\'float\'><text:p></text:p></table:table-cell>\n
         </table:table-row>\n
 \n
         <!-- TOTAL LEVEL 2 {{{ -->\n
@@ -483,7 +529,9 @@ dQEAAAAA</string> </value>
       \n
       </tal:block> <!-- loop level 1 -->\n
       \n
-      <table:table-row table:style-name=\'page-break\'/>\n
+      <table:table-row table:style-name=\'page-break\'>\n
+        <table:table-cell />\n
+      </table:table-row>\n
 \n
 \n
     </table:table> <!-- new table -->\n
@@ -553,26 +601,41 @@ dQEAAAAA</string> </value>
                            tal:define="node_category cat_level_1/getRelativeUrl">\n
 \n
                   <!-- current period -->\n
-                  <table:table-cell\n
-                      table:style-name=\'report-content-currency1\'\n
+                  <tal:block\n
                       tal:define=\'value python:- getInventory(node_category=node_category);\n
-                                  global total_current_period python: total_current_period + value;\'\n
-                      tal:attributes=\'office:value python: value;\n
-                                      office:value-type python:value and "float" or "text"\'\n
-                                    office:value-type=\'float\' office:value=\'123456.56\'>\n
-                    <text:p>123 456,56</text:p>\n
-                  </table:table-cell>\n
+                      global total_current_period python: total_current_period + value;\'>\n
+                      <table:table-cell\n
+                        tal:condition=\'value\'\n
+                        table:style-name=\'report-content-currency1\'\n
+                        tal:attributes=\'office:value value\'\n
+                        office:value-type=\'float\' office:value=\'123456.56\'>\n
+                           <text:p>123 456,56</text:p>\n
+                      </table:table-cell>\n
+                      <table:table-cell\n
+                        tal:condition=\'not: value\'\n
+                        table:style-name=\'report-content-currency1\'>\n
+                        <text:p></text:p>\n
+                      </table:table-cell>\n
+                   </tal:block>\n
+                   \n
                   <!-- previous period -->\n
-                  <table:table-cell\n
-                      table:style-name=\'report-content-currency1\'\n
+                  <tal:block\n
                       tal:define=\'value python: -getInventoryPreviousPeriod(node_category=node_category);\n
-                                  global total_previous_period python: total_previous_period + value;\'\n
-                      tal:attributes=\'office:value python: value;\n
-                                      office:value-type python:value and "float" or "text"\'\n
-                      office:value=\'123456.56\'\n
-                      office:value-type=\'float\'>\n
-                    <text:p>123 456,56</text:p>\n
-                  </table:table-cell>\n
+                      global total_previous_period python: total_previous_period + value;\'>\n
+                      <table:table-cell\n
+                        tal:condition=\'value\'\n
+                        table:style-name=\'report-content-currency1\'\n
+                        tal:attributes=\'office:value value\'\n
+                        office:value=\'123456.56\'\n
+                        office:value-type=\'float\'>\n
+                        <text:p>123 456,56</text:p>\n
+                      </table:table-cell>\n
+                      <table:table-cell\n
+                        tal:condition=\'not:value\'\n
+                        table:style-name=\'report-content-currency1\'>\n
+                        <text:p></text:p>\n
+                      </table:table-cell>\n
+                  </tal:block>\n
                  </tal:block>\n
                 </tal:block>\n
             </table:table-row>\n
@@ -615,29 +678,44 @@ dQEAAAAA</string> </value>
                 </table:table-cell>\n
                 <table:covered-table-cell table:style-name="ce9"/>\n
                 <table:covered-table-cell table:style-name="ce9"/>\n
+\n
                   <!-- current period: -->\n
-                  <table:table-cell\n
+                  <tal:block\n
                       tal:define=\'value python: -getInventory(node_category=node_category);\n
-                                  global total_current_period python: total_current_period + value;\'\n
-                      tal:attributes=\'office:value value;\n
-                                      office:value-type python:value and "float" or "text";\'\n
-                      table:style-name=\'report-content-currency2\'\n
-                      office:value-type=\'float\'\n
-                      office:value=\'123456.56\'>\n
-                    <text:p>123 456,56</text:p>\n
-                  </table:table-cell>\n
+                                  global total_current_period python: total_current_period + value;\'>\n
+                    <table:table-cell\n
+                        tal:condition=\'value\'\n
+                        tal:attributes=\'office:value value\'\n
+                        table:style-name=\'report-content-currency2\'\n
+                        office:value-type=\'float\'\n
+                        office:value=\'123456.56\'>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                        tal:condition=\'not:value\'\n
+                        table:style-name=\'report-content-currency2\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
 \n
                   <!-- previous period -->\n
-                  <table:table-cell\n
+                  <tal:block \n
                       tal:define=\'value python: -getInventoryPreviousPeriod(node_category=node_category);\n
-                                  global total_previous_period python: total_previous_period + value;\'\n
-                      tal:attributes=\'office:value python: value;\n
-                                      office:value-type python:value and "float" or "text"\'\n
+                                  global total_previous_period python: total_previous_period + value;\'>\n
+                    <table:table-cell\n
+                      tal:condition=\'value\'\n
+                      tal:attributes=\'office:value value\'\n
                       table:style-name=\'report-content-currency2\'\n
                       office:value=\'123456.56\'\n
                       office:value-type=\'float\'>\n
-                    <text:p>123 456,56</text:p>\n
-                  </table:table-cell>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                      tal:condition=\'not:value\'\n
+                      table:style-name=\'report-content-currency2\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
               </table:table-row>\n
 \n
               <!-- }}} -->\n
@@ -654,29 +732,43 @@ dQEAAAAA</string> </value>
                   <table:covered-table-cell table:style-name="ce9"/><table:covered-table-cell table:style-name="ce9"/>\n
                   \n
                   <!-- current period; -->\n
-                  <table:table-cell\n
+                  <tal:block\n
                       tal:define=\'value python: -getInventory(node_category=node_category);\n
-                                  global total_current_period python: total_current_period + value;\'\n
-                      tal:attributes=\'office:value value;\n
-                                      office:value-type python:value and "float" or "text"\'\n
-                      table:style-name=\'report-content-currency3\'\n
-                      office:value-type=\'float\'\n
-                      office:value=\'123456.56\'>\n
-                    <text:p>123 456,56</text:p>\n
-                  </table:table-cell>\n
+                              global total_current_period python: total_current_period + value;\'>\n
+                    <table:table-cell\n
+                        tal:condition=\'value\'\n
+                        tal:attributes=\'office:value value\'\n
+                        table:style-name=\'report-content-currency3\'\n
+                        office:value-type=\'float\'\n
+                        office:value=\'123456.56\'>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                        tal:condition=\'not:value\'\n
+                        table:style-name=\'report-content-currency3\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
 \n
                   <!-- previous period -->\n
-                  <table:table-cell\n
+                  <tal:block\n
                       tal:define=\'value python: -getInventoryPreviousPeriod(node_category=node_category);\n
-                                  global total_previous_period python: total_previous_period + value;\'\n
-                      tal:attributes=\'office:value python: value;\n
-                                      office:value-type python:value and "float" or "text"\'\n
-                      table:style-name=\'report-content-currency3\'\n
-                      office:value=\'123456.56\'\n
-                      office:value-type=\'float\'>\n
-                    <text:p>123 456,56</text:p>\n
-                  </table:table-cell>\n
+                                global total_previous_period python: total_previous_period + value;\'>\n
+                    <table:table-cell\n
+                        tal:condition=\'value\'\n
+                        tal:attributes=\'office:value value\'\n
+                        table:style-name=\'report-content-currency3\'\n
+                        office:value=\'123456.56\'\n
+                        office:value-type=\'float\'>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                        tal:condition=\'not:value\'\n
+                        table:style-name=\'report-content-currency3\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
 \n
+                  </tal:block>\n
                 </tal:block>\n
             </table:table-row>\n
           </tal:block>\n
