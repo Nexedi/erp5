@@ -49,16 +49,6 @@ class BankingOperationLine(BaobabMixin, AccountingTransactionLine):
                     , PropertySheet.DublinCore
                     )
 
-  security.declareProtected(Permissions.View, 'getSourceTotalAssetPrice')
-  def getSourceTotalAssetPrice(self):
-    """Default to quantity."""
-    return self._baseGetSourceTotalAssetPrice() or abs(self.getQuantity())
-
-  security.declareProtected(Permissions.View, 'getDestinationTotalAssetPrice')
-  def getDestinationTotalAssetPrice(self):
-    """Default to quantity."""
-    return self._baseGetDestinationTotalAssetPrice() or abs(self.getQuantity())
-
   security.declareProtected(Permissions.View, 'getSourceTotalAssetPriceCurrencyReference')
   def getSourceTotalAssetPriceCurrencyReference(self):
     """Return the reference of the price currency of the source payment."""
@@ -102,3 +92,16 @@ class BankingOperationLine(BaobabMixin, AccountingTransactionLine):
     else:
       return src.getInternalBankAccountNumber(default)
 
+  security.declareProtected(Permissions.View, 'getBaobabSource')
+  def getBaobabSource(self, **kw):
+    """
+    getter for source payment
+    """
+    return "account_module/bank_account"
+
+  security.declareProtected(Permissions.View, 'getBaobabDestination')
+  def getBaobabDestination(self, **kw):
+    """
+    getter for destination payment
+    """
+    return "account_module/bank_account"
