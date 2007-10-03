@@ -219,13 +219,12 @@ class CacheTool(BaseTool):
         Note: this method will calculate RAM memory usage for 'local'
         (RamCache) cache plugins and will not include 
         'shared' (DistributedRamCache and SQLCache) cache plugins."""
-    report = ''        
+    stats = {}
     total_size = 0
     ram_cache_root = self.getRamCacheRoot()
     for cf_key, cf_value in ram_cache_root.items():
       for cp in cf_value.getCachePluginList():
         cp_total_size = cp.getCachePluginTotalMemorySize()
         total_size += cp_total_size
-        report += '\n%s:\t%s' %(cf_key, cp_total_size)
-    report += '\nTOTAL = %s' %(total_size)        
-    return '%s;%s' %(total_size, report)
+        stats[cf_key] = cp_total_size
+    return total_size, stats
