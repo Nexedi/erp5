@@ -1,3 +1,7 @@
+2007-10-03 yusei
+* Fixed broken proxy fields.
+(ExternalSource_view.my_follow_up_title and Image_view.my_follow_up_title)
+
 2007-09-25 yo
 * Set module group on portal types.
 
