@@ -106,3 +106,15 @@ class CashDeliveryLine(BaobabMixin, DeliveryLine):
     if script is not None:
       return script(self)
     return self.getVariationText()
+
+  security.declareProtected(Permissions.View, 'getBaobabSourcePayment')
+  def getBaobabSourcePayment(self, **kw):
+    """
+    """
+    return None
+
+  security.declareProtected(Permissions.View, 'getBaobabDestinationPayment')
+  def getBaobabDestinationPayment(self, **kw):
+    """
+    """
+    return None
