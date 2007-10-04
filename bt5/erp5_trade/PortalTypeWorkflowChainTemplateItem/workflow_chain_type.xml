@@ -5,15 +5,15 @@
  </chain>
  <chain>
   <type>Container Cell</type>
-  <workflow>edit_workflow, packing_list_interaction_workflow</workflow>
+  <workflow>container_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Container Line</type>
-  <workflow>packing_list_interaction_workflow, edit_workflow, trade_matrix_workflow</workflow>
+  <workflow>edit_workflow, container_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Delivery Cell</type>
-  <workflow>packing_list_interaction_workflow, delivery_edit_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Delivery Rule</type>
@@ -26,10 +26,6 @@
  <chain>
   <type>Internal Packing List</type>
   <workflow>internal_packing_list_workflow, edit_workflow</workflow>
- </chain>
- <chain>
-  <type>Internal Packing List Cell</type>
-  <workflow>delivery_edit_workflow, packing_list_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Internal Packing List Line</type>
@@ -65,15 +61,15 @@
  </chain>
  <chain>
   <type>Purchase Packing List</type>
-  <workflow>edit_workflow, delivery_edit_workflow, packing_list_interaction_workflow, packing_list_causality_workflow, packing_list_workflow, delivery_causality_interaction_workflow</workflow>
+  <workflow>edit_workflow, delivery_simulation_interaction_workflow, packing_list_causality_workflow, packing_list_workflow, delivery_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List Cell</type>
-  <workflow>delivery_edit_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List Line</type>
-  <workflow>edit_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, delivery_edit_workflow, packing_list_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Supply</type>
@@ -89,7 +85,7 @@
  </chain>
  <chain>
   <type>Returned Sale Packing List</type>
-  <workflow>packing_list_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order</type>
@@ -105,15 +101,15 @@
  </chain>
  <chain>
   <type>Sale Packing List</type>
-  <workflow>packing_list_interaction_workflow, edit_workflow, delivery_edit_workflow, packing_list_container_workflow, packing_list_causality_workflow, packing_list_workflow, delivery_causality_interaction_workflow</workflow>
+  <workflow>edit_workflow, packing_list_causality_workflow, delivery_causality_interaction_workflow, packing_list_workflow, packing_list_container_workflow, delivery_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Cell</type>
-  <workflow>delivery_movement_causality_interaction_workflow, delivery_edit_workflow</workflow>
+  <workflow>container_interaction_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Line</type>
-  <workflow>delivery_edit_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, packing_list_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, trade_matrix_workflow, container_interaction_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Supply</type>
@@ -121,7 +117,7 @@
  </chain>
  <chain>
   <type>Sale Supply Line</type>
-  <workflow>supply_line_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, supply_line_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Trade Condition</type>

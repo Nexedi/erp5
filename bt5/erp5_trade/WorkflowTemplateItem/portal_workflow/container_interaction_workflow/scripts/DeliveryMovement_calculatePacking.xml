@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -65,28 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list_content = state_change[\'object\']\n
+            <value> <string>delivery = state_change[\'object\'].getExplanationValue()\n
 \n
-# Clean simulation\n
-simulation_movement_list = packing_list_content.getDeliveryRelatedValueList(\n
-                                            portal_type="Simulation Movement")\n
-for simulation_movement in simulation_movement_list:\n
-  # Simulation movement have to be aggregated on a new Delivery.\n
-  simulation_movement.setDelivery(None)\n
-\n
-# packing_list = packing_list_content.getExplanationValue()\n
-# packing_list_portal_type = packing_list.getPortalType()\n
-# if packing_list_portal_type == \'Sale Packing List\':\n
-#   delivery_builder = packing_list.portal_deliveries.sale_packing_list_builder\n
-# elif packing_list_portal_type == \'Purchase Packing List\':\n
-#   delivery_builder = packing_list.portal_deliveries.\\\n
-#                                                 purchase_packing_list_builder\n
-# \n
-# delivery_builder.build(\n
-#      movement_relative_url_list=[x.getRelativeUrl() for x in\\\n
-#                                  simulation_movement_list],\n
-#      delivery_relative_url_list=[packing_list.getRelativeUrl()]\n
-# )\n
+if getattr(delivery, \'calculatePacking\', None) is not None:\n
+  path_and_method_id = (delivery.getPath(), (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
+  delivery.activate(after_path_and_method_id=path_and_method_id).calculatePacking()\n
 </string> </value>
         </item>
         <item>
@@ -130,13 +116,12 @@ for simulation_movement in simulation_movement_list:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>packing_list_content</string>
                             <string>_getattr_</string>
-                            <string>simulation_movement_list</string>
-                            <string>_getiter_</string>
-                            <string>simulation_movement</string>
+                            <string>_getitem_</string>
+                            <string>delivery</string>
+                            <string>getattr</string>
                             <string>None</string>
+                            <string>path_and_method_id</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,7 +138,7 @@ for simulation_movement in simulation_movement_list:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PackingListContent_beforeDelete</string> </value>
+            <value> <string>DeliveryMovement_calculatePacking</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

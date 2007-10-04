@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
-        <tuple/>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -28,18 +31,8 @@
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>activate_script_name</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>after_script_name</string> </key>
-            <value>
-              <list>
-                <string>Container_updatePackingListState</string>
-              </list>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -53,36 +46,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Container_edit</string> </value>
+            <value> <string>calculate_packing</string> </value>
         </item>
         <item>
-            <key> <string>method_id</string> </key>
-            <value>
-              <list>
-                <string>_set.*</string>
-                <string>manage_afterAdd</string>
-                <string>manage_afterClone</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>once_per_transaction</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>portal_type_filter</string> </key>
-            <value>
-              <list>
-                <string>Container Cell</string>
-                <string>Container Line</string>
-              </list>
-            </value>
+            <key> <string>new_state_id</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
