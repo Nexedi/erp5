@@ -1369,9 +1369,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   def objectValues(self, spec=None, meta_type=None, portal_type=None,
                    sort_on=None, sort_order=None, base_id=None,
                    checked_permission=None, **kw):
-    """
-    Returns a list containing object contained in this folder.
-    """
+    # Returns list of objects contained in this folder.
+    #  (no docstring to prevent publishing)
+
     if meta_type is not None:
       spec = meta_type
     # when an object inherits from Folder after it was instanciated, it lacks
@@ -1408,10 +1408,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
                              'contentValues' )
   def contentValues(self, spec=None, meta_type=None, portal_type=None,
                     sort_on=None, sort_order=None, checked_permission=None, **kw):
-    """
-    Returns a list containing object contained in this folder.
-    Filter objects with appropriate permissions (as in contentValues)
-    """
+    # Returns a list of documents contained in this folder.
+    # ( no docstring to prevent publishing )
     if meta_type is not None:
       spec = meta_type
     if portal_type is not None:
