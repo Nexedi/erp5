@@ -103,6 +103,8 @@ if simulation_state is None:\n
 # remember payable / receivable lines in context.\n
 accounts_in_context = []\n
 \n
+if isinstance(account_id, str):\n
+  account_id = [account_id]\n
 \n
 accounting_transaction_type_list = [x for x in\n
             portal.getPortalAccountingTransactionTypeList()\n
@@ -150,7 +152,7 @@ for is_source, line in getIsSourceMovementItemList(context):\n
   \n
   if node_value is not None and \\\n
       node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
-    if account_id is not None and node_value.getId() != account_id:\n
+    if account_id is not None and node_value.getId() not in account_id:\n
       continue\n
     key = (node_value.getRelativeUrl(), mirror_section)\n
     total_payable_price_per_node_section[key] =\\\n
@@ -292,6 +294,8 @@ else:\n
                             <string>_getitem_</string>
                             <string>state_list</string>
                             <string>accounts_in_context</string>
+                            <string>isinstance</string>
+                            <string>str</string>
                             <string>accounting_transaction_type_list</string>
                             <string>getIsSourceMovementItemList</string>
                             <string>is_source</string>
