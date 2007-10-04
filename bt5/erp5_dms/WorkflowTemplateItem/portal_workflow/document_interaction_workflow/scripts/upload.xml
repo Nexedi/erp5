@@ -68,8 +68,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].uploadFile()\n
-state_change[\'object\'].activate().convertToBaseFormat()\n
+            <value> <string>object = state_change[\'object\']\n
+object.uploadFile()\n
+\n
+# do not activate conversion if the object is in portal_contributions\n
+# because it will be gone from there in a second\n
+# and activate would fail\n
+if object.getParentValue().getPortalType() != \'Contribution Tool\':\n
+  object.activate().convertToBaseFormat()\n
 </string> </value>
         </item>
         <item>
@@ -119,8 +125,9 @@ state_change[\'object\'].activate().convertToBaseFormat()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
                             <string>_getitem_</string>
+                            <string>object</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
