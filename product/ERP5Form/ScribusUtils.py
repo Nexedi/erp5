@@ -1310,8 +1310,8 @@ class ScribusParser:
             #iterating PAGEOBJECT attributes
             #old parsing method employed also here
             for node_id in page_object.attributes.keys():
-              node_name = str(node_id)
-              node_value = str(page_object.attributes[node_id].value)
+              node_name = node_id.encode('utf8')
+              node_value = page_object.attributes[node_id].value.encode('utf8')
 
               returned_page_object[node_name] = node_value
 
@@ -1367,8 +1367,8 @@ class ScribusParser:
           field_OwnPage = ''
           # iterating field attributes
           for node_id in page_object.attributes.keys():
-            node_name = str(node_id)
-            node_value = str(page_object.attributes[node_id].value)
+            node_name = node_id.encode('utf8')
+            node_value = page_object.attributes[node_id].value.encode('utf8')
 
             if node_name == 'ANNAME':
               if node_value != '':
