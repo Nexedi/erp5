@@ -373,10 +373,19 @@ class TestIngestion(ERP5TypeTestCase):
                         ,('jpg', 'Image')
                         ,('py', 'File')
                         )
+    counter = 1
+    old_portal_type = ''
     for extension, portal_type in extension_to_type:
       filename = 'TEST-en-002.' + extension
       printAndLog(filename)
       file = makeFileUpload(filename)
+      # if we change portal type we must change version because 
+      # mergeRevision would fail
+      if portal_type != old_portal_type:
+        counter += 1
+        old_portal_type = portal_type
+      file.filename = 'TEST-en-00%d.%s' % (counter, extension)
+      printAndLog(file.filename)
       if with_portal_type:
         ob = self.portal.portal_contributions.newContent(portal_type=portal_type, file=file)
       else:
@@ -1178,7 +1187,7 @@ if __name__ == '__main__':
   framework()
 else:
   import unittest
-  def notest_suite():
+  def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestIngestion))
     return suite
