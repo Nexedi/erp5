@@ -90,6 +90,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

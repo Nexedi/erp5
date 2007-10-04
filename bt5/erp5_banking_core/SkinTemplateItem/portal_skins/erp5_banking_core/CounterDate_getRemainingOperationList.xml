@@ -70,7 +70,7 @@
 site_uid = site.getUid()\n
 site_url = site.getRelativeUrl()\n
 operation_list = []\n
-exception_portal_type_list = [\'Paper Money Deposit\']\n
+exception_portal_type_list = [\'Paper Money Deposit\', \'Foreign Check\', \'External Banking Operation\', \'Account Transfer\', \'Check Deposit\']\n
 if site_uid is not None:\n
   not_closed_state_list = (\'ordered\',\'planned\',\'confirmed\',\'started\',\'stopped\', \'ready\', \'deposited\', \'received\')\n
   portal_type_list = [x for x in context.getPortalDeliveryTypeList()\n

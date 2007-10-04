@@ -75,6 +75,7 @@ if same_type(site, \'\'):\n
 \n
 while True:\n
   if not hasattr(site, \'getVaultTypeList\'):\n
+    context.log(\'no getVaultTypeList on :\', site.getRelativeUrl())\n
     msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
     raise ValidationFailed, (msg,)\n
   if \'site\' in site.getVaultTypeList():\n
