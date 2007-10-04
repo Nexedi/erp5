@@ -793,7 +793,7 @@ class ManageCSS:
           ,page_iterator
           ,page_id
           ,page_height
-          ,page_width,
+          ,page_width
           ,original_page_width
           ,original_page_height
           ,width_groups,height_groups):
