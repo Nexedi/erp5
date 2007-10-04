@@ -13,11 +13,11 @@
  </chain>
  <chain>
   <type>Accounting Transaction Line</type>
-  <workflow>delivery_edit_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Balance Transaction</type>
-  <workflow>accounting_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, accounting_workflow</workflow>
  </chain>
  <chain>
   <type>Balance Transaction Line</type>
@@ -25,11 +25,11 @@
  </chain>
  <chain>
   <type>Invoice Cell</type>
-  <workflow>delivery_edit_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Invoice Line</type>
-  <workflow>delivery_edit_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Invoice Rule</type>
@@ -53,18 +53,18 @@
  </chain>
  <chain>
   <type>Purchase Invoice Transaction</type>
-  <workflow>delivery_causality_interaction_workflow, accounting_workflow, edit_workflow, delivery_edit_workflow, invoice_causality_workflow</workflow>
+  <workflow>delivery_causality_interaction_workflow, accounting_workflow, invoice_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Invoice Transaction Line</type>
-  <workflow>delivery_edit_workflow, edit_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>edit_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Invoice Transaction</type>
-  <workflow>delivery_causality_interaction_workflow, accounting_workflow, edit_workflow, delivery_edit_workflow, invoice_causality_workflow</workflow>
+  <workflow>delivery_causality_interaction_workflow, accounting_workflow, delivery_simulation_interaction_workflow, edit_workflow, invoice_causality_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Invoice Transaction Line</type>
-  <workflow>edit_workflow, delivery_movement_causality_interaction_workflow, delivery_edit_workflow</workflow>
+  <workflow>edit_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

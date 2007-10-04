@@ -120,14 +120,13 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
   # FIXME after_method_id is not enough here.\n
 \n
   # build accounting lines\n
+  method_id_list = (\'expand\', \'edit\', \'updateAppliedRule\', \'Delivery_updateAppliedRule\',\n
+      \'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
   builder.activate(\n
-      after_method_id=(\'expand\', \'updateAppliedRule\', \'edit\',\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))\\\n
-      .build()\n
+      after_method_id=method_id_list).build()\n
 \n
   # build related payment transactions\n
-  portal_deliveries.payment_transaction_builder.activate(\n
-      after_method_id=(\'expand\', \'edit\', \'updateAppliedRule\', \'recursiveImmediateReindexObject\', \'immediateReindexObject\'))\\\n
-      .build()\n
+  portal_deliveries.payment_transaction_builder.activate(after_method_id=method_id_list).build()\n
 \n
   # set the object in building state.\n
   delivery.startBuilding()\n
@@ -190,6 +189,7 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
                             <string>previous_tag</string>
                             <string>expand_tag</string>
                             <string>activate_kw</string>
+                            <string>method_id_list</string>
                           </tuple>
                         </value>
                     </item>
