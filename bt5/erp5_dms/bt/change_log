@@ -1,3 +1,6 @@
+2007-10-04 yusei
+* Fixed a bug that search result does not appear. (stop to use countFolder)
+
 2007-10-03 yusei
 * Remove obsolete proxy field (Base_viewAdvancedSearchDialog.your_category_list)
 
