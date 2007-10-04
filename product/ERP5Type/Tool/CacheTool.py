@@ -120,6 +120,10 @@ class CacheTool(BaseTool):
     items = connection_string.split()
     if not items:
       return kwargs
+    compress = items[0]
+    if compress == "~":
+      kwargs['compress'] = True
+      items = items[1:]
     lockreq, items = items[0], items[1:]
     if lockreq[0] == "*":
       db_host, items = items[0], items[1:]
