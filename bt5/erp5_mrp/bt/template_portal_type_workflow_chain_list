@@ -8,24 +8,26 @@ Production Order | edit_workflow
 Production Order | order_simulation_interaction_workflow
 Production Order | production_order_workflow
 Production Packing List Cell | delivery_movement_causality_interaction_workflow
+Production Packing List Cell | delivery_movement_simulation_interaction_workflow
 Production Packing List Line | delivery_movement_causality_interaction_workflow
+Production Packing List Line | delivery_movement_simulation_interaction_workflow
 Production Packing List Line | edit_workflow
 Production Packing List Line | production_matrix_workflow
-Production Packing List Line | production_packing_list_interaction_workflow
 Production Packing List | delivery_causality_interaction_workflow
+Production Packing List | delivery_simulation_interaction_workflow
 Production Packing List | edit_workflow
 Production Packing List | production_packing_list_causality_workflow
-Production Packing List | production_packing_list_interaction_workflow
 Production Packing List | production_packing_list_workflow
 Production Report Cell | delivery_movement_causality_interaction_workflow
+Production Report Cell | delivery_movement_simulation_interaction_workflow
 Production Report Line | delivery_movement_causality_interaction_workflow
+Production Report Line | delivery_movement_simulation_interaction_workflow
 Production Report Line | edit_workflow
 Production Report Line | production_matrix_workflow
-Production Report Line | production_packing_list_interaction_workflow
 Production Report | delivery_causality_interaction_workflow
+Production Report | delivery_simulation_interaction_workflow
 Production Report | edit_workflow
 Production Report | production_packing_list_causality_workflow
-Production Report | production_packing_list_interaction_workflow
 Production Report | production_packing_list_workflow
 Supply Chain | edit_workflow
 Supply Link | edit_workflow

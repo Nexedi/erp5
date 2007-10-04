@@ -17,27 +17,27 @@
  </chain>
  <chain>
   <type>Production Packing List</type>
-  <workflow>production_packing_list_workflow, production_packing_list_causality_workflow, edit_workflow, production_packing_list_interaction_workflow, delivery_causality_interaction_workflow</workflow>
+  <workflow>delivery_simulation_interaction_workflow, production_packing_list_workflow, production_packing_list_causality_workflow, edit_workflow, delivery_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Packing List Cell</type>
-  <workflow>delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Packing List Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, production_packing_list_interaction_workflow, production_matrix_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, delivery_movement_simulation_interaction_workflow, production_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Production Report</type>
-  <workflow>production_packing_list_causality_workflow, production_packing_list_interaction_workflow, edit_workflow, production_packing_list_workflow, delivery_causality_interaction_workflow</workflow>
+  <workflow>production_packing_list_causality_workflow, delivery_simulation_interaction_workflow, production_packing_list_workflow, edit_workflow, delivery_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Report Cell</type>
-  <workflow>delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Report Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, production_matrix_workflow, production_packing_list_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Supply Chain</type>
