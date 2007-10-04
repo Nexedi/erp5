@@ -71,7 +71,18 @@
             <value> <string>delivery_movement = state_change[\'object\']\n
 \n
 delivery = delivery_movement.getExplanationValue()\n
-if delivery.getCausalityState() != \'draft\':\n
+\n
+# Check that getCausalityState is available.\n
+# For instance, Accounting Trnsaction Lines\n
+# can be contained in a Accounring Rule Cell\n
+# of a Invoice Transaction Rule, and none of\n
+# these provide a causality workflow, but\n
+# Accounting Transaction Line is also a\n
+# possible child of a Accounting Transaction\n
+# in the Accounting Transaction Module\n
+\n
+if getattr(delivery, \'getCausalityState\', None) is not None and \\\n
+    delivery.getCausalityState() != \'draft\':\n
   delivery.calculate()\n
 </string> </value>
         </item>
@@ -120,6 +131,8 @@ if delivery.getCausalityState() != \'draft\':\n
                             <string>delivery_movement</string>
                             <string>_getattr_</string>
                             <string>delivery</string>
+                            <string>getattr</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
