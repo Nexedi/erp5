@@ -53,6 +53,8 @@ priority_weight = \
   [4] * 5 + \
   [5] * 1
 
+LAST_PROCESSING_NODE = 1
+
 class SQLQueue(RAMQueue):
   """
     A simple OOBTree based queue. It should be compatible with transactions
@@ -302,6 +304,7 @@ class SQLQueue(RAMQueue):
   def distribute(self, activity_tool, node_count):
     readMessageList = getattr(activity_tool, 'SQLQueue_readMessageList', None)
     if readMessageList is not None:
+      global LAST_PROCESSING_NODE
       now_date = DateTime()
       result = readMessageList(path=None, method_id=None,
                                processing_node=-1, to_date=now_date)
@@ -318,7 +321,7 @@ class SQLQueue(RAMQueue):
       # XXX probably this below can be optimized by assigning multiple messages at a time.
       path_dict = {}
       assignMessage = activity_tool.SQLQueue_assignMessage
-      processing_node = 1
+      processing_node = LAST_PROCESSING_NODE
       id_tool = activity_tool.getPortalObject().portal_ids
       for message in message_dict.itervalues():
         path = '/'.join(message.object_path)
@@ -358,6 +361,7 @@ class SQLQueue(RAMQueue):
 
           assignMessage(processing_node=node, uid=message.uid, broadcast=0)
           get_transaction().commit() # Release locks immediately to allow processing of messages
+      LAST_PROCESSING_NODE = processing_node
 
   # Validation private methods
   def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None):
