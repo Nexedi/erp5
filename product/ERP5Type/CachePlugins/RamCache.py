@@ -135,7 +135,9 @@ class RamCache(BaseCache):
     from guppy import hpy
     h = hpy()
     total_size = 0
+    cache_keys_total_size = {}
     for cache_key, cache_value in self._cache_dict[DEFAULT_CACHE_SCOPE].items():
-      cache_value = cache_value.getValue()
-      total_size += calcPythonObjectMemorySize(h, cache_value)
-    return total_size      
+      cache_item_size = calcPythonObjectMemorySize(h, cache_value.getValue())
+      total_size += cache_item_size
+      cache_keys_total_size[cache_key] = cache_item_size
+    return total_size, cache_keys_total_size    
