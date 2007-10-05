@@ -72,10 +72,8 @@
 delivery_type = context.getPortalType()\n
 \n
 applied_rule_dict = {\n
-  \'Accounting Rule Cell\': \'\', # this one is only used as a template in the Invoice Transaction Rule, and does not need simulation\n
-  \'Accounting Transaction\': \'default_invoice_rule\',\n
-\n
   \'Pay Sheet Transaction\': \'default_invoice_rule\',\n
+  \'Payment Transaction\': \'default_invoice_rule\',\n
 \n
   \'Purchase Packing List\': \'default_delivery_rule\',\n
   \'Purchase Invoice Transaction\': \'default_invoice_rule\',\n
@@ -84,6 +82,8 @@ applied_rule_dict = {\n
   \'Sale Packing List\': \'default_delivery_rule\',\n
   \'Sale Invoice Transaction\': \'default_invoice_rule\',\n
 \n
+  \'Accounting Rule Cell\': None,\n
+  \'Accounting Transaction\': None,\n
   \'Production Packing List\': None,\n
   \'Production Report\': None,\n
 \n
