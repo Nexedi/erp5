@@ -86,6 +86,8 @@ applied_rule_dict = {\n
 \n
   \'Production Packing List\': None,\n
   \'Production Report\': None,\n
+\n
+  \'Task Report\': \'default_delivery_rule\',\n
   }\n
 \n
 marker = []\n
