@@ -33,16 +33,17 @@ from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 from BaseCache import *
 import time
 
-def calcPythonObjectMemorySize(h, i):
+def calcPythonObjectMemorySize(i):
   """ Recursive function that will 'walk' over complex python types and caclulate
       their RAM memory usage. """
-  s = h.iso(i).size
+  from mx.Tools import sizeof
+  s = sizeof(i)
   if isinstance(i, dict):
     for k, v in i.items():
-      s += calcPythonObjectMemorySize(h, k) + calcPythonObjectMemorySize(h, v)
+      s += calcPythonObjectMemorySize(k) + calcPythonObjectMemorySize(v)
   elif isinstance(i, list) or isinstance(i, tuple):
     for v in i:
-      s += calcPythonObjectMemorySize(h, v)
+      s += calcPythonObjectMemorySize(v)
   return s
 
 class RamCache(BaseCache):
@@ -129,15 +130,13 @@ class RamCache(BaseCache):
       
   def getCachePluginTotalMemorySize(self):
     """ Calculate total RAM memory size of cache plugin. 
-        This function depends on guppy python module:
-        http://guppy-pe.sourceforge.net/
+        This function depends on mxBase python module:
+        http://www.egenix.com/products/python/mxBase/
         """
-    from guppy import hpy
-    h = hpy()
     total_size = 0
     cache_keys_total_size = {}
     for cache_key, cache_value in self._cache_dict[DEFAULT_CACHE_SCOPE].items():
-      cache_item_size = calcPythonObjectMemorySize(h, cache_value.getValue())
+      cache_item_size = calcPythonObjectMemorySize(cache_value.getValue())
       total_size += cache_item_size
       cache_keys_total_size[cache_key] = cache_item_size
-    return total_size, cache_keys_total_size    
+    return total_size, cache_keys_total_size      
