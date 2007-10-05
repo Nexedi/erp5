@@ -136,7 +136,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       return {'conflict_list':conflict_list, 'object':sub_object}
     # In the case where this new node is a object to add
     if xml.nodeName in self.XUPDATE_INSERT_OR_ADD and \
-        self.getSubObjectDepth(xml)==0:
+        self.getSubObjectDepth(xml) == 0:
       if self.isHistoryAdd(xml)!=-1: # bad hack XXX to be removed
         for element in self.getXupdateElementList(xml):
           xml = self.getElementFromXupdate(element)
@@ -223,9 +223,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       #LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, SubObjectDepth: %i' % self.getSubObjectDepth(xml))
       if xml.nodeName == self.xml_object_tag:
         object_id = self.getAttribute(xml,'id')
-      elif self.getSubObjectDepth(xml)==1:
+      elif self.getSubObjectDepth(xml) == 1:
         object_id = self.getSubObjectId(xml)
-      elif self.getSubObjectDepth(xml)==2:
+      elif self.getSubObjectDepth(xml) == 2:
         # we have to call delete node on a subsubobject
         sub_object_id = self.getSubObjectId(xml)
         try:
@@ -286,14 +286,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                          conduit=self,
                                          previous_xml=previous_xml,
                                          force=force,
-          simulate=simulate, **kw)
+                                         simulate=simulate, **kw)
     # we may have only the part of an xupdate
     else:
       args = {}
       if self.isProperty(xml) and not(self.isSubObjectModification(xml)):
         keyword = None
         for subnode in self.getAttributeNodeList(xml):
-          if subnode.nodeName=='select':
+          if subnode.nodeName == 'select':
             select_list = subnode.nodeValue.split('/') # Something like:
                                                        #('','object[1]','sid[1]')
             new_select_list = ()
@@ -307,9 +307,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         data = None
         if xml.nodeName not in self.XUPDATE_INSERT_OR_ADD:
           for subnode in self.getElementNodeList(xml):
-            if subnode.nodeName=='xupdate:element':
+            if subnode.nodeName == 'xupdate:element':
               for subnode1 in subnode.attributes:
-                if subnode1.nodeName=='name':
+                if subnode1.nodeName == 'name':
                   keyword = subnode1.nodeValue
               data_xml = subnode
         else:
@@ -330,7 +330,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           return conflict_list
         if keyword is None: # This is not a selection, directly the property
           keyword = xml.nodeName
-        if len(self.getElementNodeList(data_xml))==0:
+        if len(self.getElementNodeList(data_xml)) == 0:
           try:
             data = data_xml.childNodes[0].data
           except IndexError: # There is no data
@@ -339,7 +339,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           # We will look for the data to enter
           data_type = object.getPropertyType(keyword)
           #LOG('ERP5Conduit.updateNode', DEBUG, 'data_type: %s for keyword: %s' % (str(data_type), keyword))
-          data = self.convertXmlValue(data,data_type=data_type)
+          data = self.convertXmlValue(data, data_type=data_type)
           args[keyword] = data
           args = self.getFormatedArgs(args=args)
           # This is the place where we should look for conflicts
@@ -368,7 +368,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                 # This is a conflict
                 isConflict = 1
                 string_io = StringIO()
-                PrettyPrint(xml,stream=string_io)
+                PrettyPrint(xml, stream=string_io)
                 conflict = Conflict(object_path=object.getPhysicalPath(),
                                     keyword=keyword)
                 conflict.setXupdate(string_io.getvalue())
@@ -377,8 +377,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                   conflict.setRemoteValue(data)
                 conflict_list += [conflict]
           # We will now apply the argument with the method edit
-          if args != {} and (isConflict==0 or force) and (not simulate):
-            self.editDocument(object=object,**args)
+          if args != {} and (isConflict == 0 or force) and (not simulate):
+            self.editDocument(object=object, **args)
             # It is sometimes required to do something after an edit
             if getattr(object, 'manage_afterEdit', None) is not None:
               object.manage_afterEdit()
@@ -494,7 +494,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     bad_list = (self.sub_object_exp,self.history_exp)
     for subnode in self.getAttributeNodeList(xml):
-      if subnode.nodeName=='select':
+      if subnode.nodeName == 'select':
         value = subnode.nodeValue
         for bad_string in bad_list:
           if re.search(bad_string,value) is not None:
@@ -510,7 +510,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     xml_copy = xml.cloneNode(True) #make a deepcopy of the node xml
     for subnode in self.getAttributeNodeList(xml_copy):
-      if subnode.nodeName=='select':
+      if subnode.nodeName == 'select':
         subnode.nodeValue = self.getSubObjectSelect(subnode.nodeValue)
     return xml_copy
 
@@ -519,7 +519,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   def isHistoryAdd(self, xml):
     bad_list = (self.history_exp,)
     for subnode in self.getAttributeNodeList(xml):
-      if subnode.nodeName=='select':
+      if subnode.nodeName == 'select':
         value = subnode.nodeValue
         for bad_string in bad_list:
           if re.search(bad_string,value) is not None:
@@ -537,7 +537,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     good_list = (self.sub_object_exp,)
     for subnode in self.getAttributeNodeList(xml) :
-      if subnode.nodeName=='select':
+      if subnode.nodeName == 'select':
         value = subnode.nodeValue
         for good_string in good_list:
           if re.search(good_string,value) is not None:
@@ -601,7 +601,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     object_id = None
     for subnode in self.getAttributeNodeList(xml):
-      if subnode.nodeName=='select':
+      if subnode.nodeName == 'select':
         value = subnode.nodeValue
         if re.search(self.object_exp,value) is not None:
           s = "'"
@@ -618,7 +618,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     object_id = None
     for subnode in self.getAttributeNodeList(xml):
-      if subnode.nodeName=='select':
+      if subnode.nodeName == 'select':
         value = subnode.nodeValue
         if re.search(self.history_exp,value) is not None:
           s = self.history_tag
@@ -649,7 +649,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     for attribute in self.getAttributeNodeList(xml):
       if attribute.nodeName == param:
         data = attribute.value
-        return self.convertXmlValue(data,data_type='string')
+        return self.convertXmlValue(data, data_type='string')
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation,'getObjectProperty')
@@ -685,7 +685,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       #LOG('Conduit.convertToXml not failed',0,'ok')
       xml = xml.childNodes[0] # Because we just created a new xml
     # If we have the xml from the node erp5, we just take the subnode
-    if xml.nodeName=='erp5':
+    if xml.nodeName == 'erp5':
       xml = self.getElementNodeList(xml)[0]
     return xml
 
@@ -696,7 +696,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     portal_type = None
     for subnode in self.getAttributeNodeList(xml):
-      if subnode.nodeName=='portal_type':
+      if subnode.nodeName == 'portal_type':
         portal_type = subnode.nodeValue
         portal_type = self.convertXmlValue(portal_type)
         return portal_type
@@ -709,7 +709,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     p_type = None # use getElementsByTagName !!!! XXX
     for subnode in self.getAttributeNodeList(xml):
-      if subnode.nodeName=='type':
+      if subnode.nodeName == 'type':
         p_type = subnode.nodeValue
         p_type = self.convertXmlValue(p_type,data_type='string')
         return p_type
@@ -849,7 +849,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       else:
         s_place = len(attribute)
       property = attribute[:s_place]
-      if property.find('/')==0:
+      if property.find('/') == 0:
         property = property[1:]
       result += property
       if select_id is not None:
@@ -894,7 +894,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     data = data.replace('\n','')
     if type(data) is type(u"a"):
       data = data.encode(self.getEncoding())
-    if data=='None':
+    if data == 'None':
       return None
     # We can now convert string in tuple, dict, binary...
     if data_type in self.list_type_list:
