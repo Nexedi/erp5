@@ -83,6 +83,7 @@ class PublicationSynchronization(XMLSyncUtils):
         LOG('Warning !!!, reseting client synchronization for subscriber:', WARNING,
             subscriber.getPath())
         subscriber.resetAllSignatures()
+        subscriber.resetAnchors()
 
       # Check if the last time synchronization is the same as the client one
       if subscriber.getNextAnchor() != last_anchor:
