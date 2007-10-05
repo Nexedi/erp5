@@ -1,11 +1,11 @@
 <workflow_chain>
  <chain>
   <type>Amortisation Transaction</type>
-  <workflow>amortisation_transaction_causality_workflow, amortisation_transaction_interaction_workflow, accounting_workflow, edit_workflow</workflow>
+  <workflow>delivery_causality_interaction_workflow, amortisation_transaction_causality_workflow, accounting_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Amortisation Transaction Line</type>
-  <workflow>edit_workflow, amortisation_transaction_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Delivery Cell</type>

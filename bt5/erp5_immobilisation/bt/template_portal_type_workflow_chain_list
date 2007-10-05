@@ -1,8 +1,10 @@
-Amortisation Transaction Line | amortisation_transaction_interaction_workflow
+Amortisation Transaction Line | delivery_movement_causality_interaction_workflow
+Amortisation Transaction Line | delivery_movement_simulation_interaction_workflow
 Amortisation Transaction Line | edit_workflow
 Amortisation Transaction | accounting_workflow
 Amortisation Transaction | amortisation_transaction_causality_workflow
-Amortisation Transaction | amortisation_transaction_interaction_workflow
+Amortisation Transaction | delivery_causality_interaction_workflow
+Amortisation Transaction | delivery_simulation_interaction_workflow
 Amortisation Transaction | edit_workflow
 Delivery Cell | immobilisation_movement_interaction_workflow
 Immobilisation Line | edit_workflow
