@@ -37,7 +37,6 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from OFS.Folder import Folder as OFS_Folder
 from Products.ERP5Type import Permissions
-from Products.CMFCore.PortalFolder import PortalFolder
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Document import newTempBase
@@ -73,8 +72,9 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     allowedContentTypes = BaseTool.allowedContentTypes
     getVisibleAllowedContentTypeList = BaseTool.getVisibleAllowedContentTypeList
 
-    # patch, so that we are able to rename base categories
-    _verifyObjectPaste = PortalFolder._verifyObjectPaste
+    # Override this method to resolve an inheritance problem.
+    def _verifyObjectPaste(self, *args, **kw):
+      return BaseTool._verifyObjectPaste(self, *args, **kw)
 
     all_meta_types = BaseTool.all_meta_types
 
