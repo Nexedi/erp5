@@ -39,7 +39,7 @@ from Products.ERP5SyncML import _dtmldir
 from Products.ERP5SyncML import Conduit
 from Publication import Publication, Subscriber
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
-from Subscription import Subscription, Signature
+from Subscription import Subscription
 from XMLSyncUtils import Parse
 #from Ft.Xml import Parse
 from Products.ERP5Type import Permissions
@@ -820,12 +820,11 @@ class SynchronizationTool( SubscriptionSynchronization,
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    #LOG('sendResponse, self.getPhysicalPath: ', DEBUG, self.getPhysicalPath())
-    #LOG('sendResponse, to_url: ', DEBUG, to_url)
-    #LOG('sendResponse, from_url: ', DEBUG, from_url)
-    #LOG('sendResponse, sync_id: ', DEBUG, sync_id)
-    #LOG('sendResponse, xml: \n', DEBUG, xml)
-
+    #LOG('sendResponse, self.getPhysicalPath: ', INFO, self.getPhysicalPath())
+    #LOG('sendResponse, to_url: ', INFO, to_url)
+    #LOG('sendResponse, from_url: ', INFO, from_url)
+    #LOG('sendResponse, sync_id: ', INFO, sync_id)
+    #LOG('sendResponse, xml: \n', INFO, xml)
     if content_type == self.CONTENT_TYPE['SYNCML_WBXML']:
       xml = self.xml2wbxml(xml)
       #LOG('sendHttpResponse, xml after wbxml: \n', DEBUG, self.hexdump(xml))
@@ -1027,7 +1026,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
-      LOG('type(text) : ', TRACE, type(text))
+      #LOG('type(text) : ', TRACE, type(text))
       if domain.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
         text = self.wbxml2xml(text)
       #LOG('readResponse, text after wbxml :\n', TRACE, text)
