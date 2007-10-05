@@ -200,10 +200,6 @@ def getFieldValue(self, field, id, **kw):
   """
     Return a callable expression
   """
-  # FIXME: backwards compat hack to make sure tales dict exists
-  if not hasattr(self, 'tales'):
-    self.tales = {}
-
   tales_expr = self.tales.get(id, "")
   if tales_expr:
     # TALESMethod is persistent object, so that we cannot cache original one.
@@ -211,10 +207,6 @@ def getFieldValue(self, field, id, **kw):
     # RuntimeError must occurs in __setstate__.
     clone = TALESMethod(tales_expr._text)
     return TALESValue(clone)
-
-  # FIXME: backwards compat hack to make sure overrides dict exists
-  if not hasattr(self, 'overrides'):
-      self.overrides = {}
 
   override = self.overrides.get(id, "")
   if override:
