@@ -80,17 +80,17 @@ try:
   # ZopeTestCase REQUESTs
   ZopeTestCase.installProduct('iHotfix', quiet=install_product_quiet)
   from Products import iHotfix
-  from StringIO import StringIO as OrigStringIO
   from types import UnicodeType
   # revert monkey patchs from iHotfix
   iHotfix.get_request = get_request
 
-  class UnicodeSafeStringIO(OrigStringIO):
+  originalStringIO = iHotfix.originalStringIO
+  class UnicodeSafeStringIO(originalStringIO):
     """StringIO like class which never fails with unicode."""
     def write(self, s):
       if isinstance(s, UnicodeType):
         s = s.encode('utf8', 'repr')
-      OrigStringIO.write(self, s)
+      originalStringIO.write(self, s)
   # iHotFix will patch PageTemplate StringIO with
   iHotfix.iHotfixStringIO = UnicodeSafeStringIO
 except ImportError:
