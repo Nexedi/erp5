@@ -449,15 +449,19 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     erp5diff = ERP5Diff()
     erp5diff.compare(old_xml, object_xml)
-    xupdate_doc = erp5diff._result
-    #minidom is buggy, add namespace declaration, and version
-    attr_ns = xupdate_doc.createAttribute('xmlns:xupdate')
-    attr_ns.value = 'http://www.xmldb.org/xupdate'
-    attr_version = xupdate_doc.createAttribute('version')
-    attr_version.value = '1.0'
-    xupdate_doc.documentElement.setAttributeNode(attr_ns)
-    xupdate_doc.documentElement.setAttributeNode(attr_version)
-    xupdate = xupdate_doc.toxml('utf-8')
+    #minidom is buggy, add namespace declaration, and version, only if attribute version doesn't exists
+    ns = 'http://www.xmldb.org/xupdate'
+    if not erp5diff._result.documentElement.hasAttributeNS(ns, 'version'):
+      attr_version = erp5diff._result.createAttributeNS(ns, 'version')
+      attr_version.value = '1.0'
+      erp5diff._result.documentElement.setAttributeNodeNS(attr_version)
+      attr_ns = erp5diff._result.createAttributeNS(ns, 'xmlns:xupdate')
+      attr_ns.value = ns
+      erp5diff._result.documentElement.setAttributeNodeNS(attr_ns)
+      xupdate = erp5diff._result.toxml('utf-8')
+    else:
+      #Upper version of ERP5Diff produce valid XML.
+      xupdate = erp5diff.outputString()
     #omit xml declaration
     xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
     return xupdate
