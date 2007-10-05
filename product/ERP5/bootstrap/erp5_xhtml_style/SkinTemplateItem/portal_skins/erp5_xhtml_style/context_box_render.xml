@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -117,7 +114,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
   <span id="action" metal:define-macro="action">\n
     <select name="select_action"\n
-            tal:attributes="onChange string:submitAction(this.form,\'Base_doAction\')">\n
+            onChange="submitAction(this.form,\'Base_doAction\')">\n
       <option selected="selected" value=""\n
               i18n:translate="" i18n:domain="ui">Action...</option>\n
       <tal:block tal:define="allowed_content_type_list here/getVisibleAllowedContentTypeList | python:[]">\n
@@ -195,7 +192,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                       button_actions actions/object_button | nothing;\n
                       sort_actions actions/object_sort | nothing;\n
                       ui_actions actions/object_ui | nothing;\n
-                      print_actions actions/object_print | nothing">\n
+                      print_actions actions/object_print | nothing;\n
+                      list_mode list_mode | nothing">\n
       <span class="separator"></span>\n
       <tal:block tal:condition="list_mode | nothing">\n
         <button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
@@ -221,17 +219,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <span class="description" i18n:translate="" i18n:domain="ui">Print</span>\n
       </button>\n
       <button class="new" type="submit" title="New"\n
-              tal:attributes="name python: (getattr(here, \'getParentValue\', None) is not None and getattr(here.getParentValue(), \'getLastId\', None) is not None) and \'Base_createNewDocument:method\' or \'Folder_create:method\'"\n
+              tal:attributes="name python: list_mode and \'Folder_create:method\' or \'Base_createNewDocument:method\'"\n
               i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
       </button>\n
-      <button tal:condition="list_mode | nothing" class="delete" type="submit" name="Folder_deleteObjectList:method" title="Delete"\n
+      <button tal:condition="list_mode" class="delete" type="submit" name="Folder_deleteObjectList:method" title="Delete"\n
               i18n:attributes="title" i18n:domain="ui">\n
         <span class="image"></span>\n
         <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>\n
       </button>\n
-      <tal:block tal:condition="not: list_mode | nothing">\n
+      <tal:block tal:condition="not: list_mode">\n
         <tal:block tal:condition="request/selection_index | nothing">\n
           <span class="separator"></span>\n
           <a class="jump_first" title="First"\n
@@ -265,7 +263,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </a>\n
         </tal:block>\n
       </tal:block>\n
-      <tal:block tal:condition="list_mode | nothing">\n
+      <tal:block tal:condition="list_mode">\n
         <span class="separator"></span>\n
         <a tal:condition="search_actions" class="find" title="Find"\n
            tal:attributes="href python: here.ERP5Site_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')"\n
@@ -316,7 +314,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </a>\n
         </tal:block>\n
       </tal:block>\n
-      <tal:block tal:condition="list_mode | nothing">\n
+      <tal:block tal:condition="list_mode">\n
         <tal:block tal:condition="ui_actions">\n
           <span class="separator"></span>\n
           <a class="configure" title="Configure"\n
