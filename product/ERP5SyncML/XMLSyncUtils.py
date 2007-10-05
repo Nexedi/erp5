@@ -31,7 +31,6 @@ from Products.ERP5SyncML.SyncCode import SyncCode
 from Products.ERP5SyncML.Subscription import Signature
 from AccessControl.SecurityManagement import newSecurityManager
 from StringIO import StringIO
-from xml.dom.ext import PrettyPrint
 from ERP5Diff import ERP5Diff
 from zLOG import LOG, INFO
 
@@ -47,6 +46,10 @@ try:
       from base64 import b16encode, b16decode
 except ImportError:
       from base64 import encodestring as b16encode, decodestring as b16decode
+try:
+  from Ft.Xml.Domlette import PrettyPrint
+except ImportError:
+  from xml.dom.ext import PrettyPrint
 
 class XMLSyncUtilsMixin(SyncCode):
 
