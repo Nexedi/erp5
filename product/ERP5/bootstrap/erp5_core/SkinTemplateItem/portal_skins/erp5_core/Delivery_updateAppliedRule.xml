@@ -83,6 +83,9 @@ applied_rule_dict = {\n
   \'Sale Order\': \'default_order_rule\',\n
   \'Sale Packing List\': \'default_delivery_rule\',\n
   \'Sale Invoice Transaction\': \'default_invoice_rule\',\n
+\n
+  \'Production Packing List\': None,\n
+  \'Production Report\': None,\n
   }\n
 \n
 marker = []\n
@@ -90,8 +93,9 @@ applied_rule = applied_rule_dict.get(delivery_type, marker)\n
 \n
 if applied_rule is marker:\n
   raise "SimulationError", "No rule defined for %s, see Delivery_updateAppliedRule python script" % delivery_type\n
-\n
-if applied_rule:\n
+elif applied_rule is None:\n
+  pass  \n
+elif applied_rule:\n
   delivery.updateAppliedRule(rule_id=applied_rule, **kw)\n
 </string> </value>
         </item>
@@ -146,6 +150,7 @@ if applied_rule:\n
                             <string>delivery</string>
                             <string>_getattr_</string>
                             <string>delivery_type</string>
+                            <string>None</string>
                             <string>applied_rule_dict</string>
                             <string>marker</string>
                             <string>applied_rule</string>
