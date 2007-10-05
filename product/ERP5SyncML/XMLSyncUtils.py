@@ -829,7 +829,7 @@ class XMLSyncUtilsMixin(SyncCode):
       if max is not None and loop >= max:
         result['finished'] = 0
         break
-      #LOG('getSyncMLData object_path', DEBUG, object_path)
+      #LOG('getSyncMLData object_path', INFO, object_path)
       object = self.unrestrictedTraverse(object_path)
       status = self.SENT
       object_gid = domain.getGidFromObject(object)
@@ -1265,10 +1265,10 @@ class XMLSyncUtilsMixin(SyncCode):
         if object_gid in ('', None, []):
           object_gid = status['target']
         status_code = int(status['code'])
-        if status_cmd in ('Add','Replace'):
+        if status_cmd in ('Add','Replace',):
           has_status_list = 1
           signature = subscriber.getSignatureFromGid(object_gid)
-          if signature == None:
+          if signature is None:
             signature = subscriber.getSignatureFromRid(object_gid)
           if status_code == self.CHUNK_OK:
             destination_waiting_more_data = 1
@@ -1680,10 +1680,10 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     """
     response = None #check if subsync replies to this messages
     subscription = self.unrestrictedTraverse(subscription_path)
-    if msg==None and (subscription.getSubscriptionUrl()).find('file')>=0:
+    if msg is None and (subscription.getSubscriptionUrl()).find('file')>=0:
       msg = self.readResponse(sync_id=subscription.getSubscriptionUrl(),
           from_url=subscription.getSubscriptionUrl())
-    if msg==None:
+    if msg is None:
       response = self.SubSyncInit(subscription)
     else:
       xml_client = msg
