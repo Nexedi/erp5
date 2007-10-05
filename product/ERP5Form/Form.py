@@ -54,10 +54,21 @@ def purgeFieldValueCache():
 # Patch the fiels methods to provide improved namespace handling
 
 from Products.Formulator.Field import Field
-from Products.Formulator.MethodField import Method
+from Products.Formulator.MethodField import Method, BoundMethod
 from Products.Formulator.TALESField import TALESMethod
 
 from zLOG import LOG, PROBLEM
+
+
+def copyMethod(value):
+    if type(aq_base(value)) is Method:
+      value = Method(value.method_name)
+    elif type(aq_base(value)) is TALESMethod:
+      value = TALESMethod(value._text)
+    elif type(aq_base(value)) is BoundMethod:
+      value = BoundMethod(value.object, value.method_name)
+    return value
+
 
 class StaticValue:
   """
@@ -66,8 +77,8 @@ class StaticValue:
     value as is)
   """
   def __init__(self, value):
-    if isinstance(aq_base(value), Method):
-      value = Method(value.method_name)
+    if isinstance(aq_base(value), (Method, TALESMethod)):
+      value = copyMethod(value)
     self.value = value
 
   def __call__(self, field, id, **kw):
@@ -151,8 +162,8 @@ class TALESValue(StaticValue):
 
 class OverrideValue(StaticValue):
   def __init__(self, override):
-    if isinstance(aq_base(override), Method):
-      override = Method(override.method_name)
+    if isinstance(aq_base(override), (Method, TALESMethod)):
+      override = copyMethod(override)
     self.override = override
 
   def __call__(self, field, id, **kw):
@@ -161,8 +172,8 @@ class OverrideValue(StaticValue):
 class DefaultValue(StaticValue):
   def __init__(self, field_id, value):
     self.key = field_id[3:]
-    if isinstance(aq_base(value), Method):
-      value = Method(value.method_name)
+    if isinstance(aq_base(value), (Method, TALESMethod)):
+      value = copyMethod(value)
     self.value = value
 
   def __call__(self, field, id, **kw):
@@ -755,18 +766,14 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     def proxifyField(self, field_dict=None, REQUEST=None):
         """Convert fields to proxy fields"""
         from Products.ERP5Form.ProxyField import ProxyWidget
-        from Products.Formulator.MethodField import Method
-        from Products.Formulator.TALESField import TALESMethod
 
         def copy(_dict):
             new_dict = {}
             for key, value in _dict.items():
                 if value=='':
                     continue
-                if isinstance(value, Method):
-                    value = Method(value.method_name)
-                elif isinstance(value, TALESMethod):
-                    value = TALESMethod(value._text)
+                if isinstance(aq_base(value), (Method, TALESMethod)):
+                    value = copyMethod(value)
                 elif value is not None and not isinstance(value,
                         (str, unicode, int, long, bool, list, tuple, dict)):
                     raise ValueError, repr(value)
@@ -778,7 +785,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             type_b = type(b)
             if type_a is not type_b:
                 return False
-            elif type_a is Method:
+            elif type_a is Method or type_a is BoundMethod:
                 return a.method_name==b.method_name
             elif type_a is TALESMethod:
                 return a._text==b._text
