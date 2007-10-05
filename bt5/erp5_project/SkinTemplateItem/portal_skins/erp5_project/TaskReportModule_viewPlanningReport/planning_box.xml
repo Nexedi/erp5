@@ -494,7 +494,11 @@
                       <list>
                         <tuple>
                           <string>parent</string>
-                          <string>parent</string>
+                          <string>Default</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_report_module_domain</string>
+                          <string>Selected Task Report</string>
                         </tuple>
                       </list>
                     </value>
@@ -659,7 +663,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
+            <value> <string>TaskReportModule_getTaskReportList</string> </value>
         </item>
       </dictionary>
     </pickle>
