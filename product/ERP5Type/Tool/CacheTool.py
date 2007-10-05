@@ -54,10 +54,17 @@ class CacheTool(BaseTool):
   security = ClassSecurityInfo()
   manage_options = ({'label': 'Configure',
                                 'action': 'cache_tool_configure',
-                    },) + BaseTool.manage_options
+                    },
+                    {'label': 'Statistics',
+                              'action': 'cache_tool_statistics',
+                    },
+                    ) + BaseTool.manage_options
 
   security.declareProtected( Permissions.ManagePortal, 'cache_tool_configure')
   cache_tool_configure = DTMLFile('cache_tool_configure', _dtmldir)
+  
+  security.declareProtected( Permissions.ManagePortal, 'cache_tool_statistics')
+  cache_tool_statistics = DTMLFile('cache_tool_statistics', _dtmldir)
   
   def __init__(self):
     BaseTool.__init__(self)
@@ -228,7 +235,8 @@ class CacheTool(BaseTool):
     ram_cache_root = self.getRamCacheRoot()
     for cf_key, cf_value in ram_cache_root.items():
       for cp in cf_value.getCachePluginList():
-        cp_total_size = cp.getCachePluginTotalMemorySize()
+        cp_total_size, cp_cache_keys_total_size = cp.getCachePluginTotalMemorySize()
         total_size += cp_total_size
-        stats[cf_key] = cp_total_size
-    return total_size, stats
+        stats[cf_key] = dict(total = cp_total_size,
+                             cp_cache_keys_total_size = cp_cache_keys_total_size)
+    return dict(total_size = total_size, stats = stats)
