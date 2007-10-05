@@ -774,7 +774,10 @@ class XMLSyncUtilsMixin(SyncCode):
     result = {'finished':1}
     if isinstance(remote_xml, str) or isinstance(remote_xml, unicode):
       remote_xml = Parse(remote_xml)
-    if subscriber.getRemainingObjectPathList() is None:
+    if domain.isOneWayFromServer():
+      #Do not set object_path_list, subscriber send nothing
+      subscriber.setRemainingObjectPathList([])
+    elif subscriber.getRemainingObjectPathList() is None:
       object_list = domain.getObjectList()
       object_path_list = [x.getPhysicalPath() for x in object_list]
       subscriber.setRemainingObjectPathList(object_path_list)
