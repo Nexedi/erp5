@@ -71,7 +71,7 @@ pl.activate().updateImmobilisationState()\n
 # It is done before and after because stop_date may have change\n
 for movement in pl.getAggregatedItemsNextImmobilisationMovementValueList():\n
   if movement.getImmobilisationState() != \'calculating\':\n
-    movement.calculatImmobilisationValidity()\n
+    movement.calculateImmobilisationValidity()\n
 \n
 movement_list = pl.getImmobilisationMovementList()\n
 movement_path_list = [x.getPath() for x in movement_list]\n

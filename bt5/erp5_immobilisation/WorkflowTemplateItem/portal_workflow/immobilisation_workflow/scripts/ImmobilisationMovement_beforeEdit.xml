@@ -68,7 +68,7 @@
             <value> <string>pl = state_change[\'object\']\n
 for movement in pl.getAggregatedItemsNextImmobilisationMovementValueList():\n
   if movement.getImmobilisationState() != \'calculating\':\n
-    movement.calculatImmobilisationValidity()\n
+    movement.calculateImmobilisationValidity()\n
 context.ImmobilisationDelivery_expandAggregatedItems()\n
 </string> </value>
         </item>
