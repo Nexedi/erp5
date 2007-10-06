@@ -82,6 +82,8 @@ person = context.person_module.test_webmaster\n
 person.edit(first_name=\'Test\', last_name=\'Webmaster\',\n
             reference=\'test_webmaster\', password=\'test_webmaster\')\n
 person.setRole(\'internal\')\n
+assignment = person.newContent(portal_type=\'Assignment\')\n
+assignment.open()\n
 \n
 if person.getValidationState() != \'validated\':\n
   person.validate()\n
@@ -146,6 +148,7 @@ return \'Reset Successfully.\'\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>person</string>
+                            <string>assignment</string>
                           </tuple>
                         </value>
                     </item>
