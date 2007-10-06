@@ -82,7 +82,7 @@
 have id "2". This is probably a bit too stupid. -->\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="python: \'%s/foo_module/2/view\' % here.portal_url.getPortalObject().absolute_url()"/>\n
+  <td tal:content="python: \'/%s/foo_module/2/view\' % here.getPortalObject().getId()"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -103,7 +103,7 @@ have id "2". This is probably a bit too stupid. -->\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="python: \'%s/foo_module/2/1/view\' % here.portal_url.getPortalObject().absolute_url()"/>\n
+  <td tal:content="python: \'/%s/foo_module/2/1/view\' % here.getPortalObject().getId()"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -131,7 +131,7 @@ have id "2". This is probably a bit too stupid. -->\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="python: \'%s/foo_module/3/view\' % here.portal_url.getPortalObject().absolute_url()"/>\n
+  <td tal:content="python: \'/%s/foo_module/3/view\' % here.getPortalObject().getId()"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -153,7 +153,7 @@ another object of the same type. -->\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="python: \'%s/foo_module/4/view\' % here.portal_url.getPortalObject().absolute_url()"/>\n
+  <td tal:content="python: \'/%s/foo_module/4/view\' % here.getPortalObject().getId()"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
