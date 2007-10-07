@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -175,24 +172,24 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>from_table_list</string>
-                            <string>where_expression</string>
-                            <string>order_by_expression</string>
-                            <string>group_by_expression</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>ignore_variation</string>
-                            <string>standardize</string>
-                            <string>omit_simulation</string>
-                            <string>section_filtered</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>input_simulation_state</string>
-                            <string>output_simulation_state</string>
-                            <string>precision</string>
-                            <string>inventory_list</string>
-                            <string>statistic</string>
-                            <string>stock_table_id</string>
+<string>from_table_list</string>
+<string>where_expression</string>
+<string>order_by_expression</string>
+<string>group_by_expression</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>ignore_variation</string>
+<string>standardize</string>
+<string>omit_simulation</string>
+<string>section_filtered</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>input_simulation_state</string>
+<string>output_simulation_state</string>
+<string>precision</string>
+<string>inventory_list</string>
+<string>statistic</string>
+<string>stock_table_id</string>
                           </list>
                         </value>
                     </item>
@@ -281,7 +278,7 @@ SELECT\n
   node.uid AS node_uid,\n
   node.relative_url AS node_relative_url,\n
   section.title AS section_title,\n
-  section.uid AS section.uid,\n
+  section.uid AS section_uid,\n
   section.relative_url AS section_relative_url,\n
   resource.title AS resource_title,\n
   resource.relative_url AS resource_relative_url,\n
@@ -360,9 +357,11 @@ ORDER BY\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
