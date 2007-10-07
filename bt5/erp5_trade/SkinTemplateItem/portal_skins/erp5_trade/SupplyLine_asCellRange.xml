@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -83,7 +86,7 @@ if option_variation==1:\n
   base_category_list = context.getVariationRangeBaseCategoryList()\n
   option_base_category_list = [x for x in base_category_list \\\n
                                if x not in no_option_base_category_list]\n
-  if option_base_category_list == []:\n
+  if not option_base_category_list:\n
     base_category_list_list = []\n
   else:\n
     base_category_list_list = [option_base_category_list]\n
@@ -95,7 +98,7 @@ else:\n
   if base_id in (\'path\', \'reference\'):\n
     # XXX Compatibility\n
     selected_base_category_list = context.getPVariationBaseCategoryList()\n
-    if selected_base_category_list == []:\n
+    if not selected_base_category_list:\n
       # XXX Compatibility...\n
       if context.getParentValue().getPortalType() in \\\n
                                   context.getPortalResourceTypeList():\n
