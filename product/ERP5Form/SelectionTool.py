@@ -1522,9 +1522,10 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
         object_list = root.searchFolder(sort_on=sort_on)
     else: 
       if filtered_portal_types not in [[],None,'']:
-        object_list = list_method(portal_type=filtered_portal_types)
+        object_list = list_method(portal_type=filtered_portal_types,
+                                  sort_on=sort_on)
       else:
-        object_list = list_method()
+        object_list = list_method(sort_on=sort_on)
     for zo in object_list:
       o = zo.getObject()
       if o is not None:
