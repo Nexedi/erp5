@@ -142,18 +142,23 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
+  <td>//div[@id="Group_1"]</td>\n
+  <td>[+] Title 0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
   <td>//div[@id="Group_2"]</td>\n
   <td>[+] Title 1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//div[@id="Group_3"]</td>\n
-  <td>[+] Title 0</td>\n
+  <td>[+] Title 2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_1"]</td>\n
-  <td>[+] Title 2</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>Title 0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -162,17 +167,12 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>//div[@id="Group_3_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
   <td>Title 2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
-  <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_topright"]</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_topright"]</td>\n
   <td>Title 0</td>\n
 </tr>\n
 <tr>\n
@@ -182,12 +182,12 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_topright"]</td>\n
+  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_topright"]</td>\n
   <td>Title 2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_topleft"]</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_topleft"]</td>\n
   <td>Title 0</td>\n
 </tr>\n
 <tr>\n
@@ -197,12 +197,12 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_topleft"]</td>\n
+  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_topleft"]</td>\n
   <td>Title 2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_botright"]</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_botright"]</td>\n
   <td>Title 0</td>\n
 </tr>\n
 <tr>\n
@@ -212,12 +212,12 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_botright"]</td>\n
+  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_botright"]</td>\n
   <td>Title 2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_botleft"]</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_botleft"]</td>\n
   <td>Title 0</td>\n
 </tr>\n
 <tr>\n
@@ -227,7 +227,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/a[@class="planning_box_botleft"]</td>\n
+  <td>//div[@id="Group_3_Activity_1_Block_1"]/a[@class="planning_box_botleft"]</td>\n
   <td>Title 2</td>\n
 </tr>\n
 </tbody></table>\n
