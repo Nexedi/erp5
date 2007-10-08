@@ -189,6 +189,18 @@ for folder in portal.objectValues(("ERP5 Folder",)):\n
                                      object_priority=object_priority,\n
                                      sql_catalog_id=sql_catalog_id,\n
                                      passive_commit=passive_commit)\n
+# reindex portal_caches plugins\n
+print "#### Indexing portal_caches tool ####"\n
+context.portal_caches.activate(\n
+              tag=folder_tag,\n
+              after_tag=folder_after_tag).Folder_reindexAll(\n
+                                     folder_tag=folder_tag,\n
+                                     folder_after_tag=folder_after_tag,\n
+                                     object_tag=object_tag,\n
+                                     object_after_tag=object_after_tag,\n
+                                     object_priority=object_priority,\n
+                                     sql_catalog_id=sql_catalog_id,\n
+                                     passive_commit=passive_commit)\n
 \n
 # Then we index inventories\n
 object_tag = \'inventory\'\n
