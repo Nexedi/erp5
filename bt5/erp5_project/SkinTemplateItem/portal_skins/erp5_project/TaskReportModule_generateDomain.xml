@@ -90,7 +90,7 @@ else:\n
 for category in category_list:\n
   domain = parent.generateTempDomain(id = \'sub\' + category.getId() )\n
   domain.edit(title = category.getTitle(),\n
-              membership_criterion_base_category = (\'source\',  \'destination\' ), \n
+              membership_criterion_base_category = (\'parent\', ), \n
               membership_criterion_category = (category.getRelativeUrl(),),\n
               domain_generator_method_id = script.id,\n
               uid = category.getUid())\n
