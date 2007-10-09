@@ -100,10 +100,11 @@ today_date = DateTime()\n
 def create_movement(CD_head_dict, CD_line_list):\n
   # Head creation\n
   movement_head = context.newContent( portal_type       = \'Monetary Reception\'\n
-                                    , reindex_object    = 1\n
-                                    , start_date        = today_date\n
-                                    , comment           = CD_head_dict[\'start_date\']\n
-                                    , destination       = CD_head_dict[\'destination\']\n
+                                      , reindex_object    = 1\n
+                                      , start_date        = today_date\n
+                                      , comment           = CD_head_dict[\'start_date\']\n
+                                      , destination       = CD_head_dict[\'destination\']\n
+                                      , activate_kw = {"tag" : import_tag}\n
                                     )\n
   # Container Creation\n
   base_list=(\'emission_letter\', \'variation\', \'cash_status\')\n
@@ -116,13 +117,15 @@ def create_movement(CD_head_dict, CD_line_list):\n
                                                   , reindex_object     = 1\n
                                                   , reference                 = CD_line[\'reference\']\n
                                                   , cash_number_range_start   = CD_line[\'range_start\']\n
-                                                 , cash_number_range_stop    = CD_line[\'range_stop\']\n
+                                                  , cash_number_range_stop    = CD_line[\'range_stop\']\n
+                                                  , activate_kw = {"tag" : import_tag}\n
                                                   )\n
     # create a cash container line\n
     container_line = movement_container.newContent(portal_type      = \'Container Line\'\n
                                                    , reindex_object = 1\n
                                                    , resource_value =CD_head_dict[\'resource\']\n
                                                    , quantity       = CD_line[\'quantity\']\n
+                                                   , activate_kw = {"tag" : import_tag}\n
                                                    )\n
 \n
     container_line.setResourceValue(CD_head_dict[\'resource\'])\n
@@ -137,7 +140,8 @@ def create_movement(CD_head_dict, CD_line_list):\n
         cell.setMembershipCriterionBaseCategoryList(base_list)\n
         cell.setMembershipCriterionCategoryList(category_list)\n
         cell.edit(force_update = 1,\n
-                  price = container_line.getResourceValue().getBasePrice())\n
+                  price = container_line.getResourceValue().getBasePrice(),\n
+                  activate_kw = {"tag" : import_tag})\n
 \n
 \n
     resource_total_quantity += CD_line[\'quantity\']\n
@@ -146,6 +150,7 @@ def create_movement(CD_head_dict, CD_line_list):\n
                                            , portal_type    = \'Cash Delivery Line\'\n
                                            , resource_value = CD_head_dict[\'resource\']\n
                                            , quantity_unit_value = context.portal_categories.quantity_unit.unit\n
+                                           , activate_kw = {"tag" : import_tag}\n
                                            )\n
   movement_line.setVariationBaseCategoryList(base_list)\n
   movement_line.setVariationCategoryList(category_list)\n
@@ -159,7 +164,8 @@ def create_movement(CD_head_dict, CD_line_list):\n
       cell.setMembershipCriterionBaseCategoryList(base_list)\n
       cell.setMembershipCriterionCategoryList(category_list)\n
       cell.edit(force_update = 1,\n
-                price = movement_line.getResourceValue().getBasePrice())\n
+                price = movement_line.getResourceValue().getBasePrice(),\n
+                activate_kw = {"tag" : import_tag})\n
 \n
   return {\'error\' : False, \'message\':message_dict[\'00\']+CD_head_dict[\'reference\'],\'delivery_id\':movement_head.getId()}\n
 \n
@@ -317,8 +323,7 @@ def split_lines(CD_file_line_list):\n
     # check reference doesn\'t already exist for this resource\n
     movement_container_list = context.portal_catalog(portal_type = "Cash Container Item", reference = line_container_id)\n
     if len(movement_container_list) > 0:\n
-      pass\n
-      #return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
+      return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
 \n
 \n
 \n
@@ -329,14 +334,27 @@ def split_lines(CD_file_line_list):\n
 \n
 \n
 def url_redirection(error_message,delivery_id=None):\n
-   if delivery_id is not None:\n
-     redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+delivery_id+\'/\'+\'view\', \'portal_status_message=\' + error_message)\n
-   else:\n
-     redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=\' + error_message)\n
-   request[ \'RESPONSE\' ].redirect( redirect_url )\n
+  if delivery_id is not None:\n
+    redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+delivery_id+\'/\'+\'view\', \'portal_status_message=\' + error_message)\n
+  else:\n
+    redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=\' + error_message)\n
+  request[ \'RESPONSE\' ].redirect( redirect_url )\n
 \n
 \n
+user_site = context.Baobab_getUserAssignedSiteList()\n
+if len(user_site) == 0:\n
+  if batch == 1:\n
+    raise ValueError, "Operation denied, you\'re not assigned to a site"\n
+  else:\n
+    return url_redirection("Operation denied, you\'re not assigned to a site")\n
 \n
+import_tag = "%s_monetary_reception" %(user_site[0],)\n
+# check remaining activities\n
+if context.portal_activities.countMessageWithTag(import_tag) != 0:\n
+  if batch == 1:\n
+    raise ValueError, "Some activities are remaining from previous import, please try later."\n
+  else:\n
+    return url_redirection("Some activities are remaining from previous import, please try later.")\n
 \n
 request  = context.REQUEST\n
 if file_data is not None:\n
@@ -349,25 +367,26 @@ context.log("new_line_list", CD_file_line_list)\n
 # analyse the container head and split it into dictionnary\n
 split_head_result_dict = split_head(CD_file_line_list[:20])\n
 if split_head_result_dict[\'error\']:\n
+  if batch == 1:\n
+    raise ValueError, split_head_result_dict[\'message\']\n
+  else:\n
    return url_redirection(split_head_result_dict[\'message\'])\n
 \n
 \n
 # analyse the container lines and split it into dictionnary\n
 split_line_result_dict = split_lines(CD_file_line_list[20:])\n
 if split_line_result_dict[\'error\']:\n
+  if batch == 1:\n
+    raise ValueError, split_line_result_dict[\'message\']\n
+  else:\n
    return url_redirection(split_line_result_dict[\'message\'])\n
-\n
-\n
-# raise  \'KHADIM TEST\', repr((split_head_result_dict[\'head_dict\'],\'<P>\',  split_line_result_dict[\'lines_dict\'] ))\n
-\n
 \n
 \n
 message_dict = create_movement(CD_head_dict = split_head_result_dict[\'head_dict\'], CD_line_list = split_line_result_dict[\'lines_dict\'] )\n
 \n
-\n
-\n
 if message_dict[\'error\'] :\n
-   None # Annuler les transactions\n
+  if batch == 1:\n
+    raise ValueError, message_dict[\'message\' ]\n
 \n
 return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'delivery_id\'])\n
 
@@ -394,7 +413,7 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file=None, file_data=None, **kw</string> </value>
+            <value> <string>import_file=None, file_data=None, batch=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -422,7 +441,7 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -430,6 +449,7 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                           <tuple>
                             <string>import_file</string>
                             <string>file_data</string>
+                            <string>batch</string>
                             <string>kw</string>
                             <string>message_dict</string>
                             <string>isSameSet</string>
@@ -438,14 +458,18 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                             <string>reference_currency_id</string>
                             <string>DateTime</string>
                             <string>today_date</string>
+                            <string>import_tag</string>
                             <string>create_movement</string>
                             <string>split_head</string>
                             <string>split_lines</string>
                             <string>None</string>
                             <string>request</string>
                             <string>url_redirection</string>
-                            <string>CD_file_line_list</string>
+                            <string>user_site</string>
+                            <string>len</string>
+                            <string>ValueError</string>
                             <string>_getitem_</string>
+                            <string>CD_file_line_list</string>
                             <string>split_head_result_dict</string>
                             <string>split_line_result_dict</string>
                           </tuple>
@@ -462,6 +486,7 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
               <tuple>
                 <none/>
                 <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>
