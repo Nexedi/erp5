@@ -175,7 +175,6 @@ class FolderMixIn(ExtensionClass.Base):
     """
     current_date = str(DateTime().Date()).replace("/", "")
     my_id = self._generateRandomId()
-    self._setLastId(my_id) # Make sure no reindexing happens
     return "%s-%s" %(current_date, my_id)
     
 
