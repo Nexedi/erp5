@@ -1235,7 +1235,7 @@ class BasicStructure:
       selection_report_current = ()
     else:
       selection_report_current = self.selection.getReportList()
-    
+ 
     # building report_tree_list
     report_tree_list = makeTreeList(here=self.context, form=self.form,
                                     root_dict=None,
@@ -1368,7 +1368,7 @@ class BasicStructure:
           # (list of relative elements)
           new_object_list = [s_obj for s_obj in object_list \
                              if s_obj.getUid() not in exception_uid_list]
-          sec_new_object_list = [s_obj for s_obj in object_list \
+          sec_new_object_list = [s_obj for s_obj in sec_layer_object_list \
                                  if s_obj.getUid() not in exception_uid_list]
 
           sec_layer_object_list = sec_new_object_list
@@ -2191,7 +2191,7 @@ class PlanningStructure:
     # call method to build secondary axis structure
     # need start_bound, stop_bound and number of groups to build
     # used in non calendar mode
-    self.buildSecondaryAxis(basic_structure, field)
+    self.secondary_axis.axis_group = self.buildSecondaryAxis(basic_structure, field)
 
     # completing axisgroup informations according to their bounds
     self.completeAxis()
@@ -2208,6 +2208,7 @@ class PlanningStructure:
     """
     build secondary axis structure
     """
+    axis_group_list = []
     # defining min and max delimiter number
     delimiter_min_number = field.get_value('delimiter')
     if basic_structure.calendar_mode:
@@ -2262,16 +2263,17 @@ class PlanningStructure:
       if delimiter != delimiter_list[0]:
         # actual delimiter info has a previous delimiter
         # update its informations
-        self.secondary_axis.axis_group[-1].position_secondary.relative_end = \
+        axis_group_list[-1].position_secondary.relative_end = \
           axis_group.position_secondary.relative_begin
-        self.secondary_axis.axis_group[-1].position_secondary.relative_range =\
+        axis_group_list[-1].position_secondary.relative_range =\
           axis_group.position_secondary.relative_begin - \
-          self.secondary_axis.axis_group[-1].position_secondary.relative_begin
+          axis_group_list[-1].position_secondary.relative_begin
       # add current axis_group to axis_group list
-      self.secondary_axis.axis_group.append(axis_group)
+      axis_group_list.append(axis_group)
       axis_group_number += 1
 
-    return 1
+    return axis_group_list
+    
 
   def completeAxis(self):
     """
