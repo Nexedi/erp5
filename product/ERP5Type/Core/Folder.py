@@ -456,7 +456,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
           id_list[-remaining_id_count:],
           migration_generate_id_method, tag)
     else:
-      tag = ''
+      tag = 'nothing'
     # copy from btree to hbtree
     self.activate(activity="SQLQueue", after_tag=tag)._launchCopyObjectToHBTree(tag)
     
