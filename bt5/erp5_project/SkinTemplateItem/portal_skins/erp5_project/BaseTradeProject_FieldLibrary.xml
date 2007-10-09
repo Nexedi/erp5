@@ -104,6 +104,7 @@
                         <string>my_destination_payment_title</string>
                         <string>my_source_payment_title</string>
                         <string>my_source_decision_title</string>
+                        <string>planning_box</string>
                       </list>
                     </value>
                 </item>

@@ -4,14 +4,26 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.PlanningBox</string>
-          <string>PlanningBox</string>
+          <string>Products.ERP5Form.ProxyField</string>
+          <string>ProxyField</string>
         </tuple>
         <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>report_root_list</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
+                <string>list_method</string>
+              </list>
+            </value>
+        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>planning_box</string> </value>
@@ -24,10 +36,6 @@
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
-                <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -36,163 +44,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
+                    <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>color_script</string> </key>
+                    <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>constraint_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height_axis_x</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height_global_div</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height_header</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_backleft</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_backright</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_center</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_topleft</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_topright</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_y</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>meta_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>security_index</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>space_line</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title_line</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width_line</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>x_axis_script_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>x_range</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>x_start_bloc</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>x_stop_bloc</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_axis_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_axis_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_range</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_unity</string> </key>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -203,163 +63,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
+                    <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>color_script</string> </key>
+                    <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>constraint_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height_axis_x</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height_global_div</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height_header</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_backleft</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_backright</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_center</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_topleft</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_topright</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_y</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>meta_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>security_index</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>space_line</string> </key>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title_line</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width_line</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>x_axis_script_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>x_range</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>x_start_bloc</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>x_stop_bloc</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_axis_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_axis_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_range</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_unity</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -370,115 +86,21 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>planning_box</string> </value>
                 </item>
                 <item>
-                    <key> <string>calendar_view</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>BaseTradeProject_FieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>color_script</string> </key>
-                    <value> <string>Movement_getSimulationStateColorText</string> </value>
-                </item>
-                <item>
-                    <key> <string>constraint_method</string> </key>
-                    <value> <string>SET_DHTML</string> </value>
-                </item>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>delimiter</string> </key>
-                    <value> <int>5</int> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height_axis_x</string> </key>
-                    <value> <int>50</int> </value>
-                </item>
-                <item>
-                    <key> <string>height_global_div</string> </key>
-                    <value> <int>800</int> </value>
-                </item>
-                <item>
-                    <key> <string>height_header</string> </key>
-                    <value> <int>50</int> </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>info_backleft</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_backright</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_center</string> </key>
-                    <value> <string>getTitle</string> </value>
-                </item>
-                <item>
-                    <key> <string>info_tooltip</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>info_topleft</string> </key>
-                    <value> <string>getStartDate</string> </value>
-                </item>
-                <item>
-                    <key> <string>info_topright</string> </key>
-                    <value> <string>getStopDate</string> </value>
-                </item>
-                <item>
-                    <key> <string>js_enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>main_axis_groups</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>max_y</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>meta_types</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -489,7 +111,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
+                    <key>                 <string>report_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -500,147 +122,16 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>round_script</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sec_axis_script</string> </key>
-                    <value> <string>Planning_generateDateZoomAxis</string> </value>
-                </item>
-                <item>
-                    <key> <string>second_layer_list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>security_index</string> </key>
-                    <value> <int>2</int> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>task_report_planning_selection</string> </value>
                 </item>
                 <item>
-                    <key> <string>size_border_width_left</string> </key>
-                    <value> <int>10</int> </value>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>size_header_height</string> </key>
-                    <value> <int>80</int> </value>
-                </item>
-                <item>
-                    <key> <string>size_planning_height</string> </key>
-                    <value> <int>800</int> </value>
-                </item>
-                <item>
-                    <key> <string>size_planning_width</string> </key>
-                    <value> <int>800</int> </value>
-                </item>
-                <item>
-                    <key> <string>size_x_axis_height</string> </key>
-                    <value> <int>50</int> </value>
-                </item>
-                <item>
-                    <key> <string>size_x_axis_space</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>size_y_axis_space</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>size_y_axis_width</string> </key>
-                    <value> <int>150</int> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>space_line</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>split_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>stat_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Task Planning</string> </value>
-                </item>
-                <item>
-                    <key> <string>title_line</string> </key>
-                    <value> <string>getTitle</string> </value>
-                </item>
-                <item>
-                    <key> <string>use_date_zoom</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width_line</string> </key>
-                    <value> <int>1000</int> </value>
-                </item>
-                <item>
-                    <key> <string>x_axis_position</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>x_axis_script_id</string> </key>
-                    <value> <string>genXaxis</string> </value>
-                </item>
-                <item>
-                    <key> <string>x_range</string> </key>
-                    <value> <string>month</string> </value>
-                </item>
-                <item>
-                    <key> <string>x_start_bloc</string> </key>
-                    <value> <string>start_date</string> </value>
-                </item>
-                <item>
-                    <key> <string>x_stop_bloc</string> </key>
-                    <value> <string>stop_date</string> </value>
-                </item>
-                <item>
-                    <key> <string>y_axis_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_axis_position</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>y_axis_width</string> </key>
-                    <value> <int>200</int> </value>
-                </item>
-                <item>
-                    <key> <string>y_range</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>y_size_block</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>y_unity</string> </key>
-                    <value> <string></string> </value>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Task Report Planning</string> </value>
                 </item>
               </dictionary>
             </value>
