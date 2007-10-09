@@ -1352,10 +1352,16 @@ class BasicStructure:
           category_obj = domain_obj.getMembershipCriterionCategory()
           for bc in domain_obj.getMembershipCriterionBaseCategoryList():
             if (category_obj is not None) and (bc is not None):
-              new_object_list.extend([ s_obj for s_obj in build_object_list \
-                   if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_obj])
-              sec_new_object_list.extend([ s_obj for s_obj in build_sec_layer_object_list \
-                   if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_obj])
+              if bc == 'parent':
+                new_object_list.extend([ s_obj for s_obj in build_object_list \
+                    if s_obj.getParentRelativeUrl() == category_obj])
+                sec_new_object_list.extend([ s_obj for s_obj in build_sec_layer_object_list \
+                    if s_obj.getParentRelativeUrl() == category_obj])
+              else:
+                new_object_list.extend([ s_obj for s_obj in build_object_list \
+                  if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_obj])
+                sec_new_object_list.extend([ s_obj for s_obj in build_sec_layer_object_list \
+                  if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_obj])
 
           object_list = new_object_list
           sec_layer_object_list = sec_new_object_list
