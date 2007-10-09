@@ -86,7 +86,7 @@ else:\n
 \n
 # Redirect to even\n
 portal_status_message = translateString("Created and associated a new ${portal_type} to the ticket.", \n
-                                    mapping = dict(portal_type = portal_type))\n
+                                    mapping = dict(portal_type = translateString(portal_type)))\n
 event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
         </item>
@@ -136,7 +136,7 @@ event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_sta
                             <string>direction</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>translateString</string>
                             <string>module</string>
                             <string>event</string>

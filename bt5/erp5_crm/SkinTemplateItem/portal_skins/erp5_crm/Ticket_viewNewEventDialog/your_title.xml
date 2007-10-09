@@ -245,7 +245,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
