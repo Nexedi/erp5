@@ -85,6 +85,7 @@ inventory_movement_type_list = portal.getPortalInventoryMovementTypeList()\n
 balance_movement_type_list = [ t for t in\n
                                portal.getPortalAccountingMovementTypeList()\n
                                if t in inventory_movement_type_list ]\n
+\n
 accounting_movement_type_list = [ t for t in\n
                                   portal.getPortalAccountingMovementTypeList()\n
                                   if t not in balance_movement_type_list ]\n
@@ -544,6 +545,11 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
   initial_debit_balance = data.get(\'initial_debit_balance\', 0)\n
   initial_credit_balance = data.get(\'initial_credit_balance\', 0)\n
 \n
+  initial_balance = initial_debit_balance - initial_credit_balance\n
+  # initial debit balance actually shows \n
+  initial_debit_balance = round(max(initial_balance, 0), precision)\n
+  initial_credit_balance = round(max(-initial_balance, 0) or 0, precision)\n
+\n
   total_initial_debit_balance += round(initial_debit_balance, precision)\n
   total_initial_credit_balance += round(initial_credit_balance, precision)\n
   final_debit_balance = round(initial_debit_balance + data[\'debit\'],\n
@@ -553,6 +559,7 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
   closing_balance = final_debit_balance - final_credit_balance\n
   total_final_balance_if_debit += round(max(closing_balance, 0), precision)\n
   total_final_balance_if_credit += round(max(-closing_balance, 0) or 0, precision)\n
+  \n
   \n
   line_list.append(Object(uid=\'new_\',\n
                           node_id=node_id,\n
@@ -579,7 +586,6 @@ if not show_empty_accounts:\n
 def getStringIndex(obj):\n
   return obj[\'string_index\']\n
 line_list.sort(key=getStringIndex)\n
-\n
 \n
 # cache values for stat\n
 request.set(\'TrialBalance.total_initial_debit_balance\',\n
@@ -712,6 +718,7 @@ return line_list\n
                             <string>payment</string>
                             <string>initial_debit_balance</string>
                             <string>initial_credit_balance</string>
+                            <string>initial_balance</string>
                             <string>final_debit_balance</string>
                             <string>final_credit_balance</string>
                             <string>closing_balance</string>
