@@ -120,6 +120,10 @@ def resetSelection(selection_name):\n
 resetSelection(\'foo_selection\')\n
 resetSelection(\'foo_line_selection\')\n
 \n
+pref = context.portal_preferences.newContent()\n
+pref.setPreferredListboxListModeLineCount(10)\n
+pref.enable()\n
+\n
 return \'Reset Successfully.\'\n
 </string> </value>
         </item>
@@ -180,6 +184,7 @@ return \'Reset Successfully.\'\n
                             <string>result</string>
                             <string>default_columns</string>
                             <string>resetSelection</string>
+                            <string>pref</string>
                           </tuple>
                         </value>
                     </item>

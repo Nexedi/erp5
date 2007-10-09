@@ -1,3 +1,6 @@
+2007-10-09 Fabien
+* add setPreferredListboxListModeLineCount(10) to ListBoxZuite_reset to diplay the correct lines number
+
 2007-10-02 Yusei
 * Fix planingbox test name.
 
