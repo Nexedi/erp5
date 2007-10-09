@@ -114,8 +114,8 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//select[@name="list_start"]</td>\n
-  <td>10</td>\n
+  <td>//select[@name="listbox_list_start"]</td>\n
+  <td>100</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -125,8 +125,8 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//select[@name="list_start"]</td>\n
-  <td>20</td>\n
+  <td>//select[@name="listbox_list_start"]</td>\n
+  <td>200</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -136,30 +136,30 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//select[@name="list_start"]</td>\n
-  <td>10</td>\n
+  <td>//select[@name="listbox_list_start"]</td>\n
+  <td>100</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>selectAndWait</td>\n
-  <td>list_start</td>\n
+  <td>listbox_list_start</td>\n
   <td>value=0</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//select[@name="list_start"]</td>\n
+  <td>//select[@name="listbox_list_start"]</td>\n
   <td>0</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>selectAndWait</td>\n
-  <td>list_start</td>\n
-  <td>value=20</td>\n
+  <td>listbox_list_start</td>\n
+  <td>value=200</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//select[@name="list_start"]</td>\n
-  <td>20</td>\n
+  <td>//select[@name="listbox_list_start"]</td>\n
+  <td>200</td>\n
 </tr>\n
 \n
 <tr>\n
