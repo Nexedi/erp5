@@ -242,17 +242,18 @@ class HBTreeFolder2Base (Persistent):
         """
         htree = self._htree
         id_list = self.hashId(id)
-        for idx in xrange(len(id_list[0:-1])):
+        for idx in xrange(len(id_list) - 1):
           sub_id = id_list[idx]
-          if not htree.has_key(sub_id):
-            # Create a new index and index it
+          if sub_id not in htree:
+            # Create a new level
             htree[sub_id] = OOBTree()
-            if isinstance(sub_id, int) or isinstance(sub_id, long):
+            if isinstance(sub_id, (int, long)):
               tree_id = 0
               for id in id_list[:idx+1]:
                   tree_id = tree_id + id * MAX_OBJECT_PER_LEVEL
             else:
               tree_id = H_SEPARATOR.join(id_list[:idx+1])
+            # Index newly created level
             self._tree_list[tree_id] = None
             
           htree = htree[sub_id]
