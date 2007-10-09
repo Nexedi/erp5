@@ -104,7 +104,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_report</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
