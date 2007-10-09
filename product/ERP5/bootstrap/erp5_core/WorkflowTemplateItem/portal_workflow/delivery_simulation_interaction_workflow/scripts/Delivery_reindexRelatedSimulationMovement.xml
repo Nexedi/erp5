@@ -86,7 +86,7 @@ with an up to date simulation state.\n
 """\n
 \n
 delivery = state_change[\'object\']\n
-delivery.applyToDeliveryRelatedMovement(method_id=\'recursiveReindexobject\')\n 
+delivery.applyToDeliveryRelatedMovement(method_id=\'recursiveReindexObject\')\n 
 </string> </value>
         </item>
         <item>
