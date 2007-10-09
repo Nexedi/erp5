@@ -1343,16 +1343,16 @@ class TestAccountingReports(AccountingTestCase):
     self.assertEquals(2, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
-        node_title='Payable', initial_debit_balance=200,
-        initial_credit_balance=0, debit=0, credit=0,
-        final_debit_balance=200, final_credit_balance=0,
-        final_balance_if_debit=200, final_balance_if_credit=0)
-    
-    self.checkLineProperties(data_line_list[1], node_id='41',
-        node_title='Receivable', initial_debit_balance=0,
+        node_title='Payable', initial_debit_balance=0,
         initial_credit_balance=200, debit=0, credit=0,
         final_debit_balance=0, final_credit_balance=200,
         final_balance_if_debit=0, final_balance_if_credit=200)
+    
+    self.checkLineProperties(data_line_list[1], node_id='41',
+        node_title='Receivable', initial_debit_balance=200,
+        initial_credit_balance=0, debit=0, credit=0,
+        final_debit_balance=200, final_credit_balance=0,
+        final_balance_if_debit=200, final_balance_if_credit=0)
 
     self.failUnless(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
