@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+<!--\n
+Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+-->\n
+</tal:block>\n
+<tal:block metal:define-macro="master">\n
+  <tal:block tal:define="form_id form/id;\n
+                         local_parameter_list python: {\'form_id\': form_id};\n
+                         form_action python: form and form.action not in (\'\', None) and form.action or nothing;\n
+                         title here/getTranslatedTitle | here/Title">\n
+    <tal:block metal:use-macro="here/main_template/macros/master">\n
+      <tal:block metal:fill-slot="context_bar">\n
+        <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
+      </tal:block>\n
+      <tal:block metal:fill-slot="main">\n
+        <div class="document" tal:define="actions python: []">\n
+          <div class="actions"\n
+               tal:condition="python: (not is_web_mode or editable_mode)">\n
+            <button tal:condition="python: not is_web_mode and form_action"\n
+                    type="submit" class="save" title="Save"\n
+                    tal:attributes="name string:${form_action}:method;\n
+                                    onClick string:javascript:clickSaveButton(\'${form_action}\');"\n
+                    i18n:attributes="title" i18n:domain="ui">\n
+              <span class="image"></span>\n
+              <span class="description" i18n:translate="" i18n:domain="ui">Save</span>\n
+            </button>\n
+            <ul>\n
+              <li tal:repeat="action actions"\n
+                  tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
+                <a tal:attributes="href python: \'%s%s%s\' % (action[\'url\'], \'?\' in action[\'url\'] and \'&amp;\' or \'?\', http_parameters)"\n
+                   tal:content="action/name"\n
+                   i18n:translate="" i18n:domain="ui"/>\n
+              </li>\n
+            </ul>\n
+          </div>\n
+\n
+\n
+          <tal:block metal:define-slot="main" />\n
+        </div>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>list_report</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
