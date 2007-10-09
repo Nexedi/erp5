@@ -493,12 +493,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>parent</string>
-                          <string>Default</string>
-                        </tuple>
-                        <tuple>
                           <string>task_report_module_domain</string>
-                          <string>Selected Task Report</string>
+                          <string>Task Report</string>
                         </tuple>
                       </list>
                     </value>
@@ -517,9 +513,7 @@
                 </item>
                 <item>
                     <key> <string>second_layer_list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>security_index</string> </key>
@@ -564,7 +558,12 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>id</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -664,25 +663,6 @@
         <item>
             <key> <string>method_name</string> </key>
             <value> <string>TaskReportModule_getTaskReportList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>getCausalityValueList</string> </value>
         </item>
       </dictionary>
     </pickle>
