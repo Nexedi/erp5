@@ -68,16 +68,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>node_list = context.portal_selections.getSelectionValueList(context=context, \n
+            <value> <string># Get the Object showed at List Box \n
+node_list = context.portal_selections.getSelectionValueList(context=context, \n
                                                                               REQUEST=context.REQUEST, \n
                                                                               selection_name=\'task_report_selection\')\n
-\n
 \n
 return_list = [ i.asContext() for i in node_list  ]\n
 \n
 for j in return_list:\n
+  # Creates the relation just for Planning Box Presentation\n
   j.edit(source=context.task_report_module.getRelativeUrl())\n
-  j.edit(destination=j.getRelativeUrl())\n
 \n
 return return_list\n
 </string> </value>
