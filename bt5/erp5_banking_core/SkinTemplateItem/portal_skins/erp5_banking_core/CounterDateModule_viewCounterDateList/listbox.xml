@@ -472,7 +472,20 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>site_title</string>
+                          <string>Site</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -496,6 +509,10 @@
                         <tuple>
                           <string>start_date</string>
                           <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>site_title</string>
+                          <string>Site</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
