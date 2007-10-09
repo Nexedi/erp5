@@ -1297,6 +1297,68 @@ class TestAccountingReports(AccountingTestCase):
         initial_debit_balance=600, initial_credit_balance=600, debit=2150,
         credit=2150, final_debit_balance=2750, final_credit_balance=2750,
         final_balance_if_debit=2350, final_balance_if_credit=2350)
+    
+  def testTrialBalanceInitialBalance(self):
+    # Test of trial balance and initial balance
+    account_module = self.portal.account_module
+    # previous period
+    self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction -2',
+              source_reference='-2',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 1),
+              lines=(dict(source_value=account_module.payable,
+                          source_debit=400.0),
+                     dict(source_value=account_module.receivable,
+                          source_credit=400.0),))
+    self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction -1',
+              source_reference='-1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=600.0),
+                     dict(source_value=account_module.payable,
+                          source_credit=600.0),))
+    
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2007, 1, 1)
+    request_form['at_date'] = DateTime(2007, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+
+    report_section_list = self.getReportSectionList(
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    
+    self.assertEquals(2, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0], node_id='40',
+        node_title='Payable', initial_debit_balance=200,
+        initial_credit_balance=0, debit=0, credit=0,
+        final_debit_balance=200, final_credit_balance=0,
+        final_balance_if_debit=200, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[1], node_id='41',
+        node_title='Receivable', initial_debit_balance=0,
+        initial_credit_balance=200, debit=0, credit=0,
+        final_debit_balance=0, final_credit_balance=200,
+        final_balance_if_debit=0, final_balance_if_credit=200)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=200, initial_credit_balance=200, debit=0,
+        credit=0, final_debit_balance=200, final_credit_balance=200,
+        final_balance_if_debit=200, final_balance_if_credit=200)
 
   def testTrialBalanceDifferentCurrencies(self):
     # Test of trial balance and different currencies
