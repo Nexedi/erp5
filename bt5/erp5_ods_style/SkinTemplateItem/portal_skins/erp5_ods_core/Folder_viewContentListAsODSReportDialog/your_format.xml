@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getConversionFormatList(base_content_type=\'application/vnd.oasis.opendocument.spreadsheet\')</string> </value>
+            <value> <string>python: here.Base_getConversionFormatItemList(base_content_type=\'application/vnd.oasis.opendocument.spreadsheet\')</string> </value>
         </item>
       </dictionary>
     </pickle>
