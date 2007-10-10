@@ -144,7 +144,7 @@ return  [(\'\', \'\')] + td.getTargetFormatItemList()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getConversionFormatList</string> </value>
+            <value> <string>Base_getConversionFormatItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
