@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="FloatField" module="Products.Formulator.StandardFields"/>
+        <global name="StringField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_total_price</string> </value>
+            <value> <string>listbox_destination_payment_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -28,12 +28,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>not_float</string> </key>
-                    <value> <string>You did not enter a floating point number.</string> </value>
-                </item>
-                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>Too much input was given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -87,11 +87,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -100,6 +96,14 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -160,11 +164,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -173,6 +173,14 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -231,11 +239,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-1 234.5</string> </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -244,7 +248,15 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Total Price</string> </value>
+                    <value> <string>listbox_destination_payment_reference</string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -267,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTotalPrice(fast=0)</string> </value>
+            <value> <string>python: cell.getDestinationPaymentValue().getInternalBankAccountNumber()</string> </value>
         </item>
       </dictionary>
     </pickle>

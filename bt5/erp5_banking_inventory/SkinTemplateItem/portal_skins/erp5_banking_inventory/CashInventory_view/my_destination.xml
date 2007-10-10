@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Delivery_getVaultItemList(all=1,user_site=0,base_site=here.Baobab_getUserAssignedRootSiteList()[0],vault_type=\'site\',leaf_node=0)</string> </value>
+            <value> <string>python: here.Delivery_getVaultItemList(all=1,user_site=0,base_site=here.Baobab_getUserAssignedRootSiteList()[0],vault_type=\'site\',leaf_node=0, current_url=here.getDestination())</string> </value>
         </item>
       </dictionary>
     </pickle>

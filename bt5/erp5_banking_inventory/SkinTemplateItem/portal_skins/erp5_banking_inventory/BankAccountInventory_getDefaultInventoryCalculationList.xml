@@ -65,48 +65,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-currency_id = context.getPriceCurrencyId()\n
-vault = context.getDestination()\n
+            <value> <string>default_inventory_calculation_list = ({ "inventory_params" : {"node" : context.getDestination(),\n
+                                                                      "group_by_payment" : 1,\n
+                                                                      "group_by_resource" : 1,\n
+                                                                      },\n
+                                        "list_method" : "getMovementList",\n
+                                        "first_level" : ({\'key\' : \'resource_relative_url\',\n
+                                                          \'getter\' : \'getResource\',\n
+                                                          \'setter\' : ("appendToCategoryList", "resource")},\n
+                                                         {\'key\' : \'payment_uid\',\n
+                                                          \'getter\' : \'getDestinationPaymentUid\',\n
+                                                          \'setter\' : ("appendToCategoryListFromUid", "destination_payment")},\n
+                                                         ),\n
+                                        },\n
+                                      )\n
 \n
-redirect_url = None\n
-if currency_id in (None, \'\'):\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                              , \'view\'\n
-                              , \'portal_status_message=Please+specify+a+currency.\'\n
-                              )\n
-if vault in (None, \'\'):\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                              , \'view\'\n
-                              , \'portal_status_message=Please+specify+a+destination+vault.\'\n
-                              )\n
-if redirect_url is not None:\n
-  return request.RESPONSE.redirect(redirect_url)\n
-\n
-\n
-if currency_id == context.Baobab_getPortalReferenceCurrencyID():\n
-  letter_list      = None\n
-  variation_list   = context.Baobab_getResourceVintageList(coin=1, banknote=1)\n
-  cash_status_list = None\n
-else:\n
-  letter_list      = [\'not_defined\']\n
-  variation_list   = [\'not_defined\']\n
-  cash_status_list = [\'not_defined\']\n
-\n
-cash_detail_dict = {\'line_portal_type\'           : \'Cash Inventory Line\'\n
-                    , \'operation_currency\'       : context.getPriceCurrencyId()\n
-                    , \'cash_status_list\'         : cash_status_list\n
-                    , \'emission_letter_list\'     : letter_list\n
-                    , \'variation_list\'           : variation_list\n
-                    , \'currency_cash_portal_type\': None\n
-                    , \'read_only\'                : False\n
-                    , \'column_base_category\'     : \'variation\'\n
-                    , \'use_inventory\'            : False\n
-                    }\n
-\n
-return context.CashDelivery_generateCashDetailInputDialog( listbox              = None\n
-                                         , cash_detail_dict = cash_detail_dict\n
-                                         , destination          = context.getObject().absolute_url())\n
+return default_inventory_calculation_list\n
 </string> </value>
         </item>
         <item>
@@ -156,17 +130,8 @@ return context.CashDelivery_generateCashDetailInputDialog( listbox              
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>currency_id</string>
-                            <string>vault</string>
-                            <string>None</string>
-                            <string>redirect_url</string>
-                            <string>letter_list</string>
-                            <string>variation_list</string>
-                            <string>cash_status_list</string>
-                            <string>False</string>
-                            <string>cash_detail_dict</string>
+<string>context</string>
+                            <string>default_inventory_calculation_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -183,7 +148,7 @@ return context.CashDelivery_generateCashDetailInputDialog( listbox              
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CashInventory_viewLineFastInputDialog</string> </value>
+            <value> <string>BankAccountInventory_getDefaultInventoryCalculationList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

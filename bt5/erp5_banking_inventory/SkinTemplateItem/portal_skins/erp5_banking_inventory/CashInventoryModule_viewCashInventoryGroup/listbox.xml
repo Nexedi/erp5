@@ -301,6 +301,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>id</string>
+                          <string>Id</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>

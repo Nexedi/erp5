@@ -95,7 +95,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_destination_payment_reference</string>
+                      </list>
                     </value>
                 </item>
                 <item>
