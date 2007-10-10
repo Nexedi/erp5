@@ -71,7 +71,7 @@ message_dict = {\n
      \'00\' : \'Fichier colisage charg\xc3\xa9...\'\n
     ,\'01\' : \'Date colisage incorrecte\'\n
     ,\'02\' : \'Num\xc3\xa9ro livraison du colisage inexistant\'\n
-    ,\'03\' : \'Num\xc3\xa9ro livraison exist d\xc3\xa9ja dans la base\'\n
+    ,\'03\' : \'Num\xc3\xa9ro livraison existe d\xc3\xa9ja dans la base\'\n
     ,\'04\' : \'Lettre du pays incorrect\'\n
     ,\'05\' : \'Num\xc3\xa9ro caisse inexistant\'\n
     ,\'06\' : \'doublon avec une autre ligne\'\n
@@ -194,9 +194,10 @@ def split_head(CD_file_line_list):\n
 \n
   # Verify if Movement Id is not already exist in the database\n
   head_movement_id = head_movement_id+\'_\'+head_emission_letter\n
-  movement_list = context.portal_catalog(portal_type = "Monetary Reception",reference = head_movement_id)\n
-  if len(movement_list) > 0:\n
-    return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
+  # useless as reference not register on document\n
+  #   movement_list = context.portal_catalog(portal_type = "Monetary Reception",reference = head_movement_id)\n
+  #   if len(movement_list) > 0:\n
+  #     return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
 \n
   # date verification\n
   try:\n
@@ -321,7 +322,9 @@ def split_lines(CD_file_line_list):\n
                         ,\'quantity\'    : line_quantity}\n
                        )\n
     # check reference doesn\'t already exist for this resource\n
-    movement_container_list = context.portal_catalog(portal_type = "Cash Container Item", reference = line_container_id)\n
+    movement_container_list = context.portal_catalog(portal_type = "Cash Container Item",\n
+                                                     reference = line_container_id,\n
+                                                     simulation_state = "!=cancelled")\n
     if len(movement_container_list) > 0:\n
       return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
 \n
@@ -341,6 +344,8 @@ def url_redirection(error_message,delivery_id=None):\n
   request[ \'RESPONSE\' ].redirect( redirect_url )\n
 \n
 \n
+request  = context.REQUEST\n
+\n
 user_site = context.Baobab_getUserAssignedSiteList()\n
 if len(user_site) == 0:\n
   if batch == 1:\n
@@ -348,15 +353,7 @@ if len(user_site) == 0:\n
   else:\n
     return url_redirection("Operation denied, you\'re not assigned to a site")\n
 \n
-import_tag = "%s_monetary_reception" %(user_site[0],)\n
-# check remaining activities\n
-if context.portal_activities.countMessageWithTag(import_tag) != 0:\n
-  if batch == 1:\n
-    raise ValueError, "Some activities are remaining from previous import, please try later."\n
-  else:\n
-    return url_redirection("Some activities are remaining from previous import, please try later.")\n
 \n
-request  = context.REQUEST\n
 if file_data is not None:\n
   CD_file_line_list = file_data\n
 else:\n
@@ -371,6 +368,14 @@ if split_head_result_dict[\'error\']:\n
     raise ValueError, split_head_result_dict[\'message\']\n
   else:\n
    return url_redirection(split_head_result_dict[\'message\'])\n
+\n
+import_tag = "%s_monetary_reception_%s" %(user_site[0], split_head_result_dict["head_dict"][\'reference\'])\n
+# check remaining activities\n
+if context.portal_activities.countMessageWithTag(import_tag) != 0:\n
+  if batch == 1:\n
+    raise ValueError, "Some activities are remaining from previous import, please try later."\n
+  else:\n
+    return url_redirection("Some activities are remaining from previous import, please try later.")\n
 \n
 \n
 # analyse the container lines and split it into dictionnary\n
@@ -468,8 +473,8 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                             <string>user_site</string>
                             <string>len</string>
                             <string>ValueError</string>
-                            <string>_getitem_</string>
                             <string>CD_file_line_list</string>
+                            <string>_getitem_</string>
                             <string>split_head_result_dict</string>
                             <string>split_line_result_dict</string>
                           </tuple>
