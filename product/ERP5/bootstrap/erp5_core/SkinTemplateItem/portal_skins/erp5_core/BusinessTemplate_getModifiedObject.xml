@@ -89,7 +89,10 @@ no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\',\n
                   \'CatalogResultTable\', \'MessageTranslation\', \'LocalRoles\',\n
                   \'PortalTypeAllowedContentType\',\n
                   \'PortalTypeHiddenContentType\', \'PortalTypePropertySheet\',\n
-                  \'PortalTypeBaseCategory\']\n
+                  \'PortalTypeBaseCategory\', \'Tool\', ]\n
+no_backup_dict = {}\n
+for k in no_backup_list:\n
+  no_backup_dict[k] = 1\n
 \n
 i = 0\n
 object_list = []\n
@@ -102,7 +105,7 @@ for object_id in keys:\n
               choice_item_list=[[\'Install\', \'install\'],\n
                                 [\'Do Nothing\', \'nothing\']])\n
   elif object_state == \'Modified\':\n
-    if object_class in no_backup_list:\n
+    if object_class in no_backup_dict:\n
       line.edit(object_id=object_id, object_state=object_state,\n
                 object_class=object_class,\n
                 choice_item_list=[[\'Upgrade\', \'install\'],\n
@@ -114,7 +117,7 @@ for object_id in keys:\n
                                   [\'Upgrade\', \'install\'],\n
                                   [\'Keep Original\', \'nothing\']])\n
   elif object_state == \'Removed\':\n
-    if object_class in no_backup_list:\n
+    if object_class in no_backup_dict:\n
       line.edit(object_id=object_id,\n
                 object_state=object_state,\n
                 object_class=object_class,\n
@@ -190,9 +193,12 @@ return object_list\n
                             <string>_getattr_</string>
                             <string>keys</string>
                             <string>no_backup_list</string>
+                            <string>no_backup_dict</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>_write_</string>
                             <string>i</string>
                             <string>object_list</string>
-                            <string>_getiter_</string>
                             <string>object_id</string>
                             <string>_getitem_</string>
                             <string>object_state</string>

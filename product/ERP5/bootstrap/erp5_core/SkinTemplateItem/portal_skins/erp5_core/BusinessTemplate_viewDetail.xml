@@ -85,6 +85,7 @@
                         <string>my_template_document_id_list</string>
                         <string>my_template_property_sheet_id_list</string>
                         <string>my_template_extension_id_list</string>
+                        <string>my_template_tool_id_list</string>
                         <string>my_template_update_tool</string>
                         <string>my_template_update_business_template_workflow</string>
                       </list>
