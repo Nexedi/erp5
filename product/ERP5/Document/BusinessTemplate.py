@@ -3653,8 +3653,12 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
             if action == 'nothing':
               continue
           path = string.split(path, '/')
-          lang = path[-3]
-          catalog = path[-2]
+          if len(path) == 2:
+            lang = path[0]
+            catalog = path[1]
+          else:
+            lang = path[-3]
+            catalog = path[-2]
           if lang not in localizer.get_languages():
             localizer.manage_addLanguage(lang)
           mc = localizer._getOb(catalog)
