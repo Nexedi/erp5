@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTotalPrice(fast=0, deliveryLineType=\'Incoming Cash Balance Regulation Line\')</string> </value>
+            <value> <string>python: here.getTotalPrice(fast=0, portal_type=\'Incoming Cash Balance Regulation Line\')</string> </value>
         </item>
       </dictionary>
     </pickle>
