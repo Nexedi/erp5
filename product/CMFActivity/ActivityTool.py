@@ -49,6 +49,7 @@ from Acquisition import aq_inner
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ActivityBuffer import ActivityBuffer
 from zExceptions import ExceptionFormatter
+from BTrees.OIBTree import OIBTree
 
 from ZODB.POSException import ConflictError
 from Products.MailHost.MailHost import MailHostError
@@ -72,6 +73,9 @@ is_initialized = 0
 tic_lock = threading.Lock() # A RAM based lock to prevent too many concurrent tic() calls
 timerservice_lock = threading.Lock() # A RAM based lock to prevent TimerService spamming when busy
 first_run = 1
+currentNode = None
+ROLE_IDLE = 0
+ROLE_PROCESSING = 1
 
 # Activity Registration
 activity_dict = {}
@@ -301,9 +305,6 @@ class ActivityTool (Folder, UniqueObject):
     allowed_types = ( 'CMF Active Process', )
     security = ClassSecurityInfo()
 
-    _distributingNode = ''
-    _nodes = ()
-
     manage_options = tuple(
                      [ { 'label' : 'Overview', 'action' : 'manage_overview' }
                      , { 'label' : 'Activities', 'action' : 'manageActivities' }
@@ -402,17 +403,19 @@ class ActivityTool (Folder, UniqueObject):
        
     def getCurrentNode(self):
         """ Return current node in form ip:port """
-        port = ''
-        from asyncore import socket_map
-        for k, v in socket_map.items():
-            if hasattr(v, 'port'):
-                # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-                type = str(getattr(v, '__class__', 'unknown'))
-                if type == 'ZServer.HTTPServer.zhttp_server':
-                    port = v.port
-                    break
-        ip = socket.gethostbyname(socket.gethostname())
-        currentNode = '%s:%s' %(ip, port)
+        global currentNode
+        if currentNode is None:
+          port = ''
+          from asyncore import socket_map
+          for k, v in socket_map.items():
+              if hasattr(v, 'port'):
+                  # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
+                  type = str(getattr(v, '__class__', 'unknown'))
+                  if type == 'ZServer.HTTPServer.zhttp_server':
+                      port = v.port
+                      break
+          ip = socket.gethostbyname(socket.gethostname())
+          currentNode = '%s:%s' %(ip, port)
         return currentNode
         
     security.declarePublic('getDistributingNode')
@@ -420,11 +423,46 @@ class ActivityTool (Folder, UniqueObject):
         """ Return the distributingNode """
         return self.distributingNode
 
-    security.declarePublic('getNodeList getNodes')
-    def getNodes(self):
-        """ Return all nodes """
-        return self._nodes
-    getNodeList = getNodes
+    def getNodeList(self, role=None):
+      node_dict = self.getNodeDict()
+      if role is None:
+        result = [x for x in node_dict.keys()]
+      else:
+        result = [node_id for node_id, node_role in node_dict.items() if node_role == role]
+      result.sort()
+      return result
+
+    def getNodeDict(self):
+      nodes = self._nodes
+      if isinstance(nodes, tuple):
+        new_nodes = OIBTree()
+        new_nodes.update([(x, ROLE_PROCESSING) for x in self._nodes])
+        self._nodes = nodes = new_nodes
+      return nodes
+
+    def registerNode(self, node):
+      node_dict = self.getNodeDict()
+      if not node_dict.has_key(node):
+        if len(node_dict) == 0: # If we are registering the first node, make
+                                # it both the distributing node and a processing
+                                # node.
+          role = ROLE_PROCESSING
+          self.distributingNode = node
+        else:
+          role = ROLE_IDLE
+        self.updateNode(node, role)
+
+    def updateNode(self, node, role):
+      node_dict = self.getNodeDict()
+      node_dict[node] = role
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getProcessingNodeList')
+    def getProcessingNodeList(self):
+      return self.getNodeList(role=ROLE_PROCESSING)
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getUnusedNodeList')
+    def getIdleNodeList(self):
+      return self.getNodeList(role=ROLE_IDLE)
 
     def _isValidNodeName(self, node_name) :
       """Check we have been provided a good node name"""
@@ -447,46 +485,64 @@ class ActivityTool (Folder, UniqueObject):
                   '/manageLoadBalancing?manage_tabs_message=' +
                   urllib.quote("Malformed Distributing Node."))
 
-    security.declarePublic('manage_addNode')
-    def manage_addNode(self, node, REQUEST=None):
-        """ add a node """
-        if not self._isValidNodeName(node) :
-            if REQUEST is not None:
-                REQUEST.RESPONSE.redirect(
-                    REQUEST.URL1 +
-                    '/manageLoadBalancing?manage_tabs_message=' +
-                    urllib.quote("Malformed node."))
-            return
-        
-        if node in self._nodes:
-            if REQUEST is not None:
-                REQUEST.RESPONSE.redirect(
-                    REQUEST.URL1 +
-                    '/manageLoadBalancing?manage_tabs_message=' +
-                    urllib.quote("Node exists already."))
-            return
-            
-        self._nodes = self._nodes + (node,)
-        
-        if REQUEST is not None:
-            REQUEST.RESPONSE.redirect(
-                REQUEST.URL1 +
-                '/manageLoadBalancing?manage_tabs_message=' +
-                urllib.quote("Node successfully added."))
-                        
-    security.declarePublic('manage_delNode')
-    def manage_delNode(self, deleteNodes, REQUEST=None):
-        """ delete nodes """
-        nodeList = list(self._nodes)
-        for node in deleteNodes:
-            if node in self._nodes:
-                nodeList.remove(node)
-        self._nodes = tuple(nodeList)
-        if REQUEST is not None:
-            REQUEST.RESPONSE.redirect(
-                REQUEST.URL1 +
-                '/manageLoadBalancing?manage_tabs_message=' +
-                urllib.quote("Node(s) successfully deleted."))
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_delNode')
+    def manage_delNode(self, unused_node_list=None, REQUEST=None):
+      """ delete selected unused nodes """
+      processing_node = self.getDistributingNode()
+      updated_processing_node = False
+      if unused_node_list is not None:
+        node_dict = self.getNodeDict()
+        for node in unused_node_list:
+          if node in node_dict:
+            del node_dict[node]
+          if node == processing_node:
+            self.processing_node = ''
+            updated_processing_node = True
+      if REQUEST is not None:
+        if unused_node_list is None:
+          message = "No unused node selected, nothing deleted."
+        else:
+          message = "Deleted nodes %r." % (unused_node_list, )
+        if updated_processing_node:
+          message += "Disabled distributing node because it was deleted."
+        REQUEST.RESPONSE.redirect(
+          REQUEST.URL1 +
+          '/manageLoadBalancing?manage_tabs_message=' +
+          urllib.quote(message))
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_addToProcessingList')
+    def manage_addToProcessingList(self, unused_node_list=None, REQUEST=None):
+      """ Change one or more idle nodes into processing nodes """
+      if unused_node_list is not None:
+        node_dict = self.getNodeDict()
+        for node in unused_node_list:
+          self.updateNode(node, ROLE_PROCESSING)
+      if REQUEST is not None:
+        if unused_node_list is None:
+          message = "No unused node selected, nothing done."
+        else:
+          message = "Nodes now procesing: %r." % (unused_node_list, )
+        REQUEST.RESPONSE.redirect(
+          REQUEST.URL1 +
+          '/manageLoadBalancing?manage_tabs_message=' +
+          urllib.quote(message))
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_removeFromProcessingList')
+    def manage_removeFromProcessingList(self, processing_node_list=None, REQUEST=None):
+      """ Change one or more procesing nodes into idle nodes """
+      if processing_node_list is not None:
+        node_dict = self.getNodeDict()
+        for node in processing_node_list:
+          self.updateNode(node, ROLE_IDLE)
+      if REQUEST is not None:
+        if processing_node_list is None:
+          message = "No used node selected, nothing done."
+        else:
+          message = "Nodes now unused %r." % (processing_node_list, )
+        REQUEST.RESPONSE.redirect(
+          REQUEST.URL1 +
+          '/manageLoadBalancing?manage_tabs_message=' +
+          urllib.quote(message))
 
     def process_timer(self, tick, interval, prev="", next=""):
         """
@@ -508,13 +564,12 @@ class ActivityTool (Folder, UniqueObject):
           newSecurityManager(self.REQUEST, user)
 
           currentNode = self.getCurrentNode()
+          self.registerNode(currentNode)
+          processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
 
           # only distribute when we are the distributingNode or if it's empty
-          if (self.distributingNode == currentNode):
-            self.distribute(len(self._nodes))
-
-          elif not self.distributingNode:
-            self.distribute(1)
+          if (self.getDistributingNode() == currentNode):
+            self.distribute(len(processing_node_list))
 
           # SkinsTool uses a REQUEST cache to store skin objects, as
           # with TimerService we have the same REQUEST over multiple
@@ -527,11 +582,8 @@ class ActivityTool (Folder, UniqueObject):
           # call tic for the current processing_node
           # the processing_node numbers are the indices of the elements in the node tuple +1
           # because processing_node starts form 1
-          if currentNode in self._nodes:
-            self.tic(list(self._nodes).index(currentNode)+1)
-
-          elif len(self._nodes) == 0:
-            self.tic(1)
+          if currentNode in processing_node_list:
+            self.tic(processing_node_list.index(currentNode)+1)
 
         finally:
           timerservice_lock.release()

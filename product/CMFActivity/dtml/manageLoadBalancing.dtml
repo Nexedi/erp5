@@ -44,16 +44,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   Zope Configuration File <i>zope.conf</i>.
 </p>
 
-<p class="form-help">
-    The <i>Distributing node</i> is responsible for the Load Distribution. The default value is empty
-    which means that every existing node will try to do the distribution, which is fine when there
-    is only one ZServer running.
-    To change the Distributing Node, edit the value and click &quot;Change&quot;.
-</p>
-
 <form action="&dtml-URL1;">
 
 <table cellspacing="0" cellpadding="2" border="0" width="100%">
+  <tr class="list-header">
+    <td align="left" valign="top" colspan=2>
+      <div class="form-label">This node</div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>Current node is <b><dtml-var getCurrentNode></b></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  </tr>
   <tr class="list-header">
     <td align="left" valign="top" colspan=2>
       <div class="form-label">Distributing Node</div>
@@ -61,113 +67,114 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   </tr>
   <tr>
     <td>
-      <div class="form-label">IP:Port</div>
+      <select name="distributingNode">
+        <option value="">(disabled)</option>
+        <dtml-in getNodeList prefix="node">
+          <dtml-if expr="node_item == getDistributingNode()">
+            <option selected="selected" value="<dtml-var sequence-item>">
+              <dtml-var sequence-item>
+            </option>
+          <dtml-else>
+            <option value="<dtml-var sequence-item>">
+              <dtml-var sequence-item>
+            </option>
+          </dtml-if>
+        </dtml-in>
+      </select>
+      <input type="submit" class="form-element" name="manage_setDistributingNode:method" value=" Change ">
     </td>
-    <td align="left">
-      <div class="form-item">
-        <input type="text" name="distributingNode" value="&dtml-getDistributingNode;" size="19" />
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td align="left">
-      <div class="form-element">
-        <input type="submit" class="form-element" name="manage_setDistributingNode:method" value=" Change ">
-     </div>
-    </td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="left" colspan=2>
+    <td>
       <p class="form-help">
-        The following list defines the nodes the Load is currently distributed to. Per default this list is empty
-        which means that every existing node will try to process all activities, which is fine, when ther is only one
-        ZServer running.
-        To delete a node from the list, activate the checkbox on the left of that node and click the &quot;Delete&quot; button.
+        The <i>Distributing node</i> is responsible for the Load Distribution.
+        Only one node can be <i>Distributing node</i> at any given time.
+        It is also possible to interupt activity distribution by selecting the
+        <i>(disabled)</i> value. Activity nodes will receive no more activity
+        when <i>Distributing node</i> is disabled.
       </p>
     </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
   </tr>
   <tr class="list-header">
     <td align="left" valign="top" colspan=2>
       <div class="form-label">Existing Nodes</div>
     </td>
-  <dtml-in getNodes>
-  <dtml-let domain=sequence-key
-          node=sequence-item
-          index=sequence-index>
-  <tr class="row-normal">
-    <td align="left" valign="top">
-      <input type="checkbox" name="deleteNodes:list" value="&dtml-node;">
-    </td>
-    <td align="left" valign="top">
-      <dtml-if "domain == _.None">
-        <p>Default</p>
-      <dtml-else>
-         <p><dtml-var node></p>
-      </dtml-if>
-    </td>
-  </tr>
-  </dtml-let>
-  </dtml-in>
-  <tr>
-    <td align="left" colspan="2">
-      <div class="form-element">
-        <input type="submit" class="form-element" name="manage_delNode:method" value=" Delete " />
-     </div>
-    </td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="left" valign="top" colspan=2>
-        <p class="form-help">
-          To add a new node, enter the Ip-Address and Port-Number for the new node
-          and click the &quot;Add&quot; button. 
-        </p>
-    </td>
   </tr>
   <tr>
     <td>
-      <div class="form-label">IP:Port</div>
+      <table>
+        <tr>
+          <td rowspan="2">
+            <div class="form-label">Idle&nbsp;nodes</div>
+            <select name="unused_node_list:list" size="10" multiple="multiple" style="width:100%">
+              <dtml-in getIdleNodeList>
+                <option value="<dtml-var sequence-item>"><dtml-var sequence-item></option>
+              </dtml-in>
+            </select>
+          </td>
+          <td>
+            <input type="submit" name="manage_addToProcessingList:method" value="&gt;"/>
+          </td>
+          <td rowspan="2">
+            <div class="form-label">Processing&nbsp;nodes</div>
+            <select name="processing_node_list:list" size="10" multiple="multiple" style="width:100%">
+              <dtml-in getProcessingNodeList prefix="node">
+                <option value="<dtml-var node_item>"><dtml-var node_item> (#<dtml-var expr="node_index + 1">)</option>
+              </dtml-in>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="submit" name="manage_removeFromProcessingList:method" value="&lt;"/>
+          </td>
+        </tr>
+        <tr>
+          <td align="left" colspan="2">
+            <div class="form-element">
+              <input type="submit" class="form-element" name="manage_delNode:method" value=" Delete " />
+           </div>
+          </td>
+        </tr>
+      </table>
     </td>
-    <td align="left">
-      <div class="form-item"><input type="text" name="node" size="19" /></div>
-    </td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td align="left">
-      <div class="form-element">
-        <input type="submit" class="form-element" name="manage_addNode:method" value=" Add ">
-     </div>
-    </td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="left" colspan=2>
+    <td>
       <p class="form-help">
-        Subscribe/Unsubscribe from Timer Service
+        Every node sharing the same ZODB will register itself to the idle
+        node list - except the first one which will be automaticaly declared
+        both <i>Processing node</i> and <i>Distributing node</i>. Registered
+        nodes can then be made <i>Processing nodes</i> or <i>Idle nodes</i>.
+      </p>
+      <p class="form-help">
+       <b>Important note:</b> Nodes can register themselves, but can not
+       unregister themselves (for example, a node which IP has changed will
+       be present twice in the list). It is up to the user to manualy prune
+       obsolete nodes. If non-existant nodes are present in the
+       <i>Processing node</i> list, activities will get balanced to those
+       nodes and never be executed.
       </p>
     </td>
   </tr>
+  <tr>
+    <td>&nbsp;</td>
+     <td>&nbsp;</td>
+  </tr>
   <tr class="list-header">
     <td align="left" valign="top" colspan=2>
+      <div class="form-label">Subscribe/Unsubscribe from Timer Service</div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>
       <div class="form-label">
         Status:
         <dtml-if isSubscribed>
           Subscribed
         <dtml-else>
           Not Subscribed
-       </dtml-if>
+        </dtml-if>
       </div>
     </td>
   </tr>
