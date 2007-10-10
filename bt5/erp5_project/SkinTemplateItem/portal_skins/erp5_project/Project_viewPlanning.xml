@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_editUnrestricted</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

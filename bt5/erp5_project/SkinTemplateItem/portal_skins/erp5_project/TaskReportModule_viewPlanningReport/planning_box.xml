@@ -21,6 +21,7 @@
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>list_method</string>
+                <string>round_script</string>
               </list>
             </value>
         </item>
@@ -91,7 +92,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradeProject_FieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key>                 <string>list_method</string> </key>
@@ -120,6 +121,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key>                 <string>round_script</string> </key>
+                    <value> <string>Planning_roundBoundToMinute</string> </value>
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
