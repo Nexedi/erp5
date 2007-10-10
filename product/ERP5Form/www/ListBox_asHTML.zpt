@@ -277,7 +277,7 @@
                 tal:attributes="id string:${field_id}_data_line_${repeat/line/index}; class css">
                 <td tal:condition="is_report_tree_mode" class="DataA" align="left" valign="middle"
                   tal:attributes="class css"
-                  tal:define="section_name python: line.getContext() is not None and line.getContext().getTitleOrId() or ''">
+                  tal:define="section_name python: line.getDomainTitle()">
                   <a tal:condition="section_name"
                     tal:define="method_id python: line.isOpen() and 'foldReport' or 'unfoldReport'"
                     tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"

@@ -108,7 +108,7 @@ class ReportSection:
   """
   def __init__(self, is_summary = False, object_list = (), object_list_len = 0,
                is_open = False, selection_domain = None, context = None, offset = 0,
-               depth = 0):
+               depth = 0, domain_title = None):
     self.is_summary = is_summary
     self.object_list = object_list
     self.object_list_len = object_list_len
@@ -117,6 +117,7 @@ class ReportSection:
     self.context = context
     self.offset = offset
     self.depth = depth
+    self.domain_title = domain_title
 
 class ListBoxWidget(Widget.Widget):
     """
@@ -1492,6 +1493,8 @@ class ListBoxRenderer:
           # Query the stat.
           stat_brain = selection(method = stat_method, context = context, REQUEST = self.request)
 
+          domain_title = report_tree.obj.getTitle()# XXX Yusei Keep original domain title before overriding
+
           stat_result = {}
           for index, (k, v) in enumerate(self.getSelectedColumnList()):
             try:
@@ -1507,7 +1510,8 @@ class ListBoxRenderer:
           report_section_list.append(ReportSection(is_summary = True, object_list = [stat_context],
                                                    object_list_len = 1, is_open = report_tree.is_open,
                                                    selection_domain = report_tree.selection_domain,
-                                                   context = stat_context, depth = report_tree.depth))
+                                                   context = stat_context, depth = report_tree.depth,
+                                                   domain_title = domain_title))
         else:
           selection.edit(params = param_dict)
 
@@ -1685,11 +1689,15 @@ class ListBoxRenderer:
         else:
           index = i
         #LOG('ListBox', 0, 'current_section.__dict__ = %r' % (current_section.__dict__,))
-        line = line_class(renderer = self, obj = current_section.object_list[offset],
-                          index = index, is_summary = current_section.is_summary,
-                          context = current_section.context, is_open = current_section.is_open,
+        line = line_class(renderer = self,
+                          obj = current_section.object_list[offset],
+                          index = index,
+                          is_summary = current_section.is_summary,
+                          context = current_section.context,
+                          is_open = current_section.is_open,
                           selection_domain = current_section.selection_domain,
-                          depth = current_section.depth)
+                          depth = current_section.depth,
+                          domain_title = current_section.domain_title)
         line_list.append(line)
     except IndexError:
       # If the report section list is empty, nothing to do.
@@ -1712,7 +1720,7 @@ class ListBoxRendererLine:
   """This class describes a line in a ListBox to assist ListBoxRenderer.
   """
   def __init__(self, renderer = None, obj = None, index = 0, is_summary = False, context = None,
-               is_open = False, selection_domain = None, depth = 0):
+               is_open = False, selection_domain = None, depth = 0, domain_title=None):
     """In reality, the object is a brain or a brain-like object.
     """
     self.renderer = renderer
@@ -1723,6 +1731,7 @@ class ListBoxRendererLine:
     self.is_open = is_open
     self.selection_domain = selection_domain
     self.depth = depth
+    self.domain_title = domain_title
 
     # Because it is not easy to pass an instance object implicitly to a method
     # with no side effect, tweak VolatileCachingMethod objects here for this instance.
@@ -1779,6 +1788,17 @@ class ListBoxRendererLine:
     """Return the URL of a domain. Used only for a summary line.
     """
     return getattr(self.getContext(), 'domain_url', '')
+
+  def getDomainTitle(self):
+    """Return original title of domain"""
+    if self.domain_title is not None:
+      return self.domain_title
+    else:
+      context = self.getContext()
+      if context is not None:
+        return context.getTitleOrId() or ''
+    return ''
+        
 
   def getDepth(self):
     """Return the depth of a domain. Used only for a summary line.
