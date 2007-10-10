@@ -43,6 +43,7 @@ from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
 from DateTime import DateTime
+from Products.ERP5Type.tests.utils import reindex
 
 try:
   from transaction import get as get_transaction
@@ -119,6 +120,17 @@ class TestArchive(InventoryAPITestCase):
       #LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
       self.failUnless(path not in  path_list)
 
+  @reindex
+  def _makeInventory(self, date):
+    """
+    Create inventory, use to check if they goes to the right catalog
+    """
+    portal = self.getPortal()
+    inventory_module = portal.getDefaultModule(portal_type = "Inventory Module")
+    inventory = inventory_module.newContent(portal_type = "Inventory")
+    inventory.edit(stop_date = date,)
+    return inventory
+
   def test_Archive(self, quiet=quiet, run=1): #run_all_test):
     if not run: return
     if not quiet:
@@ -131,6 +143,7 @@ class TestArchive(InventoryAPITestCase):
     portal_activities = self.getActivityTool()
     portal_archive = self.getArchiveTool()
     portal_catalog = self.getCatalogTool()
+    inventory_module = portal.getDefaultModule(portal_type = "Inventory Module")
     # Create some objects
     self.base_category = portal_category.newContent(portal_type='Base Category',
                                                title="GreatTitle1")
@@ -142,6 +155,11 @@ class TestArchive(InventoryAPITestCase):
                                   simulation_state='delivered',)
     self.assertEquals(100, getInventory(node_uid=self.node.getUid()))
     self.assertEqual(len(self.folder.searchFolder(portal_type="Dummy Movement")), 1)
+
+    # Create an inventory object
+    self.inventory = self._makeInventory(date=DateTime("2006/06/15"))
+    self.assertEqual(len(inventory_module.searchFolder(portal_type="Inventory")), 1)    
+
     # Flush message queue
     get_transaction().commit()
     self.tic()
@@ -149,7 +167,7 @@ class TestArchive(InventoryAPITestCase):
     # Check well in catalog
     self.original_connection_id = 'erp5_sql_connection'
     self.original_deferred_connection_id = 'erp5_sql_deferred_connection'
-    path_list = [self.organisation.getRelativeUrl()]
+    path_list = [self.organisation.getRelativeUrl(), self.inventory.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
     
     # Create new connectors for destination
@@ -250,6 +268,13 @@ class TestArchive(InventoryAPITestCase):
     # Check objects movement are indexed
     # in archive and old one and not in current catalog
     path_list = [self.mvt.getRelativeUrl()]
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
+    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.archive_connection_id)
+
+    # Check inventory are indexed
+    # in archive and old one and not in current catalog
+    path_list = [self.inventory.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.archive_connection_id)
