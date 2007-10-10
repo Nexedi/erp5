@@ -240,7 +240,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         # adding if necessary current activity to warning_list
         if final_block['activity_origin'].name not in warning_activity_list:
           warning_activity_list.append(final_block['activity_origin'].name)
-
+        secondary_axis_positions = [ None , None ]
       else:
         # now that all informations about the main axis changes are
         # known, checking modifications over the secondary axis.
