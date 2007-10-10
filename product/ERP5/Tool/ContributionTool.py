@@ -311,7 +311,7 @@ class ContributionTool(BaseTool):
 
     try:
       # Then edit the document contents (so that upload can happen)
-      document._edit(**kw)
+      document._edit(set_filename__=0, **kw)
       if url:
         document.fromURL(url)
     finally:

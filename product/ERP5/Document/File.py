@@ -109,7 +109,7 @@ class File(Document, CMFFile, ConversionCacheMixin):
 
   ### Special edit method
   security.declarePrivate( '_edit' )
-  def _edit(self, **kw):
+  def _edit(self, set_filename__=1, **kw):
     """\
       This is used to edit files
     """
@@ -118,6 +118,10 @@ class File(Document, CMFFile, ConversionCacheMixin):
       precondition = kw.get('precondition')
       if self._isNotEmpty(file):
         self._setFile(file, precondition=precondition)
+      if set_filename__:
+        filename = getattr(file, 'filename', None)
+        if filename is not None:
+          kw['source_reference'] = filename
       del kw['file']
     Base._edit(self, **kw)
 
