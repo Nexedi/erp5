@@ -965,6 +965,14 @@ class PathTemplateItem(ObjectTemplateItem):
         self._objects[relative_url] = obj
         obj.wl_clearLocks()
 
+class ToolTemplateItem(PathTemplateItem):
+  """This class is used only for making a distinction between other objects
+  and tools, because tools may not be backed up."""
+  def _backupObject(self, action, trashbin, container_path, object_id, **kw):
+    """Fake as if a trashbin is not available."""
+    return PathTemplateItem._backupObject(self, action, None, container_path,
+                                          object_id, **kw)
+
 class PreferenceTemplateItem(PathTemplateItem):
   """
   This class is used to store preference objects
@@ -3917,6 +3925,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_extension_item',
       '_test_item',
       '_role_item',
+      '_tool_item',
       '_message_translation_item',
       '_workflow_item',
       '_site_property_item',
@@ -4091,6 +4100,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._local_roles_item = \
           LocalRolesTemplateItem(
                self.getTemplateLocalRolesList())
+      self._tool_item = \
+          ToolTemplateItem(
+               self.getTemplateToolIdList())
 
       # Build each part
       for item_name in self._item_name_list:
@@ -4573,6 +4585,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_message_translation')
 
+    def getTemplateToolIdList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_tool_id')
+
     security.declareProtected(Permissions.ManagePortal, 'export')
     def export(self, path=None, local=0, **kw):
       """
@@ -4703,6 +4722,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._local_roles_item = \
           LocalRolesTemplateItem(
                self.getTemplateLocalRolesList())
+      self._tool_item = \
+          ToolTemplateItem(
+               self.getTemplateToolIdList())
 
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
@@ -4785,6 +4807,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogRequestKey' : '_catalog_request_key_item',
         'CatalogMultivalueKey' : '_catalog_multivalue_key_item',
         'CatalogTopicKey' : '_catalog_topic_key_item',
+        'Tool': '_tool_item',
         }
 
       object_id = REQUEST.object_id
@@ -4827,7 +4850,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # XXX Bad naming
       item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item',
                      '_category_item', '_path_item', '_preference_tem',
-                     '_skin_item', '_action_item',]
+                     '_skin_item', '_action_item', '_tool_item', ]
 
       # Not considered as objects by Zope (will be exported into XML manually)
       # XXX Bad naming
