@@ -769,13 +769,6 @@ class TestPropertySheet:
       # which is one step higher in the site 
       pass
 
-    def test_14_bangAccessor(self, quiet=quiet, run=run_all_test):
-      """
-      Bang accesors must be triggered each time another accessor is called
-      They are useful for centralising events ?
-      """
-      pass
-
     def test_15_DefaultValue(self):
       """
       Tests that the default value is returned correctly
@@ -843,6 +836,40 @@ class TestPropertySheet:
       self.assertEquals(value, person.getDummyPsProp('default'))
       self.assertEquals(value, person.getProperty('dummy_ps_prop'))
       self.assertEquals(value, person.getProperty('dummy_ps_prop', d='default'))
+
+
+    def test_15b_ListAccessorsDefaultValueDefinedOnPropertySheet(self):
+      """Tests that the default value is returned correctly when a default
+      value is defined using the property sheet, on list accesors.
+      """
+      self._addProperty('Person', '''{'id': 'dummy_ps_prop',
+                                      'type': 'lines',
+                                      'mode': 'w',
+                                      'default': [1, 2, 3],}''')
+      module = self.getPersonModule()
+      person = module.newContent(id='1', portal_type='Person')
+      # default accessor and list accessors are generated
+      self.assertTrue(hasattr(person, 'getDummyPsProp'))
+      self.assertTrue(hasattr(person, 'getDummyPsPropList'))
+
+      # The default ps value will be returned, when using generated accessor
+      self.assertEquals([1, 2, 3], person.getDummyPsPropList())
+      # (unless you explicitly pass a default value.
+      self.assertEquals(['default'], person.getDummyPsPropList(['default']))
+      # using getProperty
+      self.assertEquals([1, 2, 3], person.getProperty('dummy_ps_prop_list'))
+      self.assertEquals(['default'],
+                        person.getProperty('dummy_ps_prop_list', ['default']))
+
+      # once the value has been set, there's no default
+      value_list = ['some', 'values']
+      person.setDummyPsPropList(value_list)
+      self.assertEquals(value_list, person.getDummyPsPropList())
+      self.assertEquals(value_list, person.getDummyPsPropList(['default']))
+      self.assertEquals(value_list, person.getProperty('dummy_ps_prop_list'))
+      self.assertEquals(value_list,
+              person.getProperty('dummy_ps_prop_list', d=['default']))
+
 
     def test_15c_getDescriptionDefaultValue(self):
       """
