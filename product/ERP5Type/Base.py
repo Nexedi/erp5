@@ -1209,7 +1209,7 @@ class Base( CopyContainer,
 
       **kw allows to call setProperty as a generic setter (ex. setProperty(value_uid, portal_type=))
     """
-    if type is not 'string': # Speed
+    if type != 'string': # Speed
       if type in list_types: # Patch for OFS PropertyManager
         key += '_list'
     accessor_name = '_set' + UpperCase(key)
