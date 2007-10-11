@@ -108,7 +108,7 @@ if  nb_transfer_line == 0:\n
 # Check each line\n
 total_line_price = 0\n
 for line in transaction.objectValues(portal_type=\'Accounting Cancellation Line\'):\n
-  total_line_price += line.getDestinationTotalAssetPrice()\n
+  total_line_price += abs(line.getQuantity())\n
   # First check there is something defined on line\n
   if line.getSourcePaymentReference(None) is None and \\\n
          line.getSourceSection() is None:\n
@@ -203,6 +203,7 @@ if total_line_price != transaction.getSourceTotalAssetPrice():\n
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>_inplacevar_</string>
+                            <string>abs</string>
                             <string>context</string>
                           </tuple>
                         </value>

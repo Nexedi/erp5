@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_source_debit</string> </value>
+            <value> <string>my_destination_credit</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -240,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Debit</string> </value>
+                    <value> <string>Credit</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

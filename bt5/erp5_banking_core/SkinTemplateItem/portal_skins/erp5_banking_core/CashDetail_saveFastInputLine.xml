@@ -192,7 +192,10 @@ for resource_id in per_resource_dict.keys():\n
     variation = variation[\'variation\']\n
     # check if variation exist for the resource\n
     if column_base_category == "variation":\n
-      if variation != \'variation/not_defined\' and variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
+#       if variation != \'variation/not_defined\' and variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
+#         variation_not_defined = 1\n
+#         break\n
+      if variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
         variation_not_defined = 1\n
         break\n
     # for the letter, if coin, must always be not_defined\n
