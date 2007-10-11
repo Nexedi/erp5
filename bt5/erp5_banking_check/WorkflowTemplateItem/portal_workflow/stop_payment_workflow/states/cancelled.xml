@@ -68,16 +68,26 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
@@ -92,9 +102,9 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
