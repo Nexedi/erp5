@@ -239,7 +239,7 @@
                 tal:attributes="id string:${field_id}_data_line_${repeat/line/index}; class css">\n
                 <div tal:condition="is_report_tree_mode" class="DataA" align="left" valign="middle"\n
                   tal:attributes="class css"\n
-                  tal:define="section_name python: line.getContext() is not None and line.getContext().getTitleOrId() or \'\'">\n
+                  tal:define="section_name python: line.getDomainTitle()">\n
                   <a tal:condition="section_name"\n
                     href="portal_selections/foldReport?report_url=base_domain&amp;form_id=form&amp;list_selection_name=default"\n
                     tal:define="method_id python: line.isOpen() and \'foldReport\' or \'unfoldReport\'"\n
