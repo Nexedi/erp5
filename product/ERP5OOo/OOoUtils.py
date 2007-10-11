@@ -29,6 +29,8 @@
 
 import sys
 
+from Acquisition import Implicit
+
 from Products.PythonScripts.Utility import allow_class
 from ZPublisher.HTTPRequest import FileUpload
 from xml.dom.ext.reader import PyExpat
@@ -63,7 +65,7 @@ OOo_mimeType_dict = {
   'sxm' : 'application/vnd.sun.xml.math',
 }
 
-class OOoBuilder:
+class OOoBuilder(Implicit):
   """
   Tool that allows to reinject new files in a ZODB OOo document.
   """
@@ -218,7 +220,7 @@ class OOoBuilder:
 InitializeClass(OOoBuilder)
 allow_class(OOoBuilder)
 
-class OOoParser:
+class OOoParser(Implicit):
   """
     General purpose tools to parse and handle OpenOffice v1.x documents.
   """
@@ -553,3 +555,7 @@ class OOoParser:
 InitializeClass(OOoParser)
 allow_class(OOoParser)
 allow_class(CorruptedOOoFile)
+
+def newOOoParser(container):
+  return OOoParser().__of__(container)
+
