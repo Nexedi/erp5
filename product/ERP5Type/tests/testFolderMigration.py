@@ -55,12 +55,17 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.folder = self.getPortal().newContent(id='TestFolder',
                                                 portal_type='Folder')
 
+
     def beforeTearDown(self):
       """
         Executed after each test_*.
       """
+      self.folder.manage_delObjects(ids=list(self.folder.objectIds()))
       self.getPortal().manage_delObjects(ids=[self.folder.getId(),])
       clearCache()
+      get_transaction().commit()
+      self.tic()      
+
 
     def newContent(self):
       """
@@ -117,7 +122,48 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEquals(obj1.getId(), '%s-1' %date)
       self.assertEquals(obj2.getId(), '%s-2' %date)
       self.assertEquals(obj3.getId(), '%s-3' %date)
-          
+
+
+    def test_03_emptyFolderIsBtree(self, quiet=0, run=1):
+      """
+      Test the folder is a BTree
+      """
+      if not run : return
+      if not quiet:
+        message = 'Test EmptyFolderIsBtree'
+        LOG('Testing... ', 0, message)
+      self.assertRaises(NotImplementedError, self.folder.getTreeIdList)
+      self.assertEqual(self.folder.isBTree(), True)
+      self.assertEqual(self.folder.isHBTree(), False)
+      
+
+    def test_04_migrateFolder(self, quiet=0, run=1):
+      """
+      migrate empty folder from btree to hbtree
+      """
+      if not run : return
+      if not quiet:
+        message = 'Test migrateEmptyFolder'
+        LOG('Testing... ', 0, message)
+      # Create some objects
+      self.assertEquals(self.folder.getIdGenerator(), '')
+      self.assertEquals(len(self.folder), 0)
+      self.assertEqual(len(self.folder.objectIds()), 0)      
+      # call migration script
+      self.folder.migrateToHBTree(migration_generate_id_method=None,
+                                  new_generate_id_method="_generatePerDayId")
+      get_transaction().commit()
+      self.tic()
+      # check we now have a hbtree
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), True)
+      self.assertEqual(len(self.folder.objectIds()), 0)      
+      # check new object ids
+      obj1 = self.newContent()
+      from DateTime import DateTime
+      date = DateTime().Date()
+      date = date.replace("/", "")
+      self.failUnless(date in obj1.getId())
       
 def test_suite():
   suite = unittest.TestSuite()
