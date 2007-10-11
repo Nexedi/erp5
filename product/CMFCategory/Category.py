@@ -216,7 +216,8 @@ class Category(Folder):
     def getCategoryChildValueList(self, recursive=1, include_if_child=1,
                                   is_self_excluded=1, sort_on=None,
                                   sort_order=None, local_sort_method=None,
-                                  local_sort_id=None, **kw):
+                                  local_sort_id=None, checked_permission=None,
+                                  **kw):
       """
           List the child objects of this category and all its subcategories.
 
@@ -274,12 +275,21 @@ class Category(Folder):
         for c in child_value_list:
           value_list.append(c)
 
+      if checked_permission is not None:
+        checkPermission = self.portal_membership.checkPermission
+        def permissionFilter(obj):
+          if checkPermission(checked_permission, obj):
+            return 1
+          else:
+            return 0
+        value_list = filter(permissionFilter, value_list)
+
       return sortValueList(value_list, sort_on, sort_order, **kw)
 
     # List names recursively
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildRelativeUrlList')
-    def getCategoryChildRelativeUrlList(self, base='', recursive=1):
+    def getCategoryChildRelativeUrlList(self, base='', recursive=1, checked_permission=None):
       """
           List the path of this category and all its subcategories.
 
@@ -291,7 +301,8 @@ class Category(Folder):
       if base == 0 or base is None: base = '' # Make sure we get a meaningful base
       if base == 1: base = self.getBaseCategoryId() + '/' # Make sure we get a meaningful base
       url_list = []
-      for value in self.getCategoryChildValueList(recursive = recursive):
+      for value in self.getCategoryChildValueList(recursive=recursive,
+                                                  checked_permission=checked_permission):
         url_list.append(base + value.getRelativeUrl())
       return url_list
 
@@ -693,7 +704,8 @@ class BaseCategory(Category):
                                                  'getCategoryChildValueList')
     def getCategoryChildValueList(self, is_self_excluded=1, recursive=1,
                      include_if_child=1, sort_on=None, sort_order=None,
-                     local_sort_method=None, local_sort_id=None, **kw):
+                     local_sort_method=None, local_sort_id=None,
+                     checked_permission=None, **kw):
       """
           List the child objects of this category and all its subcategories.
 
@@ -752,6 +764,16 @@ class BaseCategory(Category):
           else:
             if len(c.objectIds(self.allowed_types))==0:
               value_list.append(c)
+
+      if checked_permission is not None:
+        checkPermission = self.portal_membership.checkPermission
+        def permissionFilter(obj):
+          if checkPermission(checked_permission, obj):
+            return 1
+          else:
+            return 0
+        value_list = filter(permissionFilter, value_list)
+
       return sortValueList(value_list, sort_on, sort_order, **kw)
 
     # Alias for compatibility
