@@ -56,7 +56,7 @@ class TestERP5BankingMixin:
             'erp5_banking_core',
             'erp5_banking_inventory',
             'erp5_banking_cash',
-            'erp5_banking_check')
+            'erp5_banking_check',)
 
   def enableLightInstall(self):
     """
@@ -531,6 +531,7 @@ class TestERP5BankingMixin:
     self.financier_a = self.banking.newContent(id='financier_a', portal_type='Category', codification='FNA')
     self.financier_b = self.banking.newContent(id='financier_b', portal_type='Category', codification='FNB')
     self.chef_financier = self.banking.newContent(id='chef_financier', portal_type='Category', codification='FCF')
+    self.admin_local = self.banking.newContent(id='administrateur_local', portal_type='Category', codification='ADL')
 
     # get the base category group
     self.group_base_category = getattr(self.category_tool, 'group')
@@ -654,7 +655,7 @@ class TestERP5BankingMixin:
         for currency in ['usd', ]:
           caisse_courante.encaisse_des_devises.newContent(id=currency, portal_type='Category', codification='', vault_type='site/surface/caisse_courante/encaisse_des_devises')
 
-    # Create other site now but without vault
+    # Create other site now but without vault          
     if len(site_list) != 0:
       if 'paris' not in site_list:
         self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
