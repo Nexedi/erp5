@@ -1024,7 +1024,10 @@ class ImmobilisableItem(XMLObject, Amount):
       try:
         self._createAmortisationRule()
       except ImmobilisationValidityError:
-        related_packing_list_list = self.getAggregateRelatedValueList()
+        delivery_list = self.getAggregateRelatedValueList()
+        for delivery in delivery_list:
+          if getattr(delivery, 'updateImmobilisationState', None) is not None:
+            delivery.updateImmobilisationState()
         self.activate().expandAmortisation(activate_kw=activate_kw)
 
 
