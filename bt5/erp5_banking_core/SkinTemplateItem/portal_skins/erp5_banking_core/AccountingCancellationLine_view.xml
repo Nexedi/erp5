@@ -100,8 +100,8 @@
                       <list>
                         <string>my_source_payment_reference</string>
                         <string>my_source_payment_title</string>
-                        <string>my_source_credit</string>
-                        <string>my_source_debit</string>
+                        <string>my_destination_credit</string>
+                        <string>my_destination_debit</string>
                       </list>
                     </value>
                 </item>
