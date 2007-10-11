@@ -75,17 +75,41 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Assistant</string>
-                      </list>
+                        <string>Manager</string>
+                        <string>Reviewer</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Modify portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <list>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Assistant</string>
-                      </list>
+                        <string>Manager</string>
+                        <string>Reviewer</string>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>
