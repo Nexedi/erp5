@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -70,7 +67,8 @@
             <key> <string>_body</string> </key>
             <value> <string>object = state_change[\'object\']\n
 #object.log(\'propaging edit on delivery\', object.getRootDeliveryValue().getRelativeUrl())\n
-object.getRootDeliveryValue().edit()\n
+if getattr(object.getRootDeliveryValue(), \'calculate\', None) is not None:\n
+  object.getRootDeliveryValue().calculate()\n
 </string> </value>
         </item>
         <item>
@@ -122,7 +120,9 @@ object.getRootDeliveryValue().edit()\n
                             <string>state_change</string>
                             <string>_getitem_</string>
                             <string>object</string>
+                            <string>getattr</string>
                             <string>_getattr_</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

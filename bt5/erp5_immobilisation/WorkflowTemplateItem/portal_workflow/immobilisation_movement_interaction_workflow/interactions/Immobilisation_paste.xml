@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5.Interaction</string>
-          <string>InteractionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -71,21 +68,18 @@
               <list>
                 <string>manage_afterAdd</string>
                 <string>manage_afterClone</string>
+                <string>manage_beforeDelete</string>
               </list>
             </value>
         </item>
         <item>
+            <key> <string>once_per_transaction</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Immobilisation</string>
-                <string>Internal Packing List</string>
-                <string>Inventory</string>
-                <string>Purchase Packing List</string>
-                <string>Reevaluation Packing List</string>
-                <string>Restoration Packing List</string>
-                <string>Sale Packing List</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>

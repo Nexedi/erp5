@@ -65,12 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context = state_change[\'object\']\n
+            <value> <string>pl = state_change[\'object\']\n
 \n
-for movement in context.getAggregatedItemsNextImmobilisationMovementValueList():\n
+for movement in pl.getRootDeliveryValue().getAggregatedItemsNextImmobilisationMovementValueList():\n
   if movement.getImmobilisationState() != \'calculating\':\n
     movement.calculateImmobilisationValidity()\n
-context.ImmobilisationDelivery_expandAggregatedItems()\n
+  else:\n
+    movement.updateImmobilisationState()\n
+pl.ImmobilisationDelivery_expandAggregatedItems()\n
 </string> </value>
         </item>
         <item>
@@ -128,7 +130,7 @@ context.ImmobilisationDelivery_expandAggregatedItems()\n
                             <string>state_change</string>
                             <string>kw</string>
                             <string>_getitem_</string>
-                            <string>context</string>
+                            <string>pl</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>movement</string>

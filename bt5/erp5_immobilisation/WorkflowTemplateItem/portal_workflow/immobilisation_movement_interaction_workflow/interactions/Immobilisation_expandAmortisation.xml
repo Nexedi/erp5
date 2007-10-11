@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5.Interaction</string>
-          <string>InteractionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -39,15 +36,15 @@
         <item>
             <key> <string>activate_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>PackingList_expandAmortisationOnAggregateValueList</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>ImmobilisationContent_updateImmobilisationState</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -62,31 +59,41 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ImmobilisationContent_paste_and_delete</string> </value>
+            <value> <string>Immobilisation_expandAmortisation</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>manage_afterAdd</string>
-                <string>manage_afterClone</string>
-                <string>manage_beforeDelete</string>
+                <string>deliver</string>
+                <string>stop</string>
               </list>
             </value>
+        </item>
+        <item>
+            <key> <string>once_per_transaction</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
                 <string>Delivery Cell</string>
+                <string>Immobilisation</string>
                 <string>Immobilisation Line</string>
+                <string>Internal Packing List</string>
                 <string>Internal Packing List Line</string>
+                <string>Inventory</string>
                 <string>Inventory Cell</string>
                 <string>Inventory Line</string>
+                <string>Purchase Packing List</string>
                 <string>Purchase Packing List Cell</string>
                 <string>Purchase Packing List Line</string>
+                <string>Reevaluation Packing List</string>
                 <string>Reevaluation Packing List Line</string>
+                <string>Restoration Packing List</string>
                 <string>Restoration Packing List Line</string>
+                <string>Sale Packing List</string>
                 <string>Sale Packing List Cell</string>
                 <string>Sale Packing List Line</string>
               </list>

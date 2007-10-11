@@ -66,17 +66,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>pl = state_change[\'object\']\n
-pl.activate().updateImmobilisationState()\n
 \n
 # It is done before and after because stop_date may have change\n
 for movement in pl.getAggregatedItemsNextImmobilisationMovementValueList():\n
   if movement.getImmobilisationState() != \'calculating\':\n
     movement.calculateImmobilisationValidity()\n
 \n
-movement_list = pl.getImmobilisationMovementList()\n
-movement_path_list = [x.getPath() for x in movement_list]\n
-#pl.log(\'immobilisation_workflow after edit, movement_path_list\',movement_path_list)\n
-pl.activate(after_path_and_method_id=(movement_path_list, [\'immediateReindexObject\', \'recursiveImmediateReindexObject\'])).ImmobilisationDelivery_expandAggregatedItems()\n
+pl.activate(after_method_id=(\'recursiveReindexObject\', \'immediateReindexObject\',)).updateImmobilisationState()\n
 </string> </value>
         </item>
         <item>
@@ -135,14 +131,9 @@ pl.activate(after_path_and_method_id=(movement_path_list, [\'immediateReindexObj
                             <string>kw</string>
                             <string>_getitem_</string>
                             <string>pl</string>
-                            <string>_getattr_</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
                             <string>movement</string>
-                            <string>movement_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>movement_path_list</string>
                           </tuple>
                         </value>
                     </item>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -70,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>item_list = []\n
 movement_list = context.getImmobilisationMovementList()\n
-#context.log(\'movement_list\',[(m.getUid(),m.getPath()) for m in movement_list])\n
+#context.log(\'movement_list %s\' % context.getRelativeUrl(),[m.getPath() for m in movement_list])\n
 movemement_path_list = []\n
 for movement in movement_list:\n
   movemement_path_list.append(movement.getPath())\n
@@ -78,7 +75,7 @@ for movement in movement_list:\n
     if item not in item_list:\n
       item_list.append(item)\n
 for item in item_list:\n
-  item.activate(after_path_and_method_id=(movemement_path_list,\'updateImmobilisationState\')).expandAmortisation()\n
+  item.activate(tag=\'expand_amortisation\', after_path_and_method_id=(movemement_path_list, \'updateImmobilisationState\', )).expandAmortisation()\n
 </string> </value>
         </item>
         <item>

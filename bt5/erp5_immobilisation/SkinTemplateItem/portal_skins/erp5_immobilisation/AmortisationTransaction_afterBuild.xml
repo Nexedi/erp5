@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -95,13 +92,13 @@ for movement in context.getMovementList():\n
       for simulation_movement in simulation_movement_list:\n
         simulation_movement.edit(delivery_ratio=1, activate_kw={\'tag\':\'after_amortisation_build\'})\n
 \n
-context.edit(causality_value_list = causality_value_list)\n
-\n
-# Update causality state\n
-#Test Add by Nicolas\n
-if hasattr(context, \'startBuilding\'):\n
-  context.startBuilding()\n
-context.activate(after_tag=\'after_amortisation_build\').updateCausalityState()\n
+if context.getSimulationState() in context.getPortalUpdatableAmortisationTransactionStateList():\n
+  context.edit(causality_value_list=causality_value_list)\n
+  # Update causality state\n
+  #Test Add by Nicolas\n
+  if getattr(context, \'startBuilding\', None) is not None:\n
+    context.startBuilding()\n
+  context.activate(after_tag=\'after_amortisation_build\').updateCausalityState()\n
 
 
 ]]></string> </value>
@@ -166,7 +163,9 @@ context.activate(after_tag=\'after_amortisation_build\').updateCausalityState()\
                             <string>_getitem_</string>
                             <string>item</string>
                             <string>total_quantity</string>
-                            <string>hasattr</string>
+                            <string>_inplacevar_</string>
+                            <string>getattr</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

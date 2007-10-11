@@ -66,10 +66,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>pl = state_change[\'object\']\n
+#pl.log(pl.getRelativeUrl())\n
 for movement in pl.getAggregatedItemsNextImmobilisationMovementValueList():\n
   if movement.getImmobilisationState() != \'calculating\':\n
     movement.calculateImmobilisationValidity()\n
-context.ImmobilisationDelivery_expandAggregatedItems()\n
 </string> </value>
         </item>
         <item>
@@ -131,7 +131,6 @@ context.ImmobilisationDelivery_expandAggregatedItems()\n
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>movement</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
