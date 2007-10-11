@@ -41,6 +41,7 @@ document_classes = updateGlobals( this_module, globals(), permissions_module = P
 # Allow access to OOoParser from scripts
 from AccessControl import ModuleSecurityInfo
 ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('OOoParser',)
+ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('newOOoParser',)
 
 # Define object classes and tools
 from OOoTemplate import OOoTemplate
@@ -59,7 +60,7 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
-                         
+
 # allow import of various exceptions in restricted environment
 # so we can catch them in ZODB scripts and inform user nicely
 allow_module('Products.ERP5.Document.Document.ConversionError')
