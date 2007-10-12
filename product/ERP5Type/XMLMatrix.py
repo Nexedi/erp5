@@ -474,7 +474,7 @@ class XMLMatrix(Folder):
           Returns the cell range as a list of index ids
       """
       if not hasattr(self, 'index'):
-        self.index = PersistentMapping()
+        return []
       cell_range = self.index.get(base_id, None)
       if cell_range is None: return None
       result = []
