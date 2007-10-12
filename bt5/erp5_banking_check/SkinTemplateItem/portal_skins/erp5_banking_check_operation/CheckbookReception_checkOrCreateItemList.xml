@@ -81,6 +81,10 @@ if destination_id is None:\n
   msg = Message(domain=\'ui\', message=\'Sorry, you must define the site\')\n
   raise ValidationFailed, (msg, )\n
 \n
+# serialize destination vault to only have one operation at a time\n
+destination_value = context.getDestinationValue()\n
+destination_value.serialize()\n
+\n
 # first check that there is not a particular tag\n
 checkbook_reception_tag = "CheckbookReception_%s" % destination_id\n
 if context.portal_activities.countMessageWithTag(checkbook_reception_tag) != 0:\n
@@ -158,6 +162,7 @@ if create==1:\n
                             <string>destination_id</string>
                             <string>None</string>
                             <string>msg</string>
+                            <string>destination_value</string>
                             <string>checkbook_reception_tag</string>
                             <string>line_list</string>
                             <string>encountered_check_identifiers_dict</string>
