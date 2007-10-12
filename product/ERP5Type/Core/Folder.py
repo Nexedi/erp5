@@ -1232,10 +1232,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     portal_type = self.getPortalType()
     portal_path = portal.getPhysicalPath()
 
-    _getVisibleAllowedContentTypeList = CachingMethod(
-        _getVisibleAllowedContentTypeList,
-        id=("_getAllowedContentTypeTitleList", user, portal_path, portal_type),
-        cache_factory='erp5_content_long')
     return _getVisibleAllowedContentTypeList()
 
   security.declarePublic('allowedContentTypes')
@@ -1270,9 +1266,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       type_list.sort(compareTypes)
       return ['/'.join(x.getPhysicalPath()) for x in type_list]
 
-    _allowedContentTypes = CachingMethod( _allowedContentTypes,
-                                          id = 'allowedContentTypes',
-                                          cache_factory = 'erp5_content_long')
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
     portal = self.getPortalObject()
