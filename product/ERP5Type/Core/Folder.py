@@ -1220,10 +1220,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       hidden content types. It allows to be much faster when only the type id
       is needed.
     """
-    if not getSecurityManager().checkPermission(
-                      Permissions.AddPortalContent, self):
-      return []
-
     portal = self.getPortalObject()
 
     def _getVisibleAllowedContentTypeList():
@@ -1264,10 +1260,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     # permission that "Add portal content". For now, this is only the case for
     # Role Definition objects, but this shows that generally speaking, this is
     # not the right approach.
-    if not getSecurityManager().checkPermission(
-                      Permissions.AddPortalContent, self):
-      return []
-
     def _allowedContentTypes( portal_type=None, user=None, portal_path=None ):
       # Sort the list for convenience -yo
       # XXX This is not the best solution, because this does not take

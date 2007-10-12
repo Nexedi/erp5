@@ -58,7 +58,9 @@ from RoleInformation import ori
 
 from TranslationProviderBase import TranslationProviderBase
 
-from zLOG import LOG
+from sys import exc_info
+from zLOG import LOG, ERROR
+from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
@@ -205,16 +207,39 @@ class ERP5TypeInformation( FactoryTypeInformation,
     #
     #   Agent methods
     #
-    security.declarePublic('isConstructionAllowed')
-    def isConstructionAllowed( self, container ):
-        """
-        Does the current user have the permission required in
-        order to construct an instance?
-        """
-        permission = self.permission
-        if permission and not _checkPermission( permission, container ):
-            return 0
-        return FactoryTypeInformation.isConstructionAllowed(self, container)
+    def _queryFactoryMethod(self, container, default=None):
+
+        if not self.product or not self.factory or container is None:
+            return default
+
+        # In case we aren't wrapped.
+        dispatcher = getattr(container, 'manage_addProduct', None)
+
+        if dispatcher is None:
+            return default
+
+        try:
+            p = dispatcher[self.product]
+        except AttributeError:
+            LOG('Types Tool', ERROR, '_queryFactoryMethod raised an exception',
+                error=exc_info())
+            return default
+
+        m = getattr(p, self.factory, None)
+
+        if m:
+            try:
+                # validate() can either raise Unauthorized or return 0 to
+                # mean unauthorized.
+                permission = self.permission
+                if permission and _checkPermission( permission, container ):
+                    return m
+                elif getSecurityManager().validate(p, p, self.factory, m):
+                    return m
+            except zExceptions_Unauthorized:  # Catch *all* Unauths!
+                pass
+
+        return default
 
     def _getFactoryMethod(self, container, check_security=1):
         if not self.product or not self.factory:
