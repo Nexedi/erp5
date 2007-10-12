@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Vault Transfers To Validate By Vault Controler (%(count)s)</string> </value>
+            <value> <string>Sent To Vault Manager (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -33,7 +33,7 @@ Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Vault Transfer
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Vault Transfers To Validate By Vault Controler</string> </value>
+            <value> <string>Sent To Vault Manager</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -57,11 +57,8 @@ Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Vault Transfer
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -81,17 +78,14 @@ Base_viewWorklist?simulation_state=planned&reset=1&portal_type=Vault Transfer
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
