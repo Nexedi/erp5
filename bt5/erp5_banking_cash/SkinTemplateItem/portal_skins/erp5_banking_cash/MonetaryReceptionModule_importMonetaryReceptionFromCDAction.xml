@@ -106,9 +106,12 @@ def create_movement(CD_head_dict, CD_line_list):\n
                                       , destination       = CD_head_dict[\'destination\']\n
                                       , activate_kw = {"tag" : import_tag}\n
                                     )\n
+  \n
   # Container Creation\n
   base_list=(\'emission_letter\', \'variation\', \'cash_status\')\n
-  category_list =  (\'emission_letter/\' + CD_head_dict[\'emission_letter\'], \'variation/\' + CD_head_dict[\'variation\'], \'cash_status/\'+CD_head_dict[\'cash_status\'] )\n
+  category_list =  (\'emission_letter/\' + CD_head_dict[\'emission_letter\'],\n
+                    \'variation/\' + CD_head_dict[\'variation\'],\n
+                    \'cash_status/\'+CD_head_dict[\'cash_status\'] )\n
 \n
   resource_total_quantity = 0\n
   for CD_line in CD_line_list:\n
@@ -128,12 +131,12 @@ def create_movement(CD_head_dict, CD_line_list):\n
                                                    , activate_kw = {"tag" : import_tag}\n
                                                    )\n
 \n
-    container_line.setResourceValue(CD_head_dict[\'resource\'])\n
+    #container_line.setResourceValue(CD_head_dict[\'resource\'])\n
     container_line.setVariationCategoryList(category_list)\n
     container_line.updateCellRange(script_id=\'CashDetail_asCellRange\',base_id="movement")\n
     for key in container_line.getCellKeyList(base_id=\'movement\'):\n
       if isSameSet(key,category_list):\n
-        cell = container_line.newCell(*key)\n
+        cell = container_line.newCell(activate_kw = {"tag" : import_tag}, *key)\n
         cell.setCategoryList(category_list)\n
         cell.setQuantity(CD_line[\'quantity\'])\n
         cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
@@ -146,6 +149,7 @@ def create_movement(CD_head_dict, CD_line_list):\n
 \n
     resource_total_quantity += CD_line[\'quantity\']\n
 \n
+  # once all cash containter created, create the movement line for the total\n
   movement_line = movement_head.newContent(id               = "movement"\n
                                            , portal_type    = \'Cash Delivery Line\'\n
                                            , resource_value = CD_head_dict[\'resource\']\n
@@ -157,7 +161,7 @@ def create_movement(CD_head_dict, CD_line_list):\n
   movement_line.updateCellRange(script_id="CashDetail_asCellRange", base_id="movement")\n
   for key in movement_line.getCellKeyList(base_id=\'movement\'):\n
     if isSameSet(key,category_list):\n
-      cell = movement_line.newCell(*key)\n
+      cell = movement_line.newCell(activate_kw = {"tag" : import_tag}, *key)\n
       cell.setCategoryList(category_list)\n
       cell.setQuantity(resource_total_quantity)\n
       cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
@@ -176,9 +180,6 @@ def split_head(CD_file_line_list):\n
   head_start_date_string = CD_file_line_list[7][35:43]\n
   head_resource_string  = CD_file_line_list[11][32:56]\n
   head_emission_letter = CD_file_line_list[14][25:26]\n
-  context.log(\'head_resource_string\',head_resource_string)\n
-  context.log(\'head_start_date_string\',head_start_date_string)\n
-  context.log(\'head_movement_id\',head_movement_id)\n
   \n
   # find letter in the emission_letter category\n
   default_emissionLetter_list = [x[1] for x in context.portal_categories.emission_letter.getCategoryChildTitleItemList()[1:]]\n
@@ -194,10 +195,6 @@ def split_head(CD_file_line_list):\n
 \n
   # Verify if Movement Id is not already exist in the database\n
   head_movement_id = head_movement_id+\'_\'+head_emission_letter\n
-  # useless as reference not register on document\n
-  #   movement_list = context.portal_catalog(portal_type = "Monetary Reception",reference = head_movement_id)\n
-  #   if len(movement_list) > 0:\n
-  #     return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
 \n
   # date verification\n
   try:\n
@@ -207,7 +204,6 @@ def split_head(CD_file_line_list):\n
     head_start_date = DateTime(head_start_date_string )\n
   except:\n
     return {\'error\':True, \'message\':message_dict[\'01\'], \'head_dict\':{}}\n
-  #\n
 \n
   head_resource_string = (head_resource_string  or \'\').strip()\n
   head_resource_string = string.replace(head_resource_string,\' \',\'\')\n
@@ -221,10 +217,6 @@ def split_head(CD_file_line_list):\n
       return {\'error\':True, \'message\':message_dict[\'10\'], \'head_dict\':{}}\n
   except:\n
     return {\'error\':True, \'message\':message_dict[\'10\'], \'head_dict\':{}}\n
-  head_variation = str(head_resource_variation)\n
-  # Bad hack because in the CD the variation used is the date of building\n
-  if head_variation==\'2005\':\n
-    head_variation=\'2003\'\n
 \n
   try:\n
     column_end_price = head_resource_string.find(\'F\')\n
@@ -243,24 +235,21 @@ def split_head(CD_file_line_list):\n
   test = []\n
   for i_resource in head_resource_list:\n
     resource_object = i_resource.getObject()\n
-    context.log(\'i_resource.getTitle\',resource_object.getTitle())\n
-    context.log(\'i_resource.getPath\',resource_object.getPath())\n
-\n
-    if      (resource_object.getPriceCurrency() == \'currency_module/%s\' % reference_currency_id)   \\\n
-           and (resource_object.getBasePrice() == head_resource_price)  \\\n
-           and (head_variation in resource_object.getVariationList()) :\n
-\n
+    if (resource_object.getPriceCurrency() == \'currency_module/%s\' % reference_currency_id)   \\\n
+           and (resource_object.getBasePrice() == head_resource_price):\n
       head_resource = resource_object\n
       break\n
-  context.log(\'head_resource\',head_resource)\n
 \n
-\n
-#  raise \'kha\', repr((head_resource, head_resource_price,head_resource_variation ,test))\n
-\n
+  resource_variation_list = head_resource.getVariationList()\n
+  # get variation from resource\n
+  head_variation = str(head_resource_variation)\n
+  if head_variation not in resource_variation_list:\n
+    head_variation = max(resource_variation_list)\n
+    \n
   if head_resource is None:\n
     return {\'error\':True, \'message\':message_dict[\'12\'], \'head_dict\':{}}\n
 \n
-  # Destination search\n
+  # Define destination\n
   user_site_list = context.Baobab_getUserAssignedSiteList()\n
   if user_site_list is None:\n
     return {\'error\':True, \'message\':message_dict[\'13\'], \'head_dict\':{}}\n
@@ -272,7 +261,7 @@ def split_head(CD_file_line_list):\n
     site = context.Baobab_getEmissionLetterSiteValue(emission_letter=head_emission_letter)\n
     head_destination = \'%s/%s/%s\' % (head_destination,\n
                   \'encaisse_des_billets_neufs_non_emis_en_transit_allant_a\',site.getId())\n
-  context.log(\'head_destination\',head_destination)\n
+\n
 \n
   CD_head_dict = {\'reference\'       : head_movement_id\n
                  ,\'start_date\'      : head_start_date\n
@@ -324,10 +313,15 @@ def split_lines(CD_file_line_list):\n
     # check reference doesn\'t already exist for this resource\n
     movement_container_list = context.portal_catalog(portal_type = "Cash Container Item",\n
                                                      reference = line_container_id,\n
+                                                     destination_uid = destination_uid,\n
                                                      simulation_state = "!=cancelled")\n
-    if len(movement_container_list) > 0:\n
-      return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
-\n
+    # if we find container line with same reference, we must\n
+    # check the resource defined on line\n
+    for same_container in movement_container_list:\n
+      same_container = same_container.getObject()\n
+      for o in same_container.objectValues():\n
+        if o.getResourceUid() == resourve_value.getUid():\n
+          return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
 \n
 \n
   if line_number > 0:\n
@@ -346,20 +340,11 @@ def url_redirection(error_message,delivery_id=None):\n
 \n
 request  = context.REQUEST\n
 \n
-user_site = context.Baobab_getUserAssignedSiteList()\n
-if len(user_site) == 0:\n
-  if batch == 1:\n
-    raise ValueError, "Operation denied, you\'re not assigned to a site"\n
-  else:\n
-    return url_redirection("Operation denied, you\'re not assigned to a site")\n
-\n
 \n
 if file_data is not None:\n
   CD_file_line_list = file_data\n
 else:\n
   CD_file_line_list = import_file.readlines()\n
-\n
-context.log("new_line_list", CD_file_line_list)\n
 \n
 # analyse the container head and split it into dictionnary\n
 split_head_result_dict = split_head(CD_file_line_list[:20])\n
@@ -369,8 +354,15 @@ if split_head_result_dict[\'error\']:\n
   else:\n
    return url_redirection(split_head_result_dict[\'message\'])\n
 \n
-import_tag = "%s_monetary_reception_%s" %(user_site[0], split_head_result_dict["head_dict"][\'reference\'])\n
-# check remaining activities\n
+# check remaining activities tag is based on destination site and resource\n
+destination = split_head_result_dict[\'head_dict\'][\'destination\']\n
+destination_value = context.portal_categories.site.restrictedTraverse(destination)\n
+# we serialize the destination to be sure we won\'t do the same operation twice at the same time\n
+destination_value.serialize()\n
+destination_uid = destination_value.getUid()\n
+resource_value = split_head_result_dict[\'head_dict\'][\'resource\']\n
+\n
+import_tag = "%s_monetary_reception_%s" %(destination_uid, resource_value.getRelativeUrl())\n
 if context.portal_activities.countMessageWithTag(import_tag) != 0:\n
   if batch == 1:\n
     raise ValueError, "Some activities are remaining from previous import, please try later."\n
@@ -387,7 +379,8 @@ if split_line_result_dict[\'error\']:\n
    return url_redirection(split_line_result_dict[\'message\'])\n
 \n
 \n
-message_dict = create_movement(CD_head_dict = split_head_result_dict[\'head_dict\'], CD_line_list = split_line_result_dict[\'lines_dict\'] )\n
+message_dict = create_movement(CD_head_dict = split_head_result_dict[\'head_dict\'],\n
+                               CD_line_list = split_line_result_dict[\'lines_dict\'] )\n
 \n
 if message_dict[\'error\'] :\n
   if batch == 1:\n
@@ -466,16 +459,18 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                             <string>import_tag</string>
                             <string>create_movement</string>
                             <string>split_head</string>
+                            <string>destination_uid</string>
                             <string>split_lines</string>
                             <string>None</string>
                             <string>request</string>
                             <string>url_redirection</string>
-                            <string>user_site</string>
-                            <string>len</string>
-                            <string>ValueError</string>
                             <string>CD_file_line_list</string>
                             <string>_getitem_</string>
                             <string>split_head_result_dict</string>
+                            <string>ValueError</string>
+                            <string>destination</string>
+                            <string>destination_value</string>
+                            <string>resource_value</string>
                             <string>split_line_result_dict</string>
                           </tuple>
                         </value>
