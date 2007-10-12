@@ -28,14 +28,16 @@
 ##############################################################################
 
 import unittest
+import os
 
+from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from zExceptions import BadRequest
 from Products.ERP5Type.Tool.ClassTool import _aq_reset
 
-class TestBase(ERP5TypeTestCase):
+class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   run_all_test = 1
   quiet = 1
@@ -962,17 +964,24 @@ class TestBase(ERP5TypeTestCase):
 
   def test_Member_Base_download(self):
     # tests that members can download files
+    class DummyFile(file):
+      def __init__(self, filename):
+        self.filename = os.path.basename(filename)
+        file.__init__(self, filename)
     f = self.portal.newContent(portal_type='File', id='f')
-    
+    f._edit(content_type='text/plain', file=DummyFile(__file__))
     # login as a member
     uf = self.portal.acl_users
     uf._doAddUser('member_user', 'secret', ['Member'], [])
     user = uf.getUserById('member_user').__of__(uf)
     newSecurityManager(None, user)
 
-    f.Base_download()
     # if it didn't raise Unauthorized, Ok
-
+    response = self.publish('%s/Base_download' % f.getPath())
+    self.assertEquals(file(__file__).read(), response.body)
+    self.assertEquals('text/plain', response.headers['content-type'])
+    self.assertEquals('attachment;; filename="%s"' % os.path.basename(__file__),
+                      response.headers['content-disposition'])
 
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
