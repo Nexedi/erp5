@@ -460,7 +460,7 @@ class ActivityTool (Folder, UniqueObject):
     def getProcessingNodeList(self):
       return self.getNodeList(role=ROLE_PROCESSING)
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getUnusedNodeList')
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getIdleNodeList')
     def getIdleNodeList(self):
       return self.getNodeList(role=ROLE_IDLE)
 
