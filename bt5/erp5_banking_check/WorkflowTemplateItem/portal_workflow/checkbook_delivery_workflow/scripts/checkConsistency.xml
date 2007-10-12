@@ -96,6 +96,22 @@ transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
 #  if not context.Baobab_checkCounterOpened(site):\n
 #    msg = Message(domain = "ui", message="Counter is not opened")\n
 #    raise ValidationFailed, (msg,)\n
+\n
+# Check that all checks are in draft\n
+line_list = transaction.getMovementList()\n
+\n
+for line in line_list:\n
+  aggregate_list = line.getAggregateValueList()\n
+  for aggregate in aggregate_list:\n
+    if aggregate.getValidationState() != \'draft\':\n
+      message = Message(domain=\'ui\', message=\'Sorry, the checkbook is not new\')\n
+      raise ValidationFailed, (message,)\n
+    if aggregate.getPortalType()==\'Checkbook\':\n
+      for check in aggregate.objectValues(portal_type=\'Check\'):\n
+        if check.getSimulationState() != \'draft\':\n
+          message = Message(domain=\'ui\',\n
+            message=\'Sorry, there is a check wich is not in the new state inside the checkbook\')\n
+          raise ValidationFailed, (message,)\n
 </string> </value>
         </item>
         <item>
@@ -158,6 +174,12 @@ transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
                             <string>x</string>
                             <string>len</string>
                             <string>at_date</string>
+                            <string>line_list</string>
+                            <string>line</string>
+                            <string>aggregate_list</string>
+                            <string>aggregate</string>
+                            <string>message</string>
+                            <string>check</string>
                           </tuple>
                         </value>
                     </item>
