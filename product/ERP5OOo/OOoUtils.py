@@ -69,10 +69,8 @@ class OOoBuilder(Implicit):
   """
   Tool that allows to reinject new files in a ZODB OOo document.
   """
-  # Declarative security
-  security = ClassSecurityInfo()
+  __allow_access_to_unprotected_subobjects__ = 1
 
-  security.declarePrivate('__init__')
   def __init__(self, document):
     if hasattr(document, 'data') :
       self._document = StringIO()
@@ -95,7 +93,6 @@ class OOoBuilder(Implicit):
     self._image_count = 0    
     self._manifest_additions_list = []
 
-  security.declarePublic('replace')
   def replace(self, filename, stream):
     """
     Replaces the content of filename by stream in the archive.
@@ -115,7 +112,6 @@ class OOoBuilder(Implicit):
     zf.writestr(filename, stream)
     zf.close()
 
-  security.declarePublic('extract')
   def extract(self, filename):
     """
     Extracts a file from the archive
@@ -126,7 +122,6 @@ class OOoBuilder(Implicit):
       zf = ZipFile(self._document, mode='r')
     return zf.read(filename)
 
-  security.declarePublic('getNameList')
   def getNameList(self):
     try:
       zf = ZipFile(self._document, mode='r', compression=ZIP_DEFLATED)
@@ -136,11 +131,9 @@ class OOoBuilder(Implicit):
     zf.close()
     return li
 
-  security.declarePublic('getMimeType')
   def getMimeType(self):
     return self.extract('mimetype')
 
-  security.declarePublic('prepareContentXml')
   def prepareContentXml(self) :
     """
       extracts content.xml text and prepare it :
@@ -163,20 +156,17 @@ class OOoBuilder(Implicit):
           tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
          office:version='1.0'""")
 
-  security.declarePublic('addFileEntry')
   def addFileEntry(self, full_path, media_type, content=None):
       """ Add a file entry to the manifest and possibly is content """
       self.addManifest(full_path, media_type)
       if content:
           self.replace(full_path, content)
 
-  security.declarePublic('addManifest')
   def addManifest(self, full_path, media_type):
     """ Add a path to the manifest """
     li = '<manifest:file-entry manifest:media-type="%s" manifest:full-path="%s"/>'%(media_type, full_path)
     self._manifest_additions_list.append(li)
 
-  security.declarePublic('updateManifest')
   def updateManifest(self):
     """ Add a path to the manifest """
     MANIFEST_FILENAME = 'META-INF/manifest.xml'
@@ -193,7 +183,6 @@ class OOoBuilder(Implicit):
     self.replace(MANIFEST_FILENAME, meta_infos)
     self._manifest_additions_list = []
 
-  security.declarePublic('addImage')
   def addImage(self, image, format='png'):
     """
     Add an image to the current document and return its id
@@ -205,7 +194,6 @@ class OOoBuilder(Implicit):
     is_legacy = ('oasis.opendocument' not in self.getMimeType())
     return "%s%s" % (is_legacy and '#' or '', name,)
 
-  security.declarePublic('render')
   def render(self, name='', extension='sxw'):
     """
     returns the OOo document
@@ -217,17 +205,13 @@ class OOoBuilder(Implicit):
     self._document.seek(0)
     return self._document.read()
 
-InitializeClass(OOoBuilder)
 allow_class(OOoBuilder)
 
 class OOoParser(Implicit):
   """
     General purpose tools to parse and handle OpenOffice v1.x documents.
   """
-  # Declarative security
-  security = ClassSecurityInfo()
-
-  security.declarePrivate('__init__')
+  __allow_access_to_unprotected_subobjects__ = 1 
   def __init__(self):
     # Create the PyExpat reader
     self.reader = PyExpat.Reader()
@@ -238,11 +222,9 @@ class OOoParser(Implicit):
     self.ns = {}
     self.filename = None
 
-  security.declareProtected(Permissions.ImportExportObjects, 'openFromString')
   def openFromString(self, text_content):
     return self.openFile(StringIO(text_content))
 
-  security.declareProtected(Permissions.ImportExportObjects, 'openFile')
   def openFile(self, file_descriptor):
     """
       Load all files in the zipped OpenOffice document
@@ -277,14 +259,12 @@ class OOoParser(Implicit):
             if name[:5] == "xmlns":
                 self.ns[name[6:]] = doc_ns[0].attributes.item(i).value
 
-  security.declarePublic('getFilename')
   def getFilename(self):
     """
       Return the name of the OpenOffice file
     """
     return self.filename
 
-  security.declarePublic('getPicturesMapping')
   def getPicturesMapping(self):
     """
       Return a dictionnary of all pictures in the document
@@ -297,14 +277,12 @@ class OOoParser(Implicit):
           self.pictures[file_name] = raw_data
     return self.pictures
 
-  security.declarePublic('getContentDom')
   def getContentDom(self):
     """
       Return the DOM tree of the main OpenOffice content
     """
     return self.oo_content_dom
 
-  security.declarePublic('getSpreadsheetsDom')
   def getSpreadsheetsDom(self, include_embedded=False):
     """
       Return a list of DOM tree spreadsheets (optionnaly included embedded ones)
@@ -315,7 +293,6 @@ class OOoParser(Implicit):
       spreadsheets += self.getEmbeddedSpreadsheetsDom()
     return spreadsheets
 
-  security.declarePublic('getSpreadsheetsMapping')
   def getSpreadsheetsMapping(self, include_embedded=False, no_empty_lines=False, normalize=True):
     """
       Return a list of table-like spreadsheets (optionnaly included embedded ones)
@@ -327,7 +304,6 @@ class OOoParser(Implicit):
       tables = self._getTableListUnion(tables, embedded_tables)
     return tables
 
-  security.declarePublic('getPlainSpreadsheetsDom')
   def getPlainSpreadsheetsDom(self):
     """
       Retrieve every spreadsheets from the document and get they DOM tree
@@ -338,7 +314,6 @@ class OOoParser(Implicit):
       spreadsheets.append(table)
     return spreadsheets
 
-  security.declarePublic('getPlainSpreadsheetsMapping')
   def getPlainSpreadsheetsMapping(self, no_empty_lines=False, normalize=True):
     """
       Return a list of plain spreadsheets from the document and transform them as table
@@ -350,7 +325,6 @@ class OOoParser(Implicit):
         tables = self._getTableListUnion(tables, new_table)
     return tables
 
-  security.declarePublic('getEmbeddedSpreadsheetsDom')
   def getEmbeddedSpreadsheetsDom(self):
     """
       Return a list of existing embedded spreadsheets in the file as DOM tree
@@ -373,7 +347,6 @@ class OOoParser(Implicit):
                 pass
     return spreadsheets
 
-  security.declarePublic('getEmbeddedSpreadsheetsMapping')
   def getEmbeddedSpreadsheetsMapping(self, no_empty_lines=False, normalize=True):
     """
       Return a list of embedded spreadsheets in the document as table
@@ -385,7 +358,6 @@ class OOoParser(Implicit):
         tables = self._getTableListUnion(tables, new_table)
     return tables
 
-  security.declarePublic('getSpreadsheetMapping')
   def getSpreadsheetMapping(self, spreadsheet=None, no_empty_lines=False, normalize=True):
     """
       This method convert an OpenOffice spreadsheet to a simple table.
@@ -479,7 +451,6 @@ class OOoParser(Implicit):
                                                 )
     return {table_name: new_table}
 
-  security.declarePrivate('_getReducedTable')
   def _getReducedTable(self, table):
     """
       Reduce the table to its minimum size
@@ -509,7 +480,6 @@ class OOoParser(Implicit):
 
     return table[:table_height]
 
-  security.declarePrivate('_getTableSizeDict')
   def _getTableSizeDict(self, table):
     """
       Get table dimension as dictionnary contain both height and width
@@ -524,7 +494,6 @@ class OOoParser(Implicit):
            , 'height': len(table)
            }
 
-  security.declarePrivate('_getNormalizedBoundsTable')
   def _getNormalizedBoundsTable(self, table, width=0, height=0):
     """
       Add necessary cells and lines to obtain given bounds
@@ -536,7 +505,6 @@ class OOoParser(Implicit):
         table[line].append(None)
     return table
 
-  security.declarePrivate('_getTableListUnion')
   def _getTableListUnion(self, list1, list2):
     """
       Coerce two dict containing tables structures.
@@ -552,7 +520,6 @@ class OOoParser(Implicit):
       list1[new_key] = list2[list2_key]
     return list1
 
-InitializeClass(OOoParser)
 allow_class(OOoParser)
 allow_class(CorruptedOOoFile)
 
