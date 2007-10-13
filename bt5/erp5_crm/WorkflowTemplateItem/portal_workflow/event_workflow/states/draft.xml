@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.States</string>
-          <string>StateDefinition</string>
-        </tuple>
-        <none/>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -48,7 +45,6 @@
                 <string>plan_action</string>
                 <string>receive</string>
                 <string>receive_action</string>
-                <string>receive_automatic</string>
                 <string>start</string>
                 <string>start_action</string>
               </tuple>
