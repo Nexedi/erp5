@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Document Ingestion Message</type>
+  <workflow>document_ingestion_interaction_workflow, document_ingestion_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Drawing</type>
   <workflow>local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow</workflow>
  </chain>
@@ -45,6 +49,6 @@
  </chain>
  <chain>
   <type>Web Page</type>
-  <workflow>-publication_workflow, local_permission_interaction_workflow, document_publication_workflow</workflow>
+  <workflow>-publication_workflow, document_interaction_workflow, local_permission_interaction_workflow, document_publication_workflow</workflow>
  </chain>
 </workflow_chain>

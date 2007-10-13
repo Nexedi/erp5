@@ -1,3 +1,4 @@
+Contribution Tool | Document Ingestion Message
 Contribution Tool | Drawing
 Contribution Tool | File
 Contribution Tool | Image
@@ -6,6 +7,7 @@ Contribution Tool | Presentation
 Contribution Tool | Spreadsheet
 Contribution Tool | Text
 Contribution Tool | Web Page
+Document Ingestion Module | Document Ingestion Message
 Document Module | Drawing
 Document Module | File
 Document Module | PDF

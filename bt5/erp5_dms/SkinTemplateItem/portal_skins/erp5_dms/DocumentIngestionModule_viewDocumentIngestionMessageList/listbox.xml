@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>columns</string>
+                <string>all_columns</string>
+                <string>search_columns</string>
+                <string>sort</string>
+                <string>selection_name</string>
+                <string>editable_columns</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>listbox</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key>                 <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Sender</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Sender</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>destination_title</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_list_mode_listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_cookie</string> </key>
+                    <value> <string>ORGANISATION_LIST</string> </value>
+                </item>
+                <item>
+                    <key> <string>reverse</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key>                 <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Sender</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string>document_ingestion_module_selection</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>asc</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Document Ingestion Messages</string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,6 +1,8 @@
 Contribution Tool | contribute_content
 Contribution Tool | latest
 Contribution Tool | view
+Document Ingestion Message | view
+Document Ingestion Module | list
 Document Module | advanced_search
 Document Module | contribute_content
 Document Module | list_ui
@@ -15,7 +17,6 @@ Drawing | download_ooo
 Drawing | download_snapshot
 Drawing | export
 Drawing | file_upload
-Drawing | history
 Drawing | html_view
 Drawing | jump_to_all_related
 Drawing | jump_to_predecessor
@@ -25,7 +26,6 @@ Drawing | jump_to_successor
 Drawing | jump_to_wiki_predecessor
 Drawing | jump_to_wiki_successor
 Drawing | local_permission
-Drawing | metadata
 Drawing | print
 Drawing | related_document
 Drawing | view
@@ -55,7 +55,6 @@ Image | local_permission
 Image | related_document
 PDF | download
 PDF | file_upload
-PDF | history
 PDF | html_view
 PDF | jump_to_all_related
 PDF | jump_to_predecessor
@@ -65,7 +64,6 @@ PDF | jump_to_successor
 PDF | jump_to_wiki_predecessor
 PDF | jump_to_wiki_successor
 PDF | local_permission
-PDF | metadata
 PDF | related_document
 PDF | view
 PDF | web_view
@@ -77,7 +75,6 @@ Presentation | download_ooo
 Presentation | download_snapshot
 Presentation | export
 Presentation | file_upload
-Presentation | history
 Presentation | html_view
 Presentation | jump_to_all_related
 Presentation | jump_to_predecessor
@@ -87,15 +84,12 @@ Presentation | jump_to_successor
 Presentation | jump_to_wiki_predecessor
 Presentation | jump_to_wiki_successor
 Presentation | local_permission
-Presentation | metadata
 Presentation | print
 Presentation | related_document
 Presentation | view
 Presentation | web_view
 RSS Feed | crawl
 RSS Feed | crawled_content
-RSS Feed | history
-RSS Feed | metadata
 RSS Feed | view
 Spreadsheet | convert
 Spreadsheet | create_snapshot
@@ -104,7 +98,6 @@ Spreadsheet | download_ooo
 Spreadsheet | download_snapshot
 Spreadsheet | export
 Spreadsheet | file_upload
-Spreadsheet | history
 Spreadsheet | html_view
 Spreadsheet | jump_to_all_related
 Spreadsheet | jump_to_predecessor
@@ -114,7 +107,6 @@ Spreadsheet | jump_to_successor
 Spreadsheet | jump_to_wiki_predecessor
 Spreadsheet | jump_to_wiki_successor
 Spreadsheet | local_permission
-Spreadsheet | metadata
 Spreadsheet | print
 Spreadsheet | related_document
 Spreadsheet | view
@@ -125,7 +117,6 @@ Text | download_ooo
 Text | download_snapshot
 Text | export
 Text | file_upload
-Text | history
 Text | html_view
 Text | jump_to_all_related
 Text | jump_to_predecessor
@@ -143,7 +134,5 @@ Text | view
 Text | web_view
 URL Crawler | crawl
 URL Crawler | crawled_content
-URL Crawler | history
-URL Crawler | metadata
 URL Crawler | view
 Web Page | local_permission
