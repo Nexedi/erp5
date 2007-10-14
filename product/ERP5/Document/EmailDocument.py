@@ -41,6 +41,7 @@ from Products.ERP5.Document.File import File
 from Products.CMFDefault.utils import isHTMLSafe
 
 from email import message_from_string
+from email.Header import decode_header
 from email.Utils import parsedate
 from email import Encoders
 from email.Message import Message
@@ -53,6 +54,8 @@ from email.MIMEText import MIMEText
 DEFAULT_TEXT_FORMAT = 'text/html'
 COMMASPACE = ', '
 _MARKER = []
+
+file_name_regexp = 'name="([^"]*)"'
 
 class EmailDocument(File, TextDocument):
   """
@@ -110,10 +113,17 @@ class EmailDocument(File, TextDocument):
     """
     Returns the content information from the header information.
     This is used by the metadata discovery system.
+
+    Header information is converted in UTF-8 since this is the standard
+    way of representing strings in ERP5.
     """
     result = {}
     for (name, value) in self._getMessage().items():
-      result[name] = value
+      for text, encoding in decode_header(value):
+        if encoding is not None:
+          result[name] = result.get(name, '') + text.decode(encoding).encode('utf-8')
+        else:
+          result[name] = result.get(name, '') + text
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentInformationList')
@@ -134,25 +144,65 @@ class EmailDocument(File, TextDocument):
         if kw.has_key('Content-Disposition'):
           content_disposition = kw['Content-Disposition']
           if content_disposition.split(';')[0] == 'attachment':
-            kw['file_name'] = content_disposition.split(';')[1].split('=')[1] # Quick hack - make this better with re
+            file_name = re.findall(file_name_regexp, content_disposition, re.MULTILINE)
+            if file_name:
+              kw['file_name'] = file_name[0]
+            else:
+              kw['file_name'] = 'attachment_%s' % i
           elif content_disposition.split(';')[0] == 'inline':
-            kw['file_name'] = 'inline_%s' % i
+            file_name = re.findall(file_name_regexp, content_disposition, re.MULTILINE)
+            if file_name:
+              kw['file_name'] = file_name[0]
+            else:
+              kw['file_name'] = 'inline_%s' % i
           else:
             kw['file_name'] = 'part_%s' % i
+        if kw.has_key('Content-Type'):
+          content_type = kw['Content-Type']
+          file_name = re.findall(file_name_regexp, content_type, re.MULTILINE)
+          if file_name: kw['file_name'] = file_name[0]
+          kw['content_type'] = content_type.split(';')[0]
         result.append(kw)
       i += 1
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentData')
-  def getAttachmentData(self, index):
+  def getAttachmentData(self, index, REQUEST=None):
     """
     Returns the decoded data of an attachment.
-    
-    TODO: add support for format in RESPONSE if defined
     """
     i = 0
     for part in self._getMessage().walk():
       if index == i:
+        # This part should be handled in skin script
+        # but it was a bit easier to access items here
+        if REQUEST is not None:
+          kw = dict(part.items())
+          RESPONSE = REQUEST.RESPONSE
+          RESPONSE.setHeader('Accept-Ranges', 'bytes')
+          if kw.has_key('Content-Type'):
+            RESPONSE.setHeader('Content-Type', kw['Content-Type'])
+            content_type = kw['Content-Type']
+          elif kw.has_key('Content-type'):
+            RESPONSE.setHeader('Content-Type', kw['Content-type'])
+            content_type = kw['Content-type']
+          else:
+            content_type = None
+          if kw.has_key('Content-Disposition'):
+            content_disposition = kw['Content-Disposition']
+          elif kw.has_key('Content-disposition'):
+            content_disposition = kw['Content-disposition']
+          else:
+            content_disposition = None
+          file_name = None
+          if content_type:
+            file_name = re.findall(file_name_regexp, content_type, re.MULTILINE)
+          if content_disposition:
+            if not file_name:
+              file_name = re.findall(file_name_regexp, content_disposition, re.MULTILINE)
+          if file_name:
+            file_name = file_name[0]
+            RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s"' % file_name)
         return part.get_payload(decode=1)
       i += 1
     return KeyError, "No attachment with index %s" % index
