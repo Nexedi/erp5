@@ -41,10 +41,9 @@ document_classes = updateGlobals( this_module, globals(),
 
 # Define object classes and tools
 import Form, FSForm, ListBox, MatrixBox, SelectionTool
-import ZGDChart, PDFTemplate, Report, PDFForm, ParallelListField
+import OOoChart, PDFTemplate, Report, PDFForm, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
 import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
-import ZPyChart
 import PreferenceTool
 
 from Products.Formulator.FieldRegistry import FieldRegistry
@@ -78,8 +77,6 @@ def initialize( context ):
                          content_classes = content_classes)
 
     # Initialise ERP5Form Formulator
-    FieldRegistry.registerField(ZPyChart.ZPyChart,
-                                'www/StringField.gif')
     FieldRegistry.registerField(ProxyField.ProxyField,
                                 'www/StringField.gif')
     FieldRegistry.registerField(DurationField.DurationField,
@@ -93,8 +90,6 @@ def initialize( context ):
     FieldRegistry.registerField(ListBox.ListBox,
                                 'www/StringField.gif')
     FieldRegistry.registerField(PlanningBox.PlanningBox,
-                                'www/StringField.gif')
-    FieldRegistry.registerField(ZGDChart.ZGDChart,
                                 'www/StringField.gif')
     FieldRegistry.registerField(MatrixBox.MatrixBox,
                                 'www/StringField.gif')
@@ -145,6 +140,8 @@ def initialize( context ):
     FieldRegistry.registerField(MultiLinkField.MultiLinkField,
                                 'www/LinkField.gif')
     FieldRegistry.registerField(InputButtonField.InputButtonField,
+                                'www/StringField.gif')
+    FieldRegistry.registerField(OOoChart.OOoChart,
                                 'www/StringField.gif')
  
     # some helper fields
