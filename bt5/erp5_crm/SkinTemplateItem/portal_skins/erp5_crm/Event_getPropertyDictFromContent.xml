@@ -107,7 +107,6 @@ for text, prop_dict in context.getSearchableReferenceList():\n
 \n
 # Search reference ticket or project\n
 follow_up_type_list = context.getPortalProjectTypeList() + context.getPortalTicketTypeList()\n
-print follow_up_type_list\n
 follow_up = context.portal_catalog.getResultValue(reference=reference_search_list, portal_type=follow_up_type_list)\n
 if follow_up is None:\n
   follow_up = context.portal_catalog.getResultValue(reference=text_search_list, portal_type=follow_up_type_list)\n
@@ -142,6 +141,10 @@ return result\n
             </value>
         </item>
         <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
@@ -165,8 +168,6 @@ return result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_print_</string>
-                            <string>_print</string>
                             <string>getPersonList</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -206,9 +207,7 @@ return result\n
         <item>
             <key> <string>warnings</string> </key>
             <value>
-              <tuple>
-                <string>Prints, but never reads \'printed\' variable.</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
       </dictionary>
