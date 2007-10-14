@@ -68,54 +68,54 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script is invoked at the end of ingestion process.\n
-  The default behaviour is to receive messages so that they\n
-  are marked as \'New\' and appear in the worklist.\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script is called during the metadata discovery process\n
+  for each document which has been ingested through the email interface\n
+  by portal contributions. It tries to analyse the text content \n
+  to define the different event parameters.\n
+\n
+  This version provides only early support.\n
 """\n
 \n
-group_list = context.getGroupList()\n
-function_list = context.getFunctionList()\n
-site_list = context.getSiteList()\n
-classification = context.getClassification()\n
-publication_section_list = context.getPublicationSectionList()\n
-owner = context.getSourceValue()\n
+def getPersonList(information_text):\n
+  result = []\n
+  for recipient in information_text.split(\',\'):\n
+    if "<" in recipient:\n
+      recipient = recipient[recipient.find(\'<\') + 1:]\n
+      recipient = recipient[:recipient.find(\'>\')]\n
+    if recipient:\n
+      email = context.portal_catalog.getResultValue(url_string=recipient, portal_type="Email")\n
+      if email is not None:\n
+        result.append(email.getParentValue().getRelativeUrl())\n
+  return result\n
 \n
-# Documents ingested by unknown person\n
-# can not be processed further\n
-if owner is None:\n
-  return\n
-user_login = owner.getReference()\n
-if not user_login:\n
-  return\n
+content_information = context.getContentInformation()\n
+sender_list = getPersonList(content_information.get(\'From\', \'\'))\n
 \n
-# Build metadata dict\n
-metadata = {}\n
-if group_list: metadata[\'group_list\'] = group_list\n
-if function_list: metadata[\'function_list\'] = function_list\n
-if site_list: metadata[\'site_list\'] = site_list \n
-if classification: metadata[\'classification\'] = classification \n
-if publication_section_list: metadata[\'publication_section_list\'] = publication_section_list\n
+# Build references\n
+reference_search_list = []\n
+text_search_list = []\n
+for text, prop_dict in context.getSearchableReferenceList():\n
+  if text: text_search_list.append(text)\n
+  if prop_dict.has_key(\'reference\'): reference_search_list.append(prop_dict[\'reference\'])\n
 \n
-contribution_tool = context.getPortalObject().portal_contributions\n
+# Search reference ticket or project\n
+follow_up_type_list = context.getPortalProjectTypeList() + context.getPortalTicketTypeList()\n
+follow_up = context.portal_catalog.getResultValue(reference=reference_search_list, portal_type=follow_up_type_list)\n
+if follow_up is None:\n
+  follow_up = context.portal_catalog.getResultValue(reference=text_search_list, portal_type=follow_up_type_list)\n
 \n
-# Ingest attachments\n
-for attachment_item in context.getAttachmentInformationList():\n
-  # We do not care about files without name\n
-  file_name = attachment_item.get(\'file_name\')\n
-  # We do not take into account the message itself\n
-  # XXX - this implementation is not acceptable in\n
-  # the long term. Better approach to defining the\n
-  # body of a message is required\n
-  if file_name and not file_name.startswith(\'part\'):\n
-    index = attachment_item[\'index\']\n
-    data = context.getAttachmentData(index)\n
-    # XXX - too bad we are not using content_type here\n
-    d = contribution_tool.newContent(data=data, file_name=file_name, user_login=user_login, **metadata)\n
-    context.setAggregateList(context.getAggregateList() + [d.getRelativeUrl()])\n
+# Build dict.\n
+result = {}\n
+if sender_list: result[\'source_list\'] = sender_list\n
+if follow_up is not None: result[\'follow_up\'] = follow_up.getRelativeUrl()\n
 \n
-context.receive()\n
-</string> </value>
+return result\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -163,27 +163,22 @@ context.receive()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>getPersonList</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>group_list</string>
-                            <string>function_list</string>
-                            <string>site_list</string>
-                            <string>classification</string>
-                            <string>publication_section_list</string>
-                            <string>owner</string>
-                            <string>None</string>
-                            <string>user_login</string>
-                            <string>metadata</string>
-                            <string>_write_</string>
-                            <string>contribution_tool</string>
+<string>context</string>
+                            <string>content_information</string>
+                            <string>sender_list</string>
+                            <string>reference_search_list</string>
+                            <string>text_search_list</string>
                             <string>_getiter_</string>
-                            <string>attachment_item</string>
-                            <string>file_name</string>
+                            <string>text</string>
+                            <string>prop_dict</string>
                             <string>_getitem_</string>
-                            <string>index</string>
-                            <string>data</string>
-                            <string>_apply_</string>
-                            <string>d</string>
+                            <string>follow_up_type_list</string>
+                            <string>follow_up</string>
+                            <string>None</string>
+                            <string>result</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
@@ -200,7 +195,7 @@ context.receive()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DocumentIngestionMessage_finishIngestion</string> </value>
+            <value> <string>DocumentIngestionMessage_getPropertyDictFromContent</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
