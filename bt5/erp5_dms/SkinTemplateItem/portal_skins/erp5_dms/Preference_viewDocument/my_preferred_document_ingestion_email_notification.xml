@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>RadioField</string>
-        </tuple>
-        <none/>
+        <global name="RadioField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
