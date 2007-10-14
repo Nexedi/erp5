@@ -93,6 +93,10 @@ class EmailDocument(File, TextDocument):
   # Declarative interfaces
   __implements__ = ()
 
+  # Searchable Text - at least search the body message
+  #                 - later: search attachments too
+  searchable_property_list = TextDocument.searchable_property_list
+
   # Mail processing API
   def _getMessage(self):
     result = getattr(self, '_v_message', None)
