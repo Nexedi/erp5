@@ -134,7 +134,7 @@ button</td></tr>\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:content="python: \'%s/portal_categories/foo_category/a/a1/view\' % here.portal_url.getPortalObject().absolute_url()"/>\n
+  <td tal:content="python: \'/portal_categories/foo_category/a/a1/view\'"/>\n
   <td/>\n
 </tr>\n
 </tbody></table>\n
