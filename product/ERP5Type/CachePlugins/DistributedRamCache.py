@@ -30,10 +30,13 @@
 Memcached based cache plugin.
 """
 
-from BaseCache import *
 from time import time
+from thread import get_ident
+
 from zLOG import LOG
-from thread import get_ident 
+
+from BaseCache import BaseCache
+from BaseCache import CacheEntry
 
 try:
   import memcache

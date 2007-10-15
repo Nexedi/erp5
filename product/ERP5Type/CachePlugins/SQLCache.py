@@ -30,10 +30,15 @@
 SQL (MySQL) based cache plugin.
 """
 
-from BaseCache import *
-import time, base64
+from thread import get_ident
+import time
+import base64
+
 from zLOG import LOG
-from thread import get_ident 
+
+from BaseCache import BaseCache
+from BaseCache import CacheEntry
+from BaseCache import CachedMethodError
 
 try:
   import cPickle as pickle

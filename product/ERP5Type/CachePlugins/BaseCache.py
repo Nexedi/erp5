@@ -32,7 +32,7 @@ Base Cache plugin.
 
 import time
 
-class CachedMethodError(Exception): 
+class CachedMethodError(Exception):
   pass
 
 class CacheEntry(object):

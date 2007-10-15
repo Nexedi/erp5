@@ -29,9 +29,12 @@
 """
 Local RAM based cache plugin.
 """
-from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
-from BaseCache import *
+
 import time
+
+from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
+from BaseCache import BaseCache
+from BaseCache import CacheEntry
 
 def calcPythonObjectMemorySize(i):
   """ Recursive function that will 'walk' over complex python types and caclulate

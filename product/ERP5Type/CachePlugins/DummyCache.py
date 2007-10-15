@@ -28,8 +28,7 @@
 
 "Dummy (no cache)"
 
-from BaseCache import *
-import time
+from BaseCache import BaseCache
 
 class DummyCache(BaseCache):
   """ Dummy cache plugin. """
