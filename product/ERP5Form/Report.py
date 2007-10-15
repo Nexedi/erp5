@@ -34,6 +34,7 @@ from Products.Formulator.Form import ZMIForm
 from zLOG import LOG, WARNING
 
 from urllib import quote
+from warnings import warn
 from Products.ERP5Type import PropertySheet
 
 from Form import ERP5Form
@@ -195,8 +196,7 @@ class ReportSection:
                      selection_name=None, selection_params=None,
                      listbox_display_mode=None, selection_columns=None,
                      selection_sort_order=None,
-                     selection_report_path=None, selection_report_list=None,
-                     preferences = None ) :
+                     selection_report_path=None, selection_report_list=None):
     """
       Initialize the line and set the default values
       Selected columns must be defined in parameter of listbox.render...
@@ -209,6 +209,8 @@ class ReportSection:
     self.path = path
     self.form_id = form_id
     self.title = title
+    if translated_title is not None:
+      warn("Don't use translated_title, but title directly", DeprecationWarning)
     self.translated_title = translated_title
     self.level = level
     self.saved_request = {}
@@ -221,9 +223,6 @@ class ReportSection:
     self.selection_report_path = selection_report_path
     self.selection_report_list = selection_report_list
     self.saved_request_form = {}
-    if preferences is not None :
-      LOG('ERP5Report', WARNING,
-       'using preferences in report is deprecated, please use selection only')
     
   security.declarePublic('getTitle')
   def getTitle(self):
@@ -231,6 +230,7 @@ class ReportSection:
 
   security.declarePublic('getTranslatedTitle')
   def getTranslatedTitle(self):
+    # deprecated: use title instead (with a translated string)
     return self.translated_title
 
   security.declarePublic('getLevel')
