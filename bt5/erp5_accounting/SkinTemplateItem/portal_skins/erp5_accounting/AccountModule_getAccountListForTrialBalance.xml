@@ -303,6 +303,22 @@ initial_balance_date = (from_date - 1).latestTime()\n
 # Initial Balance\n
 \n
 # standards accounts {{{\n
+# balance at period start date\n
+for node in getInventoryList(\n
+                node_category_strict_membership=account_type_to_group_by_node,\n
+                group_by_node=1,\n
+                to_date=period_start_date,\n
+                portal_type=accounting_movement_type_list +\n
+                              balance_movement_type_list,\n
+                **inventory_params):\n
+  account_props = line_per_account.setdefault(\n
+                          (node[\'node_relative_url\'], MARKER, MARKER),\n
+                          dict(debit=0, credit=0))\n
+  account_props[\'initial_debit_balance\'] = account_props.get(\n
+                  \'initial_debit_balance\', 0) + max(node[\'total_price\'], 0)\n
+  account_props[\'initial_credit_balance\'] = account_props.get(\n
+                 \'initial_credit_balance\', 0) + max(-node[\'total_price\'], 0)\n
+\n
 # Balance Transaction\n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
@@ -334,7 +350,8 @@ for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
                 group_by_node=1,\n
                 omit_output=1,\n
-                at_date=initial_balance_date,\n
+                from_date=period_start_date,\n
+                to_date=from_date,\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
   account_props = line_per_account.setdefault(\n
@@ -347,7 +364,8 @@ for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
                 group_by_node=1,\n
                 omit_input=1,\n
-                at_date=initial_balance_date,\n
+                from_date=period_start_date,\n
+                to_date=from_date,\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
   account_props = line_per_account.setdefault(\n
@@ -391,7 +409,25 @@ for node in getInventoryList(\n
 \n
 # payable / receivable accounts {{{\n
 if account_type_to_group_by_mirror_section:\n
-  # Balance\n
+  # initial balance\n
+  for node in getInventoryList(\n
+                  node_category_strict_membership=\n
+                          account_type_to_group_by_mirror_section,\n
+                  group_by_mirror_section=1,\n
+                  group_by_node=1,\n
+                  to_date=period_start_date,\n
+                  portal_type=accounting_movement_type_list +\n
+                                balance_movement_type_list,\n
+                  **inventory_params):\n
+    account_props = line_per_account.setdefault(\n
+            (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
+            dict(debit=0, credit=0))\n
+    account_props[\'initial_debit_balance\'] = account_props.get(\n
+                    \'initial_debit_balance\', 0) + max(node[\'total_price\'], 0)\n
+    account_props[\'initial_credit_balance\'] = account_props.get(\n
+                   \'initial_credit_balance\', 0) + max(-node[\'total_price\'], 0)\n
+\n
+  # Balance Transactions\n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
                           account_type_to_group_by_mirror_section,\n
@@ -428,7 +464,8 @@ if account_type_to_group_by_mirror_section:\n
                   group_by_mirror_section=1,\n
                   group_by_node=1,\n
                   omit_output=1,\n
-                  at_date=initial_balance_date,\n
+                  from_date=period_start_date,\n
+                  to_date=from_date,\n
                   portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
     account_props = line_per_account.setdefault(\n
@@ -443,7 +480,8 @@ if account_type_to_group_by_mirror_section:\n
                   group_by_mirror_section=1,\n
                   group_by_node=1,\n
                   omit_input=1,\n
-                  at_date=initial_balance_date,\n
+                  from_date=period_start_date,\n
+                  to_date=from_date,\n
                   portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
     account_props = line_per_account.setdefault(\n
@@ -455,7 +493,25 @@ if account_type_to_group_by_mirror_section:\n
 \n
 # bank accounts {{{\n
 if account_type_to_group_by_payment:\n
-  # Balance\n
+  # Initial balance\n
+  for node in getInventoryList(\n
+                  node_category_strict_membership=\n
+                          account_type_to_group_by_payment,\n
+                  group_by_payment=1,\n
+                  group_by_node=1,\n
+                  to_date=period_start_date,\n
+                  portal_type=accounting_movement_type_list +\n
+                                balance_movement_type_list,\n
+                  **inventory_params):\n
+    account_props = line_per_account.setdefault(\n
+            (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
+            dict(debit=0, credit=0))\n
+    account_props[\'initial_debit_balance\'] = account_props.get(\n
+                    \'initial_debit_balance\', 0) + max(node[\'total_price\'], 0)\n
+    account_props[\'initial_credit_balance\'] = account_props.get(\n
+                   \'initial_credit_balance\', 0) + max(-node[\'total_price\'], 0)\n
+\n
+  # Balance Transaction\n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
                           account_type_to_group_by_payment,\n
@@ -494,7 +550,8 @@ if account_type_to_group_by_payment:\n
                   group_by_payment=1,\n
                   group_by_node=1,\n
                   omit_output=1,\n
-                  at_date=initial_balance_date,\n
+                  from_date=period_start_date,\n
+                  to_date=from_date,\n
                   portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
@@ -510,7 +567,8 @@ if account_type_to_group_by_payment:\n
                   group_by_payment=1,\n
                   group_by_node=1,\n
                   omit_input=1,\n
-                  at_date=initial_balance_date,\n
+                  from_date=period_start_date,\n
+                  to_date=from_date,\n
                   portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
@@ -544,11 +602,6 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
 \n
   initial_debit_balance = data.get(\'initial_debit_balance\', 0)\n
   initial_credit_balance = data.get(\'initial_credit_balance\', 0)\n
-\n
-  initial_balance = initial_debit_balance - initial_credit_balance\n
-  # initial debit balance actually shows \n
-  initial_debit_balance = round(max(initial_balance, 0), precision)\n
-  initial_credit_balance = round(max(-initial_balance, 0) or 0, precision)\n
 \n
   total_initial_debit_balance += round(initial_debit_balance, precision)\n
   total_initial_credit_balance += round(initial_credit_balance, precision)\n
@@ -718,7 +771,6 @@ return line_list\n
                             <string>payment</string>
                             <string>initial_debit_balance</string>
                             <string>initial_credit_balance</string>
-                            <string>initial_balance</string>
                             <string>final_debit_balance</string>
                             <string>final_credit_balance</string>
                             <string>closing_balance</string>

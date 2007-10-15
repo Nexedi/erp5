@@ -69,7 +69,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-params = portal.ERP5Accounting_getParams(selection_name)\n
+params = portal.ERP5Accounting_getParams(selection_name=selection_name)\n
+getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
+getSelectionDomainDictFor = context.portal_selections.getSelectionDomainDictFor\n
 \n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
@@ -95,8 +97,6 @@ if kw.get(\'where_expression\'):\n
 if not \'parent_portal_type\' in params:\n
   params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
 \n
-# For expense or income accounts, we only take into account transactions from the\n
-# beginning of the period.\n
 if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
   # find the node for this node_uid\n
   if context.getUid() == params[\'node_uid\']: # I bet it\'s context\n
@@ -104,12 +104,34 @@ if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
   else:\n
     node = portal.portal_catalog.getObject(params[\'node_uid\'])\n
   if node.getAccountTypeId() in (\'expense\', \'income\'):\n
+    # For expense or income accounts, we only take into account transactions\n
+    # from the beginning of the period.\n
     params[\'from_date\'] = params[\'period_start_date\']\n
+  else:\n
+    # for other account, we calculate the initial balance as the "absolute"\n
+    # balance at the beginning of the period, plus debit or credit from this\n
+    # beginning of period to the from_date\n
+    period_start_date = params[\'period_start_date\']\n
+    at_date = params.pop(\'at_date\', None)\n
+    period_openning_balance = getInventoryAssetPrice(\n
+              selection_domain=getSelectionDomainDictFor(selection_name),\n
+              to_date=period_start_date,\n
+              **params)\n
+    if omit_output:\n
+      return getInventoryAssetPrice(omit_output=1,\n
+           from_date=period_start_date,\n
+           at_date=at_date,\n
+           **params) + max(period_openning_balance, 0)\n
+    elif omit_input:\n
+      return getInventoryAssetPrice(omit_input=1,\n
+           from_date=period_start_date,\n
+           at_date=at_date,\n
+           **params) - max(-period_openning_balance, 0)\n
 \n
-return portal.portal_simulation.getInventoryAssetPrice(\n
+return getInventoryAssetPrice(\n
               omit_input=omit_input,\n
               omit_output=omit_output,\n
-              selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
+              selection_domain=getSelectionDomainDictFor(selection_name),\n
               **params)\n
 </string> </value>
         </item>
@@ -121,6 +143,12 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -170,10 +198,17 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
                             <string>context</string>
                             <string>portal</string>
                             <string>params</string>
+                            <string>getInventoryAssetPrice</string>
+                            <string>getSelectionDomainDictFor</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
                             <string>node</string>
+                            <string>period_start_date</string>
+                            <string>None</string>
+                            <string>at_date</string>
                             <string>_apply_</string>
+                            <string>period_openning_balance</string>
+                            <string>max</string>
                           </tuple>
                         </value>
                     </item>

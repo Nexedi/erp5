@@ -71,8 +71,9 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Log import log\n
 portal = context.getPortalObject()\n
-params = portal.ERP5Accounting_getParams(selection_name)\n
+params = portal.ERP5Accounting_getParams(selection_name=selection_name)\n
 N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 \n
 if params.get(\'precision\', None) is not None:\n
@@ -114,32 +115,49 @@ if from_date or node_account_type in (\'expense\', \'income\'):\n
   period_start_date = None\n
   # Create a new parameter list to get the previous balance\n
   get_inventory_kw = params.copy()\n
-  get_inventory_kw[\'to_date\'] = from_date\n
 \n
   # ignore any at_date that could lay in params\n
   get_inventory_kw.pop(\'at_date\', None)\n
 \n
-  # if we have on an expense / income account, only take into account movements\n
-  # from the current period.\n
-  if params.has_key(\'period_start_date\') and \\\n
-            node_account_type in (\'expense\', \'income\'):\n
-    period_start_date = params[\'period_start_date\']\n
-    get_inventory_kw[\'from_date\'] = period_start_date\n
-    if from_date:\n
-      from_date = max(period_start_date, from_date)\n
+  if params.has_key(\'period_start_date\'):\n
+    if node_account_type in (\'expense\', \'income\'):\n
+      # if we have on an expense / income account, only take into account\n
+      # movements from the current period.\n
+      period_start_date = params[\'period_start_date\']\n
+      if from_date:\n
+        from_date = max(period_start_date, from_date)\n
+      else:\n
+        from_date = period_start_date\n
     else:\n
-      from_date = period_start_date\n
+      # for all other accounts, we calculate initial balance\n
+      period_start_date = params[\'period_start_date\']\n
+      if not from_date:\n
+        # I don\'t think this should happen\n
+        log(\'from_date not passed, defaulting to period_start_date\')\n
+        from_date = period_start_date\n
 \n
   # Get previous debit and credit\n
   if from_date == period_start_date:\n
     previous_total_debit = previous_total_credit = 0\n
   else:\n
     getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
-    # XXX missing Inventory API Feature ? this could be retrived in 1 SQL Query\n
+    # first to the balance at the period start date\n
+    if node_account_type in (\'expense\', \'income\'):\n
+      period_openning_balance = 0\n
+    else:\n
+      period_openning_balance = getInventoryAssetPrice(\n
+                                              to_date=period_start_date,\n
+                                              **get_inventory_kw)\n
+    # then all movement between period_start_date and from_date\n
     previous_total_debit  = getInventoryAssetPrice(omit_output=True,\n
-                                                  **get_inventory_kw)\n
-    previous_total_credit = getInventoryAssetPrice(omit_input =True,\n
-                                                   **get_inventory_kw)\n
+           from_date=period_start_date,\n
+           to_date=from_date,\n
+           **get_inventory_kw) + max(period_openning_balance, 0)\n
+    previous_total_credit = getInventoryAssetPrice(omit_input=True,\n
+           from_date=period_start_date,\n
+           to_date=from_date,\n
+           **get_inventory_kw) - max(-period_openning_balance, 0)\n
+\n
   if previous_total_credit != 0:\n
     previous_total_credit = - previous_total_credit\n
 \n
@@ -214,6 +232,12 @@ return portal.portal_simulation.getMovementHistoryList(\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, **kw</string> </value>
         </item>
@@ -250,6 +274,8 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -268,6 +294,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>previous_total_debit</string>
                             <string>previous_total_credit</string>
                             <string>getInventoryAssetPrice</string>
+                            <string>period_openning_balance</string>
                             <string>_apply_</string>
                             <string>True</string>
                             <string>Products.ERP5Type.Document</string>
