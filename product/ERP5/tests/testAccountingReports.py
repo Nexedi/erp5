@@ -922,6 +922,64 @@ class TestAccountingReports(AccountingTestCase):
     self.checkLineProperties(line_list[-1], debit=0, credit=500)
 
 
+  def testAccountStatementPeriodDateAndInitialBalanceForStdAccounts(self):
+    # Initial balance in Account Statement for standard account: the initial
+    # balance is the balance at the beginning of the period + movements in the
+    # period.
+
+    self.createAccountStatementDataSetOnTwoPeriods()
+    
+    t1b = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Transaction 1b',
+              source_reference='1b',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 1, 2),
+              lines=(dict(source_value=self.account_module.goods_sales,
+                          source_debit=21.0),
+                     dict(source_value=self.account_module.receivable,
+                          source_credit=21.0)))
+    
+
+    # set request variables and render   
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 2, 2)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='Previous Balance',
+                             date=DateTime(2006, 2, 2),
+                             Movement_getExplanationTitle='',
+                             Movement_getMirrorSectionTitle='',
+                             debit=300,
+                             credit=21,
+                             running_total_price=279)
+    
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='3',
+                             date=DateTime(2006, 2, 2),
+                             Movement_getExplanationTitle='Transaction 3',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=300,
+                             credit=0,
+                             running_total_price=579)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=600, credit=21)
+
+
   def testAccountStatementPeriodDateAndInitialBalanceForExpenseAccounts(self):
     # Account statement for expense or income account will not show
     # transactions from previous periods (also for the Initial Balance line)
@@ -1359,6 +1417,83 @@ class TestAccountingReports(AccountingTestCase):
         initial_debit_balance=200, initial_credit_balance=200, debit=0,
         credit=0, final_debit_balance=200, final_credit_balance=200,
         final_balance_if_debit=200, final_balance_if_credit=200)
+
+  def testTrialBalanceInitialBalanceWithPeriod(self):
+    # Test of trial balance and initial balance
+    account_module = self.portal.account_module
+
+    # previous period
+    self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction -2',
+              source_reference='-2',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 1),
+              lines=(dict(source_value=account_module.payable,
+                          source_debit=400.0),
+                     dict(source_value=account_module.receivable,
+                          source_credit=400.0),))
+    self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction -1',
+              source_reference='-1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=600.0),
+                     dict(source_value=account_module.payable,
+                          source_credit=600.0),))
+    
+    # current period, but before from date
+    self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 0',
+              source_reference='0',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2007, 1, 3),
+              lines=(dict(source_value=account_module.payable,
+                          source_debit=111.0),
+                     dict(source_value=account_module.receivable,
+                          source_credit=111.0),))
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2007, 2, 1)
+    request_form['at_date'] = DateTime(2007, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+
+    report_section_list = self.getReportSectionList(
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    
+    self.assertEquals(2, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0], node_id='40',
+        node_title='Payable', initial_debit_balance=111,
+        initial_credit_balance=200, debit=0, credit=0,
+        final_debit_balance=111, final_credit_balance=200,
+        final_balance_if_debit=0, final_balance_if_credit=89)
+    
+    self.checkLineProperties(data_line_list[1], node_id='41',
+        node_title='Receivable', initial_debit_balance=200,
+        initial_credit_balance=111, debit=0, credit=0,
+        final_debit_balance=200, final_credit_balance=111,
+        final_balance_if_debit=89, final_balance_if_credit=0)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=311, initial_credit_balance=311, debit=0,
+        credit=0, final_debit_balance=311, final_credit_balance=311,
+        final_balance_if_debit=89, final_balance_if_credit=89)
+
 
   def testTrialBalanceDifferentCurrencies(self):
     # Test of trial balance and different currencies
