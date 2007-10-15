@@ -143,7 +143,6 @@ class TestODSStyle(TestOOoStyle):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestODTStyle))
-  # ODS style is not valid yet
- # suite.addTest(unittest.makeSuite(TestODSStyle))
+  suite.addTest(unittest.makeSuite(TestODSStyle))
   return suite
 
