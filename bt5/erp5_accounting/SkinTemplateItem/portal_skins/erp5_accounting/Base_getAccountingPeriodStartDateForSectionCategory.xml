@@ -81,7 +81,7 @@ def getAccountingPeriodStartDateForSectionCategory(section_category, date):\n
   period_start_date = None\n
   valid_accounting_period = dict(portal_type=\'Accounting Period\',\n
                                  simulation_state=(\'planned\', \'confirmed\',\n
-                                        \'stopped\', \'closing\', \'delivered\'))\n
+                                   \'started\', \'stopped\', \'closing\', \'delivered\'))\n
   for uid in section_uid:\n
     section = portal.portal_catalog.getObject(uid)\n
     for ap in section.contentValues(filter=valid_accounting_period):\n
@@ -110,6 +110,12 @@ return getAccountingPeriodStartDateForSectionCategory(section_category, date)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
