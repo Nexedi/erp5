@@ -972,6 +972,46 @@ class TestCMFCategory(ERP5TypeTestCase):
           pc.getSingleCategoryMembershipList(obj, 'parent',
                                 checked_permission='Manage portal',
                                 portal_type='Person Module'))
+  
+  def test_28_getCategoryChildItemList_checked_permission(self):
+    pc = self.getCategoriesTool()
+
+    bc = pc.newContent(portal_type='Base Category', id='foo')
+    a = bc.newContent(portal_type='Category', id='1', title='A')
+    b = bc.newContent(portal_type='Category', id='2', title='B')
+    b1 = b.newContent(portal_type='Category', id='21', title='B1')
+
+    checked_permission = 'View'
+    
+    self.assertEquals(
+      [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList())
+    self.assertEquals(
+      [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission))
+
+    b.manage_permission(checked_permission, roles=[], acquire=0)
+    
+    self.assertEquals(
+      3, len(bc.getCategoryChildValueList()))
+    self.assertEquals(
+      1,
+      len(bc.getCategoryChildValueList(checked_permission=checked_permission)))
+    
+    self.assertEquals(
+      ['foo/1', 'foo/2', 'foo/2/21'],
+      bc.getCategoryChildRelativeUrlList())
+    self.assertEquals(
+      ['foo/1'],
+      bc.getCategoryChildRelativeUrlList(checked_permission=checked_permission))
+    
+    self.assertEquals(
+      [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(cache=0))
+    self.assertEquals(
+      [['', ''], ['A', '1']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       cache=0))
 
 
 def test_suite():
