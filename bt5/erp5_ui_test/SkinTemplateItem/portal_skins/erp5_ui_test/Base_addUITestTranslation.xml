@@ -71,8 +71,8 @@
             <value> <string>"""Add a New Test language."""\n
 \n
 \n
-context.getPortalObject().Localizer.erp5_ui.message_edit(message=message, language=\'tl1\', translation=translation_1,note=None)\n
-context.getPortalObject().Localizer.erp5_ui.message_edit(message=message, language=\'tl2\', translation=translation_2,note=None)\n
+context.getPortalObject().Localizer.erp5_ui.message_edit(message=\'Search Foos\', language=\'wo\', translation=\'Seet Foos\',note=None)\n
+context.getPortalObject().Localizer.erp5_ui.message_edit(message=\'Search Foos\', language=\'xh\', translation=\'Searching Foos\',note=None)\n
 \n
 original_message = "Search Foos"\n
 return "Translation of %s updated" % (original_message, )\n
@@ -98,7 +98,7 @@ return "Translation of %s updated" % (original_message, )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>message = "Search Foos",translation_1 ="Look for Foos",translation_2="Searching Foos"</string> </value>
+            <value> <string>message = "Search Foos",translation_1 =" Seet Foos",translation_2="Searching Foos"</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -144,7 +144,7 @@ return "Translation of %s updated" % (original_message, )\n
             <value>
               <tuple>
                 <string>Search Foos</string>
-                <string>Look for Foos</string>
+                <string> Seet Foos</string>
                 <string>Searching Foos</string>
               </tuple>
             </value>

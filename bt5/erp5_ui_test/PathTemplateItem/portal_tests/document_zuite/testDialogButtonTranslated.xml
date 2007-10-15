@@ -72,18 +72,18 @@
 -->\n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/portal_types/Localizer/erp5_ui/Base_createUITestLanguages"></td>\n
+  <td tal:content="string: ${here/portal_url}/portal_skins/erp5_ui_test/Base_createUITestLanguages"></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/portal_types/Localizer/erp5_ui/Base_addUITestTranslation?message=Search Foos&translation_1=Look for Foos&translation_2=Searching Foos"></td>\n
+  <td tal:content="string: ${here/portal_url}/portal_skins/erp5_ui_test//Base_addUITestTranslation?message=Search Foos&translation_1=Seet Foos&translation_2=Searching Foos"></td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_deleteAction?id=search2">Delete second action if exist</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_deleteAction?id=search2&name=Search2&category=object_search&action=string:%24{object_url}/FooModule_viewSearchDialog">Create a second dummy search action to test the dynamic creation of select action drop-down list</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -91,6 +91,11 @@
   <td>open</td>\n
   <td tal:content="string: ${here/portal_url}/foo_module/FooModule_viewSearchDialog?dialog_category=object_search">/erp5/foo_module/foo_module/FooModule_viewSearchDialog?dialog_category=object_search</td>\n
   <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>select</td>\n
+\t<td>select_language</td>\n
+\t<td>label=English</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
@@ -117,11 +122,7 @@
   <td>Search</td>\n
 </tr>\n
 \n
-<tr>\n
-\t<td>select</td>\n
-\t<td>select_language</td>\n
-\t<td>label=English</td>\n
-</tr>\n
+\n
 \n
 <tr>\n
 \t<td>verifyValue</td>\n
@@ -131,17 +132,17 @@
 <tr>\n
 \t<td>selectAndWait</td>\n
 \t<td>select_language</td>\n
-\t<td>label=Test_language_1</td>\n
+\t<td>label=Wolof</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyValue</td>\n
 \t<td>dialog_submit_button</td>\n
-\t<td>Look for Foos</td>\n
+\t<td>Seet Foos</td>\n
 </tr>\n
 <tr>\n
 \t<td>selectAndWait</td>\n
 \t<td>select_language</td>\n
-\t<td>label=Test_language_2</td>\n
+\t<td>label=Xhosa</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyValue</td>\n
