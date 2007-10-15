@@ -197,7 +197,7 @@ class InteractorOfInteractor(Interactor):
     self.interactor = interactor
 
   def install(self):
-    self.on(interactor.doSomething).doAfter(self.doSomething)
+    self.on(Interactor.doSomething).doAfter(self.doSomething)
 
   def doSomething(self, method_call_object):
     pass
