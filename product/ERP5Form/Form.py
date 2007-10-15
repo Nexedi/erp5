@@ -304,7 +304,7 @@ def _get_default(self, key, value, REQUEST):
 
 # Dynamic Patch
 original_get_value = Field.get_value
-Field.get_value = get_value
+# Field.get_value = get_value
 Field._original_get_value = original_get_value
 Field._get_default = _get_default
 Field.om_icons = om_icons
