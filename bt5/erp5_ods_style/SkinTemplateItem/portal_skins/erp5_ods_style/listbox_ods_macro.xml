@@ -72,7 +72,6 @@
         <tal:block tal:condition="python: len(listboxline_list) > 1">\n
           <tal:block tal:condition="python: is_domain_tree_mode">\n
             <tal:block tal:define="domain_list python: selection.getDomainList()" tal:condition="python: len(domain_list) > 0">\n
-              <table:table-column table:style-name="co2"/>\n
               <table:table-row>\n
                 <table:table-cell office:value-type=\'string\'>\n
                   <text:p tal:content="python: domain_list[-1]"/>\n
@@ -81,8 +80,7 @@
             </tal:block>\n
           </tal:block>\n
           <tal:block tal:repeat="listboxline python: listboxline_list">\n
-            <table:table-column table:style-name=\'co2\'/>\n
-            <tal:block metal:define-slot="for_form_list" tal:condition="listboxline/isTitleLine | python: is_report_tree_mode">\n
+            <tal:block metal:define-slot="for_form_list" tal:condition="listboxline/isTitleLine | is_report_tree_mode">\n
               <tal:block metal:define-slot="list_header">\n
                 <table:table-row table:style-name=\'ro4\'>\n
                   <tal:block tal:condition="python: is_report_tree_mode">\n
@@ -93,7 +91,6 @@
                     </table:table-cell>\n
                   </tal:block>\n
 \n
-                  <table:table-column table:style-name="co2"/>\n
                   <tal:block tal:condition="listboxline/isTitleLine">\n
                     <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
                       <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
@@ -117,7 +114,6 @@
             </tal:block>\n
 \n
             <tal:block tal:condition="not:listboxline/isTitleLine">\n
-              <table:table-column table:style-name="co2"/>\n
               <table:table-row>\n
                 <tal:block tal:condition="python: listboxline.isDataLine() or listboxline.isSummaryLine()">\n
                   <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
@@ -170,14 +166,13 @@
               </table:table-row>\n
             </tal:block>\n
           </tal:block>\n
-          <table:table-column table:style-name="co2"/>\n
           <table:table-row metal:define-slot="table_bottom_line">\n
             <tal:block tal:repeat="listboxline python: listboxline_list">\n
               <tal:block tal:condition="listboxline/isTitleLine">\n
                 <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
                   <tal:block tal:define="column_property python: column_item[1]; ">\n
                     <tal:block tal:condition="python: column_property is not None">\n
-                      <table:table-cell table:style-name=\'table-bottom-line\' table:number-columns-repeated=\'repeat/column_item/number\'/>\n
+                      <table:table-cell table:style-name=\'table-bottom-line\'/>\n
                     </tal:block>\n
                   </tal:block>\n
                 </tal:block>\n

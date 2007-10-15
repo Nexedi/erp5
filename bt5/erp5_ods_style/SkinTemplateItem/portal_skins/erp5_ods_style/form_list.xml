@@ -64,19 +64,25 @@
   <office:body>\n
     <office:spreadsheet>\n
       <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name here/getTitle" >\n
-        <tal:block metal:define-macro="form_layout" tal:define="dummy python: request.set(\'here\', here); listbox python:form.get_fields_in_group(\'bottom\')[0]">\n
+        <tal:block metal:define-macro="form_layout"\n
+                    tal:define="dummy python: request.set(\'here\', here);\n
+                                listbox form/listbox">\n
             <tal:block metal:use-macro="here/listbox_ods_macro/macros/listbox">\n
               <tal:block metal:fill-slot="list_header">\n
+                <tal:block tal:repeat="column_item listboxline/getColumnItemList"> \n
+                  <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
+                    <table:table-column table:style-name=\'co2\' table:default-cell-style-name=\'report-column-title\'/>\n
+                  </tal:block>\n
+                </tal:block>\n
                 <table:table-header-rows>\n
                   <table:table-row table:style-name=\'ro4\'>\n
                     <tal:block tal:condition="python: is_report_tree_mode">\n
                       <table:table-cell table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
                         <tal:block tal:condition="listboxline/getSectionName">\n
-                          <text:p  tal:content="python: here.Localozer.erp5_ui.gettext(listboxline/getSectionName).encode(\'utf-8\')"/>\n
+                          <text:p  tal:content="python: here.Localizer.erp5_ui.gettext(listboxline.getSectionName()).encode(\'utf-8\')"/>\n
                         </tal:block>\n
                       </table:table-cell>\n
                     </tal:block>\n
-                    <table:table-column table:style-name="co2"/>\n
                     <tal:block tal:condition="listboxline/isTitleLine">\n
                       <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
                         <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n

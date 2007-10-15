@@ -64,7 +64,12 @@ dQEAAAAA</string> </value>
   <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
 <office:body>\n
   <office:spreadsheet>\n
+    <!-- at least one table-column element is required for ODF to validate -->\n
+    <table:table-column\n
+          table:style-name=\'co2\'\n
+          table:default-cell-style-name=\'report-column-title\'/>\n
 \n
+    <!-- calculate max column len -->\n
     <tal:block tal:define="field_list python:form.get_fields_in_group(\'bottom\')">\n
       <tal:block tal:define="global column_len python:3"/>\n
       <tal:block tal:condition=\'field_list\'>\n
@@ -84,7 +89,6 @@ dQEAAAAA</string> </value>
               <tal:block tal:condition="python: field_list not in [None, []]">\n
                 <tal:block tal:repeat="field field_list">\n
                   <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
-                    <table:table-column table:style-name="co2"/>\n
                     <table:table-row table:style-name=\'ro2\'>\n
                       <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\'>\n
                         <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value (\'title\')).encode(\'utf-8\')"></text:p>\n
@@ -97,14 +101,14 @@ dQEAAAAA</string> </value>
                             <text:p tal:condition="item_list" tal:content="python: [i[0] for i in item_list if i[1] == item][0]"></text:p>\n
                           </tal:block>\n
                         </tal:block>\n
-                        <tal:block tal:condition="python: (not (same_type(value, []) or same_type(value, ()))) and value != None">\n
+                        <tal:block tal:condition="python: (not (same_type(value, []) or same_type(value, ()))) and value is not None">\n
                           <text:p tal:condition="not:item_list" tal:content="python: str(value)">\n
                           </text:p>\n
                           <tal:block tal:condition="python:value != \'\'">\n
-                            <text:p tal:condition="item_list" disable-output-escapint="yes" tal:content="python: [i[0].replace(\'&amp;\', \'\') for i in item_list if i[1] == value][0]">\n
+                            <text:p tal:condition="item_list" tal:content="python: [i[0].replace(\'&amp;\', \'\') for i in item_list if i[1] == value][0]">\n
                             </text:p>\n
                           </tal:block>\n
-                          <tal:block tal:condition="python: value == None">\n
+                          <tal:block tal:condition="python: value is None">\n
                             <text:p table:style="Default" tal:content="python: \' \'" />\n
                           </tal:block>\n
                         </tal:block>\n
