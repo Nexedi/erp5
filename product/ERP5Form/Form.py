@@ -257,17 +257,20 @@ def get_value(self, id, **kw):
   if self._p_oid is None:
     return self._original_get_value(id, **kw)
 
-  cache_id = ('Form.get_value',
-              self._p_oid,
-              field._p_oid,
-              id)
+  if 1:
+    value = getFieldValue(self, field, id, **kw)
+  else:
+    cache_id = ('Form.get_value',
+                self._p_oid,
+                field._p_oid,
+                id)
 
-  try:
-    value = _field_value_cache[cache_id]
-  except KeyError:
-    # either returns non callable value (ex. "Title")
-    # or a FieldValue instance of appropriate class
-    value = _field_value_cache[cache_id] = getFieldValue(self, field, id, **kw)
+    try:
+      value = _field_value_cache[cache_id]
+    except KeyError:
+      # either returns non callable value (ex. "Title")
+      # or a FieldValue instance of appropriate class
+      value = _field_value_cache[cache_id] = getFieldValue(self, field, id, **kw)
 
   if callable(value):
     return value(field, id, **kw)
@@ -304,7 +307,7 @@ def _get_default(self, key, value, REQUEST):
 
 # Dynamic Patch
 original_get_value = Field.get_value
-# Field.get_value = get_value
+Field.get_value = get_value
 Field._original_get_value = original_get_value
 Field._get_default = _get_default
 Field.om_icons = om_icons
