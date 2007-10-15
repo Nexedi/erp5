@@ -20,7 +20,8 @@ Options:
   --email_to_address=STRING  send results to this address by email (defaults to
                              erp5-report@erp5.org)
   -s, --stdout               prints the results on stdout instead of sending
-                             results by email
+                             results by email (unless email_to_address is also
+                             passed explictly)
                              
 """
 
@@ -28,7 +29,8 @@ Options:
 host = 'localhost'
 port = 8080
 portal_name = 'erp5_portal'
-send_mail = 1
+send_mail = 0
+stdout = 0
 email_to_address = 'erp5-report@erp5.org'
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
@@ -56,6 +58,7 @@ def usage(stream, msg=None):
 
 def parseArgs():
   global send_mail
+  global stdout
   global email_to_address
   try:
     opts, args = getopt.getopt(sys.argv[1:],
@@ -67,13 +70,15 @@ def parseArgs():
   
   for opt, arg in opts:
     if opt in ("-s", "--stdout"):
-      send_mail = 0
+      stdout = 1
     elif opt == '--email_to_address':
       email_to_address = arg
+      send_mail = 1
     elif opt in ('-h', '--help'):
       usage(sys.stdout)
       sys.exit()
-
+  if not stdout:
+    send_mail = 1
 
 def main():
   setPreference()
@@ -200,14 +205,14 @@ Following tests failed:
              attachments=[file_content],
              from_mail='nobody@svn.erp5.org',
              to_mail=[email_to_address])
-  else:
+  if stdout:
     print '-' * 79
     print subject
     print '-' * 79
     print summary
     print '-' * 79
     print file_content
-  return status
+  return failures
 
 if __name__ == "__main__":
   parseArgs()
