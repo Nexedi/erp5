@@ -150,8 +150,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
-  account_props[\'debit\'] = node[\'total_price\']\n
-  total_debit += round(node[\'total_price\'], precision)\n
+  total_price = node[\'total_price\'] or 0\n
+  account_props[\'debit\'] = total_price\n
+  total_debit += round(total_price, precision)\n
 \n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
@@ -165,8 +166,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
-  account_props[\'credit\'] = - node[\'total_price\']\n
-  total_credit -= round(node[\'total_price\'], precision)\n
+  total_price = node[\'total_price\'] or 0\n
+  account_props[\'credit\'] = -total_price\n
+  total_credit -= round(total_price, precision)\n
 # }}}\n
 \n
 ### profit & loss accounts {{{\n
@@ -182,8 +184,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
-  account_props[\'debit\'] = node[\'total_price\']\n
-  total_debit += round(node[\'total_price\'], precision)\n
+  total_price = node[\'total_price\'] or 0\n
+  account_props[\'debit\'] = total_price\n
+  total_debit += round(total_price, precision)\n
 \n
 for node in getInventoryList(\n
                 node_category_strict_membership=profit_and_loss_account_type,\n
@@ -197,8 +200,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
-  account_props[\'credit\'] = - node[\'total_price\'] or 0\n
-  total_credit -= round(node[\'total_price\'], precision)\n
+  total_price = node[\'total_price\'] or 0\n
+  account_props[\'credit\'] = -total_price\n
+  total_credit -= round(total_price, precision)\n
 # }}}\n
 \n
 # payable / receivable accounts {{{\n
@@ -217,8 +221,9 @@ if account_type_to_group_by_mirror_section:\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
-    account_props[\'debit\'] = node[\'total_price\']\n
-    total_debit += round(node[\'total_price\'], precision)\n
+    total_price = node[\'total_price\'] or 0\n
+    account_props[\'debit\'] = total_price\n
+    total_debit += round(total_price, precision)\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -234,8 +239,9 @@ if account_type_to_group_by_mirror_section:\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
-    account_props[\'credit\'] = - node[\'total_price\']\n
-    total_credit -= round(node[\'total_price\'], precision)\n
+    total_price = node[\'total_price\'] or 0\n
+    account_props[\'credit\'] = - total_price\n
+    total_credit -= round(total_price, precision)\n
 # }}}\n
 \n
 # bank accounts {{{\n
@@ -254,8 +260,9 @@ if account_type_to_group_by_payment:\n
     account_props = line_per_account.setdefault(\n
                   (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
                   dict(debit=0, credit=0))\n
-    account_props[\'debit\'] = node[\'total_price\']\n
-    total_debit += round(node[\'total_price\'], precision)\n
+    total_price = node[\'total_price\'] or 0\n
+    account_props[\'debit\'] = total_price\n
+    total_debit += round(total_price, precision)\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -271,8 +278,9 @@ if account_type_to_group_by_payment:\n
     account_props = line_per_account.setdefault(\n
                   (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
                   dict(debit=0, credit=0))\n
-    account_props[\'credit\'] = - node[\'total_price\']\n
-    total_credit -= round(node[\'total_price\'], precision)\n
+    total_price = node[\'total_price\'] or 0\n
+    account_props[\'credit\'] = - total_price\n
+    total_credit -= round(total_price, precision)\n
   # }}}\n
 \n
 \n
@@ -314,10 +322,11 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
+  total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
-                  \'initial_debit_balance\', 0) + max(node[\'total_price\'], 0)\n
+              \'initial_debit_balance\', 0) + max(total_price, 0)\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
-                 \'initial_credit_balance\', 0) + max(-node[\'total_price\'], 0)\n
+              \'initial_credit_balance\', 0) + max(- total_price, 0)\n
 \n
 # Balance Transaction\n
 for node in getInventoryList(\n
@@ -330,8 +339,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
+  total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
-                    \'initial_debit_balance\', 0) + node[\'total_price\']\n
+                    \'initial_debit_balance\', 0) + total_price\n
 \n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
@@ -343,8 +353,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
+  total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
-                    \'initial_credit_balance\', 0) - node[\'total_price\']\n
+                    \'initial_credit_balance\', 0) - total_price\n
 \n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
@@ -357,8 +368,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
+  total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
-                    \'initial_debit_balance\', 0) + node[\'total_price\']\n
+                    \'initial_debit_balance\', 0) + total_price\n
 \n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
@@ -371,8 +383,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
+  total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
-                    \'initial_credit_balance\', 0) - node[\'total_price\']\n
+                    \'initial_credit_balance\', 0) - total_price\n
 # }}}\n
 \n
 ### profit & loss accounts {{{\n
@@ -388,8 +401,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
+  total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
-                    \'initial_debit_balance\', 0) + node[\'total_price\']\n
+                    \'initial_debit_balance\', 0) + total_price\n
 \n
 for node in getInventoryList(\n
                 node_category_strict_membership=profit_and_loss_account_type,\n
@@ -403,8 +417,9 @@ for node in getInventoryList(\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
+  total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
-                    \'initial_credit_balance\', 0) - node[\'total_price\']\n
+                    \'initial_credit_balance\', 0) - total_price\n
 # }}}\n
 \n
 # payable / receivable accounts {{{\n
@@ -422,10 +437,11 @@ if account_type_to_group_by_mirror_section:\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
-                    \'initial_debit_balance\', 0) + max(node[\'total_price\'], 0)\n
+                    \'initial_debit_balance\', 0) + max(total_price, 0)\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
-                   \'initial_credit_balance\', 0) + max(-node[\'total_price\'], 0)\n
+                   \'initial_credit_balance\', 0) + max(-total_price, 0)\n
 \n
   # Balance Transactions\n
   for node in getInventoryList(\n
@@ -440,8 +456,9 @@ if account_type_to_group_by_mirror_section:\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
-                      \'initial_debit_balance\', 0) + node[\'total_price\']\n
+                      \'initial_debit_balance\', 0) + total_price\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -455,8 +472,9 @@ if account_type_to_group_by_mirror_section:\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
-                      \'initial_credit_balance\', 0) - node[\'total_price\']\n
+                      \'initial_credit_balance\', 0) - total_price\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -471,8 +489,9 @@ if account_type_to_group_by_mirror_section:\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
-                      \'initial_debit_balance\', 0) + node[\'total_price\']\n
+                      \'initial_debit_balance\', 0) + total_price\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -487,8 +506,9 @@ if account_type_to_group_by_mirror_section:\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
-                      \'initial_credit_balance\', 0) - node[\'total_price\']\n
+                      \'initial_credit_balance\', 0) - total_price\n
 # }}}\n
 \n
 # bank accounts {{{\n
@@ -506,10 +526,11 @@ if account_type_to_group_by_payment:\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
             dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
-                    \'initial_debit_balance\', 0) + max(node[\'total_price\'], 0)\n
+                    \'initial_debit_balance\', 0) + max(total_price, 0)\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
-                   \'initial_credit_balance\', 0) + max(-node[\'total_price\'], 0)\n
+                   \'initial_credit_balance\', 0) + max(- total_price, 0)\n
 \n
   # Balance Transaction\n
   for node in getInventoryList(\n
@@ -525,8 +546,9 @@ if account_type_to_group_by_payment:\n
     account_props = line_per_account.setdefault(\n
                   (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
                   dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
-                      \'initial_debit_balance\', 0) + node[\'total_price\']\n
+                      \'initial_debit_balance\', 0) + total_price\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -541,8 +563,9 @@ if account_type_to_group_by_payment:\n
     account_props = line_per_account.setdefault(\n
                   (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
                   dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
-                      \'initial_credit_balance\', 0) - node[\'total_price\']\n
+                      \'initial_credit_balance\', 0) - total_price\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -558,8 +581,9 @@ if account_type_to_group_by_payment:\n
     account_props = line_per_account.setdefault(\n
                   (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
                   dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
-                      \'initial_debit_balance\', 0) + node[\'total_price\']\n
+                      \'initial_debit_balance\', 0) + total_price\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -575,8 +599,9 @@ if account_type_to_group_by_payment:\n
     account_props = line_per_account.setdefault(\n
                   (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
                   dict(debit=0, credit=0))\n
+    total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
-                      \'initial_credit_balance\', 0) - node[\'total_price\']\n
+                      \'initial_credit_balance\', 0) - total_price\n
   # }}}\n
 \n
 line_list = []\n
@@ -750,6 +775,7 @@ return line_list\n
                             <string>node</string>
                             <string>_getitem_</string>
                             <string>account_props</string>
+                            <string>total_price</string>
                             <string>round</string>
                             <string>max</string>
                             <string>traverse</string>
