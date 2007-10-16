@@ -80,6 +80,13 @@ encaisse_devise = "/encaisse_des_devises/%s/sortante" %(var_ressource_title)\n
 encaisse_billets_et_monnaies = "/encaisse_des_billets_et_monnaies/entrante"\n
 \n
 \n
+# check resource on incoming line\n
+doc_resource = transaction.getResource()\n
+for line in transaction.contentValues(portal_type="Outgoing Cash To Currency Sale Line"):\n
+  if line.getResourceValue().getPriceCurrency() != doc_resource:\n
+    msg = Message(domain="ui", message="Resource defined on document is different from input cash.")\n
+    raise ValidationFailed, (msg,)\n
+\n
 counter_site = transaction.getSource()\n
 \n
 # check we don\'t change of user\n
@@ -187,6 +194,10 @@ elif resource_one != 0 :\n
                             <string>var_ressource_title</string>
                             <string>encaisse_devise</string>
                             <string>encaisse_billets_et_monnaies</string>
+                            <string>doc_resource</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>msg</string>
                             <string>counter_site</string>
                             <string>outgoing_source</string>
                             <string>context</string>
@@ -195,7 +206,6 @@ elif resource_one != 0 :\n
                             <string>billetage_sorti</string>
                             <string>base_price</string>
                             <string>quantity</string>
-                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>

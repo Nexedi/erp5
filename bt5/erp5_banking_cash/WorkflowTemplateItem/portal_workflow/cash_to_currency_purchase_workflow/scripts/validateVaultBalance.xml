@@ -109,7 +109,7 @@ pourcentage = transaction.getDiscountRatio()\n
 # check resource on incoming line\n
 doc_resource = transaction.getResource()\n
 for line in transaction.contentValues(portal_type="Incoming Cash To Currency Purchase Line"):\n
-  if line.getResource() != doc_resource:\n
+  if line.getResourceValue().getPriceCurrency() != doc_resource:\n
     msg = Message(domain="ui", message="Resource defined on document is different from input cash.")\n
     raise ValidationFailed, (msg,)\n
 \n
