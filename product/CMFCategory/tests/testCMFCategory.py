@@ -976,7 +976,8 @@ class TestCMFCategory(ERP5TypeTestCase):
   def test_28_getCategoryChildItemList_checked_permission(self):
     pc = self.getCategoriesTool()
 
-    bc = pc.newContent(portal_type='Base Category', id='foo')
+    bc_id = 'barfoo'
+    bc = pc.newContent(portal_type='Base Category', id=bc_id)
     a = bc.newContent(portal_type='Category', id='1', title='A')
     b = bc.newContent(portal_type='Category', id='2', title='B')
     b1 = b.newContent(portal_type='Category', id='21', title='B1')
@@ -985,24 +986,26 @@ class TestCMFCategory(ERP5TypeTestCase):
     
     self.assertEquals(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
-      bc.getCategoryChildTitleItemList())
+      bc.getCategoryChildTitleItemList(cache=0))
     self.assertEquals(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
-      bc.getCategoryChildTitleItemList(checked_permission=checked_permission))
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       cache=0))
 
     b.manage_permission(checked_permission, roles=[], acquire=0)
     
     self.assertEquals(
-      3, len(bc.getCategoryChildValueList()))
+      3, len(bc.getCategoryChildValueList(cache=0)))
     self.assertEquals(
       1,
-      len(bc.getCategoryChildValueList(checked_permission=checked_permission)))
+      len(bc.getCategoryChildValueList(checked_permission=checked_permission,
+                                       cache=0)))
     
     self.assertEquals(
-      ['foo/1', 'foo/2', 'foo/2/21'],
+      ['%s/1' % bc_id, '%s/2' % bc_id, '%s/2/21' % bc_id],
       bc.getCategoryChildRelativeUrlList())
     self.assertEquals(
-      ['foo/1'],
+      ['%s/1' % bc_id],
       bc.getCategoryChildRelativeUrlList(checked_permission=checked_permission))
     
     self.assertEquals(
