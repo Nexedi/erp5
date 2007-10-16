@@ -75,9 +75,9 @@ currency = transaction.getResourceTitle()\n
 encaisse_billets_et_monnaies = "/encaisse_des_billets_et_monnaies/sortante"\n
 \n
 \n
-var_ressource_title = transaction.getResourceTitle().lower()\n
-var_ressource_title = var_ressource_title.replace(" ", "_")\n
-encaisse_devise = "/encaisse_des_devises/%s/entrante" %(var_ressource_title)\n
+ressource_title = transaction.getResourceTitle().lower()\n
+ressource_title = ressource_title.replace(" ", "_")\n
+encaisse_devise = "/encaisse_des_devises/%s/entrante" %(ressource_title)\n
 \n
 #encaisse_devise = "/encaisse_des_devises/%s/entrante" %(transaction.getResourceTitle().lower())\n
 \n
@@ -106,8 +106,12 @@ if base_price is None or base_price <= 0:\n
 fix_montant = transaction.getDiscount()\n
 pourcentage = transaction.getDiscountRatio()\n
 \n
-\n
-\n
+# check resource on incoming line\n
+doc_resource = transaction.getResource()\n
+for line in transaction.contentValues(portal_type="Incoming Cash To Currency Purchase Line"):\n
+  if line.getResource() != doc_resource:\n
+    msg = Message(domain="ui", message="Resource defined on document is different from input cash.")\n
+    raise ValidationFailed, (msg,)\n
 \n
 resource_two = transaction.CashDelivery_checkCounterInventory(outgoing_source,portal_type=\'Outgoing Cash To Currency Purchase Line\')\n
 \n
@@ -190,7 +194,7 @@ elif resource_two!= 0 :\n
                             <string>_getattr_</string>
                             <string>currency</string>
                             <string>encaisse_billets_et_monnaies</string>
-                            <string>var_ressource_title</string>
+                            <string>ressource_title</string>
                             <string>encaisse_devise</string>
                             <string>counter_site</string>
                             <string>incoming_destination</string>
@@ -201,6 +205,9 @@ elif resource_two!= 0 :\n
                             <string>msg</string>
                             <string>fix_montant</string>
                             <string>pourcentage</string>
+                            <string>doc_resource</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
                             <string>resource_two</string>
                             <string>billetage_entre</string>
                             <string>billetage_sorti</string>

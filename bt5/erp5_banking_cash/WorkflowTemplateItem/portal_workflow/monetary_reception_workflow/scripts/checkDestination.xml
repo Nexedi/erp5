@@ -83,7 +83,7 @@ if len(object.objectValues(portal_type=\'Cash Delivery Line\')) == 0:\n
   raise ValidationFailed, (msg,)\n
        \n
 dest = object.getDestinationValue()\n
-if \'encaisse_des_billets_retires_de_la_circulation\' in dest.getRelativeUrl():\n
+if dest is None or \'encaisse_des_billets_retires_de_la_circulation\' in dest.getRelativeUrl():\n
   msg = Message(domain="ui", message="Wrong Destination Selected.")\n
   raise ValidationFailed, (msg,)\n
 \n
@@ -154,6 +154,7 @@ if \'transit\' not in dest.getRelativeUrl():\n
                             <string>len</string>
                             <string>msg</string>
                             <string>dest</string>
+                            <string>None</string>
                             <string>first_movement</string>
                             <string>line_letter</string>
                           </tuple>
