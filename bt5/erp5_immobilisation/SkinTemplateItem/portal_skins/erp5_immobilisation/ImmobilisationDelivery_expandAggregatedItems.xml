@@ -75,7 +75,7 @@ for movement in movement_list:\n
     if item not in item_list:\n
       item_list.append(item)\n
 for item in item_list:\n
-  item.activate(tag=\'expand_amortisation\', after_path_and_method_id=(movemement_path_list, \'updateImmobilisationState\', )).expandAmortisation()\n
+  item.activate(tag=\'expand_amortisation\', after_path_and_method_id=(movemement_path_list, (\'immediateReindexObject\', \'recursiveImmediateReindexObject\', \'updateImmobilisationState\',) )).expandAmortisation()\n
 </string> </value>
         </item>
         <item>
