@@ -857,7 +857,7 @@ class ManageCSS:
             ,page_height
             ,page_iterator
             ,page_gap
-            ,keep_page,
+            ,keep_page
             ,original_page_width
             ,original_page_height
             ,properties_page,actual_width,actual_height):
