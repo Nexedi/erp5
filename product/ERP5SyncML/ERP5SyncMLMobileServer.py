@@ -11,7 +11,6 @@ from optparse import OptionParser
 try:
   from Ft.Xml.Domlette import Print, PrettyPrint
 except ImportError:
-  LOG('ERP5Conduit',0,"Can't import Print and PrettyPrint")
   class Print:
     def __init__(self, *args, **kw):
       raise ImportError, "Sorry, it was not possible to import Ft library"
@@ -183,7 +182,7 @@ def sendResponse(text, to_url, client_url):
   try:
     result = urllib2.urlopen(request).read()
   except socket.error, msg:
-    print 'error, url:%s ,data : %s'%(url, data)
+    print 'error, url:%s ,data : %s'%(to_url, data)
   except urllib2.URLError, msg:
     print "sendResponse, can't open url : %s" % to_url
 

@@ -37,7 +37,7 @@ this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
-import SynchronizationTool
+import SynchronizationTool, Publication, Subscription
 object_classes = (Subscription.Subscription, Publication.Publication,Publication.Subscriber)
 portal_tools = (SynchronizationTool.SynchronizationTool,)
 content_classes = ()

@@ -947,7 +947,7 @@ class SynchronizationTool( SubscriptionSynchronization,
                                               domain_path=domain.getPath(),
                                               content_type=content_type)
       LOG('sendHttpResponse, socket ERROR:', INFO, msg)
-      LOG('sendHttpResponse, url, data', INFO, (url, data))
+      LOG('sendHttpResponse, url, data', INFO, (to_url, data))
       return
     except urllib2.URLError, msg:
       LOG("sendHttpResponse, can't open url %s :" % to_url, INFO, msg)
