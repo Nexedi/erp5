@@ -60,13 +60,29 @@ from Products.Formulator.TALESField import TALESMethod
 from zLOG import LOG, PROBLEM
 
 
+def isCacheable(value):
+  value = aq_base(value)
+  if type(value) is BoundMethod:
+    return False
+
+  jar = getattr(value, '_p_jar', None)
+  if jar is not None:
+    return False
+
+  dic = getattr(value, '__dict__', None)
+  if dic is not None:
+    for i in dic.values():
+      jar = getattr(i, '_p_jar', None)
+      if jar is not None:
+        return False
+  return True
+
+
 def copyMethod(value):
     if type(aq_base(value)) is Method:
       value = Method(value.method_name)
     elif type(aq_base(value)) is TALESMethod:
       value = TALESMethod(value._text)
-    elif type(aq_base(value)) is BoundMethod:
-      value = BoundMethod(value.object, value.method_name)
     return value
 
 
@@ -77,8 +93,6 @@ class StaticValue:
     value as is)
   """
   def __init__(self, value):
-    if isinstance(aq_base(value), (Method, TALESMethod)):
-      value = copyMethod(value)
     self.value = value
 
   def __call__(self, field, id, **kw):
@@ -162,8 +176,6 @@ class TALESValue(StaticValue):
 
 class OverrideValue(StaticValue):
   def __init__(self, override):
-    if isinstance(aq_base(override), (Method, TALESMethod)):
-      override = copyMethod(override)
     self.override = override
 
   def __call__(self, field, id, **kw):
@@ -172,8 +184,6 @@ class OverrideValue(StaticValue):
 class DefaultValue(StaticValue):
   def __init__(self, field_id, value):
     self.key = field_id[3:]
-    if isinstance(aq_base(value), (Method, TALESMethod)):
-      value = copyMethod(value)
     self.value = value
 
   def __call__(self, field, id, **kw):
@@ -209,38 +219,42 @@ class EditableValue(StaticValue):
 
 def getFieldValue(self, field, id, **kw):
   """
-    Return a callable expression
+    Return a callable expression and cacheable boolean flag
   """
   tales_expr = self.tales.get(id, "")
   if tales_expr:
     # TALESMethod is persistent object, so that we cannot cache original one.
     # Becase if connection which original talesmethod uses is closed,
     # RuntimeError must occurs in __setstate__.
-    clone = TALESMethod(tales_expr._text)
-    return TALESValue(clone)
+    tales_expr = copyMethod(tales_expr)
+    return TALESValue(tales_expr), isCacheable(tales_expr)
 
   override = self.overrides.get(id, "")
   if override:
-    return OverrideValue(override)
+    override = copyMethod(override)
+    return OverrideValue(override), isCacheable(override)
 
   # Get a normal value.
   value = self.get_orig_value(id)
+  value = copyMethod(value)
+  cacheable = isCacheable(value)
 
   field_id = field.id
 
   if id == 'default' and field_id.startswith('my_'):
-    return DefaultValue(field_id, value)
+    return DefaultValue(field_id, value), cacheable
 
   # For the 'editable' value, we try to get a default value
   if id == 'editable':
-    return EditableValue(value)
+    return EditableValue(value), cacheable
 
   # Return default value in callable mode
   if callable(value):
-    return StaticValue(value)
+    return StaticValue(value), cacheable
 
   # Return default value in non callable mode
-  return StaticValue(value)(field, id, **kw)
+  return_value = StaticValue(value)(field, id, **kw)
+  return return_value, isCacheable(return_value)
 
 def get_value(self, id, **kw):
   REQUEST = get_request()
@@ -257,20 +271,19 @@ def get_value(self, id, **kw):
   if self._p_oid is None:
     return self._original_get_value(id, **kw)
 
-  if 1:
-    value = getFieldValue(self, field, id, **kw)
-  else:
-    cache_id = ('Form.get_value',
-                self._p_oid,
-                field._p_oid,
-                id)
+  cache_id = ('Form.get_value',
+              self._p_oid,
+              field._p_oid,
+              id)
 
-    try:
-      value = _field_value_cache[cache_id]
-    except KeyError:
-      # either returns non callable value (ex. "Title")
-      # or a FieldValue instance of appropriate class
-      value = _field_value_cache[cache_id] = getFieldValue(self, field, id, **kw)
+  try:
+    value = _field_value_cache[cache_id]
+  except KeyError:
+    # either returns non callable value (ex. "Title")
+    # or a FieldValue instance of appropriate class
+    value, cacheable = getFieldValue(self, field, id, **kw)
+    if cacheable:
+      _field_value_cache[cache_id] = value
 
   if callable(value):
     return value(field, id, **kw)
@@ -788,7 +801,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             type_b = type(b)
             if type_a is not type_b:
                 return False
-            elif type_a is Method or type_a is BoundMethod:
+            elif type_a is Method:
                 return a.method_name==b.method_name
             elif type_a is TALESMethod:
                 return a._text==b._text

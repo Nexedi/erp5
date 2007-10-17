@@ -52,7 +52,8 @@ ZopeTestCase.installProduct('ERP5Form')
 
 from Products.Formulator.StandardFields import FloatField
 from Products.Formulator.StandardFields import StringField
-from Products.Formulator.MethodField import Method
+from Products.Formulator.StandardFields import DateTimeField
+from Products.Formulator.MethodField import Method, BoundMethod
 from Products.Formulator.TALESField import TALESMethod
 
 from Products.ERP5Type.Core.Folder import Folder
@@ -280,10 +281,16 @@ class TestFieldValueCache(unittest.TestCase):
     form.proxy_field_tales._p_oid = makeDummyOid()
     form.proxy_field_tales.tales['form_id'] = TALESMethod('string:form')
     form.proxy_field_tales.tales['field_id'] = TALESMethod('string:field')
+    # datetime field (input style is list)
+    form.datetime_field = DateTimeField('datetime_field')
+    form.datetime_field._p_oid = makeDummyOid()
+    form.datetime_field._edit(dict(input_style='list'))
+    for i in form.datetime_field.sub_form.fields.values():
+      i._p_oid = makeDummyOid()
 
   def test_method_field(self):
     field = self.root.form.field
-    value = getFieldValue(field, field, 'external_validator')
+    value, cacheable = getFieldValue(field, field, 'external_validator')
     self.assertEqual(False, value.value is field.values['external_validator'])
     self.assertEqual(True, type(value.value) is Method)
 
@@ -312,6 +319,41 @@ class TestFieldValueCache(unittest.TestCase):
     self.root.form.proxy_field_tales.get_value('title')
     self.assertEqual(True, cache_size == len(ProxyField._field_value_cache))
 
+  def test_datetime_field(self):
+    purgeFieldValueCache()
+    
+    # make sure that boundmethod must not be cached.
+    year_field = self.root.form.datetime_field.sub_form.get_field('year', include_disabled=1)
+    self.assertEqual(True, type(year_field.overrides['items']) is BoundMethod)
+
+    cache_size = len(Form._field_value_cache)
+    year_field.get_value('items')
+
+    # See Formulator/StandardFields.py(line:174)
+    # there are two get_value, start_datetime and end_datetime
+    cache_size += 2
+
+    # make sure that boundmethod is not cached(cache size does not change)
+    self.assertEqual(True, ('Form.get_value',
+                            self.root.form.datetime_field._p_oid,
+                            self.root.form.datetime_field._p_oid,
+                            'start_datetime'
+                            ) in Form._field_value_cache)
+    self.assertEqual(True, ('Form.get_value',
+                            self.root.form.datetime_field._p_oid,
+                            self.root.form.datetime_field._p_oid,
+                            'end_datetime'
+                            ) in Form._field_value_cache)
+    self.assertEqual(False, ('Form.get_value',
+                            year_field._p_oid,
+                            year_field._p_oid,
+                            'items'
+                            ) in Form._field_value_cache)
+    self.assertEqual(cache_size, len(Form._field_value_cache))
+
+    year_field.get_value('size')
+    year_field.get_value('default')
+    self.assertEqual(cache_size+2, len(Form._field_value_cache))
 
 def makeDummyOid():
   import time, random

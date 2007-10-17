@@ -52,6 +52,7 @@ from Globals import DTMLFile
 
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Form.Form import StaticValue, TALESValue, OverrideValue, DefaultValue, EditableValue
+from Products.ERP5Form.Form import copyMethod, isCacheable
 
 _USE_ORIGINAL_GET_VALUE_MARKER = []
 
@@ -512,14 +513,15 @@ class ProxyField(ZMIField):
 
   def getFieldValue(self, field, id, **kw):
     """
-      Return a callable expression
+      Return a callable expression and cacheable boolean flag
     """
     try:
       tales_expr = self.get_tales_expression(id)
     except ValueError:
-      return None
+      return None, False
     if tales_expr:
-      return TALESValue(tales_expr)
+      tales_expr = copyMethod(tales_expr)
+      return TALESValue(tales_expr), isCacheable(tales_expr)
 
     # FIXME: backwards compat hack to make sure overrides dict exists
     if not hasattr(self, 'overrides'):
@@ -527,34 +529,39 @@ class ProxyField(ZMIField):
 
     override = self.overrides.get(id, "")
     if override:
-      return OverrideValue(override)
+      override = copyMethod(override)
+      return OverrideValue(override), isCacheable(override)
 
     # Get a normal value.
     try:
       template_field = self.getRecursiveTemplateField()
       # Old ListBox instance might have default attribute. so we need to check it.
       if checkOriginalGetValue(template_field, id):
-        return _USE_ORIGINAL_GET_VALUE_MARKER
+        return _USE_ORIGINAL_GET_VALUE_MARKER, True
       value = self.get_recursive_orig_value(id)
     except KeyError:
       # For ListBox and other exceptional fields.
-      return self._get_value(id, **kw)
+      return self._get_value(id, **kw), False
 
     field_id = field.id
 
+    value = copyMethod(value)
+    cacheable = isCacheable(value)
+
     if id == 'default' and field_id.startswith('my_'):
-      return DefaultValue(field_id, value)
+      return DefaultValue(field_id, value), cacheable
 
     # For the 'editable' value, we try to get a default value
     if id == 'editable':
-      return EditableValue(value)
+      return EditableValue(value), cacheable
 
     # Return default value in callable mode
     if callable(value):
-      return StaticValue(value)
+      return StaticValue(value), cacheable
 
     # Return default value in non callable mode
-    return StaticValue(value)(field, id, **kw)
+    return_value = StaticValue(value)(field, id, **kw)
+    return return_value, isCacheable(return_value)
 
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
@@ -584,7 +591,9 @@ class ProxyField(ZMIField):
     except KeyError:
       # either returns non callable value (ex. "Title")
       # or a FieldValue instance of appropriate class
-      value = _field_value_cache[cache_id] = self.getFieldValue(field, id, **kw)
+      value, cacheable = self.getFieldValue(field, id, **kw)
+      if cacheable:
+        _field_value_cache[cache_id] = value
 
     if value is _USE_ORIGINAL_GET_VALUE_MARKER:
       return self.getTemplateField().get_value(id, **kw)
