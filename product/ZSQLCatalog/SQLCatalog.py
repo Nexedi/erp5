@@ -1624,26 +1624,28 @@ class Catalog( Folder,
         method = getattr(self, method_name)
         if method.meta_type in ("Z SQL Method", "LDIF Method"):
           # Build the dictionnary of values
-          arguments = method.arguments_src
-          for arg in split(arguments):
-            value_list = []
-            append = value_list.append
-            for object in catalogged_object_list:
+          arguments = split(method.arguments_src)
+        else:
+          arguments = []
+        for arg in arguments:
+          value_list = []
+          append = value_list.append
+          for object in catalogged_object_list:
+            try:
+              value = argument_cache[(object.uid, arg)]
+            except KeyError:
               try:
-                value = argument_cache[(object.uid, arg)]
-              except KeyError:
-                try:
-                  value = getattr(object, arg, None)
-                  if callable(value):
-                    value = value()
-                except ConflictError:
-                  raise
-                except:
-                  value = None
-                if not disable_cache:
-                  argument_cache[(object.uid, arg)] = value
-              append(value)
-            kw[arg] = value_list
+                value = getattr(object, arg, None)
+                if callable(value):
+                  value = value()
+              except ConflictError:
+                raise
+              except:
+                value = None
+              if not disable_cache:
+                argument_cache[(object.uid, arg)] = value
+            append(value)
+          kw[arg] = value_list
 
       for method_name in method_id_list:
         if method_name not in method_kw_dict:
