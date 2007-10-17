@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -80,7 +77,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
   <tal:block tal:define="local_parameter_list local_parameter_list | python: {};\n
-                         dummy python: local_parameter_list.update({\'field_id\': request[\'field_id\'], \'form_pickle\': request[\'form_pickle\'], \'form_signature\': request[\'form_signature\']});">\n
+                         dummy python: local_parameter_list.update({\'field_id\': request.get(\'field_id\', None), \'form_pickle\': request.get(\'form_pickle\', None), \'form_signature\': request.get(\'form_signature\', None)});">\n
     <tal:block metal:use-macro="here/form_dialog/macros/master" />\n
   </tal:block>\n
 </tal:block>\n
