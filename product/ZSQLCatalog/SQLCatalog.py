@@ -1625,6 +1625,9 @@ class Catalog( Folder,
         if method.meta_type in ("Z SQL Method", "LDIF Method"):
           # Build the dictionnary of values
           arguments = split(method.arguments_src)
+        elif method.meta_type == "Script (Python)":
+          arguments = \
+            method.func_code.co_varnames[:method.func_code.co_argcount]
         else:
           arguments = []
         for arg in arguments:
