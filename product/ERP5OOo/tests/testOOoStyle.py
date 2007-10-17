@@ -50,6 +50,8 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     person_module = self.portal.person_module
     if not hasattr(person_module, 'pers'):
       person_module.newContent(id='pers', portal_type='Person')
+      get_transaction().commit()
+      self.tic()
     self.portal.changeSkin(self.skin)
     self.validator = Validator()
 
@@ -74,6 +76,34 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._validate(response.getBody())
 
   def test_form_view(self):
+    # form_view on a form without listbox
+    self.portal.person_module.pers.setDefaultAddressZipCode(59000)
+    response = self.publish(
+        '/%s/person_module/pers/default_address/GeographicAddress_view'
+        % self.portal.getId(), self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_form_view_empty_listbox(self):
+    # form_view on a form with an empty listbox
+    if hasattr(self.portal.person_module.pers, 'default_address'):
+      self.portal.person_module.pers._delObject('default_address')
+    response = self.publish(
+                   '/%s/person_module/pers/Person_view'
+                   % self.portal.getId(), self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_form_view_non_empty_listbox(self):
+    self.portal.person_module.pers.setDefaultAddressZipCode(59000)
     response = self.publish(
                    '/%s/person_module/pers/Person_view'
                    % self.portal.getId(), self.auth)
