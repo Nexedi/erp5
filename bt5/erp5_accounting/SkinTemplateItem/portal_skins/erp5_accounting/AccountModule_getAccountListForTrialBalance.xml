@@ -333,6 +333,7 @@ for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
                 group_by_node=1,\n
                 omit_output=1,\n
+                from_date=from_date,\n
                 at_date=from_date + 1,\n
                 portal_type=balance_movement_type_list,\n
                 **inventory_params):\n
@@ -347,6 +348,7 @@ for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
                 group_by_node=1,\n
                 omit_input=1,\n
+                from_date=from_date,\n
                 at_date=from_date + 1,\n
                 portal_type=balance_movement_type_list,\n
                 **inventory_params):\n
@@ -450,6 +452,7 @@ if account_type_to_group_by_mirror_section:\n
                   group_by_mirror_section=1,\n
                   group_by_node=1,\n
                   omit_output=1,\n
+                  from_date=from_date,\n
                   at_date=from_date + 1,\n
                   portal_type=balance_movement_type_list,\n
                   **inventory_params):\n
@@ -466,6 +469,7 @@ if account_type_to_group_by_mirror_section:\n
                   group_by_mirror_section=1,\n
                   group_by_node=1,\n
                   omit_input=1,\n
+                  from_date=from_date,\n
                   at_date=from_date + 1,\n
                   portal_type=balance_movement_type_list,\n
                   **inventory_params):\n
@@ -539,6 +543,7 @@ if account_type_to_group_by_payment:\n
                   group_by_payment=1,\n
                   group_by_node=1,\n
                   omit_output=1,\n
+                  from_date=from_date,\n
                   at_date=from_date + 1,\n
                   portal_type=balance_movement_type_list,\n
                   **inventory_params):\n
@@ -556,6 +561,7 @@ if account_type_to_group_by_payment:\n
                   group_by_payment=1,\n
                   group_by_node=1,\n
                   omit_input=1,\n
+                  from_date=from_date,\n
                   at_date=from_date + 1,\n
                   portal_type=balance_movement_type_list,\n
                   **inventory_params):\n
