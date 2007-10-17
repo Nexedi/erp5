@@ -64,11 +64,6 @@ dQEAAAAA</string> </value>
   <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
 <office:body>\n
   <office:spreadsheet>\n
-    <!-- at least one table-column element is required for ODF to validate -->\n
-    <table:table-column\n
-          table:style-name=\'co2\'\n
-          table:default-cell-style-name=\'report-column-title\'/>\n
-\n
     <!-- calculate max column len -->\n
     <tal:block tal:define="field_list python:form.get_fields_in_group(\'bottom\')">\n
       <tal:block tal:define="global column_len python:3"/>\n
@@ -82,6 +77,11 @@ dQEAAAAA</string> </value>
     </tal:block>\n
 \n
     <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name python: unicode(here.getTitle(), \'utf-8\')">\n
+      <!-- at least one table-column element is required for ODF to validate -->\n
+      <table:table-column\n
+            table:style-name=\'co2\'\n
+            table:default-cell-style-name=\'report-column-title\'/>\n
+\n
       <tal:block metal:define-macro="form_layout">\n
         <tal:block tal:define="field_errors python: request.get(\'field_errors,{}\'); dummy python: request.set(\'here\', here)">\n
           <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
