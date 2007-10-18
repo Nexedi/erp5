@@ -112,6 +112,22 @@ class WorkflowToolInteractor(AqDynamicInteractor):
     from Products.CMFCore.WorkflowTool import WorkflowTool
     self.on(WorkflowTool.manage_changeWorkflows).doAfter(self.resetAqDynamic)
 
+
+class DCWorkflowInteractor(AqDynamicInteractor):
+  """This interactor reset aq_dynamic method cache whenever a workflow
+  definition changes
+  """
+  def install(self):
+    from Products.DCWorkflow.Transitions import Transitions
+    self.on(Transitions.addTransition).doAfter(self.resetAqDynamic)
+    self.on(Transitions.deleteTransitions).doAfter(self.resetAqDynamic)
+    
+    from Products.DCWorkflow.Transitions import TransitionDefinition
+    self.on(TransitionDefinition.setProperties).doAfter(self.resetAqDynamic)
+    
+    from Products.DCWorkflow.Variables import Variables
+    self.on(Variables.setStateVar).doAfter(self.resetAqDynamic)
+
 ## #
 ## # Experimental part
 ## #
@@ -224,6 +240,7 @@ class InteractorOfInteractor(Interactor):
 # Install some interactors:
 
 WorkflowToolInteractor().install()
+DCWorkflowInteractor().install()
 
 # This is used in ERP5Form and install method is called in ERP5Form
 # Don't install this interactor here.

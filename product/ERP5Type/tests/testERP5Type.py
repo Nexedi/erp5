@@ -1692,6 +1692,35 @@ class TestPropertySheet:
           props=dict(chain_Person='delivery_causality_workflow'))
       self.assertTrue(hasattr(doc, 'getCausalityState'))
 
+    def test_aq_reset_on_workflow_method_change(self):
+      doc = self.portal.person_module.newContent(portal_type='Person')
+      ti = self.getTypesTool()['Person']
+      self.portal.portal_workflow.manage_changeWorkflows(
+          default_chain='',
+          props=dict(chain_Person='delivery_causality_workflow'))
+      self.assertTrue(hasattr(doc, 'diverge'))
+
+      wf = self.portal.portal_workflow.delivery_causality_workflow
+      wf.transitions.addTransition('dummy_workflow_method')
+      from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
+      wf.transitions.dummy_workflow_method.setProperties(
+          title='', new_state_id='', trigger_type=TRIGGER_WORKFLOW_METHOD)
+      self.assertTrue(hasattr(doc, 'dummyWorkflowMethod'))
+
+      wf.transitions.deleteTransitions(['dummy_workflow_method'])
+      self.assertFalse(hasattr(doc, 'dummyWorkflowMethod'))
+
+    def test_aq_reset_on_workflow_state_variable_change(self):
+      doc = self.portal.person_module.newContent(portal_type='Person')
+      ti = self.getTypesTool()['Person']
+      self.portal.portal_workflow.manage_changeWorkflows(
+          default_chain='',
+          props=dict(chain_Person='delivery_causality_workflow'))
+      self.assertTrue(hasattr(doc, 'getCausalityState'))
+      wf = self.portal.portal_workflow.delivery_causality_workflow
+      wf.variables.setStateVar('dummy_state')
+      self.assertTrue(hasattr(doc, 'getDummyState'))
+
     # ... other cases should be added here
 
 

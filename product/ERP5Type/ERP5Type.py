@@ -723,7 +723,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
       if previous_property_sheet_list != self.property_sheet_list or \
                    base_category_list != self.base_category_list:
         from Products.ERP5Type.Base import _aq_reset
-        _aq_reset() # XXX We should also call it whenever we change workflow defition
+        _aq_reset()
       return result
 
     def reorderActions(self, REQUEST=None):
