@@ -368,19 +368,32 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(catalog is not None)
 
     # Clear out the uid buffer.
-    if hasattr(catalog, '_v_uid_buffer'):
-      del catalog._v_uid_buffer
+    #from Products.ZSQLCatalog.SQLCatalog import uid_buffer_dict, get_ident
+    #uid_buffer_key = get_ident()
+    #if uid_buffer_key in uid_buffer_dict:
+    #  del uid_buffer_dict[uid_buffer_key]
+    def getUIDBuffer(*args, **kw):
+      uid_lock = catalog.__class__._reserved_uid_lock
+      uid_lock.acquire()
+      try:
+        result = catalog.getUIDBuffer(*args, **kw)
+      finally:
+        uid_lock.release()
+      return result
+
+    getUIDBuffer(force_new_buffer=True)
 
     # Need to abort a transaction artificially, so commit the current
     # one, first.
     get_transaction().commit()
 
     catalog.newUid()
-    self.failUnless(hasattr(catalog, '_v_uid_buffer'))
-    self.failUnless(len(catalog._v_uid_buffer) > 0)
+    uid_buffer = getUIDBuffer()
+    self.failUnless(len(uid_buffer) > 0)
 
     get_transaction().abort()
-    self.failUnless(len(getattr(catalog, '_v_uid_buffer', [])) == 0)
+    uid_buffer = getUIDBuffer()
+    self.failUnless(len(uid_buffer) == 0)
 
   def test_13_ERP5Site_reindexAll(self, quiet=quiet, run=run_all_test):
     if not run: return

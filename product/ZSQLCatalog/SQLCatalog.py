@@ -86,6 +86,11 @@ full_text_search_modes = { 'natural': '',
 
 manage_addSQLCatalogForm=DTMLFile('dtml/addSQLCatalog',globals())
 
+# Here go uid buffers
+# Structure:
+#  global_uid_buffer_dict[catalog_path][thread_id] = UidBuffer
+global_uid_buffer_dict = {}
+
 def manage_addSQLCatalog(self, id, title,
              vocab_id='create_default_catalog_',
              REQUEST=None):
@@ -1229,6 +1234,20 @@ class Catalog( Folder,
       pass
     return keys
 
+  def getUIDBuffer(self, force_new_buffer=False):
+    global global_uid_buffer_dict
+    klass = self.__class__
+    assert klass._reserved_uid_lock.locked()
+    assert getattr(self, 'aq_base', None) is not None
+    instance_key = self.getPhysicalPath()
+    if instance_key not in global_uid_buffer_dict:
+      global_uid_buffer_dict[instance_key] = {}
+    uid_buffer_dict = global_uid_buffer_dict[instance_key]
+    thread_key = get_ident()
+    if force_new_buffer or thread_key not in uid_buffer_dict:
+      uid_buffer_dict[thread_key] = UidBuffer()
+    return uid_buffer_dict[thread_key]
+  
   # the cataloging API
   def produceUid(self):
     """
@@ -1238,12 +1257,10 @@ class Catalog( Folder,
     assert klass._reserved_uid_lock.locked()
     # This checks if the list of local reserved uids was cleared after clearReserved
     # had been called.
-    if klass._local_clear_reserved_time != self._last_clear_reserved_time:
-      self._v_uid_buffer = UidBuffer()
-      klass._local_clear_reserved_time = self._last_clear_reserved_time
-    elif getattr(self, '_v_uid_buffer', None) is None:
-      self._v_uid_buffer = UidBuffer()
-    if len(self._v_uid_buffer) == 0:
+    force_new_buffer = (klass._local_clear_reserved_time != self._last_clear_reserved_time)
+    uid_buffer = self.getUIDBuffer(force_new_buffer=force_new_buffer)
+    klass._local_clear_reserved_time = self._last_clear_reserved_time
+    if len(uid_buffer) == 0:
       id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
       if id_tool is not None:
         if self._max_uid is None:
@@ -1266,7 +1283,7 @@ class Catalog( Folder,
           pass
         instance_id = md5.new(str(random_factor_list)).hexdigest()
         uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
-      self._v_uid_buffer.extend(uid_list)
+      uid_buffer.extend(uid_list)
 
   def isIndexable(self):
     """
@@ -1328,8 +1345,9 @@ class Catalog( Folder,
     try:
       klass._reserved_uid_lock.acquire()
       self.produceUid()
-      if len(self._v_uid_buffer) > 0:
-        uid = self._v_uid_buffer.pop()
+      uid_buffer = self.getUIDBuffer()
+      if len(uid_buffer) > 0:
+        uid = uid_buffer.pop()
         # Vincent added this 2006/01/25
         #if uid > 4294967296: # 2**32
         #if uid > 10000000: # arbitrary level : below it's normal, above it's suspicious
@@ -1554,7 +1572,8 @@ class Catalog( Folder,
             klass = self.__class__
             try:
               klass._reserved_uid_lock.acquire()
-              if getattr(self, '_v_uid_buffer', None) is not None:
+              uid_buffer = self.getUIDBuffer()
+              if uid_buffer is not None:
                 # This is the case where:
                 #   1. The object got an uid.
                 #   2. The catalog was cleared.
@@ -1564,7 +1583,7 @@ class Catalog( Folder,
                 # SQLCatalog believes that it is still reserved. So it is
                 # necessary to remove the uid from the list explicitly.
                 try:
-                  self._v_uid_buffer.remove(uid)
+                  uid_buffer.remove(uid)
                 except ValueError:
                   pass
             finally:
