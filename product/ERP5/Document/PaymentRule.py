@@ -106,14 +106,14 @@ class PaymentRule(Rule):
           bank_movement = applied_rule[bank_id]
         else:
           bank_movement = applied_rule.newContent(
-                type_name = payment_line_type,
+                portal_type=payment_line_type,
                 id = bank_id)
         receivable_id = 'receivable'
         if receivable_id in applied_rule.objectIds():
           receivable_movement = applied_rule[receivable_id]
         else:
           receivable_movement = applied_rule.newContent(
-                type_name = payment_line_type,
+                portal_type=payment_line_type,
                 id = receivable_id)
         
         # TODO: specify this using a rule in portal_rules
