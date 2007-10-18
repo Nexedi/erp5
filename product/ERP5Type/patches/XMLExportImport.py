@@ -24,7 +24,9 @@ except ImportError:
 from ZODB.ExportImport import TemporaryFile
 from pickle import Pickler, EMPTY_DICT, MARK, DICT
 from cPickle import loads, dumps
-from types import *
+from types import TupleType
+from types import StringType
+from types import DictionaryType
 from OFS import XMLExportImport
 
 # Jython has PyStringMap; it's a dict subclass with string keys

@@ -33,7 +33,9 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type import _dtmldir
-from Products.ERP5Type.Cache import *
+from Products.ERP5Type.Cache import CacheFactory
+from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import DEFAULT_CACHE_FACTORY
 from Products.ERP5Type.CachePlugins.RamCache import RamCache
 from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
 from Products.ERP5Type.CachePlugins.SQLCache import SQLCache
