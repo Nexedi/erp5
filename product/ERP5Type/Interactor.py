@@ -93,10 +93,29 @@ class Interactor:
     return InteractorSource(method)
 
 
+class AqDynamicInteractor(Interactor):
+  """This base interactor will reset _aq_dynamic method cache, to regenerate
+  new accessors.
+  """
+  def resetAqDynamic(self, *args, **kw):
+    """
+      Reset _aq_dynamic
+    """
+    _aq_reset()
+
+
+class WorkflowToolInteractor(AqDynamicInteractor):
+  """This interactor reset aq_dynamic method cache whenever workflow
+  associations are changed.
+  """
+  def install(self):
+    from Products.CMFCore.WorkflowTool import WorkflowTool
+    self.on(WorkflowTool.manage_changeWorkflows).doAfter(self.resetAqDynamic)
+
 ## #
 ## # Experimental part
 ## #
-## class AqDynamicInteractor(Interactor):
+## class InteractionWorkflowAqDynamicInteractor(AqDynamicInteractor):
 
 ##   def install(self):
 ##     """
@@ -112,11 +131,6 @@ class Interactor:
 ##     """
 
 ##   # Interaction example
-##   def resetAqDynamic(self, method_call_object, a, b, toto=None):
-##     """
-##       Reset _aq_dynamic
-##     """
-##     _aq_reset()
 
 
 ## class TypeInteractorExample(Interactor):
@@ -203,12 +217,15 @@ class InteractorOfInteractor(Interactor):
     pass
 
 
-#test = AqDynamicInteractor()
-#test.install()
-
-
 #interactor_of_interactor = InteractorOfInteractor(test)
 #interactor_of_interactor.install()
+
+
+# Install some interactors:
+
+WorkflowToolInteractor().install()
+
 # This is used in ERP5Form and install method is called in ERP5Form
 # Don't install this interactor here.
 fielf_value_interactor = FieldValueInteractor()
+
