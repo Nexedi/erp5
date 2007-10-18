@@ -121,7 +121,7 @@ class SessionTool(BaseTool):
     return session
     
   def __setitem__(self, key, item):
-    session = self._getSessionObject(session_id)
+    session = self._getSessionObject(key)
     session._updatecontext(self)
 
   def newContent(self, id, **kw):
