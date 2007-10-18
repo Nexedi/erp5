@@ -1668,6 +1668,32 @@ class TestPropertySheet:
       foo.setRegionValueSet([gamma], 
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
+    
+    # _aq_reset should be called implicitly when the system configuration
+    # changes:
+    def test_aq_reset_on_portal_types_properties_change(self):
+      doc = self.portal.person_module.newContent(portal_type='Person')
+      ti = self.getTypesTool()['Person']
+      self.assertFalse(hasattr(doc, 'getDestination'))
+      ti.manage_editProperties(dict(base_category_list=
+                               list(ti.base_category_list) + ['destination']))
+      self.assertTrue(hasattr(doc, 'getDestination'))
+
+    def test_aq_reset_on_workflow_chain_change(self):
+      doc = self.portal.person_module.newContent(portal_type='Person')
+      ti = self.getTypesTool()['Person']
+      self.assertFalse(hasattr(doc, 'getCausalityState'))
+      # chain the portal type with a workflow that has 'causality_state' as
+      # state variable name, this should regenerate the getCausalityState
+      # accessor. This test might have to be updated whenever
+      # delivery_causality_workflow changes.
+      self.portal.portal_workflow.manage_changeWorkflows(
+          default_chain='',
+          props=dict(chain_Person='delivery_causality_workflow'))
+      self.assertTrue(hasattr(doc, 'getCausalityState'))
+
+    # ... other cases should be added here
+
 
 def test_suite():
   suite = unittest.TestSuite()
