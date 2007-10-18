@@ -1882,6 +1882,36 @@ class TestCMFActivity(ERP5TypeTestCase):
     for m in messages_for_o1:
       self.assertEquals(m.activity_kw.get('tag'), 'The Tag')
   
+  def test_82_LossOfVolatileAttribute(self, quiet=0, run=run_all_test):
+    """
+    Test that the loss of volatile attribute doesn't loose activities
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck loss of volatile attribute doesn\'t cause message to be lost'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    message_list = activity_tool.getMessageList()
+    self.assertEquals(len(message_list), 0)
+    def delete_volatiles():
+      for property_id in activity_tool.__dict__.keys():
+        if property_id.startswith('_v_'):
+          delattr(activity_tool, property_id)
+    organisation_module = self.getOrganisationModule()
+    active_organisation_module = organisation_module.activate()
+    delete_volatiles()
+    # Cause a message to be created
+    # If the buffer cannot be created, this will raise
+    active_organisation_module.getTitle()
+    delete_volatiles()
+    # Another activity to check that first one did not get lost even if volatile disapears
+    active_organisation_module.getId()
+    get_transaction().commit()
+    message_list = activity_tool.getMessageList()
+    self.assertEquals(len(message_list), 2)
 
 def test_suite():
   suite = unittest.TestSuite()
