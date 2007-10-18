@@ -1123,6 +1123,9 @@ class Catalog( Folder,
     return self.sql_search_result_keys
 
   def _getCatalogSchema(self, table=None):
+    # XXX: Using a volatile as a cache makes it impossible to flush
+    # consistently on all connections containing the volatile. Another
+    # caching scheme must be used here.
     catalog_schema_dict = getattr(aq_base(self), '_v_catalog_schema_dict', {})
 
     if table not in catalog_schema_dict:
