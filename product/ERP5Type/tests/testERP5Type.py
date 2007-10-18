@@ -137,11 +137,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
 
     def beforeTearDown(self):
+      get_transaction().abort()
       for module in [ self.getPersonModule(),
                       self.getOrganisationModule(),
                       self.getCategoryTool().region ]:
         module.manage_delObjects(list(module.objectIds()))
       get_transaction().commit()
+      self.tic()
 
     def loginWithNoRole(self, quiet=0, run=run_all_test):
       uf = self.getPortal().acl_users
