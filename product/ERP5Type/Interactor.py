@@ -43,7 +43,7 @@ class InteractorMethod(Method):
     self.func_defaults = method.func_defaults
 
   def registerBeforeAction(self, action, args, kw):
-    self.after_action_list.append((action, args, kw))
+    self.before_action_list.append((action, args, kw))
   
   def registerAfterAction(self, action, args, kw):
     self.after_action_list.append((action, args, kw))
