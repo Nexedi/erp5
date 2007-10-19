@@ -535,6 +535,7 @@ class TestERP5BankingMixin:
 
     # get the base category group
     self.group_base_category = getattr(self.category_tool, 'group')
+    self.baobab_group = self.group_base_category.newContent(id='baobab', portal_type='Category', codification='BAOBAB')
     # get the base category site
     self.site_base_category = getattr(self.category_tool, 'site')
     # add the category testsite in the category site which hold vaults situated in the bank
