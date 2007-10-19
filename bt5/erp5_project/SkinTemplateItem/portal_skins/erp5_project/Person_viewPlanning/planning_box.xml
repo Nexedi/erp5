@@ -17,12 +17,12 @@
             <value>
               <list>
                 <string>title</string>
-                <string>description</string>
                 <string>js_enabled</string>
                 <string>report_root_list</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>list_method</string>
+                <string>round_script</string>
                 <string>info_center</string>
                 <string>info_topleft</string>
                 <string>info_topright</string>
@@ -110,10 +110,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
-                    <value> <string>Planning of Tasks and Task Report related to the Person</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>planning_box</string> </value>
                 </item>
@@ -176,6 +172,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key>                 <string>round_script</string> </key>
+                    <value> <string>Planning_roundBoundToMinute</string> </value>
                 </item>
                 <item>
                     <key> <string>sec_layer_list_method</string> </key>
