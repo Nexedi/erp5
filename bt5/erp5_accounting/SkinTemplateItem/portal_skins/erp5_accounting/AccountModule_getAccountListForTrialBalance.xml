@@ -332,7 +332,6 @@ for node in getInventoryList(\n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
                 group_by_node=1,\n
-                omit_output=1,\n
                 from_date=from_date,\n
                 at_date=from_date + 1,\n
                 portal_type=balance_movement_type_list,\n
@@ -341,23 +340,10 @@ for node in getInventoryList(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
                           dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
-  account_props[\'initial_debit_balance\'] = account_props.get(\n
-                    \'initial_debit_balance\', 0) + total_price\n
-\n
-for node in getInventoryList(\n
-                node_category_strict_membership=account_type_to_group_by_node,\n
-                group_by_node=1,\n
-                omit_input=1,\n
-                from_date=from_date,\n
-                at_date=from_date + 1,\n
-                portal_type=balance_movement_type_list,\n
-                **inventory_params):\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
-  total_price = node[\'total_price\'] or 0\n
-  account_props[\'initial_credit_balance\'] = account_props.get(\n
-                    \'initial_credit_balance\', 0) - total_price\n
+  total_price += account_props.get(\'initial_debit_balance\', 0)\n
+  total_price -= account_props.get(\'initial_credit_balance\', 0)\n
+  account_props[\'initial_debit_balance\'] = max(total_price, 0)\n
+  account_props[\'initial_credit_balance\'] = max(- total_price, 0)\n
 \n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
@@ -451,7 +437,6 @@ if account_type_to_group_by_mirror_section:\n
                           account_type_to_group_by_mirror_section,\n
                   group_by_mirror_section=1,\n
                   group_by_node=1,\n
-                  omit_output=1,\n
                   from_date=from_date,\n
                   at_date=from_date + 1,\n
                   portal_type=balance_movement_type_list,\n
@@ -460,25 +445,11 @@ if account_type_to_group_by_mirror_section:\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
-    account_props[\'initial_debit_balance\'] = account_props.get(\n
-                      \'initial_debit_balance\', 0) + total_price\n
+    total_price += account_props.get(\'initial_debit_balance\', 0)\n
+    total_price -= account_props.get(\'initial_credit_balance\', 0)\n
+    account_props[\'initial_debit_balance\'] = max(total_price, 0)\n
+    account_props[\'initial_credit_balance\'] = max(- total_price, 0)\n
 \n
-  for node in getInventoryList(\n
-                  node_category_strict_membership=\n
-                          account_type_to_group_by_mirror_section,\n
-                  group_by_mirror_section=1,\n
-                  group_by_node=1,\n
-                  omit_input=1,\n
-                  from_date=from_date,\n
-                  at_date=from_date + 1,\n
-                  portal_type=balance_movement_type_list,\n
-                  **inventory_params):\n
-    account_props = line_per_account.setdefault(\n
-            (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
-            dict(debit=0, credit=0))\n
-    total_price = node[\'total_price\'] or 0\n
-    account_props[\'initial_credit_balance\'] = account_props.get(\n
-                      \'initial_credit_balance\', 0) - total_price\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -542,7 +513,6 @@ if account_type_to_group_by_payment:\n
                           account_type_to_group_by_payment,\n
                   group_by_payment=1,\n
                   group_by_node=1,\n
-                  omit_output=1,\n
                   from_date=from_date,\n
                   at_date=from_date + 1,\n
                   portal_type=balance_movement_type_list,\n
@@ -552,26 +522,10 @@ if account_type_to_group_by_payment:\n
                   (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
                   dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
-    account_props[\'initial_debit_balance\'] = account_props.get(\n
-                      \'initial_debit_balance\', 0) + total_price\n
-\n
-  for node in getInventoryList(\n
-                  node_category_strict_membership=\n
-                          account_type_to_group_by_payment,\n
-                  group_by_payment=1,\n
-                  group_by_node=1,\n
-                  omit_input=1,\n
-                  from_date=from_date,\n
-                  at_date=from_date + 1,\n
-                  portal_type=balance_movement_type_list,\n
-                  **inventory_params):\n
-    account_used[node[\'node_relative_url\']] = 1\n
-    account_props = line_per_account.setdefault(\n
-                  (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
-                  dict(debit=0, credit=0))\n
-    total_price = node[\'total_price\'] or 0\n
-    account_props[\'initial_credit_balance\'] = account_props.get(\n
-                      \'initial_credit_balance\', 0) - total_price\n
+    total_price += account_props.get(\'initial_debit_balance\', 0)\n
+    total_price -= account_props.get(\'initial_credit_balance\', 0)\n
+    account_props[\'initial_debit_balance\'] = max(total_price, 0)\n
+    account_props[\'initial_credit_balance\'] = max(- total_price, 0)\n
 \n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
