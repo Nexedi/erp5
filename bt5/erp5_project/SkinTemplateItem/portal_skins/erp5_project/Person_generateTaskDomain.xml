@@ -76,12 +76,9 @@ if object_path is None:\n
 domain_list = []\n
 \n
 if depth == 0:\n
-  url =  [context.person_module.restrictedTraverse(object_path)]\n
-  category_list = url\n
+  category_list =  [context.person_module.restrictedTraverse(object_path)]\n
 \n
 else:\n
-  #url = category.getProperty(\'membership_criterion_category\')\n
-  #category_list = url.searchFolder()\n
   return domain_list\n
 \n
 for category in category_list:\n
@@ -153,7 +150,6 @@ return domain_list\n
                             <string>None</string>
                             <string>_getitem_</string>
                             <string>domain_list</string>
-                            <string>url</string>
                             <string>category_list</string>
                             <string>_getiter_</string>
                             <string>category</string>

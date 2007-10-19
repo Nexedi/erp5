@@ -84,17 +84,12 @@ movement_list = context.portal_simulation.getMovementHistoryList(\n
                    omit_mirror_date=0,\n
 )\n
 \n
-# return movement_list\n
 \n
 # XXX It is a bad idea to return order_value or delivery_value,\n
 # because same object can be displayed multiple time in some cases\n
 \n
-# XXX Simulation movement should not be editable\n
-# Same for blocks on which user does not have write permission\n
-\n
 return_list = []\n
 \n
-# XXX This part is an approximtion for sevran\n
 # Normally, simulation movement should only have 1 order value\n
 for mvt_obj in movement_list:\n
   # XXX Can\'t we use a brain instead ?\n

@@ -80,8 +80,6 @@ if depth == 0:\n
                                                         selection_name= \'person_module_selection\')\n
 \n
 else:\n
-  #url = category.getProperty(\'membership_criterion_category\')\n
-  #category_list = url.searchFolder()\n
   return domain_list\n
 \n
 for category in category_list:\n
@@ -94,7 +92,6 @@ for category in category_list:\n
                 \n
   domain_list.append(domain)\n
 \n
-context.log("%s on %s" % (script.getId(), context.getPath()), "%d objects domain" %  len(domain_list))\n
 return domain_list\n
 </string> </value>
         </item>
@@ -159,7 +156,6 @@ return domain_list\n
                             <string>category</string>
                             <string>domain</string>
                             <string>script</string>
-                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
