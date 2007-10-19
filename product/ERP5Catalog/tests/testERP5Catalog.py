@@ -1867,6 +1867,156 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals([], [x.getObject() for x in
                            obj.searchFolder(portal_type='Bank Account')])
 
+  def test_60_OwnerIndexing(self, quiet=quiet, run=run_all_test):
+    if not run: 
+      return
+
+    login = PortalTestCase.login
+    logout = self.logout
+    uf = self.getPortal().acl_users
+    uf._doAddUser('super_owner', '', ['Member', 'Author', 'Assignee'], [])
+    uf._doAddUser('little_owner', '', ['Member', 'Author'], [])
+
+    perm = 'View'
+    folder = self.getOrganisationModule()
+    portal_type = 'Organisation'
+    sub_portal_type_id = 'Address'
+    sub_portal_type = self.getPortal().portal_types._getOb(sub_portal_type_id)
+
+    sql_connection = self.getSQLConnection()
+    sql = 'select owner from catalog where uid=%s'
+
+    login(self, 'super_owner')
+
+    # Check that Owner is not catalogued if he can't view the object
+    obj = folder.newContent(portal_type='Organisation')
+    obj.manage_permission(perm, [], 0)
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql % obj.getUid())
+    self.assertSameSet([None], [x.owner for x in result])
+
+    # Check that Owner is catalogued when he can view the object
+    obj = folder.newContent(portal_type='Organisation')
+    obj.manage_permission(perm, ['Owner'], 0)
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql % obj.getUid())
+    self.assertSameSet(['super_owner'], [x.owner for x in result])
+
+    # Check that Owner is not catalogued when he can view the 
+    # object because he has another role
+    obj = folder.newContent(portal_type='Organisation')
+    obj.manage_permission(perm, ['Assignee'], 0)
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql % obj.getUid())
+    self.assertSameSet([None], [x.owner for x in result])
+
+    # Check that Owner is not catalogued when he can't view the 
+    # object and when the portal type does not acquire the local roles.
+    sub_portal_type.acquire_local_roles = False
+    self.portal.portal_caches.clearAllCache()
+    logout()
+    login(self, 'super_owner')
+    obj = folder.newContent(portal_type='Organisation')
+    obj.manage_permission(perm, ['Owner'], 0)
+    logout()
+    login(self, 'little_owner')
+    sub_obj = obj.newContent(portal_type='Address')
+    sub_obj.manage_permission(perm, [], 0)
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql % sub_obj.getUid())
+    self.assertSameSet([None], [x.owner for x in result])
+
+    # Check that Owner is catalogued when he can view the 
+    # object and when the portal type does not acquire the local roles.
+    sub_portal_type.acquire_local_roles = False
+    self.portal.portal_caches.clearAllCache()
+    logout()
+    login(self, 'super_owner')
+    obj = folder.newContent(portal_type='Organisation')
+    obj.manage_permission(perm, ['Owner'], 0)
+    logout()
+    login(self, 'little_owner')
+    sub_obj = obj.newContent(portal_type='Address')
+    sub_obj.manage_permission(perm, ['Owner'], 0)
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql % sub_obj.getUid())
+    self.assertSameSet(['little_owner'], [x.owner for x in result])
+
+    # Check that Owner is catalogued when he can view the 
+    # object because permissions are acquired and when the portal type does not
+    # acquire the local roles.
+    sub_portal_type.acquire_local_roles = False
+    self.portal.portal_caches.clearAllCache()
+    logout()
+    login(self, 'super_owner')
+    obj = folder.newContent(portal_type='Organisation')
+    obj.manage_permission(perm, ['Owner'], 0)
+    logout()
+    login(self, 'little_owner')
+    sub_obj = obj.newContent(portal_type='Address')
+    sub_obj.manage_permission(perm, [], 1)
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql % sub_obj.getUid())
+    self.assertSameSet(['little_owner'], [x.owner for x in result])
+
+    # Check that Owner is not catalogued when he can't view the 
+    # object and when the portal type acquires the local roles.
+    sub_portal_type.acquire_local_roles = True
+    self.portal.portal_caches.clearAllCache()
+    logout()
+    login(self, 'super_owner')
+    obj = folder.newContent(portal_type='Organisation')
+    obj.manage_permission(perm, ['Owner'], 0)
+    logout()
+    login(self, 'little_owner')
+    sub_obj = obj.newContent(portal_type='Address')
+    sub_obj.manage_permission(perm, [], 0)
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql % sub_obj.getUid())
+    self.assertSameSet([None], [x.owner for x in result])
+
+    # Check that Owner is catalogued when he can view the 
+    # object and when the portal type acquires the local roles.
+    sub_portal_type.acquire_local_roles = True
+    self.portal.portal_caches.clearAllCache()
+    logout()
+    login(self, 'super_owner')
+    obj = folder.newContent(portal_type='Organisation')
+    obj.manage_permission(perm, ['Owner'], 0)
+    logout()
+    login(self, 'little_owner')
+    sub_obj = obj.newContent(portal_type='Address')
+    sub_obj.manage_permission(perm, ['Owner'], 0)
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql % sub_obj.getUid())
+    self.assertSameSet(['little_owner'], [x.owner for x in result])
+
+    # Check that Owner is catalogued when he can view the 
+    # object because permissions are acquired and when the portal type
+    # acquires the local roles.
+    sub_portal_type.acquire_local_roles = True
+    self.portal.portal_caches.clearAllCache()
+    logout()
+    login(self, 'super_owner')
+    obj = folder.newContent(portal_type='Organisation')
+    obj.manage_permission(perm, ['Owner'], 0)
+    logout()
+    login(self, 'little_owner')
+    sub_obj = obj.newContent(portal_type='Address')
+    sub_obj.manage_permission(perm, [], 1)
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql % sub_obj.getUid())
+    self.assertSameSet(['little_owner'], [x.owner for x in result])
+
 
 def test_suite():
   suite = unittest.TestSuite()
