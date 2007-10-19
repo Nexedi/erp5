@@ -137,7 +137,6 @@ class Inventory(Delivery):
 
     # Browse all movements on inventory and create diff line when necessary
     not_used_inventory_dict = {}
-    inventory_uid = self.getUid()
     inventory_id = self.getId()
     for movement in self.getMovementList():
       if movement.getResourceValue() is not None and \
@@ -172,7 +171,7 @@ class Inventory(Delivery):
         # Create tmp movement with only diff between inventory
         # and previous stock values
         if diff_quantity != 0:
-          kwd = {'uid': inventory_uid,
+          kwd = {'uid': movement.getUid(),
                  'start_date': start_date}
           if variation_text is not None:
             variation_list = variation_text.split('\n')
@@ -196,6 +195,7 @@ class Inventory(Delivery):
 
     # Now create line to remove some subvariation text not present 
     # in new inventory
+    inventory_uid = self.getUid()
     for resource_and_variation_key in not_used_inventory_dict.keys():
       inventory_by_subvariation_dict = \
           not_used_inventory_dict[resource_and_variation_key]
