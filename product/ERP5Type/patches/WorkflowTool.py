@@ -111,27 +111,27 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict):
   worklist_set_dict = {}
   for workflow_id, worklist in worklist_dict.iteritems():
     for worklist_id, worklist_match_dict in worklist.iteritems():
-      valid_criterion_dict = {}
-      for criterion_id, criterion_value in worklist_match_dict.iteritems():
-        if criterion_id in acceptable_key_dict \
-           or criterion_id in INTERNAL_CRITERION_KEY_LIST:
-          if isinstance(criterion_value, tuple):
-            criterion_value = list(criterion_value)
-          valid_criterion_dict[criterion_id] = criterion_value
-        else:
-          LOG('WorkflowTool_listActions', WARNING, 'Worklist %s of workflow '\
-              '%s filters on variable %s which is not available in '\
-              'catalog. Its value will not be checked.' % \
-              (worklist_id, workflow_id, criterion_id))
-      worklist_set_dict_key = [x for x in valid_criterion_dict.keys() \
-                               if x != WORKLIST_METADATA_KEY]
-      if len(worklist_set_dict_key):
-        worklist_set_dict_key.sort()
-        worklist_set_dict_key = tuple(worklist_set_dict_key)
-        if worklist_set_dict_key not in worklist_set_dict:
-          worklist_set_dict[worklist_set_dict_key] = {}
-        worklist_set_dict[worklist_set_dict_key]\
-          ['/'.join((workflow_id, worklist_id))] = valid_criterion_dict
+        valid_criterion_dict = {}
+        for criterion_id, criterion_value in worklist_match_dict.iteritems():
+          if criterion_id in acceptable_key_dict \
+             or criterion_id in INTERNAL_CRITERION_KEY_LIST:
+            if isinstance(criterion_value, tuple):
+              criterion_value = list(criterion_value)
+            valid_criterion_dict[criterion_id] = criterion_value
+          else:
+            LOG('WorkflowTool_listActions', WARNING, 'Worklist %s of workflow '\
+                '%s filters on variable %s which is not available in '\
+                'catalog. Its value will not be checked.' % \
+                (worklist_id, workflow_id, criterion_id))
+        worklist_set_dict_key = [x for x in valid_criterion_dict.keys() \
+                                 if x != WORKLIST_METADATA_KEY]
+        if len(worklist_set_dict_key):
+          worklist_set_dict_key.sort()
+          worklist_set_dict_key = tuple(worklist_set_dict_key)
+          if worklist_set_dict_key not in worklist_set_dict:
+            worklist_set_dict[worklist_set_dict_key] = {}
+          worklist_set_dict[worklist_set_dict_key]\
+            ['/'.join((workflow_id, worklist_id))] = valid_criterion_dict
   return worklist_set_dict.values()
 
 def generateQueryFromTuple(criterion_id, value, securityQueryHook):
