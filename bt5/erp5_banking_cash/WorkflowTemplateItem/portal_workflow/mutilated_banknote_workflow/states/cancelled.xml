@@ -30,6 +30,12 @@
             <value> <string>cancelled</string> </value>
         </item>
         <item>
+            <key> <string>permission_roles</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Cancelled</string> </value>
         </item>
@@ -43,6 +49,73 @@
             <key> <string>type_list</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Access contents information</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>DestinationAssignor</string>
+                        <string>Manager</string>
+                        <string>Reviewer</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Delete objects</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Modify portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>View</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>DestinationAssignor</string>
+                        <string>Manager</string>
+                        <string>Reviewer</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>
