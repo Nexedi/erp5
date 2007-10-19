@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>node = context.portal_selections.getSelectionUidList(context=context, REQUEST=context.REQUEST, \n
+                                                     selection_name=\'person_module_selection\')\n
+context.log("on %s" % context.getPath(), "%d uids at node." %  len(node))\n
+\n
+# Select only the usabe part\n
+main_axis_begin = context.REQUEST.get(\'list_start\', 0)\n
+form = getattr(context, \'PersonModule_viewTaskPlanning\')\n
+planning_box = form.get_field(\'planning_box\')\n
+main_axis_end = main_axis_begin + planning_box.get_value(\'main_axis_groups\')\n
+\n
+node_uid_list = node[main_axis_begin:main_axis_end]\n
+context.log("on %s" % context.getPath(), "%d uids at node uid list." %  len(node_uid_list))\n
+\n
+acceptable_state_list = context.getPortalFutureInventoryStateList() + \\\n
+                        context.getPortalReservedInventoryStateList() + \\\n
+                        context.getPortalTransitInventoryStateList() + \\\n
+                        context.getPortalCurrentInventoryStateList()\n
+\n
+movement_list = context.portal_simulation.getMovementHistoryList(\n
+                   node_uid=node_uid_list,\n
+                   portal_type=portal_type,\n
+                   simulation_state=acceptable_state_list, \n
+                   to_date=to_date, \n
+                   from_date=from_date,\n
+                   omit_mirror_date=0,\n
+)\n
+\n
+#return movement_list\n
+\n
+# XXX It is a bad idea to return order_value or delivery_value,\n
+# because same object can be displayed multiple time in some cases\n
+\n
+return_list = []\n
+\n
+# XXX This part is an approximtion for sevran\n
+# Normally, simulation movement should only have 1 order value\n
+for mvt_obj in movement_list:\n
+  # XXX Can\'t we use a brain instead ?\n
+  if mvt_obj.portal_type == "Simulation Movement":\n
+    obj = mvt_obj.getOrderValue()  \n
+    if obj is not None:\n
+      mvt_obj = obj\n
+  return_list.append(mvt_obj)\n
+\n
+context.log("on %s" % context.getPath(), "%d objects returned." %  len(return_list))\n
+return return_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>to_date=None, from_date=None, portal_type=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>to_date</string>
+                            <string>from_date</string>
+                            <string>portal_type</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>node</string>
+                            <string>len</string>
+                            <string>main_axis_begin</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>planning_box</string>
+                            <string>main_axis_end</string>
+                            <string>_getitem_</string>
+                            <string>node_uid_list</string>
+                            <string>acceptable_state_list</string>
+                            <string>movement_list</string>
+                            <string>return_list</string>
+                            <string>_getiter_</string>
+                            <string>mvt_obj</string>
+                            <string>obj</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PersonModule_getMovementHistoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
