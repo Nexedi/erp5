@@ -66,6 +66,7 @@ customImporters={
     }
 
 from zLOG import LOG, WARNING
+from warnings import warn
 from OFS.ObjectManager import customImporters
 from gzip import GzipFile
 from xml.dom.minidom import parse
@@ -74,6 +75,7 @@ import tarfile
 from urllib import quote, unquote
 from difflib import unified_diff
 import posixpath
+import shutil
     
 # those attributes from CatalogMethodTemplateItem are kept for
 # backward compatibility
@@ -123,26 +125,9 @@ def _recursiveRemoveUid(obj):
     _recursiveRemoveUid(subobj)
 
 def removeAll(entry):
-  '''
-    Remove all files and directories under 'entry'.
-    XXX: This is defined here, because os.removedirs() is buggy.
-  '''
-  try:
-    if os.path.isdir(entry) and not os.path.islink(entry):
-      pwd = os.getcwd()
-      os.chmod(entry, 0755)
-      os.chdir(entry)
-      for e in os.listdir(os.curdir):
-        removeAll(e)
-      os.chdir(pwd)
-      os.rmdir(entry)
-    else:
-      if not os.path.islink(entry):
-        os.chmod(entry, 0644)
-      os.remove(entry)
-  except OSError:
-    pass
-
+  warn('removeAll is deprecated; use shutil.rmtree instead.',
+       DeprecationWarning)
+  shutil.rmtree(entry, True)
 
 def getChainByType(context):
   """
@@ -218,7 +203,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       os.makedirs(self.path)
     except OSError:
       # folder already exists, remove it
-      removeAll(self.path)
+      shutil.rmtree(self.path)
       os.makedirs(self.path)
 
   def addFolder(self, name=''):
@@ -248,27 +233,31 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
 
   def _initImport(self, file=None, path=None, **kw):
     # Normalize the paths to eliminate the effect of double-slashes.
-    self.file_list = [os.path.normpath(f) for f in file]
-    path = os.path.normpath(path)
-    # to make id consistent, must remove a part of path while importing
-    self.root_path_len = len(path.split(os.sep)) + 1
+    root_path_len = len(os.path.normpath(path)) + len(os.sep)
+    self.root_path_len = root_path_len
+    d = {}
+    for f in file:
+      f = os.path.normpath(f)
+      klass = f[root_path_len:].split(os.sep, 1)[0]
+      d.setdefault(klass, []).append(f)
+    self.file_list_dict = d
 
   def importFiles(self, item, **kw):
     """
       Import file from a local folder
     """
     class_name = item.__class__.__name__
-    for file_path in self.file_list:
-      if class_name in file_path.split(os.sep):
-        if os.path.isfile(file_path):
-          file = open(file_path, 'rb')
-          # get object id
-          folders = file_path.split(os.sep)
-          file_name = os.path.join(*folders[self.root_path_len:])
+    root_path_len = self.root_path_len
+    prefix_len = root_path_len + len(class_name) + len(os.sep)
+    for file_path in self.file_list_dict.get(class_name, ()):
+      if os.path.isfile(file_path):
+        file = open(file_path, 'rb')
+        try:
+          file_name = file_path[prefix_len:]
           if '%' in file_name:
             file_name = unquote(file_name)
           item._importFile(file_name, file)
-          # close file
+        finally:
           file.close()
 
 class BusinessTemplateTarball(BusinessTemplateArchive):
@@ -283,7 +272,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
       os.makedirs(self.path)
     except OSError:
       # folder already exists, remove it
-      removeAll(self.path)
+      shutil.rmtree(self.path)
       os.makedirs(self.path)
     # init tarfile obj
     self.fobj = StringIO()
@@ -314,7 +303,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
   def finishCreation(self):
     self.tar.add(self.path)
     self.tar.close()
-    removeAll(self.path)
+    shutil.rmtree(self.path)
     return self.fobj
 
   def _initImport(self, file=None, **kw):
@@ -671,12 +660,11 @@ class ObjectTemplateItem(BaseTemplateItem):
                 container = portal.unrestrictedTraverse(container_path)
             else:
               raise
-          container_ids = container.objectIds()
           subobjects_dict = {}
           # Object already exists
-          if object_id in container_ids:
-            old_obj = container._getOb(object_id)
-            if hasattr(aq_base(old_obj), 'groups'):
+          old_obj = container._getOb(object_id, None)
+          if old_obj is not None:
+            if getattr(aq_base(old_obj), 'groups', None) is not None:
               # we must keep original order groups
               # from old form in case we keep some
               # old widget, thus we can readd them in
@@ -690,7 +678,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           if getattr(obj, 'meta_type', None) == 'Script (Python)':
             if getattr(obj, '_code') is None:
               obj._compile()
-          if hasattr(aq_base(obj), 'groups'):
+          if getattr(aq_base(obj), 'groups', None) is not None:
             # we must keep original order groups
             # because they change when we add subobjects
             groups[path] = deepcopy(obj.groups)
@@ -750,19 +738,17 @@ class ObjectTemplateItem(BaseTemplateItem):
               o = o.aq_parent
               connection = o._p_jar
             # import subobjects
-            for subobject_id in subobjects_dict.keys():
-              subobject_data = subobjects_dict[subobject_id]
-              subobject_data.seek(0)
-              subobject = connection.importFile(subobject_data)
-              if subobject_id not in obj.objectIds():
+            for subobject_id, subobject_data in subobjects_dict.iteritems():
+              if obj._getOb(subobject_id, None) is not None:
+                subobject_data.seek(0)
+                subobject = connection.importFile(subobject_data)
                 obj._setObject(subobject_id, subobject)
           if obj.meta_type in ('Z SQL Method',):
             fixZSQLMethod(portal, obj)
       # now put original order group
       # we remove object not added in forms
       # we put old objects we have kept
-      for path in groups.keys():
-        new_groups_dict = groups[path]
+      for path, new_groups_dict in groups.iteritems():
         if not old_groups.has_key(path):
           # installation of a new form
           obj = portal.unrestrictedTraverse(path)
@@ -779,17 +765,15 @@ class ObjectTemplateItem(BaseTemplateItem):
             if update_dict.has_key(widget_path) and update_dict[widget_path] in ('remove', 'save_and_remove'):
               continue
             widget_in_form = 0
-            for group_id in new_groups_dict.keys():
-              group_values = new_groups_dict[group_id]
-              if widget_id in group_values:
+            for group_id, group_value_list in new_groups_dict.iteritems():
+              if widget_id in group_value_list:
                 widget_in_form = 1
                 break
             # if not, add it in the same groups
             # defined on the former form
             previous_group_id = None
             if not widget_in_form:
-              for old_group_id in old_groups_dict.keys():
-                old_group_values = old_groups_dict[old_group_id]
+              for old_group_id, old_group_values in old_groups_dict.iteritems():
                 if widget_id in old_group_values:
                   previous_group_id = old_group_id
               # if we find same group in new one, add widget to it
@@ -803,12 +787,12 @@ class ObjectTemplateItem(BaseTemplateItem):
                   new_groups_dict['not_assigned'] = [widget_id,]
                   obj.group_list = list(obj.group_list) + ['not_assigned']
           # second check all widget_id in order are in form
-          for group_id in new_groups_dict.keys():
-            for widget_id in new_groups_dict[group_id]:
+          for group_id, group_value_list in new_groups_dict.iteritems():
+            for widget_id in tuple(group_value_list):
               if widget_id not in widget_id_list:
                 # if we don't find the widget id in the form
                 # remove it fro the group
-                new_groups_dict[group_id].remove(widget_id)
+                group_value_list.remove(widget_id)
           # now set new group object
           obj.groups = new_groups_dict
     else:
