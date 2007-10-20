@@ -41,7 +41,7 @@ from cPickle import dumps, loads
 from App.config import getConfiguration
 from tempfile import gettempdir, mktemp
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5.Document.BusinessTemplate import removeAll
+import shutil
 from xml.sax.saxutils import escape
 from dircache import listdir
 from OFS.Traversable import NotFound
@@ -1058,7 +1058,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       # Security hole fix
       raise SubversionSecurityError, 'You are not allowed to delete these files'
     for file_path in path_list:
-      removeAll(self._getWorkingPath(file_path))
+      shutil.rmtree(self._getWorkingPath(file_path))
     
   def getModifiedTree(self, business_template, show_unmodified=False) :
     """ Return tree of files returned by svn status
@@ -1139,7 +1139,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     except (pysvn.ClientError, NotFound, AttributeError, \
     Error), error:
       # Clean up
-      removeAll(path)
+      shutil.rmtree(path)
       raise error
     # Clean up
     self.activate().removeAllInList([path, ])

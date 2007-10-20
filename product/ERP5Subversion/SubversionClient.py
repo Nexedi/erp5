@@ -36,7 +36,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
 from tempfile import mktemp
-from Products.ERP5.Document.BusinessTemplate import removeAll
+import shutil
 
 class SubversionError(Exception):
   """The base exception class for the Subversion interface.
@@ -277,7 +277,7 @@ try:
       """Remove all files and folders in list
       """
       for file_path in path_list:
-        removeAll(file_path)
+        shutil.rmtree(file_path)
       
     def diff(self, path, revision1, revision2):
       tmp = mktemp()

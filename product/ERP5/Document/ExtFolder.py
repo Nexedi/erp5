@@ -37,7 +37,7 @@ from App.config import getConfiguration
 from Globals import package_home
 from Products.ERP5 import product_path
 from Shared.DC.ZRDB.TM import TM
-from Products.ERP5.Document.BusinessTemplate import removeAll
+import shutil
 
 from zLOG import LOG
 
@@ -51,7 +51,7 @@ class Deletion(TM):
   def _finish(self):
     try:
       LOG('Deletion', 0, 'removing %s' % self.path)
-      removeAll(self.path)
+      shutil.rmtree(self.path)
     except OSError:
       pass
 
