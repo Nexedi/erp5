@@ -632,6 +632,7 @@ def setupERP5Site( business_template_list=(),
             portal.portal_catalog.manage_hotReindexAll()
 
           get_transaction().commit()
+
           portal_activities = getattr(portal, 'portal_activities', None)
           if portal_activities is not None:
             count = 1000
@@ -746,5 +747,20 @@ def optimize():
     self.text = text
   from Products.CMFCore.Expression import Expression
   Expression.__init__ = __init__
+
+  # Delay the compilations of Python Scripts until they are really executed.
+  from Products.PythonScripts.PythonScript import PythonScript
+  PythonScript_compile = PythonScript._compile
+  def _compile(self):
+    self._lazy_compilation = 1
+  PythonScript._compile = _compile
+  PythonScript_exec = PythonScript._exec
+  def _exec(self, *args):
+    if getattr(self, '_lazy_compilation', 0):
+      self._lazy_compilation = 0
+      PythonScript_compile(self)
+    return PythonScript_exec(self, *args)
+  PythonScript._exec = _exec
+
 
 optimize()
