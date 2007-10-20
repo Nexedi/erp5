@@ -29,46 +29,25 @@
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
-from AccessControl.Permission import Permission
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Base import WorkflowMethod
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Utils import readLocalDocument, \
-                                    writeLocalDocument, \
-                                    importLocalDocument, \
-                                    removeLocalDocument
-from Products.ERP5Type.Utils import readLocalPropertySheet, \
-                                    writeLocalPropertySheet, \
-                                    importLocalPropertySheet, \
-                                    removeLocalPropertySheet
-from Products.ERP5Type.Utils import readLocalConstraint, \
-                                    writeLocalConstraint, \
-                                    importLocalConstraint, \
-                                    removeLocalConstraint
-from Products.ERP5Type.Utils import readLocalExtension, \
-                                    writeLocalExtension, \
-                                    removeLocalExtension
-from Products.ERP5Type.Utils import readLocalTest, \
-                                    writeLocalTest, \
-                                    removeLocalTest
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.RoleInformation import RoleInformation
 import fnmatch
-import re, os, sys, string, tarfile
-from DateTime import DateTime
+import re, os, string
 from OFS.Traversable import NotFound
 from OFS import XMLExportImport
 from cStringIO import StringIO
 from copy import deepcopy
-from App.config import getConfiguration
 from zExceptions import BadRequest
 import OFS.XMLExportImport
 customImporters={
     XMLExportImport.magic: XMLExportImport.importXML,
     }
 
-from zLOG import LOG, WARNING, ERROR
+from zLOG import LOG, WARNING
 from OFS.ObjectManager import customImporters
 from gzip import GzipFile
 from xml.dom.minidom import parse
@@ -256,11 +235,11 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     # to make id consistent, must remove a part of path while importing
     self.root_path_len = len(string.split(path, os.sep)) + 1
 
-  def importFiles(self, klass, **kw):
+  def importFiles(self, item, **kw):
     """
       Import file from a local folder
     """
-    class_name = klass.__class__.__name__
+    class_name = item.__class__.__name__
     for file_path in self.file_list:
       if class_name in file_path.split(os.sep):
         if os.path.isfile(file_path):
@@ -270,7 +249,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
           file_name = string.join(folders[self.root_path_len:], '/')
           if '%' in file_name:
             file_name = unquote(file_name)
-          klass._importFile(file_name, file)
+          item._importFile(file_name, file)
           # close file
           file.close()
 
@@ -323,11 +302,11 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
   def _initImport(self, file=None, **kw):
     self.f = file
 
-  def importFiles(self, klass, **kw):
+  def importFiles(self, item, **kw):
     """
       Import all file from the archive to the site
     """
-    class_name = klass.__class__.__name__
+    class_name = item.__class__.__name__
     self.f.seek(0)
     data = GzipFile(fileobj=self.f).read()
     io = StringIO(data)
@@ -346,7 +325,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
           file_name = ('/').join(folders[2:])
           if '%' in file_name:
             file_name = unquote(file_name)
-          klass._importFile(file_name, file)
+          item._importFile(file_name, file)
           file.close()
     tar.close()
     io.close()
@@ -441,7 +420,7 @@ class BaseTemplateItem(Implicit, Persistent):
     return self._objects.keys()
 
   def importFile(self, bta, **kw):
-    bta.importFiles(klass=self)
+    bta.importFiles(item=self)
 
   def removeProperties(self, obj):
     """
