@@ -32,11 +32,29 @@ from Acquisition import Implicit, aq_base
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Base import WorkflowMethod
+from Products.ERP5Type.Utils import readLocalDocument, \
+                                    writeLocalDocument, \
+                                    importLocalDocument, \
+                                    removeLocalDocument
+from Products.ERP5Type.Utils import readLocalPropertySheet, \
+                                    writeLocalPropertySheet, \
+                                    importLocalPropertySheet, \
+                                    removeLocalPropertySheet
+from Products.ERP5Type.Utils import readLocalConstraint, \
+                                    writeLocalConstraint, \
+                                    importLocalConstraint, \
+                                    removeLocalConstraint
+from Products.ERP5Type.Utils import readLocalExtension, \
+                                    writeLocalExtension, \
+                                    removeLocalExtension
+from Products.ERP5Type.Utils import readLocalTest, \
+                                    writeLocalTest, \
+                                    removeLocalTest
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.RoleInformation import RoleInformation
 import fnmatch
-import re, os, string
+import re, os
 from OFS.Traversable import NotFound
 from OFS import XMLExportImport
 from cStringIO import StringIO
@@ -233,7 +251,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     self.file_list = [os.path.normpath(f) for f in file]
     path = os.path.normpath(path)
     # to make id consistent, must remove a part of path while importing
-    self.root_path_len = len(string.split(path, os.sep)) + 1
+    self.root_path_len = len(path.split(os.sep)) + 1
 
   def importFiles(self, item, **kw):
     """
@@ -246,7 +264,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
           file = open(file_path, 'rb')
           # get object id
           folders = file_path.split(os.sep)
-          file_name = string.join(folders[self.root_path_len:], '/')
+          file_name = os.path.join(*folders[self.root_path_len:])
           if '%' in file_name:
             file_name = unquote(file_name)
           item._importFile(file_name, file)
@@ -321,7 +339,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
           file = tar.extractfile(info)
           tar_file_name = info.name.startswith('./') and info.name[2:] or \
               info.name
-          folders = string.split(tar_file_name, '/')
+          folders = tar_file_name.split('/')
           file_name = ('/').join(folders[2:])
           if '%' in file_name:
             file_name = unquote(file_name)
@@ -1686,7 +1704,6 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
 
   def _importFile(self, file_name, file):
     path, name = posixpath.split(file_name)
-    id = string.split(name, '.')[0]
     xml = parse(file)
     portal_type_list = xml.getElementsByTagName('portal_type')
     for portal_type in portal_type_list:
@@ -2049,8 +2066,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       self._objects[file_name[:-4]] = obj
     else:
       # recreate data mapping specific to catalog method
-      path, name = posixpath.split(file_name)
-      id = string.split(name, '.')[0]
+      name = os.path.basename(file_name)
+      id = name.split('.', 1)[0]
       xml = parse(file)
       method_list = xml.getElementsByTagName('item')
       for method in method_list:
@@ -3639,7 +3656,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
             action = update_dict[path]
             if action == 'nothing':
               continue
-          path = string.split(path, '/')
+          path = path.split('/')
           if len(path) == 2:
             lang = path[0]
             catalog = path[1]
