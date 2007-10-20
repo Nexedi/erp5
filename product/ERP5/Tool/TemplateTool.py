@@ -27,25 +27,19 @@
 ##############################################################################
 
 from webdav.client import Resource
-from Products.CMFCore.utils import UniqueObject
 
 from App.config import getConfiguration
-import os, tarfile, string, commands, OFS
+import os, tarfile
 
-from Acquisition import Implicit, aq_base
+from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
-from OFS.Traversable import NotFound
-from difflib import unified_diff
 from cStringIO import StringIO
-from zLOG import LOG
-from warnings import warn
 from urllib import pathname2url, urlopen, splittype, urlretrieve
 import re
 from xml.dom.minidom import parse
@@ -347,19 +341,24 @@ class TemplateTool (BaseTool):
         if os.path.isdir(os.path.normpath(url)):
           name = os.path.normpath(url)
         elif os.path.isfile(os.path.normpath(url)):
-          url = 'file:///%s' %os.path.normpath(url)
+          url = 'file:///%s' % os.path.normpath(url)
     
       # new version of business template in plain format (folder)
       if os.path.isdir(os.path.normpath(name)):
         name = os.path.normpath(name)
-        file_list = []
-        def callback(arg, directory, files):
-          if 'CVS' not in directory and '.svn' not in directory: # XXX:
-                                                        # possible side-effects
-            for file in files:
-              file_list.append(os.path.join(directory, file))
+        def callback(file_list, directory, files):
+          for excluded_directory in ('CVS', '.svn'):
+            try:
+              files.remove(excluded_directory)
+            except ValueError:
+              pass
+          for file in files:
+            absolute_path = os.path.join(directory, file)
+            if os.path.isfile(absolute_path):
+              file_list.append(absolute_path)
 
-        os.path.walk(name, callback, None)
+        file_list = []
+        os.path.walk(name, callback, file_list)
         file_list.sort()
         # import bt object
         bt = self.newContent(portal_type='Business Template', id=id)
