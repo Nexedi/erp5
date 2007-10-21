@@ -81,6 +81,12 @@ for key, value in activate_kw.items():\n
 # Reindex folder immediately\n
 folder.reindexObject(sql_catalog_id=sql_catalog_id)\n
 \n
+folder_id = folder.getId()\n
+if folder_after_tag is None:\n
+  folder_after_tag = ()\n
+bundle_tag = "%s_bundle_reindex" % folder_id\n
+bundle_object_tag = "%s_reindex" % folder_id\n
+\n
 # Spawn activities for bundles of content objects.\n
 # Bundle size, in object count\n
 BUNDLE_ITEM_COUNT=1000\n
@@ -90,12 +96,14 @@ def Folder_reindexObjectList(id_list_list):\n
     Create an activity calling Folder_reindexObjectList.\n
   """\n
   folder.activate(activity=\'SQLQueue\', priority=object_priority, \n
-                  round_robin_scheduling=1,**activate_kw).Folder_reindexObjectList(\n
+                  **activate_kw).Folder_reindexObjectList(\n
      id_list=None,\n
      id_list_list=id_list_list,\n
      object_priority=object_priority,\n
      object_tag=object_tag,\n
      object_after_tag=object_after_tag,\n
+     folder_tag=bundle_tag,\n
+     folder_after_tag=bundle_object_tag,\n
      sql_catalog_id=sql_catalog_id,\n
      passive_commit=passive_commit,\n
   )\n
@@ -121,14 +129,9 @@ except NotImplementedError:\n
     id_list_list.append(id_list[-remaining_object_id_count:])\n
   Folder_reindexObjectList(id_list_list)\n
 else:\n
-  if folder_after_tag is None:\n
-    folder_after_tag = ()\n
   i = 0\n
-  folder_id = folder.getId()\n
 \n
   tree_tag = "%s_tree" % folder_id\n
-  bundle_tag = "%s_bundle_reindex" % folder_id\n
-  bundle_object_tag = "%s_reindex" % folder_id\n
 \n
   # Say to Folder_reindexTreeObjectList to call himself again and\n
   # again until all tree_id_list are parsed. Also, make sure that\n
@@ -223,6 +226,9 @@ else:\n
                             <string>key</string>
                             <string>value</string>
                             <string>None</string>
+                            <string>folder_id</string>
+                            <string>bundle_tag</string>
+                            <string>bundle_object_tag</string>
                             <string>BUNDLE_ITEM_COUNT</string>
                             <string>Folder_reindexObjectList</string>
                             <string>tree_id_list</string>
@@ -238,10 +244,7 @@ else:\n
                             <string>_getitem_</string>
                             <string>remaining_object_id_count</string>
                             <string>i</string>
-                            <string>folder_id</string>
                             <string>tree_tag</string>
-                            <string>bundle_tag</string>
-                            <string>bundle_object_tag</string>
                             <string>tree_after_tag</string>
                             <string>folder_id_after_tag</string>
                             <string>id_activate_kw</string>
