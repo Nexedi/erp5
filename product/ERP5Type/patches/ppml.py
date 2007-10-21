@@ -15,6 +15,18 @@
 # Import everything right now, not after
 # or new patch will not work
 from Shared.DC.xml.ppml import *
+from Shared.DC.xml import ppml
+
+# For optimization.
+def unconvert(encoding,S):
+    if encoding == 'base64':
+        original = base64.decodestring(S)
+    else:
+        x = S.replace('\n', '')
+        original = eval("'"+x+"'")
+    return original
+
+ppml.unconvert = unconvert
 
 class Global:
 
@@ -31,7 +43,6 @@ class Global:
         return '%s<%s%s name="%s" module="%s"/>\n' % (
             ' '*indent, name, id, self.name, self.module)
 
-from Shared.DC.xml import ppml
 ppml.Global = Global
 
 class Scalar:
@@ -233,6 +244,14 @@ class Object(Sequence):
     def __setstate__(self, v): self.append(State(v, self.mapping))
 
 ppml.Object = Object
+
+# For optmization.
+class NoBlanks:
+
+    def handle_data(self, data):
+        if data.strip(): self.append(data)
+
+ppml.NoBlanks = NoBlanks
 
 class IdentityMapping:
 
@@ -603,8 +622,7 @@ def save_string(self, tag, data):
     v=''
     a=data[1]
     if len(data)>2:
-        for x in data[2:]:
-            v=v+x
+        v = ''.join(data[2:])
     encoding=a.get('encoding','repr') # JPS: repr is default encoding
     if encoding is not '':
         v=unconvert(encoding,v)
