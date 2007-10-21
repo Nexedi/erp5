@@ -746,17 +746,11 @@ class Base( CopyContainer,
 
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
-    if ptype in Base.aq_portal_type:
-      accessor = getattr(Base.aq_portal_type[ptype], id, None)
-      if accessor is not None:
-        # Clearly this below has a bad effect in CMFCategory.
-        # Someone must investigate why. -yo
-        #return accessor.__of__(self) # XXX - JPS: I have no idea if we should __of__ before returning
-        return accessor
-      return None
-    elif id in ('portal_types', 'portal_url', 'portal_workflow'):
-      # This is required to precent infinite loop (we need to access portal_types tool)
-      return None
+    try:
+      return getattr(Base.aq_portal_type[ptype], id, None)
+    except KeyError:
+      if id.startswith('portal_'):
+        return None
 
     # Proceed with property generation
     klass = self.__class__
