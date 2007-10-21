@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -77,11 +74,14 @@ if clear_catalog:\n
 # Reindex person module\n
 print "#### Indexing person_module, stage 1 ####"\n
 person_module=getattr(portal, \'person_module\', None)\n
+higher_priority = 1 + additional_priority\n
 if person_module is not None :\n
   tag = \'person_stage_1\'\n
-  person_module.activate(tag=tag).Folder_reindexAll(\n
+  person_module.activate(tag=tag,\n
+                         priority=higher_priority).Folder_reindexAll(\n
                                          folder_tag=tag,\n
                                          object_tag=tag,\n
+                                         object_priority=higher_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
                                          passive_commit=passive_commit)\n
     \n
@@ -97,11 +97,13 @@ object_after_tag = folder_after_tag\n
 \n
 context.portal_categories.activate(\n
                   tag=folder_tag,\n
+                  priority=higher_priority,\n
                   after_tag=folder_after_tag).Folder_reindexAll(\n
                                          folder_tag=folder_tag,\n
                                          folder_after_tag=folder_after_tag,\n
                                          object_tag=object_tag,\n
                                          object_after_tag=object_after_tag,\n
+                                         object_priority=higher_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
                                          passive_commit=passive_commit)\n
 \n
@@ -111,10 +113,11 @@ folder_tag = \'module\'\n
 folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\')\n
 object_tag = \'document\'\n
 object_after_tag = folder_after_tag\n
-object_priority = 2\n
+object_priority = 2 + additional_priority\n
 for folder in [context.portal_alarms, context.portal_preferences]:\n
   folder.activate(\n
                     tag=folder_tag,\n
+                    priority=object_priority,\n
                     after_tag=folder_after_tag).Folder_reindexAll(\n
                                            folder_tag=folder_tag,\n
                                            folder_after_tag=folder_after_tag,\n
@@ -131,14 +134,16 @@ folder_tag = \'module\'\n
 folder_after_tag = (\'category\', \'document\', \'person_stage_1\', \'group_person_stage_1\')\n
 object_tag = \'simulation\'\n
 object_after_tag = folder_after_tag\n
-object_priority = 3\n
+object_priority = 3 + additional_priority\n
 context.portal_simulation.activate(\n
                   tag=folder_tag,\n
+                  priority=higher_priority,\n
                   after_tag=folder_after_tag).Folder_reindexAll(\n
                                          folder_tag=folder_tag,\n
                                          folder_after_tag=folder_after_tag,\n
                                          object_tag=object_tag,\n
                                          object_after_tag=object_after_tag,\n
+                                         object_priority=higher_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
                                          passive_commit=passive_commit)\n
 \n
@@ -159,12 +164,13 @@ folder_tag = \'module\'\n
 folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\')\n
 object_tag = \'document\'\n
 object_after_tag = folder_after_tag\n
-object_priority = 2\n
+object_priority = 2 + additional_priority\n
 for folder in [context.portal_templates, context.portal_trash,\n
                context.portal_domains, context.portal_rules,\n
                context.portal_deliveries, context.portal_orders]:\n
   folder.activate(\n
                     tag=folder_tag,\n
+                    priority=object_priority,\n
                     after_tag=folder_after_tag).Folder_reindexAll(\n
                                            folder_tag=folder_tag,\n
                                            folder_after_tag=folder_after_tag,\n
@@ -181,18 +187,7 @@ for folder in portal.objectValues(("ERP5 Folder",)):\n
 \n
     folder.activate(\n
               tag=folder_tag,\n
-              after_tag=folder_after_tag).Folder_reindexAll(\n
-                                     folder_tag=folder_tag,\n
-                                     folder_after_tag=folder_after_tag,\n
-                                     object_tag=object_tag,\n
-                                     object_after_tag=object_after_tag,\n
-                                     object_priority=object_priority,\n
-                                     sql_catalog_id=sql_catalog_id,\n
-                                     passive_commit=passive_commit)\n
-# reindex portal_caches plugins\n
-print "#### Indexing portal_caches tool ####"\n
-context.portal_caches.activate(\n
-              tag=folder_tag,\n
+              priority=object_priority,\n
               after_tag=folder_after_tag).Folder_reindexAll(\n
                                      folder_tag=folder_tag,\n
                                      folder_after_tag=folder_after_tag,\n
@@ -210,6 +205,7 @@ for folder in portal.objectValues(("ERP5 Folder",)):\n
     print "#### Indexing contents inside folder %s ####" % folder.id\n
     folder.activate(\n
               tag=folder_tag,\n
+              priority=object_priority,\n
               after_tag=folder_after_tag).Folder_reindexAll(\n
                                      folder_tag=folder_tag,\n
                                      folder_after_tag=folder_after_tag,\n
@@ -222,7 +218,7 @@ for folder in portal.objectValues(("ERP5 Folder",)):\n
 # start activty from simulation because the erp5site is not an active object\n
 context.portal_simulation.activate(\n
       after_tag=(\'inventory\', \'simulation\', \'person_stage_1\', \'group_person_stage_1\'),\n
-      priority=3\n
+      priority=3 + additional_priority\n
       ).InventoryModule_reindexMovementList(\n
                             sql_catalog_id=sql_catalog_id,\n
                             passive_commit=passive_commit,\n
@@ -234,6 +230,7 @@ if final_activity_tag is not None:\n
   # Started on portal_simulation because activate does not work on portal object...\n
   # No idea if there is a better place.\n
   context.portal_simulation.activate(tag=final_activity_tag,\n
+                                     priority=3 + additional_priority,\n
                                      after_tag=(\'module\', \'inventory\', \'simulation\', \'person_stage_1\',\n
                                                 \'group_person_stage_1\', \'last_inventory_activity\', \'document\')\n
                                     ).getId()\n
@@ -261,7 +258,7 @@ return printed\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sql_catalog_id=None, passive_commit=1, clear_catalog=0, final_activity_tag=None</string> </value>
+            <value> <string>sql_catalog_id=None, additional_priority=0, passive_commit=1, clear_catalog=0, final_activity_tag=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -281,13 +278,14 @@ return printed\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>sql_catalog_id</string>
+                            <string>additional_priority</string>
                             <string>passive_commit</string>
                             <string>clear_catalog</string>
                             <string>final_activity_tag</string>
@@ -300,6 +298,7 @@ return printed\n
                             <string>getattr</string>
                             <string>None</string>
                             <string>person_module</string>
+                            <string>higher_priority</string>
                             <string>tag</string>
                             <string>folder_tag</string>
                             <string>folder_after_tag</string>
@@ -321,6 +320,7 @@ return printed\n
             <value>
               <tuple>
                 <none/>
+                <int>0</int>
                 <int>1</int>
                 <int>0</int>
                 <none/>

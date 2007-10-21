@@ -69,95 +69,79 @@
 
 folder = context\n
 \n
+# Keep compatibility with tree_id\n
+if tree_id_list is not None:\n
+  context.log(\'tree_id\', tree_id)\n
+  context.log(\'tree_id_list\', tree_id_list)\n
+  if tree_id is not None:\n
+    raise ValueError, "both tree and tree_id_list should not be defined"\n
+  tree_id = tree_id_list.pop()\n
+\n
 activate_kw = {\n
-  \'tag\': object_tag,\n
-  \'after_tag\': folder_after_tag,\n
   \'passive_commit\': passive_commit\n
 }\n
 for key, value in activate_kw.items():\n
   if value is None:\n
     activate_kw.pop(key)\n
 \n
-# Reindex folder immediately\n
-folder.reindexObject(sql_catalog_id=sql_catalog_id)\n
 \n
 # Spawn activities for bundles of content objects.\n
 # Bundle size, in object count\n
-BUNDLE_ITEM_COUNT=1000\n
+BUNDLE_ITEM_COUNT = 1000\n
 \n
+folder_id = folder.getId()\n
 def Folder_reindexObjectList(id_list_list):\n
   """\n
     Create an activity calling Folder_reindexObjectList.\n
   """\n
   folder.activate(activity=\'SQLQueue\', priority=object_priority, \n
-                  round_robin_scheduling=1,**activate_kw).Folder_reindexObjectList(\n
-     id_list=None,\n
+                  after_tag=object_tag,\n
+                  tag=folder_tag, **activate_kw).Folder_reindexObjectList(\n
+     None,\n
      id_list_list=id_list_list,\n
      object_priority=object_priority,\n
      object_tag=object_tag,\n
-     object_after_tag=object_after_tag,\n
      sql_catalog_id=sql_catalog_id,\n
      passive_commit=passive_commit,\n
+     folder_tag=folder_tag,\n
+     folder_after_tag=folder_after_tag,\n
   )\n
 \n
-try:\n
-  tree_id_list = folder.getTreeIdList()\n
-except NotImplementedError:\n
-  # Build a list of list, like this we parse ids only one time,\n
-  # and then Folder_reinexObjectList will work with one list at\n
-  # a time and remove it from the list of list\n
-  # This id_list_list can be quite big and generate quite big\n
-  # activities, but the effect is limited, because if we have too\n
-  # much objects (like millions), we should use HBTree Folders, and\n
-  # then the work will be splitted\n
-  id_list = [x for x in folder.objectIds()]\n
-  id_list_list = []\n
-  for bundle_index in xrange(len(id_list) / BUNDLE_ITEM_COUNT):\n
-    Folder_reindexObjectList(id_list=id_list[bundle_index * BUNDLE_ITEM_COUNT:((bundle_index + 1) * BUNDLE_ITEM_COUNT)])\n
-    id_list_list.append(id_list[bundle_index * BUNDLE_ITEM_COUNT:((bundle_index + 1) * BUNDLE_ITEM_COUNT)])\n
+# HBTree folder\n
+id_list = [x for x in folder.objectIds(base_id=tree_id)]\n
+# Build a list of list, like this we parse ids only one time,\n
+# and then Folder_reinexObjectList will work with one list at\n
+# a time and remove it from the list of list\n
+# This id_list_list can be quite big and generate quite big\n
+# activities, but the effect is limited, because the work is\n
+# splitted for each base_id of the HBTree.\n
+id_list_list = []\n
+for bundle_index in xrange(len(id_list) / BUNDLE_ITEM_COUNT):\n
+  id_list_list.append(id_list[bundle_index * BUNDLE_ITEM_COUNT:((bundle_index + 1) * BUNDLE_ITEM_COUNT)])\n
 \n
-  remaining_object_id_count = len(id_list) % BUNDLE_ITEM_COUNT\n
-  if remaining_object_id_count > 0:\n
-    id_list_list.append(id_list[-remaining_object_id_count:])\n
-  Folder_reindexObjectList(id_list_list)\n
-else:\n
-  if folder_after_tag is None:\n
-    folder_after_tag = ()\n
-  i = 0\n
-  folder_id = folder.getId()\n
+remaining_object_id_count = len(id_list) % BUNDLE_ITEM_COUNT\n
+if remaining_object_id_count > 0:\n
+  id_list_list.append(id_list[-remaining_object_id_count:])\n
+Folder_reindexObjectList(id_list_list=id_list_list)\n
 \n
-  tree_tag = "%s_tree" % folder_id\n
-  bundle_tag = "%s_bundle_reindex" % folder_id\n
-  bundle_object_tag = "%s_reindex" % folder_id\n
-\n
-  # Say to Folder_reindexTreeObjectList to call himself again and\n
-  # again until all tree_id_list are parsed. Also, make sure that\n
-  # the work of the previous Folder_reindexTreeObjectList is completely\n
-  # done\n
-  tree_after_tag = folder_after_tag + (bundle_tag, bundle_object_tag)\n
-  folder.activate(activity=\'SQLQueue\', priority=object_priority, \n
-      after_tag=tree_after_tag, tag=tree_tag,\n
-      ).Folder_reindexTreeObjectList(\n
-    tree_id=None,\n
-    tree_id_list=tree_id_list,\n
-    folder_tag=bundle_tag,\n
-    folder_after_tag=bundle_object_tag,\n
-    object_priority=object_priority,\n
-    sql_catalog_id=sql_catalog_id,\n
-    passive_commit=passive_commit,\n
-    object_tag=bundle_object_tag,\n
-    tree_after_tag=tree_after_tag,\n
-    tree_tag=tree_tag,\n
-    )\n
-  \n
-  # Start an activity wich will wait the end of the module\n
-  folder_id_after_tag =  folder_after_tag + (tree_tag, bundle_tag, bundle_object_tag)\n
-  id_activate_kw = {}\n
-  if object_tag is not None:\n
-    id_activate_kw[\'tag\'] = object_tag\n
-\n
-  folder.activate(activity=\'SQLDict\', priority=object_priority, \n
-                  after_tag=folder_id_after_tag, **id_activate_kw).getId()\n
+if tree_id_list is not None:\n
+  if len(tree_id_list) > 0:\n
+    # Calling again and again the same script allow to decrease the\n
+    # number of activities by the same time and increase performance.\n
+    folder.activate(activity=\'SQLQueue\', priority=object_priority,\n
+      after_tag=tree_after_tag, \n
+      tag=tree_tag).Folder_reindexTreeObjectList(\n
+        tree_id=None,\n
+        tree_id_list=tree_id_list,\n
+        folder_tag=folder_tag,\n
+        folder_after_tag=folder_after_tag,\n
+        object_priority=object_priority,\n
+        sql_catalog_id=sql_catalog_id,\n
+        object_tag=object_tag,\n
+        passive_commit=passive_commit,\n
+        tree_after_tag=tree_after_tag,\n
+        tree_tag=tree_tag,\n
+        )\n
 
 
 ]]></string> </value>
@@ -175,14 +159,8 @@ else:\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1</string> </value>
+            <value> <string>tree_id=None, tree_id_list=None, folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1, tree_tag=None, tree_after_tag=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -202,12 +180,14 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>11</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>tree_id</string>
+                            <string>tree_id_list</string>
                             <string>folder_tag</string>
                             <string>folder_after_tag</string>
                             <string>object_tag</string>
@@ -215,18 +195,20 @@ else:\n
                             <string>object_priority</string>
                             <string>sql_catalog_id</string>
                             <string>passive_commit</string>
+                            <string>tree_tag</string>
+                            <string>tree_after_tag</string>
                             <string>context</string>
                             <string>folder</string>
+                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>ValueError</string>
                             <string>activate_kw</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
                             <string>key</string>
                             <string>value</string>
-                            <string>None</string>
                             <string>BUNDLE_ITEM_COUNT</string>
+                            <string>folder_id</string>
                             <string>Folder_reindexObjectList</string>
-                            <string>tree_id_list</string>
-                            <string>NotImplementedError</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
@@ -237,16 +219,6 @@ else:\n
                             <string>bundle_index</string>
                             <string>_getitem_</string>
                             <string>remaining_object_id_count</string>
-                            <string>i</string>
-                            <string>folder_id</string>
-                            <string>tree_tag</string>
-                            <string>bundle_tag</string>
-                            <string>bundle_object_tag</string>
-                            <string>tree_after_tag</string>
-                            <string>folder_id_after_tag</string>
-                            <string>id_activate_kw</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -263,15 +235,19 @@ else:\n
                 <none/>
                 <none/>
                 <none/>
+                <none/>
+                <none/>
                 <int>1</int>
                 <none/>
                 <int>1</int>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_reindexAll</string> </value>
+            <value> <string>Folder_reindexTreeObjectList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
