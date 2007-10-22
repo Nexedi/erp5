@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -76,22 +79,12 @@ related_order = packing_list.getCausalityValue()\n
 if packing_list.getSimulationState() == \'draft\':\n
   packing_list.edit(\n
     comment=related_order.getComment(),\n
+    description = related_order.getDescription(),\n
     delivery_mode=related_order.getDeliveryMode(),\n
     incoterm=related_order.getIncoterm(),\n
     source_administration_value=related_order.getSourceAdministrationValue(),\n
     title=related_order.getTitle()\n
   )\n
-\n
-  # Copy Source Project only if all Task Report Lines share the same value.\n
-  marker = source_project_value = []\n
-  for packing_list_line in packing_list.contentValues(filter={\'portal_type\': \'Task Report Line\'}):\n
-    if source_project_value is marker:\n
-      source_project_value = packing_list_line.getSourceProjectValue()\n
-    elif source_project_value != packing_list_line.getSourceProjectValue():\n
-      source_project_value = marker\n
-      break\n
-  if source_project_value is not marker:\n
-    packing_list.setSourceProjectValue(source_project_value)\n
 \n
 # If security definitions are implemented on the packing list, it is time to apply them\n
 packing_list.assignRoleToSecurityGroup()\n
@@ -188,10 +181,6 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
                             <string>packing_list</string>
                             <string>_getattr_</string>
                             <string>related_order</string>
-                            <string>marker</string>
-                            <string>source_project_value</string>
-                            <string>_getiter_</string>
-                            <string>packing_list_line</string>
                             <string>source_person</string>
                             <string>destination_decision_person</string>
                             <string>None</string>

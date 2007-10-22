@@ -37,6 +37,12 @@
             </value>
         </item>
         <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>delivery_after_generation_script_id</string> </key>
             <value> <string>TaskReport_copyOrderPropertiesAndNotifyAssignee</string> </value>
         </item>
@@ -69,6 +75,7 @@
                 <string>DateMovementGroup</string>
                 <string>SectionPathMovementGroup</string>
                 <string>PathMovementGroup</string>
+                <string>SourceProjectMovementGroup</string>
               </tuple>
             </value>
         </item>
@@ -77,7 +84,6 @@
             <value>
               <tuple>
                 <string>ResourceMovementGroup</string>
-                <string>SourceProjectMovementGroup</string>
                 <string>TitleMovementGroup</string>
                 <string>BaseVariantMovementGroup</string>
                 <string>RequirementMovementGroup</string>
