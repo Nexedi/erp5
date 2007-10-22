@@ -746,21 +746,27 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     else:
       return CMFBTreeFolder._checkObjectId(self, id)
 
-  def objectIds(self, spec=None, base_id=None):
+  def objectIds(self, spec=None, **kw):
     if self._folder_handler == HBTREE_HANDLER:
       if self._htree is None:
         return []
-      return CMFHBTreeFolder.objectIds(self, base_id)
+      if kw.has_key("base_id"):
+        return CMFHBTreeFolder.objectIds(self, base_id=kw["base_id"])
+      else:
+        return CMFHBTreeFolder.objectIds(self)
     else:
       if self._tree is None:
         return []
       return CMFBTreeFolder.objectIds(self, spec)
 
-  def objectItems(self, spec=None, base_id=None):
+  def objectItems(self, **kw):
     if self._folder_handler == HBTREE_HANDLER:
       if  self._htree is None:
         return []
-      return CMFHBTreeFolder.objectItems(self, base_id)
+      if kw.has_key("base_id"):
+        return CMFHBTreeFolder.objectItems(self, base_id=kw["base_id"])
+      else:
+        return CMFHBTreeFolder.objectItems(self)
     else:
       if  self._tree is None:
         return []
@@ -1352,8 +1358,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'objectValues' )
   def objectValues(self, spec=None, meta_type=None, portal_type=None,
-                   sort_on=None, sort_order=None, base_id=None,
-                   checked_permission=None, **kw):
+                   sort_on=None, sort_order=None, checked_permission=None,
+                   **kw):
     # Returns list of objects contained in this folder.
     #  (no docstring to prevent publishing)
 
@@ -1372,7 +1378,10 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       if self._htree is None:
         object_list = []
       else:
-        object_list = CMFHBTreeFolder.objectValues(self, base_id=base_id)
+        if kw.has_key("base_id"):
+          object_list = CMFHBTreeFolder.objectValues(self, base_id=kw['base_id'])
+        else:
+          object_list = CMFHBTreeFolder.objectValues(self)
     else:
       if self._tree is None:
         object_list = []

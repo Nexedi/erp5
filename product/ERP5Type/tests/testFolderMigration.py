@@ -114,7 +114,13 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(self.folder.isBTree(), False)
       self.assertEqual(self.folder.isHBTree(), True)
       self.assertEqual(len(self.folder.getTreeIdList()), 1)
-      self.assertEqual(len(self.folder.objectIds()), 3)      
+      self.assertEqual(len(self.folder.objectIds()), 3)
+      # check params of objectIds in case of hbtree
+      self.assertEqual(len(self.folder.objectIds(base_id=None)), 0)
+      LOG("test", 300, "rien")
+      self.assertEqual(len(self.folder.objectValues()), 3)
+      LOG("test", 300, "base_id")
+      self.assertEqual(len(self.folder.objectValues(base_id=None)), 0)
       # check object ids
       from DateTime import DateTime
       date = DateTime().Date()
