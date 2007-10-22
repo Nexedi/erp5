@@ -189,7 +189,7 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
         # get CSS class properties relative to the actual page
         # (background picture position, picture size, etc.)
         # and add them to the css dict
-  width_groups,height_groups = ManageFiles.getPageattributes(
+        width_groups,height_groups = ManageFiles.getPageattributes(
                                               global_properties,
                                               import_pdf_file)
         properties_css_dict,properties_page,actual_width,actual_height = ManageCSS.setPageProperties(
