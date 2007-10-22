@@ -103,10 +103,14 @@ line_list = transaction.getMovementList()\n
 for line in line_list:\n
   aggregate_list = line.getAggregateValueList()\n
   for aggregate in aggregate_list:\n
-    if aggregate.getValidationState() != \'draft\':\n
-      message = Message(domain=\'ui\', message=\'Sorry, the checkbook is not new\')\n
-      raise ValidationFailed, (message,)\n
+    if aggregate.getPortalType()==\'Check\':\n
+      if aggregate.getSimulationState() != \'draft\':\n
+        message = Message(domain=\'ui\', message=\'Sorry, the check is not new\')\n
+        raise ValidationFailed, (message,)\n
     if aggregate.getPortalType()==\'Checkbook\':\n
+      if aggregate.getValidationState() != \'draft\':\n
+        message = Message(domain=\'ui\', message=\'Sorry, the checkbook is not new\')\n
+        raise ValidationFailed, (message,)\n
       for check in aggregate.objectValues(portal_type=\'Check\'):\n
         if check.getSimulationState() != \'draft\':\n
           message = Message(domain=\'ui\',\n
