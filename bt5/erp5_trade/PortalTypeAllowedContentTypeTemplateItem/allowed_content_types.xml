@@ -92,6 +92,7 @@
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Sale Order Line">
+  <item>Sale Order Line</item>
   <item>Sale Order Cell</item>
  </portal_type>
  <portal_type id="Sale Order Module">

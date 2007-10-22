@@ -36,6 +36,7 @@ Returned Sale Packing List | Returned Sale Packing List Line
 Rule Tool | Delivery Rule
 Rule Tool | Order Rule
 Sale Order Line | Sale Order Cell
+Sale Order Line | Sale Order Line
 Sale Order Module | Sale Order
 Sale Order | Discount
 Sale Order | Payment Condition
