@@ -1522,6 +1522,8 @@ for source_klass, destination_klass in \
   for method_id in method_id_list:
     if not hasattr(destination_klass, method_id):
       setattr(destination_klass, method_id, NotImplementedClass(method_id))
-
+      # Zope 2.7 required to have methodId__roles__ defined
+      # to know the security ot the method
+      setattr(destination_klass, method_id+'__roles__', None)
 # Overwrite Zope setTitle()
 Folder.setTitle = Base.setTitle
