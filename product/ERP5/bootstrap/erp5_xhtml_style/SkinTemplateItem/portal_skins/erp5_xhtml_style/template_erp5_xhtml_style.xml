@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -120,6 +123,10 @@ IDEAS:\n
     <tal:block tal:repeat="js js_list">\n
       <script tal:attributes="src js" type="text/javascript"></script>\n
     </tal:block>\n
+\n
+    <link rel="icon" tal:attributes="href string:${portal/portal_url}/favicon.ico" type="image/x-icon"/>\n
+    <link rel="shortcut icon" tal:attributes="href string:${portal/portal_url}/favicon.ico" type="image/x-icon"/>\n
+\n
   </head>\n
   <body>\n
     <form id="main_form"\n

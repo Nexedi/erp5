@@ -1,3 +1,6 @@
+2007-10-22 jerome
+* Restore link to favicon, directly as favicon.ico, not in /images. This way, if a favicon.ico already exists, it will have priority.
+
 2007-09-23 yo
 * Remove the links to the favicon, as it breaks existing settings.
 * Ignore an error if form is None. This may happen when standard_error_message is called.
