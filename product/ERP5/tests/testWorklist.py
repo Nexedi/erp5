@@ -48,6 +48,8 @@ class TestWorklist(ERP5TypeTestCase):
   actbox_assignor_name = 'assignor_todo'
   worklist_owner_id = 'owner_worklist'
   actbox_owner_name = 'owner_todo'
+  worklist_assignor_owner_id = 'assignor_owner_worklist'
+  actbox_assignor_owner_name = 'assignor_owner_todo'
 
   def getTitle(self):
     return "Worklist"
@@ -140,7 +142,8 @@ class TestWorklist(ERP5TypeTestCase):
 
     for worklist_id, actbox_name, role in [
           (self.worklist_assignor_id, self.actbox_assignor_name, 'Assignor'),
-          (self.worklist_owner_id, self.actbox_owner_name, 'Owner')]:
+          (self.worklist_owner_id, self.actbox_owner_name, 'Owner'),
+          (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name, 'Assignor; Owner')]:
       worklists.addWorklist(worklist_id)
       worklist_definition = worklists._getOb(worklist_id)
       worklist_definition.setProperties('',
@@ -198,6 +201,8 @@ class TestWorklist(ERP5TypeTestCase):
     self.login('manager')
     self.logMessage("Give foo Assignor role")
     document.manage_addLocalRoles('foo', ['Assignor'])
+    self.logMessage("Give manager Assignor role")
+    document.manage_addLocalRoles('manager', ['Assignor'])
     document.reindexObject()
     get_transaction().commit()
     self.tic()
@@ -210,10 +215,18 @@ class TestWorklist(ERP5TypeTestCase):
       self.logMessage("Check %s worklist as Assignor" % user_id)
       entry_list = [x for x in result \
                     if x['name'].startswith(self.actbox_assignor_name)]
-      self.assertEquals(len(entry_list), 0)
+      self.assertEquals(len(entry_list), 1)
+      self.assertEquals(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
       self.logMessage("Check %s worklist as Owner" % user_id)
       entry_list = [x for x in result \
                     if x['name'].startswith(self.actbox_owner_name)]
+      self.assertEquals(len(entry_list), 1)
+      self.assertEquals(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
+      self.logMessage("Check %s worklist as Owner and Assignor" % user_id)
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_owner_name)]
       self.assertEquals(len(entry_list), 1)
       self.assertEquals(
         self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
@@ -264,7 +277,9 @@ class TestWorklist(ERP5TypeTestCase):
       self.logMessage("Check %s worklist as Assignor" % user_id)
       entry_list = [x for x in result \
                     if x['name'].startswith(self.actbox_assignor_name)]
-      self.assertEquals(len(entry_list), 0)
+      self.assertEquals(len(entry_list), 1)
+      self.assertTrue(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
       self.logMessage("Check %s worklist as Owner" % user_id)
       entry_list = [x for x in result \
                     if x['name'].startswith(self.actbox_owner_name)]
