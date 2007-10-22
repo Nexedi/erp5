@@ -1,3 +1,6 @@
 portal_deliveries/task_invoice_builder
 portal_deliveries/task_report_builder
+portal_domains/person_module_tasks_domain
+portal_domains/person_task_domain
+portal_domains/task_module_domain
 portal_domains/task_report_module_domain

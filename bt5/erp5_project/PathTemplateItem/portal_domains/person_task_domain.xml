@@ -41,6 +41,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
               <dictionary/>
@@ -60,11 +66,11 @@
         </item>
         <item>
             <key> <string>domain_generator_method_id</string> </key>
-            <value> <string>TaskReportModule_generateDomain</string> </value>
+            <value> <string>Person_generateTaskDomain</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>task_report_module_domain</string> </value>
+            <value> <string>person_task_domain</string> </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
@@ -76,7 +82,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Tasks Report</string> </value>
+            <value> <string>Person Tasks</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

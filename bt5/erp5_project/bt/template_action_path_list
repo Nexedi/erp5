@@ -52,6 +52,7 @@ Sale Packing List Line | project
 Task Line | price_view
 Task Line | quantity_view
 Task Line | view
+Task Module | planning_report
 Task Module | view
 Task Module | workflow_report
 Task Report Line | price_view

@@ -60,11 +60,11 @@
         </item>
         <item>
             <key> <string>domain_generator_method_id</string> </key>
-            <value> <string>TaskReportModule_generateDomain</string> </value>
+            <value> <string>PersonModule_generateDomain</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>task_report_module_domain</string> </value>
+            <value> <string>person_module_tasks_domain</string> </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
@@ -76,7 +76,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Tasks Report</string> </value>
+            <value> <string>Report Tasks</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
