@@ -832,6 +832,7 @@ class SimulationTool(BaseTool):
         group_by_variation=0, group_by_sub_variation=0,
         group_by_movement=0, group_by_date=0,
         group_by_resource=None,
+        movement_list_mode=0,
         **ignored):
       """
       Set defaults group_by parameters
@@ -840,7 +841,10 @@ class SimulationTool(BaseTool):
 
       If any group-by is provided, automatically group by resource aswell
       unless group_by_resource is explicitely set to false.
-      If no group by is provided, group by movement, node and resource.
+      If no group by is provided, use the default group by: movement, node and
+      resource, unless movement_list_mode is true, in that case, group by
+      movement, node, resource and date (this is historically the default in
+      getMovementHistoryList).
       """
       new_group_by_dict = {}
       if not ignore_group_by:
@@ -855,6 +859,8 @@ class SimulationTool(BaseTool):
           new_group_by_dict['group_by_movement'] = 1
           new_group_by_dict['group_by_node'] = 1
           new_group_by_dict['group_by_resource'] = 1
+          if movement_list_mode:
+            new_group_by_dict['group_by_date'] = 1
       return new_group_by_dict
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -1398,6 +1404,8 @@ class SimulationTool(BaseTool):
       brains. The initial values can be passed, in case you want to have an
       "initial summary line".
       """
+      kw['movement_list_mode'] = 1
+      kw.update(self._getDefaultGroupByParameters(**kw))
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetMovementHistoryList(
                          src__=src__, ignore_variation=ignore_variation,

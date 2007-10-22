@@ -762,12 +762,10 @@ WHERE\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
 \n
+<dtml-if group_by_expression>\n
 GROUP BY\n
-  <dtml-if group_by_expression>\n
     <dtml-var group_by_expression>\n
-  <dtml-else>\n
-    stock.uid, stock.node_uid, stock.resource_uid, stock.date\n
-  </dtml-if>\n
+</dtml-if>\n
 \n
 <dtml-if order_by_expression>\n
 ORDER BY\n
@@ -920,12 +918,10 @@ WHERE\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
 \n
+<dtml-if group_by_expression>\n
 GROUP BY\n
-  <dtml-if group_by_expression>\n
     <dtml-var group_by_expression>\n
-  <dtml-else>\n
-    stock.uid, stock.node_uid, stock.resource_uid, stock.date\n
-  </dtml-if>\n
+</dtml-if>\n
 \n
 <dtml-if order_by_expression>\n
 ORDER BY\n
