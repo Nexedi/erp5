@@ -1486,50 +1486,33 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 # We browse all used class from btree and hbtree and set not implemented
 # class if one method defined on a class is not defined on other, thus if
 # new method appears in one class if will raise in the other one
-class NotImplementedClass:
+class NotImplementedClass(object):
   def __init__(self, method_id):
     self.__name__ = method_id
 
   def __call__(self, *args, **kw):
     raise NotImplementedError, str(self.__name__)
   
-# Check method on HBTree but not on BTree
-hbtree_method_id_list = [x for x in HBTreeFolder2Base.__dict__
-                              if callable(getattr(HBTreeFolder2Base, x))]
-for method_id in hbtree_method_id_list:
-  if getattr(BTreeFolder2Base, method_id, None) is None:    
-    setattr(BTreeFolder2Base, method_id, NotImplementedClass(method_id))
-
-hbtree_method_id_list = [x for x in HBTreeFolder2.__dict__
-                              if callable(getattr(HBTreeFolder2, x))]
-for method_id in hbtree_method_id_list:
-  if getattr(BTreeFolder2, method_id, None) is None:    
-    setattr(BTreeFolder2, method_id, NotImplementedClass(method_id))
-
-hbtree_method_id_list = [x for x in CMFHBTreeFolder.__dict__
-                              if callable(getattr(CMFHBTreeFolder, x))]
-for method_id in hbtree_method_id_list:
-  if getattr(CMFBTreeFolder, method_id, None) is None:    
-    setattr(CMFBTreeFolder, method_id, NotImplementedClass(method_id))
-
-# Check method on BTree but not on HBTree
-btree_method_id_list = [x for x in BTreeFolder2Base.__dict__
-                             if callable(getattr(BTreeFolder2Base, x))]
-for method_id in btree_method_id_list:
-  if getattr(HBTreeFolder2Base, method_id, None) is None:    
-    setattr(HBTreeFolder2Base, method_id, NotImplementedClass(method_id))
-
-btree_method_id_list = [x for x in BTreeFolder2.__dict__
-                             if callable(getattr(BTreeFolder2, x))]
-for method_id in btree_method_id_list:
-  if getattr(HBTreeFolder2, method_id, None) is None:    
-    setattr(HBTreeFolder2, method_id, NotImplementedClass(method_id))
-
-btree_method_id_list = [x for x in CMFBTreeFolder.__dict__
-                             if callable(getattr(CMFBTreeFolder, x))]
-for method_id in btree_method_id_list:
-  if getattr(CMFHBTreeFolder, method_id, None) is None:    
-    setattr(CMFHBTreeFolder, method_id, NotImplementedClass(method_id))
+for source_klass, destination_klass in \
+        (
+         # Check method on HBTree but not on BTree
+         (HBTreeFolder2Base, BTreeFolder2Base),
+         (HBTreeFolder2, BTreeFolder2),
+         (CMFHBTreeFolder, CMFBTreeFolder),
+         # Check method on BTree but not on HBTree
+         (BTreeFolder2Base, HBTreeFolder2Base),
+         (BTreeFolder2, HBTreeFolder2),
+         (CMFBTreeFolder, CMFHBTreeFolder),
+        ):
+  # It is better to avoid methods starting with ___, because they have
+  # special meanings in Python or Zope, and lead to strange errors
+  # when set to an unexpected value. In fact, __implemented__ should not
+  # be set this way, otherwise Zope crashes.
+  method_id_list = [x for x in source_klass.__dict__.iterkeys()
+          if not x.startswith('__') and callable(getattr(source_klass, x))]
+  for method_id in method_id_list:
+    if not hasattr(destination_klass, method_id):
+      setattr(destination_klass, method_id, NotImplementedClass(method_id))
 
 # Overwrite Zope setTitle()
 Folder.setTitle = Base.setTitle
