@@ -70,9 +70,11 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Add a New Test language."""\n
 \n
-\n
+context.getPortalObject().Localizer.manage_addLanguage(\'wo\')\n
+context.getPortalObject().Localizer.manage_addLanguage(\'xh\')\n
 context.getPortalObject().Localizer.erp5_ui.manage_addLanguage(\'wo\')\n
 context.getPortalObject().Localizer.erp5_ui.manage_addLanguage(\'xh\')\n
+context.getPortalObject().portal_caches.clearAllCache()\n
            \n
 \n
 return \'New Languages Added.\'\n
