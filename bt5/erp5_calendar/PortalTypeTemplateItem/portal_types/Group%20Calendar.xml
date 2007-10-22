@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Type.ERP5Type</string>
+          <string>ERP5TypeInformation</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_actions</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_aliases</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_roles</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>allowed_content_types</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_category_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_icon</string> </key>
+            <value> <string>document.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_meta_type</string> </key>
+            <value> <string>ERP5 Calendar</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>        A Document can contain text that can be formatted using\n
+        *Structured Text* or *HTML*. Text can be automatically translated\n
+        through the use of \'message catalogs\'.\n
+\n
+        Document inherits from XMLObject and can\n
+        be synchronized accross multiple sites.\n
+\n
+        Version Management: the notion of version depends on the\n
+        type of application. For example, in the case (1) of Transformation\n
+        (BOM), all versions are considered as equal and may be kept\n
+        indefinitely for both archive and usage purpose. In the case (2)\n
+        of Person data, the new version replaces the previous one\n
+        in place and is not needed for archive. In the case (3) of\n
+        a web page, the new version replaces the previous one,\n
+        the previous one being kept in place for archive.\n
+\n
+        Subcontent: documents may include subcontent (files, images, etc.)\n
+        so that publication of rich content can be path independent\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>factory</string> </key>
+            <value> <string>addCalendar</string> </value>
+        </item>
+        <item>
+            <key> <string>filter_content_types</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>hidden_content_type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Group Calendar</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>property_sheet_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

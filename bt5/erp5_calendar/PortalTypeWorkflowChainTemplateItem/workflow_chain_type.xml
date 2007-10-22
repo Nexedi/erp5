@@ -1,0 +1,26 @@
+<workflow_chain>
+ <chain>
+  <type>Group Calendar</type>
+  <workflow>group_calendar_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Group Presence Period</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Leave Request</type>
+  <workflow>edit_workflow, leave_request_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Leave Request Period</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Presence Request</type>
+  <workflow>edit_workflow, presence_request_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Presence Request Period</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

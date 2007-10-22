@@ -1,0 +1,517 @@
+<module>
+ <id>leave_request_module</id>
+ <permission_list>
+  <permission type='list'>
+   <name>Access Transient Objects</name>
+  </permission>
+  <permission type='list'>
+   <name>Access arbitrary user session data</name>
+  </permission>
+  <permission type='list'>
+   <name>Access contents information</name>
+  </permission>
+  <permission type='list'>
+   <name>Access future portal content</name>
+  </permission>
+  <permission type='list'>
+   <name>Access inactive portal content</name>
+  </permission>
+  <permission type='list'>
+   <name>Access session data</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Accelerated HTTP Cache Managers</name>
+  </permission>
+  <permission type='list'>
+   <name>Add BTreeFolder2s</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Browser Id Manager</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Action Icons Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Active Processs</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Caching Policy Managers</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Calendar Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Core Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Default Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Report Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Setup Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Sites</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMF Unique Id Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMFActivity Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMFCategory Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add CMFMailIn Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Configured CMF Sites</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Content Type Registrys</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Cookie Crumblers</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Database Methods</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Documents, Images, and Files</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 Filesystem Formulator Forms</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 Forms</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 OOo Templates</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 PDF Forms</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 PDF Templates</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 Publications</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 Reports</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 Sites</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 Subscriptions</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5Catalog Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5Form Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5Subversion Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5SyncML Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5Type Tools</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ExtFiles</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ExtImages</name>
+  </permission>
+  <permission type='list'>
+   <name>Add External Methods</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Filesystem Directory Views</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Folders</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Formulator Forms</name>
+  </permission>
+  <permission type='list'>
+   <name>Add LocalContents</name>
+  </permission>
+  <permission type='list'>
+   <name>Add LocalFolders</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Localizers</name>
+  </permission>
+  <permission type='list'>
+   <name>Add MailHost objects</name>
+  </permission>
+  <permission type='list'>
+   <name>Add MessageCatalogs</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Page Templates</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Photo Folders</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Photos</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Pluggable Index</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Plugin Registrys</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Python Scripts</name>
+  </permission>
+  <permission type='list'>
+   <name>Add RAM Cache Managers</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ReStructuredText Documents</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Session Data Manager</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Site Roots</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Temporary Folder</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Transient Object Container</name>
+  </permission>
+  <permission type='list'>
+   <name>Add User Folders</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Versions</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Virtual Host Monsters</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Vocabularies</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Z Gadfly Database Connections</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Z MySQL Database Connections</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Z MySQL Deferred Database Connections</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ZCatalogs</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ZMailIn Clients</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ZMailMessages</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ZODB Mount Points</name>
+  </permission>
+  <permission type='list'>
+   <name>Add Zope Tutorials</name>
+  </permission>
+  <permission type='list'>
+   <name>Add portal content</name>
+  </permission>
+  <permission type='list'>
+   <name>Add portal events</name>
+  </permission>
+  <permission type='list'>
+   <name>Add portal folders</name>
+  </permission>
+  <permission type='list'>
+   <name>Add portal member</name>
+  </permission>
+  <permission type='list'>
+   <name>Add portal topics</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Browser Id Manager</name>
+  </permission>
+  <permission type='list'>
+   <name>Change DTML Documents</name>
+  </permission>
+  <permission type='list'>
+   <name>Change DTML Methods</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Database Connections</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Database Methods</name>
+  </permission>
+  <permission type='list'>
+   <name>Change ExtFile/ExtImage</name>
+  </permission>
+  <permission type='list'>
+   <name>Change External Methods</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Formulator Fields</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Formulator Forms</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Images and Files</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Lock Information</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Page Templates</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Photo</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Python Scripts</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Session Data Manager</name>
+  </permission>
+  <permission type='list'>
+   <name>Change Versions</name>
+  </permission>
+  <permission type='list'>
+   <name>Change ZMailIn</name>
+  </permission>
+  <permission type='list'>
+   <name>Change ZMailMessages</name>
+  </permission>
+  <permission type='list'>
+   <name>Change bindings</name>
+  </permission>
+  <permission type='list'>
+   <name>Change cache managers</name>
+  </permission>
+  <permission type='list'>
+   <name>Change cache settings</name>
+  </permission>
+  <permission type='list'>
+   <name>Change configuration</name>
+  </permission>
+  <permission type='list'>
+   <name>Change local roles</name>
+  </permission>
+  <permission type='list'>
+   <name>Change permissions</name>
+  </permission>
+  <permission type='list'>
+   <name>Change portal events</name>
+  </permission>
+  <permission type='list'>
+   <name>Change portal topics</name>
+  </permission>
+  <permission type='list'>
+   <name>Change proxy roles</name>
+  </permission>
+  <permission type='list'>
+   <name>Copy or Move</name>
+  </permission>
+  <permission type='list'>
+   <name>Create Transient Objects</name>
+  </permission>
+  <permission type='list'>
+   <name>Create class instances</name>
+  </permission>
+  <permission type='list'>
+   <name>Define permissions</name>
+  </permission>
+  <permission type='list'>
+   <name>Delete objects</name>
+  </permission>
+  <permission type='list'>
+   <name>Download ExtFile/ExtImage</name>
+  </permission>
+  <permission type='list'>
+   <name>Edit Factories</name>
+  </permission>
+  <permission type='list'>
+   <name>Edit ReStructuredText</name>
+  </permission>
+  <permission type='list'>
+   <name>Edit target</name>
+  </permission>
+  <permission type='list'>
+   <name>FTP access</name>
+  </permission>
+  <permission type='list'>
+   <name>Import/Export objects</name>
+  </permission>
+  <permission type='list'>
+   <name>Join/leave Versions</name>
+  </permission>
+  <permission type='list'>
+   <name>List folder contents</name>
+  </permission>
+  <permission type='list'>
+   <name>List portal members</name>
+  </permission>
+  <permission type='list'>
+   <name>List undoable changes</name>
+  </permission>
+  <permission type='list'>
+   <name>Log Site Errors</name>
+  </permission>
+  <permission type='list'>
+   <name>Log to the Event Log</name>
+  </permission>
+  <permission type='list'>
+   <name>Mail forgotten password</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage Access Rules</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage Groups</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage Selenium test cases</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage Transient Object Container</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage Vocabulary</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage WebDAV Locks</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage Z Classes</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage ZCatalog Entries</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage ZCatalogIndex Entries</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage languages</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage messages</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage portal</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage properties</name>
+  </permission>
+  <permission type='list'>
+   <name>Manage users</name>
+  </permission>
+  <permission type='list'>
+   <name>Modify Cookie Crumblers</name>
+  </permission>
+  <permission type='list'>
+   <name>Modify portal content</name>
+  </permission>
+  <permission type='list'>
+   <name>Open/Close Database Connection</name>
+  </permission>
+  <permission type='list'>
+   <name>Open/Close Database Connections</name>
+  </permission>
+  <permission type='list'>
+   <name>Post mail to ZMailIn</name>
+  </permission>
+  <permission type='list'>
+   <name>Query Vocabulary</name>
+  </permission>
+  <permission type='list'>
+   <name>Reply to item</name>
+  </permission>
+  <permission type='list'>
+   <name>Request review</name>
+  </permission>
+  <permission type='list'>
+   <name>Review portal content</name>
+  </permission>
+  <permission type='list'>
+   <name>Save/discard Version changes</name>
+  </permission>
+  <permission type='list'>
+   <name>Search ZCatalog</name>
+  </permission>
+  <permission type='list'>
+   <name>Search for principals</name>
+  </permission>
+  <permission type='list'>
+   <name>Set own password</name>
+  </permission>
+  <permission type='list'>
+   <name>Set own properties</name>
+  </permission>
+  <permission type='list'>
+   <name>Take ownership</name>
+  </permission>
+  <permission type='list'>
+   <name>Test Database Connections</name>
+  </permission>
+  <permission type='list'>
+   <name>Translate Content</name>
+  </permission>
+  <permission type='list'>
+   <name>Undo changes</name>
+  </permission>
+  <permission type='list'>
+   <name>Use Database Methods</name>
+  </permission>
+  <permission type='list'>
+   <name>Use Factories</name>
+  </permission>
+  <permission type='list'>
+   <name>Use mailhost services</name>
+  </permission>
+  <permission type='list'>
+   <name>View</name>
+  </permission>
+  <permission type='list'>
+   <name>View History</name>
+  </permission>
+  <permission type='list'>
+   <name>View ZMailMessage</name>
+  </permission>
+  <permission type='list'>
+   <name>View management screens</name>
+  </permission>
+  <permission type='list'>
+   <name>WebDAV Lock items</name>
+  </permission>
+  <permission type='list'>
+   <name>WebDAV Unlock items</name>
+  </permission>
+  <permission type='list'>
+   <name>WebDAV access</name>
+  </permission>
+ </permission_list>
+ <portal_type>Leave Request Module</portal_type>
+ <title>Leave Requests</title>
+</module>

@@ -1,0 +1,29 @@
+<allowed_content_type_list>
+ <portal_type id="Group Calendar">
+  <item>Group Presence Period</item>
+ </portal_type>
+ <portal_type id="Group Calendar Module">
+  <item>Group Calendar</item>
+ </portal_type>
+ <portal_type id="Group Presence Period">
+  <item>Calendar Exception</item>
+ </portal_type>
+ <portal_type id="Leave Request">
+  <item>Leave Request Period</item>
+ </portal_type>
+ <portal_type id="Leave Request Module">
+  <item>Leave Request</item>
+ </portal_type>
+ <portal_type id="Leave Request Period">
+  <item>Calendar Exception</item>
+ </portal_type>
+ <portal_type id="Presence Request">
+  <item>Presence Request Period</item>
+ </portal_type>
+ <portal_type id="Presence Request Module">
+  <item>Presence Request</item>
+ </portal_type>
+ <portal_type id="Presence Request Period">
+  <item>Calendar Exception</item>
+ </portal_type>
+</allowed_content_type_list>
