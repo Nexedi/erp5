@@ -2400,7 +2400,6 @@ class Catalog( Folder,
     return sql_method(src__=src__, **kw)
 
   def searchResults(self, REQUEST=None, used=None, **kw):
-    """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns a list of brains from a set of constraints on variables """
     # The used argument is deprecated and is ignored
     method = getattr(self, self.sql_search_results)
@@ -2409,7 +2408,6 @@ class Catalog( Folder,
   __call__ = searchResults
 
   def countResults(self, REQUEST=None, used=None, stat__=1, **kw):
-    """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns the number of items which satisfy the where_expression """
     # Get the search method
     method = getattr(self, self.sql_count_results)
@@ -2503,9 +2501,7 @@ class Catalog( Folder,
     return 0
 
   def getExpression(self, method_name):
-    """
-    Returns 1 if the method is already filtered,
-    else it returns 0
+    """ Get the filter expression text for this method.
     """
     if withCMF:
       if not hasattr(self,'filter_dict'):
@@ -2516,9 +2512,7 @@ class Catalog( Folder,
     return ""
 
   def getExpressionInstance(self, method_name):
-    """
-    Returns 1 if the method is already filtered,
-    else it returns 0
+    """ Get the filter expression instance for this method.
     """
     if withCMF:
       if not hasattr(self,'filter_dict'):
@@ -2528,10 +2522,8 @@ class Catalog( Folder,
         return self.filter_dict[method_name]['expression_instance']
     return None
 
-  def isPortalTypeSelected(self, method_name,portal_type):
-    """
-    Returns 1 if the method is already filtered,
-    else it returns 0
+  def isPortalTypeSelected(self, method_name, portal_type):
+    """ Returns true if the portal type is selected for this method.
     """
     if withCMF:
       if not hasattr(self,'filter_dict'):
