@@ -43,6 +43,8 @@ class TestTaskMixin:
   organisation_portal_type = 'Organisation'
   resource_portal_type = 'Service'
   project_portal_type = 'Project'
+  requirement_portal_type = 'Requirement'
+  requirement_document_portal_type = 'Requirement Document'
   task_portal_type = 'Task'
   task_description = 'Task Description %s'
   task_line_portal_type = 'Task Line'
@@ -55,6 +57,7 @@ class TestTaskMixin:
                        stepCreateOrganisation \
                        stepCreateResource \
                        stepCreateProject \
+                       stepCreateRequirement \
                        stepCreateSimpleTask \
                        stepFillTaskWithData \
                        stepConfirmTask \
@@ -123,6 +126,23 @@ class TestTaskMixin:
     )
     sequence.edit(project=obj)
 
+  def stepCreateRequirement(self,sequence=None, sequence_list=None, \
+                            **kw):
+    """
+    Create a requirement
+    """
+    portal = self.getPortal()
+    module = portal.getDefaultModule(self.requirement_document_portal_type)
+    obj = module.newContent(
+        portal_type=self.requirement_document_portal_type,
+        title = 'Requirement Document',
+    )
+    subobj = obj.newContent(
+        portal_type=self.requirement_portal_type,
+        title = 'Requirement',
+    )
+    sequence.edit(requirement=subobj)
+
   def stepCreateOrganisation(self, sequence=None, sequence_list=None, **kw):
     """
       Create a empty organisation
@@ -158,6 +178,7 @@ class TestTaskMixin:
     """
     task = sequence.get('task')
     project = sequence.get('project')
+    requirement = sequence.get('requirement')
     resource = sequence.get('resource_list')[0]
     organisation_list = sequence.get('organisation_list')
     organisation1 = organisation_list[0]
@@ -171,6 +192,7 @@ class TestTaskMixin:
               task_line_resource_value = resource,
               task_line_quantity = self.default_quantity,
               task_line_price = self.default_price,
+              task_line_requirement_value = requirement,
               start_date = self.datetime + 10,
               stop_date = self.datetime + 20,)
     sequence.edit( task = task)
@@ -249,6 +271,8 @@ class TestTaskMixin:
     self.assertEquals(task.getTaskLineResource(), task_report_line.getResource())
     self.assertEquals(task.getTaskLineQuantity(), task_report_line.getQuantity())
     self.assertEquals(task.getTaskLinePrice(), task_report_line.getPrice())
+    self.assertEquals(task.getTaskLineRequirement(), 
+                      task_report_line.getRequirement())
 
   def stepCreateTaskLine(self, sequence=None, sequence_list=None, **kw):
     """
