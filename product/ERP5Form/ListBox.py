@@ -2138,6 +2138,8 @@ class ListBoxRendererContext(Acquisition.Explicit):
     self.renderer = renderer
     # XXX this is a workaround for GlobalTranslationService.
     self.Localizer = renderer.getContext().Localizer
+    # XXX this is a workaround for unicodeconflictresolver.
+    self.REQUEST = renderer.request
 
   def __getattr__(self, name):
     return getattr(self.renderer, name)
