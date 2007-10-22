@@ -125,6 +125,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                     'person_module',
                     'currency_module',
                     'portal_simulation',
+                    'inventory_module',
                     self.folder.getId() ]:
       folder = getattr(self.getPortal(), module, None)
       if folder:
