@@ -37,16 +37,6 @@ except ImportError:
 if not hasattr(globals()['__builtins__'], 'set'):
   from sets import Set as set
 
-# This variable is used to store thread-local buffered information.
-# This must be RAM-based, because the use of a volatile attribute does
-# not guarantee that the information persists until the end of a
-# transaction, but we need to assure that the information is accessible
-# for flushing activities. So the approach here is that information is
-# stored in RAM, and removed at _finish and _abort, so that the information
-# would not span over transactions.
-buffer_dict_lock = threading.Lock()
-buffer_dict = {}
-
 class ActivityBuffer(TM):
 
   _p_oid=_p_changed=_registered=None
@@ -54,28 +44,8 @@ class ActivityBuffer(TM):
   def __init__(self, activity_tool=None):
     self.requires_prepare = 0
 
-    # Directly store the activity tool as an attribute. At the beginning
-    # the activity tool was stored as a part of the key in queued_activity and
-    # in flushed_activity, but this is not nice because in that case we must
-    # use hash on it, and when there is no uid on activity tool, it is
-    # impossible to generate a new uid because acquisition is not available
-    # in the dictionary.
-    assert activity_tool is not None
-    self._activity_tool = activity_tool
-
-    # Referring to a persistent object is dangerous when finishing a transaction,
-    # so store only the required information.
-    self._activity_tool_path = activity_tool.getPhysicalPath()
-
-    try:
-      buffer_dict_lock.acquire()
-      if self._activity_tool_path not in buffer_dict:
-        buffer_dict[self._activity_tool_path] = threading.local()
-    finally:
-      buffer_dict_lock.release()
-
   def _getBuffer(self):
-    buffer = buffer_dict[self._activity_tool_path]
+    buffer = self
     # Create attributes only if they are not present.
     if not hasattr(buffer, 'queued_activity'):
       buffer.queued_activity = []
@@ -99,9 +69,13 @@ class ActivityBuffer(TM):
     buffer = self._getBuffer()
     return buffer.uid_set_dict.setdefault(activity, set())
 
+  def _register(self, activity_tool):
+    self._beginAndHook(activity_tool)
+    TM._register(self)
+
   # Keeps a list of messages to add and remove
   # at end of transaction
-  def _begin(self, *ignored):
+  def _beginAndHook(self, activity_tool):
     # LOG('ActivityBuffer', 0, '_begin %r' % (self,))
     from ActivityTool import activity_list
     self.requires_prepare = 1
@@ -115,7 +89,7 @@ class ActivityBuffer(TM):
       # patching Trasaction.
       transaction = get_transaction()
       try:
-        transaction.beforeCommitHook(self.tpc_prepare, transaction)
+        transaction.beforeCommitHook(self.tpc_prepare, transaction, activity_tool=activity_tool)
       except AttributeError:
         pass
     except:
@@ -143,7 +117,9 @@ class ActivityBuffer(TM):
   def _abort(self, *ignored):
     self._clearBuffer()
 
-  def tpc_prepare(self, transaction, sub=None):
+  def tpc_prepare(self, transaction, sub=None, activity_tool=None):
+    assert activity_tool is not None
+    self._activity_tool_path = activity_tool.getPhysicalPath()
     # Do nothing if it is a subtransaction
     if sub is not None:
       return
@@ -156,23 +132,23 @@ class ActivityBuffer(TM):
       # Try to push / delete all messages
       buffer = self._getBuffer()
       for (activity, message) in buffer.flushed_activity:
-        activity.prepareDeleteMessage(self._activity_tool, message)
+        activity.prepareDeleteMessage(activity_tool, message)
       activity_dict = {}
       for (activity, message) in buffer.queued_activity:
         activity_dict.setdefault(activity, []).append(message)
       for activity, message_list in activity_dict.iteritems():
         if hasattr(activity, 'prepareQueueMessageList'):
-          activity.prepareQueueMessageList(self._activity_tool, message_list)
+          activity.prepareQueueMessageList(activity_tool, message_list)
         else:
           for message in message_list:
-            activity.prepareQueueMessage(self._activity_tool, message)
+            activity.prepareQueueMessage(activity_tool, message)
     except:
       LOG('ActivityBuffer', ERROR, "exception during tpc_prepare",
           error=sys.exc_info())
       raise
 
   def deferredQueueMessage(self, activity_tool, activity, message):
-    self._register()
+    self._register(activity_tool)
     # Activity is called to prevent queuing some messages (useful for example
     # to prevent reindexing objects multiple times)
     if not activity.isMessageRegistered(self, activity_tool, message):
@@ -183,7 +159,7 @@ class ActivityBuffer(TM):
       activity.registerMessage(self, activity_tool, message)
 
   def deferredDeleteMessage(self, activity_tool, activity, message):
-    self._register()
+    self._register(activity_tool)
     buffer = self._getBuffer()
     buffer.flushed_activity.append((activity, message))
 

@@ -81,6 +81,13 @@ ROLE_PROCESSING = 1
 activity_dict = {}
 activity_list = []
 
+# Here go ActivityBuffer instances
+# Structure:
+#  global_activity_buffer[activity_tool_path][thread_id] = ActivityBuffer
+global_activity_buffer = {}
+from thread import get_ident, allocate_lock
+global_activity_buffer_lock = allocate_lock()
+
 def registerActivity(activity):
   # Must be rewritten to register
   # class and create instance for each activity
@@ -680,40 +687,76 @@ class ActivityTool (Folder, UniqueObject):
           return 1
       return 0
 
+    def getActivityBuffer(self, create_if_not_found=True):
+      """
+        Get activtity buffer for this thread for this activity tool.
+        If no activity buffer is found at lowest level and create_if_not_found
+        is True, create one.
+        Intermediate level is unconditionaly created if non existant because
+        chances are it will be used in the instance life.
+        Lock is held when checking for intermediate level existance
+        because:
+         - intermediate level dict must not be created in 2 threads at the
+           same time, since one creation would destroy the existing one.
+        It's released after that step because:
+         - lower level access is at thread scope, thus by definition there
+           can be only one access at a time to a key
+         - GIL protects us when accessing python instances
+      """
+      global global_activity_buffer
+      global global_activity_buffer_lock
+      assert getattr(self, 'aq_self', None) is not None
+      my_instance_key = self.getPhysicalPath()
+      my_thread_key = get_ident()
+      global_activity_buffer_lock.acquire()
+      try:
+        if my_instance_key not in global_activity_buffer:
+          global_activity_buffer[my_instance_key] = {}
+      finally:
+        global_activity_buffer_lock.release()
+      thread_activity_buffer = global_activity_buffer[my_instance_key]
+      if my_thread_key not in thread_activity_buffer:
+        if create_if_not_found:
+          buffer = ActivityBuffer(activity_tool=self)
+        else:
+          buffer = None
+        thread_activity_buffer[my_thread_key] = buffer
+      activity_buffer = thread_activity_buffer[my_thread_key]
+      return activity_buffer
+
     security.declarePrivate('activateObject')
     def activateObject(self, object, activity, active_process, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
-      if getattr(self, '_v_activity_buffer', None) is None:
-        self._v_activity_buffer = ActivityBuffer(activity_tool=self)
+      self.getActivityBuffer()
       return ActiveWrapper(object, activity, active_process, **kw)
 
     def deferredQueueMessage(self, activity, message):
-      self._v_activity_buffer.deferredQueueMessage(self, activity, message)
+      activity_buffer = self.getActivityBuffer()
+      activity_buffer.deferredQueueMessage(self, activity, message)
 
     def deferredDeleteMessage(self, activity, message):
-      if getattr(self, '_v_activity_buffer', None) is None:
-        self._v_activity_buffer = ActivityBuffer(activity_tool=self)
-      self._v_activity_buffer.deferredDeleteMessage(self, activity, message)
+      activity_buffer = self.getActivityBuffer()
+      activity_buffer.deferredDeleteMessage(self, activity, message)
 
     def getRegisteredMessageList(self, activity):
-      activity_buffer = getattr(self, '_v_activity_buffer', None)
+      activity_buffer = self.getActivityBuffer(create_if_not_found=False)
       if activity_buffer is not None:
-        activity_buffer._register() # This is required if flush flush is called outside activate
-        return activity.getRegisteredMessageList(self._v_activity_buffer,
+        #activity_buffer._register() # This is required if flush flush is called outside activate
+        return activity.getRegisteredMessageList(activity_buffer,
                                                  aq_inner(self))
       else:
         return []
 
     def unregisterMessage(self, activity, message):
-      self._v_activity_buffer._register() # Required if called by flush, outside activate
-      return activity.unregisterMessage(self._v_activity_buffer, aq_inner(self), message)
+      activity_buffer = self.getActivityBuffer()
+      #activity_buffer._register()
+      return activity.unregisterMessage(activity_buffer, aq_inner(self), message)
 
     def flush(self, obj, invoke=0, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
-      if getattr(self, '_v_activity_buffer', None) is None:
-        self._v_activity_buffer = ActivityBuffer(activity_tool=self)
+      self.getActivityBuffer()
       if isinstance(obj, tuple):
         object_path = obj
       else:
@@ -840,8 +883,7 @@ class ActivityTool (Folder, UniqueObject):
       # Some Security Cheking should be made here XXX
       global is_initialized
       if not is_initialized: self.initialize()
-      if getattr(self, '_v_activity_buffer', None) is None:
-        self._v_activity_buffer = ActivityBuffer(activity_tool=self)
+      self.getActivityBuffer()
       activity_dict[activity].queueMessage(aq_inner(self),
         Message(path, active_process, activity_kw, method_id, args, kw))
 
