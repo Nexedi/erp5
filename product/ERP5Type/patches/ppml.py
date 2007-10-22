@@ -249,7 +249,10 @@ ppml.Object = Object
 class NoBlanks:
 
     def handle_data(self, data):
-        if data.strip(): self.append(data)
+        if data.strip():
+            if isinstance(data, unicode):
+                data = data.encode('raw_unicode_escape')
+            self.append(data)
 
 ppml.NoBlanks = NoBlanks
 
@@ -660,6 +663,18 @@ def save_unicode(self, tag, data):
 ppml.save_unicode = save_unicode
 
 class xmlPickler(NoBlanks, xyap):
+    # XXX fix a bug in xyap.
+    def unknown_endtag(self, tag):
+        _stack = self._stack
+        top = _stack.pop()
+        append = self.append = _stack[-1].append
+        end = self.end_handlers
+        if tag in end:
+            top = end[tag](self, tag, top)
+        if isinstance(top, unicode):
+            top = top.encode('raw_unicode_escape')
+        append(top)
+
     start_handlers={
         'pickle': lambda self, tag, attrs: [tag, attrs],
         }
