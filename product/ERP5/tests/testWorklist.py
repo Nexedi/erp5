@@ -128,6 +128,12 @@ class TestWorklist(ERP5TypeTestCase):
     module = self.getPortal().getDefaultModule(self.checked_portal_type)
     return module.newContent(portal_type=self.checked_portal_type)
 
+  def getWorklistDocumentCountFromActionName(self, action_name):
+    self.assertEquals(action_name[-1], ')')
+    left_parenthesis_offset = action_name.rfind('(')
+    self.assertNotEquals(left_parenthesis_offset, -1)
+    return int(action_name[left_parenthesis_offset + 1:-1])
+
   def createWorklist(self):
     workflow = self.getWorkflowTool()[self.checked_workflow]
     worklists = workflow.worklists
@@ -137,7 +143,8 @@ class TestWorklist(ERP5TypeTestCase):
           (self.worklist_owner_id, self.actbox_owner_name, 'Owner')]:
       worklists.addWorklist(worklist_id)
       worklist_definition = worklists._getOb(worklist_id)
-      worklist_definition.setProperties('', actbox_name=actbox_name,
+      worklist_definition.setProperties('',
+          actbox_name='%s (%%(count)s)' % (actbox_name, ),
           props={'guard_roles': role,
                  'var_match_portal_type': self.checked_portal_type})
 
@@ -170,11 +177,15 @@ class TestWorklist(ERP5TypeTestCase):
       self.login(user_id)
       result = workflow_tool.listActions(object=document)
       self.logMessage("Check %s worklist as Assignor" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_assignor_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_name)]
       self.assertEquals(len(entry_list), 0)
       self.logMessage("Check %s worklist as Owner" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_owner_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 1)
+      self.assertEquals(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
       self.logout()
     for user_id in ('foo', 'bar'):
       self.logMessage("Check %s worklist" % user_id)
@@ -197,30 +208,40 @@ class TestWorklist(ERP5TypeTestCase):
       self.login(user_id)
       result = workflow_tool.listActions(object=document)
       self.logMessage("Check %s worklist as Assignor" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_assignor_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_name)]
       self.assertEquals(len(entry_list), 0)
       self.logMessage("Check %s worklist as Owner" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_owner_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 1)
+      self.assertEquals(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
       self.logout()
     for user_id in ('bar', ):
       self.login(user_id)
       result = workflow_tool.listActions(object=document)
       self.logMessage("Check %s worklist as Assignor" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_assignor_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_name)]
       self.assertEquals(len(entry_list), 0)
       self.logMessage("Check %s worklist as Owner" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_owner_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 0)
       self.logout()
     for user_id in ('foo', ):
       self.login(user_id)
       result = workflow_tool.listActions(object=document)
       self.logMessage("Check %s worklist as Assignor" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_assignor_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_name)]
       self.assertEquals(len(entry_list), 1)
+      self.assertTrue(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
       self.logMessage("Check %s worklist as Owner" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_owner_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 0)
       self.logout()
 
@@ -241,30 +262,40 @@ class TestWorklist(ERP5TypeTestCase):
       self.login(user_id)
       result = workflow_tool.listActions(object=document)
       self.logMessage("Check %s worklist as Assignor" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_assignor_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_name)]
       self.assertEquals(len(entry_list), 0)
       self.logMessage("Check %s worklist as Owner" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_owner_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 1)
+      self.assertTrue(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
       self.logout()
     for user_id in ('bar', ):
       self.login(user_id)
       result = workflow_tool.listActions(object=document)
       self.logMessage("Check %s worklist as Assignor" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_assignor_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_name)]
       self.assertEquals(len(entry_list), 0)
       self.logMessage("Check %s worklist as Owner" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_owner_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 0)
       self.logout()
     for user_id in ('foo', ):
       self.login(user_id)
       result = workflow_tool.listActions(object=document)
       self.logMessage("Check %s worklist as Assignor" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_assignor_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_name)]
       self.assertEquals(len(entry_list), 1)
+      self.assertTrue(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
       self.logMessage("Check %s worklist as Owner" % user_id)
-      entry_list = [x for x in result if x['name'] == self.actbox_owner_name]
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 0)
       self.logout()
 
