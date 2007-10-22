@@ -438,14 +438,14 @@ class HBTreeFolder2Base (Persistent):
         
     security.declareProtected(access_contents_information,
                               'ObjectValues')
-    def objectValues(self, base_id=None, spec=None):
+    def objectValues(self, base_id=_marker, spec=None):
         return LazyMap(self._getOb, self.objectIds(base_id))
 
 
     security.declareProtected(access_contents_information,
                               'objectIds')
-    def objectIds(self, base_id=None, spec=None):
-        if base_id is None:
+    def objectIds(self, base_id=_marker, spec=None):
+        if base_id is _marker:
             return LazyCat(LazyMap(self._treeObjectIds, self.getTreeIdList()))
         else:
             return self._treeObjectIds(base_id=base_id)
@@ -453,7 +453,7 @@ class HBTreeFolder2Base (Persistent):
     
     security.declareProtected(access_contents_information,
                               'objectItems')
-    def objectItems(self, base_id=None, spec=None):
+    def objectItems(self, base_id=_marker, spec=None):
         # Returns a list of (id, subobject) tuples of the current object.
         # If 'spec' is specified, returns only objects whose meta_type match
         # 'spec'
