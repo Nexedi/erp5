@@ -25,6 +25,9 @@
  <portal_type id="Requirement Module">
   <item>Requirement Document</item>
  </portal_type>
+ <portal_type id="Sale Order">
+  <item>Sale Order Milestone</item>
+ </portal_type>
  <portal_type id="Task">
   <item>Discount</item>
   <item>Task Line</item>
