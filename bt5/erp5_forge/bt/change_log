@@ -1,3 +1,6 @@
+2007-10-22 Jerome
+* Added two utility scripts SkinsTool_checkDuplicateSelectionName and SkinsTool_getNotAssignedFieldList in erp5_toolbox
+
 2007-08-14 Yusei
 * Add utility scripts to collect translation messages.
 
