@@ -42,7 +42,9 @@ class TestTaskMixin:
   default_price = 555.88888888
   organisation_portal_type = 'Organisation'
   resource_portal_type = 'Service'
+  project_portal_type = 'Project'
   task_portal_type = 'Task'
+  task_description = 'Task Description %s'
   task_line_portal_type = 'Task Line'
   task_report_portal_type = 'Task Report'
   task_report_line_portal_type = 'Task Report Line'
@@ -52,6 +54,7 @@ class TestTaskMixin:
   default_task_sequence = 'stepCreateOrganisation \
                        stepCreateOrganisation \
                        stepCreateResource \
+                       stepCreateProject \
                        stepCreateSimpleTask \
                        stepFillTaskWithData \
                        stepConfirmTask \
@@ -62,6 +65,7 @@ class TestTaskMixin:
                        stepCreateOrganisation \
                        stepCreateResource \
                        stepCreateResource \
+                       stepCreateProject \
                        stepCreateSimpleTask \
                        stepFillTaskWithData \
                        stepCreateTaskLine \
@@ -106,6 +110,18 @@ class TestTaskMixin:
     resource_list.append(resource)
     sequence.edit(resource_list=resource_list)
 
+  def stepCreateProject(self,sequence=None, sequence_list=None, \
+                        **kw):
+    """
+    Create a project
+    """
+    portal = self.getPortal()
+    module = portal.getDefaultModule(self.project_portal_type)
+    obj = module.newContent(
+        portal_type=self.project_portal_type,
+        title = 'Project',
+    )
+    sequence.edit(project=obj)
 
   def stepCreateOrganisation(self, sequence=None, sequence_list=None, **kw):
     """
@@ -141,6 +157,7 @@ class TestTaskMixin:
       Fill created task with some necessary data.
     """
     task = sequence.get('task')
+    project = sequence.get('project')
     resource = sequence.get('resource_list')[0]
     organisation_list = sequence.get('organisation_list')
     organisation1 = organisation_list[0]
@@ -149,6 +166,8 @@ class TestTaskMixin:
               source_section_value=organisation1,
               destination_value=organisation1,
               destination_section_value=organisation2,
+              source_project_value=project,
+              description=self.task_description % task.getId(),
               task_line_resource_value = resource,
               task_line_quantity = self.default_quantity,
               task_line_price = self.default_price,
@@ -213,6 +232,7 @@ class TestTaskMixin:
     self.assertEquals('confirmed', task_report.getSimulationState())
     self.assertEquals(task.getSource(), task_report.getSource())
     self.assertEquals(task.getSourceSection(), task_report.getSourceSection())
+    self.assertEquals(task.getSourceProject(), task_report.getSourceProject())
     self.assertEquals(task.getDestination(), task_report.getDestination())
     self.assertEquals(task.getDestinationSection(),
                       task_report.getDestinationSection())
@@ -220,6 +240,8 @@ class TestTaskMixin:
                       task_report.getDestinationDecision())
     self.assertEquals(task.getTitle(),
                       task_report.getTitle())
+    self.assertEquals(task.getDescription(),
+                      task_report.getDescription())
     self.assertEquals(task.getPredecessor(), task_report.getPredecessor())
     self.assertEquals(task.getDescription(), task_report.getDescription())
     self.assertEquals(len(task_report.contentValues()), 1)
