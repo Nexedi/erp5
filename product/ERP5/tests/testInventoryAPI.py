@@ -693,6 +693,21 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEquals([r for r in inventory_list if r.payment_uid ==
                        self.payment_node.getUid()][0].inventory, 200)
 
+  def test_GroupByDate(self):
+    # group by date currently only groups by *exact* date
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=1, start_date=DateTime(2000, 1, 1))
+    self._makeMovement(quantity=1, start_date=DateTime(2000, 1, 1))
+    self._makeMovement(quantity=1, start_date=DateTime(2001, 1, 1))
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_date=1)
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list
+                        if r.date.year() == 2000][0].inventory, 2)
+    self.assertEquals([r for r in inventory_list
+                        if r.date.year() == 2001][0].inventory, 1)
+
+
   def test_OmitInputOmitOutput(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement(quantity=1, price=1)

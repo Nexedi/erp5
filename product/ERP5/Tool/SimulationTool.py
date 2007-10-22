@@ -476,6 +476,7 @@ class SimulationTool(BaseTool):
         group_by_variation=0,
         group_by_movement=0,
         group_by_resource=0,
+        group_by_date=0,
         # sort_on
         sort_on=None,
         # keywords for related keys
@@ -649,6 +650,8 @@ class SimulationTool(BaseTool):
         group_by_expression_list.append('uid')
       if group_by_resource:
         group_by_expression_list.append('resource_uid')
+      if group_by_date:
+        group_by_expression_list.append('date')
       if group_by_expression_list:
         new_kw['group_by'] = group_by_expression_list
       return sql_kw, new_kw 
@@ -827,7 +830,7 @@ class SimulationTool(BaseTool):
         group_by_section=0, group_by_mirror_section=0,
         group_by_payment=0,
         group_by_variation=0, group_by_sub_variation=0,
-        group_by_movement=0,
+        group_by_movement=0, group_by_date=0,
         group_by_resource=None,
         **ignored):
       """
@@ -843,7 +846,8 @@ class SimulationTool(BaseTool):
       if not ignore_group_by:
         if group_by_node or group_by_mirror_node or group_by_section or \
            group_by_mirror_section or group_by_payment or \
-           group_by_sub_variation or group_by_variation or group_by_movement:
+           group_by_sub_variation or group_by_variation or \
+           group_by_movement or group_by_date:
           if group_by_resource is None:
             group_by_resource = 1
           new_group_by_dict['group_by_resource'] = group_by_resource
