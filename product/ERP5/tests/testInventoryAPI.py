@@ -29,7 +29,7 @@
 """Unit Tests for Inventory API.
 
 TODO: test variation
-
+      test selection_domain, selection_report
 """
 
 import os
@@ -1271,6 +1271,17 @@ class TestMovementHistoryList(InventoryAPITestCase):
                               source_value=self.node,
                               destination_value=self.node )
     
+    mvt_history_list = getMovementHistoryList(
+                            node_uid=self.node.getUid(),)
+    self.assertEquals(2, len(mvt_history_list))
+    self.assertEquals(0, sum([r.total_quantity for r in mvt_history_list]))
+
+  def testSameNodeSameDates(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt = self._makeMovement( quantity=2,
+                              start_date=DateTime(),
+                              source_value=self.node,
+                              destination_value=self.node )
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),)
     self.assertEquals(2, len(mvt_history_list))

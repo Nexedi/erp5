@@ -844,7 +844,10 @@ class SimulationTool(BaseTool):
       If no group by is provided, use the default group by: movement, node and
       resource, unless movement_list_mode is true, in that case, group by
       movement, node, resource and date (this is historically the default in
-      getMovementHistoryList).
+      getMovementHistoryList), section, mirror_section and payment (this is to
+      make sure two lines will appear when we are, for instance both source and
+      destination, implementation might not be optimal, because it uses lots of
+      group by statements in SQL).
       """
       new_group_by_dict = {}
       if not ignore_group_by:
@@ -861,6 +864,10 @@ class SimulationTool(BaseTool):
           new_group_by_dict['group_by_resource'] = 1
           if movement_list_mode:
             new_group_by_dict['group_by_date'] = 1
+            new_group_by_dict['group_by_mirror_node'] = 1
+            new_group_by_dict['group_by_section'] = 1
+            new_group_by_dict['group_by_mirror_section'] = 1
+            new_group_by_dict['group_by_payment'] = 1
       return new_group_by_dict
 
     security.declareProtected(Permissions.AccessContentsInformation,
