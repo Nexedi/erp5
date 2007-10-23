@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -86,8 +83,8 @@ for item in mixed_list:\n
     for fallback_category in base_category.getFallbackBaseCategoryList():\n
       fallback_category = ctool.restrictedTraverse(fallback_category, None)\n
       if fallback_category is not None and fallback_category.objectIds():\n
-        item_list = [(\'%s/%s\' % (item, x[0]), \'%s/%s\' % (item, x[1])) for x in\n
-                     fallback_category.getCategoryChildCompactLogicalPathItemList(base=1)]\n
+        item_list.extend([(\'%s/%s\' % (item, x[0]), \'%s/%s\' % (item, x[1])) \\\n
+          for x in fallback_category.getCategoryChildCompactLogicalPathItemList(base=1) if x[0]])\n
         break\n
 \n
   category_list.extend(item_list)\n
