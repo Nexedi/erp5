@@ -160,7 +160,7 @@ class OOoDocument(File, ConversionCacheMixin):
         fallback_script_id = 'Document_checkConversionFormatPermission')
     if not method(format=format):
       raise Unauthorized("OOoDocument: user does not have enough permission to access document"
-                         " in %s format" % format)
+                         " in %s format" % (format or 'original'))
 
     # Return the original file by default
     if format is None:
