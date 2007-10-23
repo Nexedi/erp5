@@ -87,6 +87,7 @@
                 <string>TitleMovementGroup</string>
                 <string>BaseVariantMovementGroup</string>
                 <string>RequirementMovementGroup</string>
+                <string>SplitMovementGroup</string>
               </tuple>
             </value>
         </item>
