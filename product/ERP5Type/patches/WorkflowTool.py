@@ -95,7 +95,8 @@ class ExclusionTuple(tuple):
   """
   pass
 
-def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurityUidListAndRoleColumnDict):
+def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
+                                 getSecurityUidListAndRoleColumnDict):
   """
     Get a list of dict of WorklistVariableMatchDict grouped by compatible
     conditions.
@@ -149,13 +150,15 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurity
       applied_security_criterion_dict = {}
       # TODO: make security criterions be examined in the same order for all
       # worklists if possible at all.
-      for security_column_id, security_column_value in role_column_dict.iteritems():
+      for security_column_id, security_column_value in \
+          role_column_dict.iteritems():
         valid_criterion_dict = {}
         valid_criterion_dict.update(applied_security_criterion_dict)
         # Current security criterion must be applied to all further queries
         # for this worklist negated, so the a given line cannot match multiple
         # times.
-        applied_security_criterion_dict[security_column_id] = ExclusionList(security_column_value)
+        applied_security_criterion_dict[security_column_id] = \
+          ExclusionList(security_column_value)
         valid_criterion_dict[security_column_id] = security_column_value
         for criterion_id, criterion_value in worklist_match_dict.iteritems():
           if criterion_id in acceptable_key_dict:
@@ -168,9 +171,9 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurity
           elif criterion_id == SECURITY_PARAMETER_ID:
             pass
           else:
-            LOG('WorkflowTool_listActions', WARNING, 'Worklist %s of workflow '\
-                '%s filters on variable %s which is not available in '\
-                'catalog. Its value will not be checked.' % \
+            LOG('WorkflowTool_listActions', WARNING, 'Worklist %s of ' \
+                'workflow %s filters on variable %s which is not available ' \
+                'in catalog. Its value will not be checked.' % \
                 (worklist_id, workflow_id, criterion_id))
         worklist_set_dict_key = valid_criterion_dict.keys()
         if len(worklist_set_dict_key):
@@ -182,7 +185,8 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurity
             [workflow_worklist_key] = valid_criterion_dict
   return worklist_set_dict.values(), metadata_dict
 
-def generateNestedQuery(priority_list, criterion_dict, possible_worklist_id_dict=None):
+def generateNestedQuery(priority_list, criterion_dict,
+                        possible_worklist_id_dict=None):
   """
   """
   assert possible_worklist_id_dict is None \
@@ -196,14 +200,16 @@ def generateNestedQuery(priority_list, criterion_dict, possible_worklist_id_dict
     for criterion_value, worklist_id_dict in my_criterion_dict.iteritems():
       if possible_worklist_id_dict is not None:
         criterion_worklist_id_dict = worklist_id_dict.copy()
-        # Do not use iterkeys since the dictionary will be modified in the loop
+        # Do not use iterkeys since the dictionary will be modified in the
+        # loop
         for worklist_id in criterion_worklist_id_dict.keys():
           if worklist_id not in possible_worklist_id_dict:
             del criterion_worklist_id_dict[worklist_id]
       else:
         criterion_worklist_id_dict = worklist_id_dict
       if len(criterion_worklist_id_dict):
-        subcriterion_query = generateNestedQuery(priority_list=my_priority_list,
+        subcriterion_query = generateNestedQuery(
+          priority_list=my_priority_list,
           criterion_dict=criterion_dict,
           possible_worklist_id_dict=criterion_worklist_id_dict)
         if subcriterion_query is not None:
@@ -385,7 +391,8 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
       format_data = metadata['format_data']
       format_data._push({'count': document_count})
       append({'name': metadata['worklist_title'] % format_data,
-              'url': '%s/%s' % (portal_url, metadata['action_box_url'] % format_data),
+              'url': '%s/%s' % (portal_url, metadata['action_box_url'] % \
+                                            format_data),
               'worklist_id': metadata['worklist_id'],
               'workflow_title': metadata['workflow_title'],
               'workflow_id': metadata['workflow_id'],
@@ -439,27 +446,40 @@ def WorkflowTool_listActions(self, info=None, object=None):
   if len(worklist_dict):
     portal_url = getToolByName(self, 'portal_url')()
     portal_catalog = getToolByName(self, 'portal_catalog')
-    getSecurityUidListAndRoleColumnDict = portal_catalog.getSecurityUidListAndRoleColumnDict
+    getSecurityUidListAndRoleColumnDict = \
+      portal_catalog.getSecurityUidListAndRoleColumnDict
     security_query_cache_dict = {}
     def _getWorklistActionList():
       worklist_result_dict = {}
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
-      # Get a list of dict of WorklistVariableMatchDict grouped by compatible conditions
-      worklist_list_grouped_by_condition, worklist_metadata = groupWorklistListByCondition(worklist_dict=worklist_dict, acceptable_key_dict=acceptable_key_dict, getSecurityUidListAndRoleColumnDict=getSecurityUidListAndRoleColumnDict)
+      # Get a list of dict of WorklistVariableMatchDict grouped by compatible
+      # conditions
+      worklist_list_grouped_by_condition, worklist_metadata = \
+        groupWorklistListByCondition(
+          worklist_dict=worklist_dict,
+          acceptable_key_dict=acceptable_key_dict,
+          getSecurityUidListAndRoleColumnDict=\
+            getSecurityUidListAndRoleColumnDict)
       #LOG('WorklistGeneration', WARNING, worklist_list_grouped_by_condition)
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         # Generate the query for this worklist_list
-        (select_expression, group_by_expression, query) = getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
+        (select_expression, group_by_expression, query) = \
+          getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
         search_result = portal_catalog.unrestrictedSearchResults
         search_result_kw = {'select_expression': select_expression,
                             'group_by_expression': group_by_expression,
                             'query': query}
-        #LOG('WorklistGeneration', WARNING, 'Using query: %s' % (search_result(src__=1, **search_result_kw), ))
+        #LOG('WorklistGeneration', WARNING, 'Using query: %s' % \
+        #    (search_result(src__=1, **search_result_kw), ))
         catalog_brain_result = search_result(**search_result_kw)
-        grouped_worklist_result = sumCatalogResultByWorklist(grouped_worklist_dict=grouped_worklist_dict, catalog_result=catalog_brain_result)
+        grouped_worklist_result = sumCatalogResultByWorklist(
+          grouped_worklist_dict=grouped_worklist_dict,
+          catalog_result=catalog_brain_result)
         for key, value in grouped_worklist_result.iteritems():
           worklist_result_dict[key] = value + worklist_result_dict.get(key, 0)
-      action_list = generateActionList(worklist_metadata=worklist_metadata, worklist_result=worklist_result_dict, portal_url=portal_url)
+      action_list = generateActionList(worklist_metadata=worklist_metadata,
+                                       worklist_result=worklist_result_dict,
+                                       portal_url=portal_url)
       def get_action_ident(action):
         return '/'.join((action['workflow_id'], action['worklist_id']))
       def action_cmp(action_a, action_b):
@@ -467,7 +487,9 @@ def WorkflowTool_listActions(self, info=None, object=None):
       action_list.sort(action_cmp)
       return action_list
     user = str(_getAuthenticatedUser(self))
-    _getWorklistActionList = CachingMethod(_getWorklistActionList, id=('_getWorklistActionList', user, portal_url), cache_factory = 'erp5_ui_short')
+    _getWorklistActionList = CachingMethod(_getWorklistActionList,
+      id=('_getWorklistActionList', user, portal_url),
+      cache_factory = 'erp5_ui_short')
     actions.extend(_getWorklistActionList())
   return actions 
 
