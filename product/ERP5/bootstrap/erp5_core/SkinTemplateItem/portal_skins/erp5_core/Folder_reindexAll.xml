@@ -110,7 +110,7 @@ def Folder_reindexObjectList(id_list_list):\n
 \n
 try:\n
   tree_id_list = folder.getTreeIdList()\n
-except NotImplementedError, AttributeError:\n
+except (NotImplementedError, AttributeError):\n
   # Build a list of list, like this we parse ids only one time,\n
   # and then Folder_reinexObjectList will work with one list at\n
   # a time and remove it from the list of list\n
