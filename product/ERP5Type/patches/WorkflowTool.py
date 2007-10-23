@@ -24,7 +24,7 @@ from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
 from Products.CMFCore.utils import getToolByName
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, NegatedQuery
 from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.ERP5Type.Cache import CachingMethod
 
@@ -76,14 +76,31 @@ WORKLIST_METADATA_KEY = 'metadata'
 SECURITY_PARAMETER_ID = 'local_roles'
 SECURITY_COLUMN_ID = 'security_uid'
 COUNT_COLUMN_TITLE = 'count'
-INTERNAL_CRITERION_KEY_LIST = (WORKLIST_METADATA_KEY, SECURITY_PARAMETER_ID)
 
-def groupWorklistListByCondition(worklist_dict, acceptable_key_dict):
+class ExclusionList(list):
+  """
+    This is a dummy subclass of list.
+    It is only used to detect wether contained values must be negated.
+    It is not to be used outside of the scope of this document nor outside
+    of the scope of worklist criterion handling.
+  """
+  pass
+
+class ExclusionTuple(tuple):
+  """
+    This is a dummy subclass of tuple.
+    It is only used to detect wether contained values must be negated.
+    It is not to be used outside of the scope of this document nor outside
+    of the scope of worklist criterion handling.
+  """
+  pass
+
+def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurityUidListAndRoleColumnDict):
   """
     Get a list of dict of WorklistVariableMatchDict grouped by compatible
     conditions.
     Strip any variable which is not a catalog column.
-    Keep metadata on worklists.
+    Returns metadata in a separate dict.
   
     Example:
       Input:
@@ -96,56 +113,74 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict):
         }
         acceptable_key_dict:
         ['foo', 'baz']
-      Output:
-        [{'workflow_A/worklist_AA': {'foo': (1, 2)}
-         },
-         {'workflow_A/worklist_AB': {'baz': (5, )},
-          'workflow_B/worklist_BA': {'baz': (6, )}
-         }
-        ]
+      Output a 2-tuple:
+        (
+          [{'workflow_A/worklist_AA': {'foo': (1, 2)}
+           },
+           {'workflow_A/worklist_AB': {'baz': (5, )},
+            'workflow_B/worklist_BA': {'baz': (6, )}
+           }
+          ]
+        ,
+          {} # Contains metadata information, one entry per worklist.
+        )
   """
   acceptable_key_dict = acceptable_key_dict.copy()
-  for internal_criterion_key in INTERNAL_CRITERION_KEY_LIST:
-    assert internal_criterion_key not in acceptable_key_dict
   # One entry per worklist group, based on filter criterions.
   worklist_set_dict = {}
+  metadata_dict = {}
   for workflow_id, worklist in worklist_dict.iteritems():
     for worklist_id, worklist_match_dict in worklist.iteritems():
+      workflow_worklist_key = '/'.join((workflow_id, worklist_id))
+      security_parameter = worklist_match_dict.get(SECURITY_PARAMETER_ID, [])
+      security_kw = {}
+      if len(security_parameter):
+        security_kw[SECURITY_PARAMETER_ID] = security_parameter
+      uid_list, role_column_dict = getSecurityUidListAndRoleColumnDict(
+                                     **security_kw)
+      if len(uid_list):
+        uid_list.sort()
+        role_column_dict[SECURITY_COLUMN_ID] = uid_list
+      # Make sure every item is a list - or a tuple
+      for security_column_id in role_column_dict.iterkeys():
+        value = role_column_dict[security_column_id]
+        if not isinstance(value, (tuple, list)):
+          role_column_dict[security_column_id] = [value]
+      applied_security_criterion_dict = {}
+      for security_column_id, security_column_value in role_column_dict.iteritems():
         valid_criterion_dict = {}
+        valid_criterion_dict.update(applied_security_criterion_dict)
+        # Current security criterion must be applied to all further queries
+        # for this worklist negated, so the a given line cannot match multiple
+        # times.
+        applied_security_criterion_dict[security_column_id] = ExclusionList(security_column_value)
+        valid_criterion_dict[security_column_id] = security_column_value
         for criterion_id, criterion_value in worklist_match_dict.iteritems():
-          if criterion_id in acceptable_key_dict \
-             or criterion_id in INTERNAL_CRITERION_KEY_LIST:
+          if criterion_id in acceptable_key_dict:
             if isinstance(criterion_value, tuple):
               criterion_value = list(criterion_value)
+            assert criterion_id not in valid_criterion_dict
             valid_criterion_dict[criterion_id] = criterion_value
+          elif criterion_id == WORKLIST_METADATA_KEY:
+            metadata_dict[workflow_worklist_key] = criterion_value
+          elif criterion_id == SECURITY_PARAMETER_ID:
+            pass
           else:
             LOG('WorkflowTool_listActions', WARNING, 'Worklist %s of workflow '\
                 '%s filters on variable %s which is not available in '\
                 'catalog. Its value will not be checked.' % \
                 (worklist_id, workflow_id, criterion_id))
-        worklist_set_dict_key = [x for x in valid_criterion_dict.keys() \
-                                 if x != WORKLIST_METADATA_KEY]
+        worklist_set_dict_key = valid_criterion_dict.keys()
         if len(worklist_set_dict_key):
           worklist_set_dict_key.sort()
           worklist_set_dict_key = tuple(worklist_set_dict_key)
           if worklist_set_dict_key not in worklist_set_dict:
             worklist_set_dict[worklist_set_dict_key] = {}
           worklist_set_dict[worklist_set_dict_key]\
-            ['/'.join((workflow_id, worklist_id))] = valid_criterion_dict
-  return worklist_set_dict.values()
+            [workflow_worklist_key] = valid_criterion_dict
+  return worklist_set_dict.values(), metadata_dict
 
-def generateQueryFromTuple(criterion_id, value, securityQueryHook):
-  """
-    If given tuple only contains one Query/ComplexQuery, return it and ignore
-    given id. Otherwise, generate a new 'IN' query with id and value.
-  """
-  if criterion_id == SECURITY_PARAMETER_ID:
-    query = securityQueryHook(value)
-  else:
-    query = Query(operator='IN', **{criterion_id: value})
-  return query
-
-def generateNestedQuery(priority_list, criterion_dict, securityQueryHook=None, possible_worklist_id_dict=None):
+def generateNestedQuery(priority_list, criterion_dict, possible_worklist_id_dict=None):
   """
   """
   assert possible_worklist_id_dict is None \
@@ -167,16 +202,18 @@ def generateNestedQuery(priority_list, criterion_dict, securityQueryHook=None, p
         criterion_worklist_id_dict = worklist_id_dict
       if len(criterion_worklist_id_dict):
         subcriterion_query = generateNestedQuery(priority_list=my_priority_list,
-          criterion_dict=criterion_dict, securityQueryHook=securityQueryHook,
+          criterion_dict=criterion_dict,
           possible_worklist_id_dict=criterion_worklist_id_dict)
         if subcriterion_query is not None:
-          append(ComplexQuery(generateQueryFromTuple(my_criterion_id,
-                                          criterion_value,
-                                          securityQueryHook=securityQueryHook),
-                              subcriterion_query, operator='AND'))
+          query = Query(operator='IN',
+                        **{my_criterion_id: criterion_value})
+          if isinstance(criterion_value, ExclusionTuple):
+            query = NegatedQuery(query)
+          append(ComplexQuery(query, subcriterion_query, operator='AND'))
   else:
+    possible_value_list = tuple()
+    impossible_value_list = tuple()
     if possible_worklist_id_dict is not None:
-      posible_value_list = tuple()
       for criterion_value, criterion_worklist_id_dict \
           in my_criterion_dict.iteritems():
         possible = False
@@ -185,17 +222,26 @@ def generateNestedQuery(priority_list, criterion_dict, securityQueryHook=None, p
             possible = True
             break
         if possible:
-          posible_value_list = posible_value_list + criterion_value
+          if isinstance(criterion_value, ExclusionTuple):
+            impossible_value_list += criterion_value
+          else:
+            possible_value_list += criterion_value
     else:
-      posible_value_list = my_criterion_dict.keys()
-    if len(posible_value_list):
-      append(generateQueryFromTuple(my_criterion_id, posible_value_list,
-                                    securityQueryHook=securityQueryHook))
+      possible_value_list = my_criterion_dict.keys()
+    value_query_list = []
+    if len(possible_value_list):
+      query = Query(operator='IN', **{my_criterion_id: possible_value_list})
+      value_query_list.append(query)
+    if len(impossible_value_list):
+      query = Query(operator='IN', **{my_criterion_id: impossible_value_list})
+      query = NegatedQuery(query)
+      value_query_list.append(query)
+    append(ComplexQuery(operator='AND', *value_query_list))
   if len(query_list):
     return ComplexQuery(operator='OR', *query_list)
   return None
 
-def getWorklistListQuery(grouped_worklist_dict, securityQueryHook):
+def getWorklistListQuery(grouped_worklist_dict):
   """
     Return a tuple of 3 value:
     - a select_expression with a count(*) and all columns used in
@@ -209,12 +255,13 @@ def getWorklistListQuery(grouped_worklist_dict, securityQueryHook):
   total_criterion_id_dict = {}
   for worklist_id, worklist in grouped_worklist_dict.iteritems():
     for criterion_id, criterion_value in worklist.iteritems():
-      if criterion_id == WORKLIST_METADATA_KEY:
-        continue
       criterion_value_to_worklist_dict_dict = \
         total_criterion_id_dict.setdefault(criterion_id, {})
       criterion_value.sort()
-      criterion_value = tuple(criterion_value)
+      if isinstance(criterion_value, ExclusionList):
+        criterion_value = ExclusionTuple(criterion_value)
+      else:
+        criterion_value = tuple(criterion_value)
       criterion_value_to_worklist_dict = \
         criterion_value_to_worklist_dict_dict.setdefault(criterion_value, {})
       criterion_value_to_worklist_dict[worklist_id] = None
@@ -226,15 +273,9 @@ def getWorklistListQuery(grouped_worklist_dict, securityQueryHook):
                     total_criterion_id_dict[criterion_id_b].itervalues()]))
   total_criterion_id_list.sort(criterion_id_cmp)
   query = generateNestedQuery(priority_list=total_criterion_id_list,
-                              criterion_dict=total_criterion_id_dict,
-                              securityQueryHook=securityQueryHook)
+                              criterion_dict=total_criterion_id_dict)
   assert query is not None
-  if SECURITY_PARAMETER_ID not in total_criterion_id_list:
-    # This request has no defined local_roles, so we must use default
-    # security query
-    query = ComplexQuery(query, securityQueryHook(), operator='AND')
-  group_by_expression = ', '.join([x for x in total_criterion_id_list \
-                                   if x != SECURITY_PARAMETER_ID])
+  group_by_expression = ', '.join(total_criterion_id_list)
   assert COUNT_COLUMN_TITLE not in total_criterion_id_dict
   select_expression = 'count(*) as %s, %s' % (COUNT_COLUMN_TITLE,
                                               group_by_expression)
@@ -292,10 +333,9 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
   # List all unique criterions in criterion_id_list
   criterion_id_dict = {}
   for worklist in grouped_worklist_dict.itervalues():
-    for criterion_id in worklist.iterkeys():
-      if criterion_id in INTERNAL_CRITERION_KEY_LIST:
-        continue
-      criterion_id_dict[criterion_id] = None
+    for criterion_id, criterion_value in worklist.iteritems():
+      if not isinstance(criterion_value, ExclusionList):
+        criterion_id_dict[criterion_id] = None
   criterion_id_list = criterion_id_dict.keys()
   # Group all worklists converned by a set of criterion values in
   # criterion_value_to_worklist_key_dict
@@ -331,16 +371,15 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
                                           result_line[COUNT_COLUMN_TITLE]
   return worklist_result_dict
 
-def generateActionList(grouped_worklist_dict, worklist_result, portal_url):
+def generateActionList(worklist_metadata, worklist_result, portal_url):
   """
     For each worklist generate action_list as expected by portal_actions.
   """
   action_list = []
   append = action_list.append
-  for key, value in grouped_worklist_dict.iteritems():
+  for key, metadata in worklist_metadata.iteritems():
     document_count = worklist_result.get(key, 0)
     if document_count:
-      metadata = value[WORKLIST_METADATA_KEY]
       format_data = metadata['format_data']
       format_data._push({'count': document_count})
       append({'name': metadata['worklist_title'] % format_data,
@@ -400,43 +439,25 @@ def WorkflowTool_listActions(self, info=None, object=None):
     portal_catalog = getToolByName(self, 'portal_catalog')
     getSecurityUidListAndRoleColumnDict = portal_catalog.getSecurityUidListAndRoleColumnDict
     security_query_cache_dict = {}
-    def securityQueryHook(role_list=None):
-      if role_list is None:
-        role_list = []
-      security_cache_key = list(role_list)
-      security_cache_key.sort()
-      security_cache_key = tuple(security_cache_key)
-      query = security_query_cache_dict.get(security_cache_key, None)
-      if query is None:
-        security_kw = {}
-        if len(role_list):
-          security_kw[SECURITY_PARAMETER_ID] = role_list
-        security_uid_list, role_column_dict = getSecurityUidListAndRoleColumnDict(**security_kw)
-        security_query_list = [Query(operator='IN', **{SECURITY_COLUMN_ID: security_uid_list})]
-        for column_id, value in role_column_dict.iteritems():
-          if not isinstance(value, (list, tuple)):
-            value = (value, )
-          security_query_list.append(Query(operator='IN', **{column_id: value}))
-        query = ComplexQuery(operator='OR', *security_query_list)
-        security_query_cache_dict[security_cache_key] = query
-      return query
     def _getWorklistActionList():
-      action_list = []
+      worklist_result_dict = {}
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible conditions
-      worklist_list_grouped_by_condition = groupWorklistListByCondition(worklist_dict=worklist_dict, acceptable_key_dict=acceptable_key_dict)
+      worklist_list_grouped_by_condition, worklist_metadata = groupWorklistListByCondition(worklist_dict=worklist_dict, acceptable_key_dict=acceptable_key_dict, getSecurityUidListAndRoleColumnDict=getSecurityUidListAndRoleColumnDict)
+      #LOG('WorklistGeneration', WARNING, worklist_list_grouped_by_condition)
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         # Generate the query for this worklist_list
-        (select_expression, group_by_expression, query) = getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict, securityQueryHook=securityQueryHook)
+        (select_expression, group_by_expression, query) = getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
         search_result = portal_catalog.unrestrictedSearchResults
         search_result_kw = {'select_expression': select_expression,
                             'group_by_expression': group_by_expression,
                             'query': query}
         #LOG('WorklistGeneration', INFO, 'Using query: %s' % (search_result(src__=1, **search_result_kw), ))
         catalog_brain_result = search_result(**search_result_kw)
-        worklist_result_dict = sumCatalogResultByWorklist(grouped_worklist_dict=grouped_worklist_dict, catalog_result=catalog_brain_result)
-        group_action_list = generateActionList(grouped_worklist_dict=grouped_worklist_dict, worklist_result=worklist_result_dict, portal_url=portal_url)
-        action_list.extend(group_action_list)
+        grouped_worklist_result = sumCatalogResultByWorklist(grouped_worklist_dict=grouped_worklist_dict, catalog_result=catalog_brain_result)
+        for key, value in grouped_worklist_result.iteritems():
+          worklist_result_dict[key] = value + worklist_result_dict.get(key, 0)
+      action_list = generateActionList(worklist_metadata=worklist_metadata, worklist_result=worklist_result_dict, portal_url=portal_url)
       def get_action_ident(action):
         return '/'.join((action['workflow_id'], action['worklist_id']))
       def action_cmp(action_a, action_b):
@@ -448,7 +469,4 @@ def WorkflowTool_listActions(self, info=None, object=None):
     actions.extend(_getWorklistActionList())
   return actions 
 
-# Disable this monkey patch, because some cases are not correctly handled.
-# I (vincent) will keep on working on this, but it will now be disaled by
-# default.
-#WorkflowTool.listActions = WorkflowTool_listActions
+WorkflowTool.listActions = WorkflowTool_listActions
