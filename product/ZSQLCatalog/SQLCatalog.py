@@ -238,6 +238,30 @@ class QueryMixin:
           key = "TRUNCATE(%s,%s)" % (key, precision)
     return key
 
+  def asSQLExpression(self, key_alias_dict=None,
+                      keyword_search_keys=None,
+                      full_text_search_keys=None,
+                      ignore_empty_string=1, stat__=0):
+    """
+      Return a dictionnary containing the keys and value types:
+        'where_expression': string
+        'select_expression_list': string
+    """
+    raise NotImplementedError
+
+  def getSQLKeyList(self):
+    """
+      Return a list of keys used by this query and its subqueries.
+    """
+    raise NotImplementedError
+  
+  def getRelatedTableMapDict(self):
+    """
+      Return for each key used by this query (plus ones used by its
+      subqueries) the table alias mapping.
+    """
+    raise NotImplementedError
+
 class Query(QueryMixin):
   """
   This allow to define constraints on a sql column
