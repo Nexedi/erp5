@@ -76,7 +76,7 @@ role_list = user.getRolesInContext(context)\n
 \n
 # Users involved in the document may view it in editable mode\n
 if "Associate" in role_list or "Assignee" in role_list or\\\n
-   "Assignor" in role_list or "Manager" in role_list:\n
+   "Assignor" in role_list or "Manager" in role_list or "Owner" in role_list:\n
   return 1\n
 \n
 # Reject original format\n

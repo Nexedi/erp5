@@ -79,7 +79,13 @@ response = request.RESPONSE\n
 data = context.index_html(request, response, format=format, force=force)\n
 typ = response.headers.get(\'content-type\')\n
 \n
-filename = \'%s.%s\' % ((filename or context.title_or_id(), format))\n
+if not filename:\n
+  filename = context.getSourceReference()\n
+  if filename and \'.\' in filename:\n
+    filename = filename[:filename.rindex(\'.\')]\n
+  else:\n
+    filename = context.title_or_id()\n
+filename = \'%s.%s\' % ((filename, format))\n
 if typ == \'application/zip\':\n
   filename += \'.zip\'\n
 \n
