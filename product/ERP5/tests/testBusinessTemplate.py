@@ -40,7 +40,7 @@ from urllib import pathname2url
 from Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.tests.base.testcase import LogInterceptor
-from Products.ERP5Type.Document.BusinessTemplate import removeAll
+import shutil
 import os
 
 class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
@@ -564,6 +564,96 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     subskin_id = sequence.get('skin_subfolder_id')
     skin_subfolder = skin_folder._getOb(subskin_id, None)
     self.failUnless(skin_subfolder is not None)
+
+  def stepCreateNewForm(self, sequence=None, sequence_list=None):
+    """Create a new ERP5 Form in a skin folder."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = 'Geek_view'
+    addERP5Form = skin_folder.manage_addProduct['ERP5Form'].addERP5Form
+    addERP5Form(form_id, 'View')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+                      sorted(['left', 'right', 'center', 'bottom', 'hidden']))
+    addField = form.manage_addProduct['Formulator'].manage_addField
+    addField('my_title', 'Title', 'StringField')
+    field = form.get_field('my_title')
+    self.assertEquals(form.get_fields_in_group('left'), [field])
+    group_dict = {}
+    for group in form.get_groups(include_empty=1):
+      id_list = []
+      for field in form.get_fields_in_group(group):
+        id_list.append(field.getId())
+      group_dict[group] = id_list 
+    sequence.edit(form_id=form_id, group_dict=group_dict)
+
+  def stepRemoveForm(self, sequence=None, sequence_list=None):
+    """Remove an ERP5 Form."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+    skin_folder.manage_delObjects([form_id])
+    form = skin_folder._getOb(form_id, None)
+    self.assertEquals(form, None)
+
+  def stepAddFormField(self, sequence=None, sequence_list=None):
+    """Add a field to an ERP5 Form."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+                      sorted(['left', 'right', 'center', 'bottom', 'hidden']))
+    addField = form.manage_addProduct['Formulator'].manage_addField
+    addField('my_reference', 'Reference', 'StringField')
+    form.move_field_group(['my_reference'], 'left', 'right')
+    field = form.get_field('my_reference')
+    self.assertEquals(form.get_fields_in_group('right'), [field])
+    group_dict = {}
+    for group in form.get_groups(include_empty=1):
+      id_list = []
+      for field in form.get_fields_in_group(group):
+        id_list.append(field.getId())
+      group_dict[group] = id_list 
+    sequence.edit(group_dict=group_dict, field_id=field.getId())
+
+  def stepRemoveFormField(self, sequence=None, sequence_list=None):
+    """Remove a field from an ERP5 Form."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+    field_id = sequence.get('field_id')
+    field = form.get_field(field_id)
+    self.assertNotEquals(field, None)
+    form.manage_delObjects([field_id])
+    self.assertRaises(AttributeError, form.get_field, field_id)
+
+  def stepCheckFormGroups(self, sequence=None, sequence_list=None):
+    """Check the groups of an ERP5 Form."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+    group_dict = sequence.get('group_dict')
+    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+                      sorted(group_dict.iterkeys()))
+    for group in group_dict.iterkeys():
+      id_list = []
+      for field in form.get_fields_in_group(group):
+        id_list.append(field.getId())
+      self.assertEquals(group_dict[group], id_list)
 
   def stepCreateNewObjectInSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
     """
@@ -2001,7 +2091,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt_title = pathname2url(template.getTitle())
     template_path = os.path.join(cfg.instancehome, 'tests', '%s' % (bt_title,))
     # remove previous version of bt it exists
-    removeAll(template_path)
+    shutil.rmtree(template_path)
     template.export(path=template_path, local=1)
     sequence.edit(template_path=template_path)
     self.failUnless(os.path.exists(template_path))
@@ -4244,7 +4334,47 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
     
-
+  def test_34_UpgradeForm(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Upgrade Form'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateSkinFolder \
+                       CreateNewForm \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveForm \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckFormGroups \
+                       AddFormField \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveFormField \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckFormGroups \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+    
   def test_getInstalledBusinessTemplate(self):
     self.assertNotEquals(None, self.getPortal()\
         .portal_templates.getInstalledBusinessTemplate('erp5_core'))
