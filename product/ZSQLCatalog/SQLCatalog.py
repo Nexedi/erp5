@@ -1558,7 +1558,7 @@ class Catalog( Folder,
     if not self.isIndexable():
       return None
 
-    site_root = self.getSiteRoot()
+    portal_catalog = self.getSiteRoot().portal_catalog
 
     # Reminder about optimization: It might be possible to issue just one
     # query to get enought results to check uid & path consistency.
@@ -1581,7 +1581,6 @@ class Catalog( Folder,
       uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
 
     for object in object_list:
-      path = object.getPath()
       if not getattr(aq_base(object), 'uid', None):
         try:
           object.uid = self.newUid()
@@ -1665,8 +1664,7 @@ class Catalog( Folder,
             # We will check if there is an filter on this
             # method, if so we may not call this zsqlMethod
             # for this object
-            portal_type = object.getPortalType()
-            if type_list and portal_type not in type_list:
+            if type_list and object.getPortalType() not in type_list:
               continue
             elif expression is not None:
               try:
@@ -1721,7 +1719,7 @@ class Catalog( Folder,
           continue
         kw = method_kw_dict[method_name]
         method = getattr(self, method_name)
-        method = aq_base(method).__of__(site_root.portal_catalog) # Use method in
+        method = aq_base(method).__of__(portal_catalog) # Use method in
                 # the context of portal_catalog
         # Alter/Create row
         try:
