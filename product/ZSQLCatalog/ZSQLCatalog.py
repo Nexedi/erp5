@@ -737,7 +737,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         url_list.append(url)
         
       goto_current_catalog = 0
-      if disable_archive == 0 and (archiving or (len(archive_obj_list) > 0 and \
+      if (not disable_archive) and (archiving or (len(archive_obj_list) > 0 and \
                                                  (sql_catalog_id == default_catalog.id or \
                                                   sql_catalog_id is None))):
         # check in which archive object must go
@@ -756,7 +756,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           goto_current_catalog = 1
       else:
         goto_current_catalog = 1
-      if goto_current_catalog == 1:
+      if goto_current_catalog:
         try:
           # wrap object only when sure it will be reindex now
           # thus security uid is also reindex
