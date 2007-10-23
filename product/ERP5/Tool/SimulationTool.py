@@ -1106,7 +1106,7 @@ class SimulationTool(BaseTool):
                         result[key] = value_b
                     elif line_a[key] == line_b[key]:
                       result[key] = line_a[key]
-                    else:
+                    elif key not in ('date', 'stock_uid', 'path'):
                       LOG('InventoryTool.getInventoryList.addLineValues', 0,
                           'missmatch for %s column: %s and %s' % \
                           (key, line_a[key], line_b[key]))
