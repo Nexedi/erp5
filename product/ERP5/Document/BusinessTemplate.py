@@ -551,6 +551,39 @@ class ObjectTemplateItem(BaseTemplateItem):
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
+  def _compileXML(self, file):
+      name, ext = os.path.splitext(file.name)
+      compiled_file = name + '.zexp'
+      if not os.path.exists(compiled_file) or os.path.getmtime(file.name) > os.path.getmtime(compiled_file):
+          print 'Compiling %s to %s...' % (file.name, compiled_file)
+          try:
+              import Shared.DC.xml.ppml
+              ppml = Shared.DC.xml.ppml
+              from OFS.XMLExportImport import start_zopedata, save_record, save_zopedata
+              import Shared.DC.xml.pyexpat.pyexpat
+              pyexpat=Shared.DC.xml.pyexpat.pyexpat
+              outfile=open(compiled_file, 'wb')
+              try:
+                  data=file.read()
+                  F=ppml.xmlPickler()
+                  F.end_handlers['record'] = save_record
+                  F.end_handlers['ZopeData'] = save_zopedata
+                  F.start_handlers['ZopeData'] = start_zopedata
+                  F.binary=1
+                  F.file=outfile
+                  p=pyexpat.ParserCreate()
+                  p.CharacterDataHandler=F.handle_data
+                  p.StartElementHandler=F.unknown_starttag
+                  p.EndElementHandler=F.unknown_endtag
+                  r=p.Parse(data)
+              finally:
+                  outfile.close()
+          except:
+              if os.path.exists(compiled_file):
+                  os.remove(compiled_file)
+              raise
+      return open(compiled_file)
+
   def _importFile(self, file_name, file):
     # import xml file
     if not file_name.endswith('.xml'):
@@ -563,6 +596,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       connection=obj._p_jar
     __traceback_info__ = 'Importing %s' % file_name
     obj = connection.importFile(file, customImporters=customImporters)
+    # obj = connection.importFile(self._compileXML(file))
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_bt, **kw):
@@ -739,7 +773,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               connection = o._p_jar
             # import subobjects
             for subobject_id, subobject_data in subobjects_dict.iteritems():
-              if obj._getOb(subobject_id, None) is not None:
+              if obj._getOb(subobject_id, None) is None:
                 subobject_data.seek(0)
                 subobject = connection.importFile(subobject_data)
                 obj._setObject(subobject_id, subobject)
