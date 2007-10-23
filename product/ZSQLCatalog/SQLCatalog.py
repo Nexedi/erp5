@@ -1613,7 +1613,7 @@ class Catalog( Folder,
       method_kw_dict = {}
       for method_name in method_id_list:
         kw = {}
-        if self.isMethodFiltered(method_name) and self.filter_dict.has_key(method_name):
+        if self.isMethodFiltered(method_name):
           catalogged_object_list = []
           type_list = self.filter_dict[method_name]['type']
           expression = self.filter_dict[method_name]['expression_instance']
