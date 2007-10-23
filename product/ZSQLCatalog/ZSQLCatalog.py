@@ -498,7 +498,7 @@ class ZCatalog(Folder, Persistent, Implicit):
                                archive=archive)
     # Clear the future catalog and start reindexing the site in it.
     final_activity_tag = 'hot_reindex_last_ERP5Site_reindexAll_tag'
-    self.ERP5Site_reindexAll(sql_catalog_id=destination_sql_catalog_id,                           
+    self.ERP5Site_reindexAll(sql_catalog_id=destination_sql_catalog_id,
                              final_activity_tag=final_activity_tag,
                              clear_catalog=1,
                              passive_commit=1)
@@ -771,9 +771,9 @@ class ZCatalog(Folder, Persistent, Implicit):
     # run activity or execute for each archive depending on priority
     if len(catalog_dict):
       for catalog_id in catalog_dict.keys():
-        d = catalog_dict[catalog_id]        
+        d = catalog_dict[catalog_id]
         if hot_reindexing and self.hot_reindexing_state == HOT_REINDEXING_DOUBLE_INDEXING_STATE and \
-               self.destination_sql_catalog_id == catalog_id:          
+               self.destination_sql_catalog_id == catalog_id:
           destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
           # wrap all objects
           wrapped_object_list_2 = []
@@ -784,7 +784,7 @@ class ZCatalog(Folder, Persistent, Implicit):
               raise
             except:
               LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
-              failed_object_list.append(obj)              
+              failed_object_list.append(obj)
             wrapped_object_list_2.append(wrap_obj)
           # reindex objects in destination catalog
           destination_catalog.catalogObjectList(wrapped_object_list_2, **kw)
