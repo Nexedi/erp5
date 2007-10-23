@@ -72,6 +72,7 @@ class TestTaskMixin:
                        stepCreateSimpleTask \
                        stepFillTaskWithData \
                        stepCreateTaskLine \
+                       stepFillTaskLineWithData \
                        stepConfirmTask \
                        stepTic \
                        stepSetTaskReport '
@@ -170,32 +171,42 @@ class TestTaskMixin:
     task.edit(
       title = "Task",
     )
-    sequence.edit(task = task)
+    sequence.edit(task=task)
 
-  def stepFillTaskWithData(self, sequence=None, sequence_list=None, **kw):
+  def stepSetTaskValues(self, sequence=None, sequence_list=None, **kw):
     """
-      Fill created task with some necessary data.
+    Fill created task with some necessary data.
     """
     task = sequence.get('task')
     project = sequence.get('project')
-    requirement = sequence.get('requirement')
     resource = sequence.get('resource_list')[0]
     organisation_list = sequence.get('organisation_list')
     organisation1 = organisation_list[0]
     organisation2 = organisation_list[1]
     task.edit(source_value=organisation1,
               source_section_value=organisation1,
-              destination_value=organisation1,
+              destination_value=organisation2,
               destination_section_value=organisation2,
               source_project_value=project,
               description=self.task_description % task.getId(),
-              task_line_resource_value = resource,
-              task_line_quantity = self.default_quantity,
-              task_line_price = self.default_price,
-              task_line_requirement_value = requirement,
               start_date = self.datetime + 10,
               stop_date = self.datetime + 20,)
     sequence.edit( task = task)
+
+  def stepFillTaskWithData(self, sequence=None, sequence_list=None, **kw):
+    """
+      Fill created task with some necessary data.
+    """
+    self.stepSetTaskValues(sequence=sequence, 
+                           sequence_list=sequence_list, **kw)
+    task = sequence.get('task')
+    resource = sequence.get('resource_list')[0]
+    requirement = sequence.get('requirement')
+    task.edit(task_line_resource_value = resource,
+              task_line_quantity = self.default_quantity,
+              task_line_price = self.default_price,
+              task_line_requirement_value = requirement,
+    )
 
   def stepCreateSimpleTaskReport(self,sequence=None, sequence_list=None, **kw):
     """
@@ -278,19 +289,24 @@ class TestTaskMixin:
     """
       Create task line and fill with dummy data.
     """
-    organisation = sequence.get('organisation_list')[0]
-    resource1 = sequence.get('resource_list')[1]
-    portal = self.getPortal()
     task = sequence.get('task')
     task_line = task.newContent(
         portal_type=self.task_line_portal_type,
-        title='New Task Line',
+        title='New Task Line')
+    sequence.edit(task_line=task_line)
+
+  def stepFillTaskLineWithData(self, sequence=None, sequence_list=None, **kw):
+    """
+    Fill task line with dummy data.
+    """
+    organisation = sequence.get('organisation_list')[0]
+    resource1 = sequence.get('resource_list')[1]
+    task_line = sequence.get('task_line')
+    task_line.edit(
         source_value=organisation,
-        destination_value=organisation,
         resource_value=resource1,
         quantity=self.default_quantity,
         price=self.default_price)
-    sequence.edit(task_line=task_line)
   
   def stepVerifyGeneratedTaskReportLines(self, sequence=None,
                                          sequence_list=None, **kw):
@@ -353,9 +369,41 @@ class TestTaskMixin:
     """
     task = sequence.get('task')
     task_report = task.getCausalityRelatedValueList(
-                                                portal_type = 'Task Report')[0]
-    sequence.edit( task_report = task_report)
+                                                portal_type='Task Report')[0]
+    sequence.edit(task_report=task_report)
 
+  def stepVerifyMergedTaskLine(self, sequence=None,
+                               sequence_list=None, **kw):
+    """
+    Verify that simulation generated report is correct.
+    """
+    task = sequence.get('task')
+    task_report = sequence.get('task_report')
+    self.assertEquals('confirmed', task_report.getSimulationState())
+    self.assertEquals(task.getSource(), task_report.getSource())
+    self.assertEquals(task.getSourceSection(), task_report.getSourceSection())
+    self.assertEquals(task.getSourceProject(), task_report.getSourceProject())
+    self.assertEquals(task.getDestination(), task_report.getDestination())
+    self.assertEquals(task.getDestinationSection(),
+                      task_report.getDestinationSection())
+    self.assertEquals(task.getDestinationDecision(),
+                      task_report.getDestinationDecision())
+    self.assertEquals(task.getTitle(),
+                      task_report.getTitle())
+    self.assertEquals(task.getDescription(),
+                      task_report.getDescription())
+    self.assertEquals(task.getPredecessor(), task_report.getPredecessor())
+    self.assertEquals(task.getDescription(), task_report.getDescription())
+    self.assertEquals(len(task_report.contentValues()), 2)
+    for task_report_line in task_report.contentValues():
+      self.assertEquals(task.contentValues()[0].getResource(), 
+                        task_report_line.getResource())
+      self.assertEquals(task.contentValues()[0].getQuantity(), 
+                        task_report_line.getQuantity())
+      self.assertEquals(task.contentValues()[0].getPrice(), 
+                        task_report_line.getPrice())
+      self.assertEquals(task.contentValues()[0].getRequirement(), 
+                        task_report_line.getRequirement())
 
 class TestTask(TestTaskMixin, ERP5TypeTestCase):
   """
@@ -421,6 +469,34 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
                        stepConfirmTaskReport \
                        stepTic \
                        stepVerifyTaskReportCausalityState \
+                       stepStartTaskReport \
+                       stepFinishTaskReport \
+                       stepCloseTaskReport \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_04_checkNotMergedTaskReportLine(self, quiet=0, run=run_all_test):
+    """
+    Check that a task report can not be the created from a merged of multiple
+    task lines.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = 'stepCreateOrganisation \
+                       stepCreateOrganisation \
+                       stepCreateResource \
+                       stepCreateResource \
+                       stepCreateSimpleTask \
+                       stepSetTaskValues \
+                       stepCreateTaskLine \
+                       stepFillTaskLineWithData \
+                       stepCreateTaskLine \
+                       stepFillTaskLineWithData \
+                       stepConfirmTask \
+                       stepTic \
+                       stepSetTaskReport \
+                       stepVerifyMergedTaskLine \
                        stepStartTaskReport \
                        stepFinishTaskReport \
                        stepCloseTaskReport \
