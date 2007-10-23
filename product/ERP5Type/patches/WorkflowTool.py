@@ -452,7 +452,7 @@ def WorkflowTool_listActions(self, info=None, object=None):
         search_result_kw = {'select_expression': select_expression,
                             'group_by_expression': group_by_expression,
                             'query': query}
-        #LOG('WorklistGeneration', INFO, 'Using query: %s' % (search_result(src__=1, **search_result_kw), ))
+        #LOG('WorklistGeneration', WARNING, 'Using query: %s' % (search_result(src__=1, **search_result_kw), ))
         catalog_brain_result = search_result(**search_result_kw)
         grouped_worklist_result = sumCatalogResultByWorklist(grouped_worklist_dict=grouped_worklist_dict, catalog_result=catalog_brain_result)
         for key, value in grouped_worklist_result.iteritems():
