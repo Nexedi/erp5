@@ -122,7 +122,6 @@ except (NotImplementedError, AttributeError):\n
   id_list_list = []\n
   for bundle_index in xrange(len(id_list) / BUNDLE_ITEM_COUNT):\n
     id_list_list.append(id_list[bundle_index * BUNDLE_ITEM_COUNT:((bundle_index + 1) * BUNDLE_ITEM_COUNT)])\n
-    Folder_reindexObjectList(id_list_list)\n
   remaining_object_id_count = len(id_list) % BUNDLE_ITEM_COUNT\n
   if remaining_object_id_count > 0:\n
     id_list_list.append(id_list[-remaining_object_id_count:])\n
