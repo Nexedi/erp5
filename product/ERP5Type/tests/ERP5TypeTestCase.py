@@ -111,6 +111,8 @@ ZopeTestCase.installProduct('BTreeFolder2', quiet=install_product_quiet)
 ZopeTestCase.installProduct('CMFReportTool', quiet=install_product_quiet) # Not required by ERP5Type but required by ERP5Form
 ZopeTestCase.installProduct('CMFMailIn', quiet=install_product_quiet)
 ZopeTestCase.installProduct('TranslationService', quiet=install_product_quiet)
+ZopeTestCase.installProduct('PortalTransforms', quiet=install_product_quiet)
+ZopeTestCase.installProduct('MimetypesRegistry', quiet=install_product_quiet)
 
 # Security Stuff
 ZopeTestCase.installProduct('NuxUserGroups', quiet=install_product_quiet)
