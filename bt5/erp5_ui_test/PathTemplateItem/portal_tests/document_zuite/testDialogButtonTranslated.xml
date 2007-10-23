@@ -76,9 +76,20 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>New Languages Added</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\n
   <td>open</td>\n
   <td tal:content="string: ${here/portal_url}/portal_skins/erp5_ui_test//Base_addUITestTranslation?message=Search Foos&translation_1=Seet Foos&translation_2=Searching Foos"></td>\n
   <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Translation of Search Foos updated</td>\n
+\t<td></td>\n
 </tr>\n
 \n
 <tr>\n

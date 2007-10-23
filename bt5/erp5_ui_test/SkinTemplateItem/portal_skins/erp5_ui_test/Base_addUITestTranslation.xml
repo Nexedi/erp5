@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""Add a New Test language."""\n
-\n
+context.getPortalObject().Localizer.erp5_ui.gettext(\'Search Foos\')\n
 \n
 context.getPortalObject().Localizer.erp5_ui.message_edit(message=\'Search Foos\', language=\'wo\', translation=\'Seet Foos\',note=None)\n
 context.getPortalObject().Localizer.erp5_ui.message_edit(message=\'Search Foos\', language=\'xh\', translation=\'Searching Foos\',note=None)\n
