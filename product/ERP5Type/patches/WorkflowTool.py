@@ -147,6 +147,8 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict, getSecurity
         if not isinstance(value, (tuple, list)):
           role_column_dict[security_column_id] = [value]
       applied_security_criterion_dict = {}
+      # TODO: make security criterions be examined in the same order for all
+      # worklists if possible at all.
       for security_column_id, security_column_value in role_column_dict.iteritems():
         valid_criterion_dict = {}
         valid_criterion_dict.update(applied_security_criterion_dict)
