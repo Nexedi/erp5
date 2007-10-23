@@ -36,6 +36,7 @@ from Products.CMFCore.tests.base.testcase import LogInterceptor
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
+# (which has 31645.6 pystones/second)
 MIN_OBJECT_VIEW=0.112
 MAX_OBJECT_VIEW=0.122
 MIN_MODULE_VIEW=0.125
@@ -76,6 +77,12 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       self.login()
       self.bar_module = self.getBarModule()
 
+    def beforeTearDown(self):
+      get_transaction().abort()
+      self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
+      get_transaction().commit()
+      self.tic()
+
     def test_00_viewBarObject(self, quiet=quiet, run=run_all_test):
       """
       Estimate average time to render object view
@@ -115,8 +122,6 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       if not quiet:
         message = 'Test form to view Bar module'
         LOG('Testing... ', 0, message)
-      # remove previous object
-      self.bar_module.manage_delObjects(['bar'])
       get_transaction().commit()
       self.tic()
       view_result = {}
