@@ -48,10 +48,7 @@
 # XXX test_03 and test_04 work only WITHOUT oood (because of a known bug in erp5_dms)
 
 
-#
-# Skeleton ZopeTestCase
-#
-
+import unittest
 from random import randint
 import time
 
@@ -64,15 +61,6 @@ from zLOG import LOG
 import os
 from Products.ERP5Type import product_path
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 QUIET = 0
 RUN_ALL_TEST = 1
@@ -99,7 +87,7 @@ def printAndLog(msg):
 
 class FileUploadTest(file):
 
-  __allow_access_to_unprotected_subobjects__=1
+  __allow_access_to_unprotected_subobjects__ = 1
 
   def __init__(self, path, name):
     self.filename = name
@@ -115,24 +103,38 @@ def makeFileUpload(name):
   path = makeFilePath(name)
   return FileUploadTest(path, name)
 
-class DummyLocalizer:
+class DummyMessageCatalog:
+  __allow_access_to_unprotected_subobjects__ = 1
+  def gettext(self, word, *args, **kw):
+    return word
 
+class DummyLocalizer:
   """
     A replacement for stock cookie - based localizer
   """
-
+  __allow_access_to_unprotected_subobjects__ = 1
+  erp5_ui = DummyMessageCatalog()
+  erp5_catalog = DummyMessageCatalog()
   lang = 'en'
 
   def get_selected_language(self):
     return self.lang
+  
+  def get_languages_map(self):
+    return [{'selected': True, 'id': 'en', 'title': 'English'},
+            {'selected': False, 'id': 'pl', 'title': 'Polish'},
+            {'selected': False, 'id': 'fr', 'title': 'French'},]
 
   def changeLanguage(self, lang):
     self.lang = lang
 
-  def translate(self, dictionnary, word):
+  def translate(self, word, *args, **kw):
     return word
+  
+  def __call__(self, request, context):
+    pass
 
-class TestDocument(ERP5TypeTestCase):
+class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
     Test basic document - related operations
   """
@@ -142,11 +144,14 @@ class TestDocument(ERP5TypeTestCase):
 
   ## setup
 
-  def afterSetUp(self, quiet=QUIET, run=0):
-    self.portal = self.getPortal()
+  def afterSetUp(self):
     self.setSystemPreference()
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
+    # make sure every body can traverse document module
+    self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
+    self.portal.document_module.manage_permission(
+                           'Access contents information', ['Anonymous'], 1)
 
   def setSystemPreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
@@ -176,7 +181,6 @@ class TestDocument(ERP5TypeTestCase):
     """
       Remove everything after each run
     """
-    printAndLog("clearing document module...")
     get_transaction().abort()
     self.tic()
     doc_module = self.getDocumentModule()
@@ -454,14 +458,54 @@ class TestDocument(ERP5TypeTestCase):
     doc.edit(file=makeFileUpload('import_data_list.ods'))
     self.failUnless(doc.hasData())
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestDocument))
-        return suite
+  def test_Owner_Base_download(self):
+    # tests that owners can download OOo documents, and all headers (including
+    # filenames) are set correctly
+    doc = self.portal.document_module.newContent(
+                                  source_reference='test.ods',
+                                  portal_type='Spreadsheet')
+    doc.edit(file=makeFileUpload('import_data_list.ods'))
+
+    uf = self.portal.acl_users
+    uf._doAddUser('member_user1', 'secret', ['Member', 'Owner'], [])
+    user = uf.getUserById('member_user1').__of__(uf)
+    newSecurityManager(None, user)
+
+    response = self.publish('%s/Base_download' % doc.getPath(),
+                            basic='member_user1:secret')
+    self.assertEquals(makeFileUpload('import_data_list.ods').read(),
+                      response.body)
+    self.assertEquals('application/vnd.oasis.opendocument.spreadsheet',
+                      response.headers['content-type'])
+    self.assertEquals('attachment;; filename="import_data_list.ods"',
+                      response.headers['content-disposition'])
+
+  def test_Member_download_pdf_format(self):
+    # tests that members can download OOo documents in pdf format (at least in
+    # published state), and all headers (including filenames) are set correctly
+    doc = self.portal.document_module.newContent(
+                                  source_reference='test.ods',
+                                  portal_type='Spreadsheet')
+    doc.edit(file=makeFileUpload('import_data_list.ods'))
+    doc.publish()
+    get_transaction().commit()
+
+    uf = self.portal.acl_users
+    uf._doAddUser('member_user2', 'secret', ['Member'], [])
+    user = uf.getUserById('member_user2').__of__(uf)
+    newSecurityManager(None, user)
+
+    response = self.publish('%s/Document_convert?format=pdf' % doc.getPath(),
+                            basic='member_user2:secret')
+    self.assertEquals('application/pdf', response.headers['content-type'])
+    self.assertEquals('attachment;; filename="import_data_list.pdf"',
+                      response.headers['content-disposition'])
+
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestDocument))
+  return suite
 
 
 # vim: syntax=python shiftwidth=2 
