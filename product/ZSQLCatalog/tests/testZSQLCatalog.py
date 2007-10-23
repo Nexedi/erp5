@@ -29,12 +29,14 @@
 import unittest
 import sys
 
+from DateTime import DateTime
 from Products.ZSQLMethods.SQL import SQL as ZSQLMethod
 from Products.CMFCore.Expression import Expression
 
 from Products.ZSQLCatalog.SQLCatalog import Catalog as SQLCatalog
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog as ZSQLCatalog
-#from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery
 
 try:
   from transaction import get as get_transaction
@@ -96,9 +98,74 @@ class TestSQLCatalog(unittest.TestCase):
         self._catalog.isPortalTypeSelected('not_exists', 'Selected'))
 
 
+class TestQuery(unittest.TestCase):
+  def testSimpleQuery(self):
+    q = Query(title='Foo')
+    self.assertEquals(
+          dict(where_expression="title = 'Foo'",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+    
+  def testMultiValuedQuery(self):
+    q = Query(title=['Foo', 'Bar'])
+    self.assertEquals(
+          dict(where_expression="(title = 'Foo' OR title = 'Bar')",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+
+  def testMinQuery(self):
+    q = Query(title='Foo', range='min')
+    self.assertEquals(
+          dict(where_expression="title >= 'Foo'",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+    
+  def testMaxQuery(self):
+    q = Query(title='Foo', range='max')
+    self.assertEquals(
+          dict(where_expression="title < 'Foo'",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+
+  def testDateFormat(self):
+    q = Query(date=DateTime(2001, 02, 03), format='%Y/%m/%d', type='date')
+    self.assertEquals(
+          dict(where_expression=
+            "STR_TO_DATE(DATE_FORMAT(date,'%Y/%m/%d'),'%Y/%m/%d')"
+            " = STR_TO_DATE('2001/02/03','%Y/%m/%d')",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+  
+  def testSimpleQueryFullText(self):
+    q = Query(title='Foo')
+    self.assertEquals(dict(where_expression="MATCH title AGAINST ('Foo' )",
+                           select_expression_list=
+                        ["MATCH title AGAINST ('Foo' ) AS title_relevance"]),
+          q.asSQLExpression(keyword_search_keys=[],
+                            full_text_search_keys=['title']))
+
+  def testSimpleQuerySearchKey(self):
+    q = Query(title='Foo')
+    self.assertEquals(dict(where_expression="title LIKE '%Foo%'",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title'],
+                            full_text_search_keys=[]))
+
+  def testSimpleComplexQuery(self):
+    q1 = Query(title='Foo')
+    q2 = Query(reference='Bar')
+    q = ComplexQuery(q1, q2)
+    self.assertEquals(
+        dict(where_expression="((title = 'Foo') AND (reference = 'Bar'))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[],
+                            full_text_search_keys=[]))
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSQLCatalog))
   suite.addTest(unittest.makeSuite(TestZSQLCatalog))
+  suite.addTest(unittest.makeSuite(TestQuery))
   return suite
 
