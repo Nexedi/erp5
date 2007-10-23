@@ -74,7 +74,7 @@ response = request.RESPONSE\n
 if hasattr(context,\'getContentType\'):\n
   response.setHeader(\'Content-type\', context.getContentType())\n
 else:\n
-  response.RESPONSE.setHeader(\'Content-type\', context.getFormat())\n
+  response.setHeader(\'Content-type\', context.getFormat())\n
 \n
 file_name = context.getSourceReference() or context.getTitle() or context.getId()\n
 response.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % file_name)\n
