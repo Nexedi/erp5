@@ -492,7 +492,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
               # if called by an executable with proxy roles, we don't use
               # owner, but only roles from the proxy.
               eo = getSecurityManager()._context.stack[-1]
-              proxy_roles = getattr(eo, '_proxy_roles',None)
+              proxy_roles = getattr(eo, '_proxy_roles', None)
+              if not proxy_roles:
+                role_column_dict['owner'] = user_str
             except IndexError:
               role_column_dict['owner'] = user_str
 
