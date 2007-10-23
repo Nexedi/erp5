@@ -337,7 +337,7 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
       if not isinstance(criterion_value, ExclusionList):
         criterion_id_dict[criterion_id] = None
   criterion_id_list = criterion_id_dict.keys()
-  # Group all worklists converned by a set of criterion values in
+  # Group all worklists concerned by a set of criterion values in
   # criterion_value_to_worklist_key_dict
   # key: criterion value tuple, in the same order as in criterion_id_list
   # value: list of ids of every concerned worklist
