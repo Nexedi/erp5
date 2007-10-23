@@ -454,7 +454,7 @@ def WorkflowTool_listActions(self, info=None, object=None):
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
       # conditions
-      worklist_list_grouped_by_condition, worklist_metadata = \
+      (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
           acceptable_key_dict=acceptable_key_dict,
