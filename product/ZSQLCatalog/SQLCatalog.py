@@ -1565,7 +1565,7 @@ class Catalog( Folder,
           # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
           # This can be very dangerous with relations stored in a category table (CMFCategory)
           # This is why we recommend completely reindexing subobjects after any change of id
-          if uid_path_dict.get(uid, None) is not None:
+          if uid in uid_path_dict:
             catalog_path = uid_path_dict.get(uid)
           else:
             catalog_path = self.getPathForUid(uid)
