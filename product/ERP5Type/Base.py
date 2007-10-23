@@ -1698,17 +1698,12 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.AccessContentsInformation, 'getViewPermissionOwner' )
   def getViewPermissionOwner(self):
     """
-      Returns the user ID of the owner if Owner role
-      has View permission. Returns None else.
+      Returns the user ID of the owner if this user has View permission,
+      otherwise returns None.
     """
-    marker = []
-    if getattr(aq_base(self), '_v_view_permission_owner', marker) is not marker:
-      return self._v_view_permission_owner
-
-    path, user_id = self.getOwnerTuple()
-    if 'Owner' in rolesForPermissionOn(Permissions.View, self):
-      path, user_id = self.getOwnerTuple()
-      return user_id
+    owner = self.getWrappedOwner()
+    if owner is not None and owner.has_permission(Permissions.View, self):
+      return str(owner)
     return None
 
   # Private accessors for the implementation of relations based on

@@ -161,13 +161,8 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
                 allowed[user + ':' + role] = 1
               else:
                 allowed['user:' + user + ':' + role] = 1
-            elif 'Owner' in allowed:
-              ob._v_view_permission_owner = user
-
         if allowed.has_key('Owner'):
           del allowed['Owner']
-        else:
-          ob._v_view_permission_owner = None
         return list(allowed.keys())
 
 class RelatedBaseCategory(Method):
