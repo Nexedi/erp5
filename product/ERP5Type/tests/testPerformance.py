@@ -37,8 +37,8 @@ from Products.CMFCore.tests.base.testcase import LogInterceptor
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
 # (which has 31645.6 pystones/second)
-MIN_OBJECT_VIEW=0.112
-MAX_OBJECT_VIEW=0.122
+MIN_OBJECT_VIEW=0.142
+MAX_OBJECT_VIEW=0.160
 MIN_MODULE_VIEW=0.125
 MAX_MODULE_VIEW=0.175
 MIN_OBJECT_CREATION=0.0070
