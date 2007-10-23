@@ -77,29 +77,6 @@ class PublicationSynchronization(XMLSyncUtils):
       subscriber.setSourceURI(self.getTargetURI(xml_client))
       subscriber.setTargetURI(self.getSourceURI(xml_client))
 
-      # If slow sync, then resend everything
-      if alert_code == self.SLOW_SYNC and \
-         subscriber.getNextAnchor() != self.NULL_ANCHOR:
-        LOG('Warning !!!, reseting client synchronization for subscriber:', WARNING,
-            subscriber.getPath())
-        subscriber.resetAllSignatures()
-        subscriber.resetAnchors()
-
-      # Check if the last time synchronization is the same as the client one
-      if subscriber.getNextAnchor() != last_anchor:
-        if last_anchor in (None, ''):
-          LOG('PubSyncInit', INFO, 'anchor null')
-        else:
-          mess = '\nsubscriber.getNextAnchor:\t%s\nsubscriber.getLastAnchor:\t%s\
-                 \nlast_anchor:\t\t\t%s\nnext_anchor:\t\t\t%s' % \
-                 (subscriber.getNextAnchor(),
-                  subscriber.getLastAnchor(),
-                  last_anchor,
-                  next_anchor)
-          LOG('PubSyncInit Anchors', INFO, mess)
-      else:
-        subscriber.setNextAnchor(next_anchor)
-
       xml_list = []
       xml = xml_list.append
       cmd_id = 1 # specifies a SyncML message-unique command identifier      
@@ -133,6 +110,28 @@ class PublicationSynchronization(XMLSyncUtils):
                                       subscription=subscriber).values()
         xml(xml_status)
       else:
+        # If slow sync, then resend everything
+        if alert_code == self.SLOW_SYNC and \
+          subscriber.getNextAnchor() != self.NULL_ANCHOR:
+          LOG('Warning !!!, reseting client synchronization for subscriber:', WARNING,
+              subscriber.getPath())
+          subscriber.resetAllSignatures()
+          subscriber.resetAnchors()
+  
+        # Check if the last time synchronization is the same as the client one
+        if subscriber.getNextAnchor() != last_anchor:
+          if last_anchor in (None, ''):
+            LOG('PubSyncInit', INFO, 'anchor null')
+          else:
+            mess = '\nsubscriber.getNextAnchor:\t%s\nsubscriber.getLastAnchor:\t%s\
+                  \nlast_anchor:\t\t\t%s\nnext_anchor:\t\t\t%s' % \
+                  (subscriber.getNextAnchor(),
+                    subscriber.getLastAnchor(),
+                    last_anchor,
+                    next_anchor)
+            LOG('PubSyncInit Anchors', INFO, mess)
+        else:
+          subscriber.setNextAnchor(next_anchor)
         (authentication_format, authentication_type, data) = \
             self.getCred(xml_client)
         if authentication_type == publication.getAuthenticationType():
