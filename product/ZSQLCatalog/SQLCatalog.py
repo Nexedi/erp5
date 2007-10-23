@@ -262,6 +262,26 @@ class QueryMixin:
     """
     raise NotImplementedError
 
+class NegatedQuery(QueryMixin):
+  """
+    Do a boolean negation of given query.
+  """
+
+  def __init__(self, query):
+    self._query = query
+
+  def asSQLExpression(self, *args, **kw):
+    sql_expression_dict = self._query.asSQLExpression(*args, **kw)
+    sql_expression_dict['where_expression'] = '(NOT (%s))' % \
+      (sql_expression_dict['where_expression'], )
+    return sql_expression_dict
+
+  def getSQLKeyList(self, *args, **kw):
+    return self._query.getSQLKeyList(*args, **kw)
+
+  def getRelatedTableMapDict(self, *args, **kw):
+    return self._query.getRelatedTableMapDict(*args, **kw)
+
 class Query(QueryMixin):
   """
   This allow to define constraints on a sql column
