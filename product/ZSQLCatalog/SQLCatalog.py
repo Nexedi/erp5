@@ -2492,46 +2492,52 @@ class Catalog( Folder,
     """
     if withCMF:
       # Reset Filtet dict
-      # self.filter_dict= PersistentMapping()
-      if not hasattr(self,'filter_dict'):
+      if getattr(aq_base(self), 'filter_dict', None) is None:
         self.filter_dict = PersistentMapping()
         return 0
-      if self.filter_dict.has_key(method_name):
+      try:
         return self.filter_dict[method_name]['filtered']
+      except KeyError:
+        return 0
     return 0
 
   def getExpression(self, method_name):
     """ Get the filter expression text for this method.
     """
     if withCMF:
-      if not hasattr(self,'filter_dict'):
+      if getattr(aq_base(self), 'filter_dict', None) is None:
         self.filter_dict = PersistentMapping()
         return ""
-      if self.filter_dict.has_key(method_name):
+      try:
         return self.filter_dict[method_name]['expression']
+      except KeyError:
+        return ""
     return ""
 
   def getExpressionInstance(self, method_name):
     """ Get the filter expression instance for this method.
     """
     if withCMF:
-      if not hasattr(self,'filter_dict'):
+      if getattr(aq_base(self), 'filter_dict', None) is None:
         self.filter_dict = PersistentMapping()
         return None
-      if self.filter_dict.has_key(method_name):
+      try:
         return self.filter_dict[method_name]['expression_instance']
+      except KeyError:
+        return None
     return None
 
   def isPortalTypeSelected(self, method_name, portal_type):
     """ Returns true if the portal type is selected for this method.
     """
     if withCMF:
-      if not hasattr(self,'filter_dict'):
+      if getattr(aq_base(self), 'filter_dict', None) is None:
         self.filter_dict = PersistentMapping()
         return 0
-      if self.filter_dict.has_key(method_name):
-        result = portal_type in (self.filter_dict[method_name]['type'])
-        return result
+      try:
+        return portal_type in (self.filter_dict[method_name]['type'])
+      except KeyError:
+        return 0
     return 0
 
 
