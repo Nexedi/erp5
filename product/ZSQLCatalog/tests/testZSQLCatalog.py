@@ -37,6 +37,7 @@ from Products.ZSQLCatalog.SQLCatalog import Catalog as SQLCatalog
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog as ZSQLCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import NegatedQuery
 
 try:
   from transaction import get as get_transaction
@@ -105,11 +106,51 @@ class TestQuery(unittest.TestCase):
           dict(where_expression="title = 'Foo'",
                select_expression_list=[]),
           q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+
+  def testNoneQuery(self):
+    q = Query(title=None)
+    self.assertEquals(
+          dict(where_expression="title is NULL",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+
+  def testEmptyQueryNotIgnoreEmptyString(self):
+    q = Query(title='')
+    # if you want to search with an empty string, pass ignore_empty_string=0 to
+    # asSQLExpression. XXX not to __init__ ?
+    self.assertEquals(
+          dict(where_expression="title = ''",
+               select_expression_list=[]),
+          q.asSQLExpression(ignore_empty_string=0,
+                            keyword_search_keys=[],
+                            full_text_search_keys=[]))
+
+  def testEmptyQuery(self):
+    q = Query(title='')
+    # query are true by default
+    self.assertEquals(
+          dict(where_expression="1",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
     
   def testMultiValuedQuery(self):
     q = Query(title=['Foo', 'Bar'])
     self.assertEquals(
           dict(where_expression="(title = 'Foo' OR title = 'Bar')",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+
+  def testINQuery(self):
+    q = Query(title=['Foo', 'Bar'], operator='IN')
+    self.assertEquals(
+          dict(where_expression="title IN ('Foo', 'Bar')",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+
+  def testEmptyINQuery(self):
+    q = Query(title=[], operator='IN')
+    self.assertEquals(
+          dict(where_expression="0",
                select_expression_list=[]),
           q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
 
@@ -151,6 +192,15 @@ class TestQuery(unittest.TestCase):
           q.asSQLExpression(keyword_search_keys=['title'],
                             full_text_search_keys=[]))
 
+  def testNegatedQuery(self):
+    q1 = Query(title='Foo')
+    q = NegatedQuery(q1)
+    self.assertEquals(
+        dict(where_expression="(NOT (title = 'Foo'))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[],
+                            full_text_search_keys=[]))
+
   def testSimpleComplexQuery(self):
     q1 = Query(title='Foo')
     q2 = Query(reference='Bar')
@@ -161,6 +211,17 @@ class TestQuery(unittest.TestCase):
           q.asSQLExpression(keyword_search_keys=[],
                             full_text_search_keys=[]))
 
+  def testNegatedComplexQuery(self):
+    q1 = Query(title='Foo')
+    q2 = Query(reference='Bar')
+    q3 = ComplexQuery(q1, q2)
+    q = NegatedQuery(q3)
+    self.assertEquals(
+      # maybe too many parents here
+     dict(where_expression="(NOT (((title = 'Foo') AND (reference = 'Bar'))))",
+          select_expression_list=[]),
+     q.asSQLExpression(keyword_search_keys=[],
+                       full_text_search_keys=[]))
 
 def test_suite():
   suite = unittest.TestSuite()
