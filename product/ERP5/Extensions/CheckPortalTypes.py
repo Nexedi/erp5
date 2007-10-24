@@ -1,5 +1,8 @@
 from Globals import get_request
+from Acquisition import aq_base
+from Globals import PersistentMapping
 from Products.CMFCore.utils import getToolByName
+
 
 def fixProductNames(self, REQUEST=None):
   msg = ''
@@ -81,3 +84,18 @@ def updateBalanceTransactionClass(self):
     # reindexing after ...
     newobj.activate(after_method_id='unindexObject').recursiveReindexObject()
 
+
+def updateCareerValidationState(self):
+  """Career workflow changed its state variable name in r17169
+  """
+  module = self.getPortalObject().person_module
+  for person in self.getPortalObject().person_module.contentValues(
+                              filter=dict(portal_type='Person')):
+    for career in person.contentValues(filter=dict(portal_type='Career')):
+      if getattr(aq_base(career), 'workflow_history', None) is None:
+        continue
+      for line in career.workflow_history['career_workflow']:
+        if 'state' in line:
+          line['validation_state'] = line.pop('state')
+      career.reindexObject()
+    
