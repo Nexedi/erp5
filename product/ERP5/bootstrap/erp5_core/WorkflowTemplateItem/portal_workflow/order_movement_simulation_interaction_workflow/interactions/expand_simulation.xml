@@ -62,7 +62,6 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_edit</string>
                 <string>_set.*</string>
               </list>
             </value>
