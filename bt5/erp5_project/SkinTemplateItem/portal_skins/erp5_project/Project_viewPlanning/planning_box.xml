@@ -17,6 +17,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>report_root_list</string>
               </list>
             </value>
         </item>
@@ -71,7 +72,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -90,11 +91,22 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key>                 <string>report_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>parent</string>
+                          <string>Project Line</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Project Planning</string> </value>
                 </item>
               </dictionary>
