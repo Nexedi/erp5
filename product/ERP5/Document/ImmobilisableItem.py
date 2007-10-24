@@ -629,7 +629,7 @@ class ImmobilisableItem(XMLObject, Amount):
         initial_duration = immo_period.get('initial_duration',0)
         stop_date = immo_period.get('stop_date', at_date)
         calculate = 1
-        consumpted_duration = getRoundedMonthBetween(initial_date, stop_date)
+        consumpted_duration = getRoundedMonthBetween(initial_date, stop_date, True)
         remaining_duration = initial_duration - consumpted_duration
         if remaining_duration < 0:
           returned_value = 0
@@ -698,8 +698,8 @@ class ImmobilisableItem(XMLObject, Amount):
         stop_durability = 0
 
       consumpted_durability = start_durability - stop_durability
-      consumpted_time = getRoundedMonthBetween(start_date, stop_date)
-      current_consumpted_time = getRoundedMonthBetween(start_date, at_date)
+      consumpted_time = getRoundedMonthBetween(start_date, stop_date, True)
+      current_consumpted_time = getRoundedMonthBetween(start_date, at_date, True)
       if consumpted_time <= 0 or current_consumpted_time <= 0:
         return start_durability
       else:
