@@ -95,13 +95,13 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -112,30 +112,34 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
+                    <key>                 <string>report_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>task_report_module_domain</string>
                           <string>Task Report</string>
                         </tuple>
+                        <tuple>
+                          <string>task_report_module_person_domain</string>
+                          <string>Task Report per Person</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>round_script</string> </key>
+                    <key>                 <string>round_script</string> </key>
                     <value> <string>Planning_roundBoundToMinute</string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>task_report_planning_selection</string> </value>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string>task_report_module_planning_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Task Report Planning</string> </value>
                 </item>
               </dictionary>
