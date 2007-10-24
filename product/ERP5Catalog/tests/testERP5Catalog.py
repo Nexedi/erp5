@@ -2017,6 +2017,20 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     result = sql_connection.manage_test(sql % sub_obj.getUid())
     self.assertSameSet(['little_owner'], [x.owner for x in result])
 
+  def test_ExactMatchSearch(self):
+    # test exact match search with queries
+    doc = self._makeOrganisation(title='Foo%')
+    other_doc = self._makeOrganisation(title='FooBar')
+    ctool = self.getCatalogTool()
+
+    # by default, % in catalog search is a wildcard:
+    self.assertEquals(sorted([doc, other_doc]),
+      sorted([x.getObject() for x in 
+        ctool(portal_type='Organisation', title='Foo%')]))
+    # ... but you can force searches with an exact match key
+    self.assertEquals([doc], [x.getObject() for x in
+       ctool(portal_type='Organisation', title=dict(query='Foo%',
+                                                    key='ExactMatch'))])
 
 def test_suite():
   suite = unittest.TestSuite()

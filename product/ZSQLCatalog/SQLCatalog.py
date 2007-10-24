@@ -181,6 +181,13 @@ class UidBuffer(TM):
     tid = get_ident()
     self.temporary_buffer.setdefault(tid, []).extend(iterable)
 
+
+# valid search modes for queries
+FULL_TEXT_SEARCH_MODE = 'FullText'
+EXACT_MATCH_SEARCH_MODE = 'ExactMatch'
+KEYWORD_SEARCH_MODE = 'Keyword'
+
+
 class QueryMixin:
   
   operator = None
@@ -289,7 +296,7 @@ class Query(QueryMixin):
   format - type date : %d/%m/%Y
            type float : 1 234.12
   """
-  def __init__(self, format=None, operator=None, range=None,
+  def __init__(self, format=None, operator=None, range=None, key=None,
                      search_mode=None, table_alias_list=None, type=None, **kw):
     self.format = format
     if operator is None:
@@ -304,6 +311,7 @@ class Query(QueryMixin):
     self.key = key_list[0]
     self.value = kw[self.key]
     self.type = type
+    self.search_key = key
 
   def __call__(self):
     self.asSQLExpression()
@@ -322,6 +330,8 @@ class Query(QueryMixin):
     return result
 
   def getSearchMode(self):
+    """Search mode used for Full Text search
+    """
     return self.search_mode
 
   def asSearchTextExpression(self):
@@ -345,7 +355,8 @@ class Query(QueryMixin):
     sql_expression = ''
     value = self.getValue()
     key = self.getKey()
-    ignore_key=0
+    search_key = self.search_key
+    ignore_key = 0
     if key_alias_dict is not None:
       # Try to find the alias
       if key not in key_alias_dict:
@@ -387,10 +398,10 @@ class Query(QueryMixin):
         where_expression.append("%s > %s" % (key, query_max))
     elif isSimpleType(value) or isinstance(value, DateTime) \
         or (isinstance(value, (list, tuple)) and self.operator.upper() != 'IN'):
-      # Convert into lists any value which contain a ;
-      # Refer to _listGlobalActions DCWorkflow patch
-      # for example of use
-      if isinstance(value, basestring):
+      # Convert into lists any value which contain 'OR'
+      # Refer to _listGlobalActions DCWorkflow patch for example of use
+      if isinstance(value, basestring) \
+                and search_key != EXACT_MATCH_SEARCH_MODE:
         value = value.split(' OR ')
         value = map(lambda x:x.strip(), value)
       value_list = value
@@ -401,7 +412,7 @@ class Query(QueryMixin):
         comparison_operator = None
         if (value != '' or not ignore_empty_string) \
                         and isinstance(value, basestring):
-          if '%' in value:
+          if '%' in value and search_key != EXACT_MATCH_SEARCH_MODE:
             comparison_operator = 'LIKE'
           elif len(value) >= 1 and value[0:2] in ('<=','!=','>='):
             comparison_operator = value[0:2]
@@ -409,11 +420,15 @@ class Query(QueryMixin):
           elif len(value) >= 1 and value[0] in ('=','>','<'):
             comparison_operator = value[0]
             value = value[1:]
-          elif key in keyword_search_keys:
+          elif search_key == KEYWORD_SEARCH_MODE or (
+                   key in keyword_search_keys and
+                    search_key != EXACT_MATCH_SEARCH_MODE):
             # We must add % in the request to simulate the catalog
             comparison_operator = 'LIKE'
             value = '%%%s%%' % value
-          elif key in full_text_search_keys:
+          elif search_key == FULL_TEXT_SEARCH_MODE or (
+                  key in full_text_search_keys
+                  and search_key != EXACT_MATCH_SEARCH_MODE):
             # We must add % in the request to simulate the catalog
             # we first check if there is a special search_mode for this key
             # incl. table name, or for all keys of that name,

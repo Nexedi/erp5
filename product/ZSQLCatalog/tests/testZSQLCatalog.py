@@ -39,16 +39,13 @@ from Products.ZSQLCatalog.SQLCatalog import Query
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery
 from Products.ZSQLCatalog.SQLCatalog import NegatedQuery
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 
 class TestZSQLCatalog(unittest.TestCase):
   """Tests for ZSQL Catalog.
   """
   def setUp(self):
     self._catalog = ZSQLCatalog()
+  # TODO ?
 
 
 class TestSQLCatalog(unittest.TestCase):
@@ -100,12 +97,19 @@ class TestSQLCatalog(unittest.TestCase):
 
 
 class TestQuery(unittest.TestCase):
+  """Test SQL bits generated from Queries
+  """
   def testSimpleQuery(self):
     q = Query(title='Foo')
     self.assertEquals(
           dict(where_expression="title = 'Foo'",
                select_expression_list=[]),
           q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+
+  def testQueryMultipleKeys(self):
+    # using multiple keys is invalid and raises
+    # KeyError: 'Query must have only one key'
+    self.assertRaises(KeyError, Query, title='Foo', reference='bar')
 
   def testNoneQuery(self):
     q = Query(title=None)
@@ -168,6 +172,7 @@ class TestQuery(unittest.TestCase):
                select_expression_list=[]),
           q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
 
+  # format
   def testDateFormat(self):
     q = Query(date=DateTime(2001, 02, 03), format='%Y/%m/%d', type='date')
     self.assertEquals(
@@ -177,6 +182,7 @@ class TestQuery(unittest.TestCase):
                select_expression_list=[]),
           q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
   
+  # full text
   def testSimpleQueryFullText(self):
     q = Query(title='Foo')
     self.assertEquals(dict(where_expression="MATCH title AGAINST ('Foo' )",
@@ -185,7 +191,28 @@ class TestQuery(unittest.TestCase):
           q.asSQLExpression(keyword_search_keys=[],
                             full_text_search_keys=['title']))
 
-  def testSimpleQuerySearchKey(self):
+  def testSimpleQueryFullTextSearchMode(self):
+    q = Query(title='Foo',
+              search_mode='in_boolean_mode')
+    self.assertEquals(dict(
+      where_expression="MATCH title AGAINST ('Foo' IN BOOLEAN MODE)",
+      select_expression_list=
+        ["MATCH title AGAINST ('Foo' IN BOOLEAN MODE) AS title_relevance"]),
+          q.asSQLExpression(keyword_search_keys=[],
+                            full_text_search_keys=['title']))
+  
+  def testSimpleQueryFullTextStat__(self):
+    # stat__ is an internal implementation artifact to prevent adding
+    # select_expression for countFolder
+    q = Query(title='Foo')
+    self.assertEquals(dict(
+                    where_expression="MATCH title AGAINST ('Foo' )",
+                    select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[],
+                            full_text_search_keys=['title'],
+                            stat__=1))
+
+  def testSimpleQueryKeywordSearchKey(self):
     q = Query(title='Foo')
     self.assertEquals(dict(where_expression="title LIKE '%Foo%'",
                            select_expression_list=[]),
@@ -201,6 +228,7 @@ class TestQuery(unittest.TestCase):
           q.asSQLExpression(keyword_search_keys=[],
                             full_text_search_keys=[]))
 
+  # complex queries
   def testSimpleComplexQuery(self):
     q1 = Query(title='Foo')
     q2 = Query(reference='Bar')
@@ -222,6 +250,33 @@ class TestQuery(unittest.TestCase):
           select_expression_list=[]),
      q.asSQLExpression(keyword_search_keys=[],
                        full_text_search_keys=[]))
+
+  
+  # forced keys
+  def testSimpleQueryForcedKeywordSearchKey(self):
+    q = Query(title='Foo', key='Keyword')
+    self.assertEquals("title LIKE '%Foo%'",
+          q.asSQLExpression(keyword_search_keys=[],
+                            full_text_search_keys=[])['where_expression'])
+
+  def testSimpleQueryForcedFullText(self):
+    q = Query(title='Foo', key='FullText')
+    self.assertEquals("MATCH title AGAINST ('Foo' )",
+          q.asSQLExpression(keyword_search_keys=[],
+                            full_text_search_keys=[])['where_expression'])
+
+  def testSimpleQueryForcedExactMatch(self):
+    q = Query(title='Foo', key='ExactMatch')
+    self.assertEquals("title = 'Foo'",
+          q.asSQLExpression(keyword_search_keys=['title'],
+                            full_text_search_keys=[])['where_expression'])
+
+  def testSimpleQueryForcedExactMatchOR(self):
+    q = Query(title='Foo% OR %?ar', key='ExactMatch')
+    self.assertEquals("title = 'Foo% OR %?ar'",
+          q.asSQLExpression(keyword_search_keys=['title'],
+                            full_text_search_keys=[])['where_expression'])
+
 
 def test_suite():
   suite = unittest.TestSuite()
