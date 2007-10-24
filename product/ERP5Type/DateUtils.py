@@ -215,15 +215,23 @@ def getCompletedMonthBetween(from_date=None, to_date=None,
   return getIntervalBetweenDates(from_date = from_date, to_date = to_date, keys = {'month':1} )
 
   
-def getRoundedMonthBetween(from_date=None, to_date=None):
+def getRoundedMonthBetween(from_date=None, to_date=None, rounded_day=False):
   """
   Return a rounded number of months between the both given dates.
+  rounded_day is usefull for accounting, eg:
+    the duration between 2000/01/01 23:30 and 2000/01/02 08:00
+    is 1 day, not 0.35 day
   """
   return_value = getIntervalBetweenDates(from_date = from_date, to_date = to_date, keys = {'month':1} )['month']
   from_date = addToDate(from_date, {'month': return_value} )
   end_date = addToDate(from_date, {'month':1} )
   days_in_month = end_date - from_date
-  if to_date - from_date >= days_in_month / 2.:
+  if rounded_day:
+    from math import ceil
+    interval_day = ceil(to_date - from_date)
+  else:
+    interval_day = to_date - from_dat
+  if interval_day >= days_in_month / 2.:
     return_value += 1
   return return_value
 
