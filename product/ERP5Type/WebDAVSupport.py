@@ -218,13 +218,13 @@ class Folder:
     pt = self._getTypesTool()
     myType = pt.getTypeInfo(self)
     if myType is not None and not myType.allowType( portal_type ) and \
-       'portal_trash' not in self.getPhysicalPath():
+       'portal_contributions' not in self.getPhysicalPath():
       raise ValueError('Disallowed subobject type: %s' % portal_type)
     pt.constructContent( type_name=portal_type,
                          container=self,
                          id=name,
                          is_indexable=0
-                         ) # **kw) removed due to CMF bug
+                         )
 
     # constructContent does too much, so the object has to be removed again
     obj = aq_base( self._getOb( name ) )
