@@ -1,3 +1,6 @@
+2007-10-24 Jerome
+* rename career workflow state variable in 'validation_state'
+
 2007-10-10 Kazuhiko
 * add a read-only field of filename in File view and Image view.
 

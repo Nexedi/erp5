@@ -106,7 +106,7 @@
                         <string>my_salary_coefficient</string>
                         <string>my_salary_level</string>
                         <string>my_skill_list</string>
-                        <string>my_state_title</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

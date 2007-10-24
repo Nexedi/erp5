@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -80,10 +77,11 @@ active_careers = []\n
 \n
 # Count the number of opened career\n
 for career in person_object.contentValues(filter={\'portal_type\': \'Career\'}):\n
-  if career.getState() == \'open\':\n
+  if career.getValidationState() == \'open\':\n
     active_careers.append(career.getTitleOrId())\n
 \n
 # There is at least one open career, so we can\'t open a new one until the current one is inactive (closed or cancelled)\n
+# XXX is this check really needed ?\n
 if len(active_careers) > 0:\n
   raise ValidationFailed, "Error : current active career (\'" + "\', \'".join(active_careers) + "\') must be inactive"\n
 
