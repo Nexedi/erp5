@@ -1302,3 +1302,21 @@ def TALESWidget_render_view(self, field, value):
   return text
 
 TALESWidget.render_view = TALESWidget_render_view
+
+def Widget_render_dict(self, field, value):
+  """
+  This is yet another field rendering. It is designed to allow code to
+  understand field's value data by providing its type and format when
+  applicable.
+  """
+  return None
+Widget.render_dict = Widget_render_dict
+
+def Field_render_dict(self, value=None, REQUEST=None, key=None, **kw):
+  """
+  This is yet another field rendering. It is designed to allow code to
+  understand field's value data by providing its type and format when
+  applicable.
+  """
+  return self.widget.render_dict(self, value)
+Field.render_dict = Field_render_dict

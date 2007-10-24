@@ -941,9 +941,9 @@ class ListBoxRenderer:
             search_field = listbox_form.get_field(editable_field_id)
           else:
             continue
-        render_dict = getattr(search_field.widget, 'render_dict', None)
+        render_dict = search_field.render_dict(search_value)
         if render_dict is not None:
-          params[search_id] = render_dict(search_field, search_value)
+          params[search_id] = render_dict
 
       # Set parameters, depending on the list method.
       list_method_name = self.getListMethodName()
