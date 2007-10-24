@@ -37,8 +37,10 @@ from Products.CMFCore.tests.base.testcase import LogInterceptor
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
 # (which has 31645.6 pystones/second)
-MIN_OBJECT_VIEW=0.142
-MAX_OBJECT_VIEW=0.160
+MIN_OBJECT_VIEW=0.112
+MAX_OBJECT_VIEW=0.122
+CURRENT_MIN_OBJECT_VIEW=0.1220
+CURRENT_MAX_OBJECT_VIEW=0.1280
 MIN_MODULE_VIEW=0.125
 MAX_MODULE_VIEW=0.175
 MIN_OBJECT_CREATION=0.0070
@@ -80,18 +82,16 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
     def beforeTearDown(self):
       get_transaction().abort()
       self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
+      gender = self.getPortal().portal_categories['gender']
+      gender.manage_delObjects(list(gender.objectIds()))
+      gender = self.getPortal().portal_caches.clearAllCache()
       get_transaction().commit()
       self.tic()
 
-    def test_00_viewBarObject(self, quiet=quiet, run=run_all_test):
-      """
-      Estimate average time to render object view
-      """
-      if not run : return
-      if not quiet:
-        message = 'Test form to view Bar object'
-        LOG('Testing... ', 0, message)
+    def checkViewBarObject(self, min, max, quiet=quiet, prefix=None):
       # Some init to display form with some value
+      if prefix is None:
+        prefix = ''
       gender = self.getPortal().portal_categories['gender']
       gender.newContent(id='male', title='Male', portal_type='Category')
       gender.newContent(id='female', title='Female', portal_type='Category')
@@ -110,9 +110,33 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       after_view = time()
       req_time = (after_view - before_view)/100.
       if not quiet:
-          print "time to view object form %.4f < %.4f < %.4f\n" %(MIN_OBJECT_VIEW, req_time, MAX_OBJECT_VIEW)
+          print "%s time to view object form %.4f < %.4f < %.4f\n" % \
+              (prefix, min, req_time, max)
       if DO_TEST:
-          self.failUnless(MIN_OBJECT_VIEW < req_time < MAX_OBJECT_VIEW)
+          self.failUnless(min < req_time < max)
+
+    def test_00_viewBarObject(self, quiet=quiet, run=run_all_test,
+                              min=None, max=None):
+      """
+      Estimate average time to render object view
+      """
+      if not run : return
+      if not quiet:
+        message = 'Test form to view Bar object'
+        LOG('Testing... ', 0, message)
+      self.checkViewBarObject(MIN_OBJECT_VIEW, MAX_OBJECT_VIEW,
+                              prefix='objective')
+
+    def test_00b_currentViewBarObject(self, quiet=quiet, run=run_all_test):
+      """
+      Estimate average time to render object view and check with current values
+      """
+      if not run : return
+      if not quiet:
+        message = 'Test form to view Bar object with current values'
+        LOG('Testing... ', 0, message)
+      self.checkViewBarObject(CURRENT_MIN_OBJECT_VIEW, CURRENT_MAX_OBJECT_VIEW,
+                              prefix='current')
 
     def test_01_viewBarModule(self, quiet=quiet, run=run_all_test):
       """
