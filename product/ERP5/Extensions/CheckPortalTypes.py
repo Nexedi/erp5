@@ -97,5 +97,6 @@ def updateCareerValidationState(self):
       for line in career.workflow_history['career_workflow']:
         if 'state' in line:
           line['validation_state'] = line.pop('state')
+      career.workflow_history._p_changed = 1
       career.reindexObject()
     
