@@ -289,6 +289,8 @@ class NegatedQuery(QueryMixin):
   def getRelatedTableMapDict(self, *args, **kw):
     return self._query.getRelatedTableMapDict(*args, **kw)
 
+allow_class(NegatedQuery)
+
 class Query(QueryMixin):
   """
   This allow to define constraints on a sql column
