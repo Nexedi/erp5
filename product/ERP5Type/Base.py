@@ -1697,14 +1697,15 @@ class Base( CopyContainer,
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getViewPermissionOwner' )
   def getViewPermissionOwner(self):
+    """Returns the user ID of the user with 'Owner' local role on this
+    document, if the Owner role has View permission.
+
+    If there is more than one Owner local role, the result is undefined.
     """
-      Returns the user ID of the owner if this user has View permission,
-      otherwise returns None.
-    """
-    owner = self.getWrappedOwner()
-    if owner is not None and owner.has_permission(Permissions.View, self):
-      return str(owner)
-    return None
+    if 'Owner' in rolesForPermissionOn(Permissions.View, self):
+      owner_list = self.users_with_local_role('Owner')
+      if owner_list:
+        return owner_list[0]
 
   # Private accessors for the implementation of relations based on
   # categories
