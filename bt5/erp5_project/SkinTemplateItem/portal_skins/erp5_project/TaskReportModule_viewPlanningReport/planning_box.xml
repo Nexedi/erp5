@@ -116,12 +116,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>task_report_module_domain</string>
-                          <string>Task Report</string>
-                        </tuple>
-                        <tuple>
                           <string>task_report_module_person_domain</string>
                           <string>Task Report per Person</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_report_module_domain</string>
+                          <string>Task Report</string>
                         </tuple>
                       </list>
                     </value>
