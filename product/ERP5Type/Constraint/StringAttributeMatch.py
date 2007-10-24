@@ -48,18 +48,19 @@ class StringAttributeMatch(PropertyExistence):
     Check that each attribute does not match the RE
     """
     errors = PropertyExistence.checkConsistency(self, object, fixit=fixit)
-    for attribute_name, attribute_value in self.constraint_definition.items():
-      error_message = None
-      # If property does not exist, error will be raise by 
-      # PropertyExistence Constraint.
-      current_value = object.getProperty(attribute_name)
-      regexp = re.compile(attribute_value)
-      if (current_value is not None) and \
-          (regexp.match(current_value) is None):
-        # Generate error_message
-        error_message =  "Attribute %s is '%s' and not match '%s'" % \
-            (attribute_name, current_value,
-             attribute_value)
-        # Generate error
-        errors.append(self._generateError(object, error_message))
+    if not errors:
+      for attribute_name, attribute_value in self.constraint_definition.items():
+        error_message = None
+        # If property does not exist, error will be raise by 
+        # PropertyExistence Constraint.
+        current_value = object.getProperty(attribute_name)
+        regexp = re.compile(attribute_value)
+        if (current_value is not None) and \
+            (regexp.match(current_value) is None):
+          # Generate error_message
+          error_message =  "Attribute %s is '%s' and not match '%s'" % \
+              (attribute_name, current_value,
+               attribute_value)
+          # Generate error
+          errors.append(self._generateError(object, error_message))
     return errors
