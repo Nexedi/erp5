@@ -116,7 +116,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
     def getStorage(self, default=None):
       if default is None:
         default = self.storage_list[0]
-      storage = getattr(self, 'storage', default)
+      storage = getattr(aq_base(self), 'storage', default)
       if storage is not default and storage not in self.storage_list:
         storage = self.storage_list[0]
       return storage
@@ -495,7 +495,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         default_stats = [' '] * 6
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        return getattr(selection, 'stats', default_stats)
+        return getattr(aq_base(selection), 'stats', default_stats)
       return default_stats
 
 
