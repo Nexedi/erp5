@@ -437,7 +437,7 @@ class HBTreeFolder2Base (Persistent):
         return not self._tree_list.has_key(id)
         
     security.declareProtected(access_contents_information,
-                              'ObjectValues')
+                              'objectValues')
     def objectValues(self, base_id=_marker, spec=None):
         return LazyMap(self._getOb, self.objectIds(base_id=base_id))
 
