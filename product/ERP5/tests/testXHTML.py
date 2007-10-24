@@ -84,6 +84,8 @@ target_business_templates = (
   'erp5_payroll',
 
   'erp5_project',
+
+  'erp5_calendar',
 )
 
 
