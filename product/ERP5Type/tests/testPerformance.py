@@ -127,16 +127,16 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       self.checkViewBarObject(MIN_OBJECT_VIEW, MAX_OBJECT_VIEW,
                               prefix='objective')
 
-    def test_00b_currentViewBarObject(self, quiet=quiet, run=run_all_test):
-      """
-      Estimate average time to render object view and check with current values
-      """
-      if not run : return
-      if not quiet:
-        message = 'Test form to view Bar object with current values'
-        LOG('Testing... ', 0, message)
-      self.checkViewBarObject(CURRENT_MIN_OBJECT_VIEW, CURRENT_MAX_OBJECT_VIEW,
-                              prefix='current')
+#    def test_00b_currentViewBarObject(self, quiet=quiet, run=run_all_test):
+#      """
+#      Estimate average time to render object view and check with current values
+#      """
+#      if not run : return
+#      if not quiet:
+#        message = 'Test form to view Bar object with current values'
+#        LOG('Testing... ', 0, message)
+#      self.checkViewBarObject(CURRENT_MIN_OBJECT_VIEW, CURRENT_MAX_OBJECT_VIEW,
+#                              prefix='current')
 
     def test_01_viewBarModule(self, quiet=quiet, run=run_all_test):
       """
