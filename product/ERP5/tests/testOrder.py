@@ -991,6 +991,38 @@ class TestOrderMixin:
   variated_order_creation_without_tic = variated_order_line_creation + \
     variated_line_completion_without_tic
 
+  def stepCheckCatalogued(self, sequence=None, 
+                          sequence_list=None, **kw):
+    """
+    Check that order is catalogued
+    """
+    order = sequence.get('order')
+    sql_connection = self.getSQLConnection()
+    sql = 'SELECT simulation_state FROM catalog WHERE uid=%s' % \
+                      order.getUid()
+    result = sql_connection.manage_test(sql)
+    simulation_state_list = [x['simulation_state'] for x in result]
+    self.assertEquals(1, len(simulation_state_list))
+    self.assertEquals(order.getSimulationState(), 
+                      simulation_state_list[0])
+
+  def stepCheckCataloguedSimulation(self, sequence=None, 
+                                    sequence_list=None, **kw):
+    """
+    Check that simulation is catalogued
+    """
+    order = sequence.get('order')
+    for order_movement in order.getMovementList():
+      for sim_mvt in order_movement.getOrderRelatedValueList():
+        sql_connection = self.getSQLConnection()
+        sql = 'SELECT simulation_state FROM catalog WHERE uid=%s' % \
+                          sim_mvt.getUid()
+        result = sql_connection.manage_test(sql)
+        simulation_state_list = [x['simulation_state'] for x in result]
+        self.assertEquals(1, len(simulation_state_list))
+        self.assertEquals(order.getSimulationState(), 
+                          simulation_state_list[0])
+
 class TestOrder(TestOrderMixin, ERP5TypeTestCase):
   """
     Test business template erp5_trade
@@ -1792,6 +1824,37 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 #     """
 #     if not run: return
 #     self.failUnless(1==2)
+
+  def test_18_SimulationStateIndexation(self, quiet=0, run=run_all_test):
+    """
+    Test that the simulation state is well indexed.
+    """
+    if not run: return
+
+    sequence_list = SequenceList()
+
+    sequence_string = '\
+                      stepCreateOrganisation \
+                      ' + self.non_variated_order_creation + '\
+                      stepTic \
+                      stepCheckCatalogued \
+                      stepCheckCataloguedSimulation \
+                      stepPlanOrder \
+                      stepTic \
+                      stepCheckCatalogued \
+                      stepCheckCataloguedSimulation \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckCatalogued \
+                      stepCheckCataloguedSimulation \
+                      stepCancelOrder \
+                      stepTic \
+                      stepCheckCatalogued \
+                      stepCheckCataloguedSimulation \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()
