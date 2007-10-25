@@ -12,7 +12,7 @@ CREATE TABLE `message_queue` (
   `uid` int(11) NOT NULL,
   `date` datetime,
   `path` VARCHAR(255),
-  `method_id` VARCHAR(40),
+  `method_id` VARCHAR(255),
   `processing_node` INT DEFAULT -1,
   `processing` INT DEFAULT 0,
   `processing_date` datetime,
