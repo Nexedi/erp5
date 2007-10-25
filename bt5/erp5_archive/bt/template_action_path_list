@@ -16,3 +16,8 @@ Archive Inventory | history
 Archive Inventory | metadata
 Archive Inventory | print_pdf
 Archive Inventory | view
+Archive Tool | create_archive
+Archive Tool | list_ui
+Archive Tool | view
+Archive | view
+portal_actions | manage_archive
