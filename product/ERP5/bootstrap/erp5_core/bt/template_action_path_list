@@ -4,10 +4,6 @@ Alarm | periodicity
 Alarm | view
 Applied Rule | list
 Applied Rule | view
-Archive Tool | create_archive
-Archive Tool | list_ui
-Archive Tool | view
-Archive | view
 Base Category | list
 Base Category | view
 Base Domain | list

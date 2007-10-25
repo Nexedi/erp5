@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Archive</type>
-  <workflow>edit_workflow, archive_workflow</workflow>
- </chain>
- <chain>
   <type>Base Category</type>
   <workflow>edit_workflow</workflow>
  </chain>

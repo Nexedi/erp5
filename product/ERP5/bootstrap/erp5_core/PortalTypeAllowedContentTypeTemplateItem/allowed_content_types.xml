@@ -5,9 +5,6 @@
  <portal_type id="Applied Rule">
   <item>Simulation Movement</item>
  </portal_type>
- <portal_type id="Archive Tool">
-  <item>Archive</item>
- </portal_type>
  <portal_type id="Base Category">
   <item>Category</item>
  </portal_type>
