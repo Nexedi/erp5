@@ -2024,9 +2024,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ctool = self.getCatalogTool()
 
     # by default, % in catalog search is a wildcard:
-    self.assertEquals(sorted([doc, other_doc]),
-      sorted([x.getObject() for x in 
-        ctool(portal_type='Organisation', title='Foo%')]))
+    self.assertSameSet([doc, other_doc], [x.getObject() for x in 
+        ctool(portal_type='Organisation', title='Foo%')])
     # ... but you can force searches with an exact match key
     self.assertEquals([doc], [x.getObject() for x in
        ctool(portal_type='Organisation', title=dict(query='Foo%',
