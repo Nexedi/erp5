@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -443,7 +440,7 @@ FROM\n
   <dtml-if use_movement_table> movement,  </dtml-if>\n
   <dtml-if "stat or omit_input or omit_output or node">\n
       stock, catalog as child, </dtml-if>\n
-  <dtml-if "section_category">category, </dtml-if>\n
+  <dtml-if "section_category">category, catalog as section, </dtml-if>\n
   catalog,\n
   delivery\n
 \n
@@ -491,10 +488,10 @@ WHERE\n
                   <dtml-var "restrictedTraverse(entity).getUid()">\n
      )</dtml-if>\n
   <dtml-if section_category> AND (\n
-         (  category.uid = delivery.destination_section_uid\n
-           )  OR ( category.uid = delivery.source_section_uid\n
-         )\n
-       )\n
+      (  category.uid = delivery.destination_section_uid\n
+           )  OR ( category.uid = delivery.source_section_uid ) )\n
+    AND section.portal_type = "Organisation"\n
+    AND section.uid = category.uid\n
     AND category.category_uid =\n
     <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
   </dtml-if>\n
@@ -566,9 +563,11 @@ WHERE\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -628,7 +627,7 @@ FROM\n
   <dtml-if use_movement_table> movement,  </dtml-if>\n
   <dtml-if "stat or omit_input or omit_output or node">\n
       stock, catalog as child, </dtml-if>\n
-  <dtml-if "section_category">category, </dtml-if>\n
+  <dtml-if "section_category">category, catalog as section, </dtml-if>\n
   catalog,\n
   delivery\n
 \n
@@ -676,10 +675,10 @@ WHERE\n
                   <dtml-var "restrictedTraverse(entity).getUid()">\n
      )</dtml-if>\n
   <dtml-if section_category> AND (\n
-         (  category.uid = delivery.destination_section_uid\n
-           )  OR ( category.uid = delivery.source_section_uid\n
-         )\n
-       )\n
+      (  category.uid = delivery.destination_section_uid\n
+           )  OR ( category.uid = delivery.source_section_uid ) )\n
+    AND section.portal_type = "Organisation"\n
+    AND section.uid = category.uid\n
     AND category.category_uid =\n
     <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
   </dtml-if>\n
