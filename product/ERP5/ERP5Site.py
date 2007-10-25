@@ -1233,8 +1233,6 @@ class ERP5Generator(PortalGenerator):
     addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
     if not p.hasObject('portal_catalog'):
       addTool('ERP5 Catalog', None)
-    if not p.hasObject('portal_archives'):
-      addTool('ERP5 Archive Tool', None)
 
     # Add Default SQL connection
     if p.erp5_sql_connection_type == 'Z MySQL Database Connection':
