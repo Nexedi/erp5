@@ -89,7 +89,7 @@ filename = \'%s.%s\' % ((filename, format))\n
 if typ == \'application/zip\':\n
   filename += \'.zip\'\n
 \n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % filename)\n
+request.RESPONSE.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % filename)\n
 return data\n
 </string> </value>
         </item>

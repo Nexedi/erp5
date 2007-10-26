@@ -62,7 +62,7 @@ AAAAAAAAAAAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAADEBAAAAAA==</string
 <office:document-content xmlns:draw=\'http://openoffice.org/2000/drawing\' xmlns:office=\'http://openoffice.org/2000/office\' xmlns:text=\'http://openoffice.org/2000/text\' xmlns:number=\'http://openoffice.org/2000/datastyle\' xmlns:chart=\'http://openoffice.org/2000/chart\' xmlns:table=\'http://openoffice.org/2000/table\' xmlns:dr3d=\'http://openoffice.org/2000/dr3d\' xmlns:fo=\'http://www.w3.org/1999/XSL/Format\' xmlns:style=\'http://openoffice.org/2000/style\' xmlns:form=\'http://openoffice.org/2000/form\' xmlns:script=\'http://openoffice.org/2000/script\' xmlns:svg=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' office:class=\'text\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
-          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")\'\n
          office:version=\'1.0\'>\n
   <office:script/>\n
   <office:font-decls>\n

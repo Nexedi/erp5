@@ -477,7 +477,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                       response.body)
     self.assertEquals('application/vnd.oasis.opendocument.spreadsheet',
                       response.headers['content-type'])
-    self.assertEquals('attachment;; filename="import_data_list.ods"',
+    self.assertEquals('attachment; filename="import_data_list.ods"',
                       response.headers['content-disposition'])
 
   def test_Member_download_pdf_format(self):
@@ -498,7 +498,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish('%s/Document_convert?format=pdf' % doc.getPath(),
                             basic='member_user2:secret')
     self.assertEquals('application/pdf', response.headers['content-type'])
-    self.assertEquals('attachment;; filename="import_data_list.pdf"',
+    self.assertEquals('attachment; filename="import_data_list.pdf"',
                       response.headers['content-disposition'])
 
 

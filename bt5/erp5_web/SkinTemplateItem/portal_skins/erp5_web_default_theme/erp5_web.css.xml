@@ -59,7 +59,7 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
 \n
-<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css; charset=utf-8\')"/>\n
 \n
 /*========================================================================================\n
   Default ERP5 Web CSS.\n

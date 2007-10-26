@@ -74,7 +74,7 @@ to return the file in the base-data format.\n
 """\n
 request = context.REQUEST\n
 response = request.RESPONSE\n
-response.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % context.getStandardFileName())\n
+response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % context.getStandardFileName())\n
 return context.index_html(request, response, format=\'base-data\')\n
 </string> </value>
         </item>

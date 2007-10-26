@@ -77,7 +77,7 @@ else:\n
   response.setHeader(\'Content-type\', context.getFormat())\n
 \n
 file_name = context.getSourceReference() or context.getTitle() or context.getId()\n
-response.setHeader(\'Content-disposition\', \'attachment;; filename="%s"\' % file_name)\n
+response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % file_name)\n
 return context.index_html(request, response)\n
 </string> </value>
         </item>

@@ -93,7 +93,7 @@ dQEAAAAA</string> </value>
   xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
   xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
   xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
-  tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+  tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")\'\n
   tal:define=\'at_date request/at_date;\n
               at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day());\n
               from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);\n

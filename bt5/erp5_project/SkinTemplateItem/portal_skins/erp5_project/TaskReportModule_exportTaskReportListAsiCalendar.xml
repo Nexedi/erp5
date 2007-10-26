@@ -136,7 +136,7 @@ for obj in obj_list : \n
 print "END:VCALENDAR"\n
 \n
 context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/calendar\')\n
-context.REQUEST.RESPONSE.setHeader(\'Content-disposition\',  \'attachment;; filename=ERP5.ics\')\n
+context.REQUEST.RESPONSE.setHeader(\'Content-disposition\',  \'attachment; filename=ERP5.ics\')\n
 return printed\n
 
 

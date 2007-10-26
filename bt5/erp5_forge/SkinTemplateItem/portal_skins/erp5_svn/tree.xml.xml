@@ -75,7 +75,7 @@ from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, Su
 if do_extract == \'True\':\n
   context.getPortalObject().portal_subversion.extractBT(context)\n
 \n
-context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml;; charset=utf-8\')\n
+context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml; charset=utf-8\')\n
 \n
 try:\n
   root = context.getPortalObject().portal_subversion.getModifiedTree(context, show_unmodified)\n

@@ -202,7 +202,7 @@ class EmailDocument(File, TextDocument):
               file_name = re.findall(file_name_regexp, content_disposition, re.MULTILINE)
           if file_name:
             file_name = file_name[0]
-            RESPONSE.setHeader('Content-disposition', 'attachment;; filename="%s"' % file_name)
+            RESPONSE.setHeader('Content-disposition', 'attachment; filename="%s"' % file_name)
         return part.get_payload(decode=1)
       i += 1
     return KeyError, "No attachment with index %s" % index

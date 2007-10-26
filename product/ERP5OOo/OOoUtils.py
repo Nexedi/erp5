@@ -153,7 +153,7 @@ class OOoBuilder(Implicit):
       """ xmlns:tal='http://xml.zope.org/namespaces/tal'
           xmlns:i18n='http://xml.zope.org/namespaces/i18n'
           xmlns:metal='http://xml.zope.org/namespaces/metal'
-          tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
+          tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")'
          office:version='1.0'""")
 
   def addFileEntry(self, full_path, media_type, content=None):

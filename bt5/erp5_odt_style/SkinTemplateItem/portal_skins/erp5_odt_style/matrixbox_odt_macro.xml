@@ -76,7 +76,7 @@
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
           tal:attributes=\'dummy\n
-         python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+         python:request.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")\'\n
           tal:define="global frame_width python:25.8"\n
          office:version=\'1.0\'>\n
    <office:scripts/>\n

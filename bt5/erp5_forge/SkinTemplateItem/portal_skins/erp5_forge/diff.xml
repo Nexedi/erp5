@@ -96,7 +96,7 @@ else:\n
 \n
 diff_dict, missing_in_a_dict, missing_in_b_dict = diff_recursive(object_a, object_b)\n
 \n
-context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')\n
+context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/html; charset=utf-8\')\n
 print \'<html>\'\n
 print \'<head><title>Diff between %s and %s</title></head>\' % (object_a.id, object_b.id)\n
 print \'<body><pre>\'\n

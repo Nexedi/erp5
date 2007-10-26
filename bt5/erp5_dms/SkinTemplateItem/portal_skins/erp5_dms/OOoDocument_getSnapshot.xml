@@ -75,7 +75,7 @@ file data change).\n
 """\n
 request = context.REQUEST\n
 request.RESPONSE.setHeader(\'Content-type\', context.getSnapshotContentType())\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment;; filename="%s.pdf"\' % context.getStandardFileName())\n
+request.RESPONSE.setHeader(\'Content-disposition\', \'attachment; filename="%s.pdf"\' % context.getStandardFileName())\n
 return context.getSnapshotData()\n
 </string> </value>
         </item>

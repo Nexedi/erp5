@@ -66,7 +66,7 @@
            cancel_url       request/cancel_url | current_url;\n
            dummy            python: local_parameter_list.update({\'cancel_url\': cancel_url});\n
 \n
-           dummy       python: request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\');\n
+           dummy       python: request.RESPONSE.setHeader(\'Content-Type\', \'text/html; charset=utf-8\');\n
            dummy  python: request.set(\'here\', here);\n
 \n
     global css_list  css_list | python: [];\n
