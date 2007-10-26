@@ -331,7 +331,8 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
   ManageModule.registerModule(portal,
                               module_id,
                               module_portal_type,
-                              object_portal_type)
+                              object_portal_type,
+                              module_title)
 
 
   # manage redirection URL

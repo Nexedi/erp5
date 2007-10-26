@@ -83,6 +83,7 @@ class ManageModule:
     object_names['view_pdf'] = temp_portal_type + '_view' +\
                     temp_portal_type + 'AsPdf'
     # declaring form to list the objects of a module
+    # TODO: use module portal type, not "object title + Module"
     object_names['view_list'] = object_title.replace(' ','') +\
                     'Module_view' + temp_portal_type + 'List'
     # declaring main object form
@@ -469,16 +470,14 @@ class ManageModule:
                            portal,
                            module_id,
                            module_portal_type,
-                           object_portal_type):
+                           object_portal_type,
+                           module_title):
     """
     register Module inside ERP5 instance
     """
-    title_module = ''
-    for word in object_portal_type.split():
-      title_module += str(word.capitalize() + ' ')
     portal.newContent( id          = str(module_id),
                        portal_type = str(module_portal_type),
-                       title       = title_module)
+                       title       = module_title)
 
    
 class ManageFiles:
