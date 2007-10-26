@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -75,10 +72,8 @@
  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
  xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
  xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
-          tal:attributes=\'dummy\n
-         python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
-          tal:define="global frame_width python:25.8"\n
-         office:version=\'1.0\'>\n
+ tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+ office:version=\'1.0\'>\n
    <office:scripts/>\n
   <office:font-face-decls>\n
     <style:font-face svg:font-family="\'DejaVu Sans\'" style:font-family-generic=\'roman\' style:name=\'DejaVu Sans\' style:font-pitch=\'variable\'/>\n
@@ -88,70 +83,6 @@
   <office:automatic-styles>\n
     <style:style style:family=\'table\' style:name=\'field-table\'>\n
       <style:table-properties style:may-break-between-rows=\'false\' table:align=\'margins\' style:width=\'18.352cm\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-column\' style:name=\'field-table.A\'>\n
-      <style:table-column-properties style:rel-column-width=\'32767*\' style:column-width=\'9.176cm\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-column\' style:name=\'field-table.B\'>\n
-      <style:table-column-properties style:rel-column-width=\'32768*\' style:column-width=\'9.176cm\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'field-table.A1\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-top=\'0.002cm solid #000000\' fo:background-color=\'#e6e6e6\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
-        <style:background-image/>\n
-      </style:table-cell-properties>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'field-table.B1\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border=\'0.002cm solid #000000\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'field-table.A2\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-top=\'none\' fo:background-color=\'#e6e6e6\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
-        <style:background-image/>\n
-      </style:table-cell-properties>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'field-table.B2\'>\n
-      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-right=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-top=\'none\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table\' style:name=\'listbox-table\'>\n
-      <style:table-properties style:may-break-between-rows=\'true\' table:align=\'margins\' style:width=\'18.352cm\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-column\' style:name=\'listbox-table.A\'>\n
-      <style:table-column-properties style:rel-column-width=\'21845*\' style:column-width=\'6.117cm\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-column\' style:name=\'listbox-table.B\'>\n
-      <style:table-column-properties style:rel-column-width=\'21848*\' style:column-width=\'6.117cm\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-column\' style:name=\'listbox-table.C\'>\n
-      <style:table-column-properties style:rel-column-width=\'21842*\' style:column-width=\'6.117cm\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'listbox-table.A1\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-top=\'0.002cm solid #000000\' fo:background-color=\'#b3b3b3\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
-        <style:background-image/>\n
-      </style:table-cell-properties>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'listbox-table.C1\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:background-color=\'#b3b3b3\' fo:border=\'0.002cm solid #000000\'>\n
-        <style:background-image/>\n
-      </style:table-cell-properties>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'listbox-table.A2\'>\n
-      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-right=\'none\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-top=\'none\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'listbox-table.C2\'>\n
-      <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-right=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-top=\'none\'/>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'listbox-table.A3\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-top=\'none\' fo:background-color=\'#e6e6e6\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
-        <style:background-image/>\n
-      </style:table-cell-properties>\n
-    </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'listbox-table.C3\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'none\' fo:background-color=\'#e6e6e6\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
-        <style:background-image/>\n
-      </style:table-cell-properties>\n
-    </style:style>\n
-    <style:style style:parent-style-name=\'report-title\' style:family=\'paragraph\' style:name=\'P1\'>\n
-      <style:paragraph-properties fo:text-align=\'start\' style:justify-single-word=\'false\'/>\n
-      <style:text-properties style:font-size-asian=\'14pt\' style:font-size-complex=\'14pt\' fo:font-size=\'14pt\'/>\n
     </style:style>\n
   </office:automatic-styles>\n
 \n
@@ -193,12 +124,18 @@
                  <table:table-column table:style-name=\'listbox-table.A\'/>\n
                 </tal:block>   \n
                 <tal:block tal:repeat="listboxline python: listboxline_list">\n
+                  <!-- XXX This odd / even thing will probably go away. It\'s\n
+                  great for HTML, but not so usefull when print. Actually the\n
+                  real problem it\'s it can\'t be defined in the stylesheet\n
+                  easily. For now, it\'s defined globally: -->\n
+                  <tal:block tal:define="global style_cell python:\'listbox-table.C2\'"/>\n
+\n
                   <tal:block tal:condition="repeat/listboxline/odd">\n
-                    <tal:block tal:define="global style_cell python:\'listbox-table.C2\'"/>\n
+                    <!-- <tal:block tal:define="global style_cell python:\'listbox-table.C2\'"/> -->\n
                     <tal:block tal:define="global style_text python:\'listbox-data-a\'"/>\n
                   </tal:block> \n
                   <tal:block tal:condition="repeat/listboxline/even">\n
-                    <tal:block tal:define="global style_cell python:\'listbox-table.C3\'"/>\n
+                    <!-- <tal:block tal:define="global style_cell python:\'listbox-table.C3\'"/> -->\n
                     <tal:block tal:define="global style_text python:\'listbox-data-b\'"/>\n
                   </tal:block>    \n
                   \n
@@ -211,15 +148,17 @@
                     </table:table-cell>\n
                     </table:table-row>\n
                    </tal:block>  \n
+\n
                    <tal:block tal:condition="python: listboxline.isTitleLine()">\n
                     <table:table-header-rows>\n
                     <table:table-row>\n
                     <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                      <tal:block tal:define="column_property python: column_item[1];\n
-                                       column_id python: column_item[0]">\n
+                                            column_id python: column_item[0]">\n
                       <tal:block tal:condition="python: column_property is not None">\n
                        <table:table-cell table:style-name=\'listbox-table.A1\' office:value-type=\'string\'>                      \n
-                        <text:p text:style-name=\'listbox-header\' tal:content="python: here.Localizer.erp5_ui.gettext(str(column_property)).encode(\'utf8\')"/> \n
+                         <text:p text:style-name=\'listbox-header\'\n
+                                 tal:content="python: here.Localizer.erp5_ui.gettext(column_property).encode(\'utf8\')"/> \n
                        </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: column_property is None">\n
@@ -232,12 +171,14 @@
                    </table:table-row>\n
                    </table:table-header-rows>\n
                   </tal:block>\n
+                  \n
+                  <!-- Data Line -->\n
                   <tal:block tal:condition="python: listboxline.isDataLine() ">\n
                    <table:table-row>\n
                    <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                     <tal:block tal:define="column_property python: column_item[1];\n
-                                       column_id python: column_item[0];\n
-                                       is_list python:same_type(column_property, []) or same_type(column_property, ())">\n
+                                           column_id python: column_item[0];\n
+                                           is_list python:same_type(column_property, []) or same_type(column_property, ())">\n
                     <tal:block tal:condition="python: is_list">\n
                      <table:table-cell  tal:attributes="table:style-name style_cell" office:value-type=\'string\'>\n
                       <tal:block tal:repeat="item column_property">\n
@@ -249,10 +190,12 @@
                     <tal:block tal:condition="python: column_property is not None and not is_list">\n
                      <table:table-cell tal:attributes="table:style-name style_cell" office:value-type=\'string\' \n
                         tal:define="field python: editable_fields.get(column_id, None)" >\n
-                      <text:p tal:attributes="text:style-name style_text" tal:condition="python: field is None"\n
-                           tal:content="python:str(column_property)"/>\n
-                      <text:p tal:attributes="text:style-name style_text" tal:condition="python: field is not None" \n
-                           tal:content="python:field.render_pdf(column_property)"/>\n
+                        <text:p tal:attributes="text:style-name style_text"\n
+                                tal:condition="python: field is None"\n
+                                tal:content="python:str(column_property)"/>\n
+                        <text:p tal:attributes="text:style-name python:field.get_value(\'css_class\') or style_text"\n
+                                tal:condition="python: field is not None" \n
+                                tal:content="python:field.render_pdf(column_property)"/>\n
                      </table:table-cell>\n
                     </tal:block>\n
                     <tal:block tal:condition="python: column_property is None">\n
@@ -263,21 +206,23 @@
                    </tal:block>\n
                   </tal:block>\n
                   </table:table-row>\n
-                 </tal:block>                   \n
+                 </tal:block>\n
+\n
+                 <!-- Stat Line -->\n
                  <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()">\n
                   <table:table-row>\n
                   <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                    <tal:block tal:define="column_property python: column_item[1];\n
                                        column_id python: column_item[0]">\n
-                   <tal:block tal:condition="python: column_property is not None">                  \n
-                    <table:table-cell tal:attributes="table:style-name style_cell" office:value-type=\'string\' \n
-                        tal:define="field python: editable_fields.get(column_id, None)">\n
+                   <tal:block tal:condition="python: column_property is not None"\n
+                              tal:define="field python: editable_fields.get(column_id, None);">\n
+                    <table:table-cell tal:attributes="table:style-name style_cell" office:value-type=\'string\' >\n
                       <text:p tal:attributes="text:style-name style_text"  \n
-\t\t             tal:condition="python: field is None"\n
-                             tal:content="python:column_property"/>\n
-                      <text:p tal:attributes="text:style-name style_text"  \n
-\t\t             tal:condition="python: field is not None"                             \n
-                             tal:content="python:field.render_pdf(column_property)"/>\n
+                              tal:condition="python: field is None"\n
+                              tal:content="python:column_property"/>\n
+                      <text:p tal:attributes="text:style-name python: field.get_value(\'css_class\') or style_text"\n
+                              tal:condition="python: field is not None"\n
+                              tal:content="python:field.render_pdf(column_property)"/>\n
                     </table:table-cell>\n
                    </tal:block>\n
                    <tal:block tal:condition="python: column_property is None">\n

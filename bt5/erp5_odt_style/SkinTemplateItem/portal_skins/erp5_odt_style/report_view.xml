@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5OOo.OOoTemplate</string>
-          <string>OOoTemplate</string>
-        </tuple>
-        <none/>
+        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -139,7 +136,6 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
           tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
-          tal:define="global frame_width python:25.8"\n
          office:version=\'1.0\'>\n
   <office:scripts/>\n
   <office:font-face-decls>\n
@@ -158,7 +154,9 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       <style:table-column-properties style:rel-column-width=\'32768*\' style:column-width=\'14.676cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'field-table.A1\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-top=\'0.002cm solid #000000\' fo:background-color=\'#e6e6e6\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
+      <!-- FIXME: can this be in style sheet ? as far as I see, oowriter does\n
+      not allow to set table-cell styles -->\n
+      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'0.002cm solid #000000\' fo:background-color=\'#e6e6e6\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
         <style:background-image/>\n
       </style:table-cell-properties>\n
     </style:style>\n
@@ -186,7 +184,12 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       <style:table-column-properties style:rel-column-width=\'21842*\' style:column-width=\'9.783cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'listbox-table.A1\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-top=\'0.002cm solid #000000\' fo:background-color=\'#b3b3b3\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
+      <style:table-cell-properties fo:padding=\'0.097cm\'\n
+                                   fo:border-right=\'0.002cm solid #000000\'\n
+                                   fo:border-top=\'0.002cm solid #000000\'\n
+                                   fo:background-color=\'#e6e6e6\'\n
+                                   fo:border-left=\'0.002cm solid #000000\'\n
+                                   fo:border-bottom=\'0.002cm solid #000000\'>\n
         <style:background-image/>\n
       </style:table-cell-properties>\n
     </style:style>\n
@@ -214,6 +217,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
   </office:automatic-styles>\n
   <office:body>\n
     <office:text>\n
+      <!-- XXX val -->\n
       <text:sequence-decls>\n
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Illustration\'/>\n
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Table\'/>\n
@@ -222,14 +226,14 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       </text:sequence-decls>\n
              \n
              <tal:block tal:define="report_item_list python:report_method();\n
-                       field_errors python: request.get(\'field_errors\',{});\n
-                       dummy python: request.set(\'here\',here); ">                \n
-                  <text:p text:style-name=\'report-title\' tal:content="python: here.Localizer.erp5_ui.gettext(form.getProperty(\'title\', \'\')).encode(\'utf-8\')"> report title </text:p>\n
+                                    dummy python: request.set(\'here\',here); ">                \n
+                       <text:p text:style-name=\'report-title\'\n
+                               tal:content="python: here.Localizer.erp5_ui.gettext(form.getProperty(\'title\', \'\')).encode(\'utf-8\')"> report title </text:p>\n
                      <text:p></text:p>                     \n
-                    <spacer height="100" tal:condition="form/get_fields"/>\n
                      <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
                      <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
                       <tal:block tal:condition="field_list">\n
+                        <!-- TODO: make this a macro for field rendering -->\n
                        <table:table table:style-name=\'field-table\' table:name=\'field-table\' >\n
                         <table:table-column table:style-name=\'field-table.A\' table:number-columns-repeated=\'2\'/>\n
                         <tal:block tal:repeat="field field_list">\n
@@ -240,28 +244,28 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                            </table:table-cell>\n
                            <table:table-cell table:style-name=\'field-table.B1\' office:value-type=\'string\' tal:define="value python: field.get_value(\'default\')">\n
                             <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
+                            <!-- XXX render_odf for list fields ? using TAL structure ? -->\n
                              <tal:block tal:repeat="item value">\n
-                              <text:p text:style-name=\'field-content\' tal:content="python: str(item)" />\n
+                               <text:p text:style-name=\'field-content\' tal:content="item" />\n
                              </tal:block>\n
-                            </tal:block>\n
-                            <tal:block tal:condition="python: not (same_type(value, []) or same_type(value, ()) or same_type(value, None))">\n
-                             <text:p text:style-name=\'field-content\' tal:content="python: value" />\n
-                            </tal:block>\n
-                            <tal:block tal:condition="python: value is None">\n
-                             <text:p text:style-name=\'field-content\' tal:content="python: \' \'" />\n
+                           </tal:block>\n
+                            <tal:block tal:condition="python: not (same_type(value, []) or same_type(value, ()))">\n
+                              <text:p text:style-name=\'field-content\' tal:content="python: field.render_pdf(value)" />\n
                             </tal:block>\n
                            </table:table-cell>\n
                           </table:table-row>\n
                          </tal:block>\n
                         </tal:block>\n
-                       </table:table>\n
+                      </table:table>\n
+                      <tal:block tal:condition="form/get_fields">\n
                        <text:p/>\n
                        <text:p/>\n
                        <text:p/>\n
-                       <text:p/>\n
+                       <text:p/></tal:block>\n
                       </tal:block>\n
                      </tal:block>\n
                     </tal:block>\n
+                    <!-- TODO: another macro for bottom field rendering -->\n
                     <tal:block tal:define="field_list python: form.get_fields_in_group(\'bottom\')">\n
                      <tal:block tal:condition="field_list">\n
                       <tal:block tal:repeat="field field_list">\n
@@ -281,35 +285,32 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                      </tal:block>\n
                     </tal:block>\n
                    </tal:block>\n
-                  </tal:block>\n
+                 </tal:block>  <!-- TODO: if possible a macro for form rendering ? -->\n
+\n
                   <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
                  <tal:block tal:repeat="report_item report_item_list">\n
                   <tal:block tal:define="here python:report_item.getObject(portal_object);\n
-                         dummy python:report_item.pushReport(portal_object)">\n
-                      <tal:block tal:condition="report_item/getTitle | report_item/getTranslatedTitle">\n
-        \t       <tal:block tal:condition="report_item/getTitle">\n
-                        <text:p tal:content="report_item/getTitle"\n
-\t\t\t i18n:translate=""\n
-\t\t\t tal:attributes="text:style-name string:report-title-${report_item/getLevel}">toto</text:p><text:p/>\n
-                       </tal:block>\n
-                       <tal:block tal:condition="report_item/getTranslatedTitle">\n
-\t\t        <text:p tal:content="report_item/getTranslatedTitle"\n
-\t\t\t  tal:attributes="text:style-name string:report-title-${report_item/getLevel}">toto</text:p><text:p/>\n
-                       </tal:block>\n
-                     </tal:block>                   \n
+                                        dummy python:report_item.pushReport(portal_object)">\n
+                    <tal:block tal:condition="report_item/getTitle">\n
+                       <text:p\n
+                          tal:content="report_item/getTitle"\n
+                          tal:attributes="text:style-name string:report-title-${report_item/getLevel}"\n
+                          >report item title</text:p><text:p/>\n
+                      </tal:block>\n
+\n
                     <tal:block tal:condition="report_item/getFormId">\n
-                     <tal:block tal:define="form python:getattr(here,report_item.getFormId())" >\n
+                     <tal:block tal:define="form python:getattr(here, report_item.getFormId())" >\n
                       <tal:block tal:condition="python:form.pt == \'form_view\'">\n
-                      <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
+                        <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
                       </tal:block>\n
                        <tal:block tal:condition="python:form.pt == \'form_list\'">\n
                        <tal:block metal:use-macro="form/form_list/macros/form_layout"/>\n
                        </tal:block></tal:block></tal:block>\n
                       </tal:block>\n
                       <tal:block tal:define="dummy python:report_item.popReport(portal_object)"/>\n
-                      </tal:block>\n
                      </tal:block>\n
                   </tal:block>\n
+              </tal:block>\n
            </office:text>\n
   </office:body>\n
 </office:document-content>\n

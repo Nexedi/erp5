@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5OOo.OOoTemplate</string>
-          <string>OOoTemplate</string>
-        </tuple>
-        <none/>
+        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -158,7 +155,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       <style:table-column-properties style:rel-column-width=\'32768*\' style:column-width=\'14.676cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'field-table.A1\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-top=\'0.002cm solid #000000\' fo:background-color=\'#e6e6e6\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
+      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'0.002cm solid #000000\' fo:background-color=\'#e6e6e6\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
         <style:background-image/>\n
       </style:table-cell-properties>\n
     </style:style>\n
@@ -186,7 +183,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       <style:table-column-properties style:rel-column-width=\'21842*\' style:column-width=\'9.783cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'listbox-table.A1\'>\n
-      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-top=\'0.002cm solid #000000\' fo:background-color=\'#b3b3b3\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
+      <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'0.002cm solid #000000\' fo:background-color=\'#e6e6e6\' fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\'>\n
         <style:background-image/>\n
       </style:table-cell-properties>\n
     </style:style>\n
