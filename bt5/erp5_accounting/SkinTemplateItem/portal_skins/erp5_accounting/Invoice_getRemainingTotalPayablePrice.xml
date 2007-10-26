@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -147,9 +150,8 @@ for is_source, line in getIsSourceMovementItemList(context):\n
   if at_date is None and line.getGroupingReference():\n
     continue\n
   \n
-  if node_value is not None and (\n
-      node_value.getAccountTypeId() in (\'payable\', \'receivable\')\n
-      or (account_id is not None and node_value.getId() in account_id)):\n
+  if node_value is not None and \\\n
+      node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
     if account_id is not None and node_value.getId() not in account_id:\n
       continue\n
     key = (node_value.getRelativeUrl(), mirror_section)\n
@@ -316,7 +318,6 @@ else:\n
                             <string>date</string>
                             <string>total_amount</string>
                             <string>node</string>
-                            <string>_inplacevar_</string>
                             <string>sum</string>
                           </tuple>
                         </value>
