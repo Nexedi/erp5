@@ -1856,6 +1856,92 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
+  def test_19_getMovementList(self, quiet=0, run=run_all_test):
+    """
+    Check getMovementList.
+    Verify that it manage hierarchical order lines.
+    Check that order cells are returned when defined on a leaf line, and not
+    returned when defined on a non leaf line.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    portal = self.getPortal()
+    order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
+    order = order_module.newContent(portal_type=self.order_portal_type)
+
+    # No line, no movement
+    self.assertEquals(0, len(order.getMovementList()))
+
+    # One line is considered as a movement
+    order_line = order.newContent(portal_type=self.order_line_portal_type)
+    self.assertEquals(1, len(order.getMovementList()))
+
+    # If a sub line is created, its parent should not be considered 
+    # as a movement
+    sub_order_line = order_line.newContent(
+               portal_type=self.order_line_portal_type)
+    self.assertEquals(1, len(order.getMovementList()))
+
+    # Create another subline to be sure it increases the line count
+    sub_order_line = order_line.newContent(
+               portal_type=self.order_line_portal_type)
+    self.assertEquals(2, len(order.getMovementList()))
+
+    # Create recursively sub lines, and check that the ovement number 
+    # is still the same.
+    for i in range(5):
+      sub_order_line = sub_order_line.newContent(
+          portal_type=self.order_line_portal_type)
+      self.assertEquals(2, len(order.getMovementList()))
+
+    # Create a variated resource
+    resource_module = portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(portal_type=self.resource_portal_type)
+    resource.edit(
+      industrial_phase_list=["phase1", "phase2"],
+      size_list=self.size_list,
+    )
+
+    # Prepare line variation category list
+    order_line_vcl = []
+    resource_vbcl = resource.getVariationBaseCategoryList()
+    for vbc in resource_vbcl:
+      resource_vcl = list(resource.getVariationCategoryList(
+                                  base_category_list=[vbc],
+                                  omit_individual_variation=0))
+      resource_vcl.sort()
+      order_line_vcl.extend(self.splitList(resource_vcl)[0])
+
+    # Create cell on the deepest sub line.
+    # Check that those cells increase the movement count
+    sub_order_line.setResourceValue(resource)
+    sub_order_line.setVariationCategoryList(order_line_vcl)
+    self.assertEquals(1, len(order.getMovementList()))
+
+    base_id = 'movement'
+    cell_key_list = list(sub_order_line.getCellKeyList(base_id=base_id))
+    cell_key_list.sort()
+    for cell_key in cell_key_list:
+      cell = sub_order_line.newCell(base_id=base_id,
+                                portal_type=self.order_cell_portal_type, 
+                                *cell_key)
+    self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
+
+    # Check that cells defined on a non leaf line are not returned.
+    order_line.setResourceValue(resource)
+    order_line.setVariationCategoryList(order_line_vcl)
+    self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
+
+    base_id = 'movement'
+    cell_key_list = list(order_line.getCellKeyList(base_id=base_id))
+    cell_key_list.sort()
+    for cell_key in cell_key_list:
+      cell = order_line.newCell(base_id=base_id,
+                                portal_type=self.order_cell_portal_type, 
+                                *cell_key)
+    self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestOrder))
