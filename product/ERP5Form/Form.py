@@ -933,8 +933,9 @@ def get_field_meta_type_and_proxy_flag(field):
         try:
             return field.getRecursiveTemplateField().meta_type, True
         except AttributeError:
-            raise AttributeError, 'The proxy target of %s field does not '\
-                  'exists. Please check the field setting.' % field.getId()
+            raise AttributeError, 'The proxy target of %s.%s field does not '\
+                  'exists. Please check the field setting.' % \
+                  (field.aq_parent.id, field.getId())
     else:
         return field.meta_type, False
 
