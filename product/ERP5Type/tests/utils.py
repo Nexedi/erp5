@@ -34,6 +34,16 @@ import os
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 
+
+class FileUpload(file):
+  """Act as an uploaded file.
+  """
+  __allow_access_to_unprotected_subobjects__ = 1
+  def __init__(self, path, name):
+    self.filename = name
+    file.__init__(self, path)
+    self.headers = {}
+
 # dummy objects
 class DummyMailHost(MailHost):
   """Dummy Mail Host that doesn't really send messages and keep a copy in
@@ -135,7 +145,8 @@ class reindex(object):
   
   def __call__(self, *args, **kw):
     ret = self._func(self._instance, *args, **kw)
-    get_transaction().commit()
-    self._instance.tic()
+    if kw.get('reindex', 1):
+      get_transaction().commit()
+      self._instance.tic()
     return ret
 
