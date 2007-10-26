@@ -43,6 +43,7 @@ from urllib import quote
 
 from Products.ERP5.ERP5Site import ERP5Site
 from Products.Formulator.TALESField import TALESMethod
+from Products.Formulator.MethodField import Method
 # defining global variables
 # ANFLAG tag
 # these values can be found in the Scribus document format
@@ -146,20 +147,19 @@ class ManageModule:
     form_list_id = form_view_list_object.id
     form_list = form_view_list_object.restrictedTraverse(form_list_id)
     # defining groups for objects listing
-    form_view_list_object.rename_group('Default','bottom')
-    default_groups = []
-    # adding groups
-    for group in default_groups:
-      form_view_list_object.add_group(group)
+    form_view_list_object.add_group('bottom')
     # defining module title
-    title_module = ''
+    title_module = '' # XXX use module title provided by user
     for word in module_title.split():
       title_module += str(word.capitalize() + ' ')
     # add listbox field to list the created objects
     id = 'listbox'
     title = title_module
     field_type = 'ListBox'
-    form_view_list_object.manage_addField(id,title,field_type)
+    form_view_list_object.manage_addField(id, title, field_type)
+    form_view_list_object.move_field_group(['listbox'],
+             form_view_list_object.group_list[0], 'bottom')
+
     # manage ListBox settings
     values_settings = {}
     values_settings['pt'] = "form_list"
@@ -168,18 +168,20 @@ class ManageModule:
     for key, value in values_settings.items():
       setattr(form_view_list_object, key, value)
     # manage edit property of ListBox
-    field_attributes = getattr(form_view_list_object,id)
-    field_attributes.values['lines'] = def_lineNumberInList
-    # adding field columns
-    field_attributes.values['columns'] = [('id','ID'),
-                                          ('title','Title'),
-                                          ('description','Description'),
-					  ('translated_simulation_state','State')]
-    field_attributes.values['list_action'] = 'list'
-    field_attributes.values['search'] = 1
-    field_attributes.values['select'] = 1
-    field_attributes.values['list_method'] = 'searchFolder'
-    field_attributes.values['selection_name'] = '%s_selection' % module_id
+    listbox = getattr(form_view_list_object, id)
+    listbox.manage_edit_xmlrpc(
+        dict(lines=def_lineNumberInList,
+             columns=[('id', 'ID'),
+                      ('title', 'Title'),
+                      ('description','Description'),
+                      ('translated_simulation_state','State')],
+             list_action='list',
+             search=1,
+             select=1,
+             list_method=Method('searchFolder'),
+             count_method=Method('countFolder'),
+             selection_name='%s_selection' % module_id))
+
 
   security.declarePublic('setObjectForm')
   def setObjectForm(self,
