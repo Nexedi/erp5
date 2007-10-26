@@ -602,6 +602,24 @@ class TestInventory(InventoryAPITestCase):
                            payment_uid=self.other_payment_node.getUid(),
                            omit_input=1))
 
+  def test_TimeZone(self):
+    """
+    Check that getInventory support DateTime parameter with 
+    timezone
+    """
+    getInventory = self.getSimulationTool().getInventory
+    date_gmt_1 = DateTime('2005/12/01 GMT+9')
+    date_gmt0 = DateTime('2005/12/01 GMT+10')
+    date_gmt1 = DateTime('2005/12/01 GMT+11')
+    self._makeMovement(quantity=1, start_date=date_gmt0)
+    self.assertEquals(0, getInventory(
+                           node_uid=self.node.getUid(),
+                           resource=self.resource.getRelativeUrl(),
+                           at_date=date_gmt1))
+    self.assertEquals(1, getInventory(
+                           node_uid=self.node.getUid(),
+                           resource=self.resource.getRelativeUrl(),
+                           at_date=date_gmt_1))
 
 class TestInventoryList(InventoryAPITestCase):
   """Tests getInventoryList methods.
