@@ -68,7 +68,7 @@ class XMLMatrix(Folder):
           Access a cell at row and column
       """
       base_id= kwd.get('base_id', "cell")
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         return None
 
       if not self.index.has_key(base_id):
@@ -105,7 +105,7 @@ class XMLMatrix(Folder):
           Checks if matrix corresponding to base_id contains cell specified
           by *kw coordinates.
       """
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         return 0
 
       base_id= kwd.get('base_id', "cell")
@@ -134,7 +134,7 @@ class XMLMatrix(Folder):
       """
       aq_self = aq_base(self)
 
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_self, 'index'):
         return 0
 
       if not self.index.has_key(base_id):
@@ -153,7 +153,7 @@ class XMLMatrix(Folder):
           Checks if *kw coordinates are in the range of the
         matrix in kwd['base_id'].
       """
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         return 0
 
       base_id = kwd.get('base_id', "cell")
@@ -372,7 +372,7 @@ class XMLMatrix(Folder):
       new_index = PersistentMapping() # new_index defines the relation
                                       # between keys and ids of cells
 
-      if getattr(self, 'index', None) is None:
+      if getattr(aq_base(self), 'index', None) is None:
         self.index = PersistentMapping()
 
       # Return if previous range is the same
@@ -473,7 +473,7 @@ class XMLMatrix(Folder):
       """
           Returns the cell range as a list of index ids
       """
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         return []
       cell_range = self.index.get(base_id, None)
       if cell_range is None: return None
@@ -490,7 +490,7 @@ class XMLMatrix(Folder):
       """
           This method creates a new cell
       """
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         return None
       base_id= kwd.get('base_id', "cell")
       cell_id = base_id
@@ -534,7 +534,7 @@ class XMLMatrix(Folder):
       """
         Returns a list of possible keys as tuples
       """
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         return ()
       if not self.index.has_key(base_id):
         return ()
@@ -578,7 +578,7 @@ class XMLMatrix(Folder):
       """
         Returns a list of possible ids as tuples
       """
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         return ()
       if not self.index.has_key(base_id):
         return ()
@@ -626,7 +626,7 @@ class XMLMatrix(Folder):
       """
         Return possible base_id values
       """
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         return ()
       return self.index.keys()
 
@@ -660,7 +660,7 @@ class XMLMatrix(Folder):
       to_delete = []
       errors = []
       # We make sure first that there is an index
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         self.index = PersistentMapping()
       # We will check each cell of the matrix the matrix
       for obj in self.objectValues():
