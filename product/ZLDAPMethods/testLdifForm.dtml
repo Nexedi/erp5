@@ -1,0 +1,27 @@
+<HTML><HEAD><TITLE>New LDAP Method</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" LINK="#000099" VLINK="#555555">
+<!--#var manage_tabs-->
+<H2>Test LDAP Method <!--#var title_or_id--></H2>
+
+<form action="./manage_test">
+<table>     
+            
+<tr>	<th align='LEFT'>Connection id</th>
+        <td align='LEFT'><!--#var connection_id--></td></tr>
+<tr>	<th align='LEFT'><em>Query Scope</em></th>
+	<td align='LEFT'><!--#var scope--></td></tr>
+<tr>	<th align='LEFT'><em>Base DN</em></th>
+        <td align='LEFT'><!--#var basedn fmt=html-quote-->
+<tr>    <th align='LEFT'><em>Arguments<em></th>
+        <td align='LEFT'><!--#var arguments-->
+
+<tr><td colspan=2>
+<input type="SUBMIT" name="submit" value="Test">
+</td></tr>
+
+</table>
+</form>
+
+</BODY>
+</HTML>

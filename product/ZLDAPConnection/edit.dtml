@@ -1,0 +1,88 @@
+<html> 
+  <head><title>Edit LDAP connection</title></head> 
+  <body bgcolor="#FFFFFF"> 
+  <dtml-var name="manage_tabs"> 
+   
+    <h2>Edit LDAP connection <dtml-var name="title_and_id"></h2> 
+     
+    <form action="manage_edit" method="POST"> 
+      <table cellspacing="2"> 
+         
+        <tr> 
+          <th align="LEFT" valign="TOP">Id</th> 
+          <td align="LEFT" valign="TOP"> 
+            <dtml-var name="getId"> 
+          </td> 
+        </tr> 
+         
+        <tr> 
+          <th align="LEFT" valign="TOP"><em>Title</em></th> 
+          <td align="LEFT" valign="TOP"> 
+            <input type="TEXT" name="title" size="50" value="&dtml-getTitle;"> 
+          </td> 
+        </tr> 
+ 
+        <tr> 
+          <th align="LEFT" valign="TOP"><em>LDAP server (host[:port])</em></th> 
+          <td align="LEFT" valign="TOP"> 
+            <input type="TEXT" name="hostport" size="50" value="&dtml-getHost;:&dtml-getPort;"> 
+          </td> 
+        </tr> 
+
+        <tr> 
+          <th align="LEFT" valign="TOP"><em>Base DN</em></th> 
+          <td align="LEFT" valign="TOP"> 
+            <input type="TEXT" name="basedn" size="50" value="&dtml-getDN;"> 
+          </td> 
+        </tr> 
+
+ 
+        <tr> 
+          <th align="LEFT" valign="TOP"><em>Bind As</em></th> 
+          <td align="LEFT" valign="TOP"> 
+            <input type="TEXT" name="bind_as" size="50" value="&dtml-getBindAs;"> 
+          </td> 
+        </tr> 
+ 
+        <tr> 
+          <th align="LEFT" valign="TOP"><em>Bind Password</em></th> 
+          <td align="LEFT" valign="TOP"> 
+            <input type="TEXT" name="pw" size="50" value="&dtml-getPW;"> 
+          </td> 
+        </tr> 
+ 
+        <tr> 
+          <th align="LEFT" valign="TOP"><em><label for="cb-openc">Open Connection?</label></em></th> 
+          <td align="LEFT" valign="TOP"> 
+            <input type="CHECKBOX" name="openc" <dtml-if name="shouldBeOpen">CHECKED</dtml-if> id="cb-openc" value="1"> 
+          </td> 
+        </tr> 
+
+	<tr>
+	  <th align="left" valign="top"><em><label for="cb-canBrowse">Make connection object browsable?</label></em></th>
+	  <td align="left" valign="top">
+	  <input type="checkbox" name="canBrowse" value="1" <dtml-if name="getBrowsable">checked</dtml-if> id="cb-canBrowse">
+	  </td>
+	</tr>
+ 
+	<tr>
+	  <th align="left" valign="top"><em>
+	  <label for="cb-transactional">Make connection and entries 
+	    transactional?</label></em></th>
+	  <td align="left" valign="top">
+	    <input type="checkbox" name="transactional:int" value="1"
+	    <dtml-if name="getTransactional">checked</dtml-if>
+	    id="cb-transactional">
+	    <input type="hidden" name="transactional:default:int" value="0">
+	</td>
+	</tr>
+
+        <tr> 
+          <td></td> 
+          <td><br><input type="SUBMIT" value="Change"></td> 
+        </tr> 
+     
+        </table> 
+    </form> 
+  </body> 
+</html>          

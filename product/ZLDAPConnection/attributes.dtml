@@ -1,0 +1,31 @@
+<html>
+ <head>
+  <title>Attributes for &dtml-dn;</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <dtml-var manage_tabs>
+  <h3>Attributes for <em>&dtml-id;</em></h3>
+
+  <table border="1" cellpadding="2" cellspacing="0" rules="rows" frame="void">
+   <dtml-in attributesMap>
+    <tr valign="top">
+     <th align="left">&dtml-sequence-key;</th>
+     <td><dtml-in sequence-item>&dtml-sequence-item;<br /></dtml-in></td>
+    </tr>
+   </dtml-in>
+  </table>
+
+  <hr />
+  <h3>Subentries</h3>
+
+  <dtml-if tpValues>
+  <dtml-tree>
+   <a href="&dtml-tree-item-url;/manage_attributes"
+    title="click to view this entry">&dtml-id;</a>
+  </dtml-tree>
+  <dtml-else>
+   <p><em>No subentries for &dtml-id;</em></p>
+  </dtml-if>
+
+ </body>
+</html>

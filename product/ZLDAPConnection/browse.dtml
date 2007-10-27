@@ -1,0 +1,35 @@
+<html>
+ <head>
+  <title>Browse &dtml-title_and_id;</title>
+ </head>
+ <body bgcolor="#ffffff">
+ <dtml-var manage_tabs>
+
+ <dtml-if name="canBrowse">
+  <dtml-with name="getRoot">
+  <h3>Attributes for <em>&dtml-id;</em></h3>
+
+  <table border="1" cellpadding="2" cellspacing="0" rules="rows" frame="void">
+   <dtml-in name="attributesMap">
+    <tr valign="top">
+     <th align="left">&dtml-sequence-key;</th>
+     <td><dtml-in name="sequence-item">&dtml-sequence-item;<br /></dtml-in></td>
+    </tr>
+   </dtml-in>
+  </table>
+  </dtml-with>
+  <hr />
+  <h3>Subentries</h3>
+
+  <dtml-tree name="getRoot">
+   <a href="&dtml-tree-item-url;/manage_attributes"
+    title="click to view this entry">&dtml-id;</a>
+  </dtml-tree>
+
+ <dtml-else>
+  <p><em>Connection to <code>&dtml-host;:&dtml-port;</code> is
+  <dtml-if name="openc">not browsable<dtml-else>closed</dtml-if>.</em></p>
+ </dtml-if>
+
+ </body>
+</html>

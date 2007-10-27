@@ -1,0 +1,16 @@
+<html>
+<head><title>help for LDAP connections</title></head>
+<body>
+<h1>Help for LDAP connections</h1>
+
+<b>Arguments are as follows:</b>
+<dl>
+<dt>LDAP server<dd>The hostname, and optionally the port, where the LDAP
+server is running. The standard port for LDAP is 389 - this will be used
+if no port is specified.
+<dt>Bind As<dd>Who to bind to the LDAP server as. An example:
+  "cn=Anthony, o=ekorp.com, c=AU"
+<dt>Password<dd>The password (if any) to be used to bind to the server.
+</dl>
+
+</body></html>

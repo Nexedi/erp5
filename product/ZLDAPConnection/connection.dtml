@@ -1,0 +1,28 @@
+<html>
+ <head>
+  <title>Connection for &dtml-title_or_id;</title>
+  <style type="text/css"><!--
+  .open {color: blue}
+  .close {color: red}
+  --></style>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <dtml-var manage_tabs>
+
+  <h2>Connection to <code>&dtml-host;:&dtml-port;</code> is
+  <dtml-if isOpen><span class="open"><em>open</em></span>
+  <dtml-else><span class="close"><em>closed</em></span>
+  </dtml-if>.</h2>
+
+  <dtml-if isOpen>
+   <form action="manage_close">
+    <input type="submit" value="Close Connection" class="close" />
+   </form>
+  <dtml-else>
+   <form action="manage_open">
+    <input type="submit" value="Open Connection" class="open" />
+   </form>
+  </dtml-if>
+
+ </body>
+</html>

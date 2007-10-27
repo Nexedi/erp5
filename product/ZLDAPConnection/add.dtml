@@ -1,0 +1,75 @@
+<html>
+  <head><title>Add LDAP connection</title></head>
+  <body bgcolor="#FFFFFF">
+  
+    <h2>Add LDAP connection</h2>
+    
+    <form action="manage_addZLDAPConnection" method="POST">
+      <table cellspacing="2">
+	
+	<tr>
+	  <th align="LEFT" valign="TOP">Id</th>
+	  <td align="LEFT" valign="TOP">
+            <input type="TEXT" name="id" size="50">
+          </td>
+	</tr>
+	
+	<tr>
+	  <th align="LEFT" valign="TOP"><em>Title</em></th>
+	  <td align="LEFT" valign="TOP">
+            <input type="TEXT" name="title" size="50">
+          </td>
+	</tr>
+
+	<tr>
+	  <th align="LEFT" valign="TOP"><em>LDAP Server (host[:port])</em></th>
+	  <td align="LEFT" valign="TOP">
+            <input type="TEXT" name="hostport" size="50">
+          </td>
+	</tr>
+
+	<tr>
+	  <th align="LEFT" valign="TOP"><em>Base DN</em></th>
+	  <td align="LEFT" valign="TOP">
+            <input type="TEXT" name="basedn" size="50">
+          </td>
+	</tr>
+
+	<tr>
+	  <th align="LEFT" valign="TOP"><em>Bind As</em></th>
+	  <td align="LEFT" valign="TOP">
+            <input type="TEXT" name="bind_as" size="50">
+          </td>
+	</tr>
+
+	<tr>
+	  <th align="LEFT" valign="TOP"><em>Bind Password</em></th>
+	  <td align="LEFT" valign="TOP">
+            <input type="TEXT" name="pw" size="50">
+          </td>
+	</tr>
+
+	<tr>
+	  <th align="LEFT" valign="TOP"><em>Open Connection?</em></th>
+	  <td align="LEFT" valign="TOP">
+            <input type="CHECKBOX" name="openc" CHECKED>
+          </td>
+	</tr>
+
+	<tr>
+	  <th align="left" valign="top"><em>Transactional?</em></th>
+	  <td align="left" valign="top">
+	   <input type="checkbox" name="transactional:int" value="1" checked>
+	   <input type="hidden" name="transactional:default:int" value="0">
+	  </td>
+	</tr>
+
+	<tr>
+	  <td></td>
+	  <td><br><input type="SUBMIT" value="Add"></td>
+	</tr>
+    
+	</table>
+    </form>
+  </body>
+</html>

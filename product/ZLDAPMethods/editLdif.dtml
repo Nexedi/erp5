@@ -1,0 +1,50 @@
+<HTML><HEAD><TITLE>Edit LDIF Method</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" LINK="#000099" VLINK="#555555">
+<!--#var manage_tabs-->
+<H2>Edit LDIF Method</H2>
+
+<!--#if LDAPConnectionIDs-->
+
+
+<form action="manage_edit" method="post">
+
+<table>
+<tr>    <th align='LEFT'>Id</th>
+        <td align='LEFT'><!--#var id--></td></tr>
+<tr>    <th align='LEFT'><em>Title<em></th>
+        <td align='LEFT'><input name="title" size="40" value="<!--#var title-->"></td></tr>
+<tr>    <th align='LEFT'>Connection id</th>
+        <td align='LEFT'><select name="connection_id">
+              <!--#in LDAPConnectionIDs-->
+                <option value="<!--#var sequence-item-->"
+                <!--#if expr="connection_id==_vars['sequence-item']"-->
+                 SELECTED<!--#/if-->>
+                <!--#var sequence-key--></option>
+              <!--#/in-->
+            </select></td></tr>
+
+<tr>    <th align='LEFT'><em>Base DN</em></th>
+        <td align='LEFT'><input name="basedn" size="40" value="<!--#var basedn fmt=html-quote-->"></td></tr>
+<tr>    <th align='LEFT'><em>Arguments<em></th>
+        <td align='LEFT'><textarea name="arguments:text" rows="4" cols="50"><!--#var arguments--></textarea></td></tr>
+<tr>    <td colspan=2 align='LEFT'><strong>ldif</strong><br>
+        <textarea name="ldif:text" rows=20 cols=100><!--#var ldif--></textarea>
+        </td></tr>
+
+<tr><td colspan=2>
+<input type="SUBMIT" name="submit" value="Change">
+</td></tr>
+
+</table>
+</form>
+
+
+<!--#else-->
+<em><strong>Warning:</strong>
+There are no LDAP connections.  You need
+to add a Zope LDAP connection
+before you can use a Zope LDAP Method.
+</em>
+<!--#/if-->
+</body></html>

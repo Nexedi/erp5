@@ -1,0 +1,153 @@
+Programming ZopeLDAP Entry Objects
+
+ Author -- "Jeffrey P Shell", mailto:jeffrey@digicool.com
+
+ Date -- Dec 18, 2000
+
+ Revision -- For ZopeLDAP 1.1.0
+
+ 1. Getting an Entry Object and its attributes
+
+  Using an LDAP Filter object is the best way to get an Entry object.
+  LDAP Filter objects act like methods\functions and return a sequence 
+  of entry objects (so they can be used with any sort of looping
+  structure).  For example, if you had an LDAP Filter titled
+  'lookupByEmail' with the parameter 'email' with the content::
+
+       mail=<dtml-var name="mail">*
+
+  Can be used in DTML like this::
+
+       <dtml-in expr="lookupByEmail(email='jef')">
+        Surname: <dtml-var name="sn"><br />
+        Common name: <dtml-var name="cn"><br /><br />
+       </dtml-in>
+
+  Or in a Python Script like this::
+
+       entries = container.lookupByEmail(email='jef')
+
+       for entry in entries:
+        # do something here...
+
+  1.1. Notes about Attributes and Entry Objects
+
+   By default, LDAP always returns its attributes as sequences (Python 
+   lists), even if there is only one value.  ZopeLDAP Entry objects
+   use a special class, *AttrWrap*, when returning attributes accessed 
+   through normal __getattr__ (the a.b syntax).  AttrWrap behaves and
+   acts like a normal Python list with the exception that when printed 
+   as a string (ie, with 'dtml-var' or Python 'str()' or '"%s"'), it
+   printes the results as a comma seperated list.  This makes DTML
+   representations of Entry object significantly easier.  When using
+   the Entry method 'get()', the attribute is returned as a Python
+   list as returned by PythonLDAP.  But if you're wanting to do tests
+   based on attributes, you have to *remember to qualify the
+   attribute*, ie::
+
+     if entry.sn[0] == 'Shell':   # Works
+
+     if entry.sn == 'Shell':      # Won't work
+
+   And also remember that 'getattr' based access returns *AttrWrap*
+   instances, which means the following::
+
+    if entry.get('sn') == ['Shell']:   # Works
+
+    if entry.sn == ['Shell']:          # Won't work
+
+  2. Changing attribute values
+
+   Changing attributes on Entry objects is protected by the permission 
+   **Manage Entry Information**.  This permission can be set anywhere
+   in Zope, and will work best when set in the folder containing the
+   LDAP Filter used to access the Entry object.  The methods exposed
+   under this permission are:
+
+    **set(key, value)** -- example:  'entry.set("sn", "Shell")',
+    'entry.set("mail", ["foo@bar.com", "foo@baz.net"])'
+
+    **setattrs([kwdict, kw])** -- Takes either a mapping argument or
+    keyword arguments.  Or both.  Example:
+    'entry.setattrs({"sn": "Bazzo"}, mail=["foo@bar.com,
+    "foo@baz.net"])'
+
+    **setAll([kwdict, kw])** -- Same as *setattrs*, except that the
+    existing data is *replaced* by what's passed in here.
+
+    **remove(attr)** -- Deletes the attribute, example:
+    'entry.remove("comments")'
+
+   3. Accessing subentries
+
+    Attributes on Entry objects are available through the Python
+    'getattr' protocol, and subentries are available through the
+    'getitem' protocol via their Relative Distinguished Name (RDN).
+
+    Meaning if you had an Organizational Unit entry for 'Housewares'
+    and wanted to get the subentry '"Betty Ford"', it would appear like
+    this (considering 'housewares' is the Entry object)::
+
+      betty = housewares["cn=Betty Ford"]
+
+   3.1. Adding subentries
+
+    Adding subentries to an Entry object is done through the
+    'addSubentry' method.  Adding subentries is protected by the
+    permission **Create New Entry Objects**.
+
+    **addSubentry(rdn, [attrs,kw])** -- Add a new subentry identified by
+    the rdn.  The rdn **MUST** be a string in the form 'attr=value',
+    such as 'ou=Housewares' or 'cn=Davy Jones'.  The rest of the
+    signature can be a combination of a dictionary of attributes
+    passed in to 'attrs' or keyword arguments.  If no 'objectClass'
+    attribute is passed in, the default objectClass is 'top'.  The
+    newly created Entry object is returned, wrapped in the acquisition 
+    context of its parent.  Some example uses are::
+
+      betty = housewares.addSubentry("cn=Betty Ford", {
+                "objectClass": ["top", "person"],
+		"sn": "Ford",
+	      })
+
+      clinic = betty.addSubentry("sn=Clinic",
+                         objectClass=["top","place"],
+			 description="A good place to go..."
+	       )
+
+   3.2. Deleting subentries
+
+    Deleting subentries from an Entry object is done through the
+    'deleteSubentry' method.  Deleting subentries is protected by the
+    permission **Delete Entry Objects**.
+
+    **deleteSubentry(entry)** -- You can either delete a subentry by
+    its 'rdn', or by passing in the subentry object itself.  Deletion
+    is recursive and will delete everything below the specified entry
+    from the LDAP server as well as the Entry object itself.  Some
+    examples uses are::
+
+     betty.deleteSubentry("sn=Clinic")  # Delete by rdn (local id)
+
+     housewares.deleteSubentry(betty)   # Delete by entry itself
+
+ 4. Other Zope Interfaces supported
+
+  Entry objects are a combination of classes:  The basic Entry class
+  (either GenericEntry or TransactionalEntry at present), and one
+  called Entry, which implements some Zope level Interfaces (of the
+  programming kind).  These include::
+
+    - '__bobo_traverse__' -- To traverse to subentries along the URL.
+
+    - The Tree Protocol -- Allows Entry objects to be used
+      automatically with the 'dtml-tree' tag.
+
+    - 'objectValues()' -- Returns all of the subentries in a list.
+
+    - 'objectIds()' -- returns all of the RDN's of the subentries.
+
+    - 'objectItems()' -- returns a list of tuples in the form of
+      ('rdn', 'entry object').
+
+    

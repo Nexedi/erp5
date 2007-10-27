@@ -1,0 +1,108 @@
+ZLDAPConnection CHANGES.txt
+
+ 1.1.0
+
+  Features Added
+
+   o A non beta release!  Although, this may still be a bit shaky.
+
+   o The LDAP Connection object has the ability to be
+     *non-transactional*, which is currently the preferred way of
+     using the LDAP Connection object.  There is still an outstanding
+     bug with the way the transactional behavior works when updating
+     more than one Entry object at a time.
+
+   o Entry API is vastly improved, and is not backwards compatible
+     with ZopeLDAP 1.0.  The primary advantage is that now that Python 
+     Scripts are in the core, Entry objects are easier to program
+     without having to use the 'manage_' methods (although those will
+     continue to work, and their API has not changed).
+
+   o To go along with the Entry API improvement, the Permissions of
+     Entry objects have been improved as well.
+
+   o The LDAP Connection has an Entry Factory which decides whether to 
+     use a Transactional or Non-Transactional Entry object.  The usage 
+     to the end user is indistinguishable, except that the
+     nontransactional entry objects update to the LDAP server
+     *immediately*.
+
+  Bugs Fixed
+
+   o The bug in the transaction management behavior of the Connection
+     object has not been fixed, but the new Non-Transactional ability
+     should make up for this bug in most situations.
+
+
+ 1.0b5
+
+   Bugs Fixed
+
+    o Entry objects would raise a KeyError on a failed attribute
+      access, which caused a failure in the Security Machinery
+      (non-critical - security was not affected, only attribute
+      access).  Now AttributeError is properly raised.
+
+
+ 1.0b4
+
+  Bugs Fixed
+
+    o Entry.manage_newEntry and Entry.manage_newEntryWithAttributes
+      now return the newly added Entry object.
+  
+    o Should work properly with Zope 2.2.x, and still work with Zope
+      2.1.6.
+
+ 1.0b3
+
+  Bugs Fixed
+
+    o Fixes an issue with getRawEntry() raising an IndexError
+      exception in some cases.
+
+    o LDAPConnection doesn't keep setting self.openc every time _open()
+      is called, thus avoiding constant writes to the ZODB.
+
+    o Fixed ZLDAPConnection.__init__.py to use the proper product
+      initialization code (prior versions were using an extremely
+      outdated mechanism).  *This also means registering permissions
+      which affect Entry objects so that on Folders, permissions to
+      manage entry objects are settable*.
+
+  Features Added
+  
+    o New module 'LDCAccessors.py' implements getter/setter methods for
+      all ZLDAPConnection properties.  It is mixed into ZLDAPConnection.
+
+ 1.0b2
+
+  o Updated for Zope 2.1.5/2.1.6 new security measures on method-ish
+    objects.
+
+  o Has a settable "Browsable" property on the Connection object. 
+
+ 1.0b1
+
+  o This is a pretty major overhaul of the original alpha code,
+    primarily to include some sort of pseudo-transactional safety (all 
+    done in Zope since LDAP has no concept of transactions).
+
+  o Seperated ZLDAPConnection and Entry objects.  ZLDAPConnection (the 
+    class) no longer subclasses from an Entry object.  (In old code,
+    it was the Entry object at the root of the connection.  In this
+    version, the root is gotten to by calling the method 'getRoot()'
+    on the connection).
+
+  o Seperated the Entry class into two classes:  GenericEntry and
+    Entry, found in Entry.py.  GenericEntry holds all of the Entry
+    related methods and data for communicating with its Connection
+    object; Entry has the Zope interface and implements the tree
+    protocol (tpValues, tpId, tpURL) and the objectXXX protocol
+    (objectValues, objectItems, objectIds).  These calls access the
+    Entry's sub-entry objects.
+
+  o Try to ensure some integrity with Zope transactions.  Since LDAP
+    has no concept of transactions, this is not ideal, but it's a step 
+    up from having no transaction support at all.
+

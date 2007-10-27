@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<TITLE>Contents</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" LINK="#000099" VLINK="#555555">
+<!--#var manage_tabs-->
+<P>
+
+<FORM ACTION="." METHOD="POST">
+
+
+<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<!--#in "tpValues()" -->
+<TR>
+
+  <TD ALIGN="LEFT" VALIGN="TOP" WIDTH="16">
+  <INPUT TYPE="CHECKBOX" NAME="ids:list" VALUE="<!--#var dn-->">
+  </TD>
+
+  <TD ALIGN="LEFT" VALIGN="TOP">
+  <A HREF="<!--#var id fmt=url-quote-->/manage_main">
+  <IMG SRC="<!--#var SCRIPT_NAME-->/<!--#var icon-->"
+   ALT="[Entry]" BORDER="0"></A>
+  </TD>
+
+  <TD ALIGN="LEFT" VALIGN="TOP">
+  <A HREF="<!--#var id fmt=url-quote-->/manage_main"><!--#var id--></A>
+  </TD>
+
+</TR>
+<!--#/in-->
+</TABLE>
+
+
+<TABLE BORDER="0" CELLSPACING="0" CELLPADDING=2>
+<TR>
+  <TD ALIGN="LEFT" VALIGN="TOP" WIDTH="16"></TD>
+  <TD ALIGN="LEFT" VALIGN="TOP">
+    <!--#if "tpValues()"-->
+    <INPUT TYPE="SUBMIT" NAME="manage_deleteEntry:method" VALUE="Delete">
+  <!--#/if-->
+  </TD>
+</TR>
+</TABLE>
+
+</FORM>
+
+<a name="addentryform">
+<form action="." method="POST">
+<p>
+To add a new entry, enter an RDN (Relative Distinguished Name) for the entry
+to appear under the above DN (Distinguished Name) and click the &quot;Add New Entry&quot; 
+button. For example enter &quot;uid=spam&quot; for the RDN. An attribute of &quot;uid: spam&quot;
+will be automatically added to the entry. Other attributes may be entered by using the attribute management screens.
+</p>
+<table>
+<tr>
+  <th align="left" valign="top">RDN</th>
+  <td align="left" valign="top"><input type="text" name="rdn" size="20"></td>
+  <td align="right" valign="top">
+    <INPUT TYPE="SUBMIT" NAME="manage_newEntry:method" VALUE="Add New Entry">
+  </td>
+</tr>
+</table>
+</form>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
+
+
+
+
+
+
+</BODY>
+</HTML>
