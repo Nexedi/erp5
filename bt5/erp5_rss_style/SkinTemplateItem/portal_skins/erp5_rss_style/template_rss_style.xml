@@ -48,7 +48,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'application/rss+xml; charset=utf-8\');"\n
+<tal:block tal:define="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'application/rss+xml;; charset=utf-8\');"\n
 ><tal:block tal:define="listbox python:form[\'listbox\'];" \n
 ><tal:block tal:content="structure python: listbox.render()" />\n
 </tal:block>\n
