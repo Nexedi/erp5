@@ -64,7 +64,7 @@ class SQLQueue(RAMQueue):
   def prepareQueueMessage(self, activity_tool, m):
     if m.is_registered:
       id_tool = activity_tool.getPortalObject().portal_ids
-      uid = id_tool.generateNewLengthId(id_group='portal_activity_queue')
+      uid = id_tool.generateNewLengthId(id_group='portal_activity_queue', store=0)
       activity_tool.SQLQueue_writeMessage(uid = uid,
                                           path = '/'.join(m.object_path) ,
                                           method_id = m.method_id,
@@ -89,6 +89,10 @@ class SQLQueue(RAMQueue):
     next_processing_date = now_date + float(VALIDATION_ERROR_DELAY)/86400
     message_list = readMessage(processing_node=processing_node, to_date=now_date)
     for line in message_list:
+      # Do not process many messages if there are long
+      new_date = DateTime()
+      if ((new_date-now_date)*86400) > 10:
+        break
       path = line.path
       method_id = line.method_id
       # Make sure message can not be processed anylonger
@@ -331,7 +335,8 @@ class SQLQueue(RAMQueue):
           assignMessage(processing_node=1, uid=message.uid)
           if node_count > 1:
             uid_list = id_tool.generateNewLengthIdList(id_group='portal_activity_queue',
-                                                       id_count=node_count - 1)
+                                                       id_count=node_count - 1,
+						       store=0)
             priority = message.activity_kw.get('priority', 1)
             dumped_message = self.dumpMessage(message)
             date = message.activity_kw.get('at_date', now_date)
@@ -352,9 +357,11 @@ class SQLQueue(RAMQueue):
           # the same node, so that object caching is more efficient. Otherwise, apply a round
           # robin scheduling.
           node = path_dict.get(path)
+          round_robin_scheduling = message.activity_kw.get('round_robin_scheduling', 0)
           if node is None:
             node = processing_node
-            path_dict[path] = node
+	    if not round_robin_scheduling:
+              path_dict[path] = node
             processing_node += 1
             if processing_node > node_count:
               processing_node = 1

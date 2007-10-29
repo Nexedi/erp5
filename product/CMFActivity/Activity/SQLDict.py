@@ -95,7 +95,8 @@ class SQLDict(RAMDict):
                               for message in registered_message_list]
       tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
       order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]
-      uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity', id_count=len(registered_message_list))
+      uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity', 
+		           id_count=len(registered_message_list), store=0)
       activity_tool.SQLDict_writeMessageList( uid_list = uid_list,
                                               path_list = path_list,
                                               method_id_list = method_id_list,
@@ -484,12 +485,12 @@ class SQLDict(RAMDict):
                                    order_validation_text = line.order_validation_text)
         self.getExecutableMessageList(activity_tool, message, message_dict,
                                       validation_text_dict)
-
       # XXX probably this below can be optimized by assigning multiple messages at a time.
       path_dict = {}
       assignMessage = activity_tool.SQLDict_assignMessage
       processing_node = LAST_PROCESSING_NODE
       id_tool = activity_tool.getPortalObject().portal_ids
+  
       for message in message_dict.itervalues():
         path = '/'.join(message.object_path)
         broadcast = message.activity_kw.get('broadcast', 0)
@@ -499,7 +500,8 @@ class SQLDict(RAMDict):
           assignMessage(processing_node=1, uid=[uid])
           if node_count > 1:
             uid_list = id_tool.generateNewLengthIdList(id_group='portal_activity',
-                                                       id_count=node_count - 1)
+                                                       id_count=node_count - 1,
+						       store=0)
             path_list = [path] * (node_count - 1)
             method_id_list = [message.method_id] * (node_count - 1)
             priority_list = [message.activity_kw.get('priority', 1)] * (node_count - 1)
