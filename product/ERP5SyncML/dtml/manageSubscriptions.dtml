@@ -39,8 +39,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <form action="manage_editSubscription" method="POST">
     <table cellspacing="0" cellpadding="2" border="0">
       <tr>
-        <td><div class="form-label">Last Synchronisation Date</div></td>
+        <td><div class="form-label">Last Anchor</div></td>
         <td><dtml-var getLastAnchor></td>
+      </tr>
+      <tr>
+        <td><div class="form-label">Next Anchor</div></td>
+        <td><dtml-var getNextAnchor></td>
       </tr>
       <tr>
         <td align="left" valign="top">
