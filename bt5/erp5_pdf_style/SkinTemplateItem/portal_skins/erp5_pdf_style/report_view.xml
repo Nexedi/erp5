@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.PDFTemplate</string>
-          <string>PDFTemplate</string>
-        </tuple>
-        <none/>
+        <global name="PDFTemplate" module="Products.ERP5Form.PDFTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -88,8 +85,17 @@
                   </td>\n
                   <td tal:attributes="colwidth python: None" tal:define="value python: field.get_value(\'default\')">\n
                     <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
-                      <tal:block tal:repeat="item value">\n
-                        <para  style="TableStandard" tal:content="python: str(item)" />\n
+                      <tal:block tal:condition="python: field.has_value(\'items\')"\n
+                                 tal:define="field_item_dict python:dict([(x[1], x[0]) for x in field.get_value(\'items\')]);">\n
+                         <tal:block tal:repeat="item value">\n
+                           <para style="TableStandard"\n
+                                 tal:content="python: field_item_dict.get(item, \'??? (%s)\' % item)"/>\n
+                         </tal:block>\n
+                       </tal:block>\n
+                      <tal:block tal:condition="python: not field.has_value(\'items\')">\n
+                        <tal:block tal:repeat="item value">\n
+                          <para  style="TableStandard" tal:content="python: str(item)" />\n
+                        </tal:block>\n
                       </tal:block>\n
                     </tal:block>\n
                     <tal:block tal:condition="python: not (same_type(value, []) or same_type(value, ()) or same_type(value, None))">\n
