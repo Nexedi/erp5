@@ -197,12 +197,26 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         portal_type = self.getPortalMovementTypeList()
       movement_list = []
       add_movement = movement_list.append
-      for m in self.contentValues(filter={'portal_type': portal_type}):
-        if m.hasCellContent():
-          for c in m.contentValues(filter={'portal_type': portal_type}):
-            add_movement(c)
+      extend_movement = movement_list.extend
+      sub_object_list = self.contentValues(filter={'portal_type': portal_type})
+      extend_sub_object = sub_object_list.extend
+      append_sub_object = sub_object_list.append
+      while sub_object_list:
+        sub_object = sub_object_list.pop()
+        content_list = sub_object.contentValues(
+                          filter={'portal_type': portal_type})
+        if sub_object.hasCellContent():
+          cell_list = sub_object.getCellValueList()
+          if len(cell_list) != len(content_list):
+            for x in content_list:
+              if x not in cell_list:
+                append_sub_object(x)
+          else:
+            extend_movement(content_list)
+        elif content_list:
+          extend_sub_object(content_list)
         else:
-          add_movement(m)
+          add_movement(sub_object)
       return movement_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
