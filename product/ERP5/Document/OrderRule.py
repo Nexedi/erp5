@@ -111,16 +111,11 @@ class OrderRule(DeliveryRule):
           related_order = movement.getOrderRelatedValue()
         property_dict = self._getExpandablePropertyDict(applied_rule, movement)      
         if related_order is None:
-          if movement.getParentUid() == movement.getExplanationUid():
-            # We are on a line
-            new_id = movement.getId()
-          else:
-            # We are on a cell
-            new_id = "%s_%s" % (movement.getParentId(), movement.getId())
           # Generate a simulation movement
+          # Do not try to create meaningfull IDs, as order movement can be
+          # hierarchicals
           applied_rule.newContent(
               portal_type=movement_type,
-              id=new_id,
               order_value=movement,
               order_ratio=1,
               delivery_ratio=1,
