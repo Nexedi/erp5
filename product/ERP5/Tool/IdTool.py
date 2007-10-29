@@ -151,7 +151,8 @@ class IdTool(BaseTool):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewLengthIdList')
-  def generateNewLengthIdList(self, id_group=None, id_count=1, default=None):
+  def generateNewLengthIdList(self, id_group=None, id_count=1, default=None,
+                              store=1):
     """
       Generates a list of Ids.
       The ids are generated using mysql and then stored in a Length object in a
@@ -161,6 +162,9 @@ class IdTool(BaseTool):
       some IDs might be skipped because of failed transactions.
       "Length" is because the id is stored in a python object inspired by
       BTrees.Length. It doesn't have to be a length.
+
+      store : if we want do store the new id into the zodb, we want it
+              by default
     """
     if getattr(self, 'dict_length_ids', None) is None:
       # Length objects are stored in a persistent mapping: there is one
@@ -191,16 +195,18 @@ class IdTool(BaseTool):
     new_id = result[0]['LAST_INSERT_ID()']
     if self.dict_length_ids.get(id_group) is None:
       self.dict_length_ids[id_group] = Length(new_id)
-    self.dict_length_ids[id_group].set(new_id)
+    if store:
+      self.dict_length_ids[id_group].set(new_id)
     return range(new_id - id_count, new_id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewLengthId')
-  def generateNewLengthId(self, id_group=None, default=None):
+  def generateNewLengthId(self, id_group=None, default=None, store=1):
     """
       Generates an Id.
       See generateNewLengthIdList documentation for details.
     """
-    return self.generateNewLengthIdList(id_group=id_group, id_count=1, default=default)[0]
+    return self.generateNewLengthIdList(id_group=id_group, id_count=1, 
+        default=default, store=store)[0]
 
 InitializeClass(IdTool)
