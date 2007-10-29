@@ -35,6 +35,7 @@ class TestPurchaseOrder(TestOrder):
     Test business template erp5_trade 
   """
   run_all_test = 1
+  run_all_test = 0
   order_portal_type = 'Purchase Order'
   order_line_portal_type = 'Purchase Order Line'
   order_cell_portal_type = 'Purchase Order Cell'
@@ -46,6 +47,14 @@ class TestPurchaseOrder(TestOrder):
 
   def getTitle(self):
     return "Purchase Order"
+
+  def test_20_testHierarchicalOrderAppliedRuleGeneration(self, quiet=0, 
+                                                         run=run_all_test):
+    """
+    Surcharge this test, because hierarchical lines are not enable in purchase
+    order.
+    """
+    pass
 
 def test_suite():
   suite = unittest.TestSuite()
