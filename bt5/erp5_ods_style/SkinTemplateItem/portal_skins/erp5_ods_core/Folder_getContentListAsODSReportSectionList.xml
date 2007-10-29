@@ -94,7 +94,7 @@ def getReportSectionListForObject(doc):\n
       report_section_list.append(ReportSection(path = doc.getPath(), \n
                                                form_id = form_id, \n
                                                level = 2, \n
-                                               title = \'%s-%s\' % (title, translate(action_title))))\n
+                                               title = \'%s - %s\' % (title, translate(action_title))))\n
   return report_section_list\n
 \n
 if selection_name is not None:\n
