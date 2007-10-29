@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -166,6 +163,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                   <div tal:condition="python: field_errors.has_key(field.id)"\n
                         ><!-- field has errors-->\n
                     <span tal:replace="structure struct"\n
+                    i18n:attributes="title"\n
                     tal:attributes="class string:${name}_class_error;\n
                                     title string:${field/title}"\n
                   /></div>\n
@@ -205,6 +203,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                               class_final python:\'%s%s%s%s\' %\n
                                               (class_base,\'_class_\', struct_ind, \'_error\')"\n
                                   tal:replace="structure struct_final"\n
+                                  i18n:attributes="title"\n
                                   tal:attributes="class class_final;\n
                                                   title field/title"\n
                       /></div>\n
@@ -285,7 +284,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                         (class_base, \'_error_display\')"\n
                             tal:content="python:field_errors[field.id].error_text"\n
                             i18n:translate=""\n
-                            i18domain="ui"\n
+                            i18n:domain="ui"\n
                             tal:attributes="class class_final;\n
                                             title string:${field/title}"\n
                       ></div>\n
