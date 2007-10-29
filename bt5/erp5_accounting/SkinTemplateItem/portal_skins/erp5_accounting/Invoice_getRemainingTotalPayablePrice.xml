@@ -115,10 +115,7 @@ def getIsSourceMovementItemList(invoice):\n
   source on this movement\n
   Handle the (very ad hoc) case of Balance Transfer Transactions\n
   """\n
-  if invoice.AccountingTransaction_isSourceView():\n
-    is_source = 1\n
-  else:\n
-    is_source = 0\n
+  is_source = invoice.AccountingTransaction_isSourceView()\n
   movement_item_list = [(is_source, m) for m in invoice.getMovementList(\n
           portal_type=portal.getPortalAccountingMovementTypeList())]\n
   for btt in context.getCausalityRelatedValueList(\n
@@ -131,6 +128,7 @@ def getIsSourceMovementItemList(invoice):\n
         movement_item_list.append((btt_is_source, btt_movement))\n
 \n
   return movement_item_list\n
+\n
 \n
 # calculate the total price of this invoice (according to accounting\n
 # transaction lines)\n
@@ -150,14 +148,16 @@ for is_source, line in getIsSourceMovementItemList(context):\n
   if at_date is None and line.getGroupingReference():\n
     continue\n
   \n
-  if node_value is not None and \\\n
-      node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
+  if node_value is not None:\n
     if account_id is not None and node_value.getId() not in account_id:\n
+      continue\n
+    if account_id is None and node_value.getAccountTypeId() not in (\'payable\', \'receivable\'):\n
       continue\n
     key = (node_value.getRelativeUrl(), mirror_section)\n
     total_payable_price_per_node_section[key] =\\\n
           total_payable_price_per_node_section.get(key, 0) + amount\n
     accounts_in_context.append(node_value)\n
+\n
 \n
 related_transaction_list = context.getCausalityRelatedValueList(\n
                           portal_type=accounting_transaction_type_list)\n
@@ -180,11 +180,16 @@ for related_transaction in related_transaction_list:\n
         continue\n
       if other_invoice_is_source:\n
         other_invoice_line_account = other_line.getSourceValue()\n
+        other_invoice_line_mirror_section = other_line.getDestinationSection()\n
       else:\n
         other_invoice_line_account = other_line.getDestinationValue()\n
+        other_invoice_line_mirror_section = other_line.getSourceSection()\n
         \n
       if other_invoice_line_account in accounts_in_context:\n
-        raise ValueError(\'Unable to calculate\')\n
+        # unless this line is for another mirror_section, we cannot calculate\n
+        if mirror_section_relative_url is None or \\\n
+              other_invoice_line_mirror_section == mirror_section_relative_url:\n
+          raise ValueError(\'Unable to calculate %s\' % context.getPath())\n
   \n
   related_transaction_is_source = related_transaction.\\\n
                                         AccountingTransaction_isSourceView()\n
@@ -207,8 +212,11 @@ for related_transaction in related_transaction_list:\n
       amount = line.getDestinationInventoriatedTotalAssetPrice() or 0\n
       date = line.getStopDate().earliestTime()\n
     \n
-    if node_value is not None and \\\n
-        node_value.getAccountTypeId() in (\'payable\', \'receivable\'):\n
+    if node_value is not None:\n
+      if account_id is not None and node_value.getId() not in account_id:\n
+        continue\n
+      if account_id is None and node_value.getAccountTypeId() not in (\'payable\', \'receivable\'):\n
+        continue\n
       if at_date and date > at_date:\n
         continue\n
       if node_value in accounts_in_context:\n
@@ -313,6 +321,7 @@ else:\n
                             <string>other_invoice_is_source</string>
                             <string>other_line</string>
                             <string>other_invoice_line_account</string>
+                            <string>other_invoice_line_mirror_section</string>
                             <string>ValueError</string>
                             <string>related_transaction_is_source</string>
                             <string>date</string>
