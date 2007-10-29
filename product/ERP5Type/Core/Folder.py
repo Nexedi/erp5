@@ -759,7 +759,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         return []
       return CMFBTreeFolder.objectIds(self, spec)
 
-  def objectItems(self, **kw):
+  def objectItems(self, spec=None, **kw):
     if self._folder_handler == HBTREE_HANDLER:
       if  self._htree is None:
         return []
