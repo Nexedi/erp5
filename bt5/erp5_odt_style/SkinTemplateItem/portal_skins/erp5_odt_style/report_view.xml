@@ -242,12 +242,22 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                            <table:table-cell table:style-name=\'field-table.A1\' office:value-type=\'string\'>\n
                             <text:p text:style-name=\'field-label\' tal:content="python: here.Localizer.erp5_ui.gettext(field.get_value(\'title\')).encode(\'utf-8\')" />\n
                            </table:table-cell>\n
-                           <table:table-cell table:style-name=\'field-table.B1\' office:value-type=\'string\' tal:define="value python: field.get_value(\'default\')">\n
+                           <table:table-cell table:style-name=\'field-table.B1\' office:value-type=\'string\'\n
+                                             tal:define="value python: field.get_value(\'default\')">\n
                             <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
-                            <!-- XXX render_odf for list fields ? using TAL structure ? -->\n
-                             <tal:block tal:repeat="item value">\n
-                               <text:p text:style-name=\'field-content\' tal:content="item" />\n
-                             </tal:block>\n
+                              <tal:block tal:condition="python: field.has_value(\'items\')"\n
+                                         tal:define="field_item_dict python:dict([(x[1], x[0]) for x in field.get_value(\'items\')]);">\n
+                               <tal:block tal:repeat="item value">\n
+                                 <text:p text:style-name=\'field-content\'\n
+                                         tal:content="python: field_item_dict.get(item, \'??? (%s)\' % item)"/>\n
+                               </tal:block>\n
+                              </tal:block>\n
+                              <tal:block tal:condition="python: not field.has_value(\'items\')">\n
+                              <!-- XXX render_odf for list fields ? using TAL structure ? -->\n
+                               <tal:block tal:repeat="item value">\n
+                                 <text:p text:style-name=\'field-content\' tal:content="item" />\n
+                               </tal:block>\n
+                              </tal:block>\n
                            </tal:block>\n
                             <tal:block tal:condition="python: not (same_type(value, []) or same_type(value, ()))">\n
                               <text:p text:style-name=\'field-content\' tal:content="python: field.render_pdf(value)" />\n
