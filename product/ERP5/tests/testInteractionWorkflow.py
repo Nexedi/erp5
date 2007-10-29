@@ -425,6 +425,56 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     # - interaction:setVatCode(bara)
     self.assertEquals(organisation.getVatCode(),'bara')
     
+  def test_14_BeforeScriptParameters(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Before Script Parameters')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'afterEdit',
+            method_id='getProperty',
+            script_name=('afterEdit',))
+    params = 'sci,**kw'
+    body = """\
+context = sci['object']
+kwargs = sci['kwargs'] or {}
+d = kwargs.get('d', None)
+args = kwargs.get('workflow_method_args', ())
+result = kwargs.get('workflow_method_result', None)
+context.setDescription('%s,%s,%s' % (d, args, result))
+"""
+    self.script.ZPythonScript_edit(params,body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setDescription('bad')
+    value = organisation.getProperty('description', d='toto')
+    self.assertEquals(value, "toto,('description',),None")
+
+  def test_15_AfterScriptParameters(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('After Script Parameters')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'afterEdit',
+            method_id='getProperty',
+            after_script_name=('afterEdit',))
+    params = 'sci,**kw'
+    body = """\
+context = sci['object']
+kwargs = sci['kwargs'] or {}
+d = kwargs.get('d', None)
+args = kwargs.get('workflow_method_args', ())
+result = kwargs.get('workflow_method_result', None)
+context.setDescription('%s,%s,%s' % (d, args, result))
+"""
+    self.script.ZPythonScript_edit(params,body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setDescription('bad')
+    organisation.getProperty('description', d='toto')
+    value = organisation.getDescription()
+    self.assertEquals(value, "toto,('description',),bad")
 
 def test_suite():
   suite = unittest.TestSuite()
