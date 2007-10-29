@@ -135,7 +135,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
           xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
-          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")\'\n
+          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
          office:version=\'1.0\'>\n
   <office:scripts/>\n
   <office:font-face-decls>\n

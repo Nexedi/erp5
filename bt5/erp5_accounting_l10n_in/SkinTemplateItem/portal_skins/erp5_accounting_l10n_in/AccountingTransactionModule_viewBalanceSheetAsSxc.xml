@@ -63,7 +63,7 @@ TUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAABAAEAQwAAAJoBAAAAAA==</string> </value>
 <office:document-content xmlns:draw=\'http://openoffice.org/2000/drawing\' xmlns:office=\'http://openoffice.org/2000/office\' xmlns:text=\'http://openoffice.org/2000/text\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:number=\'http://openoffice.org/2000/datastyle\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:meta=\'http://openoffice.org/2000/meta\' xmlns:table=\'http://openoffice.org/2000/table\' xmlns:dr3d=\'http://openoffice.org/2000/dr3d\' xmlns:fo=\'http://www.w3.org/1999/XSL/Format\' xmlns:style=\'http://openoffice.org/2000/style\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:form=\'http://openoffice.org/2000/form\' xmlns:script=\'http://openoffice.org/2000/script\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'http://www.w3.org/2000/svg\' xmlns:chart=\'http://openoffice.org/2000/chart\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' office:class=\'spreadsheet\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
-          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")\'\n
+          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
          office:version=\'1.0\'>\n
   <office:script/>\n
   <office:font-decls>\n

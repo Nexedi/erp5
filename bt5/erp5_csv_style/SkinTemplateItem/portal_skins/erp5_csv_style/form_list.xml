@@ -50,7 +50,7 @@
 
 <tal:block tal:define=\'amp python:"\\""\'\n
 ><tal:block tal:define="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/x-comma-separated-values; charset=utf-8\');\n
-                       dummy2 python: request.RESPONSE.setHeader(\'Content-disposition\',\'attachment; filename=%s%s.csv%s\' % (amp,form.title_or_id(),amp) ); "\n
+                       dummy2 python: request.RESPONSE.setHeader(\'Content-disposition\',\'attachment;; filename=%s%s.csv%s\' % (amp,form.title_or_id(),amp) ); "\n
 ><tal:block tal:define="groups python: form.get_groups(include_empty=1);\n
                  field_errors python: request.get(\'field_errors\',{});\n
                  dummy python: request.set(\'here\',here);\n
