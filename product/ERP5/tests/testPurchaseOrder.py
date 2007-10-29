@@ -35,7 +35,6 @@ class TestPurchaseOrder(TestOrder):
     Test business template erp5_trade 
   """
   run_all_test = 1
-  run_all_test = 0
   order_portal_type = 'Purchase Order'
   order_line_portal_type = 'Purchase Order Line'
   order_cell_portal_type = 'Purchase Order Cell'
