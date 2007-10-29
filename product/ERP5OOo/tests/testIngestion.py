@@ -37,6 +37,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
 from Products.ERP5.Document.File import _unpackData
 from zLOG import LOG, INFO, ERROR
@@ -59,21 +60,13 @@ def printAndLog(msg):
   ZopeTestCase._print('\n ' + msg)
   LOG('Testing... ', 0, msg)
 
-class FileUploadTest(file):
-
-  __allow_access_to_unprotected_subobjects__=1
-
-  def __init__(self, path, name):
-    self.filename = name
-    file.__init__(self, path, 'rb')
-    self.headers = {}
 
 def makeFilePath(name):
   return os.path.join(TEST_FILES_HOME, name)
 
 def makeFileUpload(name):
   path = makeFilePath(name)
-  return FileUploadTest(path, name)
+  return FileUpload(path, name)
 
 class TestIngestion(ERP5TypeTestCase):
   """
