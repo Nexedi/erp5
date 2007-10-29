@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Report</string>
-          <string>ERP5Report</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -95,13 +92,13 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>at_date</string>
-                        <string>from_date</string>
-                        <string>section_category</string>
-                        <string>portal_type</string>
-                        <string>payment</string>
-                        <string>payment_mode</string>
-                        <string>simulation_state</string>
+                        <string>your_at_date</string>
+                        <string>your_from_date</string>
+                        <string>your_section_category</string>
+                        <string>your_portal_type</string>
+                        <string>your_payment</string>
+                        <string>your_payment_mode</string>
+                        <string>your_simulation_state</string>
                       </list>
                     </value>
                 </item>

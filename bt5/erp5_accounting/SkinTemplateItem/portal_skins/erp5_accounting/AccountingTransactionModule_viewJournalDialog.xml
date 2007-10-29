@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -88,6 +85,7 @@
                         <string>your_from_date</string>
                         <string>your_at_date</string>
                         <string>your_portal_skin</string>
+                        <string>your_format</string>
                       </list>
                     </value>
                 </item>

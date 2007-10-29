@@ -2,3 +2,4 @@ erp5_pdm
 erp5_base
 erp5_pdf_style
 erp5_trade
+erp5_core >= 1.0rc13

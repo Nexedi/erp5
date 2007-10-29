@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Report</string>
-          <string>ERP5Report</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -73,14 +70,13 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>transaction_section_category</string>
-                        <string>transaction_simulation_state</string>
-                        <string>at_date</string>
-                        <string>my_node_category</string>
-                        <string>my_omit_balanced_accounts</string>
-                        <string>my_omit_empty_accounts</string>
-                        <string>my_omit_grouped_references</string>
-                        <string>entity_role</string>
+                        <string>your_section_category</string>
+                        <string>your_simulation_state</string>
+                        <string>your_at_date</string>
+                        <string>your_omit_balanced_accounts</string>
+                        <string>your_omit_empty_accounts</string>
+                        <string>your_omit_grouped_references</string>
+                        <string>your_entity_role</string>
                       </list>
                     </value>
                 </item>
