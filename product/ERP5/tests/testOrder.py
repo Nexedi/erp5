@@ -697,17 +697,7 @@ class TestOrderMixin:
       sequence.edit(simulation_movement_list=simulation_movement_list)
 
       # Count the number of movement in order
-      order_line_list = order.objectValues( \
-                                 portal_type=self.order_line_portal_type)
-      order_line_list = [x.getObject() for x in order_line_list]
-      movement_list = []
-      for order_line in order_line_list:
-        if not order_line.hasCellContent():
-          movement_list.append(order_line)
-        else:
-          cell_list = order_line.objectValues( \
-                                 portal_type=self.order_cell_portal_type)
-          movement_list.extend([x.getObject() for x in cell_list])
+      movement_list = order.getMovementList()
       # Check if number of movement is equal to number of simulation movement
       self.assertEquals(len(movement_list), len(simulation_movement_list))
       # Check if each movement has only one simulation movement related
@@ -1941,6 +1931,99 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                                 portal_type=self.order_cell_portal_type, 
                                 *cell_key)
     self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
+
+  def stepCreateSubOrderLine(self,sequence=None, sequence_list=None, **kw):
+    """
+      Create a empty order line
+    """
+    order = sequence.get('order')
+    # Create sub line in the first order line
+    order_line = \
+        order.contentValues(portal_type=self.order_line_portal_type)[0]
+    sub_order_line = order_line.newContent(
+        portal_type=self.order_line_portal_type,
+        title="Sub Order Line")
+    sequence.edit(order_line=sub_order_line,
+                  sub_order_line=sub_order_line)
+
+  def stepCreateSubSubOrderLine(self,sequence=None, sequence_list=None, **kw):
+    """
+      Create a empty order line
+    """
+    sub_order_line = sequence.get('sub_order_line')
+    # Create sub line in the first sub order line
+    order_line = sub_order_line.newContent(
+        portal_type=self.order_line_portal_type,
+        title="Sub Order Line")
+    sequence.edit(order_line=order_line)
+
+  def test_20_testHierarchicalOrderAppliedRuleGeneration(self, quiet=0, 
+                                                         run=run_all_test):
+    """
+    Test generation and update of an hierarchical order applied rule.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    hierarchical_order_creation = '\
+        stepCreateOrder \
+        stepCreateNotVariatedResource \
+        stepCreateOrderLine \
+        stepCheckOrderLineEmptyMatrix \
+        stepSetOrderLineResource \
+        stepSetOrderLineDefaultValues \
+        stepCheckOrderLineDefaultValues \
+        \
+        stepCreateSubOrderLine \
+        stepCheckOrderLineEmptyMatrix \
+        stepSetOrderLineResource \
+        stepSetOrderLineDefaultValues \
+        stepCheckOrderLineDefaultValues \
+        \
+        stepCreateSubSubOrderLine \
+        stepCheckOrderLineEmptyMatrix \
+        stepSetOrderLineResource \
+        stepSetOrderLineDefaultValues \
+        stepCheckOrderLineDefaultValues \
+        \
+        stepCreateSubSubOrderLine \
+        stepCheckOrderLineEmptyMatrix \
+        stepSetOrderLineResource \
+        stepSetOrderLineDefaultValues \
+        stepCheckOrderLineDefaultValues \
+        \
+        stepCreateSubOrderLine \
+        stepCheckOrderLineEmptyMatrix \
+        stepSetOrderLineResource \
+        stepSetOrderLineDefaultValues \
+        stepCheckOrderLineDefaultValues \
+        \
+        stepCreateOrderLine \
+        stepCheckOrderLineEmptyMatrix \
+        stepSetOrderLineResource \
+        stepSetOrderLineDefaultValues \
+        stepCheckOrderLineDefaultValues \
+        '
+
+    # Test when order is cancelled
+    sequence_string = '\
+                      stepCreateOrganisation \
+                      ' + hierarchical_order_creation + '\
+                      stepCheckOrderSimulation \
+                      stepPlanOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepOrderOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepCancelOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+
+    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()
