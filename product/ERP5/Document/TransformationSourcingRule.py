@@ -99,7 +99,7 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
         # should generate a compensation movement
         continue
       # Update movement properties
-      movement.edit(**(movement_dict[movement_id]))
+      movement.edit(activate_kw=activate_kw, **(movement_dict[movement_id]))
 
   security.declareProtected(Permissions.View, 'getTransformation')
   def getTransformation(self, movement):
