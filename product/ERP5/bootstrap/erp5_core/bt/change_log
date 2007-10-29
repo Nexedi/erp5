@@ -1,3 +1,6 @@
+2007-10-29 jerome
+* Add field libraries for report and dialogs. Increase version to 1.0rc13
+
 2007-10-25 romain
 * Move Archive Tool to erp5_archive.
 
