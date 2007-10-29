@@ -28,7 +28,8 @@
 #
 ##############################################################################
 
-import os, sys, cStringIO, zipfile
+import unittest
+import os, cStringIO, zipfile
 from xml.dom.minidom import parseString
 from Testing import ZopeTestCase
 from DateTime import DateTime
@@ -39,13 +40,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
 from Products.ERP5.Document.File import _unpackData
 from zLOG import LOG, INFO, ERROR
-
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 # Define the conversion server host
 conversion_server_host = ('127.0.0.1', 8008)
@@ -1183,17 +1177,14 @@ class TestIngestion(ERP5TypeTestCase):
                 ]
     self.playSequence(step_list, quiet)
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestIngestion))
-    return suite
 
 # Missing tests
 """
     property_dict = context.getPropertyDictFromUserLogin()
     property_dict = context.getPropertyDictFromInput()
 """
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestIngestion))
+  return suite

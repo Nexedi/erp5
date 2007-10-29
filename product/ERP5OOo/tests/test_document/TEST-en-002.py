@@ -45,12 +45,6 @@ from Products.ERP5Type.Cache import clearCache
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
 
 
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 ooodoc_coordinates = ('127.0.0.1', 8008)
 
@@ -793,14 +787,11 @@ class TestIngestion(ERP5TypeTestCase):
     """
 
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestIngestion))
-    return suite
+import unittest
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestIngestion))
+  return suite
 
 
 # vim: filetype=python syntax=python shiftwidth=2 
