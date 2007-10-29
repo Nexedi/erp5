@@ -47,6 +47,13 @@ class TestPurchaseOrder(TestOrder):
   def getTitle(self):
     return "Purchase Order"
 
+  def test_19_getMovementList(self, quiet=0, run=run_all_test):
+    """
+    Surcharge this test, because hierarchical lines are not enable in purchase
+    order.
+    """
+    pass
+
   def test_20_testHierarchicalOrderAppliedRuleGeneration(self, quiet=0, 
                                                          run=run_all_test):
     """
