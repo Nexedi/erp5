@@ -111,6 +111,8 @@
                         <string>your_portal_skin</string>
                         <string>your_format</string>
                         <string>your_section_category</string>
+                        <string>your_at_date</string>
+                        <string>your_from_date</string>
                       </list>
                     </value>
                 </item>
