@@ -60,18 +60,18 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AccountModule_viewDialogFieldLibrary</string> </value>
+                    <value> <string>AccountModule_viewReportFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -113,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_getTranslatedWorkflowStateItemList(wf_id = \'accounting_workflow\')</string> </value>
+            <value> <string>python:[here.Localizer.erp5_ui.gettext(x).encode(\'utf8\') for x in request.get(\'simulation_state\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
