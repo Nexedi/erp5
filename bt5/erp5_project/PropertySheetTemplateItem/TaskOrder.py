@@ -39,6 +39,7 @@ class TaskOrder:
         'acquired_property_id': ( 'quantity', 'quantity_unit', 'price',
                                   'quantity_unit_title', 
 				  'quantity_unit_logical_path', 
+          'description',
 				  'resource', 'resource_value', 
 				  'resource_title',
 				  'requirement', 'requirement_value_list',
