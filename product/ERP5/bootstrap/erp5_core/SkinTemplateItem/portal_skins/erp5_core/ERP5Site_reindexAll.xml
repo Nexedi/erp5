@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()  \n
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()  \n
 if clear_catalog:\n
   # clear the catalog before reindexing\n
   catalog = portal.portal_catalog.getSQLCatalog(sql_catalog_id)\n
@@ -182,9 +184,8 @@ for folder in [context.portal_templates, context.portal_trash,\n
 \n
 # Then we index everything except inventories\n
 for folder in portal.objectValues(("ERP5 Folder",)):\n
-  print "#### Indexing contents inside folder %s ####" % folder.id\n
-  if folder.getId() not in (\'inventory_module\',):\n
-\n
+  if folder.getId().find(\'inventory\') < 0:\n
+    print "#### Indexing contents inside folder %s ####" % folder.id\n
     folder.activate(\n
               tag=folder_tag,\n
               priority=object_priority,\n
@@ -201,7 +202,7 @@ for folder in portal.objectValues(("ERP5 Folder",)):\n
 object_tag = \'inventory\'\n
 object_after_tag = (\'module\', \'category\', \'person_stage_1\', \'document\', \'group_person_stage_1\')\n
 for folder in portal.objectValues(("ERP5 Folder",)):\n
-  if folder.getId() in (\'inventory_module\',):\n
+  if folder.getId().find(\'inventory\') >= 0: \n
     print "#### Indexing contents inside folder %s ####" % folder.id\n
     folder.activate(\n
               tag=folder_tag,\n
@@ -236,7 +237,9 @@ if final_activity_tag is not None:\n
                                     ).getId()\n
 \n
 return printed\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
