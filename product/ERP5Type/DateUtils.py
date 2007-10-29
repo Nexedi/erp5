@@ -230,7 +230,7 @@ def getRoundedMonthBetween(from_date=None, to_date=None, rounded_day=False):
     from math import ceil
     interval_day = ceil(to_date - from_date)
   else:
-    interval_day = to_date - from_dat
+    interval_day = to_date - from_date
   if interval_day >= days_in_month / 2.:
     return_value += 1
   return return_value
