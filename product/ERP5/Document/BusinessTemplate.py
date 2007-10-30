@@ -4027,8 +4027,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Make sure that everything is sane.
       self.clean()
 
-      # Update revision number
-      # <christophe@nexedi.com>
       self.updateRevisionNumber()
 
       self._setTemplateFormatVersion(1)
@@ -4743,7 +4741,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
 
-    #By christophe Dumez <christophe@nexedi.com>
     def getItemsList(self):
       """Return list of items in business template
       """
@@ -4754,7 +4751,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           items_list.extend(item.getKeys())
       return items_list
 
-    #By christophe Dumez <christophe@nexedi.com>
     def checkDependencies(self):
       """
        Check if all the dependencies of the business template
@@ -4767,6 +4763,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for dependency_couple in dependency_list:
           dependency_couple_list = dependency_couple.strip().split(' ', 1)
           dependency = dependency_couple_list[0]
+          if dependency.startswith('('):
+            # Something like "(>= 1.0rc6)".
+            dependency = dependency[1:-1]
           if dependency in (None, ''):
             continue
           version_restriction = None
@@ -4942,7 +4941,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         else:
           diff_msg = 'No diff'
 
-      else: # Added By <christophe@nexedi.com>
+      else:
         diff_msg += 'Unsupported file !'
 
       if compare_to_zodb:
