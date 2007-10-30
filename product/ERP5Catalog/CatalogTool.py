@@ -598,6 +598,17 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     __call__ = searchResults
 
+    security.declarePrivate('clear')
+    def beforeCatalogClear(self):
+      """
+      Clears the catalog by calling a list of methods
+      """
+      id_tool = self.getPortalObject().portal_ids
+      # Call generate new id in order to store the last id into
+      # the zodb
+      id_tool.generateNewLengthId(id_group='portal_activity')
+      id_tool.generateNewLengthId(id_group='portal_activity_queue')
+
     security.declarePrivate('unrestrictedSearchResults')
     def unrestrictedSearchResults(self, REQUEST=None, **kw):
         """Calls ZSQLCatalog.searchResults directly without restrictions.
@@ -746,6 +757,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           if object is None:
             raise TypeError, 'One of uid, path and object parameters must not be None'
           path = self.__url(object)
+        if uid is None:
+          raise TypeError, "unindexObject supports only uid now"
+        self.uncatalog_object(path=path,uid=uid, sql_catalog_id=sql_catalog_id)
         self.uncatalog_object(path=path, uid=uid, sql_catalog_id=sql_catalog_id)
 
     security.declarePrivate('beforeUnindexObject')
