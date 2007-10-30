@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Budget Transaction</type>
-  <workflow>edit_workflow, budget_transaction_workflow</workflow>
+  <workflow>pricing_interaction_workflow, edit_workflow, budget_transaction_workflow</workflow>
  </chain>
  <chain>
   <type>Budget Transfer</type>

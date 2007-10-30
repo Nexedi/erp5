@@ -1,3 +1,6 @@
+2007-10-30 yo
+* Set pricing_interaction_workflow to Budget Transaction.
+
 2007-08-07 yo
 * Take setGroupValue and _setGroupValue into account for the interaction workflow.
 * Rename workflow transitions and states for consistency.

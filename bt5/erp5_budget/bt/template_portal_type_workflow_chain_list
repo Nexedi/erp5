@@ -3,6 +3,7 @@ Budget Line | budget_line_interaction_workflow
 Budget Line | edit_workflow
 Budget Transaction | budget_transaction_workflow
 Budget Transaction | edit_workflow
+Budget Transaction | pricing_interaction_workflow
 Budget Transfer Line | edit_workflow
 Budget Transfer | edit_workflow
 Budget | budget_workflow
