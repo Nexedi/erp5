@@ -178,9 +178,15 @@ class PDFTk:
     fdf = "%FDF-1.2\x0d%\xe2\xe3\xcf\xd3\x0d\x0a"
     fdf += "1 0 obj\x0d<< \x0d/FDF << /Fields [ "
     for key, value in values.items():
-      fdf += "<< /T (%s) /V (%s) /ClrF 2 /ClrFf 1 >> \x0d" % (
-           self._escapeString(key),
-           self._escapeString(value))
+      if 0: # if the field is a check box
+            # ... but this is not working yet
+        fdf += "<< /V /%s\n/T (%s)>> \x0d" % (
+             value and 'Yes' or 'Off',
+             self._escapeString(key),)
+      else:
+        fdf += "<</V (%s) /T (%s) /ClrF 2 /ClrFf 1 >> \x0d" % (
+           self._escapeString(value),
+           self._escapeString(key))
 
     fdf += "] \x0d"
 
@@ -319,7 +325,8 @@ class PDFForm(File):
     values = self.pdftk.dumpDataFields(file)
     self.cells = {}
     for v in values :
-      if v["FieldType"] != "Button" :
+      if v["FieldType"] not in ("Button", "Choice")\
+                    or not int(v["FieldFlags"]) & 65536:
         k = v["FieldName"]
         if not self.all_cells.has_key(k) :
           self.cells[k] = ""

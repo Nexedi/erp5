@@ -128,7 +128,37 @@ class TestPDFForm(unittest.TestCase):
     self.assertEquals('Value', calculated_values['text_1'])
   
 
+class TestPDFFormButtons(unittest.TestCase):
+  """Tests PDF Form with buttons
+  """
+  def setUp(self):
+    """Creates a PDFForm with buttons, and a document on which the PDF form is
+    rendered.
+    """
+    self.document = Document('doc_id')
+    pdf_file = open(os.path.join(os.path.dirname(__file__),
+                        'data', 'test_button.pdf'), 'rb')
+    self.pdf_form = PDFForm('test_pdf_form').__of__(self.document)
+    self.pdf_form.manage_upload(pdf_file)
+    
+  def test_getCellNames(self):
+    self.assertEquals(['check_box',],
+                      self.pdf_form.getCellNames())
+
+  def test_SimpleGeneratePDF(self):
+    self.pdf_form.setCellTALES('check_box', 'python: 1')
+    self.failUnless(self.pdf_form.generatePDF())
+    # aliases
+    self.failUnless(self.pdf_form.index_html())
+    self.failUnless(self.pdf_form())
+
+    # XXX for debugging:
+    # file('/tmp/out.pdf', 'w').write(self.pdf_form())
+    # os.system('xpdf /tmp/out.pdf')
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPDFForm))
+  suite.addTest(unittest.makeSuite(TestPDFFormButtons))
   return suite
