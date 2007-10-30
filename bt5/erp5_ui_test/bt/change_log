@@ -1,3 +1,6 @@
+2007-10-30 yo
+* Set pricing_interaction_workflow to Foo Line.
+
 2007-10-09 Fabien
 * add setPreferredListboxListModeLineCount(10) to ListBoxZuite_reset to diplay the correct lines number
 
