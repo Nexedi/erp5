@@ -50,6 +50,10 @@
             <value> <string>Folder_viewContentListAsODSReport</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -137,7 +141,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Export Content as SpreadSheet</string> </value>
+            <value> <string>Export Content</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
