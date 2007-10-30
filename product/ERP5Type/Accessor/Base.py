@@ -45,6 +45,9 @@ class Setter(Method):
       Sets an attribute value. ATTRIBUTE_PREFIX and storage_id allow
       a simple form of data access parametrisations
     """
+    __slots__ = ('_id', '__name__', '_key', '_reindex', '_property_type',
+            '_cast', '_null', '_storage_id', )
+
     _need__name__=1
 
     # Generic Definition of Method Object
@@ -122,6 +125,9 @@ class Getter(Method):
     getSomething(self, [default], [name=value, [name=value], ])
 
     """
+    __slots__ = ('_id', '__name__', '_key', '_property_type', '_null',
+            '_default', '_storage_id', '_is_tales_type', )
+
     _need__name__=1
 
     # Generic Definition of Method Object
@@ -168,6 +174,9 @@ class Tester(Method):
     """
       Tests if an attribute value exists
     """
+    __slots__ = ('_id', '__name__', '_key', '_property_type', '_null',
+            '_storage_id', )
+
     _need__name__=1
 
     # Generic Definition of Method Object
@@ -188,4 +197,4 @@ class Tester(Method):
       self._storage_id = storage_id
 
     def __call__(self, instance, *args, **kw):
-      return aq_base(instance).__dict__.has_key(self._storage_id) # No acquisition on properties
+      return getattr(aq_base(instance), self._storage_id, None) is not None
