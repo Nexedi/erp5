@@ -138,6 +138,9 @@ dQEAAAAA</string> </value>
       <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border=\'none\'/>\n
       <style:paragraph-properties fo:text-align=\'center\'/>\n
     </style:style>\n
+    <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'empty-cell\'>\n
+      <style:table-cell-properties fo:border-left=\'none\' fo:border-bottom=\'none\' fo:border-right=\'none\' fo:border-top=\'none\'/>\n
+    </style:style>\n
     <style:style style:parent-style-name=\'Default\' style:family=\'table-cell\' style:name=\'bottom_border\'>\n
       <style:table-cell-properties fo:border-left=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\' fo:border-right=\'0.002cm solid #000000\' fo:border-top=\'none\'/>\n
     </style:style>\n
@@ -541,7 +544,7 @@ dQEAAAAA</string> </value>
       </tal:block> <!-- loop level 1 -->\n
       \n
       <table:table-row table:style-name=\'page-break\'>\n
-        <table:table-cell/>\n
+        <table:table-cell table:style-name=\'empty-cell\'/>\n
       </table:table-row>\n
 \n
 \n
