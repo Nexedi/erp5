@@ -276,9 +276,6 @@ class Movement(XMLObject, Amount):
     if local_price is None:
       # We must find a price for this movement
       local_price = self._getPrice(context=self)
-      # And store it localy
-      if local_price is not None:
-        self.setPrice(local_price)
     return local_price
 
   security.declareProtected( Permissions.AccessContentsInformation,
