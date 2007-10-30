@@ -1474,6 +1474,8 @@ class Catalog( Folder,
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None,
                           URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
+    self.beforeCatalogClear()
+
     self.clear()
 
     if RESPONSE and URL1:
