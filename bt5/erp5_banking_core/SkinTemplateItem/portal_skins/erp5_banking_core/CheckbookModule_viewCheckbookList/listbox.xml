@@ -488,7 +488,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>checkbook_selection</string> </value>
+                    <value> <string>checkbook_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

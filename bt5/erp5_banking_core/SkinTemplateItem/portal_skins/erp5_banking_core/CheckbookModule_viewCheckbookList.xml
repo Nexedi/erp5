@@ -78,7 +78,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_destination_payment_internal_bank_account_number</string>
                       </list>
                     </value>
                 </item>

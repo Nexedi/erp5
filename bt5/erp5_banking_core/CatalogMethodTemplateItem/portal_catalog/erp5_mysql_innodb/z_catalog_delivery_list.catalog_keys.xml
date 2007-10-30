@@ -6,7 +6,7 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python: isDelivery</value>
+  <value>python: isDelivery or here.getPortalType()=='Checkbook'</value>
  </item>
  <item key="_filter_type_archive" type="tuple">
  </item>

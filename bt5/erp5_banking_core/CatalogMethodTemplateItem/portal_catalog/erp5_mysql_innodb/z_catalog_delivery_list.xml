@@ -203,9 +203,7 @@ getSourceTotalAssetPrice</string> </value>
 
 <dtml-let delivery_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isDelivery[loop_item]">\n
       <dtml-call expr="delivery_list.append(loop_item)">\n
-    </dtml-if>\n
   </dtml-in>\n
   <dtml-if expr="_.len(delivery_list) > 0">\n
 REPLACE INTO\n
@@ -272,9 +270,7 @@ VALUES\n
 
 <dtml-let delivery_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isDelivery[loop_item]">\n
       <dtml-call expr="delivery_list.append(loop_item)">\n
-    </dtml-if>\n
   </dtml-in>\n
   <dtml-if expr="_.len(delivery_list) > 0">\n
 REPLACE INTO\n
