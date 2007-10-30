@@ -691,25 +691,7 @@ def setDefaultClassProperties(property_holder):
           , 'category'      : 'object_view'
           , 'action'        : '%s_view' % property_holder.__name__
           , 'permissions'   : ( Permissions.View, )
-          }
-        , { 'id'            : 'history'
-          , 'name'          : 'History'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Base_viewHistory'
-          , 'permissions'   : ( Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Base_viewMetadata'
-          , 'permissions'   : ( Permissions.ManageProperties, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : '%s_print' % property_holder.__name__
-          , 'permissions'   : ( Permissions.View, )
-          }
+          },
         )
       }
 
