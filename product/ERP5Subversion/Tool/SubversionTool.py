@@ -1060,7 +1060,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     for file_path in path_list:
       real_path = self._getWorkingPath(file_path)
       if os.path.isdir(real_path):
-        shutil.rmtree(self._getWorkingPath(file_path))
+        shutil.rmtree(real_path)
       elif os.path.isfile(real_path):
         os.remove(real_path)
     
