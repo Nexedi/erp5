@@ -1,3 +1,6 @@
+2007-10-30 yo
+* Set pricing_interaction_workflow to Campaign, Fax Message, Letter, Mail Message, Meeting, Note, Phone Call, Sale Opportunity, Support Request, Visit and Web Message.
+
 2007-10-01 Yusei
 * Removed my_reference from Ticket_view.
 

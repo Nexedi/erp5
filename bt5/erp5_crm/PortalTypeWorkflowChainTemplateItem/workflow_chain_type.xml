@@ -1,46 +1,46 @@
 <workflow_chain>
  <chain>
   <type>Campaign</type>
-  <workflow>edit_workflow, ticket_workflow, ticket_interaction_workflow</workflow>
+  <workflow>edit_workflow, pricing_interaction_workflow, ticket_workflow, ticket_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Fax Message</type>
-  <workflow>edit_workflow, event_interaction_workflow, event_workflow</workflow>
+  <workflow>edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Letter</type>
-  <workflow>event_interaction_workflow, edit_workflow, event_workflow</workflow>
+  <workflow>event_interaction_workflow, edit_workflow, pricing_interaction_workflow, event_workflow</workflow>
  </chain>
  <chain>
   <type>Mail Message</type>
-  <workflow>edit_workflow, event_workflow, event_interaction_workflow</workflow>
+  <workflow>edit_workflow, pricing_interaction_workflow, event_workflow, event_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Meeting</type>
-  <workflow>edit_workflow, ticket_workflow, ticket_interaction_workflow</workflow>
+  <workflow>pricing_interaction_workflow, edit_workflow, ticket_workflow, ticket_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Note</type>
-  <workflow>event_workflow, edit_workflow, event_interaction_workflow</workflow>
+  <workflow>event_workflow, edit_workflow, pricing_interaction_workflow, event_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Phone Call</type>
-  <workflow>event_interaction_workflow, event_workflow, edit_workflow</workflow>
+  <workflow>event_interaction_workflow, event_workflow, pricing_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Opportunity</type>
-  <workflow>ticket_interaction_workflow, sale_opportunity_workflow, edit_workflow</workflow>
+  <workflow>pricing_interaction_workflow, ticket_interaction_workflow, sale_opportunity_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Support Request</type>
-  <workflow>edit_workflow, ticket_interaction_workflow, ticket_workflow</workflow>
+  <workflow>edit_workflow, pricing_interaction_workflow, ticket_interaction_workflow, ticket_workflow</workflow>
  </chain>
  <chain>
   <type>Visit</type>
-  <workflow>edit_workflow, event_interaction_workflow, event_workflow</workflow>
+  <workflow>event_interaction_workflow, pricing_interaction_workflow, event_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Web Message</type>
-  <workflow>event_interaction_workflow, event_workflow, edit_workflow</workflow>
+  <workflow>pricing_interaction_workflow, event_interaction_workflow, event_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
