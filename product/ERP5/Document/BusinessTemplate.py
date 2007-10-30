@@ -1530,9 +1530,9 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
             continue
         path_splitted = path.split('/', 1)
         # XXX: to avoid crashing when no portal_type
-        if len(path_splitted) < 2:
+        if len(path_splitted) < 1:
           continue
-        portal_type = path_splitted[1]
+        portal_type = path_splitted[-1]
         if chain_dict.has_key('chain_%s' % portal_type):
           old_chain_dict = chain_dict['chain_%s' % portal_type]
           # XXX we don't use the chain (Default) in erp5 so don't keep it
