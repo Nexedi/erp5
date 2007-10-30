@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -77,8 +74,8 @@ from Products.ERP5Form.Report import ReportSection\n
 \n
 request = context.REQUEST\n
 at_date = request[\'at_date\']\n
-transaction_section_category = request[\'transaction_section_category\']\n
-transaction_simulation_state = request[\'transaction_simulation_state\']\n
+section_category = request[\'section_category\']\n
+simulation_state = request[\'simulation_state\']\n
 role_filter_list = request.get(\'entity_role\', None)\n
 omit_balanced_accounts = request[\'omit_balanced_accounts\']\n
 from_date = request.get(\'from_date\', None)\n
@@ -93,9 +90,8 @@ result = []\n
 \n
 params =  {\n
     \'at_date\'                     : at_date\n
-  , \'transaction_section_category\': transaction_section_category\n
-  , \'section_category\'            : transaction_section_category\n
-  , \'simulation_state\'            : transaction_simulation_state\n
+  , \'section_category\': section_category\n
+  , \'simulation_state\': simulation_state\n
   , \'report_depth\'                : 5\n
   #, \'where_expression\'            : " section.portal_type = \'Organisation\' "\n
 }\n
@@ -117,8 +113,8 @@ entity_columns = [\n
                        (\'Movement_getExplanationTitle\', \'Title\'),\n
                        (\'Movement_getSpecificReference\', \'Reference\'),\n
                        (\'getTranslatedSimulationStateTitle\', \'State\'),\n
-                       (\'Movement_getDebitPrice\', \'Debit\'),\n
-                       (\'Movement_getCreditPrice\', \'Credit\'),\n
+                       (\'debit\', \'Debit\'),\n
+                       (\'credit\', \'Credit\'),\n
                        (\'running_total_price\', \'Balance\'),\n
 ]\n
 \n
@@ -150,7 +146,7 @@ for party in context.Account_zDistinctSectionList():\n
     continue\n
 \n
   if o.getPortalType() == \'Person\' or\\\n
-      not o.isMemberOf(transaction_section_category):\n
+      not o.isMemberOf(section_category):\n
         # don\'t show entities belonging to the group we are reporting\n
     if omit_balanced_accounts and (\n
             simulation_tool.getInventoryAssetPrice(\n
@@ -232,8 +228,8 @@ return result\n
                             <string>request</string>
                             <string>_getitem_</string>
                             <string>at_date</string>
-                            <string>transaction_section_category</string>
-                            <string>transaction_simulation_state</string>
+                            <string>section_category</string>
+                            <string>simulation_state</string>
                             <string>None</string>
                             <string>role_filter_list</string>
                             <string>omit_balanced_accounts</string>
@@ -252,6 +248,7 @@ return result\n
                             <string>o</string>
                             <string>_apply_</string>
                             <string>title</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
