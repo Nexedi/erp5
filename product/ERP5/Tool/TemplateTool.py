@@ -688,8 +688,10 @@ class TemplateTool (BaseTool):
                 dependency = dependency_couple_list[0]
                 version_restriction = None
                 if len(dependency_couple_list) > 1:
-                  # remove parenthesis to get something like ">= O.2"
-                  version_restriction = dependency_couple_list[1][1:-1]
+                  version_restriction = dependency_couple_list[1]
+                  if version_restriction.startswith('('):
+                    # Something like "(>= 1.0rc6)".
+                    version_restriction = version_restriction[1:-1]
                 require_update = False
                 installed_bt = self.portal_templates.getInstalledBusinessTemplate(dependency)
                 if version_restriction is not None:
