@@ -587,6 +587,8 @@ class ZCatalog(Folder, Persistent, Implicit):
     if REQUEST is not None and sql_catalog_id is None:
       sql_catalog_id = REQUEST.get('sql_catalog_id', None)
 
+    self.beforeCatalogClear()
+
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       catalog.manage_catalogClear(REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
@@ -845,6 +847,10 @@ class ZCatalog(Folder, Persistent, Implicit):
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       catalog.beforeUncatalogObject(uid=uid,path=path)
+
+  def beforeCatalogClear(self):
+    """ allow to override this method """
+    pass
 
   def catalogTranslationList(self, object_list, sql_catalog_id=None):
     """Catalog translations.
