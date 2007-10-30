@@ -791,7 +791,7 @@ class TemplateTool (BaseTool):
               elif diff_version == 0 \
                    and previous_property_dict['revision'] \
                    and property_dict['revision'] \
-                   and previous_property_dict['revision'] < property_dict['revision']:
+                   and int(previous_property_dict['revision']) < int(property_dict['revision']):
                       template_item_dict[title] = (repository, property_dict)
         # Next, select only updated business templates.
         for repository, property_dict in template_item_dict.values():
