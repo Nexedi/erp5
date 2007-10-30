@@ -1058,7 +1058,11 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       # Security hole fix
       raise SubversionSecurityError, 'You are not allowed to delete these files'
     for file_path in path_list:
-      shutil.rmtree(self._getWorkingPath(file_path))
+      real_path = self._getWorkingPath(file_path)
+      if os.path.isdir(real_path):
+        shutil.rmtree(self._getWorkingPath(file_path))
+      elif os.path.isfile(real_path):
+        os.remove(real_path)
     
   def getModifiedTree(self, business_template, show_unmodified=False) :
     """ Return tree of files returned by svn status
