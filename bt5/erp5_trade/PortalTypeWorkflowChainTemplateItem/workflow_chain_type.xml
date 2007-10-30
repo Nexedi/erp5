@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Container</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>pricing_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Container Cell</type>
@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Container Line</type>
-  <workflow>edit_workflow, container_interaction_workflow, trade_matrix_workflow</workflow>
+  <workflow>pricing_interaction_workflow, edit_workflow, trade_matrix_workflow, container_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Delivery Cell</type>
@@ -29,7 +29,7 @@
  </chain>
  <chain>
   <type>Internal Packing List Line</type>
-  <workflow>edit_workflow, trade_matrix_workflow</workflow>
+  <workflow>trade_matrix_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Inventory</type>
@@ -37,7 +37,7 @@
  </chain>
  <chain>
   <type>Inventory Line</type>
-  <workflow>trade_matrix_workflow, edit_workflow</workflow>
+  <workflow>trade_matrix_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Order Rule</type>
@@ -53,11 +53,11 @@
  </chain>
  <chain>
   <type>Purchase Order Cell</type>
-  <workflow>order_movement_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Order Line</type>
-  <workflow>trade_matrix_workflow, edit_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>trade_matrix_workflow, pricing_interaction_workflow, edit_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List</type>
@@ -69,7 +69,7 @@
  </chain>
  <chain>
   <type>Purchase Packing List Line</type>
-  <workflow>delivery_movement_simulation_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, pricing_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Supply</type>
@@ -88,6 +88,10 @@
   <workflow>edit_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
+  <type>Returned Sale Packing List Line</type>
+  <workflow>pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Sale Order</type>
   <workflow>order_workflow, order_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
@@ -97,11 +101,11 @@
  </chain>
  <chain>
   <type>Sale Order Line</type>
-  <workflow>trade_matrix_workflow, order_movement_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>pricing_interaction_workflow, order_movement_simulation_interaction_workflow, trade_matrix_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List</type>
-  <workflow>edit_workflow, packing_list_causality_workflow, delivery_causality_interaction_workflow, packing_list_workflow, packing_list_container_workflow, delivery_simulation_interaction_workflow</workflow>
+  <workflow>packing_list_causality_workflow, edit_workflow, delivery_causality_interaction_workflow, packing_list_workflow, packing_list_container_workflow, delivery_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Cell</type>
@@ -109,7 +113,7 @@
  </chain>
  <chain>
   <type>Sale Packing List Line</type>
-  <workflow>delivery_movement_simulation_interaction_workflow, trade_matrix_workflow, container_interaction_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, trade_matrix_workflow, container_interaction_workflow, pricing_interaction_workflow, edit_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Supply</type>

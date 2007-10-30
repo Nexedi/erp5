@@ -2,17 +2,21 @@ Container Cell | container_interaction_workflow
 Container Cell | edit_workflow
 Container Line | container_interaction_workflow
 Container Line | edit_workflow
+Container Line | pricing_interaction_workflow
 Container Line | trade_matrix_workflow
 Container | edit_workflow
+Container | pricing_interaction_workflow
 Delivery Cell | delivery_movement_causality_interaction_workflow
 Delivery Cell | delivery_movement_simulation_interaction_workflow
 Delivery Rule | edit_workflow
 Discount | edit_workflow
 Internal Packing List Line | edit_workflow
+Internal Packing List Line | pricing_interaction_workflow
 Internal Packing List Line | trade_matrix_workflow
 Internal Packing List | edit_workflow
 Internal Packing List | internal_packing_list_workflow
 Inventory Line | edit_workflow
+Inventory Line | pricing_interaction_workflow
 Inventory Line | trade_matrix_workflow
 Inventory | edit_workflow
 Inventory | inventory_workflow
@@ -22,6 +26,7 @@ Purchase Order Cell | edit_workflow
 Purchase Order Cell | order_movement_simulation_interaction_workflow
 Purchase Order Line | edit_workflow
 Purchase Order Line | order_movement_simulation_interaction_workflow
+Purchase Order Line | pricing_interaction_workflow
 Purchase Order Line | trade_matrix_workflow
 Purchase Order | edit_workflow
 Purchase Order | order_simulation_interaction_workflow
@@ -31,6 +36,7 @@ Purchase Packing List Cell | delivery_movement_simulation_interaction_workflow
 Purchase Packing List Line | delivery_movement_causality_interaction_workflow
 Purchase Packing List Line | delivery_movement_simulation_interaction_workflow
 Purchase Packing List Line | edit_workflow
+Purchase Packing List Line | pricing_interaction_workflow
 Purchase Packing List Line | trade_matrix_workflow
 Purchase Packing List | delivery_causality_interaction_workflow
 Purchase Packing List | delivery_simulation_interaction_workflow
@@ -41,12 +47,14 @@ Purchase Supply Line | edit_workflow
 Purchase Supply Line | supply_line_interaction_workflow
 Purchase Supply | edit_workflow
 Purchase Trade Condition | edit_workflow
+Returned Sale Packing List Line | pricing_interaction_workflow
 Returned Sale Packing List | edit_workflow
 Returned Sale Packing List | packing_list_workflow
 Sale Order Cell | edit_workflow
 Sale Order Cell | order_movement_simulation_interaction_workflow
 Sale Order Line | edit_workflow
 Sale Order Line | order_movement_simulation_interaction_workflow
+Sale Order Line | pricing_interaction_workflow
 Sale Order Line | trade_matrix_workflow
 Sale Order | edit_workflow
 Sale Order | order_simulation_interaction_workflow
@@ -58,6 +66,7 @@ Sale Packing List Line | container_interaction_workflow
 Sale Packing List Line | delivery_movement_causality_interaction_workflow
 Sale Packing List Line | delivery_movement_simulation_interaction_workflow
 Sale Packing List Line | edit_workflow
+Sale Packing List Line | pricing_interaction_workflow
 Sale Packing List Line | trade_matrix_workflow
 Sale Packing List | delivery_causality_interaction_workflow
 Sale Packing List | delivery_simulation_interaction_workflow

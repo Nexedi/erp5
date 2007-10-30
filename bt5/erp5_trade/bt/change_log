@@ -1,3 +1,6 @@
+2007-10-30 yo
+* Set pricing_interaction_workflow to Container, Container Line, Internal Packing List Line, Inventory Line, Purchase Order Line, Purchase Packing List Line, Returned Sale Packing List Line, Sale Order Line, and Sale Packing List Line.
+
 2007-09-30 yo
 * Clean up the actions of portal types.
 
