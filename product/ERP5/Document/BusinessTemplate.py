@@ -4763,14 +4763,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for dependency_couple in dependency_list:
           dependency_couple_list = dependency_couple.strip().split(' ', 1)
           dependency = dependency_couple_list[0]
-          if dependency.startswith('('):
-            # Something like "(>= 1.0rc6)".
-            dependency = dependency[1:-1]
           if dependency in (None, ''):
             continue
           version_restriction = None
           if len(dependency_couple_list) > 1:
             version_restriction = dependency_couple_list[1]
+            if version_restriction.startswith('('):
+              # Something like "(>= 1.0rc6)".
+              version_restriction = version_restriction[1:-1]
           installed_bt = self.portal_templates.getInstalledBusinessTemplate(dependency)
           if (not self.portal_templates.IsOneProviderInstalled(dependency)) \
              and ((installed_bt is None) \
