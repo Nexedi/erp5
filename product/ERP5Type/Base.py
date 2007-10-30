@@ -1368,7 +1368,7 @@ class Base( CopyContainer,
       keep_existing -- if set to 1 or True, only those properties for which
       hasProperty is False will be updated.
     """
-    self._v_modified_property_dict = {}
+    modified_property_dict = self._v_modified_property_dict = {}
 
     def getModifiedPropertyList(self):
       my_modified_property_list = []
@@ -1389,7 +1389,7 @@ class Base( CopyContainer,
           # edit itself, this is useless as the dict will be overwritten
           # If the keep_existing flag is set to 1, we do not update properties which are defined
           if not keep_existing or not self.hasProperty(key):
-            self._v_modified_property_dict[key] = old_value
+            modified_property_dict[key] = old_value
             my_modified_property_list.append(key)
       return my_modified_property_list
 
@@ -1413,7 +1413,7 @@ class Base( CopyContainer,
 
     if reindex_object:
       # We do not want to reindex the object if nothing is changed
-      if (self._v_modified_property_dict != {}):
+      if (modified_property_dict != {}):
         self.reindexObject(activate_kw=activate_kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
