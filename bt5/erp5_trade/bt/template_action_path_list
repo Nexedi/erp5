@@ -90,6 +90,7 @@ Sale Order | jump_to_related_sale_packing_list
 Sale Order | payment_condition
 Sale Order | profile_view
 Sale Order | reference_generate
+Sale Order | sale_order_planning
 Sale Order | view
 Sale Order | view_discount
 Sale Order | view_stock
