@@ -9,6 +9,7 @@ Amortisation Transaction | edit_workflow
 Delivery Cell | immobilisation_movement_interaction_workflow
 Immobilisation Line | edit_workflow
 Immobilisation Line | immobilisation_movement_interaction_workflow
+Immobilisation Line | pricing_interaction_workflow
 Immobilisation | edit_workflow
 Immobilisation | immobilisation_delivery_workflow
 Immobilisation | immobilisation_movement_interaction_workflow
