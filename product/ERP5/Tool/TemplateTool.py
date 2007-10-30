@@ -805,7 +805,7 @@ class TemplateTool (BaseTool):
             elif diff_version == 0 \
                  and installed_bt.getRevision() \
                  and property_dict['revision'] \
-                 and installed_bt.getRevision() < property_dict['revision']:
+                 and int(installed_bt.getRevision()) < int(property_dict['revision']):
                    template_item_list.append((repository, property_dict))
       else:
         for repository, property_dict_list in self.repository_dict.items():
