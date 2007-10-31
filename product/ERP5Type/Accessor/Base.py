@@ -188,4 +188,4 @@ class Tester(Method):
       self._storage_id = storage_id
 
     def __call__(self, instance, *args, **kw):
-      return getattr(aq_base(instance), self._storage_id, None) is not None
+      return getattr(aq_base(instance), self._storage_id, None) not in self._null
