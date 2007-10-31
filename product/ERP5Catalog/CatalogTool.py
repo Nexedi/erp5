@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from ZODB.POSException import ConflictError
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
