@@ -18,7 +18,9 @@ Business Template | view
 Business Template | view_catalog
 Business Template | view_detail
 Business Template | view_portal_types
+Cache Factory | statistics
 Cache Factory | view
+Cache Tool | statistics
 Cache Tool | view
 Category Divergence Tester | view
 Category Tool | fast_input
@@ -56,6 +58,7 @@ Preference | html_style_preferences
 Preference | view
 Property Divergence Tester | view
 Quantity Divergence Tester | view
+Ram Cache | statistics
 Ram Cache | view
 Route Tool | list
 Route Tool | localroles

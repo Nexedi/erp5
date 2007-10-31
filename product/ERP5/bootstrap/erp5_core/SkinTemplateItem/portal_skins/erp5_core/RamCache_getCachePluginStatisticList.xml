@@ -193,7 +193,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>RamCache_getCachePluginStatistics</string> </value>
+            <value> <string>RamCache_getCachePluginStatisticList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

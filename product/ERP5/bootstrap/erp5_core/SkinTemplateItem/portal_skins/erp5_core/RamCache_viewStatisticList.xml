@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Form.Report</string>
-          <string>ERP5Report</string>
+          <string>Products.ERP5Form.Form</string>
+          <string>ERP5Form</string>
         </tuple>
         <none/>
       </tuple>
@@ -40,6 +40,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>_owner</string> </key>
             <value>
               <none/>
@@ -47,10 +53,6 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
@@ -78,31 +80,34 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_cache_plugin_total_memory</string>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -112,7 +117,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CacheFactory_viewStatistics</string> </value>
+            <value> <string>RamCache_viewStatisticList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -120,15 +125,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>B</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>report_view</string> </value>
-        </item>
-        <item>
-            <key> <string>report_method</string> </key>
-            <value> <string>CacheFactory_getAggregatedCachePluginListStatistics</string> </value>
+            <value> <string>1</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -145,10 +142,6 @@
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

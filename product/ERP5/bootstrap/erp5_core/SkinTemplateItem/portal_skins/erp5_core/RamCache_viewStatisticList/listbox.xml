@@ -519,7 +519,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>RamCache_getCachePluginStatistics</string> </value>
+            <value> <string>RamCache_getCachePluginStatisticList</string> </value>
         </item>
       </dictionary>
     </pickle>

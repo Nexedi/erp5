@@ -77,7 +77,7 @@ for ram_cache_plugin in context.getPortalObject().portal_catalog(\n
                                              portal_type = \'Ram Cache\',\n
                                              path =\'%\' + context.getRelativeUrl() +\'%\'):\n
   result.append(ReportSection(path = ram_cache_plugin.getRelativeUrl(), \n
-                              form_id=\'RamCache_viewStatistics\',\n
+                              form_id = \'RamCache_viewStatisticList\',\n
                               selection_params = {\'list_lines\':0,},\n
                               title = \'%s/%s\' %(ram_cache_plugin.getParent().getTitle(),\n
                                                 ram_cache_plugin.getTitle()),))\n
@@ -101,6 +101,10 @@ return result\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,7 +153,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CacheFactory_getAggregatedCachePluginListStatistics</string> </value>
+            <value> <string>CacheFactory_getAggregatedCachePluginListStatisticList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
