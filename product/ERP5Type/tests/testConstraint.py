@@ -414,25 +414,23 @@ class TestConstraint(PropertySheetTestCase):
     # Test Constraint with property defined on object
     # With None value
     # None is considered as a NULL value for string
-    # and so, is considered as a data
+    # and so, is considered as no data
     sequence_string = '\
               CreateObject \
               SetObjectNoneTitle \
               CreatePropertyExistence2 \
               CallCheckConsistency \
-              CheckIfConstraintSucceeded \
+              CheckIfConstraintFailed \
               '
     sequence_list.addSequenceString(sequence_string)
     # Test Constraint with property defined on object
     # With '' value
-    # As disapointing as it could be, empty string is a data,
-    # and test must succeed
     sequence_string = '\
               CreateObject \
               SetObjectEmptyTitle \
               CreatePropertyExistence2 \
               CallCheckConsistency \
-              CheckIfConstraintSucceeded \
+              CheckIfConstraintFailed \
               '
     sequence_list.addSequenceString(sequence_string)
     # Test Constraint with property defined on object
