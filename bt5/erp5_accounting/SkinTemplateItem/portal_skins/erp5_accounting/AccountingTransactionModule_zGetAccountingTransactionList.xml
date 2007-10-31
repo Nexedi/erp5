@@ -478,6 +478,7 @@ WHERE\n
     AND catalog.creation_date <\n
         <dtml-sqlvar "creation_date_range_max+1" type="datetime"> </dtml-if>\n
   <dtml-if use_movement_table>\n
+    AND movement.is_accountable\n
     AND movement.explanation_uid = catalog.uid </dtml-if>\n
   <dtml-if resource> AND movement.resource_uid =\n
       <dtml-var "restrictedTraverse(resource).getUid()"> </dtml-if>\n
@@ -665,6 +666,7 @@ WHERE\n
     AND catalog.creation_date <\n
         <dtml-sqlvar "creation_date_range_max+1" type="datetime"> </dtml-if>\n
   <dtml-if use_movement_table>\n
+    AND movement.is_accountable\n
     AND movement.explanation_uid = catalog.uid </dtml-if>\n
   <dtml-if resource> AND movement.resource_uid =\n
       <dtml-var "restrictedTraverse(resource).getUid()"> </dtml-if>\n
