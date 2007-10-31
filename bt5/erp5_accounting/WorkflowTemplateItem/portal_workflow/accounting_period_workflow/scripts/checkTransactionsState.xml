@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -86,15 +83,25 @@ invalid_simulation_state_list = [state for state in all_state_list\n
 \n
 section_uid = period.getParentUid()\n
 search_params = {\n
-  \'delivery.start_date\': dict(query=period.getStartDate(),\n
-                              range=\'min\'),\n
-  \'delivery.stop_date\': dict(query=period.getStopDate(),\n
-                             range=\'ngt\'),\n
   \'simulation_state\': invalid_simulation_state_list,\n
   \'portal_type\': portal.getPortalAccountingTransactionTypeList(),\n
-  \'query\': ComplexQuery(Query(source_section_uid=section_uid),\n
-                        Query(destination_section_uid=section_uid),\n
-                        operator=\'OR\')\n
+  \'query\': ComplexQuery( \n
+            \n
+             ComplexQuery( \n
+               Query(source_section_uid=section_uid),\n
+               Query(**{\'delivery.start_date\': [period.getStartDate(),\n
+                                                period.getStopDate()],\n
+                         \'range\': \'minngt\'}),\n
+               operator=\'AND\'),\n
+              \n
+             ComplexQuery( \n
+               Query(destination_section_uid=section_uid),\n
+               Query(**{\'delivery.stop_date\': [period.getStartDate(),\n
+                                               period.getStopDate()], \n
+                         \'range\': \'minngt\'}),\n
+               operator=\'AND\'),\n
+\n
+            operator=\'OR\')\n
 }\n
 \n
 transaction_list = portal.portal_catalog.searchResults(**search_params)\n
@@ -166,9 +173,8 @@ if transaction_list:\n
                             <string>state</string>
                             <string>invalid_simulation_state_list</string>
                             <string>section_uid</string>
-                            <string>dict</string>
-                            <string>search_params</string>
                             <string>_apply_</string>
+                            <string>search_params</string>
                             <string>transaction_list</string>
                           </tuple>
                         </value>
