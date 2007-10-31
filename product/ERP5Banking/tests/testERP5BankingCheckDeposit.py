@@ -228,7 +228,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     Add a check to the check deposit, check number is not defined into site
     so transition must failed
     """
-    self.check_operation_line_1 = self.check_deposit.newContent(
+    self.check_operation_line_2 = self.check_deposit.newContent(
           id='check_operation_line_1',
           portal_type="Check Operation Line",
           aggregate_free_text="CHKNB6",
