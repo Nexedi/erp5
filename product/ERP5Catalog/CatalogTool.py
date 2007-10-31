@@ -604,10 +604,19 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       Clears the catalog by calling a list of methods
       """
       id_tool = self.getPortalObject().portal_ids
-      # Call generate new id in order to store the last id into
-      # the zodb
-      id_tool.generateNewLengthId(id_group='portal_activity')
-      id_tool.generateNewLengthId(id_group='portal_activity_queue')
+      try:
+        # Call generate new id in order to store the last id into
+        # the zodb
+        id_tool.generateNewLengthId(id_group='portal_activity')
+        id_tool.generateNewLengthId(id_group='portal_activity_queue')
+      except ConflictError:
+        raise
+      except:
+        # Swallow exceptions to allow catalog clear to happen.
+        # For example, is portal_ids table does not exist and exception will
+        # be thrown by portal_id methods.
+        LOG('ERP5Catalog.beforeCatalogClear', WARNING,
+            'beforeCatalogClear failed', error=sys.exc_info())
 
     security.declarePrivate('unrestrictedSearchResults')
     def unrestrictedSearchResults(self, REQUEST=None, **kw):
