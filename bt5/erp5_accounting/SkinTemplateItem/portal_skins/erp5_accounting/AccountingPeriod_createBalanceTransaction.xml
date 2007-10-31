@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -93,6 +90,7 @@ assert at_date\n
 section = context.getParentValue()\n
 section_uid = context.getParentUid()\n
 section_currency = section.getPriceCurrency()\n
+section_currency_precision = section.getPriceCurrencyValue().getQuantityPrecision()\n
 \n
 balance_transaction = portal.accounting_module.newContent(\n
                         activate_kw=dict(tag=activity_tag),\n
@@ -128,6 +126,7 @@ getInventoryList = portal.portal_simulation.getInventoryList\n
 \n
 inventory_param_dict = dict(section_uid=section_uid,\n
                             simulation_state=(\'delivered\',),\n
+                            precision=section_currency_precision,\n
                             portal_type=portal.getPortalAccountingMovementTypeList(),\n
                             at_date=at_date.latestTime(),)\n
                             \n
@@ -330,6 +329,7 @@ context.activate(after_tag=activity_tag).getTitle()\n
                             <string>section</string>
                             <string>section_uid</string>
                             <string>section_currency</string>
+                            <string>section_currency_precision</string>
                             <string>balance_transaction</string>
                             <string>group_by_node_node_category_list</string>
                             <string>group_by_mirror_section_node_category_list</string>
@@ -348,6 +348,7 @@ context.activate(after_tag=activity_tag).getTitle()\n
                             <string>inventory</string>
                             <string>total_price</string>
                             <string>quantity</string>
+                            <string>_inplacevar_</string>
                             <string>ValueError</string>
                           </tuple>
                         </value>
