@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,21 +65,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal = context.getPortalObject()\n
+            <value> <string>from DateTime import DateTime\n
 \n
-period_list = context.getParentValue()\\\n
-                            .searchFolder( simulation_state = [\'planned\', \'confirmed\', \'delivered\'],\n
-                                                    sort_on = [(\'delivery.stop_date\', \'ASC\'),] )\n
+period_list = context.getParentValue().searchFolder(\n
+           simulation_state=[\'started\', \'confirmed\', \'delivered\'],\n
+           sort_on=[(\'delivery.stop_date\', \'ASC\'),] )\n
 \n
-if len(period_list) > 0 :\n
+if period_list:\n
   last_period  = period_list[-1].getObject()\n
-  context.setStartDate(last_period.getStopDate() + 1)\n
-  context.setStopDate(None) # XXX doesn\'t work\n
-
-
-]]></string> </value>
+  new_date = last_period.getStopDate() + 1\n
+  context.setStartDate(new_date)\n
+  context.setStopDate(DateTime(new_date.year(), 12, 31))\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -126,14 +120,13 @@ if len(period_list) > 0 :\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
                             <string>period_list</string>
-                            <string>len</string>
                             <string>_getitem_</string>
                             <string>last_period</string>
-                            <string>None</string>
+                            <string>new_date</string>
                           </tuple>
                         </value>
                     </item>
