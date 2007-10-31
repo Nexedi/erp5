@@ -150,10 +150,11 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                             .portal_simulation.getInventoryList
     section_uid = self.getDestinationSectionUid()
     precision =  self.getDestinationSectionValue()\
-                        .getCurrencyPrecisionValue().getQuantityPrecision()
+                        .getPriceCurrencyValue().getQuantityPrecision()
     default_inventory_params = dict(
                         to_date=self.getStartDate().earliestTime(),
                         section_uid=section_uid,
+                        precision=precision,
                         portal_type=self.getPortalAccountingMovementTypeList(),
                         simulation_state=('delivered', ))
 
