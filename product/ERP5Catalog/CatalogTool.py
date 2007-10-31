@@ -52,6 +52,7 @@ from MethodObject import Method
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 
 import os, time, urllib, warnings
+import sys
 from zLOG import LOG, PROBLEM, WARNING, INFO
 
 SECURITY_USING_NUX_USER_GROUPS, SECURITY_USING_PAS = range(2)
