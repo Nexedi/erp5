@@ -74,38 +74,20 @@ period = state_change[\'object\']\n
 portal = period.getPortalObject()\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
-\n
 valid_simulation_state_list = [\'cancelled\', \'delivered\', \'deleted\', \'rejected\']\n
 all_state_list = [x[1] for x in\n
   portal.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n
 invalid_simulation_state_list = [state for state in all_state_list\n
                                  if state not in valid_simulation_state_list]\n
 \n
-section_uid = period.getParentUid()\n
-search_params = {\n
-  \'simulation_state\': invalid_simulation_state_list,\n
-  \'portal_type\': portal.getPortalAccountingTransactionTypeList(),\n
-  \'query\': ComplexQuery( \n
-            \n
-             ComplexQuery( \n
-               Query(source_section_uid=section_uid),\n
-               Query(**{\'delivery.start_date\': [period.getStartDate(),\n
-                                                period.getStopDate()],\n
-                         \'range\': \'minngt\'}),\n
-               operator=\'AND\'),\n
-              \n
-             ComplexQuery( \n
-               Query(destination_section_uid=section_uid),\n
-               Query(**{\'delivery.stop_date\': [period.getStartDate(),\n
-                                               period.getStopDate()], \n
-                         \'range\': \'minngt\'}),\n
-               operator=\'AND\'),\n
+movement_list = portal.portal_simulation.getMovementHistoryList(\n
+      section_uid=period.getParentUid(),\n
+      from_date=period.getStartDate().earliestTime(),\n
+      at_date=period.getStopDate().latestTime(),\n
+      simulation_state=invalid_simulation_state_list,\n
+      portal_type=portal.getPortalAccountingMovementTypeList(),)\n
 \n
-            operator=\'OR\')\n
-}\n
-\n
-transaction_list = portal.portal_catalog.searchResults(**search_params)\n
-if transaction_list:\n
+if movement_list:\n
   raise ValidationFailed, N_(\n
     "All Accounting Transactions for this organisation during the period have"\n
     " to be closed first")\n
@@ -172,10 +154,7 @@ if transaction_list:\n
                             <string>all_state_list</string>
                             <string>state</string>
                             <string>invalid_simulation_state_list</string>
-                            <string>section_uid</string>
-                            <string>_apply_</string>
-                            <string>search_params</string>
-                            <string>transaction_list</string>
+                            <string>movement_list</string>
                           </tuple>
                         </value>
                     </item>
