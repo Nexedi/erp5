@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -108,6 +105,14 @@
                           <string>Task</string>
                           <string>Task</string>
                         </tuple>
+                        <tuple>
+                          <string>Project Line</string>
+                          <string>Project Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>Project Milestones</string>
+                          <string>Project Milestones</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -118,6 +123,10 @@
                         <tuple>
                           <string>task_module_person_domain</string>
                           <string>Task per Person</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_module_project_domain</string>
+                          <string>Project</string>
                         </tuple>
                         <tuple>
                           <string>task_module_domain</string>
@@ -132,7 +141,7 @@
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>task_report_planning_selection</string> </value>
+                    <value> <string>task_planning_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -151,11 +160,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

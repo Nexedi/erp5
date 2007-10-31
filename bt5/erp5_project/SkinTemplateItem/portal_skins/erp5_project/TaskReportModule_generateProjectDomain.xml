@@ -69,28 +69,28 @@
 domain_list = []\n
 \n
 if depth == 0:\n
-  category_list = [ context.task_module.getObject() ]  \n
-\n
-# XXX this is usefull but Breaks the edition\n
-#elif depth == 1:\n
-#    category_list = context.portal_selections.getSelectionValueList(context=context,\n
-#                                                                        selection_name= \'task_report_selection\')\n
-\n
-\n
+  category_list = [ ]\n
+  for i in context.portal_selections.getSelectionValueList(context=context,\n
+                                                                   selection_name= \'task_report_selection\'):\n
+    category_list.extend([j for j in i.getSourceProjectValueList(portal_type="Project") if j not in category_list])\n
+  \n
 else:\n
-  return domain_list\n
+  category_list = [ ]\n
+  for i in context.portal_selections.getSelectionValueList(context=context,\n
+                                                                   selection_name=\'task_selection\'):\n
+    category_list.extend([j for j in i.getSourceProjectValueList(portal_type=["Project Line", "Project Milestones"]) \\\n
+                                                            if (j not in category_list) and ( j.getParentRelativeUrl() in parent.getMembershipCriterionCategoryList()) ])\n
 \n
 for category in category_list:\n
   domain = parent.generateTempDomain(id = \'sub\' + category.getId() )\n
   domain.edit(title = category.getTitle(),\n
-              membership_criterion_base_category = (\'parent\', ), \n
+              membership_criterion_base_category = (\'source_project\', ), \n
               membership_criterion_category = (category.getRelativeUrl(),),\n
               domain_generator_method_id = script.id,\n
               uid = category.getUid())\n
                 \n
   domain_list.append(domain)\n
 \n
-#context.log("%s on %s" % (script.getId(), context.getPath()), "%d objects domain" %  len(domain_list))\n
 return domain_list\n
 </string> </value>
         </item>
@@ -149,6 +149,10 @@ return domain_list\n
                             <string>domain_list</string>
                             <string>category_list</string>
                             <string>_getiter_</string>
+                            <string>i</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>j</string>
                             <string>category</string>
                             <string>domain</string>
                             <string>script</string>
@@ -168,7 +172,7 @@ return domain_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TaskModule_generateDomain</string> </value>
+            <value> <string>TaskReportModule_generateProjectDomain</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
