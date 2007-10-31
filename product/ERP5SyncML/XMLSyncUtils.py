@@ -797,7 +797,7 @@ class XMLSyncUtilsMixin(SyncCode):
           local_gid_list.append(b16encode(gid))
           #LOG('getSyncMLData :', DEBUG,'gid_not_encoded_list:%s, local_gid_list:%s, gid:%s' % (gid_not_encoded_list, local_gid_list, gid))
       else:
-        local_gid_list = map(lambda x: domain.getGidFromObject(x),object_list)
+        local_gid_list = [domain.getGidFromObject(x) for x in object_list]
 
       # Objects to remove
       #LOG('getSyncMLData remove object to remove ...', DEBUG, '')
@@ -1480,6 +1480,21 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                 remote_xml, xml_list, has_status_list,
                                 has_response)
 
+  def deleteRemainObjectList(self, domain, subscriber):
+    """
+    This method allow deletion on not synchronised Objects at the end of Synchronisation session.
+    Usefull only after reseting in One Way Sync
+    """
+    object_list = domain.getObjectList()
+    gid_list = [domain.getGidFromObject(x) for x in object_list]
+    destination = self.unrestrictedTraverse(domain.getDestinationPath())
+    conduit_name = subscriber.getConduit()
+    conduit = self.getConduitByName(conduit_name)
+    for gid in gid_list:
+      if gid not in subscriber.getGidList():
+        object_id = b16decode(gid)
+        conduit.deleteObject(object=destination, object_id=object_id)
+
   def activateSyncModif(self, **kw):
     domain = self.unrestrictedTraverse(kw['domain_relative_url'])
     subscriber = self.unrestrictedTraverse(kw['subscriber_relative_url'])
@@ -1566,6 +1581,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                   content_type=domain.getSyncContentType())
         has_response = 1
       else:
+        if domain.isOneWayFromServer():
+          self.deleteRemainObjectList(domain, subscriber)
         LOG('this is the end of the synchronisation session !!!', INFO, domain.getId())
         domain.setAuthenticated(False)
     return {'has_response':has_response, 'xml':xml_a}
