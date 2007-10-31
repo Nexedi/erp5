@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import os
 
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -35,7 +36,7 @@ from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 class TestConstraint(PropertySheetTestCase):
 
   run_all_test = 1
-  quiet = 1
+  quiet = not os.environ.get('VERBOSE', 0)
 
   object_portal_type = "Organisation"
   object_content_portal_type = "Address"
