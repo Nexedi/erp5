@@ -2,11 +2,8 @@ Alarm Tool | view
 Alarm | latest_result
 Alarm | periodicity
 Alarm | view
-Applied Rule | list
 Applied Rule | view
-Base Category | list
 Base Category | view
-Base Domain | list
 Base Domain | view
 Business Template | export
 Business Template | get_portal_type_properties
@@ -24,11 +21,7 @@ Cache Tool | statistics
 Cache Tool | view
 Category Divergence Tester | view
 Category Tool | fast_input
-Category Tool | list
-Category Tool | localroles
-Category Tool | syndication
 Category Tool | view
-Category | list
 Category | view
 Delivery Builder | view
 Delivery Builder | view_predicate_group
@@ -36,15 +29,9 @@ Delivery Builder | view_profile
 Delivery Tool | view
 Distributed Ram Cache | view
 Document | view
-Domain Generator | list
 Domain Generator | view
-Domain Tool | list
-Domain Tool | localroles
-Domain Tool | syndication
 Domain Tool | view
-Domain | list
 Domain | view
-Folder | foldercontents
 Folder | view
 Mapped Value | view
 Order Builder | view
@@ -60,13 +47,7 @@ Property Divergence Tester | view
 Quantity Divergence Tester | view
 Ram Cache | statistics
 Ram Cache | view
-Route Tool | list
-Route Tool | localroles
-Route Tool | syndication
 Route Tool | view
-Rule Tool | list
-Rule Tool | localroles
-Rule Tool | syndication
 Rule Tool | view
 SQL Cache | view
 Simulation Movement | view
@@ -82,7 +63,6 @@ Template Tool | upgrade_from_repository
 Template Tool | view
 Trash Bin | jump_bt5
 Trash Bin | view
-Trash Folder | list
 Trash Folder | view
 Trash Tool | view
 portal_actions | bt_tool
