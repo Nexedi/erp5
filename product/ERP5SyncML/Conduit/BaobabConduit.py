@@ -201,12 +201,16 @@ class BaobabConduit(ERP5Conduit):
     from Products.Baobab.Conduit import variation_translate_dict
     from Products.Baobab.Conduit import status_code_to_cash_status
     from Products.Baobab.Conduit import former_coin_variation_list
+    from Products.Baobab.Conduit import default_letter_code
+    from Products.Baobab.Conduit import valid_letter_code_set
   except ImportError:
     inventory_code_to_path = {}
     vault_code_to_path = {}
     ariation_translate_dict = {}
     status_code_to_cash_status = {}
     former_coin_variation_list = []
+    default_letter_code = None
+    valid_letter_code_set = ()
 
   """
     Methods below are tools to use the property_map.
@@ -587,8 +591,12 @@ class BaobabConduit(ERP5Conduit):
               category = self.variation_translate_dict.get(kw[base_key], kw[base_key])
             else:
               category = 'not_defined'
-          else:
-            category = kw[base_key]
+          elif base_key == 'letter_code':
+            letter = kw[base_key]
+            if letter in valid_letter_code_set:
+              category = letter
+            else:
+              category = default_letter_code
         else:
           category = 'not_defined'
         # We must have at least a category for each axis
