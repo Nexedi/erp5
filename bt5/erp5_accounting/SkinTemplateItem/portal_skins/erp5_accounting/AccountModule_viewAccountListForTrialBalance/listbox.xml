@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -346,20 +343,20 @@
                           <string>Initial Debit Balance</string>
                         </tuple>
                         <tuple>
-                          <string>debit</string>
-                          <string>Debit Transactions</string>
-                        </tuple>
-                        <tuple>
-                          <string>final_debit_balance</string>
-                          <string>Final Debit Balance</string>
-                        </tuple>
-                        <tuple>
                           <string>initial_credit_balance</string>
                           <string>Initial Credit Balance</string>
                         </tuple>
                         <tuple>
+                          <string>debit</string>
+                          <string>Debit Transactions</string>
+                        </tuple>
+                        <tuple>
                           <string>credit</string>
                           <string>Credit Transactions</string>
+                        </tuple>
+                        <tuple>
+                          <string>final_debit_balance</string>
+                          <string>Final Debit Balance</string>
                         </tuple>
                         <tuple>
                           <string>final_credit_balance</string>
@@ -570,11 +567,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -589,11 +583,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
