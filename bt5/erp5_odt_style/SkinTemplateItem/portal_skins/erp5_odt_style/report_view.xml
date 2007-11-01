@@ -325,7 +325,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                       <tal:block tal:condition="report_item/getTitle">\n
                          <text:p\n
                             tal:content="report_item/getTitle"\n
-                            tal:attributes="text:style-name string:report-title-${report_item/getLevel}"\n
+                            tal:attributes="text:style-name string:Heading_20_${report_item/getLevel}"\n
                             >report item title</text:p><text:p/>\n
                         </tal:block>\n
   \n
