@@ -1184,8 +1184,8 @@ class TestAccountingReports(AccountingTestCase):
           len(data_line_list))
     
     self.assertEquals(['node_id', 'node_title',
-           'initial_debit_balance', 'debit', 'final_debit_balance',
-           'initial_credit_balance', 'credit', 'final_credit_balance',
+           'initial_debit_balance', 'initial_credit_balance', 'debit',
+           'credit', 'final_debit_balance', 'final_credit_balance',
            'final_balance_if_debit', 'final_balance_if_credit'],
            data_line_list[0].column_id_list)
     
