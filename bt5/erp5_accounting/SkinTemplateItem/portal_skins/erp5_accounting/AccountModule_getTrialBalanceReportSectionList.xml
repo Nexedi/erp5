@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -81,6 +78,7 @@ from_date = request.get(\'from_date\', None)\n
 simulation_state = request[\'simulation_state\']\n
 expand_accounts = request.get(\'expand_accounts\', False)\n
 show_empty_accounts = request[\'show_empty_accounts\']\n
+per_account_class_summary = request[\'per_account_class_summary\']\n
 \n
 section_uid = portal.Base_getSectionUidListForSectionCategory(\n
                                    request[\'section_category\'])\n
@@ -128,7 +126,9 @@ return [ ReportSection(\n
                                   section_uid=section_uid,\n
                                   simulation_state=simulation_state,\n
                                   precision=precision,\n
-                                  node_uid=node_uid), )]\n
+                                  node_uid=node_uid,\n
+                                  per_account_class_summary=\n
+                                          per_account_class_summary), )]\n
 </string> </value>
         </item>
         <item>
@@ -192,6 +192,7 @@ return [ ReportSection(\n
                             <string>False</string>
                             <string>expand_accounts</string>
                             <string>show_empty_accounts</string>
+                            <string>per_account_class_summary</string>
                             <string>section_uid</string>
                             <string>period_start_date</string>
                             <string>currency</string>

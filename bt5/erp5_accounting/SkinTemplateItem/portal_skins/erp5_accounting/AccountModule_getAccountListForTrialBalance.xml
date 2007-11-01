@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -634,7 +631,69 @@ request.set(\'TrialBalance.debit\', total_debit)\n
 request.set(\'TrialBalance.credit\', total_credit)\n
 request.set(\'TrialBalance.final_balance_if_debit\', total_final_balance_if_debit)\n
 request.set(\'TrialBalance.final_balance_if_credit\', total_final_balance_if_credit)\n
-return line_list\n
+\n
+if not per_account_class_summary:\n
+  return line_list\n
+\n
+current_gap = portal.portal_preferences.getPreferredAccountingTransactionGap()\n
+if current_gap.startswith(\'gap/\'):\n
+  current_gap = current_gap[4:]\n
+def getAccountClass(account_relative_url):\n
+  account = traverse(account_relative_url)\n
+  for gap in account.getGapList():\n
+    if gap.startswith(current_gap):\n
+     gap_part_list = gap.split(\'/\')\n
+     # country / accounting principle / ${class}\n
+     if len(gap_part_list) > 2:\n
+       return gap_part_list[2]\n
+  return None # this account has no class on the current GAP  \n
+\n
+new_line_list = []\n
+account_per_class = dict()\n
+for brain in line_list:\n
+  account_per_class.setdefault(\n
+      getAccountClass(brain.node_relative_url), []).append(brain)\n
+\n
+account_class_list = account_per_class.keys()\n
+account_class_list.sort()\n
+\n
+add_line = new_line_list.append\n
+for account_class in account_class_list:\n
+  initial_debit_balance = 0\n
+  debit = 0\n
+  final_debit_balance = 0\n
+  initial_credit_balance = 0\n
+  credit = 0\n
+  final_credit_balance = 0\n
+  final_balance_if_debit = 0\n
+  final_balance_if_credit = 0\n
+\n
+  for account in account_per_class[account_class]:\n
+    initial_debit_balance += account.initial_debit_balance\n
+    debit += account.debit\n
+    final_debit_balance += account.final_debit_balance\n
+    initial_credit_balance += account.initial_credit_balance\n
+    credit += account.credit\n
+    final_credit_balance += account.final_credit_balance\n
+    final_balance_if_debit += account.final_balance_if_debit\n
+    final_balance_if_credit += account.final_balance_if_credit\n
+    add_line(account)\n
+    \n
+  # summary\n
+  add_line(Object(node_title=N_(\'Total for class ${account_class}\',\n
+                   mapping=dict(account_class=account_class or \'???\')),\n
+          initial_debit_balance=round(initial_debit_balance, precision),\n
+          debit=round(debit, precision),\n
+          final_debit_balance=round(final_debit_balance, precision),\n
+          initial_credit_balance=round(initial_credit_balance, precision),\n
+          credit=round(credit, precision),\n
+          final_credit_balance=round(final_credit_balance, precision),\n
+          final_balance_if_debit=round(final_balance_if_debit, precision),\n
+          final_balance_if_credit=round(final_balance_if_credit, precision),))\n
+\n
+  add_line(Object(node_title=\' \'))\n
+\n
+return new_line_list\n
 # vim: foldmethod=marker\n
 
 
@@ -660,7 +719,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, **kw</string> </value>
+            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, per_account_class_summary=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -680,7 +739,7 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -695,6 +754,7 @@ return line_list\n
                             <string>simulation_state</string>
                             <string>precision</string>
                             <string>node_uid</string>
+                            <string>per_account_class_summary</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -736,6 +796,7 @@ return line_list\n
                             <string>_getitem_</string>
                             <string>account_props</string>
                             <string>total_price</string>
+                            <string>_inplacevar_</string>
                             <string>round</string>
                             <string>max</string>
                             <string>traverse</string>
@@ -762,6 +823,19 @@ return line_list\n
                             <string>closing_balance</string>
                             <string>line</string>
                             <string>getStringIndex</string>
+                            <string>current_gap</string>
+                            <string>getAccountClass</string>
+                            <string>new_line_list</string>
+                            <string>account_per_class</string>
+                            <string>brain</string>
+                            <string>account_class_list</string>
+                            <string>add_line</string>
+                            <string>account_class</string>
+                            <string>debit</string>
+                            <string>credit</string>
+                            <string>final_balance_if_debit</string>
+                            <string>final_balance_if_credit</string>
+                            <string>account</string>
                           </tuple>
                         </value>
                     </item>
@@ -773,7 +847,9 @@ return line_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
