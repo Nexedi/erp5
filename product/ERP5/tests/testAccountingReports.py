@@ -979,6 +979,74 @@ class TestAccountingReports(AccountingTestCase):
     self.failUnless(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=600, credit=21)
 
+  def testAccountStatementPeriodDateEqualsFromDate(self):
+    # Initial balance in Account Statement for standard account: the initial
+    # balance is the balance at the beginning of the period + movements in the
+    # period.
+    # This is for the special case whe the period start date is equals to the
+    # start date
+
+    self.createAccountStatementDataSetOnTwoPeriods()
+    
+    t1b = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Transaction 1b',
+              source_reference='1b',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2005, 12, 13),
+              lines=(dict(source_value=self.account_module.goods_sales,
+                          source_debit=21.0),
+                     dict(source_value=self.account_module.receivable,
+                          source_credit=21.0)))
+    
+    # set request variables and render   
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(3, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='Previous Balance',
+                             date=DateTime(2006, 1, 1),
+                             Movement_getExplanationTitle='',
+                             Movement_getMirrorSectionTitle='',
+                             debit=79,
+                             credit=0,
+                             running_total_price=79)
+
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='2',
+                             date=DateTime(2006, 1, 1),
+                             Movement_getExplanationTitle='Transaction 2',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=200,
+                             credit=0,
+                             running_total_price=279)
+
+    self.checkLineProperties(data_line_list[2],
+                             Movement_getSpecificReference='3',
+                             date=DateTime(2006, 2, 2),
+                             Movement_getExplanationTitle='Transaction 3',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=300,
+                             credit=0,
+                             running_total_price=579)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=579, credit=0)
+
 
   def testAccountStatementPeriodDateAndInitialBalanceForExpenseAccounts(self):
     # Account statement for expense or income account will not show
