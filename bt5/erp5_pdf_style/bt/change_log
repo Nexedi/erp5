@@ -1,3 +1,7 @@
+2007-10-30 jerome
+* Support for list fields in report_view
+* define macros for deferred rendering
+
 2007-08-17 jerome
 * Add support for cases where matrixbox or listbox is a proxyfield
 

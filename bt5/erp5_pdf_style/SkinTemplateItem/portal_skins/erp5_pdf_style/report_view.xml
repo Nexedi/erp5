@@ -62,8 +62,12 @@
   <title>List Print</title>\n
   <author>ERP5</author>\n
   <subject>Print Example</subject>\n
-  <content tal:define="report_item_list python:report_method();\n
-                       dummy python: request.set(\'here\',here); ">\n
+  <!-- This template can be used to aggregate together some already rendered report sections.\n
+        In this case, "rendered_report_item_list" must be in the page template context. -->\n
+  <tal:block tal:define="rendered_report_item_list rendered_report_item_list | python:[];\n
+                         report_item_list python: rendered_report_item_list or report_method();">\n
+\n
+  <content tal:define="dummy python: request.set(\'here\',here); ">\n
 \n
    <action name="nextPageTemplate">\n
       <parameter>FirstPage</parameter>\n
@@ -139,11 +143,22 @@
 \n
    <spacer height="100"/>\n
 \n
+   <!-- if we are called with a rendered_report_item_list, just insert the rendered text here. -->\n
+   <tal:block tal:condition="rendered_report_item_list">\n
+      <tal:block tal:repeat="report_item report_item_list">\n
+        <tal:block tal:replace="structure report_item"/>\n
+      </tal:block>\n
+   </tal:block>\n
 \n
-<tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
+<tal:block tal:define="portal_object here/portal_url/getPortalObject"\n
+           tal:condition="not: rendered_report_item_list">\n
 <tal:block tal:repeat="report_item report_item_list">\n
   <tal:block tal:define="here python:report_item.getObject(portal_object);\n
                          dummy python:report_item.pushReport(portal_object)">\n
+  <tal:block metal:define-macro="render_report_section"\n
+             tal:define="comment string:this is required for the macro;\n
+                         landscape python: int(request.get(\'landscape\', 0) or 0);\n
+                         global frame_width python:landscape and 25.8 or 19">\n
   <tal:block tal:condition="report_item/getTitle | report_item/getTranslatedTitle">\n
     <tal:block tal:condition="report_item/getTitle">\n
       <para style="Heading1" tal:content="report_item/getTitle"\n
@@ -157,12 +172,13 @@
       <tal:block tal:condition="python:form.pt == \'form_view\'">\n
         <tal:block metal:use-macro="form/form_view/macros/form_layout"/></tal:block>\n
       <tal:block tal:condition="python:form.pt == \'form_list\'">\n
-        <tal:block metal:use-macro="form/form_list/macros/form_layout"/></tal:block></tal:block></tal:block></tal:block>\n
+        <tal:block metal:use-macro="form/form_list/macros/form_layout"/></tal:block></tal:block></tal:block></tal:block></tal:block>\n
   <tal:block tal:define="dummy python:report_item.popReport(portal_object)"/>\n
 </tal:block>\n
 </tal:block>\n
 \n
   </content>\n
+ </tal:block>\n
 </document>\n
 
 
