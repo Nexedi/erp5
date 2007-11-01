@@ -14,16 +14,21 @@ OOo Template
 
     - <office:include>
         Allow you to include another document in the current template (as an OLE attachment)
-        You must specify at least the path (can be either a single name or a path name using "/")
-        and the type of the document (generally calc or writer), the default is zope's content-type.
-        The size is always specified in centimeters (with attached "cm" suffix or not).
-        You can specify the style (defined in the sylesheet) with the "style" option.
-        You can also pass "x" and "y" attributes for positioning, it's mainly useful for draw documents.
+        You must specify at least the path (can be either a single name or a path name using "/").
+        The type of document must be specified in the embedded document itself as
+        a MIME type. Size parameters are defined, as in any ODF file,
+        within the <draw:frame> tag which encloses the <office:include> tag.
+
+        TODO: make sure it is useful or useless to pass x, y params (as before)
 
        Example:
-           <office:include type="calc" width="10.100cm" height="16.000cm" path="agenda" />
-           <office:include width="15" height="20" path="/reports/my_report" />
-           <office:include path="foo" />
+        <draw:frame draw:style-name='gr1' svg:height='18.686cm' svg:width='27.367cm' draw:layer='layout' 
+                    svg:x='0cm' svg:y='0cm'
+                    tal:attributes="svg:height height | string:18.686cm;
+                                    svg:width width | string:27.367cm">
+          <office:include path="ERP5Site_viewOwnerBarChart" xlink:type='simple' 
+                          xlink:actuate='onLoad' xlink:show='embed'/>
+        </draw:frame>
 
     - <office:include_img>
         Not unlike <office:include>, allows you to include a picture document, refer to
@@ -36,7 +41,7 @@ OOo Template
         or if a constraint is applied).
 
        Example:
-           <office:include x="5cm" y="1cm" path="foo" />
+           <office:include_img x="5cm" y="1cm" path="foo" />
 
   Tips:
 

@@ -115,6 +115,7 @@ class OOoTemplate(ZopePageTemplate):
   _OLE_directory_prefix  = 'Obj'
   # every OOo document have a content-type starting like this
   _OOo_content_type_root = 'application/vnd.sun.xml.'
+  _ODF_content_type_root = 'application/vnd.oasis.opendocument.'
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -224,53 +225,53 @@ class OOoTemplate(ZopePageTemplate):
       return ret
 
     def replaceIncludes(match):
-      options_dict = dict( style="fr1", x="0cm", y="0cm" )
-      options_dict.update( dict(arguments_re.findall( match.group(1) )) )
-      document = self._resolvePath( options_dict['path'].encode() )
-      #document_text = document.read()
+      tag_string = match.group(1)
+
+      # Build a dictionary with tag parameters
+      options_dict = dict(arguments_re.findall(match.group(1)))
+
+      # Find the page template based on the path and remove path from dict
+      document = self._resolvePath(options_dict['path'].encode())
       document_text = ZopePageTemplate.pt_render(document) # extra_context is missing
+      del options_dict['path']
 
-      if 'type' not in options_dict:
-        options_dict['type'] = document.content_type
-      else: # type passed in short form as an attribute
-        options_dict['type'] = self._OOo_content_type_root + options_dict['type']
+      # Find the type of the embedded document
+      document_type = document.content_type
 
-      w, h, x, y = getLengthInfos( options_dict , ('width', 'height', 'x', 'y') )
-      # Set defaults
-      if w is None:
-        w = 10.0
-      if h is None:
-        h = 10.0
-      if  x is None:
-        x = 0.0
-      if  y is None:
-        y = 0.0
-
+      # Prepare a subdirectory to store embedded objects
       actual_idx = self.document_counter.next()
       dir_name = '%s%d'%(self._OLE_directory_prefix,actual_idx)
 
       if sub_document: # sub-document means sub-directory
         dir_name = sub_document + '/' + dir_name
 
-      try:
-        ooo_stylesheet = getattr(here, document.ooo_stylesheet)
-        # If style is dynamic, call it
+      # Get the stylesheet of the embedded openoffice document
+      ooo_stylesheet = document.ooo_stylesheet
+      if ooo_stylesheet:
+        ooo_stylesheet = getattr(here, ooo_stylesheet)
+        # If ooo_stylesheet is dynamic, call it
         try:
           ooo_stylesheet = ooo_stylesheet()
         except AttributeError:
           pass
         temp_builder = OOoBuilder(ooo_stylesheet)
         stylesheet = temp_builder.extract('styles.xml')
-      except AttributeError:
+      else:
         stylesheet = None
 
+      # Start recursion if necessary
       sub_attached_files_dict = {}
       if 'office:include' in document_text: # small optimisation to avoid recursion if possible
         (document_text, sub_attached_files_dict ) = self.renderIncludes(document_text, dir_name)
 
-      # View*    = writer
-      # Visible* = calc
-      settings_text = """<?xml version="1.0" encoding="UTF-8"?>
+      # Build settings document if necessary
+      settings_text = None
+      if 0:
+        w = 10
+        h = 10
+        # View*    = writer
+        # Visible* = calc
+        settings_text = """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE office:document-settings PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "office.dtd">
 <office:document-settings xmlns:office="http://openoffice.org/2000/office"
 xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -287,36 +288,36 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
 <config:config-item config:name="VisibleAreaHeight" config:type="int">%(h)d</config:config-item>
 </config:config-item-set>
 </office:settings>
-</office:document-settings>"""%dict( w=int(w*1000) , h=int(h*1000) ) # convert from 10^-2 (centimeters) to 10^-5
-      attached_files_dict[dir_name] = dict(document = document_text,
-              doc_type = options_dict['type'], stylesheet = stylesheet )
-      attached_files_dict[dir_name+'/settings.xml'] = dict( document = settings_text,
-              doc_type = 'text/xml' )
-      attached_files_dict.update(sub_attached_files_dict )
+</office:document-settings>""" % dict( w=int(w*1000) , h=int(h*1000) ) # convert from 10^-2 (centimeters) to 10^-5
 
-      # add a paragraph with the OLE document in it
-      # The dir_name is relative here, extract the last path component
-      replacement = """
-      <draw:object draw:style-name="%s" draw:name="ERP5IncludedObject%d"
-      text:anchor-type="paragraph" svg:x="%.3fcm" svg:y="%.3fcm"
-      svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="#./%s
-      " xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
-      """%(options_dict['style'], actual_idx, x, y, w, h, dir_name.split('/')[-1])
-      if not self.content_type.endswith('draw'):
-        replacement = '<text:p text:style-name="Standard">'+replacement+'</text:p>'
-      return replacement
+      # Attach content, style and settings if any
+      attached_files_dict[dir_name] = dict(document=document_text,
+                                           doc_type=document_type,
+                                           stylesheet=stylesheet)
+      if settings_text:
+        attached_files_dict[dir_name + '/settings.xml'] = dict(document=settings_text,
+                                                               doc_type='text/xml')
+      attached_files_dict.update(sub_attached_files_dict)
+
+      # Build the new tag
+      parameter_list = []
+      for k, v in options_dict.items():
+        parameter_list.append('%s="%s"' % (k, v))
+      new_tag = '<draw:object draw:name="ERP5IncludedObject%d" xlink:href="./%s" %s/>' %\
+                 (actual_idx, dir_name.split('/')[-1], ' '.join(parameter_list))
+      return new_tag
 
     def replaceIncludesImg(match):
-      options_dict = dict( x='0cm', y='0cm', style="fr1" )
-      options_dict.update( dict(arguments_re.findall( match.group(1) )) )
-      picture = self._resolvePath( options_dict['path'].encode() )
+      options_dict = dict(x='0cm', y='0cm', style="fr1")
+      options_dict.update(dict(arguments_re.findall(match.group(1))))
+      picture = self._resolvePath(options_dict['path'].encode())
 
       # "standard" filetype == Image or File , for ERP objects the
       # manipulations are different
       is_standard_filetype = True
 
       if getattr(picture, 'data', None) is None \
-              or callable(picture.content_type):
+                    or callable(picture.content_type):
         is_standard_filetype = False
 
       if is_standard_filetype:
@@ -334,7 +335,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       if '/' not in options_dict['type']:
         options_dict['type'] = 'image/' + options_dict['type']
 
-      w, h, maxwidth, maxheight = getLengthInfos( options_dict, ('width','height','maxwidth','maxheight') )
+      w, h, maxwidth, maxheight = getLengthInfos(options_dict, ('width', 'height', 'maxwidth', 'maxheight'))
 
       try: # try image properties
         aspect_ratio = float(picture.width) / float(picture.height)
@@ -359,22 +360,22 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
         w = h * aspect_ratio
 
       actual_idx = self.document_counter.next()
-      pic_name = 'Pictures/picture%d.%s'%(actual_idx, options_dict['type'].split('/')[-1])
+      pic_name = 'Pictures/picture%d.%s' % (actual_idx, options_dict['type'].split('/')[-1])
 
       if sub_document: # sub-document means sub-directory
-        pic_name = sub_document+'/'+pic_name
+        pic_name = sub_document + '/' + pic_name
 
       attached_files_dict[pic_name] = dict(
-        document = picture_data,
-        doc_type = options_dict['type']
+        document=picture_data,
+        doc_type=options_dict['type']
       )
       # XXX: Pictures directory not managed (seems facultative)
       #  <manifest:file-entry manifest:media-type="" manifest:full-path="ObjBFE4F50D/Pictures/"/>
       is_legacy = ('oasis.opendocument' not in self.content_type)
       replacement = """<draw:image draw:style-name="%s" draw:name="ERP5Image%d"
-      text:anchor-type="paragraph" svg:x="%s" svg:y="%s"
-      svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="%sPictures/%s"
-      xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+text:anchor-type="paragraph" svg:x="%s" svg:y="%s"
+svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="%sPictures/%s"
+xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
       """ % (options_dict['style'], actual_idx,
              options_dict['x'], options_dict['y'],
              w, h,
@@ -432,20 +433,22 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     # Add the associated files
     for dir_name, document_dict in attachments_dict.iteritems():
       # Special case : the document is an OOo one
-      if document_dict['doc_type'].startswith(self._OOo_content_type_root):
-        ooo_builder.addFileEntry(full_path = dir_name,
-                  media_type = document_dict['doc_type'] )
-        ooo_builder.addFileEntry(full_path = dir_name+'/content.xml',
-                  media_type = 'text/xml',content = document_dict['document'] )
+      if document_dict['doc_type'].startswith(self._OOo_content_type_root) or \
+         document_dict['doc_type'].startswith(self._ODF_content_type_root):
+        ooo_builder.addFileEntry(full_path=dir_name,
+                                 media_type=document_dict['doc_type'])
+        ooo_builder.addFileEntry(full_path=dir_name + '/content.xml',
+                                 media_type='text/xml', content=document_dict['document'])
         styles_text = default_styles_text
         if document_dict.has_key('stylesheet') and document_dict['stylesheet']:
           styles_text = document_dict['stylesheet']
         if styles_text:
-          ooo_builder.addFileEntry(full_path = dir_name+'/styles.xml',
-                      media_type = 'text/xml',content = styles_text )
+          ooo_builder.addFileEntry(full_path=dir_name + '/styles.xml',
+                                   media_type='text/xml', content=styles_text)
       else: # Generic case
         ooo_builder.addFileEntry(full_path=dir_name,
-                  media_type=document_dict['doc_type'], content = document_dict['document'] )
+                                 media_type=document_dict['doc_type'],
+                                 content=document_dict['document'])
 
     # Debug mode
     if request.get('debug',0):
