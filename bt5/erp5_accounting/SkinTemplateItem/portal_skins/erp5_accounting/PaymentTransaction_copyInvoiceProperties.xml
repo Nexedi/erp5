@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -92,7 +89,6 @@ if payment_transaction.getSimulationState() == "draft": \n
   payment_transaction.portal_workflow.doActionFor(\n
                                   payment_transaction,\n
                                   \'plan_action\',\n
-                                  wf_id=\'accounting_workflow\',\n
                                   comment="Initialized by Delivery Builder")\n
   LOG("payment simulation state set to planned")\n
 \n

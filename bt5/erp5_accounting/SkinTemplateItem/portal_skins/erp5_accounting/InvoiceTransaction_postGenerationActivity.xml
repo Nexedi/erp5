@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -73,7 +70,14 @@
 # after the invoice_builder delivery builder has created\n
 # the new Sale Invoice Transaction\n
 #\n
-from ZODB.POSException import ConflictError \n
+try:\n
+  from Products.CMFCore.WorkflowCore import WorkflowException\n
+except ImportError:\n
+  # WorkflowException has not always been allowed in restricted\n
+  # environment, in this case, make sure WorkflowException is \n
+  # defined \n
+  class WorkflowException(Exception):\n
+    pass\n
 \n
 invoice = context\n
 \n
@@ -88,7 +92,7 @@ related_packing_list = invoice.getDefaultCausalityValue()\n
 \n
 # get a price_currency from the packing list\n
 related_order  = related_packing_list.getDefaultCausalityValue()\n
-if related_order is not None :\n
+if related_order is not None:\n
   price_currency = related_order.getPriceCurrency()\n
   invoice.edit(\n
     resource = price_currency,\n
@@ -96,20 +100,20 @@ if related_order is not None :\n
   )\n
   \n
 # copy title, if not updating a new delivery\n
-if invoice.getTitle() is None :\n
+if not invoice.getTitle():\n
   invoice.setTitle(related_packing_list.getTitle())\n
 \n
 # initialize accounting_workflow to planned state\n
-if invoice.getSimulationState() == \'draft\' : \n
+if invoice.getSimulationState() == \'draft\':\n
   try :\n
     context.getPortalObject().portal_workflow.doActionFor(\n
-      invoice, \'plan_action\', wf_id=\'accounting_workflow\',\n
-      comment = \'Initialized by Delivery Builder\',\n
-      skip_period_validation = 1 )\n
-  except (ConflictError, RuntimeError), e : raise\n
-  except Exception, e :\n
-    LOG(\'Exception in plan_action %s\' % e)\n
-  if invoice.getSimulationState() == \'draft\' : \n
+      invoice, \'plan_action\',\n
+      comment=\'Initialized by Delivery Builder\',\n
+      skip_period_validation=1)\n
+  except WorkflowException, e:\n
+    # The user cannot pass the transition, it\'s OK\n
+    pass\n
+  if invoice.getSimulationState() == \'draft\':\n
     # call the workflow method, if the user cannot perform this operation.\n
     invoice.plan()\n
 \n
@@ -117,7 +121,7 @@ if invoice.getSimulationState() == \'draft\' : \n
 invoice.startBuilding()\n
 \n
 # Then an activity should put the causality state in diverged or solved\n
-# XXX after_method_id is not good, it should be after_group_id, but not yet implemented\n
+# XXX after_method_id is not good, it should use tag / after tag correctly\n
 invoice.activate(\n
         after_method_id = ( \'immediateReindexObject\',\n
                             \'recursiveImmediateReindexObject\',\n
@@ -165,8 +169,10 @@ invoice.activate(\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>ZODB.POSException</string>
-                            <string>ConflictError</string>
+                            <string>Products.CMFCore.WorkflowCore</string>
+                            <string>WorkflowException</string>
+                            <string>ImportError</string>
+                            <string>Exception</string>
                             <string>context</string>
                             <string>invoice</string>
                             <string>LOG</string>
@@ -175,9 +181,7 @@ invoice.activate(\n
                             <string>related_order</string>
                             <string>None</string>
                             <string>price_currency</string>
-                            <string>RuntimeError</string>
                             <string>e</string>
-                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
