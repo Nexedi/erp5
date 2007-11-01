@@ -461,9 +461,9 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       self.OLE_documents_zipstring = None
 
     # Convert if necessary
-    opts = extra_context.get("options", None)
+    opts = extra_context.get("options", dict())
 
-    # Get request and batch_mode
+    # Get batch_mode
     batch_mode = opts.get('batch_mode', None)
 
     # If the file has embedded OLE documents, restore it
@@ -478,10 +478,9 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     # Produce final result
     ooo = ooo_builder.render(name=self.title or self.id)
     
-    if opts is not None:
-      format = opts.get('format', request.get('format', None))
-      if format:
-        return self._asFormat(ooo, format, request, batch_mode)
+    format = opts.get('format', request.get('format', None))
+    if format:
+      return self._asFormat(ooo, format, request, batch_mode)
 
     if not format and not batch_mode:
       request.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % self.content_type)
