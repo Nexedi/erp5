@@ -82,7 +82,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     * `self.section` an organisation in region europe/west/france
     using EUR as default currency, without any openned accounting period by
     default. This organisation is member of group/demo_group/sub1
-    * self.client_1, self.client_2 & self.vendor, some other organisations
+    * self.client_1, self.client_2 & self.supplier, some other organisations
   
   Accounts:
       All accounts are associated to a virtual GAP category named "My Accounting
@@ -191,7 +191,7 @@ class AccountingTestCase(ERP5TypeTestCase):
                       list(self.accounting_module.objectIds()))
     self.organisation_module.manage_delObjects([x for x in 
           self.accounting_module.objectIds() if x not in ('my_organisation',
-            'client_1', 'client_2', 'client_3')])
+            'client_1', 'client_2', 'supplier')])
     self.organisation_module.my_organisation.manage_delObjects([x.getId()
         for x in self.organisation_module.my_organisation.objectValues(
                    portal_type=('Accounting Period', 'Bank Account'))])
@@ -217,10 +217,133 @@ class AccountingTestCase(ERP5TypeTestCase):
             'erp5_accounting_ui_test')
 
 
+class TestTransactionValidation(AccountingTestCase):
+  """Test validations of accounting transactions.
+
+  In this test suite, the section have a closed accounting period for 2006, and
+  an open one for 2007.
+  """
+  def afterSetUp(self):
+    self.organisation_module = self.portal.organisation_module
+    self.section = self.organisation_module.my_organisation
+
+    if 'accounting_period_2006' not in self.section.objectIds():
+      accounting_period_2006 = self.section.newContent(
+                                  id='accounting_period_2006',
+                                  portal_type='Accounting Period',
+                                  start_date=DateTime('2006/01/01'),
+                                  stop_date=DateTime('2006/12/31'))
+      accounting_period_2006.start()
+      accounting_period_2006.stop()
+      accounting_period_2007 = self.section.newContent(
+                                  id='accounting_period_2007',
+                                  portal_type='Accounting Period',
+                                  start_date=DateTime('2007/01/01'),
+                                  stop_date=DateTime('2007/12/31'))
+      accounting_period_2007.start()
+      get_transaction().commit()
+      self.tic()
+
+  def test_SaleInvoiceTransactionValidationDate(self):
+    # Accounting Period Date matters for Sale Invoice Transaction
+    transaction = self._makeOne(
+               portal_type='Sale Invoice Transaction',
+               start_date=DateTime('2006/03/03'),
+               destination_section_value=self.organisation_module.supplier,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+    # validation is refused, because period is closed
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    # in 2007, it's OK
+    transaction.setStartDate(DateTime("2007/03/03"))
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+  
+  def test_PurchaseInvoiceTransactionValidationDate(self):
+    # Accounting Period Date matters for Purchase Invoice Transaction
+    transaction = self._makeOne(
+               portal_type='Purchase Invoice Transaction',
+               stop_date=DateTime('2006/03/03'),
+               source_section_value=self.organisation_module.supplier,
+               lines=(dict(destination_value=self.account_module.goods_purchase,
+                           destination_debit=500),
+                      dict(destination_value=self.account_module.receivable,
+                           destination_credit=500)))
+    # validation is refused, because period is closed
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    # in 2007, it's OK
+    transaction.setStopDate(DateTime("2007/03/03"))
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
+  def test_PaymentTransactionValidationDate(self):
+    # Accounting Period Date matters for Payment Transaction
+    transaction = self._makeOne(
+               portal_type='Payment Transaction',
+               start_date=DateTime('2006/03/03'),
+               destination_section_value=self.organisation_module.supplier,
+               payment_module='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+    # validation is refused, because period is closed
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    # in 2007, it's OK
+    transaction.setStartDate(DateTime("2007/03/03"))
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
+  def test_DestinationPaymentTransactionValidationDate(self):
+    # Accounting Period Date matters for Payment Transaction
+    transaction = self._makeOne(
+               portal_type='Payment Transaction',
+               stop_date=DateTime('2006/03/03'),
+               source_section_value=self.organisation_module.supplier,
+               destination_section_value=self.section, 
+               payment_module='default',
+               lines=(dict(destination_value=self.account_module.goods_purchase,
+                           destination_debit=500),
+                      dict(destination_value=self.account_module.receivable,
+                           destination_credit=500)))
+    # validation is refused, because period is closed
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    # in 2007, it's OK
+    transaction.setStopDate(DateTime("2007/03/03"))
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
+  def test_AccountingTransactionValidationStartDate(self):
+    # Check we can/cannot validate at date boundaries of the period
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2006/12/31'),
+               destination_section_value=self.organisation_module.supplier,
+               payment_module='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+    # validation is refused, because period is closed
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    transaction.setStartDate(DateTime("2007/01/01"))
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
+
+
 class TestClosingPeriod(AccountingTestCase):
   """Various tests for closing the period.
   """
   def beforeTearDown(self):
+    get_transaction().abort()
     # we manually remove the content of stock table, because unindexObject
     # might not work correctly on Balance Transaction, and we don't want
     # leave something in stock table that will change the next test.
@@ -2249,6 +2372,7 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateValidAccountingTransaction
       stepValidateNoDate""", quiet=quiet)
 
+
   def test_AccountingTransactionValidationSection(self, quiet=QUIET,
                                              run=RUN_ALL_TESTS):
     """Transaction validation and section"""
@@ -2522,5 +2646,6 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccounting))
   suite.addTest(unittest.makeSuite(TestClosingPeriod))
+  suite.addTest(unittest.makeSuite(TestTransactionValidation))
   return suite
 
