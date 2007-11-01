@@ -391,40 +391,19 @@ class ListBoxWidget(Widget.Widget):
 
 ListBoxWidgetInstance = ListBoxWidget()
 
-class VolatileCachingMethod:
-  """This class caches the result of a callable object, and behaves like a method.
-     Unlike ERP5Type's CachingMethod, this cache is volatile, namely, the cached
-     data is removed immediately when an object which stores the cached data is deleted.
-     Naturally, the object (self) should not be a persistent object.
+def lazyMethod(func):
+  """Return a function which stores a computed value in an instance
+  at the first call.
   """
-  def __init__(self, callable_object):
-    """Generate the key for the cache.
-    """
-    self.method = callable_object
-    self.key = '_cache_' + str(id(callable_object))
-
-  def __call__(self, instance):
-    """Call the callable object passed to __init__, if the result is not cached.
-
-    For now, this does not take any extra argument, because it is not necessary
-    at the moment.
-    """
+  key = '_cache_' + str(id(func))
+  def decorated(self, *args, **kw):
     try:
-      return getattr(instance, self.key)
+      return getattr(self, key)
     except AttributeError:
-      result = self.method(instance)
-      setattr(instance, self.key, result)
+      result = func(self, *args, **kw)
+      setattr(self, key, result)
       return result
-
-class InstanceMethod:
-  """This class makes it possible to pass an instance object implicitly to a method.
-  """
-  def __init__(self, instance, method):
-    self.instance = instance
-    self.method = method
-
-  def __call__(self):
-    return self.method(self.instance)
+  return decorated
 
 class ListBoxRenderer:
   """This class deals with rendering of a ListBox field.
@@ -439,13 +418,6 @@ class ListBoxRenderer:
     self.widget = widget
     self.field = field
     self.request = REQUEST
-
-    # Because it is not easy to pass an instance object implicitly to a method
-    # with no side effect, tweak VolatileCachingMethod objects here for this instance.
-    for k in dir(self):
-      v = getattr(self, k)
-      if isinstance(v, VolatileCachingMethod):
-        setattr(self, k, InstanceMethod(self, v))
 
   def getPhysicalPath(self):
     """
@@ -470,21 +442,21 @@ class ListBoxRenderer:
       value = self.getForm().aq_parent
     return value
 
-  getContext = VolatileCachingMethod(getContext)
+  getContext = lazyMethod(getContext)
 
   def getForm(self):
     """Return the form which contains the ListBox.
     """
     return self.field.aq_parent
 
-  getForm = VolatileCachingMethod(getForm)
+  getForm = lazyMethod(getForm)
 
   def getEncoding(self):
     """Retutn the encoding of strings in the fields. Default to UTF-8.
     """
     return self.getPortalObject().getProperty('management_page_charset', 'utf-8')
 
-  getEncoding = VolatileCachingMethod(getEncoding)
+  getEncoding = lazyMethod(getEncoding)
 
   def isReset(self):
     """Determine if the ListBox should be reset.
@@ -492,14 +464,14 @@ class ListBoxRenderer:
     reset = self.request.get('reset', 0)
     return (reset not in (0, '0'))
 
-  isReset = VolatileCachingMethod(isReset)
+  isReset = lazyMethod(isReset)
 
   def getFieldErrorDict(self):
     """Return a dictionary of errors.
     """
     return self.request.get('field_errors', {})
 
-  getFieldErrorDict = VolatileCachingMethod(getFieldErrorDict)
+  getFieldErrorDict = lazyMethod(getFieldErrorDict)
 
   def getUrl(self):
     """
@@ -511,7 +483,7 @@ class ListBoxRenderer:
     return '%s/%s' % (self.getContext().absolute_url(),
                       self.request.other.get('current_form_id', 'view'))
 
-  getUrl = VolatileCachingMethod(getUrl)
+  getUrl = lazyMethod(getUrl)
 
   def getRequestedSelectionName(self):
     """Return a selection name which may be passed by a request.
@@ -527,77 +499,77 @@ class ListBoxRenderer:
 
     return selection_name
 
-  getRequestedSelectionName = VolatileCachingMethod(getRequestedSelectionName)
+  getRequestedSelectionName = lazyMethod(getRequestedSelectionName)
 
   def getSelectionIndex(self):
     """Return the index of a requested selection, or None if not specified.
     """
     return self.request.get('selection_index', None)
 
-  getSelectionIndex = VolatileCachingMethod(getSelectionIndex)
+  getSelectionIndex = lazyMethod(getSelectionIndex)
 
   def getReportDepth(self):
     """Return the depth of reports, or None if not specified.
     """
     return self.request.get('report_depth', None)
 
-  getReportDepth = VolatileCachingMethod(getReportDepth)
+  getReportDepth = lazyMethod(getReportDepth)
 
   def getPortalObject(self):
     """Return the portal object.
     """
     return self.getContext().getPortalObject()
 
-  getPortalObject = VolatileCachingMethod(getPortalObject)
+  getPortalObject = lazyMethod(getPortalObject)
 
   def getPortalUrlString(self):
     """Return the URL of the portal as a string.
     """
     return self.getPortalObject().portal_url()
 
-  getPortalUrlString = VolatileCachingMethod(getPortalUrlString)
+  getPortalUrlString = lazyMethod(getPortalUrlString)
 
   def getCategoryTool(self):
     """Return the Category Tool.
     """
     return self.getPortalObject().portal_categories
 
-  getCategoryTool = VolatileCachingMethod(getCategoryTool)
+  getCategoryTool = lazyMethod(getCategoryTool)
 
   def getDomainTool(self):
     """Return the Domain Tool.
     """
     return self.getPortalObject().portal_domains
 
-  getDomainTool = VolatileCachingMethod(getDomainTool)
+  getDomainTool = lazyMethod(getDomainTool)
 
   def getCatalogTool(self):
     """Return the Catalog Tool.
     """
     return self.getPortalObject().portal_catalog
 
-  getCatalogTool = VolatileCachingMethod(getCatalogTool)
+  getCatalogTool = lazyMethod(getCatalogTool)
 
   def getSelectionTool(self):
     """Return the Selection Tool.
     """
     return self.getPortalObject().portal_selections
 
-  getSelectionTool = VolatileCachingMethod(getSelectionTool)
+  getSelectionTool = lazyMethod(getSelectionTool)
 
   def getId(self):
     """Return the id of the field. Usually, "listbox".
     """
     return self.field.id
 
-  getId = VolatileCachingMethod(getId)
+  getId = lazyMethod(getId)
 
   def getTitle(self):
     """Return the title. Make sure that it is in unicode.
     """
     return unicode(self.field.get_value('title'), self.getEncoding())
 
-  getTitle = VolatileCachingMethod(getTitle)
+  getTitle = lazyMethod(getTitle)
 
   def getMaxLineNumber(self):
     """Return the maximum number of lines shown in a page.
@@ -610,14 +582,14 @@ class ListBoxRenderer:
     """
     return self.field.get_value('search')
 
-  showSearchLine = VolatileCachingMethod(showSearchLine)
+  showSearchLine = lazyMethod(showSearchLine)
 
   def showSelectColumn(self):
     """Return a boolean that represents whether a select column is displayed or not.
     """
     return self.field.get_value('select')
 
-  showSelectColumn = VolatileCachingMethod(showSelectColumn)
+  showSelectColumn = lazyMethod(showSelectColumn)
 
   def showStat(self):
     """Return a boolean that represents whether a stat line is displayed or not.
@@ -627,42 +599,42 @@ class ListBoxRenderer:
     """
     return (self.getStatMethod() is not None) and (len(self.getStatColumnList()) > 0)
 
-  showStat = VolatileCachingMethod(showStat)
+  showStat = lazyMethod(showStat)
 
   def isDomainTreeSupported(self):
     """Return a boolean that represents whether a domain tree is supported or not.
     """
     return (self.field.get_value('domain_tree') and len(self.getDomainRootList()) > 0)
 
-  isDomainTreeSupported = VolatileCachingMethod(isDomainTreeSupported)
+  isDomainTreeSupported = lazyMethod(isDomainTreeSupported)
 
   def isReportTreeSupported(self):
     """Return a boolean that represents whether a report tree is supported or not.
     """
     return (self.field.get_value('report_tree') and len(self.getReportRootList()) > 0)
 
-  isReportTreeSupported = VolatileCachingMethod(isReportTreeSupported)
+  isReportTreeSupported = lazyMethod(isReportTreeSupported)
 
   def isDomainTreeMode(self):
     """Return whether the current mode is domain tree mode or not.
     """
     return self.isDomainTreeSupported() and self.getSelection().domain_tree_mode
 
-  isDomainTreeMode = VolatileCachingMethod(isDomainTreeMode)
+  isDomainTreeMode = lazyMethod(isDomainTreeMode)
 
   def isReportTreeMode(self):
     """Return whether the current mode is report tree mode or not.
     """
     return self.isReportTreeSupported() and self.getSelection().report_tree_mode
 
-  isReportTreeMode = VolatileCachingMethod(isReportTreeMode)
+  isReportTreeMode = lazyMethod(isReportTreeMode)
 
   def getDefaultParamList(self):
     """Return the list of default parameters.
     """
     return self.field.get_value('default_params')
 
-  getDefaultParamList = VolatileCachingMethod(getDefaultParamList)
+  getDefaultParamList = lazyMethod(getDefaultParamList)
 
   def getListMethodName(self):
     """Return the name of the list method. If not defined, return None.
@@ -674,7 +646,7 @@ class ListBoxRenderer:
       name = list_method
     return name or None
 
-  getListMethodName = VolatileCachingMethod(getListMethodName)
+  getListMethodName = lazyMethod(getListMethodName)
 
   def getCountMethodName(self):
     """Return the name of the count method. If not defined, return None.
@@ -686,7 +658,7 @@ class ListBoxRenderer:
       name = count_method
     return name or None
 
-  getCountMethodName = VolatileCachingMethod(getCountMethodName)
+  getCountMethodName = lazyMethod(getCountMethodName)
 
   def getStatMethodName(self):
     """Return the name of the stat method. If not defined, return None.
@@ -698,14 +670,14 @@ class ListBoxRenderer:
       name = stat_method
     return name or None
 
-  getStatMethodName = VolatileCachingMethod(getStatMethodName)
+  getStatMethodName = lazyMethod(getStatMethodName)
 
   def getSelectionName(self):
     """Return the selection name.
     """
     return self.field.get_value('selection_name')
 
-  getSelectionName = VolatileCachingMethod(getSelectionName)
+  getSelectionName = lazyMethod(getSelectionName)
 
   def getMetaTypeList(self):
     """Return the list of meta types for filtering. Return None when empty.
@@ -713,7 +685,7 @@ class ListBoxRenderer:
     meta_types = [c[0] for c in self.field.get_value('meta_types')]
     return meta_types or None
 
-  getMetaTypeList = VolatileCachingMethod(getMetaTypeList)
+  getMetaTypeList = lazyMethod(getMetaTypeList)
 
   def getPortalTypeList(self):
     """Return the list of portal types for filtering. Return None when empty.
@@ -721,7 +693,7 @@ class ListBoxRenderer:
     portal_types = [c[0] for c in self.field.get_value('portal_types')]
     return portal_types or None
 
-  getPortalTypeList = VolatileCachingMethod(getPortalTypeList)
+  getPortalTypeList = lazyMethod(getPortalTypeList)
 
   def getColumnList(self):
     """Return the columns. Make sure that the titles are in unicode.
@@ -729,7 +701,7 @@ class ListBoxRenderer:
     columns = self.field.get_value('columns')
     return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in columns]
 
-  getColumnList = VolatileCachingMethod(getColumnList)
+  getColumnList = lazyMethod(getColumnList)
 
   def getAllColumnList(self):
     """Return the all columns. Make sure that the titles are in unicode.
@@ -741,7 +713,7 @@ class ListBoxRenderer:
                               if c[0] not in all_column_id_set])
     return all_column_list
 
-  getAllColumnList = VolatileCachingMethod(getAllColumnList)
+  getAllColumnList = lazyMethod(getAllColumnList)
 
   def getStatColumnList(self):
     """Return the stat columns. Fall back to all the columns if empty.
@@ -753,7 +725,7 @@ class ListBoxRenderer:
       stat_column_list = [(c[0], c[0]) for c in self.getAllColumnList()]
     return stat_column_list
 
-  getStatColumnList = VolatileCachingMethod(getStatColumnList)
+  getStatColumnList = lazyMethod(getStatColumnList)
 
   def getUrlColumnList(self):
     """Return the url columns. Make sure that it is an empty list, when not defined.
@@ -761,14 +733,14 @@ class ListBoxRenderer:
     url_columns = self.field.get_value('url_columns')
     return url_columns or []
 
-  getUrlColumnList = VolatileCachingMethod(getUrlColumnList)
+  getUrlColumnList = lazyMethod(getUrlColumnList)
 
   def getDefaultSortColumnList(self):
     """Return the default sort columns.
     """
     return self.field.get_value('sort')
 
-  getDefaultSortColumnList = VolatileCachingMethod(getDefaultSortColumnList)
+  getDefaultSortColumnList = lazyMethod(getDefaultSortColumnList)
 
   def getDomainRootList(self):
     """Return the domain root list. Make sure that the titles are in unicode.
@@ -776,7 +748,7 @@ class ListBoxRenderer:
     domain_root_list = self.field.get_value('domain_root_list')
     return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in domain_root_list]
 
-  getDomainRootList = VolatileCachingMethod(getDomainRootList)
+  getDomainRootList = lazyMethod(getDomainRootList)
 
   def getReportRootList(self):
     """Return the report root list. Make sure that the titles are in unicode.
@@ -784,7 +756,7 @@ class ListBoxRenderer:
     report_root_list = self.field.get_value('report_root_list')
     return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in report_root_list]
 
-  getReportRootList = VolatileCachingMethod(getReportRootList)
+  getReportRootList = lazyMethod(getReportRootList)
 
   def getSearchColumnIdSet(self):
     """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
@@ -796,7 +768,7 @@ class ListBoxRenderer:
       search_column_id_list = self.getCatalogTool().schema()
     return set(search_column_id_list)
 
-  getSearchColumnIdSet = VolatileCachingMethod(getSearchColumnIdSet)
+  getSearchColumnIdSet = lazyMethod(getSearchColumnIdSet)
 
   def getSortColumnIdSet(self):
     """Return the set of the ids of the sort columns. Fall back to search column ids, if not defined.
@@ -808,7 +780,7 @@ class ListBoxRenderer:
       sort_column_id_set = self.getSearchColumnIdSet()
     return sort_column_id_set
 
-  getSortColumnIdSet = VolatileCachingMethod(getSortColumnIdSet)
+  getSortColumnIdSet = lazyMethod(getSortColumnIdSet)
 
   def getEditableColumnIdSet(self):
     """Return the set of the ids of the editable columns.
@@ -816,7 +788,7 @@ class ListBoxRenderer:
     editable_columns = self.field.get_value('editable_columns')
     return set([c[0] for c in editable_columns])
 
-  getEditableColumnIdSet = VolatileCachingMethod(getEditableColumnIdSet)
+  getEditableColumnIdSet = lazyMethod(getEditableColumnIdSet)
 
   def getListActionUrl(self):
     """Return the URL of the list action.
@@ -828,7 +800,7 @@ class ListBoxRenderer:
       list_action_part_list.append('?reset=1')
     return ''.join(list_action_part_list)
 
-  getListActionUrl = VolatileCachingMethod(getListActionUrl)
+  getListActionUrl = lazyMethod(getListActionUrl)
 
   # Whether the selection object is initialized.
   is_selection_initialized = False
@@ -878,21 +850,21 @@ class ListBoxRenderer:
 
     return selection
 
-  getSelection = VolatileCachingMethod(getSelection)
+  getSelection = lazyMethod(getSelection)
 
   def getCheckedUidList(self):
     """Return the list of checked uids.
     """
     return self.getSelection().getCheckedUids()
 
-  getCheckedUidList = VolatileCachingMethod(getCheckedUidList)
+  getCheckedUidList = lazyMethod(getCheckedUidList)
 
   def getCheckedUidSet(self):
     """Return the set of checked uids.
     """
     return set(self.getCheckedUidList())
 
-  getCheckedUidSet = VolatileCachingMethod(getCheckedUidSet)
+  getCheckedUidSet = lazyMethod(getCheckedUidSet)
 
   def getSelectedColumnList(self):
     """Return the list of selected columns.
@@ -901,7 +873,7 @@ class ListBoxRenderer:
                                                        columns = self.getColumnList(),
                                                        REQUEST = self.request)
 
-  getSelectedColumnList = VolatileCachingMethod(getSelectedColumnList)
+  getSelectedColumnList = lazyMethod(getSelectedColumnList)
 
   def getColumnAliasList(self):
     """Return the list of column aliases for SQL, because SQL does not allow a symbol to contain dots.
@@ -911,7 +883,7 @@ class ListBoxRenderer:
       alias_list.append(sql.replace('.', '_'))
     return alias_list
 
-  getColumnAliasList = VolatileCachingMethod(getColumnAliasList)
+  getColumnAliasList = lazyMethod(getColumnAliasList)
 
   def getParamDict(self):
     """Return a dictionary of parameters.
@@ -1010,7 +982,7 @@ class ListBoxRenderer:
       del params['select_expression']
     return params
 
-  getParamDict = VolatileCachingMethod(getParamDict)
+  getParamDict = lazyMethod(getParamDict)
 
   def getEditableField(self, alias):
     """Get an editable field for column, using column alias.
@@ -1039,7 +1011,7 @@ class ListBoxRenderer:
 
     return list_method
 
-  getListMethod = VolatileCachingMethod(getListMethod)
+  getListMethod = lazyMethod(getListMethod)
 
   def getCountMethod(self):
     """Return the count method object.
@@ -1061,7 +1033,7 @@ class ListBoxRenderer:
 
     return count_method
 
-  getCountMethod = VolatileCachingMethod(getCountMethod)
+  getCountMethod = lazyMethod(getCountMethod)
 
   def getStatMethod(self):
     """Return the stat method object.
@@ -1083,7 +1055,7 @@ class ListBoxRenderer:
 
     return stat_method
 
-  getStatMethod = VolatileCachingMethod(getStatMethod)
+  getStatMethod = lazyMethod(getStatMethod)
 
   def getDomainSelection(self):
     """Return a DomainSelection object wrapped with the context.
@@ -1119,7 +1091,7 @@ class ListBoxRenderer:
 
       return DomainSelection(domain_dict = root_dict).__of__(self.getContext())
 
-  getDomainSelection = VolatileCachingMethod(getDomainSelection)
+  getDomainSelection = lazyMethod(getDomainSelection)
 
   def getStatSelectExpression(self):
     """Return a string which expresses the information retrieved by SELECT for
@@ -1148,7 +1120,7 @@ class ListBoxRenderer:
 
     return ', '.join(select_expression_list)
 
-  getStatSelectExpression = VolatileCachingMethod(getStatSelectExpression)
+  getStatSelectExpression = lazyMethod(getStatSelectExpression)
 
   def makeReportTreeList(self, root_dict = None, report_path = None, base_category = None, depth = 0,
                          unfolded_list = (), is_report_opened = True, sort_on = (('id', 'ASC'),)):
@@ -1293,7 +1265,7 @@ class ListBoxRenderer:
         domain_path = None
     return domain_path
 
-  getSelectedDomainPath = VolatileCachingMethod(getSelectedDomainPath)
+  getSelectedDomainPath = lazyMethod(getSelectedDomainPath)
 
   def getSelectedReportPath(self):
     """Return a selected report path.
@@ -1310,7 +1282,7 @@ class ListBoxRenderer:
 
     return selection.getReportPath(default = default_selection_report_path)
 
-  getSelectedReportPath = VolatileCachingMethod(getSelectedReportPath)
+  getSelectedReportPath = lazyMethod(getSelectedReportPath)
 
   def getLabelValueList(self):
     """Return a list of values, where each value is a tuple consisting of an property id, a title and a string which
@@ -1733,13 +1705,6 @@ class ListBoxRendererLine:
     self.depth = depth
     self.domain_title = domain_title
 
-    # Because it is not easy to pass an instance object implicitly to a method
-    # with no side effect, tweak VolatileCachingMethod objects here for this instance.
-    for k in dir(self):
-      v = getattr(self, k)
-      if isinstance(v, VolatileCachingMethod):
-        setattr(self, k, InstanceMethod(self, v))
-
   def getBrain(self):
     """Return the brain. This can be identical to a real object.
     """
@@ -1753,21 +1718,21 @@ class ListBoxRendererLine:
     except AttributeError:
       return self.obj
 
-  getObject = VolatileCachingMethod(getObject)
+  getObject = lazyMethod(getObject)
 
   def getUid(self):
     """Return the uid of the object.
     """
     return getattr(aq_base(self.obj), 'uid', None)
 
-  getUid = VolatileCachingMethod(getUid)
+  getUid = lazyMethod(getUid)
 
   def getUrl(self):
     """Return the absolute URL path of the object
     """
     return self.getBrain().getUrl()
 
-  getUrl = VolatileCachingMethod(getUrl)
+  getUrl = lazyMethod(getUrl)
 
   def isSummary(self):
     """Return whether this line is a summary or not.
@@ -2168,18 +2133,18 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
 
     return start
 
-  getLineStart = VolatileCachingMethod(getLineStart)
+  getLineStart = lazyMethod(getLineStart)
 
   def getMaxLineNumber(self):
     """Return the maximum number of lines shown in a page.
     """
-    list_lines =self.getParamDict().get('list_lines', None)
+    list_lines = self.getParamDict().get('list_lines', None)
     if list_lines is not None:
       # it's possible to override max lines from selection parameters
       return int(list_lines)
     return self.field.get_value('lines')
 
-  getMaxLineNumber = VolatileCachingMethod(getMaxLineNumber)
+  getMaxLineNumber = lazyMethod(getMaxLineNumber)
 
   def getMD5Checksum(self):
     """Generate a MD5 checksum against checked uids. This is used to confirm
