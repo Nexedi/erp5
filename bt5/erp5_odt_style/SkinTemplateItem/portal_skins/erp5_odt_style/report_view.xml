@@ -224,9 +224,13 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Text\'/>\n
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Drawing\'/>\n
       </text:sequence-decls>\n
-             \n
-             <tal:block tal:define="report_item_list python:report_method();\n
-                                    dummy python: request.set(\'here\',here); ">                \n
+\n
+      <!-- This template can be used to aggregate together some already rendered report sections.\n
+        In this case, "rendered_report_item_list" must be in the page template context. -->\n
+        <tal:block tal:define="rendered_report_item_list rendered_report_item_list | python:[];\n
+                                report_item_list python: rendered_report_item_list or report_method();">\n
+\n
+             <tal:block tal:define="dummy python: request.set(\'here\',here); ">                \n
                        <text:p text:style-name=\'report-title\'\n
                                tal:content="python: here.Localizer.erp5_ui.gettext(form.getProperty(\'title\', \'\')).encode(\'utf-8\')"> report title </text:p>\n
                      <text:p></text:p>                     \n
@@ -303,33 +307,46 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                      </tal:block>\n
                     </tal:block>\n
                    </tal:block>\n
-                 </tal:block>  <!-- TODO: if possible a macro for form rendering ? -->\n
+                 </tal:block>\n
 \n
-                  <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
+                <!-- if we are called with a rendered_report_item_list, just insert the rendered text here. -->\n
+                <tal:block tal:condition="rendered_report_item_list">\n
+                  <tal:block tal:repeat="report_item report_item_list">\n
+                    <tal:block tal:replace="structure report_item"/>\n
+                  </tal:block>\n
+                </tal:block>\n
+                 \n
+                 <tal:block tal:condition="not: rendered_report_item_list">\n
+                 <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
                  <tal:block tal:repeat="report_item report_item_list">\n
                   <tal:block tal:define="here python:report_item.getObject(portal_object);\n
                                         dummy python:report_item.pushReport(portal_object)">\n
-                    <tal:block tal:condition="report_item/getTitle">\n
-                       <text:p\n
-                          tal:content="report_item/getTitle"\n
-                          tal:attributes="text:style-name string:report-title-${report_item/getLevel}"\n
-                          >report item title</text:p><text:p/>\n
-                      </tal:block>\n
-\n
-                    <tal:block tal:condition="report_item/getFormId">\n
-                     <tal:block tal:define="form python:getattr(here, report_item.getFormId())" >\n
-                      <tal:block tal:condition="python:form.pt == \'form_view\'">\n
-                        <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
-                      </tal:block>\n
-                       <tal:block tal:condition="python:form.pt == \'form_list\'">\n
-                       <tal:block metal:use-macro="form/form_list/macros/form_layout"/>\n
-                       </tal:block></tal:block></tal:block>\n
+                    <tal:block metal:define-macro="render_report_section">\n
+                      <tal:block tal:condition="report_item/getTitle">\n
+                         <text:p\n
+                            tal:content="report_item/getTitle"\n
+                            tal:attributes="text:style-name string:report-title-${report_item/getLevel}"\n
+                            >report item title</text:p><text:p/>\n
+                        </tal:block>\n
+  \n
+                      <tal:block tal:condition="report_item/getFormId">\n
+                       <tal:block tal:define="form python:getattr(here, report_item.getFormId())" >\n
+                        <tal:block tal:condition="python:form.pt == \'form_view\'">\n
+                          <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
+                        </tal:block>\n
+                         <tal:block tal:condition="python:form.pt == \'form_list\'">\n
+                         <tal:block metal:use-macro="form/form_list/macros/form_layout"/>\n
+                         </tal:block></tal:block></tal:block>\n
+                       </tal:block>\n
                       </tal:block>\n
                       <tal:block tal:define="dummy python:report_item.popReport(portal_object)"/>\n
                      </tal:block>\n
-                  </tal:block>\n
+                 </tal:block>\n
+                </tal:block>\n
+\n
               </tal:block>\n
-           </office:text>\n
+        </tal:block>\n
+    </office:text>\n
   </office:body>\n
 </office:document-content>\n
 
