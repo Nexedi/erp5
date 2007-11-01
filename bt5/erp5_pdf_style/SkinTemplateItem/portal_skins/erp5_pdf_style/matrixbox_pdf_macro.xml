@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -54,7 +51,10 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<html>\n
+<?xml version="1.0" encoding="iso-8859-1" ?>\n
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <head>\n
     <title tal:content="template/title">Matrixbox PDF Macro</title>\n
   </head>\n
@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value> <string>application/xml</string> </value>
         </item>
         <item>
             <key> <string>expand</string> </key>

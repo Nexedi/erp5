@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -54,6 +51,10 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<?xml version="1.0" encoding="iso-8859-1" ?>\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
 <tal:block tal:replace="nothing">\n
 Users of this page template must define \'field\' name.\n
 It will dispatch to the good macro, and supports proxy fields (in a quite ad-hoc way).\n
@@ -72,13 +73,14 @@ It will dispatch to the good macro, and supports proxy fields (in a quite ad-hoc
   <table><tr><td tal:content="python: \' \'"></td></tr></table>\n
  </tal:block>\n
 \n
+</tal:block>\n
 </tal:block>
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value> <string>application/xml</string> </value>
         </item>
         <item>
             <key> <string>expand</string> </key>

@@ -55,6 +55,7 @@
 <document filename="erp5_list.pdf"\n
    xmlns:tal="http://xml.zope.org/namespaces/tal"\n
    xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
    tal:define="landscape python: int(request.get(\'landscape\', 0) or 0);\n
                global frame_width python:landscape and 25.8 or 19"\n
    metal:define-macro="master">\n
@@ -169,7 +170,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value> <string>application/xml</string> </value>
         </item>
         <item>
             <key> <string>expand</string> </key>
