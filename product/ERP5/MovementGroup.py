@@ -438,22 +438,17 @@ class QuantitySignMovementGroup(RootMovementGroup):
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     quantity = movement.getQuantity()
-    if quantity == 0:
-      self.sign = 0
-    elif quantity > 0:
-      self.sign = 1
-    else:
-      self.sign = -1
+    self.sign = cmp(quantity, 0)
     self.setGroupEdit(quantity_sign=self.sign)
 
   def test(self, movement):
     quantity = movement.getQuantity()
-    if quantity == 0 or self.sign == 0 :
+    sign = cmp(quantity, 0)
+    if sign == 0:
       return 1
-    if quantity > 0:
-      sign = 1
-    else:
-      sign = -1
+    if self.sign == 0:
+      self.sign = sign
+      return 1
     return self.sign == sign
 
 allow_class(QuantitySignMovementGroup)
