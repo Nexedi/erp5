@@ -6,6 +6,7 @@ __version__ = 'TimerServer for Zope 0.1'
 import traceback
 
 import thread
+import re
 import sys, os, errno, time, socket
 from StringIO import StringIO
 from zLOG import LOG, INFO
@@ -14,6 +15,7 @@ from ZServer.PubCore import handle
 from ZPublisher.BaseRequest import BaseRequest
 from ZPublisher.BaseResponse import BaseResponse
 from ZPublisher.HTTPRequest import HTTPRequest
+import ZPublisher.HTTPRequest
 
 class TimerServer:
     def __init__(self, module, interval=600):
@@ -97,6 +99,25 @@ class TimerResponse(BaseResponse):
 
     def unauthorized(self):
         pass
+
+    # This is taken from ZPublisher.HTTPResponse
+    # I don't think it's safe to make TimerResponse a subclass of HTTPResponse,
+    # so I inline here the method . This is required it you want unicode page
+    # templates to be usable by timer service.
+    # This is used by an iHotFix patch on PageTemplate.StringIO method
+    def _encode_unicode(self, body,
+                        charset_re=re.compile(r'(?:application|text)/[-+0-9a-z]+\s*;\s*' +
+                                              r'charset=([-_0-9a-z]+' +
+                                              r')(?:(?:\s*;)|\Z)',
+                                              re.IGNORECASE)):
+        # Encode the Unicode data as requested
+        if self.headers.has_key('content-type'):
+            match = charset_re.match(self.headers['content-type'])
+            if match:
+                encoding = match.group(1)
+                return body.encode(encoding)
+        # Use the default character encoding
+        return body.encode(ZPublisher.HTTPResponse.default_encoding,'replace')
 
 
 class TimerRequest(HTTPRequest):
