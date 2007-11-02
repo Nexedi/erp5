@@ -158,8 +158,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
     security.declarePrivate('edit')
     def edit(self, params=None, **kw):
-        if self.isMemcachedUsed():
-          setattr(self, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID, True)
+        setattr(self, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID, True)
         if params is not None:
           # We should only keep params which do not start with field_
           # in order to make sure we do not collect unwanted params
