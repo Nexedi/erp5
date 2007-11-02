@@ -547,39 +547,22 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         catalogued with columns.
       """
       original_query = query
-      try:
-        security_uid_list, role_column_dict = self.getSecurityUidListAndRoleColumnDict(sql_catalog_id=sql_catalog_id, **kw)
-      except DeprecationWarning, message:
-        warnings.warn(message, DeprecationWarning)
-        allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(sql_catalog_id=sql_catalog_id, **kw)
-        if role_column_dict:
-          query_list = []
-          for key, value in role_column_dict.items():
-            new_query = Query(**{key : value})
-            query_list.append(new_query)
-          operator_kw = {'operator': 'AND'} 
-          query = ComplexQuery(*query_list, **operator_kw)
-          if allowedRolesAndUsers:
-            query = ComplexQuery(Query(allowedRolesAndUsers=allowedRolesAndUsers),
-                                 query, operator='OR')
-        else:
-          query = Query(allowedRolesAndUsers=allowedRolesAndUsers)
+      security_uid_list, role_column_dict = self.getSecurityUidListAndRoleColumnDict(sql_catalog_id=sql_catalog_id, **kw)
+      if role_column_dict:
+        query_list = []
+        for key, value in role_column_dict.items():
+          new_query = Query(**{key : value})
+          query_list.append(new_query)
+        operator_kw = {'operator': 'AND'}
+        query = ComplexQuery(*query_list, **operator_kw)
+        # If security_uid_list is empty, adding it to criterions will only
+        # result in "false or [...]", so avoid useless overhead by not
+        # adding it at all.
+        if security_uid_list:
+          query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
+                               query, operator='OR')
       else:
-        if role_column_dict:
-          query_list = []
-          for key, value in role_column_dict.items():
-            new_query = Query(**{key : value})
-            query_list.append(new_query)
-          operator_kw = {'operator': 'AND'}
-          query = ComplexQuery(*query_list, **operator_kw)
-          # If security_uid_list is empty, adding it to criterions will only
-          # result in "false or [...]", so avoid useless overhead by not
-          # adding it at all.
-          if security_uid_list:
-            query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
-                                 query, operator='OR')
-        else:
-          query = Query(security_uid=security_uid_list, operator='IN')
+        query = Query(security_uid=security_uid_list, operator='IN')
       if original_query is not None:
         query = ComplexQuery(query, original_query, operator='AND')
       return query
