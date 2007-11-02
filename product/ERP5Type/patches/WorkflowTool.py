@@ -309,11 +309,8 @@ def getWorklistListQuery(grouped_worklist_dict):
   query = generateNestedQuery(priority_list=total_criterion_id_list,
                               criterion_dict=total_criterion_id_dict)
   assert query is not None
-  group_by_expression = ', '.join(total_criterion_id_list)
   assert COUNT_COLUMN_TITLE not in total_criterion_id_dict
-  select_expression = 'count(*) as %s, %s' % (COUNT_COLUMN_TITLE,
-                                              group_by_expression)
-  return (select_expression, group_by_expression, query)
+  return (total_criterion_id_list, query)
 
 def _ensemblistMultiply(ensemble_a, ensemble_b):
   """
@@ -489,8 +486,12 @@ def WorkflowTool_listActions(self, info=None, object=None):
             getSecurityUidListAndRoleColumnDict)
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         # Generate the query for this worklist_list
-        (select_expression, group_by_expression, query) = \
+        (total_criterion_id_list, query) = \
           getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
+        group_by_expression = ', '.join(total_criterion_id_list)
+        assert COUNT_COLUMN_TITLE not in total_criterion_id_list
+        select_expression = 'count(*) as %s, %s' % (COUNT_COLUMN_TITLE,
+                                                    group_by_expression)
         search_result_kw = {'select_expression': select_expression,
                             'group_by_expression': group_by_expression,
                             'query': query}
