@@ -399,7 +399,7 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
         criterion_value_to_worklist_key_dict[criterion_value_key]:
       count = worklist_result_dict.get(worklist_id, 0)
       worklist_result_dict[worklist_id] = count + \
-                                          result_line[COUNT_COLUMN_TITLE]
+                                          int(result_line[COUNT_COLUMN_TITLE])
   return worklist_result_dict
 
 def generateActionList(worklist_metadata, worklist_result, portal_url):
