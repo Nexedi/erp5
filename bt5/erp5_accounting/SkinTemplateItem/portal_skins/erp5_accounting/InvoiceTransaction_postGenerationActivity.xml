@@ -90,14 +90,20 @@ invoice.Delivery_setCausalityFromSimulation()\n
 related_packing_list = invoice.getDefaultCausalityValue()\n
 #LOG(\'causality %s \' %invoice.getCausalityValueList())\n
 \n
-# get a price_currency from the packing list\n
-related_order  = related_packing_list.getDefaultCausalityValue()\n
-if related_order is not None:\n
-  price_currency = related_order.getPriceCurrency()\n
+# XXX this use of currency is completly bogus, it should be set on simulation movements.\n
+# get a price_currency from the packing list, or the order\n
+price_currency = related_packing_list.getPriceCurrency()\n
+if price_currency:\n
   invoice.edit(\n
-    resource = price_currency,\n
-    price_currency = price_currency,\n
-  )\n
+       resource=price_currency,\n
+       price_currency=price_currency,)\n
+else:\n
+  related_order = related_packing_list.getDefaultCausalityValue()\n
+  if related_order is not None:\n
+    price_currency = related_order.getPriceCurrency()\n
+    invoice.edit(\n
+       resource=price_currency,\n
+       price_currency=price_currency,)\n
   \n
 # copy title, if not updating a new delivery\n
 if not invoice.getTitle():\n
@@ -113,6 +119,7 @@ if invoice.getSimulationState() == \'draft\':\n
   except WorkflowException, e:\n
     # The user cannot pass the transition, it\'s OK\n
     pass\n
+\n
   if invoice.getSimulationState() == \'draft\':\n
     # call the workflow method, if the user cannot perform this operation.\n
     invoice.plan()\n
@@ -178,9 +185,9 @@ invoice.activate(\n
                             <string>LOG</string>
                             <string>_getattr_</string>
                             <string>related_packing_list</string>
+                            <string>price_currency</string>
                             <string>related_order</string>
                             <string>None</string>
-                            <string>price_currency</string>
                             <string>e</string>
                           </tuple>
                         </value>
