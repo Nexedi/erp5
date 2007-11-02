@@ -509,10 +509,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
       catalog = self.getSQLCatalog(sql_catalog_id)
       method = getattr(catalog, catalog.sql_search_security, None)
-      if method is None:
-        raise DeprecationWarning, "The usage of allowedRolesAndUsers is "\
-                                  "deprecated. Please update your catalog "\
-                                  "business template."
       if allowedRolesAndUsers:
         allowedRolesAndUsers.sort()
         cache_key = tuple(allowedRolesAndUsers)
@@ -524,10 +520,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         try:
           security_uid_list = security_uid_cache[cache_key]
         except KeyError:
-          # XXX: What with this string transformation ?! Souldn't it be done in
-          # dtml instead ?
-          allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
-          security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
+          if method is None:
+            warnings.warn("The usage of allowedRolesAndUsers is "\
+                          "deprecated. Please update your catalog "\
+                          "business template.", DeprecationWarning)
+            security_uid_list = [x.security_uid for x in \
+              self.unrestrictedSearchResults(
+                allowedRolesAndUsers=allowedRolesAndUsers,
+                select_expression="security_uid",
+                group_by_expression="security_uid")]
+          else:
+            # XXX: What with this string transformation ?! Souldn't it be done in
+            # dtml instead ?
+            allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
+            security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
           security_uid_cache[cache_key] = security_uid_list
       else:
         security_uid_list = []
