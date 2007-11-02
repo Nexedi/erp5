@@ -741,9 +741,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         url_list.append(url)
         
       goto_current_catalog = 0
-      if (not disable_archive) and (archiving or (len(archive_obj_list) > 0 and \
-                                                 (sql_catalog_id == default_catalog.id or \
-                                                  sql_catalog_id is None))):
+      if (not disable_archive) and (archiving or (len(archive_obj_list) > 0 and sql_catalog_id is None)):
         # check in which archive object must go if we defined archive
         catalog_id = None
         for archive in archive_obj_list:
