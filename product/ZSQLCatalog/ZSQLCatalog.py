@@ -823,10 +823,11 @@ class ZCatalog(Folder, Persistent, Implicit):
     if uid is None:
       raise TypeError, "sorry uncatalog_object supports only uid"
 
+    archive_list = []
     if getattr(self, "portal_archives", None) is not None:
-      archive_list = self.portal_archives.getArchiveList()
-    else:
-      archive_list = []
+      if len(self.portal_archives):
+        archive_list = self.portal_archives.getArchiveList()
+
     catalog_id = None
     if len(archive_list) and sql_catalog_id is None:
       for archive_path in archive_list:
