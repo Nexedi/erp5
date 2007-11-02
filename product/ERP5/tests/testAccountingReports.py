@@ -1379,6 +1379,7 @@ class TestAccountingReports(AccountingTestCase):
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
+    request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
                                     'AccountModule_viewTrialBalanceReport')
