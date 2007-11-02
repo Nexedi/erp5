@@ -91,38 +91,26 @@
       , \'left webcontent (The Fantastic Group (and (funky) lisp-like parenthesis)) extra\'\n
       )\n
 """\n
-from Products.ERP5Type.Cache import CachingMethod\n
-\n
 form=context\n
 \n
 def getFormGroupTitleAndId():\n
   res = []\n
+  append = res.append\n
   for original_group_id in form.get_groups(include_empty=0):\n
-    # Separate the group id and the group title using parenthesis as marker from the original form group id\n
-    o_gid_list = original_group_id.strip().split(\'(\')\n
-    # Get the first part of the group id (which is the part before the first opened parenthesis)\n
-    group_id = o_gid_list[0]\n
-    # Get the end of the list (which is the part just after the first opened parenthesis)\n
-    group_title_list = \'(\'.join(o_gid_list[1:]).split(\')\')\n
-    # Get the last part of the group id (the part which stand after the last closing parenthesis)\n
-    group_id += group_title_list[-1]\n
-    # Normalize the group id (suppress unecessary multiple-space)\n
-    group_id_list = []\n
-    for group_word in group_id.split(\' \'):\n
-      if len(group_word):\n
-        group_id_list.append(group_word)\n
-    group_id = \' \'.join(group_id_list)\n
-    # Generate the group title\n
-    group_title = \')\'.join(group_title_list[:-1]).strip()\n
-    # Return the group id if no title found\n
-    if len(group_title) == 0:\n
+    group_id = original_group_id\n
+    try:\n
+      group_id_head, group_id_rest = group_id.split(\'(\', 1)\n
+      group_title, group_id_tail = group_id_rest.rsplit(\')\', 1)\n
+      group_id = group_id_head + group_id_tail\n
+      if not group_title:\n
+        group_title = None\n
+    except ValueError:\n
+      # When group_id does not have parentheses.\n
       group_title = None\n
-    res.append({\'gid\': group_id, \'gtitle\': group_title, \'goid\': original_group_id})\n
+    group_id = \' \'.join((w for w in group_id.split(\' \') if w))\n
+    append({\'gid\': group_id, \'gtitle\': group_title, \'goid\': original_group_id})\n
   return res\n
 \n
-getFormGroupTitleAndId = CachingMethod(getFormGroupTitleAndId,\n
-                                       ("ERP5Site_getFormGroupTitleAndId", form.id, form.get_groups(include_empty=0)),\n
-                                       cache_factory=\'erp5_ui_long\')\n
 return getFormGroupTitleAndId()\n
 </string> </value>
         </item>
@@ -172,12 +160,9 @@ return getFormGroupTitleAndId()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
                             <string>context</string>
                             <string>form</string>
                             <string>getFormGroupTitleAndId</string>
-                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
