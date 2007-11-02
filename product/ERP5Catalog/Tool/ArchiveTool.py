@@ -189,7 +189,7 @@ class ArchiveTool(BaseTool):
     # Call hot reindexing
     portal_catalog.manage_hotReindexAll(source_sql_catalog_id=source_catalog_id,
                                              destination_sql_catalog_id=destination_sql_catalog_id,
-                                             archive=archive,
+                                             archive_path=archive.getPath(),
                                              source_sql_connection_id_list=[source_connection_id, source_deferred_connection_id],
                                              destination_sql_connection_id_list=[destination_connection_id, destination_deferred_connection_id],
                                              REQUEST=REQUEST, RESPONSE=RESPONSE)
