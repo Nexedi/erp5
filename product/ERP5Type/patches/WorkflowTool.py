@@ -193,7 +193,11 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
         # worklists if possible at all.
         for security_column_id, security_column_value in \
             role_column_dict.iteritems():
-          valid_criterion_dict = {}
+          valid_criterion_dict, metadata = getValidCriterionDict(
+            worklist_match_dict=worklist_match_dict,
+            acceptable_key_dict=acceptable_key_dict)
+          if metadata is not None:
+            metadata_dict[workflow_worklist_key] = metadata
           valid_criterion_dict.update(applied_security_criterion_dict)
           # Current security criterion must be applied to all further queries
           # for this worklist negated, so the a given line cannot match multiple
@@ -201,29 +205,10 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
           applied_security_criterion_dict[security_column_id] = \
             ExclusionList(security_column_value)
           valid_criterion_dict[security_column_id] = security_column_value
-          for criterion_id, criterion_value in worklist_match_dict.iteritems():
-            if criterion_id in acceptable_key_dict:
-              if isinstance(criterion_value, tuple):
-                criterion_value = list(criterion_value)
-              assert criterion_id not in valid_criterion_dict
-              valid_criterion_dict[criterion_id] = criterion_value
-            elif criterion_id == WORKLIST_METADATA_KEY:
-              metadata_dict[workflow_worklist_key] = criterion_value
-            elif criterion_id == SECURITY_PARAMETER_ID:
-              pass
-            else:
-              LOG('WorkflowTool_listActions', WARNING, 'Worklist %s of ' \
-                  'workflow %s filters on variable %s which is not available ' \
-                  'in catalog. Its value will not be checked.' % \
-                  (worklist_id, workflow_id, criterion_id))
-          worklist_set_dict_key = valid_criterion_dict.keys()
-          if len(worklist_set_dict_key):
-            worklist_set_dict_key.sort()
-            worklist_set_dict_key = tuple(worklist_set_dict_key)
-            if worklist_set_dict_key not in worklist_set_dict:
-              worklist_set_dict[worklist_set_dict_key] = {}
-            worklist_set_dict[worklist_set_dict_key]\
-              [workflow_worklist_key] = valid_criterion_dict
+          updateWorklistSetDict(
+            worklist_set_dict=worklist_set_dict,
+            workflow_worklist_key=workflow_worklist_key,
+            valid_criterion_dict=valid_criterion_dict)
   return worklist_set_dict.values(), metadata_dict
 
 def generateNestedQuery(priority_list, criterion_dict,
