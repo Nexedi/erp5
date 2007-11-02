@@ -446,6 +446,7 @@ def WorkflowTool_listActions(self, info=None, object=None):
   if len(worklist_dict):
     portal_url = getToolByName(self, 'portal_url')()
     portal_catalog = getToolByName(self, 'portal_catalog')
+    search_result = portal_catalog.unrestrictedSearchResults
     getSecurityUidListAndRoleColumnDict = \
       portal_catalog.getSecurityUidListAndRoleColumnDict
     security_query_cache_dict = {}
@@ -460,12 +461,10 @@ def WorkflowTool_listActions(self, info=None, object=None):
           acceptable_key_dict=acceptable_key_dict,
           getSecurityUidListAndRoleColumnDict=\
             getSecurityUidListAndRoleColumnDict)
-      #LOG('WorklistGeneration', WARNING, worklist_list_grouped_by_condition)
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         # Generate the query for this worklist_list
         (select_expression, group_by_expression, query) = \
           getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
-        search_result = portal_catalog.unrestrictedSearchResults
         search_result_kw = {'select_expression': select_expression,
                             'group_by_expression': group_by_expression,
                             'query': query}
