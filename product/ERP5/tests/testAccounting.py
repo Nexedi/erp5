@@ -286,7 +286,7 @@ class TestTransactionValidation(AccountingTestCase):
                portal_type='Payment Transaction',
                start_date=DateTime('2006/03/03'),
                destination_section_value=self.organisation_module.supplier,
-               payment_module='default',
+               payment_mode='default',
                lines=(dict(source_value=self.account_module.goods_purchase,
                            source_debit=500),
                       dict(source_value=self.account_module.receivable,
@@ -306,7 +306,7 @@ class TestTransactionValidation(AccountingTestCase):
                stop_date=DateTime('2006/03/03'),
                source_section_value=self.organisation_module.supplier,
                destination_section_value=self.section, 
-               payment_module='default',
+               payment_mode='default',
                lines=(dict(destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
                       dict(destination_value=self.account_module.receivable,
@@ -325,7 +325,7 @@ class TestTransactionValidation(AccountingTestCase):
                portal_type='Accounting Transaction',
                start_date=DateTime('2006/12/31'),
                destination_section_value=self.organisation_module.supplier,
-               payment_module='default',
+               payment_mode='default',
                lines=(dict(source_value=self.account_module.goods_purchase,
                            source_debit=500),
                       dict(source_value=self.account_module.receivable,
@@ -336,7 +336,28 @@ class TestTransactionValidation(AccountingTestCase):
         transaction, 'stop_action')
     transaction.setStartDate(DateTime("2007/01/01"))
     self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
-
+  
+  def test_PaymentTransactionWithEmployee(self):
+    # we have to set bank account if we use an asset/cash/bank account, but not
+    # for our employees
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.person_module.john_smith,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.bank,
+                           destination_value=self.account_module.bank,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+    # refused because no bank account
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    # with bank account, it's OK
+    bank_account = self.section.newContent(portal_type='Bank Account')
+    transaction.setSourcePaymentValue(bank_account)
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
 
 
 class TestClosingPeriod(AccountingTestCase):
