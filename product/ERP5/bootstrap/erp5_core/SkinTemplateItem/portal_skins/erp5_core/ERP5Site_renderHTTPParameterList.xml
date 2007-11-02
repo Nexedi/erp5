@@ -69,7 +69,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from ZTUtils import make_query\n
-return make_query(dict([(k, v) for k, v in http_parameter_list.items() if v is not None]))\n
+return make_query((item for item in http_parameter_list.iteritems() if item[1] is not None))\n
 </string> </value>
         </item>
         <item>
@@ -121,14 +121,7 @@ return make_query(dict([(k, v) for k, v in http_parameter_list.items() if v is n
                             <string>http_parameter_list</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
-                            <string>dict</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
-                            <string>k</string>
-                            <string>v</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

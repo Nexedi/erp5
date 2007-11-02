@@ -78,9 +78,7 @@
 # Cancel url is always overwritten, except when rendering\n
 # a dialog. So this is safe to propagate it.\n
 \n
-kept_names = dict([(key, None) for key in kept_names])\n
-to_keep = kept_names.has_key\n
-return dict([(k, v) for k, v in parameter_list.items() if to_keep(k)])\n
+return dict((item for item in parameter_list.iteritems() if item[0] in kept_names))\n
 </string> </value>
         </item>
         <item>
@@ -132,15 +130,7 @@ return dict([(k, v) for k, v in parameter_list.items() if to_keep(k)])\n
                             <string>parameter_list</string>
                             <string>kept_names</string>
                             <string>dict</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>None</string>
                             <string>_getattr_</string>
-                            <string>to_keep</string>
-                            <string>k</string>
-                            <string>v</string>
                           </tuple>
                         </value>
                     </item>
