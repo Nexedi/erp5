@@ -1016,6 +1016,15 @@ class TestCMFCategory(ERP5TypeTestCase):
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
                                        cache=0))
 
+  def test_renameBaseCategory(self):
+    bc = self.portal.portal_categories.newContent(
+                          portal_type='Base Category',
+                          id='first_id')
+    get_transaction().commit()
+    self.tic()
+    bc.setId('new_id')
+    self.assertEquals('new_id', bc.getId())
+
 
 def test_suite():
   suite = unittest.TestSuite()
