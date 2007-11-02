@@ -553,6 +553,7 @@ def WorkflowTool_refreshWorklistCache(self):
       groupWorklistListByCondition(
         worklist_dict=worklist_dict,
         acceptable_key_dict=acceptable_key_dict)
+    assert COUNT_COLUMN_TITLE in table_column_id_set
     for grouped_worklist_dict in worklist_list_grouped_by_condition:
       # Generate the query for this worklist_list
       (total_criterion_id_list, query) = \
@@ -565,7 +566,6 @@ def WorkflowTool_refreshWorklistCache(self):
         total_criterion_id_list.append(security_column_id)
       group_by_expression = ', '.join(total_criterion_id_list)
       assert COUNT_COLUMN_TITLE not in total_criterion_id_list
-      assert COUNT_COLUMN_TITLE in table_column_id_set
       select_expression = 'count(*) as %s, %s' % (COUNT_COLUMN_TITLE,
                                                   group_by_expression)
       search_result_kw = {'select_expression': select_expression,
