@@ -200,7 +200,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         # Set the name so that this selection itself can get its own name.
         selection_object.edit(name = selection_name)
 
-      self._setSelectionToContainer(selection_name, selection_object)
+      if self.getSelectionFor(selection_name) != selection_object:
+        self._setSelectionToContainer(selection_name, selection_object)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionParamsFor')
     def getSelectionParamsFor(self, selection_name, params=None, REQUEST=None):
@@ -227,7 +228,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         Sets the selection params for a given selection_name
       """
       selection_object = self.getSelectionFor(selection_name, REQUEST)
-      if selection_object:
+      if selection_object is not None:
         selection_object.edit(params=params)
       else:
         selection_object = Selection(params=params)

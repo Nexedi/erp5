@@ -888,7 +888,7 @@ class ListBoxRenderer:
   def getParamDict(self):
     """Return a dictionary of parameters.
     """
-    params = self.getSelection().getParams()
+    params = dict(self.getSelection().getParams())
     if self.getListMethodName():
       # Update parameters, only if list_method is defined.
       # (i.e. do not update parameters in listboxes intended to show a previously defined selection.
@@ -980,6 +980,8 @@ class ListBoxRenderer:
     # objects in the current ListBox configuration.
     if 'select_expression' in params:
       del params['select_expression']
+    
+    self.getSelection().edit(params=params)
     return params
 
   getParamDict = lazyMethod(getParamDict)
