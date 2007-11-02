@@ -184,7 +184,7 @@ class ZCatalog(Folder, Persistent, Implicit):
   destination_sql_catalog_id = None
   hot_reindexing_state = None
   default_sql_catalog_id = None
-  archive = None
+  archive_path = None
   
   manage_catalogAddRowForm = DTMLFile('dtml/catalogAddRowForm', globals())
   manage_catalogFilter = DTMLFile( 'dtml/catalogFilter', globals() )
@@ -252,7 +252,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       return HOT_REINDEXING_FINISHED_STATE
     return value
 
-  def setHotReindexingState(self, state='', source_sql_catalog_id=None, destination_sql_catalog_id=None, archive=None):
+  def setHotReindexingState(self, state='', source_sql_catalog_id=None, destination_sql_catalog_id=None, archive_path=None):
     """
       Set the state of hot reindexing.
 
@@ -267,13 +267,13 @@ class ZCatalog(Folder, Persistent, Implicit):
       self.hot_reindexing_state = None
       self.source_sql_catalog_id = None
       self.destination_sql_catalog_id = None
-      self.archive = None
+      self.archive_path = None
     elif state == HOT_REINDEXING_RECORDING_STATE or \
          state == HOT_REINDEXING_DOUBLE_INDEXING_STATE:
       self.hot_reindexing_state = state
       self.source_sql_catalog_id = source_sql_catalog_id
       self.destination_sql_catalog_id = destination_sql_catalog_id
-      self.archive = archive
+      self.archive_path = archive_path
     else:
       raise CatalogError, 'unknown hot reindexing state %s' % state
 
@@ -399,7 +399,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   def manage_hotReindexAll(self, source_sql_catalog_id,
                            destination_sql_catalog_id,
-                           archive=None,
+                           archive_path=None,
                            source_sql_connection_id_list=None,
                            destination_sql_connection_id_list=None,
                            skin_name_list=None,
@@ -495,7 +495,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     self.setHotReindexingState(HOT_REINDEXING_RECORDING_STATE,
                                source_sql_catalog_id=source_sql_catalog_id,
                                destination_sql_catalog_id=destination_sql_catalog_id,
-                               archive=archive)
+                               archive_path=archive_path)
     # Clear the future catalog and start reindexing the site in it.
     final_activity_tag = 'hot_reindex_last_ERP5Site_reindexAll_tag'
     self.ERP5Site_reindexAll(sql_catalog_id=destination_sql_catalog_id,
@@ -694,7 +694,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     hot_reindexing = (self.hot_reindexing_state is not None) and \
                      (catalog is not None) and \
                      (self.source_sql_catalog_id == catalog.id)
-    archiving = self.archive is not None
+    archiving = self.archive_path is not None
     wrapped_object_list = []
     failed_object_list = []
     url_list = []
@@ -707,7 +707,10 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     # Create archive obj list if necessary
     if archiving:
-      archive_obj_list = [self.archive,]
+      # while archiving only test with the archive we used, do not care
+      # of other as they must alredy be ok
+      archive = self.unrestrictedTraverse(self.archive_path)
+      archive_obj_list = [archive,]
       for archive_path in archive_list:
         try:
           archive = self.unrestrictedTraverse(archive_path)
@@ -716,6 +719,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         if archive.getCatalogId() == self.destination_sql_catalog_id:
           archive_obj_list.append(archive)
     else:
+      # otherwise take all archive in use to knwo where object must go
       archive_obj_list = []
       for archive_path in archive_list:
         try:
@@ -723,7 +727,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         except KeyError:
           continue
         archive_obj_list.append(archive)
-    # Construct list of object to catalog
+    # Construct list of object to catalogged
     for obj in object_list:
       if hot_reindexing:
         try: 
@@ -740,7 +744,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       if (not disable_archive) and (archiving or (len(archive_obj_list) > 0 and \
                                                  (sql_catalog_id == default_catalog.id or \
                                                   sql_catalog_id is None))):
-        # check in which archive object must go
+        # check in which archive object must go if we defined archive
         catalog_id = None
         for archive in archive_obj_list:
           if archive.test(obj) is True:
@@ -751,11 +755,12 @@ class ZCatalog(Folder, Persistent, Implicit):
               catalog_dict[catalog_id]['obj'].append(obj)
             else:
               catalog_dict[catalog_id] = {'priority' : priority, 'obj' : [obj,]}
-        if catalog_id is None: # or sql_catalog_id is None:
+        if catalog_id is None or sql_catalog_id is None or self.source_sql_catalog_id == catalog.id:
           # at least put object in current catalog if no archive match
           goto_current_catalog = 1
       else:
         goto_current_catalog = 1
+
       if goto_current_catalog:
         try:
           # wrap object only when sure it will be reindex now
@@ -771,8 +776,13 @@ class ZCatalog(Folder, Persistent, Implicit):
     # run activity or execute for each archive depending on priority
     if len(catalog_dict):
       for catalog_id in catalog_dict.keys():
+        if goto_current_catalog and catalog_id == default_catalog.id:
+          # if we reindex in current catalog, do not relaunch an activity for this
+          continue
         d = catalog_dict[catalog_id]
-        if hot_reindexing and self.hot_reindexing_state == HOT_REINDEXING_DOUBLE_INDEXING_STATE and \
+        # hot_reindexing is True when creating an object during a hot reindex, in this case, we don't want
+        # to reindex it in destination catalog, it will be recorded an play only once
+        if not hot_reindexing and self.hot_reindexing_state != HOT_REINDEXING_DOUBLE_INDEXING_STATE and \
                self.destination_sql_catalog_id == catalog_id:
           destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
           # wrap all objects
@@ -790,7 +800,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           destination_catalog.catalogObjectList(wrapped_object_list_2, **kw)
         else:
           for obj in d['obj']:
-            obj.reindexObject(sql_catalog_id=catalog_id, activate_kw = \
+            obj._reindexObject(sql_catalog_id=catalog_id, activate_kw = \
                               {'priority': d['priority']}, disable_archive=1, **kw)
     
     if catalog is not None:
