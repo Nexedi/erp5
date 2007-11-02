@@ -1312,7 +1312,26 @@ class ERP5Generator(PortalGenerator):
     # Add an error_log
     if 'error_log' not in p.objectIds():
       manage_addErrorLog(p)
-    
+
+    # Remove unused default actions
+    def removeActionsFromTool(tool, remove_list):
+      action_id_list = [i.id for i in tool.listActions()]
+      remove_index_list = []
+      for i in remove_list:
+        if i in action_id_list:
+          remove_index_list.append(action_id_list.index(i))
+      if remove_index_list:
+        tool.deleteActions(remove_index_list)
+    # membership tool
+    removeActionsFromTool(p.portal_membership,
+                          ('addFavorite', 'mystuff', 'favorites', 'logged_in',
+                           'manage_members'))
+    # actions tool
+    removeActionsFromTool(p.portal_actions, ('folderContents',))
+    # remove unused action providers
+    for i in ('portal_registration', 'portal_discussion', 'portal_syndication'):
+      p.portal_actions.deleteActionProvider(i)
+
   def setupMembersFolder(self, p):
     """
     ERP5 is not a CMS
