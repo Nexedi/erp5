@@ -698,10 +698,10 @@ class ZCatalog(Folder, Persistent, Implicit):
     wrapped_object_list = []
     failed_object_list = []
     url_list = []
+    archive_list = []
     if getattr(self, "portal_archives", None) is not None:
-      archive_list = self.portal_archives.getArchiveList()
-    else:
-      archive_list = []
+      if len(self.portal_archives):
+        archive_list = self.portal_archives.getArchiveList()
 
     catalog_dict = {}
 
