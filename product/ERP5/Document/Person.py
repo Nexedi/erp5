@@ -118,6 +118,11 @@ class Person(XMLObject):
         return ' '.join(name_list)
       else:
         return self.title
+      
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'title_or_id')
+    def title_or_id(self):
+      return self.getTitleOrId()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setTitle')
     def setTitle(self, value):

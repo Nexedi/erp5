@@ -119,6 +119,17 @@ class TestPerson(ERP5TypeTestCase):
             last_name='last',
             title='title' )
     # no infinite loop :) but there's no guarantee on the behaviour
+    
+  def testGetTitleOrId(self):
+    p = self._makeOne('person')
+    self.assertEquals('person', p.getTitleOrId())
+    self.assertEquals('person', p.title_or_id())
+
+    p.edit( first_name='first',
+            last_name='last', )
+    self.assertEquals('first last', p.getTitleOrId())
+    self.assertEquals('first last', p.title_or_id())
+    
 
 def test_suite():
   suite = unittest.TestSuite()
