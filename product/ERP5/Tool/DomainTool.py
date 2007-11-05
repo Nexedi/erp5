@@ -95,8 +95,7 @@ class DomainTool(BaseTool):
           if (column.endswith('_range_min')) or \
              (column.endswith('_range_max')):
             range_property = 1
-            # XXX FIXME: what means property here ?
-            property = column[-len('_range_min')]
+            property = column[:-len('_range_min')]
           if ('%s_range_min' % column) in column_list:
             range_property = 1
             property = column
