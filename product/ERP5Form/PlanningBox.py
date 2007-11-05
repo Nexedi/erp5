@@ -37,31 +37,21 @@
     # fit the constraints.
 
 
-import string, types, sys
 
 # Class monitoring access security control
 from Products.PythonScripts.Utility import allow_class
-from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
-from Form import BasicForm
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
-from Products.Formulator.MethodField import BoundMethod
 from DateTime import DateTime
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
-from SelectionTool import makeTreeList,TreeListLine
+from SelectionTool import makeTreeList
 from Selection import Selection
-import OFS
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 from copy import copy
-from Acquisition import aq_base, aq_inner, aq_parent, aq_self
-from Products.Formulator.Form import BasicForm
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Utils import getPath
-from Products.ERP5Type.Message import Message
 
 class PlanningBoxError(Exception):
   pass
@@ -1676,7 +1666,7 @@ class BasicStructure:
     main_axis_dict['bound_end'] = len(report_tree_list)
     if self.render_format == 'list':
       main_axis_dict['bound_start'] = 0
-      main_axis_dict['bound_stop'] = axis_dict['bound_end']
+      main_axis_dict['bound_stop'] = main_axis_dict['bound_end']
       main_axis_dict['bound_page_total'] = 1
       main_axis_dict['bound_page_current'] = 1
       main_axis_dict['bound_page_groups'] = 1
