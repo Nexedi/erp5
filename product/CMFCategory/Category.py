@@ -188,7 +188,7 @@ class Category(Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getIndentedTitle')
-    def getIndentedTitle(self):
+    def getIndentedTitle(self, item_method = 'getTitle'):
       """
         Returns title or id, indented from base_category.
       """
@@ -205,11 +205,19 @@ class Category(Folder):
       if path_len >= 2:
         logical_title_list.append('&nbsp;' * 4 * (path_len - 1))
       
-      logical_title = self.getTitle()
+      logical_title = getattr(self, item_method)()
       if logical_title in [None, '']:
         logical_title = self.getId()
       logical_title_list.append(logical_title)
       return ''.join(logical_title_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                    'getTranslatedIndentedTitle')
+    def getTranslatedIndentedTitle(self):
+      """
+        Returns translated logical path, started under base category.
+      """
+      return self.getIndentedTitle(item_method='getTranslatedTitle')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
@@ -402,6 +410,17 @@ class Category(Folder):
       """
       return self.getCategoryChildItemList(recursive=recursive,
           display_id='indented_title', base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                     'getCategoryChildTranslatedIndentedTitleItemList')
+    def getCategoryChildTranslatedIndentedTitleItemList(self,
+                                              recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getIndentedTitle as default method
+      """
+      return self.getCategoryChildItemList(recursive=recursive,
+          display_id='translated_indented_title', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                               'getCategoryChildIdItemList')
