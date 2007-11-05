@@ -198,7 +198,8 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
             role_column_dict.iteritems():
           valid_criterion_dict, metadata = getValidCriterionDict(
             worklist_match_dict=worklist_match_dict,
-            acceptable_key_dict=acceptable_key_dict)
+            acceptable_key_dict=acceptable_key_dict,
+            workflow_worklist_key=workflow_worklist_key)
           if metadata is not None:
             metadata_dict[workflow_worklist_key] = metadata
           valid_criterion_dict.update(applied_security_criterion_dict)
