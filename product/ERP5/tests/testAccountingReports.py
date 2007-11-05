@@ -1540,8 +1540,8 @@ class TestAccountingReports(AccountingTestCase):
     self.assertEquals(4, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
-        node_title='Payable (Client 1)3', initial_debit_balance=400,
-        initial_credit_balance=0, debit=03, credit=03,
+        node_title='Payable (Client 1)', initial_debit_balance=400,
+        initial_credit_balance=0, debit=0, credit=0,
         final_debit_balance=400, final_credit_balance=0,
         final_balance_if_debit=400, final_balance_if_credit=0)
     
