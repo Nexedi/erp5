@@ -280,7 +280,7 @@ class MatrixBoxWidget(Widget.Widget):
               td_css = 'DataA'
             else:
               td_css = 'DataB'
-            list_body = list_body + '<tr><td class=\"%s\">%s</td>' % (td_css, str(l[1]))
+            list_body = list_body + '\n<tr class=\"%s\"><td class=\"%s\">%s</td>' % (td_css, td_css, str(l[1]))
             j = 0
             
             if render_format == 'list':
