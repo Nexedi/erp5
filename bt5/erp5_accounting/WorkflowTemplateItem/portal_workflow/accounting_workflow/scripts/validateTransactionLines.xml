@@ -222,12 +222,22 @@ if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
                                  \'bank_account_currency\':\n
                      unicode(payment.getPriceCurrencyReference(), \'utf8\')})\n
     \n
-  # TODO: should use currency precision instead of hardcoding 100 !\n
-  if int(source_sum*100) != 0:\n
+  source_precision = destination_precision = 2\n
+  if source_section is not None and\\\n
+               source_section.getPortalType() == \'Organisation\':\n
+    source_currency = source_section.getPriceCurrencyValue()\n
+    if source_currency is not None:\n
+      source_precision = source_currency.getQuantityPrecision()\n
+  if round(source_sum, source_precision) != 0:\n
     raise ValidationFailed, N_(\n
             \'Action failed: transaction is not balanced for source section.\')\n
 \n
-  if int(destination_sum*100) != 0:\n
+  if destination_section is not None and\\\n
+               destination_section.getPortalType() == \'Organisation\':\n
+    destination_currency = destination_section.getPriceCurrencyValue()\n
+    if destination_currency is not None:\n
+      destination_precision = destination_currency.getQuantityPrecision()\n
+  if round(destination_sum, destination_precision) != 0:\n
     raise ValidationFailed, N_(\n
         \'Action failed: transaction is not balanced for destination section.\')\n
 \n
@@ -326,7 +336,11 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>third_party</string>
                             <string>unicode</string>
                             <string>bank_account_currency</string>
-                            <string>int</string>
+                            <string>source_precision</string>
+                            <string>destination_precision</string>
+                            <string>source_currency</string>
+                            <string>round</string>
+                            <string>destination_currency</string>
                           </tuple>
                         </value>
                     </item>
