@@ -93,6 +93,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>Delete objects</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple/>

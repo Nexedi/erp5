@@ -93,6 +93,17 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Delete objects</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
@@ -102,6 +113,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
