@@ -96,7 +96,8 @@ class ExclusionTuple(tuple):
   """
   pass
 
-def getValidCriterionDict(worklist_match_dict, acceptable_key_dict):
+def getValidCriterionDict(worklist_match_dict, acceptable_key_dict,
+                          workflow_worklist_key):
   valid_criterion_dict = {}
   metadata = None
   for criterion_id, criterion_value in worklist_match_dict.iteritems():
@@ -110,10 +111,10 @@ def getValidCriterionDict(worklist_match_dict, acceptable_key_dict):
     elif criterion_id == SECURITY_PARAMETER_ID:
       pass
     else:
-      LOG('WorkflowTool_listActions', WARNING, 'Worklist %s of ' \
-          'workflow %s filters on variable %s which is not available ' \
+      LOG('WorkflowTool_listActions', WARNING, 'Worklist %s' \
+          'filters on variable %s which is not available ' \
           'in catalog. Its value will not be checked.' % \
-          (worklist_id, workflow_id, criterion_id))
+          (workflow_worklist_key, criterion_id))
   return valid_criterion_dict, metadata
 
 def updateWorklistSetDict(worklist_set_dict, workflow_worklist_key, valid_criterion_dict):
@@ -167,7 +168,8 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
       if getSecurityUidListAndRoleColumnDict is None:
         valid_criterion_dict, metadata = getValidCriterionDict(
           worklist_match_dict=worklist_match_dict,
-          acceptable_key_dict=acceptable_key_dict)
+          acceptable_key_dict=acceptable_key_dict,
+          workflow_worklist_key=workflow_worklist_key)
         if metadata is not None:
           metadata_dict[workflow_worklist_key] = metadata
         updateWorklistSetDict(
