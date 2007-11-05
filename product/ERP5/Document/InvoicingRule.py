@@ -152,11 +152,6 @@ class InvoicingRule(Rule):
           applied_rule._delObject(movement_id)
       
         for movement, prop_dict in modify_dict.items():
-          #XXX ignore start_date and stop_date if the difference is smaller than a
-          # rule defined value
-          for prop in ('start_date', 'stop_date'):
-           if prop in prop_dict.keys():
-              prop_dict.pop(prop)
           applied_rule[movement].edit(**prop_dict)
 
         for movement_dict in add_list:
