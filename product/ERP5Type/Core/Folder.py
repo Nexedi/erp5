@@ -1219,7 +1219,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   def getVisibleAllowedContentTypeList(self):
     """
       List portal_types' names wich can be added in this folder / object.
-      Cache results.
 
       This function is *much* similar to allowedContentTypes, except it does
       not returns portal types but their ids and filter out those listed as
@@ -1228,58 +1227,10 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     """
     portal = self.getPortalObject()
 
-    def _getVisibleAllowedContentTypeList():
-      hidden_type_list = portal.portal_types.getTypeInfo(self)\
+    hidden_type_list = portal.portal_types.getTypeInfo(self)\
                                               .getHiddenContentTypeList()
-      return [ ti.id for ti in CMFBTreeFolder.allowedContentTypes(self)
+    return [ ti.id for ti in self.allowedContentTypes()
                if ti.id not in hidden_type_list ]
-
-    user = str(_getAuthenticatedUser(self))
-    portal_type = self.getPortalType()
-    portal_path = portal.getPhysicalPath()
-
-    return _getVisibleAllowedContentTypeList()
-
-  security.declarePublic('allowedContentTypes')
-  def allowedContentTypes( self ):
-    """ List portal_types which can be added in this folder / object.
-        Cache results.
-        Only paths are cached, because we must not cache objects.
-        This makes the result, even if based on cache, O(n) so it becomes quite
-        costly with many allowed content types.
-        Example:
-         on Person (12 allowed content types): 1000 calls take 3s.
-         on Person Module (1 allowed content type): 1000 calls take 0.3s.
-    """
-    # if we don't have add portal content permission, return directly.
-    # this prevents returning cached allowed types when the user no longer have
-    # the permission to any content type. (security definitions in workflows
-    # usually remove some permission once an object is "Valid")
-    # This also prevents filling the cache with an empty list, when the user
-    # does not have the permission to add any content yet.
-
-    # XXX this works just fine, unless some objects can be added with another
-    # permission that "Add portal content". For now, this is only the case for
-    # Role Definition objects, but this shows that generally speaking, this is
-    # not the right approach.
-    def _allowedContentTypes( portal_type=None, user=None, portal_path=None ):
-      # Sort the list for convenience -yo
-      # XXX This is not the best solution, because this does not take
-      # account i18n into consideration.
-      # XXX So sorting should be done in skins, after translation is performed.
-      def compareTypes(a, b): return cmp(a.title or a.id, b.title or b.id)
-      type_list = CMFBTreeFolder.allowedContentTypes(self)
-      type_list.sort(compareTypes)
-      return ['/'.join(x.getPhysicalPath()) for x in type_list]
-
-    user = str(_getAuthenticatedUser(self))
-    portal_type = self.getPortalType()
-    portal = self.getPortalObject()
-    portal_path = portal.getPhysicalPath()
-    return [portal.restrictedTraverse(path) for path in
-              _allowedContentTypes( portal_type = portal_type,
-                                    user = user,
-                                    portal_path = portal_path )]
 
   # Multiple Inheritance Priority Resolution
   _setProperty = Base._setProperty
