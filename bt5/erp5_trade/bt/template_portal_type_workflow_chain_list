@@ -9,6 +9,7 @@ Container | pricing_interaction_workflow
 Delivery Cell | delivery_movement_causality_interaction_workflow
 Delivery Cell | delivery_movement_simulation_interaction_workflow
 Delivery Rule | edit_workflow
+Delivery Rule | rule_validation_workflow
 Discount | edit_workflow
 Internal Packing List Line | edit_workflow
 Internal Packing List Line | pricing_interaction_workflow
@@ -21,6 +22,7 @@ Inventory Line | trade_matrix_workflow
 Inventory | edit_workflow
 Inventory | inventory_workflow
 Order Rule | edit_workflow
+Order Rule | rule_validation_workflow
 Payment Condition | edit_workflow
 Purchase Order Cell | edit_workflow
 Purchase Order Cell | order_movement_simulation_interaction_workflow

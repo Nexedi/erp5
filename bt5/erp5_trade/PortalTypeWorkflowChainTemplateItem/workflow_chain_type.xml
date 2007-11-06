@@ -17,7 +17,7 @@
  </chain>
  <chain>
   <type>Delivery Rule</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Discount</type>
@@ -41,7 +41,7 @@
  </chain>
  <chain>
   <type>Order Rule</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Payment Condition</type>

@@ -40,12 +40,24 @@
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default_order_rule</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>default_order_rule</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Order Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>OrderRule_testContextPortalType</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -56,6 +68,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>1</string> </value>
         </item>
       </dictionary>
     </pickle>
