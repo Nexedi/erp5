@@ -18,6 +18,7 @@ Cash Delivery Line | CashDeliveryLine
 Category | BaobabCategory
 Check Model Type Variation | Amount
 Check Model | CheckModel
+Check Operation Line | CheckOperationLineDate
 Check | Arrow
 Check | Task
 Checkbook Model Check Amount Variation | Amount

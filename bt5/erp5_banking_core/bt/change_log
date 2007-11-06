@@ -1,3 +1,6 @@
+2007-11-06 aurel
+* add issue date on check operation line
+
 2006-06-08 Aurel
 * put recoup date in delivery table instead of start/stop_range_min/max
 

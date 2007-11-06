@@ -86,7 +86,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_start_date</string>
+                        <string>my_issue_date</string>
                         <string>my_stop_date</string>
                       </list>
                     </value>

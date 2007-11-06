@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_start_date</string> </value>
+            <value> <string>my_issue_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -289,6 +289,14 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>hidden_day_is_last_day</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_day</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>input_order</string> </key>
                     <value> <string>dmy</string> </value>
                 </item>
@@ -298,7 +306,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>start_datetime</string> </key>

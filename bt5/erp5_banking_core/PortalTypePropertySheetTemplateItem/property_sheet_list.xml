@@ -41,6 +41,9 @@
  <portal_type id="Check Model Type Variation">
   <item>Amount</item>
  </portal_type>
+ <portal_type id="Check Operation Line">
+  <item>CheckOperationLineDate</item>
+ </portal_type>
  <portal_type id="Checkbook">
   <item>Arrow</item>
   <item>VariationRange</item>
