@@ -1,3 +1,7 @@
+2007-11-06 aurel
+* remove checkbook movement module
+* use issue date on check operation line
+
 2007-04-04 aurel
 * add check deposit module
 

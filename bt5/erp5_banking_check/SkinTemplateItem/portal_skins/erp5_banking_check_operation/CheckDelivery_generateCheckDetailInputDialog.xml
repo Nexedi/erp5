@@ -127,6 +127,10 @@ else:\n
     reference_range_max = line.get(\'reference_range_max\',None)\n
     check_amount = line.get(\'check_amount\',None)\n
     quantity = int(line.get(\'quantity\',0))\n
+    if quantity not in (None, 0) and item_model.isAccountNumberEnabled() \\\n
+        and destination_payment_reference in (None,\'\'):\n
+      message = \'You must define an account\'\n
+      generate_error(line,\'destination_payment_reference\',message)\n
     if destination_payment_reference not in (None,\'\'):\n
       # String index contains the internal bank account reference\n
       account_list = [x.getObject() for x in\n
@@ -294,12 +298,12 @@ else:\n
                             <string>check_amount</string>
                             <string>int</string>
                             <string>quantity</string>
+                            <string>message</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
                             <string>account_list</string>
                             <string>len</string>
-                            <string>message</string>
                             <string>_getitem_</string>
                             <string>account</string>
                             <string>_write_</string>

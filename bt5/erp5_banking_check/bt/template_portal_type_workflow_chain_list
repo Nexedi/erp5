@@ -4,8 +4,6 @@ Check Payment | check_payment_workflow
 Check Payment | edit_workflow
 Checkbook Delivery | checkbook_delivery_workflow
 Checkbook Delivery | edit_workflow
-Checkbook Movement | checkbook_movement_workflow
-Checkbook Movement | edit_workflow
 Checkbook Reception | checkbook_reception_workflow
 Checkbook Reception | edit_workflow
 Checkbook Usual Cash Transfer | checkbook_usual_cash_transfer_workflow

@@ -24,16 +24,6 @@ Checkbook Delivery | history
 Checkbook Delivery | metadata
 Checkbook Delivery | print_pdf
 Checkbook Delivery | view
-Checkbook Movement Module | list
-Checkbook Movement Module | list_ui
-Checkbook Movement Module | print_pdf
-Checkbook Movement Module | sort_on
-Checkbook Movement Module | view
-Checkbook Movement | fastinput
-Checkbook Movement | history
-Checkbook Movement | metadata
-Checkbook Movement | print_pdf
-Checkbook Movement | view
 Checkbook Reception Line | metadata
 Checkbook Reception Line | print
 Checkbook Reception Line | view

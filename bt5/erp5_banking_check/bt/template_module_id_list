@@ -1,7 +1,6 @@
 check_deposit_module
 check_payment_module
 checkbook_delivery_module
-checkbook_movement_module
 checkbook_reception_module
 checkbook_usual_cash_transfer_module
 checkbook_vault_transfer_module

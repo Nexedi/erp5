@@ -12,10 +12,6 @@
   <workflow>checkbook_delivery_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Checkbook Movement</type>
-  <workflow>edit_workflow, checkbook_movement_workflow</workflow>
- </chain>
- <chain>
   <type>Checkbook Reception</type>
   <workflow>edit_workflow, checkbook_reception_workflow</workflow>
  </chain>

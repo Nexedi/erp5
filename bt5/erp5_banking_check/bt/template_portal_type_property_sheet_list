@@ -4,8 +4,6 @@ Check Payment | ItemAggregation
 Check Payment | Price
 Checkbook Delivery | Amount
 Checkbook Delivery | Price
-Checkbook Movement | Amount
-Checkbook Movement | Price
 Checkbook Reception | CheckbookReception
 Checkbook Usual Cash Transfer | Amount
 Checkbook Usual Cash Transfer | Price

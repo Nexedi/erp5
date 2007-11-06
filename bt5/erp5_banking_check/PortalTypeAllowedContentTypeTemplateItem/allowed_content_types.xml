@@ -19,12 +19,6 @@
  <portal_type id="Checkbook Delivery Module">
   <item>Checkbook Delivery</item>
  </portal_type>
- <portal_type id="Checkbook Movement">
-  <item>Checkbook Delivery Line</item>
- </portal_type>
- <portal_type id="Checkbook Movement Module">
-  <item>Checkbook Movement</item>
- </portal_type>
  <portal_type id="Checkbook Reception">
   <item>Checkbook Reception Line</item>
  </portal_type>
