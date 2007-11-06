@@ -71,6 +71,7 @@ class TestOrderMixin:
     portal_catalog = self.getCatalogTool()
     #portal_catalog.manage_catalogClear()
     self.createCategories()
+    self.validateRules()
 
   def createCategories(self):
     """
@@ -106,6 +107,17 @@ class TestOrderMixin:
         o = self.category_tool.product_line.newContent(
                                                  portal_type='Category',
                                                  id=category_id)
+
+  def validateRules(self, sequence=None, sequence_list=[]):
+    """
+    does what it says it does
+    """
+    rule_tool = self.getRuleTool()
+    for rule in rule_tool.contentValues(
+        portal_type=rule_tool.getPortalRuleTypeList()):
+      if rule.getValidationState() != 'validated':
+        rule.validate()
+        rule.recursiveReindexObject()
 
   def stepTic(self,**kw):
     self.tic()
