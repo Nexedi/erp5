@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -78,7 +75,7 @@
 # Cancel url is always overwritten, except when rendering\n
 # a dialog. So this is safe to propagate it.\n
 \n
-return dict((item for item in parameter_list.iteritems() if item[0] in kept_names))\n
+return dict((item for item in parameter_list.items() if item[0] in kept_names))\n
 </string> </value>
         </item>
         <item>
@@ -130,6 +127,7 @@ return dict((item for item in parameter_list.iteritems() if item[0] in kept_name
                             <string>parameter_list</string>
                             <string>kept_names</string>
                             <string>dict</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>
