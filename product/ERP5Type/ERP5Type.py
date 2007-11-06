@@ -162,7 +162,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
     # with great care.
     defined_group_list = (
       # Framework
-      'alarm',
+      'alarm', 'rule',
       # ERP5 UBM (5 Classes)
       'resource', 'node', 'item',
       'delivery', 'delivery_movement',

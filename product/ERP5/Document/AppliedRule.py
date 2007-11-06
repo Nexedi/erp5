@@ -73,18 +73,6 @@ class AppliedRule(XMLObject):
       """ show the content in the left pane of the ZMI """
       return self.objectValues()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'test')
-    def test(self):
-      """
-      Tests if the rule (still) applies
-      """
-      if self.isRootAppliedRule():
-        return 1
-      else:
-        parent_value = self.getParentValue()
-        rule = self.getSpecialiseValue()
-        return rule.test(parent_value)
-
     security.declareProtected(Permissions.AccessContentsInformation,
         'isAccountable')
     def isAccountable(self, movement):

@@ -223,7 +223,7 @@ class SimulationMovement(Movement):
     # we know that invoicing rule acts like this, and that it comes after
     # invoice or invoicing_rule, so we if we come from invoince rule or
     # invoicing rule, we always expand regardless of the causality state.
-    if ((self.getParentValue().getSpecialiseId() not in
+    if ((self.getParentValue().getSpecialiseReference() not in
          ('default_invoicing_rule', 'default_invoice_rule')
          and self.getCausalityState() == 'expanded' ) or \
          len(self.objectIds()) != 0):
@@ -233,9 +233,8 @@ class SimulationMovement(Movement):
     else:
       portal_rules = getToolByName(self, 'portal_rules')
       # Parse each rule and test if it applies
-      for rule in portal_rules.objectValues():
-        if rule.test(self):
-          my_applied_rule = rule.constructNewAppliedRule(self, **kw)
+      for rule in portal_rules.searchRuleList(self):
+        rule.constructNewAppliedRule(self, **kw)
       for my_applied_rule in self.objectValues() :
         my_applied_rule.expand(force=force,**kw)
       # Set to expanded

@@ -34,7 +34,7 @@ from Products.ERP5.Document.Predicate import Predicate
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from zLOG import LOG, WARNING
 
-class Rule(XMLObject, Predicate):
+class Rule(Predicate, XMLObject):
   """
     Rule objects implement the simulation algorithm
     (expand, solve)
@@ -67,6 +67,7 @@ class Rule(XMLObject, Predicate):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
+  isPredicate = 1
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -81,6 +82,9 @@ class Rule(XMLObject, Predicate):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.Task
+                    , PropertySheet.Predicate
+                    , PropertySheet.Reference
+                    , PropertySheet.Version
                     )
   
   # Portal Type of created children
@@ -139,29 +143,6 @@ class Rule(XMLObject, Predicate):
       If it does not diverge, the rule is reexpanded. If not,
       diverge is called on the parent movement.
     """
-
-  def test(self, movement):
-    """
-    Tests if the rule (still) applies
-    First try to call a python script, then call the _test method defined in
-    the class
-
-    This method should not be overriden by Rules.
-    """
-    method = self._getTypeBasedMethod('test')
-    if method is not None:
-      return method(movement)
-    return self._test(movement)
-
-  def _test(self, movement):
-    """
-    Default behaviour of Rule.test, used when no test method for the rule
-    was defined
-
-    This method should be overriden by Rules if another default behaviour is
-    wanted.
-    """
-    return 0
 
   security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
   def diverge(self, applied_rule):

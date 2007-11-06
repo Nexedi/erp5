@@ -656,11 +656,27 @@ class Delivery(XMLObject, ImmobilisationDelivery):
     # Applied Rule stuff
     def updateAppliedRule(self, rule_id,force=0,**kw):
       """
-      Create a new Applied Rule is none is related, or call expand
+      Create a new Applied Rule if none is related, or call expand
       on the existing one.
+
+      The chosen applied rule will be the validated rule with reference ==
+      rule_id, and the higher version number.
+
+      If no rule is found, simply pass rule_id to _createAppliedRule, as we
+      did previously.
       """
-      if (rule_id is not None) and\
-         (self.getSimulationState() not in \
+      if rule_id is None:
+        return
+
+      portal_rules = getToolByName(self, 'portal_rules')
+      res = portal_rules.searchFolder(reference=rule_id,
+          validation_state="validated", sort_on='version',
+          sort_order='descending') # XXX validated is Hardcoded !
+
+      if len(res) > 0:
+        rule_id = res[0].getId()
+
+      if (self.getSimulationState() not in \
                                        self.getPortalDraftOrderStateList()):
         # Nothing to do if we are already simulated
         self._createAppliedRule(rule_id,force=force,**kw)

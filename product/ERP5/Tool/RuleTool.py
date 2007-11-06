@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type import Permissions
+from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5 import _dtmldir
 
@@ -119,5 +120,23 @@ class RuleTool (UniqueObject, Folder):
                 meta_types.append(meta_type)
         return meta_types
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'searchRuleList')
+    def searchRuleList(self, movement, tested_base_category_list=[], **kw):
+      """
+      this method searches for rules, as predicates against movement
+
+      - the rule must be in "validated" state
+      - the rule must be of a known portal type
+      - Predicate criterions can be used (like start_date_range_min)
+      """
+      domain_tool = getToolByName(self, "portal_domains")
+
+      rule_list = domain_tool.searchPredicateList(context=movement,
+          tested_base_category_list=tested_base_category_list,
+          portal_type=self.getPortalRuleTypeList(),
+          validation_state="validated", **kw) #XXX "validated" is hardcoded
+
+      return rule_list
 
 InitializeClass(RuleTool)

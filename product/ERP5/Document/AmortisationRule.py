@@ -86,14 +86,6 @@ class AmortisationRule(Rule):
                                                  'depr':  'transfer_depr'},
                            'correction':         'correction'
                          }
-            
-    def _test(self, movement):
-      """
-        Tests if the rule (still) applies
-      """
-      # An order rule never applies since it is always explicitely instanciated
-      # XXX And if it is an amortisation rule ?
-      return 0
 
 
     # Simulation workflow

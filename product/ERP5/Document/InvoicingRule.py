@@ -75,18 +75,6 @@ class InvoicingRule(Rule):
     """
     return 0
 
-  def _test(self, movement):
-    """
-    Tests if the rule (still) applies
-    """
-    parent = movement.getParentValue()
-    result = 0
-    if (parent.getPortalType() == 'Applied Rule') and \
-       (parent.getSpecialiseId() in ('default_order_rule',
-                                     'default_delivery_rule' )):
-      result = 1
-    return result
-
 #### Helper method for expand
   def _generatePrevisionList(self, applied_rule, **kw):
     """

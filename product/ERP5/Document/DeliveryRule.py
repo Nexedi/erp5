@@ -59,15 +59,6 @@ class DeliveryRule(Rule):
                     , PropertySheet.Task
                     )
 
-  def _test(self, movement):
-    """
-    Default behaviour of DeliveryRule.test
-    Tests if the rule (still) applies
-    """
-    # A delivery rule never applies 
-    # since it is always explicitely instanciated
-    return 0
-
   # Simulation workflow
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, **kw):
