@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.PaymentRule</string>
-          <string>PaymentRule</string>
-        </tuple>
-        <none/>
+        <global name="PaymentRule" module="Products.ERP5Type.Document.PaymentRule"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -25,6 +22,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -37,10 +40,20 @@
             </value>
         </item>
         <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default_payment_rule</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -51,6 +64,14 @@
             <value> <string>Payment Rule</string> </value>
         </item>
         <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>PaymentRule_testMovementId</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Payment Rule</string> </value>
         </item>
@@ -59,6 +80,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>1</string> </value>
         </item>
       </dictionary>
     </pickle>

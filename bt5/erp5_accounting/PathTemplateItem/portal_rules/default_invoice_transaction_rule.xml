@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.InvoiceTransactionRule</string>
-          <string>InvoiceTransactionRule</string>
-        </tuple>
-        <none/>
+        <global name="InvoiceTransactionRule" module="Products.ERP5Type.Document.InvoiceTransactionRule"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -25,6 +22,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -37,10 +40,20 @@
             </value>
         </item>
         <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default_invoice_transaction_rule</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -61,6 +74,14 @@
             <value> <string>Invoice Transaction Rule</string> </value>
         </item>
         <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>InvoiceTransactionRule_test</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Invoice Transaction Rule</string> </value>
         </item>
@@ -69,6 +90,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>1</string> </value>
         </item>
       </dictionary>
     </pickle>

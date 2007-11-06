@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Amortisation Rule</type>
+  <workflow>rule_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Amortisation Transaction</type>
   <workflow>delivery_causality_interaction_workflow, amortisation_transaction_causality_workflow, accounting_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>

@@ -19,10 +19,14 @@ Invoice Line | edit_workflow
 Invoice Line | pricing_interaction_workflow
 Invoice Line | trade_matrix_workflow
 Invoice Rule | edit_workflow
+Invoice Rule | rule_validation_workflow
 Invoice Transaction Rule | edit_workflow
 Invoice Transaction Rule | rule_interaction_workflow
+Invoice Transaction Rule | rule_validation_workflow
 Invoicing Rule | edit_workflow
+Invoicing Rule | rule_validation_workflow
 Payment Rule | edit_workflow
+Payment Rule | rule_validation_workflow
 Payment Transaction | accounting_workflow
 Payment Transaction | edit_workflow
 Purchase Invoice Transaction Line | delivery_movement_causality_interaction_workflow

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.InvoiceRule</string>
-          <string>InvoiceRule</string>
-        </tuple>
-        <none/>
+        <global name="InvoiceRule" module="Products.ERP5Type.Document.InvoiceRule"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -25,6 +22,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -37,10 +40,20 @@
             </value>
         </item>
         <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default_invoice_rule</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -49,6 +62,14 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Invoice Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>InvoiceRule_testContextPortalType</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -60,30 +81,22 @@
               <none/>
             </value>
         </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>1</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -91,13 +104,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.TransformationRule</string>
-          <string>TransformationRule</string>
-        </tuple>
-        <none/>
+        <global name="TransformationRule" module="Products.ERP5Type.Document.TransformationRule"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -43,12 +40,24 @@
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default_transformation_rule</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>default_transformation_rule</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Transformation Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>TransformationRule_test</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -60,30 +69,22 @@
               <none/>
             </value>
         </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>1</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -91,13 +92,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>

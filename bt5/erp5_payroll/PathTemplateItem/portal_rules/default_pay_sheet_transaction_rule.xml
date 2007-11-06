@@ -3,15 +3,36 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.InvoiceTransactionRule</string>
-          <string>InvoiceTransactionRule</string>
-        </tuple>
-        <none/>
+        <global name="InvoiceTransactionRule" module="Products.ERP5Type.Document.InvoiceTransactionRule"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
@@ -22,6 +43,12 @@
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
         <item>
@@ -37,10 +64,20 @@
             </value>
         </item>
         <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default_pay_sheet_transaction_rule</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -61,8 +98,16 @@
             <value> <string>Invoice Transaction Rule</string> </value>
         </item>
         <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>InvoiceTransactionRule_test</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Default Pay Sheet Transaction Rule</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -70,30 +115,22 @@
               <none/>
             </value>
         </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>1</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <tuple>
@@ -110,13 +147,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -125,17 +156,14 @@
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -196,17 +224,14 @@
   <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -264,17 +289,14 @@
   <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -294,22 +316,19 @@
   <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/4</string> </key>
-                    <value> <int>7</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/5</string> </key>
@@ -317,35 +336,35 @@
                 </item>
                 <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/6</string> </key>
-                    <value> <int>6</int> </value>
-                </item>
-                <item>
-                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/7</string> </key>
-                    <value> <int>5</int> </value>
-                </item>
-                <item>
-                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/8</string> </key>
-                    <value> <int>4</int> </value>
-                </item>
-                <item>
-                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/9</string> </key>
-                    <value> <int>8</int> </value>
-                </item>
-                <item>
-                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/copy2_of_4</string> </key>
-                    <value> <int>3</int> </value>
-                </item>
-                <item>
-                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/copy3_of_4</string> </key>
-                    <value> <int>2</int> </value>
-                </item>
-                <item>
-                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/copy4_of_4</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
+                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/7</string> </key>
+                    <value> <int>2</int> </value>
+                </item>
+                <item>
+                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/8</string> </key>
+                    <value> <int>3</int> </value>
+                </item>
+                <item>
+                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/9</string> </key>
+                    <value> <int>4</int> </value>
+                </item>
+                <item>
+                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/copy2_of_4</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+                <item>
+                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/copy3_of_4</string> </key>
+                    <value> <int>6</int> </value>
+                </item>
+                <item>
+                    <key> <string>portal_rules/default_pay_sheet_transaction_rule/copy4_of_4</string> </key>
+                    <value> <int>7</int> </value>
+                </item>
+                <item>
                     <key> <string>portal_rules/default_pay_sheet_transaction_rule/copy_of_4</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>8</int> </value>
                 </item>
               </dictionary>
             </value>

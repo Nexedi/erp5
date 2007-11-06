@@ -4,6 +4,7 @@ Production Order Line | edit_workflow
 Production Order Line | order_movement_simulation_interaction_workflow
 Production Order Line | production_matrix_workflow
 Production Order Rule | edit_workflow
+Production Order Rule | rule_validation_workflow
 Production Order | edit_workflow
 Production Order | order_simulation_interaction_workflow
 Production Order | production_order_workflow
@@ -33,4 +34,6 @@ Supply Chain | edit_workflow
 Supply Link | edit_workflow
 Supply Node | edit_workflow
 Transformation Rule | edit_workflow
+Transformation Rule | rule_validation_workflow
 Transformation Sourcing Rule | edit_workflow
+Transformation Sourcing Rule | rule_validation_workflow
