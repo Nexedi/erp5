@@ -1016,7 +1016,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
                                        cache=0))
 
-  def test_renameBaseCategory(self):
+  def test_29_renameBaseCategory(self):
     bc = self.portal.portal_categories.newContent(
                           portal_type='Base Category',
                           id='first_id')
@@ -1025,6 +1025,36 @@ class TestCMFCategory(ERP5TypeTestCase):
     bc.setId('new_id')
     self.assertEquals('new_id', bc.getId())
 
+  def test_30_resolveCategory(self):
+    portal = self.getPortal()
+    category_tool = portal.portal_categories
+    module = portal.sale_order_module
+    order = module.newContent(id='foo', portal_type='Sale Order')
+    self.assertNotEquals(order, None)
+    line = order.newContent(id='bar', portal_type='Sale Order Line')
+    self.assertNotEquals(line, None)
+    cell = line.newContent(id='baz', portal_type='Sale Order Cell')
+    self.assertNotEquals(cell, None)
+    get_transaction().commit()
+    self.tic()
+
+    for relative_url, value in (
+            ('sale_order_module', module),
+            ('sale_order_module/foo', order),
+            ('sale_order_module/bar', None),
+            ('sale_order_module/sale_order_module', None),
+            ('sale_order_module/foo/bar', line),
+            ('sale_order_module/foo/foo', None),
+            ('sale_order_module/foo/sale_order_module', None),
+            ('sale_order_module/foo/bar/baz', cell),
+            ('sale_order_module/foo/bar/bar', None),
+            ('sale_order_module/foo/bar/foo', None),
+            ('sale_order_module/foo/bar/sale_order_module', None),
+            ):
+      obj = category_tool.resolveCategory(relative_url)
+      self.assertEquals(obj, value)
+      obj = category_tool.resolveCategory('order/' + relative_url)
+      self.assertEquals(obj, value)
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -34,6 +34,7 @@ from OFS.Folder import Folder
 from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
+from AccessControl import Unauthorized, getSecurityManager
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
@@ -45,7 +46,7 @@ from OFS.Traversable import NotFound
 
 import re
 
-from zLOG import LOG, PROBLEM
+from zLOG import LOG, PROBLEM, WARNING
 
 _marker = object()
 
@@ -1511,23 +1512,76 @@ class CategoryTool( UniqueObject, Folder, Base ):
           except KeyError:
             pass
 
-        try:
-          obj = self.restrictedTraverse(relative_url)
-          if obj is None:
-            REQUEST = self.REQUEST
-            url = '%s/%s' % ('/'.join(self.getPhysicalPath()), relative_url)
-            #LOG("CMFCategory:",0,"Trying url %s" % url )
-            obj = self.portal_catalog.resolve_url(url, REQUEST)
-          #LOG('Obj type', 0, str(obj.getUid()))
-          value = obj
-        except (KeyError, AttributeError) :
-          LOG("CMFCategory WARNING",0,"Could not access object relative_url %s" % relative_url )
-          value = None
+        # This below is complicated, because we want to avoid acquisitions
+        # in most cases, but we still need to restrict the access.
+        # For instance, if the relative url is source/person_module/yo,
+        # only person_module should be acquired. This becomes very critical,
+        # for example, with source/sale_order_module/1/1/1, because
+        # we do not want to acquire a Sale Order when a Line or a Cell is
+        # not present.
+        # 
+        # In addition, the behavior of resolveCategory is weird, in that
+        # the relative url might not start with a base category. It can
+        # be without a base category, and this means that the first
+        # part must be acquired. This notation makes things quite
+        # unpredictable. Therefore, we will have to redesign this method
+        # in the future.
+        if isinstance(relative_url, basestring):
+          stack = relative_url.split('/')
+        else:
+          stack = list(relative_url)
+        stack.reverse()
+
+        validate = getSecurityManager().validate
+        key = stack.pop()
+        obj = self._getOb(key, None)
+        if obj is not None:
+          # The first one is a base category.
+          if not validate(self, self, key, obj):
+            raise Unauthorized('unauthorized access to element %s' % key)
+          base_category = obj
+
+          # Next, an object must be retrieved from a base category or
+          # a portal.
+          if stack:
+            key = stack.pop()
+            obj = base_category._getOb(key, None)
+            if obj is None:
+              portal = self.getPortalObject()
+              obj = portal._getOb(key, None)
+              if obj is not None:
+                if not validate(portal, base_category, key, obj):
+                  raise Unauthorized('unauthorized access to element %s' % key)
+                obj = obj.__of__(base_category)
+            else:
+              if not validate(base_category, base_category, key, obj):
+                raise Unauthorized('unauthorized access to element %s' % key)
+        else:
+          # The first one is a module.
+          portal = self.getPortalObject()
+          obj = portal._getOb(key, None)
+          if obj is not None:
+            if not validate(portal, portal, key, obj):
+              raise Unauthorized('unauthorized access to element %s' % key)
+
+        if obj is not None:
+          while stack:
+            container = obj
+            key = stack.pop()
+            obj = container._getOb(key, None)
+            if obj is None:
+              break
+            if not validate(container, container, key, obj):
+              raise Unauthorized('unauthorized access to element %s' % key)
+
+        if obj is None:
+          LOG('CMFCategory', WARNING, 
+              'Could not access object %s' % relative_url)
 
         if cache is not None:
-          cache[key] = value
+          cache[key] = obj
 
-        return value
+        return obj
 
 InitializeClass( CategoryTool )
 
