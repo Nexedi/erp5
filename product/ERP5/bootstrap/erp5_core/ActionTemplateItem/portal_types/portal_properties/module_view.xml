@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:object and object.getId().endswith(\'_module\') and getattr(object, \'getTypeInfo\', None) and object.getTypeInfo() and object.getTypeInfo().getId().endswith(\' Module\')</string> </value>
+            <value> <string>python: object.getPortalType() in portal.getPortalModuleTypeList()</string> </value>
         </item>
       </dictionary>
     </pickle>
