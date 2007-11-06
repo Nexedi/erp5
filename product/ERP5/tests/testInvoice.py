@@ -84,7 +84,7 @@ class TestInvoice(TestPackingListMixin,
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
-    uf._doAddUser('alex', 'alex', ['Manager', 'Assignee', 'Assignor',
+    uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
@@ -954,9 +954,9 @@ class TestInvoice(TestPackingListMixin,
       activity_tool = self.getActivityTool()
       activity_tool.manageClearActivities(keep=0)
     else:
-      self.fail("""Error: stepConfirmInvoice didn't fail, the builder script
-          InvoiceTransaction_postTransactionLineGeneration should have
-          complain that accounting movements use multiple resources""")
+      self.fail("Error: stepConfirmInvoice didn't fail, the builder script"
+          + " InvoiceTransaction_postTransactionLineGeneration should have"
+          + " complained that accounting movements use multiple resources")
 
   def stepCheckSimulationTrees(self, sequence=None, sequence_list=[]):
     """
@@ -1010,11 +1010,18 @@ class TestInvoice(TestPackingListMixin,
                   movement.getPath()))
         elif k == 'next_rule_list':
           for movement in rule.objectValues():
+            found_rule_dict = {}
             for next_rule in movement.objectValues():
-              self.assertTrue(next_rule.getSpecialiseValue().getPortalType()
-                  in v, 'looking for %s in %s on %s' % (
-                  next_rule.getSpecialiseValue().getPortalType(), v,
-                  next_rule.getPath()))
+              next_rule_type = next_rule.getSpecialiseValue().getPortalType()
+              self.assertTrue(next_rule_type in v,
+                  'looking for %s in %s on %s' % (
+                  next_rule_type, v, next_rule.getPath()))
+              n = found_rule_dict.get(next_rule_type, 0)
+              found_rule_dict[next_rule_type] = n + 1
+            # for each movement, we want to make sure that each rule is not
+            # instanciated more than once
+            if len(found_rule_dict):
+              self.assertEquals(set(found_rule_dict.itervalues()), set([1]))
         elif k == 'parent_movement_type_list':
           if rule.getParentValue().getDeliveryValue() is not None:
             parent_type = rule.getParentValue().getDeliveryValue().getPortalType()
