@@ -106,7 +106,7 @@ string:${object_url}/Base_jumpToRelatedObject?portal_type=Query&base_category=ag
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.Base_checkPermission(\'query_module\', \'View\')</string> </value>
+            <value> <string>python: portal.Base_checkPermission(\'query_module\', \'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
