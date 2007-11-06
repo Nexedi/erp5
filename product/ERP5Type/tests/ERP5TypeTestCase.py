@@ -763,6 +763,11 @@ def optimize():
       PythonScript_compile(self)
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
+  from Products.CMFCore.FSPythonScript import FSPythonScript
+  FSPythonScript_write = FSPythonScript._write
+  def _write(self, text, compile):
+    return FSPythonScript_write(self, text, 0)
+  FSPythonScript._write = _write
 
 
 optimize()
