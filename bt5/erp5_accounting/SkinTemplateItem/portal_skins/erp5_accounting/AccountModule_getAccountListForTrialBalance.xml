@@ -444,7 +444,7 @@ for node in getInventoryList(\n
                 portal_type=accounting_movement_type_list +\n
                               balance_movement_type_list,\n
                 **inventory_params):\n
-  mirror_section_uid = MARKER\n
+  mirror_section_key = MARKER\n
   if expand_accounts:\n
     mirror_section_key = node[\'mirror_section_uid\']\n
   account_props = line_per_account.setdefault(\n
@@ -467,7 +467,7 @@ for node in getInventoryList(\n
                 at_date=from_date + 1,\n
                 portal_type=balance_movement_type_list,\n
                 **inventory_params):\n
-  mirror_section_uid = MARKER\n
+  mirror_section_key = MARKER\n
   if expand_accounts:\n
     mirror_section_key = node[\'mirror_section_uid\']\n
   account_props = line_per_account.setdefault(\n
@@ -489,7 +489,7 @@ for node in getInventoryList(\n
                   to_date=from_date,\n
                   portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
-    mirror_section_uid = MARKER\n
+    mirror_section_key = MARKER\n
     if expand_accounts:\n
       mirror_section_key = node[\'mirror_section_uid\']\n
     account_props = line_per_account.setdefault(\n
@@ -509,7 +509,7 @@ for node in getInventoryList(\n
                   to_date=from_date,\n
                   portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
-    mirror_section_uid = MARKER\n
+    mirror_section_key = MARKER\n
     if expand_accounts:\n
       mirror_section_key = node[\'mirror_section_uid\']\n
     account_props = line_per_account.setdefault(\n
@@ -842,10 +842,10 @@ return new_line_list\n
                             <string>getNodeTitleAndId</string>
                             <string>initial_balance_date</string>
                             <string>min</string>
-                            <string>mirror_section_uid</string>
                             <string>mirror_section_key</string>
                             <string>line_list</string>
                             <string>node_relative_url</string>
+                            <string>mirror_section_uid</string>
                             <string>payment_uid</string>
                             <string>data</string>
                             <string>node_title</string>
