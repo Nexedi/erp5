@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -36,6 +33,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -44,11 +45,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>css_class</string> </key>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -105,10 +106,6 @@
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -175,6 +172,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -183,11 +184,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>css_class</string> </key>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -247,14 +248,8 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>page_template</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>portal_types</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>report_root_list</string> </key>
@@ -312,7 +307,17 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>all_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -331,7 +336,15 @@
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
-                          <string>Portal Type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -343,11 +356,15 @@
                 <item>
                     <key> <string>count_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -389,10 +406,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -400,16 +425,20 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>30</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
                     <value> <string>Folder_viewContentList</string> </value>
                 </item>
                 <item>
+                    <key> <string>list_cookie</string> </key>
+                    <value> <string>FOLDER_LIST</string> </value>
+                </item>
+                <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -439,6 +468,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>reverse</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>search</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -454,7 +487,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>divergence_tester_selection</string> </value>
+                    <value> <string>ruletool_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -480,13 +513,17 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Content</string> </value>
+                    <value> <string>Rules</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -497,18 +534,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(x, x) for x in here.getPortalDivergenceTesterTypeList()]</string> </value>
+            <key> <string>method_name</string> </key>
+            <value> <string>countFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -516,37 +550,15 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <unicode>countFolder</unicode> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <unicode>searchFolder</unicode> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

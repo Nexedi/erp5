@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
+        <global name="VariableDefinition" module="Products.DCWorkflow.Variables"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -16,49 +16,39 @@
             </value>
         </item>
         <item>
-            <key> <string>action</string> </key>
+            <key> <string>default_expr</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
-        </item>
-        <item>
-            <key> <string>condition</string> </key>
+            <key> <string>default_value</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Time of the last transition</string> </value>
         </item>
         <item>
-            <key> <string>icon</string> </key>
-            <value> <string></string> </value>
+            <key> <string>for_catalog</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>for_status</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view</string> </value>
+            <value> <string>time</string> </value>
         </item>
         <item>
-            <key> <string>permissions</string> </key>
+            <key> <string>info_guard</string> </key>
             <value>
-              <tuple>
-                <string>View</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
-            <key> <string>priority</string> </key>
-            <value> <float>1.0</float> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>View</string> </value>
-        </item>
-        <item>
-            <key> <string>visible</string> </key>
+            <key> <string>update_always</string> </key>
             <value> <int>1</int> </value>
         </item>
       </dictionary>
@@ -67,15 +57,18 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/RuleTool_viewRuleList</string> </value>
+            <value> <string>state_change/getDateTime</string> </value>
         </item>
       </dictionary>
     </pickle>

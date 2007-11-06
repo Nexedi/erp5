@@ -44,7 +44,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -62,9 +62,6 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
               </list>
             </value>
@@ -74,37 +71,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>left</string> </key>
-                    <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>my_version</string>
-                        <string>my_validation_state_title</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>right</string> </key>
-                    <value>
-                      <list>
-                        <string>my_start_date_range_min</string>
-                        <string>my_start_date_range_max</string>
-                        <string>my_test_method_id</string>
                       </list>
                     </value>
                 </item>
@@ -113,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Rule_view</string> </value>
+            <value> <string>RuleTool_viewRuleList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -121,11 +91,15 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Rule_view</string> </value>
+            <value> <string>RuleTool_viewRuleList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_list</string> </value>
+        </item>
+        <item>
+            <key> <string>rid</string> </key>
+            <value> <int>-1722436574</int> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -137,7 +111,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Rule</string> </value>
+            <value> <string>Rule Tool Contents</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
