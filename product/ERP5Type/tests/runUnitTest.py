@@ -117,20 +117,20 @@ if WIN:
 elif os.path.isdir('/usr/lib64/zope/lib/python'):
   software_home = '/usr/lib64/zope/lib/python'
   zope_home = '/usr/lib64/zope'
-elif os.path.isdir('/usr/lib/zope/lib/python'):
-  software_home = '/usr/lib/zope/lib/python'
+elif os.path.isdir('/usr/lib/erp5/lib/python'):
+  software_home = '/usr/lib/erp5/lib/python'
   zope_home = '/usr/lib/zope'
 else:
-  software_home = '/usr/lib/erp5/lib/python'
-  zope_home = '/usr/lib/erp5'
+  software_home = '/usr/lib/zope/lib/python'
+  zope_home = '/usr/lib/zope'
 # handle 'system global' instance and windows
 if WIN:
   real_instance_home = os.path.join(erp5_home, 'ERP5Instance')
 elif tests_framework_home.startswith('/usr/lib'):
-  if os.path.isdir('/var/lib/zope'):
-    real_instance_home = '/var/lib/zope'
-  else:
+  if os.path.isdir('/var/lib/erp5'):
     real_instance_home = '/var/lib/erp5'
+  else:
+    real_instance_home = '/var/lib/zope'
 else:
   real_instance_home = os.path.sep.join(
       tests_framework_home.split(os.path.sep)[:-3])
