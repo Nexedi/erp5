@@ -356,13 +356,8 @@ for node in getInventoryList(\n
 \n
 \n
 for node in getInventoryList(\n
-                node_category_strict_membership=[\n
-                  \'account_type/asset\',\n
-                  \'account_type/asset/cash\',\n
-                  \'account_type/asset/receivable/refundable_vat\',\n
-                  \'account_type/liability/payable/collected_vat\',\n
-                  \'account_type/equity\',\n
-                  \'account_type/liability\',],\n
+                node_category_strict_membership=\n
+                          account_type_to_group_by_node,\n
                 group_by_node=1,\n
                 omit_output=1,\n
                 from_date=period_start_date,\n
@@ -377,13 +372,8 @@ for node in getInventoryList(\n
                     \'initial_debit_balance\', 0) + total_price\n
 \n
 for node in getInventoryList(\n
-                node_category_strict_membership=[\n
-                  \'account_type/asset\',\n
-                  \'account_type/asset/cash\',\n
-                  \'account_type/asset/receivable/refundable_vat\',\n
-                  \'account_type/liability/payable/collected_vat\',\n
-                  \'account_type/equity\',\n
-                  \'account_type/liability\',],\n
+                node_category_strict_membership=\n
+                          account_type_to_group_by_node,\n
                 group_by_node=1,\n
                 omit_input=1,\n
                 from_date=period_start_date,\n
@@ -489,11 +479,8 @@ for node in getInventoryList(\n
                   to_date=from_date,\n
                   portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
-    mirror_section_key = MARKER\n
-    if expand_accounts:\n
-      mirror_section_key = node[\'mirror_section_uid\']\n
     account_props = line_per_account.setdefault(\n
-            (node[\'node_relative_url\'], mirror_section_key, MARKER),\n
+            (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
@@ -509,11 +496,8 @@ for node in getInventoryList(\n
                   to_date=from_date,\n
                   portal_type=accounting_movement_type_list,\n
                   **inventory_params):\n
-    mirror_section_key = MARKER\n
-    if expand_accounts:\n
-      mirror_section_key = node[\'mirror_section_uid\']\n
     account_props = line_per_account.setdefault(\n
-            (node[\'node_relative_url\'], mirror_section_key, MARKER),\n
+            (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
             dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
