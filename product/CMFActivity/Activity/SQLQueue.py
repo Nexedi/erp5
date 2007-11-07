@@ -123,6 +123,8 @@ class SQLQueue(RAMQueue):
           get_transaction().commit()                                        # If successful, commit
       except:
         # If an exception occurs, abort the transaction to minimize the impact,
+        LOG('SQLQueue', WARNING, 'Could not evaluate %s on %s' % (m.method_id, path),
+             error=sys.exc_info())
         try:
           abortTransactionSynchronously()
         except:
