@@ -124,7 +124,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     if not run: return
     portal_actions = getattr(self.getPortal(), 'portal_actions', None)
-    global_action_list = portal_actions.listFilteredActionsFor()['global']
+    global_action_list = portal_actions.listFilteredActionsFor(
+                               self.getPortal())['global']
     action_name_list = []
     for action in global_action_list:
       if(action['visible']):
