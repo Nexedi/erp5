@@ -1780,8 +1780,16 @@ class TestCMFActivity(ERP5TypeTestCase):
     # Usual abort should not remove a read conflict error.
     organisation = module[organisation_id]
     self.assertRaises(ReadConflictError, getattr, organisation, 'uid')
-    get_transaction().abort()
-    self.assertRaises(ReadConflictError, getattr, organisation, 'uid')
+
+    # In Zope 2.7, abort does not sync automatically, so even after abort,
+    # ReadConflictError is raised. But in Zope 2.8, this is automatic, so
+    # abort has the same effect as abortTransactionSynchronously.
+    # 
+    # In reality, we do not care about whether abort raises or not
+    # at this point. We are only interested in whether
+    # abortTransactionSynchronously works expectedly.
+    #get_transaction().abort()
+    #self.assertRaises(ReadConflictError, getattr, organisation, 'uid')
 
     # Synchronous abort.
     from Products.CMFActivity.Activity.Queue import abortTransactionSynchronously
