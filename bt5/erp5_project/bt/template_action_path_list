@@ -69,6 +69,7 @@ Task Report | view
 Task Report | view_discount
 Task | apply_trade_condition
 Task | constraint
+Task | duplicate_task
 Task | jump_to_related_task_report
 Task | payment_condition
 Task | profile_view
