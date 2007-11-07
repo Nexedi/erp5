@@ -32,6 +32,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
+from Products.ZSQLCatalog.SQLCatalog import Query
 
 class TestDomainTool(ERP5TypeTestCase):
 
@@ -144,8 +145,13 @@ class TestDomainTool(ERP5TypeTestCase):
     order_line = self.getOrderLine()
     domain_tool = self.getDomainTool()
 
+    # ignore simulation rules, which are now predicates
+    rule_query = Query(operator='AND', portal_type=['!=%s' % x for x in
+      domain_tool.getPortalRuleTypeList()])
+
     # Test with order line and predicate to none
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test)
+    predicate_list = domain_tool.searchPredicateList(order_line,test=test,
+        portal_type=rule_query)
     self.assertEquals(len(predicate_list),1) # Actually, a predicate where
                                              # nothing is defined is ok
 
@@ -153,7 +159,8 @@ class TestDomainTool(ERP5TypeTestCase):
     order_line.setQuantity(45)
     get_transaction().commit()
     self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test)
+    predicate_list = domain_tool.searchPredicateList(order_line,test=test,
+        portal_type=rule_query)
     self.assertEquals(len(predicate_list),1)
 
     # Test with order line not none and predicate to identity
@@ -183,7 +190,8 @@ class TestDomainTool(ERP5TypeTestCase):
     order_line.setQuantity(10)
     get_transaction().commit()
     self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test)
+    predicate_list = domain_tool.searchPredicateList(order_line,test=test,
+        portal_type=rule_query)
     self.assertEquals(len(predicate_list),0)
 
     # Test with order line not none and predicate to max
