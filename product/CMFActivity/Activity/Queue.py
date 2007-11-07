@@ -67,11 +67,7 @@ def abortTransactionSynchronously():
   """
   try:
     import transaction
-    # Zope 2.8 and later.
-    manager_list = transaction.get()._adapters.keys()
-    for manager in manager_list:
-      if getattr(manager, 'sync', None) is not None:
-        manager.sync()
+    # Zope 2.8 and later. sync is automatic.
     transaction.abort()
   except ImportError:
     # Zope 2.7 and earlier.
