@@ -101,7 +101,7 @@
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_version</string>
-                        <string>my_validation_state_title</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
