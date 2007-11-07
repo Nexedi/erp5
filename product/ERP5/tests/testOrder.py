@@ -108,16 +108,6 @@ class TestOrderMixin:
                                                  portal_type='Category',
                                                  id=category_id)
 
-  def validateRules(self, sequence=None, sequence_list=[]):
-    """
-    does what it says it does
-    """
-    rule_tool = self.getRuleTool()
-    for rule in rule_tool.contentValues(
-        portal_type=rule_tool.getPortalRuleTypeList()):
-      if rule.getValidationState() != 'validated':
-        rule.validate()
-
   def stepTic(self,**kw):
     self.tic()
 

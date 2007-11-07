@@ -56,6 +56,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     """set up """
     self.createCategories()
     self.login()
+    self.validateRules()
   
   def _safeTic(self):
     """Like tic, but swallowing errors, usefull for teardown"""

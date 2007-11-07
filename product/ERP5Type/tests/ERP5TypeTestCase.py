@@ -474,6 +474,15 @@ class ERP5TypeTestCase(PortalTestCase):
       return getattr(self.getPortal(), 'currency_module',
           getattr(self.getPortal(), 'currency', None))
 
+    def validateRules(self):
+      """
+      try to validate all rules in rule_tool
+      """
+      rule_tool = self.getRuleTool()
+      for rule in rule_tool.contentValues(
+          portal_type=rule_tool.getPortalRuleTypeList()):
+        rule.validate()
+
     def tic(self):
       """
       Start all messages
