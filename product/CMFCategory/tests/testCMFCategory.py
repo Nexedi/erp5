@@ -1042,18 +1042,23 @@ class TestCMFCategory(ERP5TypeTestCase):
             ('sale_order_module', module),
             ('sale_order_module/foo', order),
             ('sale_order_module/bar', None),
+            ('sale_order_module/order', None),
             ('sale_order_module/sale_order_module', None),
             ('sale_order_module/foo/bar', line),
             ('sale_order_module/foo/foo', None),
+            ('sale_order_module/foo/order', None),
             ('sale_order_module/foo/sale_order_module', None),
             ('sale_order_module/foo/bar/baz', cell),
             ('sale_order_module/foo/bar/bar', None),
             ('sale_order_module/foo/bar/foo', None),
+            ('sale_order_module/foo/bar/order', None),
             ('sale_order_module/foo/bar/sale_order_module', None),
             ):
       obj = category_tool.resolveCategory(relative_url)
       self.assertEquals(obj, value)
       obj = category_tool.resolveCategory('order/' + relative_url)
+      self.assertEquals(obj, value)
+      obj = category_tool.resolveCategory('mapping/order/' + relative_url)
       self.assertEquals(obj, value)
 
 def test_suite():

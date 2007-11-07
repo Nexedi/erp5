@@ -35,7 +35,7 @@ from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized, getSecurityManager
-from Acquisition import aq_base
+from Acquisition import aq_base, aq_inner
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
@@ -1497,7 +1497,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                 strict_membership = strict_membership, strict = strict,
                                 display_id = 'getTitle')
 
-
     security.declarePublic('resolveCategory')
     def resolveCategory(self, relative_url):
         """
@@ -1520,12 +1519,56 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # we do not want to acquire a Sale Order when a Line or a Cell is
         # not present.
         # 
-        # In addition, the behavior of resolveCategory is weird, in that
-        # the relative url might not start with a base category. It can
-        # be without a base category, and this means that the first
-        # part must be acquired. This notation makes things quite
-        # unpredictable. Therefore, we will have to redesign this method
-        # in the future.
+        # I describe my own idea about the categorisation system in ERP5
+        # here, because I think it is important to understand why
+        # resolveCategory is implemented in this way.
+        # 
+        # The goal of resolveCategory is to provide either a conceptual
+        # element or a concrete element from a certain viewpoint. There
+        # are 5 different actors in this system:
+        #
+        #   - Categorisation Utility (= Category Tool)
+        #   - Abstract concept (= Base Category)
+        #   - Certain view (= Category)
+        #   - Classification of documents (= Module or Tool)
+        #   - Document (= Document)
+        # 
+        # Categories are conceptually a tree structure with the root
+        # of Category Tool. The next level is always Base Categories,
+        # to represent abstract concepts. The deeper going down in a tree,
+        # the more concrete a viewpoint is.
+        # 
+        # Base Categories may contain other Base Categories, because an
+        # abstract concept can be a part of another abstract concept,
+        # simply representing a multi-level concept. Base Categories may
+        # contain Categories, because an abstract concept gets more concrete.
+        # This is the same for Modules and Tools.
+        # 
+        # Categories may contain Categories only in a way that views
+        # are more concrete downwards. Thus a category may not acquire
+        # a Base Category or a upper-level category. Also, Categories
+        # may not contain Modules or Tools, because they don't narrow
+        # views.
+        # 
+        # In a sense, Modules and Tools are similar to Categories,
+        # as they do narrow things down, but they are fundamentally
+        # different from Categories, because their purpose is to
+        # classify data processed based on business or system procedures,
+        # while Categories provide a backbone of supporting such
+        # procedures by more abstract viewpoints. The difference between
+        # Modules and Tools are about whether procedures are business
+        # oriented or system oriented.
+        # 
+        # Documents may contain Documents, but only to a downward direction.
+        # Otherwise, things get more abstract in a tree.
+        # 
+        # According to those ideas, the current implementation may not
+        # always behave correctly, because you can resolve a category
+        # which violates the rules. For example, you can resolve
+        # 'base_category/portal_categories'. This is an artifact,
+        # and can be considered as a bug. In the future, Tools and Modules
+        # should be clarified if they should behave as Category-like
+        # objects, so that the resolver can detect violations.
         if isinstance(relative_url, basestring):
           stack = relative_url.split('/')
         else:
@@ -1533,46 +1576,42 @@ class CategoryTool( UniqueObject, Folder, Base ):
         stack.reverse()
 
         validate = getSecurityManager().validate
-        key = stack.pop()
-        obj = self._getOb(key, None)
-        if obj is not None:
-          # The first one is a base category.
-          if not validate(self, self, key, obj):
-            raise Unauthorized('unauthorized access to element %s' % key)
-          base_category = obj
-
-          # Next, an object must be retrieved from a base category or
-          # a portal.
-          if stack:
-            key = stack.pop()
-            obj = base_category._getOb(key, None)
-            if obj is None:
-              portal = self.getPortalObject()
-              obj = portal._getOb(key, None)
-              if obj is not None:
-                if not validate(portal, base_category, key, obj):
-                  raise Unauthorized('unauthorized access to element %s' % key)
-                obj = obj.__of__(base_category)
-            else:
-              if not validate(base_category, base_category, key, obj):
-                raise Unauthorized('unauthorized access to element %s' % key)
-        else:
-          # The first one is a module.
-          portal = self.getPortalObject()
-          obj = portal._getOb(key, None)
+        def restrictedGetOb(container, key):
+          obj = container._getOb(key, None)
           if obj is not None:
-            if not validate(portal, portal, key, obj):
-              raise Unauthorized('unauthorized access to element %s' % key)
-
-        if obj is not None:
-          while stack:
-            container = obj
-            key = stack.pop()
-            obj = container._getOb(key, None)
-            if obj is None:
-              break
             if not validate(container, container, key, obj):
               raise Unauthorized('unauthorized access to element %s' % key)
+          return obj
+
+        # XXX Currently, resolveCategory accepts that a category might
+        # not start with a Base Category, but with a Module. This is
+        # probably wrong. For compatibility, this behavior is retained.
+        obj = self
+        if stack:
+          portal = aq_inner(self.getPortalObject())
+          key = stack.pop()
+          obj = restrictedGetOb(self, key)
+          if obj is None:
+            obj = restrictedGetOb(portal, key)
+            if obj is not None:
+              obj = obj.__of__(self)
+          else:
+            while stack:
+              container = obj
+              key = stack.pop()
+              obj = restrictedGetOb(container, key)
+              if obj is not None:
+                break
+              obj = restrictedGetOb(self, key)
+              if obj is None:
+                obj = restrictedGetOb(portal, key)
+                if obj is not None:
+                  obj = obj.__of__(container)
+                break
+
+          while obj is not None and stack:
+            key = stack.pop()
+            obj = restrictedGetOb(obj, key)
 
         if obj is None:
           LOG('CMFCategory', WARNING, 
