@@ -289,7 +289,7 @@ class Queue:
     key_list.sort()
     for key in key_list:
       method_id = "_validate_%s" % key
-      if hasattr(self, method_id):
+      if getattr(self, method_id, None) is not None:
         order_validation_item_list.append((key, message.activity_kw[key]))
     if len(order_validation_item_list) == 0:
       # When no order validation argument is specified, skip the computation
