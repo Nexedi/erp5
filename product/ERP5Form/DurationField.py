@@ -50,7 +50,20 @@ class DurationWidget(FormulatorPatch.IntegerWidget):
   
   The field purpose is to display second quantity in hour, minute and second,
   in order to make it more readable.
+
+  XXX This field is experimental, and unstable.
+  Do not use it.
   """
+
+  title = fields.StringField('title',
+      title='Title. ' \
+          '(Warning! Do not use this field!)',
+                             description=(
+      "The title of this field. This is the title of the field that "
+      "will appear in the form when it is displayed. Required."),
+                             default="",
+                             required=1)
+
   def render_view(self, field, value):
     sub_field_render_list = []
     for title, sub_key, convertion in (('Hour', 'hour', HOUR_IN_SECOND),
