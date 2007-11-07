@@ -301,6 +301,10 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       product_barebone_region_africa_cell = product_barebone_region_africa_cell,
     )
     
+  def stepValidateSaleInvoiceTransaction(self, sequence, **kw) :
+    """validates the sale invoice transaction rule"""
+    sequence.get('invoice_transaction_rule').validate()
+
   def stepCreateNotebookFranceCell(self, sequence, **kw):
     """ creates the content of product_notebook_region_france_cell """
     # create content in the notebook / france cell
@@ -1406,6 +1410,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.playSequence("""
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepTic
       stepCheckAddPredicate
       stepTic
@@ -1432,6 +1437,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepTic
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateProducts
       stepTic
       stepCreateDummyInvoice
@@ -1460,6 +1466,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1491,6 +1498,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1521,6 +1529,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1551,6 +1560,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1584,6 +1594,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1615,6 +1626,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1646,6 +1658,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1679,6 +1692,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1711,6 +1725,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateSaleInvoiceTransactionRule
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1749,6 +1764,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateSaleInvoiceTransactionRule
       stepTic
       stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepValidateSaleInvoiceTransaction
       stepTic
       stepCreateNotebookFranceCell
       stepCreateBareboneFranceCell
