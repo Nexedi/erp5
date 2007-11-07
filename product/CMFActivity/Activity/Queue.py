@@ -70,7 +70,7 @@ def abortTransactionSynchronously():
     # Zope 2.8 and later.
     manager_list = transaction.get()._adapters.keys()
     for manager in manager_list:
-      if hasattr(manager, 'sync'):
+      if getattr(manager, 'sync', None) is not None:
         manager.sync()
     transaction.abort()
   except ImportError:
@@ -78,7 +78,7 @@ def abortTransactionSynchronously():
     t = get_transaction()
     jar_list = t._get_jars(t._objects, 0)
     for jar in jar_list:
-      if hasattr(jar, 'sync'):
+      if getattr(jar, 'sync', None) is not None:
         jar.sync()
     t.abort()
 
