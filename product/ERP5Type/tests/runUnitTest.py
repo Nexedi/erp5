@@ -119,7 +119,7 @@ elif os.path.isdir('/usr/lib64/zope/lib/python'):
   zope_home = '/usr/lib64/zope'
 elif os.path.isdir('/usr/lib/erp5/lib/python'):
   software_home = '/usr/lib/erp5/lib/python'
-  zope_home = '/usr/lib/zope'
+  zope_home = '/usr/lib/erp5'
 else:
   software_home = '/usr/lib/zope/lib/python'
   zope_home = '/usr/lib/zope'
