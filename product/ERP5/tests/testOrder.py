@@ -117,7 +117,6 @@ class TestOrderMixin:
         portal_type=rule_tool.getPortalRuleTypeList()):
       if rule.getValidationState() != 'validated':
         rule.validate()
-        rule.recursiveReindexObject()
 
   def stepTic(self,**kw):
     self.tic()
