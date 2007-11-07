@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_stop_date</string> </value>
+            <value> <string>my_start_date_range_min</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -331,7 +331,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Stop Date</string> </value>
+                    <value> <string>Start Date Range Min</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -421,28 +421,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>Default</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>date</string> </key>
+                    <key>                 <string>date</string> </key>
                     <value>
                       <list>
-                        <string>year</string>
-                        <string>month</string>
-                        <string>day</string>
+<string>year</string>
+<string>month</string>
+<string>day</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>time</string> </key>
+                    <key>                 <string>time</string> </key>
                     <value>
                       <list>
-                        <string>hour</string>
-                        <string>minute</string>
-                        <string>ampm</string>
+<string>hour</string>
+<string>minute</string>
+<string>ampm</string>
                       </list>
                     </value>
                 </item>

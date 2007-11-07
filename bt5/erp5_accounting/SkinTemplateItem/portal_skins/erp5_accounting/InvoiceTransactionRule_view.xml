@@ -98,8 +98,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_version</string>
+                        <string>my_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -107,8 +109,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
+                        <string>my_start_date_range_min</string>
+                        <string>my_start_date_range_max</string>
+                        <string>my_test_method_id</string>
                       </list>
                     </value>
                 </item>
