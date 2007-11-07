@@ -78,23 +78,34 @@ emission_letter = context.getEmissionLetter()\n
 \n
 resource_portal_type = context.getResourceValue().getPortalType()\n
 if resource_portal_type == \'Banknote\':\n
-  if cash_status == "to_sort" and emission_letter == "not_defined":\n
-    # banknote letter \'not defined\' / a trier -> caisse source\n
-    source = context.getSource()\n
-    if not \'ventilation\' in source:\n
-      return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
+  if emission_letter == "not_defined":\n
+    if cash_status == "to_sort":\n
+      # banknote letter \'not defined\' / a trier -> caisse source\n
+      source = context.getSource()\n
+      if not \'ventilation\' in source:\n
+        return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
+      else:\n
+        return \'%s/caveau/auxiliaire/%s\' %(site, \'/\'.join(source.split(\'/\')[-2:]))\n
     else:\n
-      return \'%s/caveau/auxiliaire/%s\' %(site, \'/\'.join(source.split(\'/\')[-2:]))\n
-  elif emission_letter != site_letter:\n
-    # external banknote  -> caisse auxiliaire / encaisse externe\n
-    # banknote letter \'mixed\' -> caisse auxiliaire / encaisse externe\n
-    return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
-  elif cash_status in ("cancelled", "to_sort"):\n
-    # banknote \'cancelled\' or \'to_sort\'from same country -> caisse auxiliaire / billets et monnaies\n
-    return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
-  elif cash_status == "valid":\n
-    # banknote \'valid\' from same country -> caisse de reserve / billets et monnaies\n
-    return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
+      # This case is/must be protected by a constraint: a document containing a\n
+      # line matching this condition must not get validated.\n
+      # XXX: Maybe we should return None here instead of raising.\n
+      raise Exception, \'Should not be here\'\n
+  elif emission_letter == site_letter:\n
+    if cash_status == "valid":\n
+      # banknote \'valid\' from same country -> caisse de reserve / billets et monnaies\n
+      return \'%s/caveau/reserve/encaisse_des_billets_et_monnaies\' %(site,)\n
+    else:\n
+      # banknote of any other status from same country -> caisse auxiliaire / billets et monnaies\n
+      return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
+  else: # emission_letter != site_letter\n
+    if cash_status == "to_sort":\n
+      # Foreign unsorted banknotes -> salle_de_tri / encaisse externe\n
+      return \'%s/surface/salle_tri/encaisse_des_externes\' %(site,)\n
+    else:\n
+      # external banknote  -> caisse auxiliaire / encaisse externe\n
+      # banknote letter \'mixed\' -> caisse auxiliaire / encaisse externe\n
+      return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
 else:\n
   # Coin\n
   if cash_status == "valid":\n
@@ -188,6 +199,7 @@ else:\n
                             <string>emission_letter</string>
                             <string>resource_portal_type</string>
                             <string>source</string>
+                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
