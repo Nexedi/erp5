@@ -763,11 +763,12 @@ def optimize():
       PythonScript_compile(self)
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
+  # Filesystem Python Script inherits from PythonScript, but
+  # the behavior is a bit inconsistent, and hard to override
+  # correctly. So just get back the original _compile. Note
+  # that _exec is overridden, so no need to recover.
   from Products.CMFCore.FSPythonScript import FSPythonScript
-  FSPythonScript_write = FSPythonScript._write
-  def _write(self, text, compile):
-    return FSPythonScript_write(self, text, 0)
-  FSPythonScript._write = _write
+  FSPythonScript._compile = PythonScript_compile
 
 
 optimize()
