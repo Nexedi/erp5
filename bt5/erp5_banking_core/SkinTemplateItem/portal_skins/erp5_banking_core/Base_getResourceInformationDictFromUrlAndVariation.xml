@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>resource_dict = {}\n
+resource_dict = {\'resource_relative_url\':resource, \'variation_text\':variation_text}\n
+portal = context.getPortalObject()\n
+\n
+\n
+def getVariationTitleList(variation_text):\n
+  return [getTitleFromCategoryUrl(x) for x in variation_text.split(\'\\n\')]\n
+\n
+def getTitleFromCategoryUrl(category):\n
+  return context.portal_categories.getCategoryValue(category).getTitle()\n
+\n
+def getTranslatedTitleFromCategoryUrl(category):\n
+  return context.portal_categories.getCategoryValue(category).getTranslatedTitle()\n
+\n
+\n
+for variation in variation_text.split(\'\\n\'):\n
+  if variation.startswith(\'cash_status\'):\n
+    resource_dict[\'cash_status\'] = variation\n
+    resource_dict[\'cash_status_title\'] = getTitleFromCategoryUrl(variation)\n
+    resource_dict[\'cash_status_translated_title\'] = getTranslatedTitleFromCategoryUrl(variation)\n
+  elif variation.startswith(\'emission_letter\'):\n
+    resource_dict[\'emission_letter\'] = variation\n
+    resource_dict[\'emission_letter_title\'] = getTitleFromCategoryUrl(variation)\n
+    resource_dict[\'emission_letter_translated_title\'] = getTranslatedTitleFromCategoryUrl(variation)\n
+  elif variation.startswith(\'variation\'):\n
+    resource_dict[\'variation\'] = variation\n
+    resource_dict[\'variation_title\'] = getTitleFromCategoryUrl(variation)\n
+    resource_dict[\'variation_translated_title\'] = getTranslatedTitleFromCategoryUrl(variation)\n
+\n
+resource_dict[\'variation_text_title\'] = \' \'.join(getVariationTitleList(resource))\n
+\n
+resource_value = portal.restrictedTraverse(resource)\n
+current_resource_portal_type = resource_value.getPortalType()\n
+if movement is not None: # case of history\n
+  #context.log(\'movement uid before error\',resource[2])\n
+  #movement = context.portal_catalog.getObject(resource[2])\n
+  movement = portal.restrictedTraverse(movement)\n
+  #context.log(\'CounterModule_getVaultTransactionList\', \'movement = %s\' %movement)\n
+  explanation_value = movement\n
+  if getattr(movement,\'getExplanationValue\',None) is not None:\n
+    explanation_value = movement.getExplanationValue()\n
+  resource_dict[\'explanation_relative_url\'] = explanation_value.getRelativeUrl()\n
+  source_reference = explanation_value.getSourceReference() or \'\'\n
+  resource_dict[\'source_reference\'] = source_reference\n
+  resource_dict[\'explanation_translated_relative_url\'] = "%s/%s" % \\\n
+        (explanation_value.getTranslatedPortalType(),source_reference)\n
+resource_dict[\'base_price\'] = resource_value.getBasePrice()\n
+resource_dict[\'resource_title\'] = resource_value.getTitle()\n
+resource_dict[\'resource_id\'] = resource_value.getId()\n
+#context.log(\'resource_value\',resource_value.getRelativeUrl())\n
+try:\n
+  resource_dict[\'resource_translated_title\'] = resource_value.getTranslatedTitle()\n
+except KeyError:\n
+  resource_dict[\'resource_translated_title\'] = resource_value.getTitle()\n
+resource_dict[\'price_currency_title\'] = resource_value.getPriceCurrencyTitle()\n
+resource_dict[\'price_currency_id\'] = resource_value.getPriceCurrencyId()\n
+resource_dict[\'price_currency\'] = resource_value.getPriceCurrency()\n
+resource_dict[\'resource_portal_type\'] = current_resource_portal_type\n
+\n
+\n
+\n
+return resource_dict\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>resource, variation_text, movement=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>resource</string>
+                            <string>variation_text</string>
+                            <string>movement</string>
+                            <string>resource_dict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>getTitleFromCategoryUrl</string>
+                            <string>getVariationTitleList</string>
+                            <string>getTranslatedTitleFromCategoryUrl</string>
+                            <string>_getiter_</string>
+                            <string>variation</string>
+                            <string>_write_</string>
+                            <string>resource_value</string>
+                            <string>current_resource_portal_type</string>
+                            <string>None</string>
+                            <string>explanation_value</string>
+                            <string>getattr</string>
+                            <string>source_reference</string>
+                            <string>KeyError</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getResourceInformationDictFromUrlAndVariation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
