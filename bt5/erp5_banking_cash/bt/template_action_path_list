@@ -1,296 +1,167 @@
-Cash Balance Regulation Module | list
-Cash Balance Regulation Module | list_ui
-Cash Balance Regulation Module | sort_on
 Cash Balance Regulation Module | view
 Cash Balance Regulation | final
-Cash Balance Regulation | history
 Cash Balance Regulation | incoming_fastinput
 Cash Balance Regulation | initial
-Cash Balance Regulation | metadata
 Cash Balance Regulation | outgoing_fastinput
 Cash Balance Regulation | print
 Cash Balance Regulation | view
-Cash Container Item | metadata
 Cash Container Item | view
-Cash Container | metadata
 Cash Container | view
-Cash Exchange Module | list
-Cash Exchange Module | list_sort_on
-Cash Exchange Module | list_ui
 Cash Exchange Module | view
-Cash Exchange | history
 Cash Exchange | incoming_fastinput
-Cash Exchange | metadata
 Cash Exchange | outgoing_fastinput
 Cash Exchange | print
 Cash Exchange | receipt
 Cash Exchange | return
 Cash Exchange | view
-Cash Movement Module | list_ui
 Cash Movement Module | print_pdf
-Cash Movement Module | sort_on
 Cash Movement Module | view
 Cash Movement | fastinput
-Cash Movement | history
-Cash Movement | metadata
 Cash Movement | print_pdf
 Cash Movement | view
-Cash Sorting Module | list
-Cash Sorting Module | list_ui
-Cash Sorting Module | sort_on
 Cash Sorting Module | view
-Cash Sorting | history
 Cash Sorting | incoming_fastinput
 Cash Sorting | incoming_line_view
-Cash Sorting | metadata
 Cash Sorting | outgoing_fastinput
 Cash Sorting | outgoing_line_list
 Cash Sorting | view
-Cash To Currency Purchase Module | list_ui
-Cash To Currency Purchase Module | sort_on
 Cash To Currency Purchase Module | view
-Cash To Currency Purchase | History
 Cash To Currency Purchase | incoming_cash
 Cash To Currency Purchase | incoming_fastinput
-Cash To Currency Purchase | metadata
 Cash To Currency Purchase | outgoing_cash
 Cash To Currency Purchase | outgoing_fastinput
 Cash To Currency Purchase | print
 Cash To Currency Purchase | view
-Cash To Currency Sale Module | list_ui
-Cash To Currency Sale Module | sort_on
 Cash To Currency Sale Module | view
-Cash To Currency Sale | history
 Cash To Currency Sale | incoming_cash_view
 Cash To Currency Sale | incoming_fastinput
-Cash To Currency Sale | metadata
 Cash To Currency Sale | outgoing_cash_view
 Cash To Currency Sale | outgoing_fastinput
 Cash To Currency Sale | print
 Cash To Currency Sale | view
-Classification Survey Module | list
-Classification Survey Module | list_ui
-Classification Survey Module | sort_on
 Classification Survey Module | view
-Classification Survey | history
 Classification Survey | incoming_fastinput
-Classification Survey | metadata
 Classification Survey | outgoing_fastinput
 Classification Survey | print
 Classification Survey | result
 Classification Survey | supply
 Classification Survey | view
-Container Cell | metadata
 Container Cell | print
 Container Cell | view
-Container Line | metadata
 Container Line | print
 Container Line | view
-Container Line | view_history
 Container Line | view_quantity
-Counter Rendering Module | list_ui
 Counter Rendering Module | print_pdf
-Counter Rendering Module | sort_on
 Counter Rendering Module | view
 Counter Rendering | fastinput
-Counter Rendering | history
-Counter Rendering | metadata
 Counter Rendering | print_pdf
 Counter Rendering | view
-Destruction Survey Module | list
-Destruction Survey Module | list_ui
-Destruction Survey Module | sort_on
 Destruction Survey Module | view
 Destruction Survey | fastInput
-Destruction Survey | history
-Destruction Survey | metadata
 Destruction Survey | print
 Destruction Survey | view
-Exchanged Mutilated Banknote Line | metadata
 Exchanged Mutilated Banknote Line | print
 Exchanged Mutilated Banknote Line | view
-Foreign Cash Reception Module | list_ui
-Foreign Cash Reception Module | print_pdf
-Foreign Cash Reception Module | sort_on
 Foreign Cash Reception Module | view
 Foreign Cash Reception | fastinput
-Foreign Cash Reception | history
-Foreign Cash Reception | metadata
 Foreign Cash Reception | print_pdf
 Foreign Cash Reception | view
-Incoming Cash Balance Regulation Line | metadata
 Incoming Cash Balance Regulation Line | view
-Incoming Cash Exchange Line | history
-Incoming Cash Exchange Line | metadata
 Incoming Cash Exchange Line | print
 Incoming Cash Exchange Line | view
-Incoming Cash Sorting Line | metadata
 Incoming Cash Sorting Line | view
-Incoming Cash To Currency Purchase Line | metadata
 Incoming Cash To Currency Purchase Line | print
 Incoming Cash To Currency Purchase Line | view
-Incoming Cash To Currency Sale Line | metadata
 Incoming Cash To Currency Sale Line | print
 Incoming Cash To Currency Sale Line | view
-Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
-Incoming Mutilated Banknote Line | metadata
 Incoming Mutilated Banknote Line | print
 Incoming Mutilated Banknote Line | view
-Internal Money Deposit Module | list_ui
-Internal Money Deposit Module | sort_on
 Internal Money Deposit Module | view
 Internal Money Deposit | accouting_view
 Internal Money Deposit | fast_input
-Internal Money Deposit | history
-Internal Money Deposit | metadata
 Internal Money Deposit | print
 Internal Money Deposit | view
-Monetary Destruction Cell | metadata
 Monetary Destruction Cell | view
-Monetary Destruction Line | metadata
 Monetary Destruction Line | print
 Monetary Destruction Line | view
-Monetary Destruction Module | list_ui
-Monetary Destruction Module | sort_on
 Monetary Destruction Module | view
 Monetary Destruction | fastinput
-Monetary Destruction | history
-Monetary Destruction | metadata
 Monetary Destruction | print
 Monetary Destruction | view
-Monetary Issue Container | metadata
 Monetary Issue Container | view
-Monetary Issue Line | metadata
 Monetary Issue Line | print
 Monetary Issue Line | view
-Monetary Issue Module | list_ui
-Monetary Issue Module | sort_on
 Monetary Issue Module | view
 Monetary Issue | coin_fastinput
 Monetary Issue | container
 Monetary Issue | fastInput
-Monetary Issue | history
-Monetary Issue | metadata
 Monetary Issue | view
-Monetary Recall Cell | metadata
 Monetary Recall Cell | view
-Monetary Recall Line | metadata
 Monetary Recall Line | print
 Monetary Recall Line | view
-Monetary Recall Module | list
-Monetary Recall Module | list_ui
-Monetary Recall Module | sort_on
 Monetary Recall Module | view
 Monetary Recall | fastinput
-Monetary Recall | history
-Monetary Recall | metadata
 Monetary Recall | print
 Monetary Recall | view
 Monetary Reception Module | import
-Monetary Reception Module | list_ui
 Monetary Reception Module | print_pdf
-Monetary Reception Module | sort_on
 Monetary Reception Module | view
 Monetary Reception | cahs_container
 Monetary Reception | fastinput
-Monetary Reception | history
-Monetary Reception | metadata
 Monetary Reception | print_pdf
 Monetary Reception | view
-Monetary Survey Module | list
-Monetary Survey Module | list_ui
-Monetary Survey Module | sort_on
 Monetary Survey Module | view
 Monetary Survey | fastInput
-Monetary Survey | history
-Monetary Survey | metadata
 Monetary Survey | print
 Monetary Survey | view
-Money Deposit Module | list
-Money Deposit Module | list_ui
-Money Deposit Module | sort_on
 Money Deposit Module | view
-Money Deposit Rendering Module | list_ui
 Money Deposit Rendering Module | print_pdf
-Money Deposit Rendering Module | sort_on
 Money Deposit Rendering Module | view
 Money Deposit Rendering | fastinput
-Money Deposit Rendering | history
-Money Deposit Rendering | metadata
 Money Deposit Rendering | print_pdf
 Money Deposit Rendering | view
 Money Deposit | accouting_view
 Money Deposit | fast_input
-Money Deposit | history
-Money Deposit | metadata
 Money Deposit | print
 Money Deposit | view
-Mutilated Banknote Module | list_ui
 Mutilated Banknote Module | print_pdf
-Mutilated Banknote Module | sort_on
 Mutilated Banknote Module | view
 Mutilated Banknote | exchanged_line
 Mutilated Banknote | exchanged_line_fast_input
-Mutilated Banknote | history
-Mutilated Banknote | metadata
 Mutilated Banknote | print_pdf
 Mutilated Banknote | returned_line
 Mutilated Banknote | returned_line_fast_input
 Mutilated Banknote | supply_line
 Mutilated Banknote | supply_line_fast_input
 Mutilated Banknote | view
-Outgoing Cash Balance Regulation Line | metadata
 Outgoing Cash Balance Regulation Line | view
-Outgoing Cash Exchange Line | metadata
 Outgoing Cash Exchange Line | view
-Outgoing Cash Sorting Cell | metadata
 Outgoing Cash Sorting Cell | view
-Outgoing Cash Sorting Line | metadata
 Outgoing Cash Sorting Line | view
-Outgoing Cash To Currency Purchase Line | metadata
 Outgoing Cash To Currency Purchase Line | print
 Outgoing Cash To Currency Purchase Line | view
-Outgoing Cash To Currency Sale Line | metadata
 Outgoing Cash To Currency Sale Line | print
 Outgoing Cash To Currency Sale Line | view
-Outgoing Classification Survey Cell | metadata
 Outgoing Classification Survey Cell | view
-Outgoing Classification Survey Line | metadata
 Outgoing Classification Survey Line | view
-Outgoing Mutilated Banknote Line | metadata
 Outgoing Mutilated Banknote Line | print
 Outgoing Mutilated Banknote Line | view
-Usual Cash Rendering Module | list_ui
 Usual Cash Rendering Module | print_pdf
-Usual Cash Rendering Module | sort_on
 Usual Cash Rendering Module | view
 Usual Cash Rendering | fastinput
-Usual Cash Rendering | history
-Usual Cash Rendering | metadata
 Usual Cash Rendering | print_pdf
 Usual Cash Rendering | view
-Usual Cash Transfer Module | list
-Usual Cash Transfer Module | list_ui
-Usual Cash Transfer Module | sort_on
 Usual Cash Transfer Module | view
 Usual Cash Transfer | fastinput
-Usual Cash Transfer | history
-Usual Cash Transfer | metadata
 Usual Cash Transfer | print
 Usual Cash Transfer | view
-Vault Transfer Cell | metadata
 Vault Transfer Cell | view
-Vault Transfer Line | metadata
 Vault Transfer Line | print
 Vault Transfer Line | view
 Vault Transfer Module | list
-Vault Transfer Module | list_ui
 Vault Transfer Module | print_pdf
-Vault Transfer Module | sort_on
 Vault Transfer Module | view
 Vault Transfer | fastinput
-Vault Transfer | history
-Vault Transfer | metadata
 Vault Transfer | print_pdf
 Vault Transfer | view

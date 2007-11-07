@@ -1,93 +1,48 @@
-Accounting Cancellation Line | history
-Accounting Cancellation Line | metadata
 Accounting Cancellation Line | print
 Accounting Cancellation Line | view
-Accounting Cancellation Module | list_ui
 Accounting Cancellation Module | print_pdf
-Accounting Cancellation Module | sort_on
 Accounting Cancellation Module | view
-Accounting Cancellation | history
-Accounting Cancellation | metadata
 Accounting Cancellation | print
 Accounting Cancellation | view
-Accounting Date Module | list_ui
 Accounting Date Module | print_pdf
-Accounting Date Module | sort_on
 Accounting Date Module | view
-Accounting Date | history
-Accounting Date | metadata
 Accounting Date | remaining_operations
 Accounting Date | view
-Banking Operation Line | history
-Banking Operation Line | metadata
 Banking Operation Line | print
 Banking Operation Line | view
-Banknote | history
-Banknote | metadata
 Banknote | view
-Cash Delivery Cell | metadata
 Cash Delivery Cell | view
-Cash Delivery Line | metadata
 Cash Delivery Line | print
 Cash Delivery Line | view
-Check Model Type Variation | metadata
 Check Model Type Variation | print
 Check Model Type Variation | view
-Check Model | history
-Check Model | metadata
 Check Model | print
 Check Model | view
-Check Module | list_ui
-Check Module | sort_on
 Check Module | view
 Check Operation Line | agents
-Check Operation Line | metadata
 Check Operation Line | print
 Check Operation Line | view
-Check | history
-Check | metadata
 Check | print
 Check | view
-Checkbook Model Check Amount Variation | metadata
 Checkbook Model Check Amount Variation | print
 Checkbook Model Check Amount Variation | view
-Checkbook Model Module | list_ui
 Checkbook Model Module | print_pdf
-Checkbook Model Module | sort_on
 Checkbook Model Module | view
-Checkbook Model | history
-Checkbook Model | metadata
 Checkbook Model | print
 Checkbook Model | view
-Checkbook Module | list_ui
 Checkbook Module | print_pdf
-Checkbook Module | sort_on
 Checkbook Module | view
 Checkbook | create_check_list
-Checkbook | history
-Checkbook | metadata
 Checkbook | print
 Checkbook | view
-Coin | history
-Coin | metadata
 Coin | view
-Counter Date Module | list_ui
 Counter Date Module | print_pdf
-Counter Date Module | sort_on
 Counter Date Module | view
-Counter Date | history
-Counter Date | metadata
 Counter Date | remaining_operations
 Counter Date | view
-Counter Module | list_ui
 Counter Module | print_pdf
-Counter Module | sort_on
 Counter Module | vault_report
 Counter Module | view
-Counter | history
-Counter | metadata
 Counter | view
-Currency Cash Module | list_sort_on
-Currency Cash Module | list_ui
 Currency Cash Module | print_pdf
 Currency Cash Module | view

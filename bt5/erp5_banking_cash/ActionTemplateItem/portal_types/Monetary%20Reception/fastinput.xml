@@ -71,11 +71,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -90,11 +87,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -109,11 +103,8 @@
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

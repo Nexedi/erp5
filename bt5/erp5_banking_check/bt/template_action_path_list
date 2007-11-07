@@ -1,86 +1,50 @@
-Check Deposit Module | list_ui
-Check Deposit Module | sort_on
 Check Deposit Module | view
 Check Deposit | accounting_view
-Check Deposit | history
-Check Deposit | metadata
 Check Deposit | view
-Check Payment Module | list_ui
 Check Payment Module | print
-Check Payment Module | sort_on
 Check Payment Module | view
 Check Payment | accounting_view
 Check Payment | fastInput
-Check Payment | history
-Check Payment | metadata
 Check Payment | print
 Check Payment | related_agents
 Check Payment | view
-Checkbook Delivery Line | metadata
 Checkbook Delivery Line | print
 Checkbook Delivery Line | view
 Checkbook Delivery | fastinput
-Checkbook Delivery | history
-Checkbook Delivery | metadata
 Checkbook Delivery | print_pdf
 Checkbook Delivery | view
-Checkbook Reception Line | metadata
 Checkbook Reception Line | print
 Checkbook Reception Line | view
-Checkbook Reception Module | list_ui
-Checkbook Reception Module | sort_on
 Checkbook Reception Module | view
 Checkbook Reception | fastInput
-Checkbook Reception | history
-Checkbook Reception | metadata
 Checkbook Reception | view
 Checkbook Usual Cash Transfer Module | list
-Checkbook Usual Cash Transfer Module | list_ui
 Checkbook Usual Cash Transfer Module | print_pdf
-Checkbook Usual Cash Transfer Module | sort_on
 Checkbook Usual Cash Transfer Module | view
 Checkbook Usual Cash Transfer | fastinput
-Checkbook Usual Cash Transfer | history
-Checkbook Usual Cash Transfer | metadata
 Checkbook Usual Cash Transfer | print_pdf
 Checkbook Usual Cash Transfer | view
 Checkbook Vault Transfer Module | list
-Checkbook Vault Transfer Module | list_ui
 Checkbook Vault Transfer Module | print_pdf
-Checkbook Vault Transfer Module | sort_on
 Checkbook Vault Transfer Module | view
 Checkbook Vault Transfer | fastinput
-Checkbook Vault Transfer | history
-Checkbook Vault Transfer | metadata
 Checkbook Vault Transfer | print_pdf
 Checkbook Vault Transfer | view
-Stop Payment Module | list_ui
 Stop Payment Module | print
-Stop Payment Module | sort_on
 Stop Payment Module | view
 Stop Payment | accounting_view
 Stop Payment | fastinput
-Stop Payment | history
-Stop Payment | metadata
 Stop Payment | print_pdf
 Stop Payment | view
-Traveler Check Purchase Module | list_ui
 Traveler Check Purchase Module | print
-Traveler Check Purchase Module | sort_on
 Traveler Check Purchase Module | view
 Traveler Check Purchase | accounting_view
 Traveler Check Purchase | fastinput
-Traveler Check Purchase | history
-Traveler Check Purchase | metadata
 Traveler Check Purchase | print_pdf
 Traveler Check Purchase | view
-Traveler Check Sale Module | list_ui
 Traveler Check Sale Module | print
-Traveler Check Sale Module | sort_on
 Traveler Check Sale Module | view
 Traveler Check Sale | accounting_view
 Traveler Check Sale | fastinput
-Traveler Check Sale | history
-Traveler Check Sale | metadata
 Traveler Check Sale | print_pdf
 Traveler Check Sale | view
