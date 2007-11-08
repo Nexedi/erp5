@@ -171,8 +171,8 @@ class ERP5TypeTestLoader(unittest.TestLoader):
       return module.test_suite()
     return unittest.TestLoader.loadTestsFromModule(self, module)
 
-def runUnitTestList(test_list):
-  if len(test_list) == 0 :
+def runUnitTestList(test_list, verbosity=1):
+  if not test_list:
     print "No test to run, exiting immediately."
     return
   os.environ['INSTANCE_HOME'] = instance_home
@@ -268,7 +268,7 @@ def runUnitTestList(test_list):
 
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
-  return TestRunner().run(suite)
+  return TestRunner(verbosity=verbosity).run(suite)
 
 def usage(stream, msg=None):
   if msg:
@@ -298,10 +298,12 @@ def main():
     os.environ["erp5_tests_bt5_path"] = os.path.join(real_instance_home, 'bt5')
 
   os.environ["erp5_tests_recreate_catalog"] = "0"
+  verbosity = 1
   
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
       os.environ['VERBOSE'] = "1"
+      verbosity = 2
     elif opt in ("-h", "--help"):
       usage(sys.stdout)
       sys.exit()
@@ -344,7 +346,7 @@ def main():
     print "No test to run, exiting immediately."
     sys.exit(1)
 
-  result = runUnitTestList(test_list=test_list)
+  result = runUnitTestList(test_list=test_list, verbosity=verbosity)
   from Testing.ZopeTestCase import profiler
   profiler.print_stats()
   sys.exit(len(result.failures) + len(result.errors))
