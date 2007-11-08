@@ -101,16 +101,8 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_value': ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
                              'quantity': self.quantity_5000}
 
-    inventory_dict_line_4 = {'id' : 'inventory_line_4',
-                             'resource': self.billet_100,
-                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
-                             'quantity': self.quantity_100}
-
-
-    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3, inventory_dict_line_4]
+    self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
     self.encaisse_tri = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
-    self.tri_encaisse_externe = self.paris.surface.salle_tri.encaisse_des_externes
     self.encaisse_reserve = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
     self.encaisse_externe = self.paris.caveau.auxiliaire.encaisse_des_externes
     self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
@@ -156,7 +148,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.simulation_tool = self.getSimulationTool()
     node = self.encaisse_tri.getRelativeUrl()
-    for resource, quantity in [(self.billet_10000.getRelativeUrl(), 5.0), (self.billet_200.getRelativeUrl(), 12.0), (self.billet_5000.getRelativeUrl(), 24.0), (self.billet_100.getRelativeUrl(), 10.0)]:
+    for resource, quantity in [(self.billet_10000.getRelativeUrl(), 5.0), (self.billet_200.getRelativeUrl(), 12.0), (self.billet_5000.getRelativeUrl(), 24.0)]:
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), quantity)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), quantity)
 
@@ -167,8 +159,8 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check inventory in destination vault (caisse_2) before confirm
     """
-    for node in [self.encaisse_reserve.getRelativeUrl(), self.encaisse_externe.getRelativeUrl(), self.encaisse_auxiliaire.getRelativeUrl(), self.tri_encaisse_externe.getRelativeUrl()]:
-      for resource in [self.billet_100.getRelativeUrl(), self.billet_5000.getRelativeUrl(), self.billet_200.getRelativeUrl(), self.billet_10000.getRelativeUrl()]:
+    for node in [self.encaisse_reserve.getRelativeUrl(), self.encaisse_externe.getRelativeUrl(), self.encaisse_auxiliaire.getRelativeUrl()]:
+      for resource in [self.billet_5000.getRelativeUrl(), self.billet_200.getRelativeUrl(), self.billet_10000.getRelativeUrl()]:
         self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), 0.0)
         self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), 0.0)
 
@@ -329,56 +321,16 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
-    self.addCashLineToDelivery(self.cash_sorting, 'valid_incoming_line_4', 'Incoming Cash Sorting Line', self.billet_100,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
-            self.quantity_100)
-    # execute tic
-    self.stepTic()
-    # check there is only one line created
-    self.assertEqual(len(self.cash_sorting.objectValues()), 4)
-    # get the cash sorting line
-    self.valid_incoming_line = getattr(self.cash_sorting, 'valid_incoming_line_4')
-    # check its portal type
-    self.assertEqual(self.valid_incoming_line.getPortalType(), 'Incoming Cash Sorting Line')
-    # check the resource is banknotes of 100
-    self.assertEqual(self.valid_incoming_line.getResourceValue(), self.billet_100)
-    # chek the value of the banknote
-    self.assertEqual(self.valid_incoming_line.getPrice(), 100.0)
-    # check the unit of banknote
-    self.assertEqual(self.valid_incoming_line.getQuantityUnit(), 'unit')
-    # check we have two delivery cells: (one for year 1992 and one for 2003)
-    self.assertEqual(len(self.valid_incoming_line.objectValues()), 2)
-    # now check for each variation (years 1992 and 2003)
-    for variation in self.variation_list:
-      # get the delivery cell
-      cell = self.valid_incoming_line.getCell('emission_letter/not_defined', variation, 'cash_status/to_sort')
-      # chek portal types
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-      # check the banknote of the cell is banknote of 100
-      self.assertEqual(cell.getResourceValue(), self.billet_100)
-      # check the source vault is encaisse_paris
-      self.assertEqual(cell.getSourceValue(), self.encaisse_tri)
-      # check the destination vault is encaisse_externe
-      self.assertEqual(cell.getDestinationValue(), None)
-      if cell.getId() == 'movement_0_0_0':
-        # check the quantity of banknote for year 1992 is 2
-        self.assertEqual(cell.getQuantity(), 4.0)
-      elif cell.getId() == 'movement_0_1_0':
-        # check the quantity of banknote for year 2003 is 3
-        self.assertEqual(cell.getQuantity(), 6.0)
-      else:
-        self.fail('Wrong cell created : %s' % cell.getId())
-
   def stepCheckSubTotal(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the amount after the creation of cash sorting line 1
     """
     # Check number of lines
-    self.assertEqual(len(self.cash_sorting.objectValues()), 4)
+    self.assertEqual(len(self.cash_sorting.objectValues()), 3)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.cash_sorting.getTotalQuantity(deliveryLineType="Incoming Cash Sorting Line"), 51.0)
+    self.assertEqual(self.cash_sorting.getTotalQuantity(deliveryLineType="Incoming Cash Sorting Line"), 41.0)
     # Check the total price
-    self.assertEqual(self.cash_sorting.getTotalPrice(deliveryLineType="Incoming Cash Sorting Line"), 10000 * 5.0 + 200 * 12.0 + 5000 * 24.0 + 100 * 10.0)
+    self.assertEqual(self.cash_sorting.getTotalPrice(deliveryLineType="Incoming Cash Sorting Line"), 10000 * 5.0 + 200 * 12.0 + 5000 * 24.0)
 
 
   def stepCreateValidOutgoingLineForInternalBanknote(self, sequence=None, sequence_list=None, **kwd):
@@ -392,7 +344,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     # execute tic
     self.stepTic()
     # check the number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_sorting.objectValues()), 5)
+    self.assertEqual(len(self.cash_sorting.objectValues()), 4)
     # get the second cash sorting line
     self.valid_outgoing_line = getattr(self.cash_sorting, 'valid_outgoing_line_1')
     # check portal types
@@ -431,7 +383,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     # execute tic
     self.stepTic()
     # check the number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_sorting.objectValues()), 6)
+    self.assertEqual(len(self.cash_sorting.objectValues()), 5)
     # get the second cash sorting line
     self.valid_outgoing_line = getattr(self.cash_sorting, 'valid_outgoing_line_2')
     # check portal types
@@ -470,7 +422,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     # execute tic
     self.stepTic()
     # check the number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_sorting.objectValues()), 7)
+    self.assertEqual(len(self.cash_sorting.objectValues()), 6)
     # get the second cash sorting line
     self.valid_outgoing_line = getattr(self.cash_sorting, 'valid_outgoing_line_3')
     # check portal types
@@ -497,54 +449,16 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
-  def stepCreateValidOutgoingLineForReSortBanknote(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create the cash sorting outgoing line wiht banknotes of 100 and check it has been well created
-    """
-    # create the line
-    self.addCashLineToDelivery(self.cash_sorting, 'valid_outgoing_line_4', 'Outgoing Cash Sorting Line', self.billet_100,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/mixed', 'cash_status/to_sort') + self.variation_list,
-            self.quantity_100)
-    # execute tic
-    self.stepTic()
-    # check the number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_sorting.objectValues()), 8)
-    # get the second cash sorting line
-    self.valid_outgoing_line = getattr(self.cash_sorting, 'valid_outgoing_line_4')
-    # check portal types
-    self.assertEqual(self.valid_outgoing_line.getPortalType(), 'Outgoing Cash Sorting Line')
-    # check the resource is coin of 200
-    self.assertEqual(self.valid_outgoing_line.getResourceValue(), self.billet_100)
-    # check the value of coin
-    self.assertEqual(self.valid_outgoing_line.getPrice(), 100.0)
-    # check the unit of coin
-    self.assertEqual(self.valid_outgoing_line.getQuantityUnit(), 'unit')
-    # check we have two delivery cells: (one for year 1992 and one for 2003)
-    self.assertEqual(len(self.valid_outgoing_line.objectValues()), 2)
-    for variation in self.variation_list:
-      # get the delivery  cell
-      cell = self.valid_outgoing_line.getCell('emission_letter/mixed', variation, 'cash_status/to_sort')
-      # check the portal type
-      self.assertEqual(cell.getPortalType(), 'Outgoing Cash Sorting Cell')
-      if cell.getId() == 'movement_0_0_0':
-        # check the quantity for coin for year 1992 is 5
-        self.assertEqual(cell.getQuantity(), 4.0)
-      elif cell.getId() == 'movement_0_1_0':
-        # check the quantity for coin for year 2003 is 7
-        self.assertEqual(cell.getQuantity(), 6.0)
-      else:
-        self.fail('Wrong cell created : %s' % cell.getId())
-
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the total after the creation of the two cash sorting lines
     """
     # Check number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_sorting.objectValues()), 8)
+    self.assertEqual(len(self.cash_sorting.objectValues()), 6)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.cash_sorting.getTotalQuantity(), (5.0 + 12.0 + 24.0 + 10.0) * 2.0)
+    self.assertEqual(self.cash_sorting.getTotalQuantity(), (5.0 + 12.0 + 24.0) * 2.0)
     # check the total price
-    self.assertEqual(self.cash_sorting.getTotalPrice(), (10000 * 5.0 + 200 * 12.0 + 5000 * 24.0 + 100 * 10.0) * 2.0)
+    self.assertEqual(self.cash_sorting.getTotalPrice(), (10000 * 5.0 + 200 * 12.0 + 5000 * 24.0) * 2.0)
 
 
   def stepConfirmCashSorting(self, sequence=None, sequence_list=None, **kwd):
@@ -552,7 +466,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     Confirm the cash sorting and check it
     """
     # do the Workflow action
-    self.cash_sorting.setSourceTotalAssetPrice('173400.0')
+    self.cash_sorting.setSourceTotalAssetPrice('172400.0')
     self.workflow_tool.doActionFor(self.cash_sorting, 'confirm_action', wf_id='cash_sorting_workflow')
     self.stepTic()
     state = self.cash_sorting.getSimulationState()
@@ -564,7 +478,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver
     """
     node = self.encaisse_tri.getRelativeUrl()
-    for resource, quantity in [(self.billet_10000.getRelativeUrl(), 5.0), (self.billet_200.getRelativeUrl(), 12.0), (self.billet_5000.getRelativeUrl(), 24.0), (self.billet_100.getRelativeUrl(), 10.0)]:
+    for resource, quantity in [(self.billet_10000.getRelativeUrl(), 5.0), (self.billet_200.getRelativeUrl(), 12.0), (self.billet_5000.getRelativeUrl(), 24.0)]:
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), quantity)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), 0.0)
 
@@ -575,8 +489,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     for node, resource, quantity in [(self.encaisse_reserve.getRelativeUrl(), self.billet_10000.getRelativeUrl(), 5.0),
                                      (self.encaisse_externe.getRelativeUrl(), self.billet_200.getRelativeUrl(), 12.0),
-                                     (self.encaisse_auxiliaire.getRelativeUrl(), self.billet_5000.getRelativeUrl(), 24.0),
-                                     (self.tri_encaisse_externe.getRelativeUrl(), self.billet_100.getRelativeUrl(), 10.0)]:
+                                     (self.encaisse_auxiliaire.getRelativeUrl(), self.billet_5000.getRelativeUrl(), 24.0)]:
         self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), 0.0)
         self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), quantity)
 
@@ -596,7 +509,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     Check inventory at source (vault encaisse_paris) after deliver of the cash sorting
     """
     node = self.encaisse_tri.getRelativeUrl()
-    for resource in [self.billet_10000.getRelativeUrl(), self.billet_200.getRelativeUrl(), self.billet_5000.getRelativeUrl(), self.billet_100.getRelativeUrl()]:
+    for resource in [self.billet_10000.getRelativeUrl(), self.billet_200.getRelativeUrl(), self.billet_5000.getRelativeUrl()]:
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), 0.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), 0.0)
 
@@ -607,8 +520,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     for node, resource, quantity in [(self.encaisse_reserve.getRelativeUrl(), self.billet_10000.getRelativeUrl(), 5.0),
                                      (self.encaisse_externe.getRelativeUrl(), self.billet_200.getRelativeUrl(), 12.0),
-                                     (self.encaisse_auxiliaire.getRelativeUrl(), self.billet_5000.getRelativeUrl(), 24.0),
-                                     (self.tri_encaisse_externe.getRelativeUrl(), self.billet_100.getRelativeUrl(), 10.0)]:
+                                     (self.encaisse_auxiliaire.getRelativeUrl(), self.billet_5000.getRelativeUrl(), 24.0)]:
         self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), quantity)
         self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), quantity)
 
@@ -631,8 +543,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
     self.failUnless(message.find('Insufficient balance')>=0)
 
   def stepCheckWorklist(self, **kw):
-    pass
-    #self.checkWorklist(self.cash_sorting)
+    self.checkWorklist(self.cash_sorting)
 
   ##################################
   ##  Tests
@@ -651,7 +562,6 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidOutgoingLineForInternalBanknote ' \
                     + 'CreateValidOutgoingLineForExternalBanknote ' \
                     + 'CreateValidOutgoingLineForInternalAndCancelledBanknote ' \
-                    + 'CreateValidOutgoingLineForReSortBanknote ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckSource CheckDestination ' \
                     + 'Tic CheckWorklist ' \
