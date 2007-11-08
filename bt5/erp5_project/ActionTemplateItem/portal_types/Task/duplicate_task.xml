@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Task_duplicateFormDialog</string> </value>
+            <value> <string>string:${object_url}/Task_viewDuplicateDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
