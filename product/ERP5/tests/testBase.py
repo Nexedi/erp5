@@ -892,7 +892,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                      'workflow_history', property_value)
   
   def test_12_editTempObject(self, quiet=quiet, run=run_all_test):
-    """Simple test to edit a temp object.
+    """Simple t
+    est to edit a temp object.
     """
     portal = self.getPortal()
     from Products.ERP5Type.Document import newTempOrganisation
@@ -982,6 +983,40 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('text/plain', response.headers['content-type'])
     self.assertEquals('attachment; filename="%s"' % os.path.basename(__file__),
                       response.headers['content-disposition'])
+
+  
+  def test_portal_ids_generateNewId(self):
+    idtool = self.portal.portal_ids
+    # id tool generate ids based on a group
+    self.assertEquals(0, idtool.generateNewId(id_group=('a', 'b')))
+    self.assertEquals(1, idtool.generateNewId(id_group=('a', 'b')))
+    # different groups generate different ids
+    self.assertEquals(0, idtool.generateNewId(id_group=('a', 'b', 'c')))
+
+    self.assertEquals(2, idtool.generateNewId(id_group=('a', 'b')))
+    self.assertEquals(1, idtool.generateNewId(id_group=('a', 'b', 'c')))
+      
+    # you can pass an initial value
+    self.assertEquals(4, idtool.generateNewId(id_group=('a', 'b', 'c', 'd'),
+                                                default=4))
+    self.assertEquals(5, idtool.generateNewId(id_group=('a', 'b', 'c', 'd'),
+                                                default=4))
+    #method to generate a special number                                            
+    def generateTestNumber(last_id):
+       return ('A%s'%(last_id))
+      # you can pass a method
+    self.assertEquals('A0', idtool.generateNewId(id_group=('c', 'd'),
+                                                method=generateTestNumber))
+    self.assertEquals('AA0', idtool.generateNewId(id_group=('c', 'd'),
+                                                method=generateTestNumber))
+    
+    self.assertEquals('AA', idtool.generateNewId(id_group=('c', 'd', 'e'),
+                                                default='A',
+                                                method=generateTestNumber))
+    self.assertEquals('AAA', idtool.generateNewId(id_group=('c', 'd', 'e'),
+                                                default='A',
+                                                method=generateTestNumber))
+
 
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
