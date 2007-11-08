@@ -1,6 +1,7 @@
 #!/usr/bin/python2.4
 import os
 import sys
+import re
 import getopt
 import unittest
 
@@ -54,7 +55,8 @@ Options:
                              catalog storage).
   --run_only=STRING
                              Run only specified test methods delimited with
-                             commas (e.g. testFoo,testBar).
+                             commas (e.g. testFoo,testBar). This can be regular
+                             expressions.
 """
 
 def getUnitTestFile():
@@ -253,13 +255,15 @@ def runUnitTestList(test_list):
 
   # Hack the profiler to run only specified test methods.
   run_only = os.environ.get('run_only')
-  if run_only:
+  if run_only and not save:
     test_method_list = run_only.split(',')
     from Testing.ZopeTestCase import profiler
     run_orig = profiler.Profiled.__call__
     def run(self, *args, **kw):
-      if self.id().rsplit('.', 1)[-1] in test_method_list:
-        return run_orig(self, *args, **kw)
+      test_method_name = self.id().rsplit('.', 1)[-1]
+      for valid_test_method_name_re in test_method_list:
+        if re.match(valid_test_method_name_re, test_method_name):
+          return run_orig(self, *args, **kw)
     profiler.Profiled.__call__ = run
 
   # change current directory to the test home, to create zLOG.log in this dir.
