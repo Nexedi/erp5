@@ -35,6 +35,47 @@ try:
 except ImportError:
   pass
 
+
+import traceback
+import linecache
+import sys
+# Monkey patch traceback system to print how far we get in the current
+# sequence.
+# This part is adapted from python 2.4's traceback.py
+def special_extract_tb(tb, limit = None):
+    if limit is None:
+        if hasattr(sys, 'tracebacklimit'):
+            limit = sys.tracebacklimit
+    list = []
+    n = 0
+    while tb is not None and (limit is None or n < limit):
+        f = tb.tb_frame
+        lineno = tb.tb_lineno
+        co = f.f_code
+        filename = co.co_filename
+        name = co.co_name
+        linecache.checkcache(filename)
+        line = linecache.getline(filename, lineno)
+        if line: line = line.strip()
+        else: line = None
+        
+        # display where we failed in the sequence
+        if co == Sequence.play.func_code:
+          line += '\n    Current Sequence:'
+          for idx, method_name in enumerate([x._method_name for x in
+                                       f.f_locals['self']._step_list]):
+            if idx == f.f_locals['idx']:
+              line += '\n    > %s' % method_name
+            else:
+              line += '\n      %s' % method_name
+
+        list.append((filename, lineno, name, line))
+        tb = tb.tb_next
+        n = n+1
+    return list
+traceback.extract_tb = special_extract_tb
+
+
 class Step:
 
   def __init__(self,method_name='',required=1,max_replay=1):
@@ -68,7 +109,7 @@ class Sequence:
       ZopeTestCase._print('\nStarting New Sequence %i... ' % sequence_number)
       LOG('Sequence.play', 0, 'Starting New Sequence %i... ' % sequence_number)
     if sequence is None:
-      for step in self._step_list:
+      for idx, step in enumerate(self._step_list):
         step.play(context, sequence=self, quiet=quiet)
         # commit transaction after each step
         get_transaction().commit()
