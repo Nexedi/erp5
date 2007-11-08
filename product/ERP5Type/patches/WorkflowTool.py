@@ -251,21 +251,20 @@ def generateNestedQuery(priority_list, criterion_dict,
   else:
     possible_value_list = tuple()
     impossible_value_list = tuple()
-    if possible_worklist_id_dict is not None:
-      for criterion_value, criterion_worklist_id_dict \
-          in my_criterion_dict.iteritems():
+    possible = True
+    for criterion_value, criterion_worklist_id_dict \
+        in my_criterion_dict.iteritems():
+      if possible_worklist_id_dict is not None:
         possible = False
         for worklist_id in criterion_worklist_id_dict.iterkeys():
           if worklist_id in possible_worklist_id_dict:
             possible = True
             break
-        if possible:
-          if isinstance(criterion_value, ExclusionTuple):
-            impossible_value_list += criterion_value
-          else:
-            possible_value_list += criterion_value
-    else:
-      possible_value_list = my_criterion_dict.keys()
+      if possible:
+        if isinstance(criterion_value, ExclusionTuple):
+          impossible_value_list += criterion_value
+        else:
+          possible_value_list += criterion_value
     value_query_list = []
     if len(possible_value_list):
       query = Query(operator='IN', **{my_criterion_id: possible_value_list})
