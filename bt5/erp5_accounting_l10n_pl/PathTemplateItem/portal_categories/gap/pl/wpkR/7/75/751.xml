@@ -19,21 +19,17 @@
             </value>
         </item>
         <item>
-            <key> <string>_count</string> </key>
+            <key> <string>categories</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <tuple>
+                <string>gap/pl/wpkR/7/75/751</string>
+              </tuple>
             </value>
         </item>
         <item>
-            <key> <string>_mt_index</string> </key>
+            <key> <string>description</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_tree</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -46,7 +42,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>odsetki uzyskane i zarachowane</string> </value>
+            <value> <string>Koszty finansowe</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -55,46 +51,6 @@
             </value>
         </item>
       </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle> <int>0</int> </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <none/>
     </pickle>
   </record>
 </ZopeData>

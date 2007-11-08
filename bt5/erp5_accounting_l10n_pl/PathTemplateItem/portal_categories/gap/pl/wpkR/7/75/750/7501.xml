@@ -37,6 +37,15 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>gap/pl/wpkR/7/75/750/7501</string>
+                <string>gap/pl/wpkR/7/75/750/7501</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>codification</string> </key>
             <value>
               <none/>
@@ -44,7 +53,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>756</string> </value>
+            <value> <string>7501</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -58,7 +67,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Wartosc sprzedanych inwestycji</string> </value>
+            <value> <string>Dywidendy i udzialy w zyskach</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
