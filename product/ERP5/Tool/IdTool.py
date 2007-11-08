@@ -110,7 +110,8 @@ class IdTool(BaseTool):
             new_id=0
           else:
             new_id=default
-
+          if method is not None:
+            new_id=method(new_id)  
         else:
           # Now generate a new id
           if method is not None:
