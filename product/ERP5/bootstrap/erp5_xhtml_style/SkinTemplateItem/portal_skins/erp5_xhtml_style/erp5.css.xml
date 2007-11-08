@@ -968,7 +968,7 @@ fieldset.bottom .field .input {\n
   bottom: -1px;\n
 }\n
 \n
-.document .actions li {\n
+.document .actions li a {\n
   float: left;\n
   color: inherit;\n
   background: url(\'<dtml-var expr="portal_url()">/images/tab_left.png\') top left no-repeat;\n
@@ -976,11 +976,11 @@ fieldset.bottom .field .input {\n
   padding: 0 0 0 10px;\n
 }\n
 \n
-.document .actions li.selected {\n
+.document .actions li.selected a {\n
   background: url(\'<dtml-var expr="portal_url()">/images/tab_left_selected.png\') top left no-repeat;\n
 }\n
 \n
-.document .actions li a {\n
+.document .actions li a span {\n
   display: block;\n
   padding: 5px 15px 4px 5px;\n
   color: inherit;\n
@@ -989,7 +989,7 @@ fieldset.bottom .field .input {\n
 /*   font-size: 90%; */\n
 }\n
 \n
-.document .actions li.selected a {\n
+.document .actions li.selected a span {\n
   font-weight: bold;\n
   padding-bottom: 5px;\n
   background: url(\'<dtml-var expr="portal_url()">/images/tab_right_selected.png\') top right no-repeat;\n

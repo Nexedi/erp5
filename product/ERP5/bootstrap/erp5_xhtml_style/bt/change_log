@@ -1,3 +1,6 @@
+2007-11-08 kazuhiko
+* Enlarge link area to whole tab
+
 2007-10-22 jerome
 * Restore link to favicon, directly as favicon.ico, not in /images. This way, if a favicon.ico already exists, it will have priority.
 
