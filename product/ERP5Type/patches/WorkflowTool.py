@@ -573,7 +573,7 @@ def WorkflowTool_refreshWorklistCache(self):
       search_result_kw = {'select_expression': select_expression,
                           'group_by_expression': group_by_expression,
                           'query': query}
-      #LOG('WorklistGeneration', WARNING, 'Using query: %s' % \
+      #LOG('refreshWorklistCache', WARNING, 'Using query: %s' % \
       #    (search_result(src__=1, **search_result_kw), ))
       catalog_brain_result = search_result(**search_result_kw)
       value_column_dict = dict([(x, []) for x in table_column_id_set])
