@@ -98,14 +98,12 @@ if resource_portal_type == \'Banknote\':\n
     else:\n
       # banknote of any other status from same country -> caisse auxiliaire / billets et monnaies\n
       return \'%s/caveau/auxiliaire/encaisse_des_billets_et_monnaies\' %(site,)\n
+  elif emission_letter == "mixed":\n
+    # banknote letter \'mixed\' -> caisse auxiliaire / encaisse externe\n
+    return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
   else: # emission_letter != site_letter\n
-    if cash_status == "to_sort":\n
-      # Foreign unsorted banknotes -> salle_de_tri / encaisse externe\n
-      return \'%s/surface/salle_tri/encaisse_des_externes\' %(site,)\n
-    else:\n
-      # external banknote  -> caisse auxiliaire / encaisse externe\n
-      # banknote letter \'mixed\' -> caisse auxiliaire / encaisse externe\n
-      return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
+    # external banknote  -> caisse auxiliaire / encaisse externe\n
+    return \'%s/caveau/auxiliaire/encaisse_des_externes\' %(site,)\n
 else:\n
   # Coin\n
   if cash_status == "valid":\n
