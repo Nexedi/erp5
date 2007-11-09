@@ -469,6 +469,7 @@ for node in getInventoryList(\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
               \'initial_credit_balance\', 0) + max(- total_price, 0)\n
 \n
+if expand_accounts:\n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
                           account_type_to_group_by_mirror_section,\n
