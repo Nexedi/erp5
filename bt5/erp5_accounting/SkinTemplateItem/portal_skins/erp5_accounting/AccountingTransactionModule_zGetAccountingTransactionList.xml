@@ -513,26 +513,45 @@ WHERE\n
   </dtml-if>\n
 \n
   <dtml-if node>\n
-    AND category.uid = stock.section_uid\n
-    AND child.uid = stock.uid\n
-    AND child.parent_uid = catalog.uid\n
-    AND (\n
-    <dtml-in node>\n
-      <dtml-unless sequence-start>OR</dtml-unless>\n
-         stock.node_uid =\n
-            <dtml-var "restrictedTraverse(_[\'sequence-item\']).getUid()">\n
-    </dtml-in> )\n
-   </dtml-if>\n
+    <dtml-if stat>\n
+      AND stock.uid IN (\n
+          SELECT child.uid from catalog as child\n
+           WHERE category.uid = stock.section_uid\n
+             AND child.parent_uid = catalog.uid\n
+          HAVING (SELECT count(stock.uid) from stock, catalog as child\n
+                   WHERE stock.uid = child.uid \n
+                     AND child.parent_uid = catalog.uid\n
+                     AND (\n
+                    <dtml-in node>\n
+                      <dtml-unless sequence-start>OR</dtml-unless>\n
+                         stock.node_uid =\n
+                            <dtml-var "restrictedTraverse(_[\'sequence-item\']).getUid()">\n
+                    </dtml-in> )\n
+                )\n
+          )\n
+    <dtml-else>\n
+      AND category.uid = stock.section_uid\n
+      AND child.uid = stock.uid\n
+      AND child.parent_uid = catalog.uid\n
+      AND (\n
+      <dtml-in node>\n
+        <dtml-unless sequence-start>OR</dtml-unless>\n
+           stock.node_uid =\n
+              <dtml-var "restrictedTraverse(_[\'sequence-item\']).getUid()">\n
+      </dtml-in> )\n
+    </dtml-if>\n
+  </dtml-if>\n
+\n
   <dtml-if stat>\n
     AND category.uid = stock.section_uid\n
     AND child.uid = stock.uid\n
     AND child.parent_uid = catalog.uid\n
-  </dtml-if>\n
-  <dtml-if omit_input> AND stock.total_price < 0\n
-                       AND stock.uid = movement.uid\n
-  </dtml-if>\n
-  <dtml-if omit_output> AND stock.total_price > 0\n
-                        AND stock.uid = movement.uid\n
+    <dtml-if omit_input> AND stock.total_price < 0\n
+                         AND stock.uid = movement.uid\n
+    </dtml-if>\n
+    <dtml-if omit_output> AND stock.total_price > 0\n
+                          AND stock.uid = movement.uid\n
+    </dtml-if>\n
   </dtml-if>\n
   <dtml-if expr="selection_name is not None and portal_selections.getSelectionInvertModeFor(selection_name) and len(portal_selections.getSelectionInvertModeUidListFor(selection_name)) > 0">\n
     AND ( 0 = 1\n
@@ -701,26 +720,45 @@ WHERE\n
   </dtml-if>\n
 \n
   <dtml-if node>\n
-    AND category.uid = stock.section_uid\n
-    AND child.uid = stock.uid\n
-    AND child.parent_uid = catalog.uid\n
-    AND (\n
-    <dtml-in node>\n
-      <dtml-unless sequence-start>OR</dtml-unless>\n
-         stock.node_uid =\n
-            <dtml-var "restrictedTraverse(_[\'sequence-item\']).getUid()">\n
-    </dtml-in> )\n
-   </dtml-if>\n
+    <dtml-if stat>\n
+      AND stock.uid IN (\n
+          SELECT child.uid from catalog as child\n
+           WHERE category.uid = stock.section_uid\n
+             AND child.parent_uid = catalog.uid\n
+          HAVING (SELECT count(stock.uid) from stock, catalog as child\n
+                   WHERE stock.uid = child.uid \n
+                     AND child.parent_uid = catalog.uid\n
+                     AND (\n
+                    <dtml-in node>\n
+                      <dtml-unless sequence-start>OR</dtml-unless>\n
+                         stock.node_uid =\n
+                            <dtml-var "restrictedTraverse(_[\'sequence-item\']).getUid()">\n
+                    </dtml-in> )\n
+                )\n
+          )\n
+    <dtml-else>\n
+      AND category.uid = stock.section_uid\n
+      AND child.uid = stock.uid\n
+      AND child.parent_uid = catalog.uid\n
+      AND (\n
+      <dtml-in node>\n
+        <dtml-unless sequence-start>OR</dtml-unless>\n
+           stock.node_uid =\n
+              <dtml-var "restrictedTraverse(_[\'sequence-item\']).getUid()">\n
+      </dtml-in> )\n
+    </dtml-if>\n
+  </dtml-if>\n
+\n
   <dtml-if stat>\n
     AND category.uid = stock.section_uid\n
     AND child.uid = stock.uid\n
     AND child.parent_uid = catalog.uid\n
-  </dtml-if>\n
-  <dtml-if omit_input> AND stock.total_price < 0\n
-                       AND stock.uid = movement.uid\n
-  </dtml-if>\n
-  <dtml-if omit_output> AND stock.total_price > 0\n
-                        AND stock.uid = movement.uid\n
+    <dtml-if omit_input> AND stock.total_price < 0\n
+                         AND stock.uid = movement.uid\n
+    </dtml-if>\n
+    <dtml-if omit_output> AND stock.total_price > 0\n
+                          AND stock.uid = movement.uid\n
+    </dtml-if>\n
   </dtml-if>\n
   <dtml-if expr="selection_name is not None and portal_selections.getSelectionInvertModeFor(selection_name) and len(portal_selections.getSelectionInvertModeUidListFor(selection_name)) > 0">\n
     AND ( 0 = 1\n
