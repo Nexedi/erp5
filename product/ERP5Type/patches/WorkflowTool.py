@@ -111,8 +111,8 @@ def getValidCriterionDict(worklist_match_dict, acceptable_key_dict,
     elif criterion_id == SECURITY_PARAMETER_ID:
       pass
     else:
-      LOG('WorkflowTool_listActions', WARNING, 'Worklist %s' \
-          'filters on variable %s which is not available ' \
+      LOG('WorkflowTool_listActions', WARNING, 'Worklist %r' \
+          ' filters on variable %r which is not available ' \
           'in catalog. Its value will not be checked.' % \
           (workflow_worklist_key, criterion_id))
   return valid_criterion_dict, metadata
