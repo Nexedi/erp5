@@ -280,6 +280,8 @@ class TestArchive(InventoryAPITestCase):
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.archive_connection_id)
 
     # Create a new movement and check it goes only in new catalog
+    import pdb
+    pdb.set_trace()
     self.assertEqual(len(self.folder.searchFolder(portal_type="Dummy Movement")), 0)
     self.assertEquals(100, getInventory(node_uid=self.node.getUid()))
     self.new_mvt = self._makeMovement(quantity=50, stop_date=DateTime("2006/08/06"),
@@ -318,6 +320,25 @@ class TestArchive(InventoryAPITestCase):
     
     # As we only have first movement in archive, inventory must be 100
     self.assertEquals(100, getInventory(node=self.node.getRelativeUrl()))
+
+    # go on current catalog
+    self.pref.edit(preferred_archive=None)
+    get_transaction().commit()
+    self.tic()
+
+    # unindex and reindex an older movement and check it's well reindexed    
+    self.inventory.unindexObject()
+    get_transaction().commit()
+    self.tic()
+    path_list = [self.inventory.getRelativeUrl()]
+    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
+    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.archive_connection_id)
+    self.inventory.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    path_list = [self.inventory.getRelativeUrl()]
+    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.archive_connection_id)
 
 
 def test_suite():
