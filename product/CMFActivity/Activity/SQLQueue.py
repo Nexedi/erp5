@@ -36,6 +36,7 @@ from Products.CMFActivity.Errors import ActivityFlushError
 from ZODB.POSException import ConflictError
 from types import ClassType
 import sys
+from time import time
 
 try:
   from transaction import get as get_transaction
@@ -84,14 +85,15 @@ class SQLQueue(RAMQueue):
     if readMessage is None:
       return 1
 
+    # XXX: arbitrary maximum delay.
+    # Stop processing new messages if processing duration exceeds 10 seconds.
+    activity_stop_time = time() + 10
     now_date = DateTime()
     # Next processing date in case of error
     next_processing_date = now_date + float(VALIDATION_ERROR_DELAY)/86400
     message_list = readMessage(processing_node=processing_node, to_date=now_date)
     for line in message_list:
-      # Do not process many messages if there are long
-      new_date = DateTime()
-      if ((new_date-now_date)*86400) > 10:
+      if time() > activity_stop_time:
         break
       path = line.path
       method_id = line.method_id
