@@ -294,7 +294,7 @@ class Inventory(Delivery):
 
     # Reindex objects
     object_list = [self]
-    immediate_reindex_archive = sql_catalog_id is None
+    immediate_reindex_archive = sql_catalog_id is not None    
     self.portal_catalog.catalogObjectList(object_list,
                                           sql_catalog_id = sql_catalog_id,
                                           disable_archive=disable_archive,
