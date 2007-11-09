@@ -2692,24 +2692,28 @@ class Base( CopyContainer,
 
       fallback_script_id : the script to use if nothing is found
     """
+    def cached_getattr(portal_type, method_id):
+      script_name_end = '_%s' % method_id
+      for script_name_begin in [portal_type, self.getMetaType(),
+          self.__class__.__name__]:
+        name = ''.join([script_name_begin.replace(' ',''), script_name_end])
+        script = getattr(self, name, None)
+        if script is not None:
+          return script
+    cached_getattr = CachingMethod(cached_getattr, id='Base__getattr',
+        cache_factory='erp5_content_long')
     # script_id should not be used any more, keep compatibility
     if script_id is not None:
       LOG('ERP5Type/Base.getTypeBaseMethod',0,
            'DEPRECATED script_id parameter is used')
       fallback_script_id=script_id
-    script_name = ''
-    script = None
-    script_name_end = '_%s' % method_id
     # Look at a local script which
     # can return a new predicate.
-    for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
-      script_name = join([script_name_begin.replace(' ',''), script_name_end ], '')
-      script = getattr(self, script_name, None)
-      if script is not None:
-        break
-    if script is None and fallback_script_id is not None:
-      script = getattr(self, fallback_script_id)
-    return script
+    script = cached_getattr(self.getPortalType(), method_id)
+    if script is not None:
+      return script.__of__(self)
+    if fallback_script_id is not None:
+      return getattr(self, fallback_script_id)
 
   # Predicate handling
   security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
