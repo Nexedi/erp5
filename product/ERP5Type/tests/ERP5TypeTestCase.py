@@ -749,7 +749,7 @@ def dummy_tearDown(self):
   afterTearDown from the original tests, which would write to the
   FileStorage when --save is enabled
   '''
-  pass
+  self._close()
 
 def optimize():
   '''Significantly reduces portal creation time.'''
