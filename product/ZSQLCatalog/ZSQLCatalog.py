@@ -741,6 +741,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         url_list.append(url)
         
       goto_current_catalog = 0
+      # either we are doing archiving, either we have used archive without a catalog specified
       if (not disable_archive) and (archiving or (len(archive_obj_list) > 0 and sql_catalog_id is None)):
         # check in which archive object must go if we defined archive
         catalog_id = None
@@ -748,12 +749,16 @@ class ZCatalog(Folder, Persistent, Implicit):
           if archive.test(obj) is True:
             goto_current_catalog = 0
             catalog_id = archive.getCatalogId()
+            # if current catalog, no need to construct dict as it will be reindex now
+            if catalog_id in (default_catalog.id, self.source_sql_catalog_id):
+              goto_current_catalog = 1
+              continue
             priority = archive.getPriority()
             if catalog_dict.has_key(catalog_id):
               catalog_dict[catalog_id]['obj'].append(obj)
             else:
               catalog_dict[catalog_id] = {'priority' : priority, 'obj' : [obj,]}
-        if catalog_id is None or sql_catalog_id is None or self.source_sql_catalog_id == catalog.id:
+        if catalog_id is None:
           # at least put object in current catalog if no archive match
           goto_current_catalog = 1
       else:
