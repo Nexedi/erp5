@@ -18,7 +18,7 @@ SELECT * FROM
 WHERE
 1 = 1
 <dtml-if expr="not(include_processing)">
-    AND processing <> 1
+    AND processing = 0
 </dtml-if>
 <dtml-if processing_node> AND processing_node = <dtml-sqlvar processing_node type="int"> </dtml-if>
 <dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if>

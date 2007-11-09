@@ -29,7 +29,7 @@ VALUES
   <dtml-if date_list><dtml-sqlvar expr="date_list[loop_item]" type="datetime"><dtml-else><dtml-sqlvar "_.DateTime()" type="datetime"></dtml-if>, 
   <dtml-sqlvar expr="method_id_list[loop_item]" type="string">,
   <dtml-if processing_node_list><dtml-sqlvar expr="processing_node_list[loop_item]" type="int"><dtml-else>-1</dtml-if>,
-  -1,
+  0,
   <dtml-sqlvar expr="priority_list[loop_item]" type="int">,
   <dtml-sqlvar expr="broadcast_list[loop_item]" type="int">,
   <dtml-sqlvar expr="group_method_id_list[loop_item]" type="string">,

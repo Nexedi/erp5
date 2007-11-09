@@ -26,7 +26,7 @@ SET
   processing_node = <dtml-sqlvar processing_node type="int">,
 </dtml-if>
   broadcast = <dtml-sqlvar broadcast type="int">,
-  processing = -1,
+  processing = 0,
   priority = <dtml-sqlvar priority type="int">,
   tag = <dtml-sqlvar tag type="string">,
   message = <dtml-sqlvar message type="string">

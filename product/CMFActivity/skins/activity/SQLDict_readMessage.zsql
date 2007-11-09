@@ -16,7 +16,7 @@ order_validation_text</params>
 SELECT * FROM
     message
 WHERE
-    processing <> 1
+    processing = 0
 <dtml-if processing_node> AND processing_node = <dtml-sqlvar processing_node type="int"> </dtml-if>
 <dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if>
 <dtml-if to_date>AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>

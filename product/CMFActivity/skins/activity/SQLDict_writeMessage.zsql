@@ -25,7 +25,7 @@ SET
   <dtml-if date>date = <dtml-sqlvar date type="datetime">, <dtml-else>date = <dtml-sqlvar "_.DateTime()" type="datetime">, </dtml-if> 
   method_id = <dtml-sqlvar method_id type="string">,
   processing_node = <dtml-sqlvar processing_node type="int">,
-  processing = -1,
+  processing = 0,
   priority = <dtml-sqlvar priority type="int">,
   broadcast = <dtml-sqlvar broadcast type="int">,
   group_method_id = <dtml-sqlvar group_method_id type="string">,
