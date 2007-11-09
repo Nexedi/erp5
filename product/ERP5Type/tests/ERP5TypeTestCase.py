@@ -163,7 +163,6 @@ import os
 from cStringIO import StringIO
 from urllib import urlretrieve
 from glob import glob
-import pysvn
 
 portal_name = 'erp5_portal'
 
@@ -211,6 +210,7 @@ class ERP5TypeTestCase(PortalTestCase):
 
     def getRevision(self):
       try:
+        import pysvn
         return pysvn.Client().info('%s/Products/ERP5'
                     % os.environ['INSTANCE_HOME']).revision.number
       except:
