@@ -280,8 +280,6 @@ class TestArchive(InventoryAPITestCase):
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.archive_connection_id)
 
     # Create a new movement and check it goes only in new catalog
-    import pdb
-    pdb.set_trace()
     self.assertEqual(len(self.folder.searchFolder(portal_type="Dummy Movement")), 0)
     self.assertEquals(100, getInventory(node_uid=self.node.getUid()))
     self.new_mvt = self._makeMovement(quantity=50, stop_date=DateTime("2006/08/06"),
