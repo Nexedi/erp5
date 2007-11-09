@@ -113,7 +113,8 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           print "%s time to view object form %.4f < %.4f < %.4f\n" % \
               (prefix, min, req_time, max)
       if DO_TEST:
-          self.failUnless(min < req_time < max)
+          self.failUnless(min < req_time < max,
+                          '%.4f < %.4f < %.4f' % (min, req_time, max))
 
     def test_00_viewBarObject(self, quiet=quiet, run=run_all_test,
                               min=None, max=None):
@@ -197,9 +198,16 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
             print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
             print
         if DO_TEST:
-            self.failUnless(min_view < module_value < max_view)
-            self.failUnless(MIN_OBJECT_CREATION < add_value < MAX_OBJECT_CREATION)
-            self.failUnless(MIN_TIC < tic_value < MAX_TIC)
+            self.failUnless(min_view < module_value < max_view,
+                            'View: %.4f < %.4f < %.4f' % (
+                            min_view, module_value, max_view))
+            self.failUnless(
+                 MIN_OBJECT_CREATION < add_value < MAX_OBJECT_CREATION,
+                'Create: %.4f < %.4f < %.4f' % (
+                 MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION))
+            self.failUnless(MIN_TIC < tic_value < MAX_TIC,
+                            'Tic: %.4f < %.4f < %.4f' % (
+                            MIN_TIC, tic_value, MAX_TIC))
         i += 1
 
 def test_suite():
