@@ -66,7 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>source_trade = context.getSourceTrade()\n
-if source_trade is None:\n
+if source_trade is None or context.getSimulationState() != \'delivered\':\n
   user_id = context.Base_getLastUserIdByTransition(workflow_id=\'check_payment_workflow\', transition_id=\'deliver_action\')\n
   if user_id is not None:\n
     site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
@@ -77,7 +77,7 @@ if source_trade is None:\n
         source_trade = site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
         # Save it only once we are sure that the document will not change any more\n
         # and that we will not have many users trying to do deliver_action\n
-        if context.getSimulationState() == \'delivered\':\n
+        if context.getSourceTrade() != source_trade:\n
           context.setSourceTrade(source_trade)\n
 return source_trade\n
 </string> </value>

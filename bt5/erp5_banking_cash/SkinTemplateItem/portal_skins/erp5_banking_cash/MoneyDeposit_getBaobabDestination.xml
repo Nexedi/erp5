@@ -66,7 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>source_trade = context.getSourceTrade()\n
-if source_trade is None:\n
+if source_trade is None or context.getSimulationState() != \'delivered\':\n
   destination = context.getDestination()\n
   if destination is None:\n
     return None\n
@@ -77,7 +77,7 @@ if source_trade is None:\n
   for site in site_list:\n
     if context.portal_categories.getCategoryValue(site).getVaultType().endswith(\'guichet\') and destination in site:\n
       source_trade = site + \'/encaisse_des_billets_et_monnaies/entrante\'\n
-      if context.getSimulationState() == \'delivered\':\n
+      if context.getSourceTrade() != source_trade:\n
         context.setSourceTrade(source_trade)\n
       return source_trade\n
   from Products.ERP5Type.Message import Message\n
