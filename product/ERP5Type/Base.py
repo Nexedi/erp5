@@ -2699,9 +2699,10 @@ class Base( CopyContainer,
         name = ''.join([script_name_begin.replace(' ',''), script_name_end])
         script = getattr(self, name, None)
         if script is not None:
-          return script
+          return name
     cached_getattr = CachingMethod(cached_getattr, id='Base__getattr',
         cache_factory='erp5_content_long')
+
     # script_id should not be used any more, keep compatibility
     if script_id is not None:
       LOG('ERP5Type/Base.getTypeBaseMethod',0,
@@ -2709,9 +2710,9 @@ class Base( CopyContainer,
       fallback_script_id=script_id
     # Look at a local script which
     # can return a new predicate.
-    script = cached_getattr(self.getPortalType(), method_id)
-    if script is not None:
-      return script.__of__(self)
+    name = cached_getattr(self.getPortalType(), method_id)
+    if name is not None:
+      return getattr(self, name)
     if fallback_script_id is not None:
       return getattr(self, fallback_script_id)
 
