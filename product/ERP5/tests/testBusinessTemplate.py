@@ -2091,7 +2091,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt_title = pathname2url(template.getTitle())
     template_path = os.path.join(cfg.instancehome, 'tests', '%s' % (bt_title,))
     # remove previous version of bt it exists
-    shutil.rmtree(template_path)
+    if os.path.exists(template_path):
+      shutil.rmtree(template_path)
     template.export(path=template_path, local=1)
     sequence.edit(template_path=template_path)
     self.failUnless(os.path.exists(template_path))
@@ -4420,7 +4421,23 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     
     bt5.setDependencyList(['not_exists (= 1.0)'])
     self.assertRaises(BusinessTemplateMissingDependency, bt5.checkDependencies)
-    
+   
+  def test_download_http(self):
+    test_web = self.portal.portal_templates.download(
+        'http://www.erp5.org/dists/snapshot/test_bt5/test_web.bt5')
+    self.assertEquals(test_web.getPortalType(), 'Business Template')
+    self.assertEquals(test_web.getTitle(), 'test_web')
+    self.assertTrue(test_web.getRevision())
+
+  def test_download_svn(self):
+    # if the page looks like a svn repository, template tool will use pysvn to
+    # get the bt5.
+    test_web = self.portal.portal_templates.download(
+        'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_web')
+    self.assertEquals(test_web.getPortalType(), 'Business Template')
+    self.assertEquals(test_web.getTitle(), 'test_web')
+    self.assertTrue(test_web.getRevision())
+
 
 def test_suite():
   suite = unittest.TestSuite()

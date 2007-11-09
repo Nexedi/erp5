@@ -30,6 +30,7 @@ from webdav.client import Resource
 
 from App.config import getConfiguration
 import os, tarfile
+import shutil
 
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
@@ -51,11 +52,11 @@ try:
 except ImportError:
   from base64 import encodestring as b64encode, decodestring as b64decode
 from Products.ERP5Type.Message import Message
+from zLOG import LOG, INFO
+
 N_ = lambda msgid, **kw: Message('ui', msgid, **kw)
 
-WIN = False
-if os.name == 'nt':
-  WIN = True
+WIN = os.name == 'nt'
 
 class BusinessTemplateUnknownError(Exception):
   """ Exception raised when the business template
@@ -321,31 +322,12 @@ class TemplateTool (BaseTool):
         psm = N_("Business+Template+Downloaded+Successfully")
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s" 
                                     % (ret_url, psm))
-
-    security.declareProtected( 'Import/Export objects', 'download' )
-    def download(self, url, id=None, REQUEST=None):
-      """
-      Download Business Template from url, can be file or local directory
-      """
-      # For backward compatibility: If REQUEST is passed, it is likely that we
-      # come from the management interface.
-      if REQUEST is not None:
-        return self.manage_download(url, id=id, REQUEST=REQUEST)
-      
-      if id is None:
-        id = self.generateNewId()
-
-      urltype, name = splittype(url)
-      # Windows compatibility
-      if WIN:
-        if os.path.isdir(os.path.normpath(url)):
-          name = os.path.normpath(url)
-        elif os.path.isfile(os.path.normpath(url)):
-          url = 'file:///%s' % os.path.normpath(url)
     
-      # new version of business template in plain format (folder)
-      if os.path.isdir(os.path.normpath(name)):
-        name = os.path.normpath(name)
+    def _download_local(self, path, bt_id):
+      """Download Business Template from local directory or file
+      """
+      if os.path.isdir(os.path.normpath(path)):
+        path = os.path.normpath(path)
         def callback(file_list, directory, files):
           for excluded_directory in ('CVS', '.svn'):
             try:
@@ -358,12 +340,11 @@ class TemplateTool (BaseTool):
               file_list.append(absolute_path)
 
         file_list = []
-        os.path.walk(name, callback, file_list)
+        os.path.walk(path, callback, file_list)
         file_list.sort()
         # import bt object
-        bt = self.newContent(portal_type='Business Template', id=id)
-        id = bt.getId()
-        bt_path = os.path.join(name, 'bt')
+        bt = self.newContent(portal_type='Business Template', id=bt_id)
+        bt_path = os.path.join(path, 'bt')
 
         # import properties
         prop_dict = {}
@@ -381,19 +362,63 @@ class TemplateTool (BaseTool):
         prop_dict.pop('id', '')
         bt.edit(**prop_dict)
         # import all others objects
-        bt.importFile(dir=1, file=file_list, root_path=name)
+        bt.importFile(dir=1, file=file_list, root_path=path)
+        return bt
       else:
-        tempid, temppath = mkstemp()
-        try:
-          os.close(tempid) # Close the opened fd as soon as possible.    
-          file, headers = urlretrieve(url, temppath)
-          if id is None:
-            id = str(self.generateNewId())
-          bt = self._importBT(temppath, id)
-        finally:
-          os.remove(temppath)
+        # this should be a file
+        return self._importBT(path, bt_id)
+
+    def _download_url(self, url, bt_id):
+      tempid, temppath = mkstemp()
+      try:
+        os.close(tempid) # Close the opened fd as soon as possible.    
+        file_path, headers = urlretrieve(url, temppath)
+        if re.search(r'<title>Revision \d+:', open(file_path, 'r').read()):
+          # this looks like a subversion repository, try to check it out
+          LOG('ERP5', INFO, 'TemplateTool doing a svn checkout of %s' % url)
+          return self._download_svn(url, bt_id)
+
+        return self._download_local(file_path, bt_id)
+      finally:
+        os.remove(temppath)
+
+    def _download_svn(self, url, bt_id):
+      svn_checkout_tmp_dir = mkdtemp()
+      svn_checkout_dir = os.path.join(svn_checkout_tmp_dir, 'bt')
+      try:
+        import pysvn
+        pysvn.Client().export(url, svn_checkout_dir)
+        return self._download_local(svn_checkout_dir, bt_id)
+      finally:
+        shutil.rmtree(svn_checkout_tmp_dir)
+
+    security.declareProtected( 'Import/Export objects', 'download' )
+    def download(self, url, id=None, REQUEST=None):
+      """
+      Download Business Template from url, can be file or local directory
+      """
+      # For backward compatibility: If REQUEST is passed, it is likely that we
+      # come from the management interface.
+      if REQUEST is not None:
+        return self.manage_download(url, id=id, REQUEST=REQUEST)
+      
+      if id is None:
+        id = self.generateNewId()
+
+      urltype, name = splittype(url)
+      # Windows compatibility
+      if WIN:
+        if os.path.isdir(os.path.normpath(url)) or \
+           os.path.isfile(os.path.normpath(url)):
+          urltype = 'file'
+          name = os.path.normpath(url)
+      
+      if urltype and urltype != 'file':
+        bt = self._download_url(url, id)
+      else:
+        bt = self._download_local(name, id)
+
       bt.build(no_action=1)
-      bt.reindexObject()
       return bt
 
     def importFile(self, import_file=None, id=None, REQUEST=None, 
