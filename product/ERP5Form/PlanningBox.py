@@ -1827,6 +1827,7 @@ class BasicGroup:
     # specific begin & stop property names for secondary axis
     object_property_begin = self.field.get_value('x_start_bloc')
     object_property_end = self.field.get_value('x_stop_bloc')
+    object_property_height = self.field.get_value('y_size_block')
     # specific block text_information methods
     info_center = self.field.get_value('info_center')
     info_topleft = self.field.get_value('info_topleft')
@@ -1834,29 +1835,6 @@ class BasicGroup:
     info_botleft = self.field.get_value('info_backleft')
     info_botright = self.field.get_value('info_backright')
     info_tooltip = self.field.get_value('info_tooltip')
-    # getting info method from activity itself if exists
-    info_center_method = getattr(self.object.getObject(),info_center,None)
-    info_topright_method = getattr(self.object.getObject(),info_topright,None)
-    info_topleft_method = getattr(self.object.getObject(),info_topleft,None)
-    info_botleft_method = getattr(self.object.getObject(),info_botleft,None)
-    info_botright_method = \
-                  getattr(self.object.getObject(),info_botright,None)
-    info_tooltip_method = \
-                  getattr(self.object.getObject(), info_tooltip, None)
-    # if method recovered is not null, then updating
-    # XXX Does script have to manage multiple context object ?
-    if info_center_method is not None:
-      info['info_center'] = str(info_center_method())
-    if info_topright_method is not None:
-      info['info_topright'] = str(info_topright_method())
-    if info_topleft_method is not None:
-      info['info_topleft'] = str(info_topleft_method())
-    if info_botleft_method is not None:
-      info['info_botleft'] = str(info_botleft_method())
-    if info_botright_method is not None:
-      info['info_botright'] = str(info_botright_method())
-    if info_tooltip_method is not None:
-      info['info_tooltip'] = str(info_tooltip_method())
 
     if activity_list not in ([],None):
       indic=0
@@ -1881,6 +1859,13 @@ class BasicGroup:
             raise AttributeError, object_property_end
         except AttributeError:
           block_end = getattr(obj, object_property_end, None)
+
+        try:
+          height = obj.getProperty(object_property_height, _marker)
+          if height is _marker:
+            raise AttributeError, object_property_height 
+        except AttributeError:
+          height = getattr(obj, object_property_height, None)
 
         # handling case where activity bound is not defined
         if block_begin is None:
@@ -1912,27 +1897,18 @@ class BasicGroup:
 
           error = 'false'
           current_color=''
+          info = {}
+          info['info_center'] = ''
+          info['info_topright'] = ''
+          info['info_topleft'] = ''
+          info['info_botleft'] = ''
+          info['info_botright'] = ''
 
           if self.property_dict['stat'] == 1:
-            info = {}
-            info['info_center'] = ''
-            info['info_topright'] = ''
-            info['info_topleft'] = ''
-            info['info_botleft'] = ''
-            info['info_botright'] = ''
             title = ''
             object = activity_content
             url=''
-            object_property_height = self.field.get_value('y_size_block')
-            height = \
-                 getattr(activity_content.getObject(),object_property_height)
           else:
-            info = {}
-            info['info_center'] = ''
-            info['info_topright'] = ''
-            info['info_topleft'] = ''
-            info['info_botleft'] = ''
-            info['info_botright'] = ''
             
             # getting info text from activity itself if exists
             info_center_method = getattr(activity_content,info_center,None)
@@ -1995,7 +1971,7 @@ class BasicGroup:
             url = object.getUrl()
 
             # XXX should define height of block here
-            height = None
+            #height = None
 
           # creating new activity instance
           activity = BasicActivity(title=title, name=name, object=object,
@@ -2374,6 +2350,7 @@ class PlanningStructure:
                               title=basic_activity_object.title,
                               object=basic_activity_object.object,
                               color=basic_activity_object.color,
+                              height=basic_activity_object.height,
                               link=basic_activity_object.url,
                               secondary_axis_begin= \
                                           basic_activity_object.absolute_begin,
@@ -2482,7 +2459,7 @@ class Activity:
                 color=None, link=None, height=None, secondary_axis_begin=None,
                 secondary_axis_end=None, secondary_axis_start=None,
                 secondary_axis_stop=None, primary_axis_block=None, info=None,
-                calendar_view=0, property_dict={}):
+                calendar_view=0,property_dict={}):
     # internal activity_name
     self.name = name
     self.id = self.name
@@ -3115,7 +3092,7 @@ class AxisGroup:
       if height in (0, None):
         relative_size = 1
       else:
-        relative_size = float(height) / max_activity_height
+        relative_size = float(height) / float(max_activity_height)
       for block in activity.block_list:
         # recovering original values
         position_main = block.position_main
