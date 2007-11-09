@@ -277,6 +277,23 @@ return result
       ## Cache  cleared shouldn't be previously cached
       self.assert_(1.0 < calculation_time)
 
+  def test_CachePersistentObjects(self):
+    # storing persistent objects in cache is not allowed, but this check is
+    # only performed in unit tests.
+    from Products.ERP5Type.Cache import CachingMethod
+    def func():
+      # return a persistent object
+      return self.portal
+    cached_func = CachingMethod(func, 'cache_persistent_obj')
+    self.assertRaises(TypeError, cached_func)
+
+    def func():
+      # return a method bound on a persistent object
+      return self.portal.getTitle
+    cached_func = CachingMethod(func, 'cache_bound_method')
+    self.assertRaises(TypeError, cached_func)
+    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCacheTool))
