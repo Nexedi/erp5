@@ -153,6 +153,15 @@ class PDFDocument(Image, ConversionCacheMixin):
     h = h.replace('<BODY bgcolor="#A0A0A0"', '<BODY ') # Quick hack to remove bg color - XXX
     return h
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+
+  def hasBaseData(self):
+    """
+    This method is an override of dynamically generated method for Document
+    class.Because PDFDocument does not use baae_data to store raw data.
+    """
+    return self.get_size()>0 
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
     """
