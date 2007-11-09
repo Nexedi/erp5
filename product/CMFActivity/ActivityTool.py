@@ -206,7 +206,7 @@ class Message:
           'Could not call method %s on object %s' % (
           self.method_id, self.object_path), error=sys.exc_info())
       # push the error in ZODB error_log
-      if hasattr(activity_tool, 'error_log'):
+      if getattr(activity_tool, 'error_log', None) is not None:
         activity_tool.error_log.raising(sys.exc_info())
 
   def validate(self, activity, activity_tool, check_order_validation=1):
