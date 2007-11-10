@@ -400,6 +400,7 @@ class Image(File, OFSImage):
       writeData(imgin, self.getData())
       imgin.close()
       newimg.write(imgout.read())
+      imgout.close()
       newimg.seek(0)
       return newimg
 
