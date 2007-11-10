@@ -73,7 +73,8 @@ class PDFDocument(Image, ConversionCacheMixin):
                               'subject', 'source_reference', 'source_project_title',)
 
   security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75, resolution=None):
+  def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75, 
+                                          resolution=None, frame=0):
     """
       Returns data in the appropriate format (graphical)
       it is always a zip because multi-page pdfs are converted into a zip
@@ -89,7 +90,8 @@ class PDFDocument(Image, ConversionCacheMixin):
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
       return data
     return Image.index_html(self, REQUEST, RESPONSE, display=display,
-                            format=format, quality=quality, resolution=resolution)
+                            format=format, quality=quality,
+                            resolution=resolution, frame=frame)
 
   # Conversion API
   security.declareProtected(Permissions.ModifyPortalContent, 'convert')
@@ -151,16 +153,8 @@ class PDFDocument(Image, ConversionCacheMixin):
     tmp.close()
     r.close()
     h = h.replace('<BODY bgcolor="#A0A0A0"', '<BODY ') # Quick hack to remove bg color - XXX
+    h = h.replace('href="%s.html' % tmp.name.split(os.sep)[-1], 'href="asEntireHTML') # Make links relative
     return h
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
-
-  def hasBaseData(self):
-    """
-    This method is an override of dynamically generated method for Document
-    class.Because PDFDocument does not use baae_data to store raw data.
-    """
-    return self.get_size()>0 
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
