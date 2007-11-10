@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.WorkflowCore import WorkflowMethod
+from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -186,12 +186,11 @@ class TextDocument(Document, TextContent):
         return base_list[0]
       return Document.getContentBaseURL(self)
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
     def hasBaseData(self):
-      """ 
-        This method is an override of dynamically generated method for Document class.
-        We need to manually override it because for some backwards compatibility 
-        instances of TextDocument as 'Web Page' doesn't use 'base_data' to store raw 
-        data information. Instead they use 'text-content'
-        This makes results and logic of abstract Document class inconsistent.
+      """
+        A TextDocument store its data in the "text_content" property. Since
+        there is no such thing as base_data in TextDocument, having base_data
+        is equivalent to having some text_content.
       """
       return self.hasTextContent()
