@@ -547,12 +547,12 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       later stage of the implementation.
     """
     # XXX results should be cached as volatile attributes
-    refs = [r[1] for r in self.getSearchableReferenceList()]
-    res = self.Base_getImplicitSuccessorValueList(refs)
+    reference_list = [r[1] for r in self.getSearchableReferenceList()]
+    result = self.Base_getImplicitSuccessorValueList(reference_list)
     # get unique latest (most relevant) versions
-    res = [r.getObject().getLatestVersionValue() for r in res]
-    res_dict = dict.fromkeys(res)
-    return res_dict.keys()
+    result = [r.getObject().getLatestVersionValue() for r in result]
+    result_dict = dict.fromkeys(result)
+    return result_dict.keys()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitPredecessorValueList')
   def getImplicitPredecessorValueList(self):
@@ -870,7 +870,6 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     res = catalog(reference=self.getReference(), sort_on=(('creation_date','ascending'),))
     # XXX this should be security-unaware - delegate to script with proxy roles
     return res[0].getLanguage() # XXX what happens if it is empty?
-    
 
   ### Property getters
   # Property Getters are document dependent so that we can
@@ -991,13 +990,13 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     # Try not to invoke an automatic transition here
     self._edit(**kw)
     # Finish ingestion by calling method
-    self.finishIngestion() 
+    self.finishIngestion()
     self.reindexObject()
     # Revision merge is tightly coupled
     # to metadata discovery - refer to the documentation of mergeRevision method
     merged_doc = self.mergeRevision()
     merged_doc.reindexObject()
-    return merged_doc 
+    return merged_doc
 
   security.declareProtected(Permissions.ModifyPortalContent, 'finishIngestion')
   def finishIngestion(self):
@@ -1070,7 +1069,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       is the one to override in subclasses.
     """
     if not self.hasBaseData():
-      return ''
+      raise ConversionError('This document has not been processed yet.')
     if self.hasConversion(format='base-html'):
       mime, data = self.getConversion(format='base-html')
       return data
@@ -1098,7 +1097,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     # find charset and convert to utf-8
     charset_list = self.charset_parser.findall(str(html)) # XXX - Not efficient is datastream 
                                                           # instance but hard to do better
-    if charset_list:
+    if charset_list and charset_list[0] not in ('utf-8', 'UTF-8'):
       stripped_html = unicode(str(stripped_html), charset_list[0]).encode('utf-8')
     return stripped_html
 
