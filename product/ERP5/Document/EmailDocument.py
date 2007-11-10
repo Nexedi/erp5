@@ -319,9 +319,10 @@ class EmailDocument(File, TextDocument):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
   def hasBaseData(self):
-    """ 
+    """
       Since there is no need to convert to a base format, we consider that 
-      we always have the base format if we have text of file.
+      we always have the base format data if and only is we have
+      some text defined or a file.
     """
     return self.hasFile() or self.hasTextContent()
 
