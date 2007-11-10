@@ -33,14 +33,10 @@ from Products.ERP5.Document.Ticket import Ticket
 
 class SaleOpportunity(Ticket):
     """
-    A SalesOpportunity allows to track a sales process involving
-    multilple Person and Organisations. It is a placeholder for
-    documents, events, etc.
+    LEGACY
 
-    SalesOpportunity objects can be synchronized accross
-    multiple sites
-
-    XXX Must be renamed to Opportunity
+    This class is superceded by the Ticket class. Legacy
+    sale opportunity data should still be usable.
     """
 
     meta_type = 'ERP5 Sale Opportunity'
