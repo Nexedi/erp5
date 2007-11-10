@@ -171,6 +171,14 @@ class File(Document, CMFFile, ConversionCacheMixin):
     """
     return self.hasData()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  def hasBaseData(self):
+    """
+      By default, a File instance does not require conversion
+      to a base format. Therefore, hasBaseData must be overriden.
+    """
+    return self.hasData()
+
   security.declareProtected(Permissions.ModifyPortalContent, 'guessMimeType')
   def guessMimeType(self, fname=''):
     """
