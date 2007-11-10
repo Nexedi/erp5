@@ -32,7 +32,6 @@ from AccessControl import ClassSecurityInfo
 
 from Products.CMFMailIn.MailMessage import MailMessage as CMFMailInMessage
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 
 from Products.ERP5.Document.Event import Event
 import smtplib
@@ -41,7 +40,15 @@ from zLOG import LOG
 
 class MailMessage(Event, CMFMailInMessage):
   """
-  MailMessage subclasses Event objects to implement Email Events.
+  LEGACY
+
+  The MailMessage class is deprecated. It is superceded by
+  the Event class (for CRM events) and by the EmailDocument class
+  (to store raw email messages).
+
+  TODO: compatibility layer is required so that old MailMessage
+  instance can mimic Event instances based on legacy data. This
+  is required for example for old CRM implementations of ERP5.
   """
 
   meta_type       = 'ERP5 Mail Message'
