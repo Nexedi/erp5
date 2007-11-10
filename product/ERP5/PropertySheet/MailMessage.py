@@ -29,7 +29,11 @@
 
 class MailMessage:
     """
-    MailMessage properties and categories
+    LEGACY
+
+    This property sheet is here for convenience and compatibility
+    of legacy implementations of ERP5 CRM. It should never be
+    used in new environments.
     """
 
     _properties = (
