@@ -66,5 +66,3 @@ class DocumentReferenceConstraint(Constraint):
                                                       object.getLanguage(), object.getVersion()))
       #error_list.append(self._generateError(object, N_(s)))
     return error_list
-
-# vim: filetype=python syntax=python shiftwidth=2 
