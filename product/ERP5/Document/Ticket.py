@@ -46,6 +46,12 @@ class Ticket(Movement, Project):
     - as a project because it acts as a reporting
       node for other movements (ex. accounting,
       task reports)
+
+    Ticket are a good example of documents which may require
+    synchronisation process accross multiple sites and
+    for which acquisition properties such as source_title
+    may be useful to provide a simple way to synchronise
+    data with relations.
     """
 
     meta_type = 'ERP5 Ticket'
