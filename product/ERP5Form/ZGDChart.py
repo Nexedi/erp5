@@ -39,7 +39,7 @@ class ZGDChartWidget(Widget.Widget):
   This is the class used in order to include inside
   ERP5 some very nice charts
   """
-  property_names = Widget.Widget.property_names+\
+  property_names = Widget.Widget.property_names +\
                    ['selection_name','default_params','chart_title',
                    'data_method','chart_style','x_title','y_title',
                    'bg_transparent']
