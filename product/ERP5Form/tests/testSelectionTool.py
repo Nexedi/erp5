@@ -84,6 +84,18 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEquals({'key':'value'},
                       self.portal_selections.getSelectionParamsFor('test_selection'))
 
+  def testGetSelectionParamsDictInterface(self):
+    self.assertEquals('value',
+                      self.portal_selections['test_selection']['key'])
+    # the main use case is to have a dict interface in TALES expressions:
+    from Products.PageTemplates.Expressions import getEngine
+    evaluate_tales = getEngine().getContext(dict(context=self.portal)).evaluate
+    self.assertEquals('value',
+            evaluate_tales('context/portal_selections/test_selection/key'))
+    self.assertEquals('default', evaluate_tales(
+      'context/portal_selections/test_selection/not_found | string:default'))
+
+
   def testCallSelectionFor(self, quiet=quiet, run=run_all_test):
     if not run: return
     self.assertEquals(None,

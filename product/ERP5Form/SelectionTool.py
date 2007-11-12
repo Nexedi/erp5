@@ -191,6 +191,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       if selection is not None:
         return selection.__of__(self)
 
+    def __getitem__(self, key):
+        return self.getSelectionParamsFor(key)
+
     security.declareProtected(ERP5Permissions.View, 'setSelectionFor')
     def setSelectionFor(self, selection_name, selection_object, REQUEST=None):
       """
