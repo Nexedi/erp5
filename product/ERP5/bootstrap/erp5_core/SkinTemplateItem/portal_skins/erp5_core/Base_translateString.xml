@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,11 +65,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
+            <value> <string>"""\n
+  Translate message into another language.\n
+  If \'lang\' is omitted a selected user interface language is used.\n
+  Can use any of existing message catalogs (default is \'ui\').\n
+"""\n
+\n
+from Products.CMFCore.utils import getToolByName\n
 translation_service = getToolByName(context, \'Localizer\', None)\n
 if translation_service is not None :\n
   try:\n
-    return translation_service.translate(catalog, msg, **kw).encode(encoding)\n
+    return translation_service.translate(catalog, msg, lang, **kw).encode(encoding)\n
   except AttributeError: # This happens in unit testing, because it is not able to find something with get_context()\n
     pass\n
 return msg\n
@@ -98,7 +101,7 @@ return msg\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>msg, catalog="ui", encoding=\'utf8\', **kw</string> </value>
+            <value> <string>msg, catalog="ui", encoding=\'utf8\', lang=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,7 +121,7 @@ return msg\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -127,6 +130,7 @@ return msg\n
                             <string>msg</string>
                             <string>catalog</string>
                             <string>encoding</string>
+                            <string>lang</string>
                             <string>kw</string>
                             <string>Products.CMFCore.utils</string>
                             <string>getToolByName</string>
@@ -150,6 +154,7 @@ return msg\n
               <tuple>
                 <string>ui</string>
                 <string>utf8</string>
+                <none/>
               </tuple>
             </value>
         </item>
