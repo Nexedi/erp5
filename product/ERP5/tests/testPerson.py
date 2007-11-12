@@ -27,8 +27,12 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl import Unauthorized
+
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type import Permissions
 
 
 class TestPerson(ERP5TypeTestCase):
@@ -130,6 +134,22 @@ class TestPerson(ERP5TypeTestCase):
     self.assertEquals('first last', p.getTitleOrId())
     self.assertEquals('first last', p.title_or_id())
     
+  def testSetPasswordSecurity(self):
+    p = self._makeOne('person')
+    p.manage_permission(Permissions.SetOwnPassword, [], 0)
+    self.assertRaises(Unauthorized, p.setPassword, 'secret')
+    self.assertRaises(Unauthorized, p.edit, password='secret')
+
+    # setPassword(None) has no effect, because in the user interface we always
+    # show an empty field for password. Note that it also does not require any
+    # specific permission.
+    p.setPassword(None)
+    self.assertFalse(p.getPassword())
+
+    p.manage_permission(Permissions.SetOwnPassword, ['Anonymous'], 0)
+    p.setPassword('secret')
+    self.assertTrue(p.getPassword())
+
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -29,6 +29,8 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.exceptions import AccessControl_Unauthorized
 
 #from Products.ERP5.Core.Node import Node
 
@@ -202,12 +204,14 @@ class Person(XMLObject):
         return pw_validate(self.getPassword(), value)
       return False
     
-    security.declareProtected(Permissions.SetOwnPassword, 'setPassword')
+    security.declarePublic('setPassword')
     def setPassword(self, value) :
       """
         Set the password, only if the password is not empty.
       """
-      if value is not None :
+      if value is not None:
+        if not _checkPermission(Permissions.SetOwnPassword, self):
+          raise AccessControl_Unauthorized('setPassword')
         self._setPassword(pw_encrypt(value))
         self.reindexObject()
     
