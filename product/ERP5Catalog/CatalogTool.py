@@ -759,7 +759,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           path = self.__url(object)
         if uid is None:
           raise TypeError, "unindexObject supports only uid now"
-        self.uncatalog_object(path=path,uid=uid, sql_catalog_id=sql_catalog_id)
         self.uncatalog_object(path=path, uid=uid, sql_catalog_id=sql_catalog_id)
 
     security.declarePrivate('beforeUnindexObject')
