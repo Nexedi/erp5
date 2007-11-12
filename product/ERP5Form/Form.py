@@ -959,5 +959,5 @@ psyco.bind(Field.get_value)
 
 # install interactor
 # we need to install interactor after to apply get_value patch.
-from Products.ERP5Type.Interactor import fielf_value_interactor
-fielf_value_interactor.install()
+from Products.ERP5Type.Interactor import field_value_interactor
+field_value_interactor.install()

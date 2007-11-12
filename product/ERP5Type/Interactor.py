@@ -244,5 +244,5 @@ DCWorkflowInteractor().install()
 
 # This is used in ERP5Form and install method is called in ERP5Form
 # Don't install this interactor here.
-fielf_value_interactor = FieldValueInteractor()
+field_value_interactor = FieldValueInteractor()
 
