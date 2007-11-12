@@ -50,6 +50,7 @@ Globals.get_request = get_request
 from Testing import ZopeTestCase
 ZopeTestCase.installProduct('ERP5Form')
 
+from Acquisition import aq_base
 from Products.Formulator.StandardFields import FloatField
 from Products.Formulator.StandardFields import StringField
 from Products.Formulator.StandardFields import DateTimeField
@@ -251,6 +252,24 @@ class TestProxyField(unittest.TestCase):
     self.assertEquals(other_field, proxy_field.getTemplateField())
     self.assertEquals('Other', proxy_field.get_value('title'))
 
+  def test_proxy_to_date_time_field(self):
+    # date time fields are specific, because they use a 'sub_form', we must
+    # make sure this works as expected
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_date', 'Date', 'DateTimeField')
+    original_field.manage_edit_xmlrpc(dict(required=0))
+    proxy_field = self.addField(self.container.Base_view,
+                                'my_date', 'Date', 'ProxyField')
+    proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                        field_id='my_date',))
+    self.assertTrue(hasattr(proxy_field, 'sub_form'))
+    self.assertTrue(aq_base(proxy_field.sub_form) is
+                      aq_base(original_field.sub_form))
+    # we can render
+    proxy_field.render()
+    # and validate
+    self.container.Base_view.validate_all_to_request(dict())
+    
 
 class TestFieldValueCache(unittest.TestCase):
   """Tests field value caching system
