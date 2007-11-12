@@ -328,7 +328,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     portal_url = getToolByName(here, 'portal_url')
     portal_url_string = portal_url()
     if (value not in ((), [], None, '')) and \
-       (field.get_value('allow_jump') == 1):
+        field.get_value('allow_jump'):
       # Keep the selection name in the URL
       if REQUEST.get('selection_name') is not None:
         selection_name_html = '&amp;selection_name=%s&amp;selection_index=%s' % \
