@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+request = container.REQUEST\n
+request.other.update(request_other)\n
+portal = context.getPortalObject()\n
+ap = portal.restrictedTraverse(active_process_url)\n
+N_ = portal.Base_translateString\n
+\n
+# emulate Localizer\'s __before_publishing_traverse__\n
+request.form[\'LOCALIZER_LANGUAGE\'] = localizer_language\n
+request.get(\'PARENTS\', []).insert(0, portal)\n
+portal.Localizer(context, request)\n
+# set the selected skin\n
+portal.portal_skins.changeSkin(skin_name)\n
+\n
+report_section_list = [r.getResult() for r in ap.getResultList()]\n
+report_section_list.sort(lambda a, b:cmp(a[0], b[0]))\n
+\n
+report_data = context.report_view.pt_render(\n
+      extra_context=dict(options=dict(),\n
+                         rendered_report_item_list=[r[1] for r in report_section_list],\n
+                         form=portal.restrictedTraverse(form_path)))\n
+\n
+email_from = portal.getProperty(\'email_from_address\')\n
+if portal.getProperty(\'email_from_name\'):\n
+  email_from = \'"%s" <%s>\' % (portal.getProperty(\'email_from_name\'), email_from)\n
+\n
+if 0: # send an email ?\n
+  portal.MailHost.send(\'\'\'From:%(mfrom)s\n
+To:%(mto)s\n
+Subject:%(subject)s\n
+Content-Type: Multipart/Mixed;\n
+  boundary="Boundary-00=_GJWGGr2lsPnqbw0"\n
+\n
+--Boundary-00=_GJWGGr2lsPnqbw0\n
+Content-Type: text/plain;\n
+  charset="utf-8"\n
+Content-Transfer-Encoding: 7bit\n
+Content-Disposition: inline\n
+\n
+Your report is attached.\n
+\n
+Maybe here we could sum up the parameters, date, user etc ?\n
+\n
+--Boundary-00=_GJWGGr2lsPnqbw0\n
+Content-Type: application/pdf;\n
+  name="CasParticuliers.pdf"\n
+Content-Transfer-Encoding: 8bit\n
+Content-Disposition: attachment;\n
+\tfilename="%(subject)s.pdf"\n
+\n
+%(report_data)s\n
+\'\'\' % dict(subject=title,\n
+           mfrom=email_from,\n
+           mto=email_to,\n
+           report_data=report_data))\n
+\n
+# TODO: this should use portal_contributions\n
+doc = portal.document_module.newContent(portal_type=\'File\',\n
+                                  title=N_(title),\n
+                                  language=localizer_language,\n
+                                  data=report_data)\n
+\n
+content_type = request.RESPONSE.getHeader(\'Content-Type\')\n
+if content_type:\n
+  doc.setContentType(content_type.split(\';\')[0])\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, email_to</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>7</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>active_process_url</string>
+                            <string>skin_name</string>
+                            <string>localizer_language</string>
+                            <string>title</string>
+                            <string>request_other</string>
+                            <string>form_path</string>
+                            <string>email_to</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>ap</string>
+                            <string>N_</string>
+                            <string>_write_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>r</string>
+                            <string>report_section_list</string>
+                            <string>dict</string>
+                            <string>_getitem_</string>
+                            <string>report_data</string>
+                            <string>email_from</string>
+                            <string>doc</string>
+                            <string>content_type</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_report</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

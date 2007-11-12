@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>context.log(\'report_section %s: %s/%s\' % (\n
+                report_section_idx, context.getPath(), report_section.getFormId(),))\n
+request = container.REQUEST\n
+request.other.update(request_other)\n
+\n
+portal = context.getPortalObject()\n
+\n
+# emulate Localizer\'s __before_publishing_traverse__\n
+request.form[\'LOCALIZER_LANGUAGE\'] = localizer_language\n
+request.get(\'PARENTS\', []).insert(0, portal)\n
+portal.Localizer(context, request)\n
+\n
+portal.portal_skins.changeSkin(skin_name)\n
+\n
+# for unicode encoding\n
+request.RESPONSE.setHeader("Content-Type", "application/xml; charset=utf-8")\n
+\n
+report_section.pushReport(portal)\n
+\n
+if report_section.getFormId():\n
+  form = getattr(context, report_section.getFormId())\n
+else:\n
+  form = None\n
+data = context.render_report_section.pt_render(\n
+              extra_context=dict(form=form, report_section=report_section))\n
+\n
+report_section.popReport(portal)\n
+\n
+return report_section_idx, data\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>localizer_language, skin_name, report_section, report_section_idx, request_other</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>localizer_language</string>
+                            <string>skin_name</string>
+                            <string>report_section</string>
+                            <string>report_section_idx</string>
+                            <string>request_other</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>portal</string>
+                            <string>_write_</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>None</string>
+                            <string>dict</string>
+                            <string>data</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_renderReportSection</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

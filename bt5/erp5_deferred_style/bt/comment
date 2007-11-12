@@ -1,0 +1,2 @@
+It registers a new skin selection "Deferred" that will use, by default, erp5_odt_style to do the real rendering (for now hardcoded inBase_activateReport) .
+It can easily use any style that have the "render_report_section" macro in report_view and understand "rendered_report_item_list" in extra context.

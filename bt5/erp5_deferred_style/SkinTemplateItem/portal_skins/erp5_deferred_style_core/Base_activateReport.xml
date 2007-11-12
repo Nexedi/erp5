@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = container.REQUEST\n
+RESPONSE =  request.RESPONSE\n
+\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+active_process = portal.portal_activities.newActiveProcess()\n
+email_to = \'jerome@nexedi.com\' # XXX \n
+\n
+skin_name = \'ODT\' # hardcoded for now\n
+tag = \'active-report-%s\' % random.randint(0, 1000)\n
+\n
+# compute list of report section to render\n
+report_section_list = report_method()\n
+\n
+# save request parameters (after calling the report_method which may tweak the\n
+# request). XXX we exclude some reserved names in a very ad hoc way\n
+request_other = dict()\n
+for k, v in request.other.items():\n
+  if k not in (\'TraversalRequestNameStack\', \'AUTHENTICATED_USER\', \'URL\',\n
+      \'SERVER_URL\', \'AUTHENTICATION_PATH\', \'USER_PREF_LANGUAGES\', \'PARENTS\',\n
+      \'PUBLISHED\', \'AcceptLanguage\', \'AcceptCharset\', \'RESPONSE\',\n
+      \'ACTUAL_URL\'):\n
+    request_other[k] = v\n
+\n
+localizer_language = portal.Localizer.get_selected_language()\n
+\n
+for idx, report_section in enumerate(report_section_list):\n
+  if report_section.getPath():\n
+    doc = report_section.getObject(portal)\n
+  else:\n
+    doc = context\n
+  doc.activate(activity=\'SQLQueue\',\n
+               active_process=active_process,\n
+               tag=tag,\n
+              ).Base_renderReportSection(skin_name=skin_name,\n
+                                         localizer_language=localizer_language,\n
+                                         report_section=report_section,\n
+                                         report_section_idx=idx,\n
+                                         request_other=request_other)\n
+\n
+portal.portal_simulation.activate(after_tag=tag).Base_report(\n
+           active_process_url=active_process.getRelativeUrl(),\n
+           skin_name=skin_name,\n
+           localizer_language=localizer_language,\n
+           title=form.getProperty(\'title\'),\n
+           request_other=request_other,\n
+           form_path=form.getPhysicalPath(),\n
+           email_to=email_to,\n
+          )\n
+\n
+context.activate(after_tag=tag).getTitle()\n
+\n
+portal.changeSkin(None)\n
+return context.Base_redirect(\'view\', keep_items=dict(\n
+              portal_status_message=N_("Report Started")))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>report_method, form, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>report_method</string>
+                            <string>form</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>RESPONSE</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>active_process</string>
+                            <string>email_to</string>
+                            <string>skin_name</string>
+                            <string>random</string>
+                            <string>tag</string>
+                            <string>report_section_list</string>
+                            <string>dict</string>
+                            <string>request_other</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>_write_</string>
+                            <string>localizer_language</string>
+                            <string>enumerate</string>
+                            <string>idx</string>
+                            <string>report_section</string>
+                            <string>doc</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_activateReport</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
