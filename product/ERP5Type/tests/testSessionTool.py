@@ -145,7 +145,24 @@ class TestSessionTool(ERP5TypeTestCase):
       portal_sessions.manage_delObjects(self.session_id)
       session = portal_sessions[self.session_id]
       self.assert_(0 == len(session.keys()))
-      
+
+  def test_session_dict_interface(self):
+    session = self.portal.portal_sessions[self.session_id]
+    session['foo'] = 'Bar'
+    self.assertTrue('foo' in session)
+    self.assertEquals('Bar', session['foo'])
+    self.assertEquals('Bar', session.get('foo'))
+    self.assertFalse('bar' in session)
+    self.assertEquals('Default', session.get('bar', 'Default'))
+    self.assertRaises(KeyError, session.__getitem__, 'bar')
+
+  def test_session_getattr(self):
+    session = self.portal.portal_sessions[self.session_id]
+    session['foo'] = 'Bar'
+    self.assertEquals('Bar', session.foo)
+    self.assertEquals('Default', getattr(session, 'bar', 'Default'))
+    self.assertRaises(AttributeError, getattr, session, 'bar')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSessionTool))

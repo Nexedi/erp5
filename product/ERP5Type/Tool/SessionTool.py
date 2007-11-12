@@ -57,14 +57,20 @@ class Session(UserDict):
     """ Update current aquisition context. """
     self._aq_context = aq_context
   
-  def __getattr__(self, key):
-    return self.__getitem__(key)
+  def __getattr__(self, key, default=_marker):
+    if key in self.data:
+      return self.__getitem__(key)
+    if default is not _marker:
+      return default
+    raise AttributeError, key
   
   def __getitem__(self, key):
-    value = self.data.get(key, None)
-    if key is not None and hasattr(value, '__of__'):
-      value = value.__of__(self._aq_context)
-    return value
+    if key in self.data:
+      value = self.data[key]
+      if hasattr(value, '__of__'):
+        value = value.__of__(self._aq_context)
+      return value
+    raise KeyError, key
     
   def __setitem__(self, key, item):
     self.data[key] = aq_base(item)
