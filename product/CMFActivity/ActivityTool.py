@@ -187,6 +187,7 @@ class Message:
     try:
       obj = self.getObject(activity_tool)
       old_security_manager = getSecurityManager()
+      # Change user if required (TO BE DONE)
       # We will change the user only in order to execute this method
       user = self.changeUser(self.user_name, activity_tool)
       try:
