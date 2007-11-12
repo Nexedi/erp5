@@ -143,7 +143,10 @@ class OOoDocument(File, ConversionCacheMixin):
     File._setFile(self, data, precondition=precondition)
     if self.hasBaseData():
       # This is a hack - XXX - new accessor needed to delete properties
-      delattr(self, 'base_data')
+      try:
+        delattr(self, 'base_data')
+      except AttributeError:
+        pass
 
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=None, display=None, **kw):
