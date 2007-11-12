@@ -137,7 +137,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
          },
         ))
 
-    acquire_local_roles = True
+    acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
     init_script = ''
