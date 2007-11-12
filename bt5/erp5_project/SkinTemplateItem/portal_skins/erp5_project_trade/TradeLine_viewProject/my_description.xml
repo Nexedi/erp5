@@ -99,11 +99,11 @@
                     <value> <string>BaseTradeSale_FieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>height</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <int>5</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>width</string> </key>
+                    <key> <string>width</string> </key>
                     <value> <int>80</int> </value>
                 </item>
               </dictionary>

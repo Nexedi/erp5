@@ -164,7 +164,7 @@
                     <value> <string>BaseTradeProject_FieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Invoiced Customer</string> </value>
                 </item>
               </dictionary>

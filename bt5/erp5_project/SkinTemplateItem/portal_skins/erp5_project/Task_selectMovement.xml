@@ -70,8 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string>kw[\'parent_specialise_portal_type\'] = [\'Order Rule\', \'Delivery Rule\']\n
 kw[\'explanation_portal_type\'] = \'Task\'\n
-kw[\'portal_type\']             = \'Simulation Movement\'\n
-kw[\'simulation_state\']        = \'confirmed\'\n
+kw[\'portal_type\'] = \'Simulation Movement\'\n
+kw[\'simulation_state\'] = \'confirmed\'\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
 \n

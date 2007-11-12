@@ -91,7 +91,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>report_root_list</string> </key>
+                    <key> <string>report_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -106,7 +106,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Project Planning</string> </value>
                 </item>
               </dictionary>
