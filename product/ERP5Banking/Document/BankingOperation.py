@@ -29,6 +29,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Delivery import Delivery
+from Products.ERP5.Document.InventoryLine import InventoryLine
 from Products.ERP5Type.Document.DeliveryCell import DeliveryCell
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Container import Container
@@ -214,3 +215,35 @@ Container.getBaobabSourceProjectUid__roles__ = PermissionRole(Permissions.View)
 
 Container.getBaobabDestinationProjectUid = lambda x: x.getDestinationProjectUid()
 Container.getBaobabDestinationProjectUid__roles__ = PermissionRole(Permissions.View)
+
+
+### Dynamic patch
+InventoryLine.getBaobabSourceUid = lambda x: x.getSourceUid()
+InventoryLine.getBaobabSourceUid__roles__ = PermissionRole(Permissions.View)
+
+InventoryLine.getBaobabDestinationUid = lambda x: x.getDestinationUid()
+InventoryLine.getBaobabDestinationUid__roles__ = PermissionRole(Permissions.View)
+
+InventoryLine.getBaobabSourceSectionUid = lambda x: x.getSourceSectionUid()
+InventoryLine.getBaobabSourceSectionUid__roles__ = PermissionRole(Permissions.View)
+
+InventoryLine.getBaobabDestinationSectionUid = lambda x: x.getDestinationSectionUid()
+InventoryLine.getBaobabDestinationSectionUid__roles__ = PermissionRole(Permissions.View)
+
+InventoryLine.getBaobabSourcePaymentUid = lambda x: x.getSourcePaymentUid()
+InventoryLine.getBaobabSourcePaymentUid__roles__ = PermissionRole(Permissions.View)
+
+InventoryLine.getBaobabDestinationPaymentUid = lambda x: x.getDestinationPaymentUid()
+InventoryLine.getBaobabDestinationPaymentUid__roles__ = PermissionRole(Permissions.View)
+
+InventoryLine.getBaobabSourceFunctionUid = lambda x: x.getSourceFunctionUid()
+InventoryLine.getBaobabSourceFunctionUid__roles__ = PermissionRole(Permissions.View)
+
+InventoryLine.getBaobabDestinationFunctionUid = lambda x: x.getDestinationFunctionUid()
+InventoryLine.getBaobabDestinationFunctionUid__roles__ = PermissionRole(Permissions.View)
+
+InventoryLine.getBaobabSourceProjectUid = lambda x: x.getSourceProjectUid()
+InventoryLine.getBaobabSourceProjectUid__roles__ = PermissionRole(Permissions.View)
+
+InventoryLine.getBaobabDestinationProjectUid = lambda x: x.getDestinationProjectUid()
+InventoryLine.getBaobabDestinationProjectUid__roles__ = PermissionRole(Permissions.View)
