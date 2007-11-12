@@ -446,7 +446,6 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                   ['relation_result_too_long', 'relation_result_ambiguous', 
                    'relation_result_empty',]
 
-  # XXX Do we need to translate here ?
   relation_result_too_long = "Too many documents were found."
   relation_result_ambiguous = "Select appropriate document in the list."
   relation_result_empty = "No such document was found."
