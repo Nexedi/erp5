@@ -35,7 +35,7 @@ except ImportError:
   pass
 
 
-def Localizer_translate(self, domain, msgid, mapping=None, *args, **kw):
+def Localizer_translate(self, domain, msgid, lang=None, mapping=None, *args, **kw):
     """
       This translate() method use Localizer and support catalog aliases.
     """
@@ -58,6 +58,8 @@ def Localizer_translate(self, domain, msgid, mapping=None, *args, **kw):
     for key in ('lang', 'add', 'default'):
       if key in kw:
         params[key] = kw[key]
+    if lang is not None:
+      params['lang'] = lang
     if 'target_language' in kw:
       params['lang'] = kw['target_language']
     translated_str = catalog_obj.gettext(msgid, **params)
