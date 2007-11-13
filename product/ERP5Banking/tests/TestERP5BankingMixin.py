@@ -796,7 +796,8 @@ class TestERP5BankingMixin:
       self.bank_account_inventory = self.bank_account_inventory_module.newContent(id='account_inventory',
                                                                                 portal_type='Bank Account Inventory',
                                                                                 source=None,
-                                                                                destination_value=self.testsite,
+                                                                                site_value=self.testsite,
+                                                                                destination = "account_module/bank_account",
                                                                                 stop_date=DateTime().Date())
 
     account_inventory_line_id = 'account_inventory_line_%s' %(self.account_inventory_number,)
