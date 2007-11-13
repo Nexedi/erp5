@@ -85,7 +85,10 @@ if person_module is not None :\n
                                          object_tag=tag,\n
                                          object_priority=higher_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
-                                         passive_commit=passive_commit)\n
+                                         passive_commit=passive_commit,\n
+                                         start_tree=start_tree,\n
+                                         stop_tree=stop_tree,)\n
+\n
     \n
 print "#### Indexing translations ####"\n
 context.ERP5Site_updateTranslationTable(sql_catalog_id=sql_catalog_id)\n
@@ -107,7 +110,7 @@ context.portal_categories.activate(\n
                                          object_after_tag=object_after_tag,\n
                                          object_priority=higher_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
-                                         passive_commit=passive_commit)\n
+                                         passive_commit=passive_commit,)\n
 \n
 print "#### Indexing alarms ####"\n
 print "#### Indexing preferences ####"\n
@@ -127,7 +130,7 @@ for folder in [context.portal_alarms, context.portal_preferences]:\n
                                            object_after_tag=object_after_tag,\n
                                            object_priority=object_priority,\n
                                            sql_catalog_id=sql_catalog_id,\n
-                                           passive_commit=passive_commit)\n
+                                           passive_commit=passive_commit,)\n
 \n
 # We index simulation first to make sure we can calculate tests\n
 # (ie. related quantity)\n
@@ -147,7 +150,7 @@ context.portal_simulation.activate(\n
                                          object_after_tag=object_after_tag,\n
                                          object_priority=higher_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
-                                         passive_commit=passive_commit)\n
+                                         passive_commit=passive_commit,)\n
 \n
 # We index templates secondly\n
 print "#### Indexing templates ####"\n
@@ -180,7 +183,7 @@ for folder in [context.portal_templates, context.portal_trash,\n
                                            object_after_tag=object_after_tag,\n
                                            object_priority=object_priority,\n
                                            sql_catalog_id=sql_catalog_id,\n
-                                           passive_commit=passive_commit)\n
+                                           passive_commit=passive_commit,)\n
 \n
 # Then we index everything except inventories\n
 for folder in portal.objectValues(("ERP5 Folder",)):\n
@@ -196,7 +199,9 @@ for folder in portal.objectValues(("ERP5 Folder",)):\n
                                      object_after_tag=object_after_tag,\n
                                      object_priority=object_priority,\n
                                      sql_catalog_id=sql_catalog_id,\n
-                                     passive_commit=passive_commit)\n
+                                     passive_commit=passive_commit,\n
+                                     start_tree=start_tree,\n
+                                     stop_tree=stop_tree,)\n
 \n
 # Then we index inventories\n
 object_tag = \'inventory\'\n
@@ -214,7 +219,9 @@ for folder in portal.objectValues(("ERP5 Folder",)):\n
                                      object_after_tag=object_after_tag,\n
                                      object_priority=object_priority,\n
                                      sql_catalog_id=sql_catalog_id,\n
-                                     passive_commit=passive_commit)\n
+                                     passive_commit=passive_commit,\n
+                                     start_tree=start_tree,\n
+                                     stop_tree=stop_tree,)\n
 \n
 # start activty from simulation because the erp5site is not an active object\n
 context.portal_simulation.activate(\n
@@ -261,7 +268,7 @@ return printed\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sql_catalog_id=None, additional_priority=0, passive_commit=1, clear_catalog=0, final_activity_tag=None</string> </value>
+            <value> <string>sql_catalog_id=None, additional_priority=0, passive_commit=1, clear_catalog=0, final_activity_tag=None, start_tree=None, stop_tree=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -281,7 +288,7 @@ return printed\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>7</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -292,6 +299,8 @@ return printed\n
                             <string>passive_commit</string>
                             <string>clear_catalog</string>
                             <string>final_activity_tag</string>
+                            <string>start_tree</string>
+                            <string>stop_tree</string>
                             <string>_print_</string>
                             <string>_print</string>
                             <string>_getattr_</string>
@@ -326,6 +335,8 @@ return printed\n
                 <int>0</int>
                 <int>1</int>
                 <int>0</int>
+                <none/>
+                <none/>
                 <none/>
               </tuple>
             </value>

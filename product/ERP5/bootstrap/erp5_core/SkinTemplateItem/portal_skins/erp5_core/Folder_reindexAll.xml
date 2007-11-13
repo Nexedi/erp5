@@ -122,11 +122,29 @@ except (NotImplementedError, AttributeError):\n
   id_list_list = []\n
   for bundle_index in xrange(len(id_list) / BUNDLE_ITEM_COUNT):\n
     id_list_list.append(id_list[bundle_index * BUNDLE_ITEM_COUNT:((bundle_index + 1) * BUNDLE_ITEM_COUNT)])\n
+\n
   remaining_object_id_count = len(id_list) % BUNDLE_ITEM_COUNT\n
   if remaining_object_id_count > 0:\n
     id_list_list.append(id_list[-remaining_object_id_count:])\n
   Folder_reindexObjectList(id_list_list)\n
-else:\n
+else:  \n
+  if start_tree is not None:\n
+    new_tree_id_list = []  \n
+    for tree_id in tree_id_list:\n
+      if tree_id >= start_tree:\n
+        new_tree_id_list.append(tree_id)\n
+    tree_id_list = new_tree_id_list\n
+    \n
+  if stop_tree is not None:\n
+    new_tree_id_list = []  \n
+    for tree_id in tree_id_list:\n
+      if tree_id < stop_tree:\n
+        new_tree_id_list.append(tree_id)\n
+    tree_id_list = new_tree_id_list\n
+\n
+  if len(tree_id_list) == 0:\n
+    return\n
+        \n
   i = 0\n
 \n
   tree_tag = "%s_tree" % folder_id\n
@@ -183,7 +201,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1</string> </value>
+            <value> <string>folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1, start_tree=None, stop_tree=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -203,7 +221,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -216,6 +234,8 @@ else:\n
                             <string>object_priority</string>
                             <string>sql_catalog_id</string>
                             <string>passive_commit</string>
+                            <string>start_tree</string>
+                            <string>stop_tree</string>
                             <string>context</string>
                             <string>folder</string>
                             <string>activate_kw</string>
@@ -242,6 +262,8 @@ else:\n
                             <string>bundle_index</string>
                             <string>_getitem_</string>
                             <string>remaining_object_id_count</string>
+                            <string>new_tree_id_list</string>
+                            <string>tree_id</string>
                             <string>i</string>
                             <string>tree_tag</string>
                             <string>tree_after_tag</string>
@@ -268,6 +290,8 @@ else:\n
                 <int>1</int>
                 <none/>
                 <int>1</int>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>
