@@ -78,6 +78,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Assignee</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>

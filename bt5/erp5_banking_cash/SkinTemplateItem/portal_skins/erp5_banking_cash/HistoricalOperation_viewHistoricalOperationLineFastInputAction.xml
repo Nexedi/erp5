@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>cash_detail_dict = {\'line_portal_type\'          : \'Cash Delivery Line\'\n
                     , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
-                    , \'cash_status_list\'          : [\'valid\']\n
+                    , \'cash_status_list\'          : [\'valid\', \'new_not_emitted\', \'new_emitted\', \'not_defined\', \'cancelled\']\n
                     , \'emission_letter_list\'      : None\n
                     #, \'emission_letter_list\'      : #  context.Baobab_getUserEmissionLetterList()\n
                     , \'variation_list\'           : context.Baobab_getResourceVintageList(coin=1, banknote=1)\n

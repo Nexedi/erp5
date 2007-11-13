@@ -313,14 +313,16 @@ def split_lines(CD_file_line_list):\n
     # check reference doesn\'t already exist for this resource\n
     movement_container_list = context.portal_catalog(portal_type = "Cash Container Item",\n
                                                      reference = line_container_id,\n
-                                                     destination_uid = destination_uid,\n
+                                                     default_destination_uid = destination_uid,\n
                                                      simulation_state = "!=cancelled")\n
     # if we find container line with same reference, we must\n
     # check the resource defined on line\n
     for same_container in movement_container_list:\n
       same_container = same_container.getObject()\n
       for o in same_container.objectValues():\n
-        if o.getResourceUid() == resourve_value.getUid():\n
+        if o.getResourceUid() == resource_value.getUid():\n
+          #context.log("same containter exist %s" %(o.getPath(), "AURELXXX"))\n
+                      #           raise ValueError, "same containter exist %s" %(o.getPath(),)\n
           return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
 \n
 \n
@@ -460,6 +462,7 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                             <string>create_movement</string>
                             <string>split_head</string>
                             <string>destination_uid</string>
+                            <string>resource_value</string>
                             <string>split_lines</string>
                             <string>None</string>
                             <string>request</string>
@@ -470,7 +473,6 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
                             <string>ValueError</string>
                             <string>destination</string>
                             <string>destination_value</string>
-                            <string>resource_value</string>
                             <string>split_line_result_dict</string>
                           </tuple>
                         </value>
