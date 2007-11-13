@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -79,8 +76,8 @@ recursive method, etc.)\n
 Then take this special list of objects and return a list of special\n
 temp_objects to display as blocks \'as they are\'\n
 """\n
-from Products.ERP5Type.Document import newTempBase\n
-\n
+from Products.ERP5Type.Document import newTempMovement as newTempBase\n
+from string import zfill\n
 \n
 # first recovering methods to apply on tasks\n
 start_property_id = field.get_value(\'x_start_bloc\')\n
@@ -119,9 +116,10 @@ for input_object in input_object_list:\n
     #updating block_size value\n
     block_size = float(block_size) / (block_end - block_begin)\n
     # creating new object\n
-    temp_object = newTempBase(context.getPortalObject(),temp_object_id)\n
+    temp_object = newTempBase(context.getPortalObject(),id=str(temp_object_id), uid =\'new_%s\' % zfill(temp_object_id, 4) )\n
     # editing object with new values\n
-    temp_object.setProperty(start_property_id,block_begin)\n
+    context.log("%s" % (",".join([start_property_id, str(block_begin),stop_property_id, str(block_end),size_property_id, str(block_size)])))\n
+    temp_object.setProperty(start_property_id, block_begin)\n
     temp_object.setProperty(stop_property_id, block_end)\n
     temp_object.setProperty(size_property_id, block_size)\n
     # adding new object to list\n
@@ -139,13 +137,12 @@ for temp_stat in temp_object_list:\n
   block_end   = temp_stat.getProperty(stop_property_id)\n
   block_size  = temp_stat.getProperty(size_property_id)\n
 \n
-  prop_list.append([block_begin, block_size])\n
-  prop_list.append([block_end  ,-block_size])\n
+  prop_list.append([block_begin, float(block_size)])\n
+  prop_list.append([block_end  ,-(float(block_size))])\n
 \n
 \n
 # now sorting list to put start & stop in the right order\n
 prop_list.sort()\n
-\n
 # now building new list of temp object with updated properties\n
 size = 0\n
 temp_stat_object_list = []\n
@@ -161,9 +158,9 @@ for index in range(len(prop_list) - 1):\n
     # size is not null\n
     # building new tempObject\n
     temp_stat_object_id += 1\n
-    temp_stat_object = newTempBase(context.getPortalObject(),temp_object_id)\n
+    temp_stat_object = newTempBase(context.getPortalObject(),str(temp_stat_object_id), uid =\'new_%s\' % zfill(temp_stat_object_id, 4))\n
     # editing object with new values\n
-    temp_stat_object.setProperty(start_property_id,start)\n
+    temp_stat_object.setProperty(start_property_id, start)\n
     temp_stat_object.setProperty(stop_property_id, stop)\n
     temp_stat_object.setProperty(size_property_id, size)\n
     # adding new object to list\n
@@ -229,7 +226,10 @@ return temp_stat_object_list\n
                             <string>REQUEST</string>
                             <string>field</string>
                             <string>Products.ERP5Type.Document</string>
+                            <string>newTempMovement</string>
                             <string>newTempBase</string>
+                            <string>string</string>
+                            <string>zfill</string>
                             <string>_getattr_</string>
                             <string>start_property_id</string>
                             <string>stop_property_id</string>
@@ -245,7 +245,9 @@ return temp_stat_object_list\n
                             <string>block_size</string>
                             <string>float</string>
                             <string>context</string>
+                            <string>str</string>
                             <string>temp_object</string>
+                            <string>_inplacevar_</string>
                             <string>prop_list</string>
                             <string>temp_stat</string>
                             <string>size</string>
