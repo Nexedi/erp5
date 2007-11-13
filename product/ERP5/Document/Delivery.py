@@ -654,36 +654,36 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, rule_id,force=0,**kw):
+    def updateAppliedRule(self, rule_reference, force=0, **kw):
       """
       Create a new Applied Rule if none is related, or call expand
       on the existing one.
 
       The chosen applied rule will be the validated rule with reference ==
-      rule_id, and the higher version number.
+      rule_reference, and the higher version number.
 
-      If no rule is found, simply pass rule_id to _createAppliedRule, as we
-      did previously.
+      If no rule is found, simply pass rule_reference to _createAppliedRule,
+      to keep compatibility vith the previous behaviour
       """
-      if rule_id is None:
+      if rule_reference is None:
         return
 
       portal_rules = getToolByName(self, 'portal_rules')
-      res = portal_rules.searchFolder(reference=rule_id,
+      res = portal_rules.searchFolder(reference=rule_reference,
           validation_state="validated", sort_on='version',
           sort_order='descending') # XXX validated is Hardcoded !
 
       if len(res) > 0:
         rule_id = res[0].getId()
+      else:
+        rule_id = rule_reference
 
-      if (self.getSimulationState() not in \
-                                       self.getPortalDraftOrderStateList()):
+      if (self.getSimulationState() not in
+          self.getPortalDraftOrderStateList()):
         # Nothing to do if we are already simulated
-        self._createAppliedRule(rule_id,force=force,**kw)
+        self._createAppliedRule(rule_id, force=force, **kw)
 
-
-
-    def _createAppliedRule(self, rule_id,force=0,activate_kw=None,**kw):
+    def _createAppliedRule(self, rule_id, force=0, activate_kw=None, **kw):
       """
         Create a new Applied Rule is none is related, or call expand
         on the existing one.
@@ -695,8 +695,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         return
       # Otherwise, expand
       # Look up if existing applied rule
-      my_applied_rule_list = self.getCausalityRelatedValueList(\
-                                            portal_type='Applied Rule')
+      my_applied_rule_list = self.getCausalityRelatedValueList(
+          portal_type='Applied Rule')
       my_applied_rule = None
       if len(my_applied_rule_list) == 0:
         if self.isSimulated(): 
@@ -708,32 +708,31 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           portal_rules = getToolByName(self, 'portal_rules')
           portal_simulation = getToolByName(self, 'portal_simulation')
           my_applied_rule = portal_rules[rule_id].\
-                                      constructNewAppliedRule(portal_simulation)
+              constructNewAppliedRule(portal_simulation)
           # Set causality
           my_applied_rule.setCausalityValue(self)
           # We must make sure this rule is indexed
           # now in order not to create another one later
-          my_applied_rule.reindexObject(activate_kw=activate_kw,**kw)
+          my_applied_rule.reindexObject(activate_kw=activate_kw, **kw)
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
       else:
         raise "SimulationError", 'Delivery %s has more than one applied'\
-                                 ' rule.' % self.getRelativeUrl()
+            ' rule.' % self.getRelativeUrl()
 
       my_applied_rule_id = None
       expand_activate_kw = {}
       if my_applied_rule is not None:
         my_applied_rule_id = my_applied_rule.getId()
-        expand_activate_kw['after_path_and_method_id'] = \
-                (my_applied_rule.getPath(),\
-               ['immediateReindexObject', 'recursiveImmediateReindexObject'])
+        expand_activate_kw['after_path_and_method_id'] = (
+            my_applied_rule.getPath(),
+            ['immediateReindexObject', 'recursiveImmediateReindexObject'])
       # We are now certain we have a single applied rule
       # It is time to expand it
-      self.activate( activate_kw=activate_kw,
-                     **expand_activate_kw
-        ).expand(applied_rule_id=my_applied_rule_id,force=force,
-                 activate_kw=activate_kw,**kw)
+      self.activate(activate_kw=activate_kw, **expand_activate_kw).expand(
+          applied_rule_id=my_applied_rule_id, force=force,
+          activate_kw=activate_kw, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule_id=None, force=0, activate_kw=None,**kw):
