@@ -27,12 +27,6 @@
             <value> <string>SaleOrder_viewDetailedReportOdtContainer</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>application/vnd.oasis.opendocument.text</string> </value>
         </item>

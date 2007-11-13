@@ -50,6 +50,10 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -65,6 +69,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -89,6 +94,14 @@
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_stop_date</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
@@ -109,8 +122,7 @@
                         <string>my_destination_decision_title</string>
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
-                        <string>total_quantity</string>
-                        <string>total_price</string>
+                        <string>my_total_price</string>
                         <string>my_translated_simulation_state_title</string>
                         <string>my_translated_causality_state_title</string>
                       </list>
@@ -129,7 +141,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Task_view</string> </value>
+            <value> <string>TaskReport_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -145,7 +157,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Task</string> </value>
+            <value> <string>Task Report</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

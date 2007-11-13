@@ -155,12 +155,6 @@ else:\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>periodicity_month_day_list=(), periodicity_month_list=(), periodicity_week_list=(), periodicity_stop_date=None, periodicity_week_day_list=(), **kw</string> </value>
         </item>

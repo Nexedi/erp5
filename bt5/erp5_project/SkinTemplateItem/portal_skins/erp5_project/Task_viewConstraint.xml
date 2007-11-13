@@ -50,6 +50,10 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -114,7 +118,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ProjectLine_viewConstraint  External Editor</string> </value>
+            <value> <string>Task_viewConstraint</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -130,7 +134,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Project Constraints</string> </value>
+            <value> <string>Task Constraints</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

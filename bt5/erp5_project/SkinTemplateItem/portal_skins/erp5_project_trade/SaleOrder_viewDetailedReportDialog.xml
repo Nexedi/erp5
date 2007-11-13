@@ -46,12 +46,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value> <string>SaleOrder_viewDetailedReportAsOdt</string> </value>
         </item>

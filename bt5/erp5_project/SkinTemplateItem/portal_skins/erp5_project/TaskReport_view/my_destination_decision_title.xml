@@ -13,12 +13,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>delegated_list</string> </key>
             <value>
               <list/>
@@ -165,7 +159,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradeProject_FieldLibrary</string> </value>
+                    <value> <string>TaskReport_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>

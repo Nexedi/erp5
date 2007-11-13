@@ -13,17 +13,9 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -167,11 +159,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradeProject_FieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Invoiced Customer</string> </value>
+                    <value> <string>Project_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>

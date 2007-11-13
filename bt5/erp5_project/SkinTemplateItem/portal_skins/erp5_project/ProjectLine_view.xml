@@ -95,11 +95,11 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_title</string>
                         <string>listbox_quantity</string>
                         <string>listbox_start_date</string>
                         <string>listbox_stop_date</string>
                         <string>listbox_int_index</string>
+                        <string>listbox_title</string>
                       </list>
                     </value>
                 </item>

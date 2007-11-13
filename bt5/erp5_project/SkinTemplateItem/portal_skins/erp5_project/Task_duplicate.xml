@@ -115,12 +115,6 @@ pasted_task.edit(\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>next_date</string> </value>
         </item>

@@ -65,6 +65,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -86,6 +87,14 @@
                       <list>
                         <string>my_description</string>
                         <string>my_task_line_requirement_logical_path_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_stop_date</string>
                       </list>
                     </value>
                 </item>
@@ -114,7 +123,7 @@
                         <string>my_task_line_quantity</string>
                         <string>my_task_line_quantity_unit</string>
                         <string>my_task_line_price</string>
-                        <string>total_price</string>
+                        <string>my_total_price</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>

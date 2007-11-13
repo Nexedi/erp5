@@ -50,6 +50,10 @@
             <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -62,6 +66,7 @@
             <value>
               <list>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -74,6 +79,15 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_delivery_stop_date</string>
                       </list>
                     </value>
                 </item>
@@ -106,7 +120,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Tasks</string> </value>
+            <value> <string>Task Reports</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

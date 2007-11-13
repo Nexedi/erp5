@@ -117,8 +117,8 @@
                         <string>my_price</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>total_quantity</string>
-                        <string>total_price</string>
+                        <string>my_total_quantity</string>
+                        <string>my_total_price</string>
                       </list>
                     </value>
                 </item>

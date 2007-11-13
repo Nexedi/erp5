@@ -187,7 +187,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradeProject_FieldLibrary</string> </value>
+                    <value> <string>Task_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
