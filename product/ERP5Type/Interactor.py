@@ -1,7 +1,5 @@
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Base import _aq_reset
-import Acquisition
-from Acquisition import aq_parent
 """
   Current implementation uses callable objects.
   Using decorator would be more modern and consistent with
@@ -20,6 +18,10 @@ from Acquisition import aq_parent
 
 
 class InteractorMethodCall:
+  """
+  Method's wrapper used to keep arguments passed, in order to retrieve them
+  from before and after scripts if needed.
+  """
 
   def __init__(self, method, instance, *args, **kw):
     self.instance = instance
