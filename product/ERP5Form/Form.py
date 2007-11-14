@@ -645,7 +645,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         def iterate(obj):
             for i in obj.objectValues():
                 if (i.meta_type=='ERP5 Form' and
-                    i.getId().endswith('FieldLibrary')):
+                    i.getId().endswith('FieldLibrary') and 
+                    '_view' in i.getId()):
                     form_id = i.getId()
                     form_path = '%s.%s' % (obj.getId(), form_id)
                     field_list = []
