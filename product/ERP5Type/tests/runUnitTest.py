@@ -225,6 +225,10 @@ def runUnitTestList(test_list, verbosity=1):
                             os.path.join(instance_home, 'bt5'))
   bt5_test_list = glob(os.path.join(bt5_path, '*', 'TestTemplateItem'))
   sys.path.extend(bt5_test_list)
+  # also suport instance_home/bt5/project_bt5/*
+  project_bt5_test_list = glob(os.path.join(bt5_path, '*', '*', 'TestTemplateItem'))
+  sys.path.extend(project_bt5_test_list)
+
   sys.path.extend((real_tests_home, tests_home))
 
   # Make sure that locally overridden python modules are used
