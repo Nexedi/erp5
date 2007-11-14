@@ -337,7 +337,13 @@ class TestArchive(InventoryAPITestCase):
     path_list = [self.inventory.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.archive_connection_id)
+    # check inventory in archive now
+    self.pref.edit(preferred_archive=archive.getRelativeUrl())
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(100, getInventory(node=self.node.getRelativeUrl()))
 
+    
 
 def test_suite():
   suite = unittest.TestSuite()
