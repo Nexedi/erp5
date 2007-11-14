@@ -1862,8 +1862,11 @@ class BasicGroup:
           block_end = getattr(obj, object_property_end, None)
 
         height_method = getattr(obj, object_height_method, None)
-        if height_method is not None:
-          height = height_method()
+        if callable(height_method):
+          try:
+            height = height_method()
+          except (ConflictError, RuntimeError):
+            raise
 
         # handling case where activity bound is not defined
         if block_begin is None:
