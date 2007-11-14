@@ -2233,6 +2233,8 @@ class Base( CopyContainer,
         'Career': dict(default_career='Default Career'),
         'Payment Condition': dict(default_payment_condition=
                                     'Default Payment Condition'),
+        'Annotation Line': dict(default_annotation_line=
+                                    'Default Annotation Line'),
         'Image': dict(default_image='Default Image'),
         'Purchase Supply Line': dict(purchase_supply_line=
                                     'Default Purchase Supply Line'),
