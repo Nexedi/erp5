@@ -968,8 +968,12 @@ fieldset.bottom .field .input {\n
   bottom: -1px;\n
 }\n
 \n
-.document .actions li a {\n
+.document .actions li {\n
   float: left;\n
+}\n
+\n
+.document .actions li a {\n
+  display: block;\n
   color: inherit;\n
   background: url(\'<dtml-var expr="portal_url()">/images/tab_left.png\') top left no-repeat;\n
   margin: 0;\n
