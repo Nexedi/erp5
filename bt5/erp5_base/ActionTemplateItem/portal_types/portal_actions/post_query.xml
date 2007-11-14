@@ -50,7 +50,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+<string></string>
               </tuple>
             </value>
         </item>
@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: portal.Base_checkCachedPermission(\'query_module\', \'Add portal content\')</string> </value>
+            <value> <string>python: portal.Base_checkPermission(\'query_module\', \'Add portal content\')</string> </value>
         </item>
       </dictionary>
     </pickle>
