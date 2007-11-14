@@ -343,8 +343,15 @@ class TestArchive(InventoryAPITestCase):
     self.tic()
     self.assertEquals(100, getInventory(node=self.node.getRelativeUrl()))
 
-    
+    # check if we unindex an object, it's remove in all catalog:
+    module.manage_delObjects([self.organisation_1.id,])
+    get_transaction().commit()
+    self.tic()
+    path_list = [self.organisation_1.getRelativeUrl()]
+    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
+    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.archive_connection_id)
 
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestArchive))
