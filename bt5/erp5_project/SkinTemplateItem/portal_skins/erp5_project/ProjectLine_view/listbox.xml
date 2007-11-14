@@ -16,13 +16,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
-                <string>sort</string>
                 <string>selection_name</string>
-                <string>portal_types</string>
-                <string>editable_columns</string>
-                <string>report_root_list</string>
                 <string>enabled</string>
               </list>
             </value>
@@ -107,123 +101,24 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>End</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Estimated Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>End</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key>                 <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Project Line</string>
-                          <string>Project Line</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>report_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>parent</string>
-                          <string>Document Tree</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Project_view</string> </value>
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
                     <value> <string>project_selection</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>int_index</string>
-                        </tuple>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>title</string> </key>
-                    <value> <string>Project Lines</string> </value>
                 </item>
               </dictionary>
             </value>

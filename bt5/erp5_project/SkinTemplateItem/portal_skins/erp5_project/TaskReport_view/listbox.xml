@@ -153,16 +153,16 @@
                           <string>Unit</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
                           <string>start_date</string>
                           <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
                           <string>End Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>getTotalPrice</string>
+                          <string>Total Price</string>
                         </tuple>
                       </list>
                     </value>

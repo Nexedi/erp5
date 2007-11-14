@@ -15,15 +15,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>base_category</string>
-                <string>enabled</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_task_line_resource_title</string> </value>
+            <value> <string>my_start_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -60,20 +57,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -82,15 +65,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -101,20 +76,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
-                    <value> <string>task_line_resource</string> </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>resource_module</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>enabled</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_resource_title</string> </value>
+                    <value> <string>my_start_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -126,25 +89,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/Task_isSimpleTask</string> </value>
         </item>
       </dictionary>
     </pickle>
