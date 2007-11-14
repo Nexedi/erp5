@@ -658,13 +658,13 @@ class ContributionTool(BaseTool):
           # IDEA : ajouter l'url en question dans une list "bad_url_list" puis lors du crawling au lieu que de boucler sur 
           #        la liste des url extraites de la page web on fait un test supplementaire qui verifie que l'url n'est pas 
           #        dans la liste bad_url_lis
-          raise urllib2.HTTPError
+          raise
         content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
         return
       except urllib2.URLError, error:
         if repeat == 0:
           # XXX - Call the extendBadURLList method,--NOT Implemented--
-          raise urllib2.URLError
+          raise
         content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
         return
 
@@ -720,7 +720,7 @@ class ContributionTool(BaseTool):
         # here we must call the extendBadURLList method,--NOT Implemented--
         # which had to add this url to bad URL list, so next time we avoid
         # crawling bad URL
-        raise urllib2.HTTPError
+        raise
       # Catch any HTTP error
       self.activate(at_date=DateTime() + 1).newContentFromURL(
                         container_path=container_path, id=id,
@@ -728,7 +728,7 @@ class ContributionTool(BaseTool):
     except urllib2.URLError, error:
       if repeat == 0:
         # XXX - Call the extendBadURLList method, --NOT Implemented--
-        raise urllib2.URLError
+        raise
       print error.reason
       #if getattr(error.reason,'args',None):
         #if error.reason.args[0] == socket.EAI_AGAIN:
