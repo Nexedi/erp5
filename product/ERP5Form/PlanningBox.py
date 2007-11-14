@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005,2007 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Tomas Bernard <thomas@nexedi.com>
+#                    Rafael Monnerat <rafael@nexedi.com>
 #     from an original experimental script written by :
 #                    Jonathan Loriette <john@nexedi.com>
 #
@@ -832,7 +833,7 @@ class PlanningBoxWidget(Widget.Widget):
       required=0)
 
   y_size_block = fields.StringField('y_size_block',
-      title='Specific property to get height of blocks (ex.quantity)',
+      title='Specific Method to set relative height of blocks',
       description='Method for building height of blocks objects',
       default='quantity',
       required=0)
@@ -1827,7 +1828,7 @@ class BasicGroup:
     # specific begin & stop property names for secondary axis
     object_property_begin = self.field.get_value('x_start_bloc')
     object_property_end = self.field.get_value('x_stop_bloc')
-    object_property_height = self.field.get_value('y_size_block')
+    object_height_method = self.field.get_value('y_size_block')
     # specific block text_information methods
     info_center = self.field.get_value('info_center')
     info_topleft = self.field.get_value('info_topleft')
@@ -1842,7 +1843,7 @@ class BasicGroup:
       for activity_content in activity_list:
         # interpreting results and getting begin and end values from
         # previously recovered method
-        block_begin = block_end = None
+        block_begin = block_end = height =None
         obj = activity_content.getObject()
         _marker = []
 
@@ -1860,12 +1861,9 @@ class BasicGroup:
         except AttributeError:
           block_end = getattr(obj, object_property_end, None)
 
-        try:
-          height = obj.getProperty(object_property_height, _marker)
-          if height is _marker:
-            raise AttributeError, object_property_height 
-        except AttributeError:
-          height = getattr(obj, object_property_height, None)
+        height_method = getattr(obj, object_height_method, None)
+        if height_method is not None:
+          height = height_method()
 
         # handling case where activity bound is not defined
         if block_begin is None:
@@ -2430,6 +2428,7 @@ class PlanningStructure:
             axis_stop  = basic_structure.secondary_axis_info['bound_stop']
             axis_range = axis_stop - axis_start
           activity.addBlocs(main_axis_start=0,
+                            height = activity.height,
                             main_axis_stop=self.main_axis.size,
                             secondary_axis_start = axis_start,
                             secondary_axis_stop  = axis_stop,
@@ -2513,7 +2512,7 @@ class Activity:
   def addBlocs(self, main_axis_start=None, main_axis_stop=None,
                secondary_axis_start=None, secondary_axis_stop=None,
                secondary_axis_range=None, planning=None, warning=0,
-               error_block_list=[], error_info_dict={}):
+               error_block_list=[], height=0, error_info_dict={}):
     """
     define list of (begin & stop) values for blocs representing the actual
     activity (can have several blocs if necessary).
