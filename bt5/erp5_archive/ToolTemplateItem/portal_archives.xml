@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Catalog.Tool.ArchiveTool</string>
-          <string>ArchiveTool</string>
-        </tuple>
-        <none/>
+        <global name="ArchiveTool" module="Products.ERP5Catalog.Tool.ArchiveTool"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -19,8 +16,34 @@
             </value>
         </item>
         <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_folder_handler</string> </key>
+            <value> <string>CMFBTreeFolderHandler</string> </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>portal_archives</string> </value>
+        </item>
+        <item>
+            <key> <string>last_id</string> </key>
+            <value> <string>1</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -29,6 +52,28 @@
             </value>
         </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
     </pickle>
   </record>
 </ZopeData>

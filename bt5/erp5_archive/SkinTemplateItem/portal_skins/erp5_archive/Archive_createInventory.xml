@@ -80,17 +80,7 @@ if len(node_uid_list):\n
                                                                      group_by_section=1,\n
                                                                      group_by_node=1,\n
                                                                      connection_id=source_connection_id)\n
-  rq = context.portal_simulation.getCurrentInventoryList(node_uid=node_uid_list,\n
-                                                         at_date=inventory_date,\n
-                                                         group_by_variation=1,\n
-                                                         group_by_resource=1,\n
-                                                         group_by_section=1,\n
-                                                         group_by_node=1,\n
-                                                         src__=1,\n
-                                                         connection_id=source_connection_id)\n
-  \n
-  context.log("node",list(node_inventory_list))\n
-  context.log("request = %s" %rq, "" )\n
+\n
 if len(payment_uid_list):\n
   payment_inventory_list = context.portal_simulation.getCurrentInventoryList(payment_uid=payment_uid_list,\n
                                                                      at_date=inventory_date,\n
@@ -99,12 +89,10 @@ if len(payment_uid_list):\n
                                                                      group_by_section=1,\n
                                                                      group_by_payment=1,\n
                                                                      connection_id=source_connection_id)\n
-  context.log("payment",list(payment_inventory_list))\n
 \n
 inventory_module = context.getPortalObject().archive_inventory_module\n
 node_inventory_dict = {}\n
 for inventory in node_inventory_list:\n
-  context.log("inventory quantity/variation_text/section", ((inventory.total_quantity, inventory.variation_text)))\n
   # Do only one inventory per node\n
   if not node_inventory_dict.has_key(inventory.node_relative_url):\n
     \n
@@ -131,7 +119,6 @@ for inventory in node_inventory_list:\n
   inv_line.getPrice()\n
 \n
   if inventory.variation_text in ("", None):\n
-    context.log("setting quantity on line", inventory.total_quantity)\n
     inv_line.edit(quantity=inventory.total_quantity)\n
   else:\n
     # construct base category list\n
@@ -179,7 +166,6 @@ for inv in node_inventory_dict.values():  \n
 # same for payment uid\n
 payment_inventory_dict = {}\n
 for inventory in payment_inventory_list:\n
-  context.log("inventory quantity/variation_text/section", ((inventory.total_quantity, inventory.variation_text)))\n
   # Do only one inventory per payment\n
   if not payment_inventory_dict.has_key(inventory.payment_uid):\n
     \n
@@ -270,8 +256,6 @@ for inv in payment_inventory_dict.values():  \n
                             <string>len</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>rq</string>
-                            <string>list</string>
                             <string>inventory_module</string>
                             <string>node_inventory_dict</string>
                             <string>_getiter_</string>

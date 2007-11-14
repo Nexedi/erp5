@@ -30,6 +30,12 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>account_node_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>account_uid_list</string> </key>
                                 <value>
                                   <dictionary/>
@@ -43,6 +49,7 @@
                         <value>
                           <list>
 <string>account_uid_list</string>
+<string>account_node_uid</string>
                           </list>
                         </value>
                     </item>
@@ -84,7 +91,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>account_uid_list</string> </value>
+            <value> <string>account_uid_list\r\n
+account_node_uid</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -104,7 +112,7 @@
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>erp5_dest1_sql_connection</string> </value>
+            <value> <string>erp5_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -125,13 +133,17 @@
 select distinct(stock.node_uid) \n
 from stock \n
 where \n
-  stock.payment_uid not in (\n
+  (stock.payment_uid not in (\n
    <dtml-in account_uid_list>\n
     <dtml-unless sequence-start>, </dtml-unless>\n
      <dtml-sqlvar sequence-item type="int">\n
    </dtml-in>\n
    ) \n
-  or stock.payment_uid is NULL
+  or stock.payment_uid is NULL\n
+  or stock.payment_uid = "")\n
+  <dtml-if account_node_uid>\n
+    and stock.node_uid != <dtml-sqlvar account_node_uid type="int" >\n
+  </dtml-if>
 
 ]]></string> </value>
         </item>
@@ -174,13 +186,17 @@ where \n
 select distinct(stock.node_uid) \n
 from stock \n
 where \n
-  stock.payment_uid not in (\n
+  (stock.payment_uid not in (\n
    <dtml-in account_uid_list>\n
     <dtml-unless sequence-start>, </dtml-unless>\n
      <dtml-sqlvar sequence-item type="int">\n
    </dtml-in>\n
    ) \n
-  or stock.payment_uid is NULL
+  or stock.payment_uid is NULL\n
+  or stock.payment_uid = "")\n
+  <dtml-if account_node_uid>\n
+    and stock.node_uid != <dtml-sqlvar account_node_uid type="int" >\n
+  </dtml-if>
 
 ]]></string> </value>
                     </item>

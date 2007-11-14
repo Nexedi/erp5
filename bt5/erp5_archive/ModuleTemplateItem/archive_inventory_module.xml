@@ -571,6 +571,9 @@
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
+  </permission>
   <permission type='tuple'>
    <name>Manage languages</name>
    <role>Manager</role>

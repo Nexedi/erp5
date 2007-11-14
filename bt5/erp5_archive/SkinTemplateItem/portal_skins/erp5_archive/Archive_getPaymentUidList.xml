@@ -104,7 +104,7 @@
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>erp5_dest1_sql_connection</string> </value>
+            <value> <string>erp5_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -131,7 +131,8 @@ where \n
      <dtml-sqlvar sequence-item type="int">\n
    </dtml-in>\n
    ) \n
-  and stock.payment_uid is not NULL
+  and stock.payment_uid is not NULL  \n
+  and stock.payment_uid != ""
 
 ]]></string> </value>
         </item>
@@ -180,7 +181,8 @@ where \n
      <dtml-sqlvar sequence-item type="int">\n
    </dtml-in>\n
    ) \n
-  and stock.payment_uid is not NULL
+  and stock.payment_uid is not NULL  \n
+  and stock.payment_uid != ""
 
 ]]></string> </value>
                     </item>

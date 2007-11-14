@@ -1,3 +1,6 @@
+2007-11-14 Aurel
+* update workflow to defined h:m:s on archive date, many zsql method and script update to take more cases into account
+
 2007-10-25 romain
 * Move Archive Tool frm erp5_core.
 

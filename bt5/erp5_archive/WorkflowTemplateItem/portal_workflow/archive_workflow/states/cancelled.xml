@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.States</string>
-          <string>StateDefinition</string>
-        </tuple>
-        <none/>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -57,7 +54,7 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="PersistentMapping" module="Persistence"/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
         <tuple/>
       </tuple>
     </pickle>

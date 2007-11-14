@@ -66,18 +66,18 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># This script is intended to be call at archive creation\n
-# It will launch one activity per group of 100 node uid in order\n
+# It will launch one activity per group of 10 node uid in order\n
 # to create inventory and same for payment_uid\n
 \n
 account_uid_list = [x.uid for x in context.Archive_getBankAccountUidList()]\n
 node_uid_list = [x.node_uid for x in context.Archive_getNodeUidList(connection_id=source_connection_id,\n
                                                                     account_uid_list=account_uid_list)]\n
 \n
-context.log("node_uid_list", node_uid_list)\n
+#context.log("node_uid_list", node_uid_list)\n
 while len(node_uid_list):\n
-  activity_node_list = node_uid_list[:100]\n
-  node_uid_list = node_uid_list[100:]\n
-  context.portal_simulation.activate(activity="SQLQueue",\n
+  activity_node_list = node_uid_list[:10]\n
+  node_uid_list = node_uid_list[10:]\n
+  context.portal_simulation.activate(activity="SQLQueue", round_robin_scheduling=1,\n
                                      tag=tag).Archive_createInventory(node_uid_list=activity_node_list,\n
                                                                       source_connection_id=source_connection_id,\n
                                                                       destination_sql_catalog_id=destination_sql_catalog_id,\n
@@ -87,11 +87,11 @@ while len(node_uid_list):\n
 payment_uid_list = [x.payment_uid for x in context.Archive_getPaymentUidList(connection_id=source_connection_id,\n
                                                                              account_uid_list=account_uid_list)]\n
 \n
-context.log("payment_uid_list", payment_uid_list)\n
+#context.log("payment_uid_list", payment_uid_list)\n
 while len(payment_uid_list):\n
-  activity_payment_list = payment_uid_list[:100]\n
-  payment_uid_list = payment_uid_list[100:]\n
-  context.portal_simulation.activate(activity="SQLQueue",\n
+  activity_payment_list = payment_uid_list[:10]\n
+  payment_uid_list = payment_uid_list[10:]\n
+  context.portal_simulation.activate(activity="SQLQueue", round_robin_scheduling=1,\n
                                      tag=tag).Archive_createInventory(payment_uid_list=activity_payment_list,\n
                                                                       source_connection_id=source_connection_id,\n
                                                                       destination_sql_catalog_id=destination_sql_catalog_id,\n

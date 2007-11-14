@@ -65,64 +65,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-non_reflected_portal_type = []\n
-item_type_list = context.getPortalItemTypeList()\n
-item_container_type_list = []\n
+            <value> <string>obj = state_change[\'object\']\n
+from DateTime import DateTime\n
+# we set h/m/s on min date and max date\n
+date = obj.getStopDateRangeMax()\n
+if date is not None:\n
+  date = DateTime("%8s 23:59:59" %(date.Date(),))\n
+  obj.setStopDateRangeMax(date)\n
 \n
-log = 0\n
-result = True\n
-\n
-if log:\n
-  context.log("object = %s" %(context,), "archive = %s" %(predicate,))\n
-\n
-# items and their container go in all catalog\n
-ptype = context.getPortalType()\n
-if ptype in item_type_list:\n
-  return True\n
-if ptype in item_container_type_list:\n
-  return True\n
-\n
-if getattr(context, \'getExplanationValue\', None) is not None:\n
-  try:\n
-    explanation_value = context.getExplanationValue()\n
-  except AttributeError:\n
-    context.log("Archive_test, getExplanationValue failed", "obj = %s" %(context,))\n
-    explanation_value = None\n
-  if explanation_value is not None and explanation_value.getPortalType() \\\n
-         in item_container_type_list:\n
-    return True\n
-\n
-# Check Date\n
-if getattr(context, \'getStopDate\', None) is not None:\n
-  max_stop_date = predicate.getStopDateRangeMax()\n
-  min_stop_date = predicate.getStopDateRangeMin()\n
-  if log:\n
-    context.log("obj stop date %s" %context.getStopDate(), "min %s, max %s" %(min_stop_date, max_stop_date))\n
-  if max_stop_date is not None:\n
-    result = result and (context.getStopDate() <= max_stop_date)\n
-  if min_stop_date is not None:\n
-    result = result and (context.getStopDate() >= min_stop_date)\n
-if log:\n
-  context.log("result after date", result)\n
-\n
-# Except those we don\'t want\n
-if ptype not in non_reflected_portal_type:\n
-  # Object not delivery or movement goes in all archive\n
-  result = result or (not(getattr(context, \'isMovement\', 0) or getattr(context, \'isDelivery\', 0)))\n
-  if log:\n
-    context.log(" - result after isMovement/Delivery", "%s" %result)\n
-else:\n
-  result = result and True\n
-  if log:\n
-    context.log(" - result after reflected", "%s" %result)\n
-\n
-# XXX must manage specific case like Applied Rule, where do we want them to go ?\n
-return result\n
-
-
-]]></string> </value>
+date = obj.getStopDateRangeMin()\n
+if date is not None:\n
+  date = DateTime("%8s 23:59:59" %(date.Date(),))\n
+  obj.setStopDateRangeMin(date)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -138,7 +93,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>predicate=None</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -164,22 +119,14 @@ return result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>predicate</string>
-                            <string>non_reflected_portal_type</string>
+                            <string>state_change</string>
+                            <string>kw</string>
+                            <string>_getitem_</string>
+                            <string>obj</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>item_type_list</string>
-                            <string>item_container_type_list</string>
-                            <string>log</string>
-                            <string>True</string>
-                            <string>result</string>
-                            <string>ptype</string>
-                            <string>getattr</string>
+                            <string>date</string>
                             <string>None</string>
-                            <string>explanation_value</string>
-                            <string>AttributeError</string>
-                            <string>max_stop_date</string>
-                            <string>min_stop_date</string>
                           </tuple>
                         </value>
                     </item>
@@ -191,14 +138,12 @@ return result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Archive_test</string> </value>
+            <value> <string>Archive_updateDate</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

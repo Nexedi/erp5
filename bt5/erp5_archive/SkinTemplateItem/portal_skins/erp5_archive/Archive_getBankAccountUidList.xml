@@ -95,7 +95,7 @@
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>erp5_dest1_sql_connection</string> </value>
+            <value> <string>erp5_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>select catalog.uid from catalog where portal_type = "Bank Account"</string> </value>
+            <value> <string>select catalog.uid from catalog where portal_type = "Bank Account" or portal_type = "Account"</string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -147,7 +147,7 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>select catalog.uid from catalog where portal_type = "Bank Account"</string> </value>
+                        <value> <string>select catalog.uid from catalog where portal_type = "Bank Account" or portal_type = "Account"</string> </value>
                     </item>
                   </dictionary>
                 </state>
