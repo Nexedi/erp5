@@ -15,9 +15,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>editable</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -155,10 +153,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key>                 <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
                 <item>
                     <key> <string>extra_context</string> </key>
                     <value>

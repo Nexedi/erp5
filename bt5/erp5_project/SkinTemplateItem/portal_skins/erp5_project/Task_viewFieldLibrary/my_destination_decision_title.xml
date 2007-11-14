@@ -16,11 +16,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
-                <string>default_module</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>portal_type</string>
+                <string>catalog_index</string>
                 <string>items</string>
               </list>
             </value>
@@ -72,7 +71,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -97,7 +96,7 @@
                     <value> <string>title</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>default_module</string> </key>
+                    <key> <string>default_module</string> </key>
                     <value> <string>person_module</string> </value>
                 </item>
                 <item>
@@ -107,6 +106,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key>                 <string>portal_type</string> </key>
@@ -133,7 +138,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Destination Decision</string> </value>
+                    <value> <string>Requested by</string> </value>
                 </item>
               </dictionary>
             </value>

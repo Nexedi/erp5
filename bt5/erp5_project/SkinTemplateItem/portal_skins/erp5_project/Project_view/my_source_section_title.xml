@@ -15,14 +15,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>enabled</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_quantity</string> </value>
+            <value> <string>my_source_section_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -78,16 +76,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_quantity</string> </value>
+                    <value> <string>my_source_section_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>ProjectLine_viewFieldLibrary</string> </value>
+                    <value> <string>Project_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

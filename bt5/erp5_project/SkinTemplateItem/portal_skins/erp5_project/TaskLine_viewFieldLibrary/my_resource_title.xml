@@ -17,7 +17,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>display_width</string>
                 <string>base_category</string>
                 <string>portal_type</string>
                 <string>catalog_index</string>
@@ -106,10 +105,6 @@
                     <value> <string>resource_module</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_relation_field</string> </value>
                 </item>
@@ -134,7 +129,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Resource</string> </value>
+                    <value> <string>Service</string> </value>
                 </item>
               </dictionary>
             </value>

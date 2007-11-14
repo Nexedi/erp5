@@ -111,10 +111,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>int_index</string>
                           <string>Index</string>
                         </tuple>
@@ -154,12 +150,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
                           <string>quantity</string>
-                          <string>Estimated Time</string>
+                          <string>Quantity</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>
@@ -168,10 +160,6 @@
                         <tuple>
                           <string>stop_date</string>
                           <string>End</string>
-                        </tuple>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>int_index</string>
                         </tuple>
                       </list>
                     </value>

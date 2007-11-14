@@ -95,6 +95,8 @@
                     <value>
                       <list>
                         <string>listbox_stop_date</string>
+                        <string>listbox_start_date</string>
+                        <string>listbox_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -103,10 +105,12 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_predecessor_title_list</string>
-                        <string>my_task_line_resource_title</string>
                         <string>my_source_title</string>
+                        <string>my_source_section_title</string>
+                        <string>my_destination_decision_title</string>
+                        <string>my_destination_section_title</string>
                         <string>my_source_project_title</string>
+                        <string>my_destination_title</string>
                         <string>my_trade_condition_title</string>
                       </list>
                     </value>
@@ -117,13 +121,12 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_destination_title</string>
-                        <string>my_destination_section_title</string>
-                        <string>my_destination_decision_title</string>
+                        <string>my_task_line_resource_title</string>
                         <string>my_task_line_quantity</string>
                         <string>my_task_line_quantity_unit</string>
                         <string>my_task_line_price</string>
                         <string>my_total_price</string>
+                        <string>my_price_currency</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>

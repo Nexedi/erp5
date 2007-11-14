@@ -16,8 +16,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>display_width</string>
-                <string>input_style</string>
                 <string>enabled</string>
               </list>
             </value>
@@ -61,11 +59,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>display_width</string> </key>
+                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>enabled</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -79,7 +77,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>input_style</string> </key>
+                    <key> <string>input_style</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -94,10 +92,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>display_width</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
                     <key>                 <string>enabled</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -107,11 +101,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>input_style</string> </key>
-                    <value> <string>-1234.5</string> </value>
+                    <value> <string>TaskLine_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

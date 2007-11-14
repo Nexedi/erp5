@@ -15,12 +15,14 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>enabled</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_requirement_logical_path_list</string> </value>
+            <value> <string>my_int_index</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,8 +78,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_requirement_logical_path_list</string> </value>
+                    <value> <string>my_int_index</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

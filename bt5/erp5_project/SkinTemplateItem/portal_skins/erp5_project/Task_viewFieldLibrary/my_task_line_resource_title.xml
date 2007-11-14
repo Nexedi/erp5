@@ -17,7 +17,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>display_width</string>
                 <string>base_category</string>
                 <string>portal_type</string>
                 <string>catalog_index</string>
@@ -64,19 +63,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
+                    <key> <string>base_category</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>catalog_index</string> </key>
+                    <key> <string>catalog_index</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key>                 <string>enabled</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -90,17 +85,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <key> <string>portal_type</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -123,28 +116,24 @@
                     <value> <string>resource_module</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
-                </item>
-                <item>
                     <key>                 <string>enabled</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_resource_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>TaskLine_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key>                 <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Resource</string>
-                          <string>Resource</string>
+                          <string>Service</string>
+                          <string>Service</string>
                         </tuple>
                       </list>
                     </value>
@@ -155,7 +144,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Resource</string> </value>
+                    <value> <string>Service</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -178,25 +167,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>here/Task_isSimpleTask</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: map( lambda x: (x,x), here.getPortalResourceTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>

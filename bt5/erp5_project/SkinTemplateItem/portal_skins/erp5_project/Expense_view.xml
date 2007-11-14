@@ -94,7 +94,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_source_section_title</string>
                         <string>my_source_section_id</string>
                       </list>

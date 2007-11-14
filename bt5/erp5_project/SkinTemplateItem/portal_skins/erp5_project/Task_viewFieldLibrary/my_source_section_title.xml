@@ -16,12 +16,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
-                <string>default_module</string>
+                <string>base_category</string>
                 <string>portal_type</string>
                 <string>allow_creation</string>
-                <string>base_category</string>
+                <string>catalog_index</string>
               </list>
             </value>
         </item>
@@ -95,7 +94,7 @@
                     <value> <string>title</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>default_module</string> </key>
+                    <key> <string>default_module</string> </key>
                     <value> <string>organisation</string> </value>
                 </item>
                 <item>
@@ -131,7 +130,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Source Section</string> </value>
+                    <value> <string>Billing Supplier</string> </value>
                 </item>
               </dictionary>
             </value>

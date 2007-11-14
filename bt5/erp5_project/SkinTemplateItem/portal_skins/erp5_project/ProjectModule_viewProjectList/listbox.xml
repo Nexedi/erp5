@@ -18,8 +18,10 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
+                <string>all_columns</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -85,6 +87,33 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
+                    <key>                 <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_title</string>
+                          <string>Project Location</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_section_title</string>
+                          <string>Billable Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list/>
@@ -100,19 +129,34 @@
                         </tuple>
                         <tuple>
                           <string>default_destination_title</string>
-                          <string>Real Client</string>
+                          <string>Project Location</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_section_title</string>
-                          <string>Invoiced Client</string>
+                          <string>Billable Client</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Start Date</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>Stop Date</string>
+                          <string>End Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>

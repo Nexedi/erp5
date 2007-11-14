@@ -98,8 +98,6 @@
                         <string>listbox_quantity</string>
                         <string>listbox_start_date</string>
                         <string>listbox_stop_date</string>
-                        <string>listbox_int_index</string>
-                        <string>listbox_title</string>
                       </list>
                     </value>
                 </item>
@@ -107,6 +105,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_int_index</string>
                         <string>my_title</string>
                         <string>my_destination_title</string>
                         <string>my_quantity</string>
@@ -121,7 +120,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_source_trade_title_list</string>
+                        <string>my_source_title_list</string>
                       </list>
                     </value>
                 </item>

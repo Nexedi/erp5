@@ -121,7 +121,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Invoiced Customer</string> </value>
+                    <value> <string>Billable Client</string> </value>
                 </item>
               </dictionary>
             </value>

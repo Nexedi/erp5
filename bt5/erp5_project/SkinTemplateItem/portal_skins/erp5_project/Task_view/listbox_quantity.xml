@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>DateTimeField</string>
+          <string>Products.ERP5Form.ProxyField</string>
+          <string>ProxyField</string>
         </tuple>
         <none/>
       </tuple>
@@ -13,28 +13,22 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_stop_date</string> </value>
+            <value> <string>listbox_quantity</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
             <value>
               <dictionary>
                 <item>
-                    <key> <string>datetime_out_of_range</string> </key>
-                    <value> <string>The date and time you entered were out of range.</string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <string>not_datetime</string> </key>
-                    <value> <string>You did not enter a valid date and time.</string> </value>
-                </item>
-                <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -44,15 +38,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>allow_empty_time</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>ampm_time_style</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -60,19 +46,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>date_only</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>date_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_now</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -88,35 +62,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>end_datetime</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>input_order</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>start_datetime</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>time_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -137,15 +99,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>allow_empty_time</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>ampm_time_style</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -153,19 +107,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>date_only</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>date_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_now</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -181,35 +123,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>end_datetime</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>input_order</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>start_datetime</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>time_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -224,90 +154,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>allow_empty_time</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>ampm_time_style</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>date_only</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>date_separator</string> </key>
-                    <value> <string>/</string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
+                    <key> <string>extra_context</string> </key>
                     <value>
-                      <none/>
+                      <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_now</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_quantity</string> </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>end_datetime</string> </key>
-                    <value>
-                      <none/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>input_order</string> </key>
-                    <value> <string>ymd</string> </value>
-                </item>
-                <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>text</string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>start_datetime</string> </key>
-                    <value>
-                      <none/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>time_separator</string> </key>
-                    <value> <string>:</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Stop Date</string> </value>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>TaskLine_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>

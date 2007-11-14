@@ -16,20 +16,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>lines</string>
-                <string>all_editable_columns</string>
                 <string>title</string>
+                <string>columns</string>
+                <string>all_columns</string>
+                <string>sort</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
                 <string>report_tree</string>
                 <string>report_root_list</string>
-                <string>all_columns</string>
-                <string>selection_name</string>
-                <string>columns</string>
-                <string>Base_viewSearchResultList</string>
-                <string>sort</string>
-                <string>editable_columns</string>
-                <string>list_method</string>
-                <string>list_action</string>
-                <string>portal_types</string>
               </list>
             </value>
         </item>
@@ -91,17 +86,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>Base_viewSearchResultList</string> </key>
+                    <key> <string>Base_viewSearchResultList</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                         <tuple>
                           <string>int_index</string>
                           <string>Index</string>
@@ -134,7 +125,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>all_editable_columns</string> </key>
+                    <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -160,10 +151,6 @@
                     <key>                 <string>columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                         <tuple>
                           <string>int_index</string>
                           <string>Index</string>
@@ -200,43 +187,12 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Estimated Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>End</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>lines</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key>                 <string>list_action</string> </key>
-                    <value> <string>Project_viewLineList</string> </value>
                 </item>
                 <item>
                     <key>                 <string>list_method</string> </key>
@@ -291,7 +247,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Listbox</string> </value>
+                    <value> <string>Tasks</string> </value>
                 </item>
               </dictionary>
             </value>

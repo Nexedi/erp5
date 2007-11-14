@@ -106,7 +106,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_predecessor_title_list</string>
                         <string>my_source_title</string>
                         <string>my_source_project_title</string>
                         <string>my_trade_condition_title</string>

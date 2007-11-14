@@ -16,11 +16,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
-                <string>default_module</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>portal_type</string>
+                <string>catalog_index</string>
               </list>
             </value>
         </item>
@@ -83,14 +82,14 @@
               <dictionary>
                 <item>
                     <key>                 <string>base_category</string> </key>
-                    <value> <string>source</string> </value>
+                    <value> <string>source_trade</string> </value>
                 </item>
                 <item>
                     <key>                 <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>default_module</string> </key>
+                    <key> <string>default_module</string> </key>
                     <value> <string>person</string> </value>
                 </item>
                 <item>

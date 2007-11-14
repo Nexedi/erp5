@@ -117,6 +117,7 @@
                         <string>my_group_title_list</string>
                         <string>my_resource_title</string>
                         <string>my_destination_section_title</string>
+                        <string>my_int_index</string>
                       </list>
                     </value>
                 </item>

@@ -103,8 +103,12 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>source_title</string>
+                          <string>Assigned to</string>
+                        </tuple>
+                        <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Service</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -115,12 +119,16 @@
                           <string>Unit</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
-                          <string>Total Price</string>
+                          <string>start_date</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>End Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>getTotalPrice</string>
+                          <string>Total Price</string>
                         </tuple>
                       </list>
                     </value>
@@ -130,8 +138,16 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
                           <string>stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>

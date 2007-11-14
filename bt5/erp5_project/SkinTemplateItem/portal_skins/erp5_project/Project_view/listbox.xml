@@ -116,10 +116,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>int_index</string>
                           <string>Index</string>
                         </tuple>
@@ -133,15 +129,15 @@
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Begin</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>End Date</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
-                          <string>Estimated Time</string>
+                          <string>Quantity</string>
                         </tuple>
                         <tuple>
                           <string>quantity_unit</string>
@@ -158,10 +154,6 @@
                     <key>                 <string>editable_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
                         <tuple>
                           <string>quantity</string>
                           <string>Estimated Time</string>
