@@ -831,25 +831,29 @@ class ZCatalog(Folder, Persistent, Implicit):
     """ wrapper around catalog """
     if uid is None:
       raise TypeError, "sorry uncatalog_object supports only uid"
+    default_catalog = self.getSQLCatalog()
 
-    archive_list = []
-    if getattr(self, "portal_archives", None) is not None:
-      if len(self.portal_archives):
-        archive_list = self.portal_archives.getArchiveList()
+    if sql_catalog_id is None:
+      archive_list = []
+      if getattr(self, "portal_archives", None) is not None:
+        if len(self.portal_archives):
+          archive_list = self.portal_archives.getArchiveList()
 
-    catalog_id = None
-    if len(archive_list) and sql_catalog_id is None:
-      for archive_path in archive_list:
-        try:
-          archive = self.unrestrictedTraverse(archive_path)
-        except KeyError:
-          continue
-        catalog_id = archive.getCatalogId()
-        self.activate(activity="SQLQueue", round_robin_scheduling=1,
-                      priority=archive.getPriority()).uncatalog_object(uid=uid,path=path,
-                                                                      sql_catalog_id=catalog_id)
+      if len(archive_list):
+        for archive_path in archive_list:
+          try:
+            archive = self.unrestrictedTraverse(archive_path)
+          except KeyError:
+            continue
+          catalog_id = archive.getCatalogId()
+          if catalog_id != default_catalog.id:
+            # only launch activity when not in current catalog
+            self.activate(activity="SQLQueue", round_robin_scheduling=1,
+                          priority=archive.getPriority()).uncatalog_object(uid=uid,path=path,
+                                                                           sql_catalog_id=catalog_id)
+          
     catalog = self.getSQLCatalog(sql_catalog_id)
-    if catalog is not None and catalog_id is None:
+    if catalog is not None:
       catalog.uncatalogObject(uid=uid,path=path)
       if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
