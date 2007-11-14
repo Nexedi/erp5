@@ -1,3 +1,6 @@
+2007-11-14 kazuhiko
+* check if simulation state is draft or not before calling 'calculate' workflow method otherwise causality state can remain calculating.
+
 2007-09-25 yo
 * Set module group on portal types.
 

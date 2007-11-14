@@ -1,3 +1,6 @@
+2007-11-14 kazuhiko
+* check if simulation state is draft or not before calling 'calculate' workflow method otherwise causality state can remain calculating.
+
 2007-10-30 yo
 * Set pricing_interaction_workflow to Container, Container Line, Internal Packing List Line, Inventory Line, Purchase Order Line, Purchase Packing List Line, Returned Sale Packing List Line, Sale Order Line, and Sale Packing List Line.
 

@@ -1,3 +1,6 @@
+2007-11-14 kazuhiko
+* check if simulation state is draft or not before calling 'calculate' workflow method otherwise causality state can remain calculating.
+
 2007-09-20 yo
 * Set Source Project on Task Report, if all lines share the same Source Project.
 * Show Source Project in Task Report Module.
