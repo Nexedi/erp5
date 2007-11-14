@@ -654,7 +654,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, rule_reference, force=0, **kw):
+    def updateAppliedRule(self, rule_reference=None, rule_id=None, force=0,
+                          **kw):
       """
       Create a new Applied Rule if none is related, or call expand
       on the existing one.
@@ -665,6 +666,12 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       If no rule is found, simply pass rule_reference to _createAppliedRule,
       to keep compatibility vith the previous behaviour
       """
+      if rule_id is not None:
+        from warnings import warn
+        warn('rule_id to updateAppliedRule is deprecated; use rule_reference instead',
+             DeprecationWarning)
+        rule_reference = rule_id
+
       if rule_reference is None:
         return
 
