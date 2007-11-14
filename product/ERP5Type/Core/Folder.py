@@ -1207,12 +1207,12 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     # We should also return an error if any
     return error_list
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'asXML' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'asXML')
   def asXML(self, ident=0):
     """
         Generate an xml text corresponding to the content of this object
     """
-    return Folder_asXML(self,ident=ident)
+    return Folder_asXML(self, ident=ident)
 
   # Optimized Menu System
   security.declarePublic('getVisibleAllowedContentTypeList')
@@ -1244,13 +1244,13 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
                             'getObjectIds')
   def getObjectIds(self, *args, **kw):
     return self.objectIds(*args, **kw)
-    
+
   # Overloading
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentSQLExpression' )
-  def getParentSQLExpression(self, table = 'catalog', strict_membership = 0):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getParentSQLExpression')
+  def getParentSQLExpression(self, table='catalog', strict_membership=0):
     """
-      Builds an SQL expression to search children and subclidren
+      Builds an SQL expression to search children and subchildren
     """
     if strict_membership:
       return Base.getParentSQLExpression(self,
