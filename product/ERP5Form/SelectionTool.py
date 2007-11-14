@@ -1423,7 +1423,7 @@ class SelectionPersistentMapping(PersistentMapping):
     oldState = newState
     # dict returned by PersistentMapping.__getstate__ contains the data
     # under '_container' key in zope 2.7 and 'data' in zope 2.8
-    if 'data' in state:
+    if 'data' in oldState:
       oldState['data'].update(savedState['data'])
     else:
       oldState['_container'].update(savedState['_container'])
