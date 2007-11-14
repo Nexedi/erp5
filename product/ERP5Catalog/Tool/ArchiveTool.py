@@ -190,13 +190,14 @@ class ArchiveTool(BaseTool):
     portal_catalog.manage_hotReindexAll(source_sql_catalog_id=source_catalog_id,
                                              destination_sql_catalog_id=destination_sql_catalog_id,
                                              archive_path=archive.getPath(),
-                                             source_sql_connection_id_list=[source_connection_id, source_deferred_connection_id],
-                                             destination_sql_connection_id_list=[destination_connection_id, destination_deferred_connection_id],
+                                             source_sql_connection_id_list=[source_connection_id, \
+                                                                            source_deferred_connection_id],
+                                             destination_sql_connection_id_list=[destination_connection_id, \
+                                                                                 destination_deferred_connection_id],
                                              REQUEST=REQUEST, RESPONSE=RESPONSE)
 
     # Create inventory just before finish of hot reindexing
-    inventory_date = "%s 23:59:59" %str(archive.getStopDateRangeMax().Date())
-    LOG("inventory_date", 300, inventory_date)
+    inventory_date = str(archive.getStopDateRangeMax())
     self.activate(passive_commit=1,
                   after_method_id=('playBackRecordedObjectList'),
                   priority=5).runInventoryMethod(archive.id,
@@ -211,17 +212,18 @@ class ArchiveTool(BaseTool):
       RESPONSE.redirect(URL1 + '/portal_archives?portal_status_message=Archiving%20Started')
 
 
-  def runInventoryMethod(self, archive_id, source_connection_id, destination_sql_catalog_id, inventory_date):
+  def runInventoryMethod(self, archive_id, source_connection_id,
+                         destination_sql_catalog_id, inventory_date):
     """
     Use a specific method to create inventory in order to use
     activity to execute it
     """
-    #destination_sql_catalog = getattr(self.portal_catalog, destination_sql_catalog_id)
     archive = self._getOb(archive_id)
     inventory_method_id = archive.getInventoryMethodId()
     inventory_method = getattr(archive, inventory_method_id, None)
     if inventory_method is not None:
-      inventory_method(source_connection_id, destination_sql_catalog_id, inventory_date, tag='runInventoryMethod')
+      inventory_method(source_connection_id, destination_sql_catalog_id,
+                       inventory_date, tag='runInventoryMethod')
     
 
 InitializeClass(ArchiveTool)
