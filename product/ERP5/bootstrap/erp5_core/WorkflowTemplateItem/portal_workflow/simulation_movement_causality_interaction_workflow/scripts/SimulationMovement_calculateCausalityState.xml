@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -77,8 +74,11 @@ if delivery_movement is not None:\n
   # Because Payment Transaction does not have a causality workflow, we cannot assume that\n
   # getCausalityState will always be present. This getattr test needs to be removed once\n
   # Payment Transaction is linked to a correct causality workflow.\n
-  if getattr(delivery, \'getCausalityState\', None) is not None \\\n
-      and delivery.getCausalityState() != \'draft\':\n
+  getCausalityState = getattr(delivery, \'getCausalityState\', None)\n
+  getSimulationState = getattr(delivery, \'getSimulationState\', None)\n
+\n
+  if getCausalityState is not None and getCausalityState() != \'draft\' and \\\n
+     getSimulationState is not None and getSimulationState() != \'draft\':\n
     delivery.activate(\n
         after_path_and_method_id=(delivery_movement.getPath(),\n
         (\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))).calculate()\n
@@ -150,6 +150,8 @@ if delivery_movement is not None:\n
                             <string>None</string>
                             <string>delivery</string>
                             <string>getattr</string>
+                            <string>getCausalityState</string>
+                            <string>getSimulationState</string>
                           </tuple>
                         </value>
                     </item>
