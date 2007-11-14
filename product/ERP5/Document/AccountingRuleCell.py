@@ -51,9 +51,6 @@ An AccountingRuleCell object allows to add SaleInvoiceTransactionLines into a Ma
                       , PropertySheet.Amount
                       , PropertySheet.Reference
                       , PropertySheet.PaymentCondition
-                      , PropertySheet.ValueAddedTax
-                      , PropertySheet.EcoTax
-                      , PropertySheet.CopyrightTax
                       , PropertySheet.Predicate
                       , PropertySheet.MappedValue
                       )

@@ -56,9 +56,6 @@ class Invoice(AccountingTransaction):
                       , PropertySheet.Amount
                       , PropertySheet.Reference
                       , PropertySheet.TradeCondition
-                      , PropertySheet.ValueAddedTax
-                      , PropertySheet.EcoTax
-                      , PropertySheet.CopyrightTax
                       , PropertySheet.Folder
                       )
 

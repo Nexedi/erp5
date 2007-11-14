@@ -65,9 +65,6 @@ class InvoiceCell(DeliveryCell):
                       , PropertySheet.Price
                       , PropertySheet.Predicate
                       , PropertySheet.MappedValue
-                      , PropertySheet.ValueAddedTax
-                      , PropertySheet.EcoTax
-                      , PropertySheet.CopyrightTax
                       )
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')

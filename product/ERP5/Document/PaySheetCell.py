@@ -66,9 +66,6 @@ class PaySheetCell(InvoiceCell):
                       , PropertySheet.Price
                       , PropertySheet.Predicate
                       , PropertySheet.MappedValue
-                      , PropertySheet.ValueAddedTax
-                      , PropertySheet.EcoTax
-                      , PropertySheet.CopyrightTax
                       )
 
     def getNetConvertedQuantity(self):

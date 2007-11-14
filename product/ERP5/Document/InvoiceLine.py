@@ -68,9 +68,6 @@ class InvoiceLine(DeliveryLine):
                       , PropertySheet.Movement
                       , PropertySheet.Price
                       , PropertySheet.VariationRange
-                      , PropertySheet.ValueAddedTax
-                      , PropertySheet.EcoTax
-                      , PropertySheet.CopyrightTax
                       )
     
     # Cell Related
