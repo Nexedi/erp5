@@ -967,19 +967,22 @@ class TestERP5BankingMixin:
 
 
   def createCashInventory(self, source, destination, currency, line_list=[],extra_id='',
-                          reset_quantity=0):
+                          reset_quantity=0, start_date=None):
     """
     Create a cash inventory group
     """
     # we need to have a unique inventory group id by destination
+
     inventory_group_id = 'inventory_group_%s_%s%s' % \
                          (destination.getParentValue().getUid(),destination.getId(),extra_id)
+    if start_date is None:
+      start_date = DateTime()
     if not hasattr(self, inventory_group_id):
       inventory_group =  self.cash_inventory_module.newContent(id=inventory_group_id,
                                                                portal_type='Cash Inventory Group',
                                                                source=None,
                                                                destination_value=destination,
-                                                               start_date=DateTime())
+                                                               start_date=start_date)
       setattr(self, inventory_group_id, inventory_group)
     else:
       inventory_group = getattr(self, inventory_group_id)
