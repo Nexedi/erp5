@@ -479,7 +479,10 @@ xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
     ooo_builder.updateManifest()
 
     # Produce final result
-    ooo = ooo_builder.render(name=self.title or self.id)
+    if batch_mode:
+      ooo = ooo_builder.render()
+    else:
+      ooo = ooo_builder.render(name=self.title or self.id)
     
     format = opts.get('format', request.get('format', None))
     if format:
@@ -487,9 +490,6 @@ xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
 
     if not format and not batch_mode:
       request.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % self.content_type)
-      request.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s' % self.title_or_id())
-    else:
-      request.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % 'text/html')
       request.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s' % self.title_or_id())
         
     return ooo
@@ -540,8 +540,8 @@ xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
           REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
           REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;filename=%s.pdf' % self.title_or_id())
       return data
-    mime , data = tmp_ooo.convert(format)
-    if REQUEST is not None:
+    mime, data = tmp_ooo.convert(format)
+    if REQUEST is not None and not batch_mode:
       REQUEST.RESPONSE.setHeader('Content-type', mime)
       REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;filename=%s.%s' % (self.title_or_id(),format))
         # FIXME the above lines should return zip format when html was requested
