@@ -95,7 +95,7 @@ from AccessControl.SecurityInfo import ModuleSecurityInfo
 allow_module('Products.ERP5Type.Cache')
 ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'sortValueList', 'convertToUpperCase', 'UpperCase',
-    'convertToMixedCase', 'cartesianProduct', 'sleep')
+    'convertToMixedCase', 'cartesianProduct', 'sleep', 'getCommonTimeZoneList')
 
 allow_module('Products.ERP5Type.Message')
 allow_module('Products.ERP5Type.Error')

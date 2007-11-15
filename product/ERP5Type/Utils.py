@@ -2494,3 +2494,13 @@ def sleep(t=5):
   Wait for a given time
   """
   time.sleep(t)
+
+
+#####################################################
+# Timezones
+#####################################################
+
+def getCommonTimeZoneList():
+  """ Get common (country/capital(major cities) format) timezones list """
+  from pytz import common_timezones
+  return common_timezones
