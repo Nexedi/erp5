@@ -839,6 +839,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     if self._folder_handler == HBTREE_HANDLER:
       return CMFHBTreeFolder.__getattr__(self, name)
     else:
+      if self._tree is None:
+        raise AttributeError, name
       return CMFBTreeFolder.__getattr__(self, name)
     
   def __len__(self):
