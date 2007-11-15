@@ -70,7 +70,7 @@ class BusinessTemplateInfoBase:
 
   def setUpModules(self):
     name = '%s/ModuleTemplateItem/' % self.getPrefix()
-    for i in self.findFileInfosByName(startswith=name):
+    for i in self.findFileInfosByName(startswith=name, endswith='.xml'):
       source = self.readFileInfo(i)
       doc = xml.dom.minidom.parseString(source)
       module_id = doc.getElementsByTagName('id')[0].childNodes[0].data
@@ -145,7 +145,7 @@ class BusinessTemplateInfoBase:
       return handler.data
 
     name = '%s/ActionTemplateItem/portal_types/' % self.getPrefix()
-    for i in self.findFileInfosByName(startswith=name):
+    for i in self.findFileInfosByName(startswith=name, endswith='.xml'):
       portal_type = url2pathname(self.getFileInfoName(i).split('/')[-2])
       if not portal_type in self.actions:
         self.actions[portal_type] = []
