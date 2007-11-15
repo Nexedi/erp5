@@ -33,7 +33,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 from zLOG import LOG
-from testOrder import TestOrderMixin
 from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD
 
 try:
@@ -41,7 +40,7 @@ try:
 except ImportError:
   pass
 
-class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
+class TestImmobilisationMixin(ERP5TypeTestCase):
   run_all_test = 1
   # Different variables used for this test
   item_portal_type = 'Apparel Fabric Item'
@@ -62,6 +61,7 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
   no_amortisation_method = 'eu/no_amortisation'
   diverged = 'diverged'
   solved = 'solved'
+  datetime = DateTime()
   id_transaction = 0
   id_simulation = 0
   reindex_done = 0
@@ -420,6 +420,9 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
         item_id = 'item%i' % i
         item_module.newContent(id=item_id, reference='%i' % i)
 
+  def stepTic(self, sequence=None, sequence_list=None, **kw):
+    self.tic()
+
   def stepPdb(self, sequence=None, sequence_list=None, **kw):
     import pdb;pdb.set_trace()
 
@@ -464,6 +467,12 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     #self.workflow_tool.doActionFor(pl, 'deliver_action', wf_id='packing_list_workflow')
+
+  def stepConfirmAmortisationTransaction(self, sequence=None, sequence_list=None, **kw):
+    for transaction in self.getAccountingModule().objectValues():
+      self.workflow_tool.doActionFor(transaction,
+                                     'confirm_action',
+                                     wf_id='accounting_workflow')
 
   def stepTestItemValidationState(self, sequence=None, sequence_list=None, **kw):
     item = self.getItemModule()['item1']
@@ -3763,6 +3772,8 @@ class TestImmobilisation(TestImmobilisationMixin):
                        AggregateItems \
                        Tic \
                        BuildAccounting \
+                       Tic \
+                       ConfirmAmortisationTransaction \
                        Tic \
                        TestSimpleAccountingBuild \
                        ChangeAccountingPrice \
