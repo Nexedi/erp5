@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 <h3>Queued Activities</h3>
 <p>Warning: Invoking or canceling activities will invoke/cancel all activities with both the same path and the same method_id.</p>
+<p>Warning: Invoking an activity will <b>not</b> run any dependency check.</p>
 <table cellspacing="0" cellpadding="2" border="1">
   <tr>
     <th align="left" valign="top"></th>
