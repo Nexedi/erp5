@@ -448,7 +448,7 @@ class OOoDocument(File, ConversionCacheMixin):
       OOo instances implement conversion to a base format. We should therefore
       use the default accessor.
     """
-    return self.baseHasBaseData()
+    return self._baseHasBaseData()
 
   security.declarePrivate('_convertToBaseFormat')
   def _convertToBaseFormat(self):
