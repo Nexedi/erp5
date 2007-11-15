@@ -2151,7 +2151,20 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
         e_cursor += 1
         #LOG('_testSimulationBuild',0,'wrong movement %s' % wrong_movement)
       if e_found_movement is None:
-        self.fail('No expected movement found for %s' % (c_movement.getRelativeUrl()))
+        import pprint
+        self.fail('No expected movement found for\
+ %s\n\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n%s' % (
+                          c_movement.getRelativeUrl(),
+                          c_movement.getDestination(),
+                          c_movement.getDestinationSection(),
+                          c_movement.getProfitQuantity(),
+                          c_movement.getQuantity(),
+                          c_movement.getResource(),
+                          c_movement.getSource(),
+                          c_movement.getSourceSection(),
+                          c_movement.getStartDate(),
+                          c_movement.getStopDate(),
+                          pprint.pformat(e_simulation_movement_list)))
       e_simulation_movement_list.remove(e_found_movement)
     if len(e_simulation_movement_list) > 0:
       #LOG('More expected movements than calculated ! Remaining expected ones are', 0, e_simulation_movement_list)
