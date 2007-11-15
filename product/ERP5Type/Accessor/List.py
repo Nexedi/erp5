@@ -210,7 +210,7 @@ class DefaultGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, default = None, storage_id=None):
+    def __init__(self, id, key, property_type, default=None, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -227,11 +227,7 @@ class DefaultGetter(Method):
         default = args[0]
       else:
         default = self._default
-        if default and len(default):
-          default = default[0]
-        else:
-          default = None
-      list_value = getattr(instance, self._storage_id, None)
+      list_value = getattr(instance, self._storage_id, default)
       if list_value is not None:
         if self._is_tales_type:
           if kw.get('evaluate', 1):
@@ -240,7 +236,9 @@ class DefaultGetter(Method):
             return list_value
         if len(list_value) > 0:
           return list_value[0]
-      return default
+      if default and len(default):
+        return default[0]
+      return None
 
     psyco.bind(__call__)
 
@@ -277,7 +275,7 @@ class ListGetter(Method):
         default = args[0]
       else:
         default = self._default
-      list_value = getattr(aq_base(instance), self._storage_id, None)
+      list_value = getattr(aq_base(instance), self._storage_id, default)
       # We should not use here self._null but None instead XXX
       if list_value not in self._null:
         if self._is_tales_type:
