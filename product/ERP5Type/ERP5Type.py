@@ -227,15 +227,15 @@ class ERP5TypeInformation( FactoryTypeInformation,
 
         m = getattr(p, self.factory, None)
 
-        if m:
+        if m is not None:
             try:
                 # validate() can either raise Unauthorized or return 0 to
                 # mean unauthorized.
                 permission = self.permission
-                if permission and _checkPermission( permission, container ):
-                    return m
+                if permission and _checkPermission(permission, container):
+                  return m
                 elif getSecurityManager().validate(p, p, self.factory, m):
-                    return m
+                  return m
             except zExceptions_Unauthorized:  # Catch *all* Unauths!
                 pass
 
