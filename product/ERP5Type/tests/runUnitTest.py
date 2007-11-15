@@ -266,7 +266,7 @@ def runUnitTestList(test_list, verbosity=1):
     def run(self, *args, **kw):
       test_method_name = self.id().rsplit('.', 1)[-1]
       for valid_test_method_name_re in test_method_list:
-        if re.match(valid_test_method_name_re, test_method_name):
+        if re.search(valid_test_method_name_re, test_method_name):
           return run_orig(self, *args, **kw)
     profiler.Profiled.__call__ = run
 
