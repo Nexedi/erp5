@@ -89,7 +89,7 @@ total_inventory_list = []\n
 for counter_vault in counter_vault_list:\n
   counter_title = counter_vault[0]\n
   counter_vault_url = counter_vault[1]\n
-  if counter_vault_url==\'\':\n
+  if counter_vault_url in (\'\', None):\n
     continue\n
   counter_title = counter_vault[0]\n
   temp_list = context.CounterModule_getVaultTransactionList(vault=counter_vault_url)\n
