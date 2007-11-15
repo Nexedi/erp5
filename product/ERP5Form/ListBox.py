@@ -909,8 +909,10 @@ class ListBoxRenderer:
           search_alias = '_'.join(search_id.split('.'))
           # If the search field could not be found, try to get an "editable" field on current form.
           editable_field_id = '%s_%s' % (listbox_id, search_alias)
-          if listbox_form.has_field(editable_field_id):
-            search_field = listbox_form.get_field(editable_field_id)
+          if listbox_form.has_field(editable_field_id, include_disabled=1): # We must include disabled fields at this
+                                                                            # stage since there is no way (yet)
+                                                                            # to evalue cell in TALES expressions
+            search_field = listbox_form.get_field(editable_field_id, include_disabled=1)
           else:
             continue
         render_dict = search_field.render_dict(search_value)
@@ -992,8 +994,8 @@ class ListBoxRenderer:
     """
     form = self.getForm()
     editable_field_id = '%s_%s' % (self.getId(), alias)
-    if form.has_field(editable_field_id):
-      return form.get_field(editable_field_id)
+    if form.has_field(editable_field_id, include_disabled=1):
+      return form.get_field(editable_field_id, include_disabled=1)
     return None
 
   def getListMethod(self):
@@ -3257,7 +3259,6 @@ class ListBoxLine:
       Returns the property of a column
     """
     return self.column_dict[column_id]
-
 
   security.declarePublic('getColumnPropertyList')
   def getColumnPropertyList(self, column_id_list = None):
