@@ -78,5 +78,10 @@ class Preference:
       'type'            : 'tokens',
       'default'         : ['plain','html',],
       'mode'            : 'w'},
+    { 'id'              : 'preferred_time_zone',
+      'description'     : 'Preferred timezone',
+      'type'            : 'string',
+      'default'         : '',
+      'mode'            : 'w'},
   )
 
