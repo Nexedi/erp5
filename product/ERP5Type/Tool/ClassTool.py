@@ -86,7 +86,7 @@ class ClassToolMixIn:
   # Declarative Security
   security = ClassSecurityInfo()
 
-  security.declareProtected( Permissions.ManagePortal, 'getPropertySheetPropertyIdList' )
+  security.declareProtected(Permissions.ManagePortal, 'getPropertySheetPropertyIdList')
   def getPropertySheetPropertyIdList(self):
     """
     Returns the sorted list of property IDs defined in the current instance
@@ -104,6 +104,18 @@ class ClassToolMixIn:
     result = result_dict.keys()
     result.sort()
     return result
+
+  security.declareProtected(Permissions.ManagePortal, 'getDocumentationHelper')
+  def getDocumentationHelper(self, class_name, uri, REQUEST=None):
+    """
+    Builds a documentation helper class with given URI and type
+    """
+    from Products.ERP5Type import DocumentationHelper
+    class_object = getattr(DocumentationHelper, class_name)
+    helper = class_object(uri).__of__(self)
+    if REQUEST is not None:
+      return helper.view()
+    return helper
 
 if allowClassTool():
 
@@ -855,13 +867,6 @@ def initialize( context ):
 
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_viewProductGeneration?manage_tabs_message=New+Product+Saved+In+%s' % (self.absolute_url(), base_path))
-
-      security.declareProtected(Permissions.ManagePortal, 'getDocumentationHelper')
-      def getDocumentationHelper(self, uri, helper_class):
-        """
-        Returns a documentation of the appropriate class (helper_class)
-        for a given uri
-        """
 
       security.declareProtected( Permissions.ManagePortal,
                                  'asDocumentationHelper')
