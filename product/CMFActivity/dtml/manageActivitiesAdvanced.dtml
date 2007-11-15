@@ -12,15 +12,26 @@
 </tr>
 <tr>
   <td align="left" valign="top">
-  <p class="form-help">Clearing the activities will remove all entries and
-  create new tables if necessary.
-  </p>
+  <p class="form-help">Recreate activity tables, preserving existing messages.</p>
   </td>
   <td align="right" valign="top">
 <form action="<dtml-var URL1>">
 <input class="form-element" type="submit"
- name="manageClearActivities:method" value=" Clear Activities ">
+ name="manageClearActivities:method" value=" Recreate Tables ">
 </form>
+  </td>
+</tr>
+<tr>
+  <td>
+  <p class="form-help">Recreate activity tables, throwing away all contained messages.</p>
+  </td>
+  <td align="right" valign="top">
+  <form action="<dtml-var URL1>">
+<input type="hidden" name="keep:int" value="0">
+<input class="form-element" type="submit"
+ name="manageClearActivities:method" value=" Clear Activities " style="background-color: #F00">
+</form>
+
   </td>
 </tr>
 </table>
