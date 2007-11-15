@@ -431,7 +431,7 @@ class SQLQueue(RAMQueue):
   def timeShift(self, activity_tool, delay, processing_node = None):
     """
       To simulate timeShift, we simply substract delay from
-      all dates in SQLDict message table
+      all dates in SQLQueue message table
     """
     activity_tool.SQLQueue_timeShift(delay=delay, processing_node=processing_node)
 
