@@ -119,6 +119,14 @@ class Rule(Predicate, XMLObject):
     return context.get(id)
 
   # Simulation workflow
+  def test(self, *args, **kw):
+    """
+    If no test method is defined, return False, to prevent infinite loop
+    """
+    if not self.getTestMethodId():
+      return False
+    return Predicate.test(self, *args, **kw)
+
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, **kw):
     """
