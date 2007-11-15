@@ -13,6 +13,7 @@
 ##############################################################################
 
 from zLOG import LOG, WARNING
+from types import StringTypes
 
 # Make sure Interaction Workflows are called even if method not wrapped
 
@@ -29,11 +30,17 @@ from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.ERP5Type.Cache import CachingMethod
 from sets import ImmutableSet
 
-def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, method_id, args=None, kw=None, transition_list=None):
+def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     '''
     Allows the system to request a workflow action.  This method
     must perform its own security checks.
     '''
+    if type(transition_list) in StringTypes:
+      method_id = transition_list
+    elif len(transition_list) == 1:
+      method_id = transition_list[0]
+    else:
+      raise ValueError('WorkflowMethod should be attached to exactly 1 transition per DCWorkflow instance.')
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
         raise WorkflowException, 'Object is in an undefined state'
@@ -54,7 +61,7 @@ def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, method_id, args=None, kw
             activate_kw = {}
         ob.reindexObject(activate_kw=activate_kw)
 
-def DCWorkflowDefinition_notifyBefore(self, ob, action, args=None, kw=None, transition_list=None):
+def DCWorkflowDefinition_notifyBefore(self, ob, transition_list, args=None, kw=None):
     '''
     Notifies this workflow of an action before it happens,
     allowing veto by exception.  Unless an exception is thrown, either
@@ -63,7 +70,7 @@ def DCWorkflowDefinition_notifyBefore(self, ob, action, args=None, kw=None, tran
     '''
     pass
 
-def DCWorkflowDefinition_notifySuccess(self, ob, action, result, args=None, kw=None, transition_list=None):
+def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=None, kw=None):
     '''
     Notifies this workflow that an action has taken place.
     '''

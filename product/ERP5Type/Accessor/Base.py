@@ -51,11 +51,11 @@ class Setter(Method):
     # This is required to call the method form the Web
     # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
     func_code = func_code()
-    func_code.co_varnames = ('self','value')
+    func_code.co_varnames = ('self', 'value')
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, reindex=1, storage_id=None):
+    def __init__(self, id, key, property_type, storage_id=None, reindex=1):
       self._id = id
       self.__name__ = id
       self._key = key

@@ -51,7 +51,7 @@ class DefaultSetter(Method):
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, reindex=1, storage_id=None):
+    def __init__(self, id, key, property_type, storage_id=None, reindex=1):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -140,7 +140,7 @@ class SetSetter(Method):
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, reindex=1, storage_id=None):
+    def __init__(self, id, key, property_type, storage_id=None, reindex=1):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -227,6 +227,10 @@ class DefaultGetter(Method):
         default = args[0]
       else:
         default = self._default
+        if default and len(default):
+          default = default[0]
+        else:
+          default = None
       list_value = getattr(instance, self._storage_id, None)
       if list_value is not None:
         if self._is_tales_type:
@@ -284,7 +288,9 @@ class ListGetter(Method):
           else:
             return list_value
         return list(list_value)
-      return default
+      if default is None:
+        return None # nothing was defined as default so None is the right value
+      return list(default) # Make sure we return a list rather than a tuple
 
     psyco.bind(__call__)
 

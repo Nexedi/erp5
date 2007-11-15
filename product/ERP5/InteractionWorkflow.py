@@ -18,6 +18,7 @@
 
 import Globals
 import App
+from types import StringTypes
 from AccessControl import getSecurityManager, ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
@@ -195,26 +196,31 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         return
 
     security.declarePrivate('notifyWorkflowMethod')
-    def notifyWorkflowMethod(self, ob, action, args=None, kw=None, transition_list=None):
+    def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
       """
       InteractionWorkflow is stateless. Thus, this function should do nothing.
       """
       return
 
     security.declarePrivate('notifyBefore')
-    def notifyBefore(self, ob, action, args=None, kw=None, transition_list=None):
+    def notifyBefore(self, ob, transition_list, args=None, kw=None):
         '''
         Notifies this workflow of an action before it happens,
         allowing veto by exception.  Unless an exception is thrown, either
         a notifySuccess() or notifyException() can be expected later on.
         The action usually corresponds to a method name.
         '''
-        if not transition_list: return
+        if type(transition_list) in StringTypes:
+          return
+
         # Wrap args into kw since this is the only way
         # to be compatible with DCWorkflow
         # A better approach consists in extending DCWorkflow
-        kw = kw.copy()
-        kw['workflow_method_args'] = args
+        if kw is None:
+          kw = {'workflow_method_args' : args}
+        else:
+          kw = kw.copy()
+          kw['workflow_method_args'] = args
         filtered_transition_list = []
 
         for t_id in transition_list:
@@ -236,11 +242,12 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         return filtered_transition_list
 
     security.declarePrivate('notifySuccess')
-    def notifySuccess(self, ob, action, result, args=None, kw=None, transition_list=None):
+    def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
         '''
         Notifies this workflow that an action has taken place.
         '''
-        if not transition_list: return
+        if type(transition_list) in StringTypes:
+          return
 
         kw = kw.copy()
         kw['workflow_method_args'] = args

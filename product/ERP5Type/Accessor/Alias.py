@@ -43,8 +43,8 @@ class Reindex(Method):
     # This is required to call the method form the Web
     # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
     func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
+    func_code.co_varnames = ('self', 'value') # XXX - This part should be configurable at instanciation
+    func_code.co_argcount = 2
     func_defaults = ()
 
     def __init__(self, id, accessor_id):
@@ -75,6 +75,7 @@ class Dummy(Reindex):
       self._id = id
       self.__name__ = id
       self._accessor_id = accessor_id
+      self.func_code = getattr(instance, self._accessor_id).func_code
 
     def __call__(self, instance, *args, **kw):
       method = getattr(instance, self._accessor_id)
