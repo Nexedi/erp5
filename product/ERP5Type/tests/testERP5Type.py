@@ -307,7 +307,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
               id = category_id,
               title = category_title, )
       category_relative_url = category_object.getRelativeUrl()
-      
+ 
       person_title = "Toto"
       person_id = "toto"
       person_object = self.getPersonModule().newContent(
@@ -315,7 +315,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
               id = person_id,
               title = person_title,)
       person_relative_url = person_object.getRelativeUrl()
-      
+
       def checkRelationSet(self):
         get_transaction().commit()
         person_object.reindexObject()
