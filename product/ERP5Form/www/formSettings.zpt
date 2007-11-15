@@ -15,6 +15,11 @@
       <td><input name="pdf_stylesheet" value="default_pdf_template" type="text" size="20"
                 tal:attributes="value request/pdf_stylesheet | here/pdf_stylesheet | nothing"/></td>
     </tr>
+    <tr>
+      <td class="form-label">PDF Encoding</td>
+      <td><input name="pdf_encoding" value="iso-8859-1" type="text" size="20"
+                tal:attributes="value request/pdf_encoding | here/pdf_encoding | nothing"/></td>
+    </tr>
 
     <tr>
       <td align="left" valign="top">
