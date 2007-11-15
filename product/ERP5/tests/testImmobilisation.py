@@ -2934,7 +2934,7 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
     
     
   def _testAccountingBuild(self, c_transaction_list, e_transaction_list):
-    #self.assertEquals(len(c_transaction_list),len(e_transaction_list))
+    self.assertEquals(len(c_transaction_list), len(e_transaction_list))
     e_removed_list = []
     for c_transaction in c_transaction_list:
       #LOG('c_transaction %s :' % c_transaction, 0, 
@@ -3022,9 +3022,18 @@ class TestImmobilisationMixin(TestOrderMixin, ERP5TypeTestCase):
             key_cursor += 1
           if not wrong_line:
             e_found_line = e_line
+          else:
+            LOG('c_value e_value', 0, (c_value, e_value))
           e_line_cursor += 1
         if e_found_line is None:
-          self.failUnless(e_found_line is not None)
+          import pprint
+          self.fail('Calculated Transaction %s not expected:\n\t source=%s\n\tdestination=%s\n\tquantity=%s\n\tquantity_sign=%s\n%s' % (
+                    c_line.getRelativeUrl(),
+                    c_line.getSource(),
+                    c_line.getDestination(),
+                    c_line.getQuantity(),
+                    c_line.getQuantitySign(),
+                    pprint.pformat(e_line_list)))
         e_line_list.remove(e_found_line)
       if len(e_line_list) > 0:
         self.assertEquals(len(e_line_list),0)
