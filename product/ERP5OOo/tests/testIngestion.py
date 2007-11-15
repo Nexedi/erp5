@@ -108,6 +108,9 @@ class TestIngestion(ERP5TypeTestCase):
     self.createTools()
     self.setSimulatedNotificationScript()
 
+  def beforeTearDown(self):
+    self.portal.portal_caches.clearAllCache()
+
   def createTools(self):
     """
       Set up missing portal_mailin tool.
