@@ -59,7 +59,8 @@ except ImportError:
   psyco = None
 
 try:
-  from Products.ERP5Type.Cache import enableReadOnlyTransactionCache, disableReadOnlyTransactionCache, CachingMethod
+  from Products.ERP5Type.Cache import enableReadOnlyTransactionCache
+  from Products.ERP5Type.Cache import disableReadOnlyTransactionCache, CachingMethod
 except ImportError:
   def doNothing(context):
     pass
@@ -75,16 +76,20 @@ except ImportError:
   disableReadOnlyTransactionCache = doNothing
 
 UID_BUFFER_SIZE = 300
+OBJECT_LIST_SIZE = 300
+MAX_PATH_LEN = 255
 RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit',
                      'format', 'search_mode', 'operator', 'selection_domain', 'selection_report')
 
-valid_method_meta_type_list = ('Z SQL Method', 'LDIF Method', 'Script (Python)')
+valid_method_meta_type_list = ('Z SQL Method', 'LDIF Method', 'Script (Python)') # Nicer
 
-full_text_search_modes = { 'natural': '',
-                           'in_boolean_mode': 'IN BOOLEAN MODE',
-                           'with_query_expansion': 'WITH QUERY EXPANSION' }
+full_text_search_modes = { 'natural': '',                                   # XXX-JPS probably not right place
+                           'in_boolean_mode': 'IN BOOLEAN MODE',            # full_text_search_modes wrong naming
+                           'with_query_expansion': 'WITH QUERY EXPANSION' } # according to ERP5 conventions
+                                                                            # we really need a good grammar
+                                                                            # and some cleanup
 
-manage_addSQLCatalogForm=DTMLFile('dtml/addSQLCatalog',globals())
+manage_addSQLCatalogForm = DTMLFile('dtml/addSQLCatalog',globals())
 
 # Here go uid buffers
 # Structure:
@@ -92,17 +97,17 @@ manage_addSQLCatalogForm=DTMLFile('dtml/addSQLCatalog',globals())
 global_uid_buffer_dict = {}
 
 def manage_addSQLCatalog(self, id, title,
-             vocab_id='create_default_catalog_',
+             vocab_id='create_default_catalog_', # vocab_id is a strange name - not abbreviation
              REQUEST=None):
   """Add a Catalog object
   """
-  id=str(id)
-  title=str(title)
-  vocab_id=str(vocab_id)
+  id = str(id)
+  title = str(title)
+  vocab_id = str(vocab_id)
   if vocab_id == 'create_default_catalog_':
     vocab_id = None
 
-  c=Catalog(id, title, self)
+  c = Catalog(id, title, self)
   self._setObject(id, c)
   if REQUEST is not None:
     return self.manage_main(self, REQUEST,update_menu=1)
@@ -189,7 +194,11 @@ KEYWORD_SEARCH_MODE = 'Keyword'
 
 
 class QueryMixin:
-  
+  """
+    Mixing class which implements methods which are
+    common to all kinds of Queries
+  """
+
   operator = None
   format = None
   type = None
@@ -269,7 +278,7 @@ class QueryMixin:
     """
     raise NotImplementedError
 
-class NegatedQuery(QueryMixin):
+class NegatedQuery(QueryMixin): # XXX Bad name JPS - NotQuery or NegativeQuery is better NegationQuery
   """
     Do a boolean negation of given query.
   """
@@ -288,6 +297,8 @@ class NegatedQuery(QueryMixin):
 
   def getRelatedTableMapDict(self, *args, **kw):
     return self._query.getRelatedTableMapDict(*args, **kw)
+
+  # asSearchTextExpression is still not implemented
 
 allow_class(NegatedQuery)
 
@@ -572,11 +583,11 @@ class ComplexQuery(QueryMixin):
 
 allow_class(ComplexQuery)
 
-class Catalog( Folder,
-               Persistent,
-               Acquisition.Implicit,
-               ExtensionClass.Base,
-               OFS.History.Historical ):
+class Catalog(Folder,
+              Persistent,
+              Acquisition.Implicit,
+              ExtensionClass.Base,
+              OFS.History.Historical):
   """ An Object Catalog
 
   An Object Catalog maintains a table of object metadata, and a
@@ -600,7 +611,7 @@ class Catalog( Folder,
   or search_mode_Table_Key
 
 
-  bgrain defined in meyhods...
+  brain defined in methods...
 
   TODO:
 
@@ -608,7 +619,7 @@ class Catalog( Folder,
       until timeout value or end of transaction
   """
   meta_type = "SQLCatalog"
-  icon='misc_/ZCatalog/ZCatalog.gif' # FIXME: use a different icon
+  icon = 'misc_/ZCatalog/ZCatalog.gif' # FIXME: use a different icon
   security = ClassSecurityInfo()
 
   manage_options = (
@@ -640,7 +651,7 @@ class Catalog( Folder,
      'help': ('OFSP','Ownership.stx'),}
     ) + OFS.History.Historical.manage_options
 
-  __ac_permissions__=(
+  __ac_permissions__= (
 
     ('Manage ZCatalog Entries',
      ['manage_catalogObject', 'manage_uncatalogObject',
@@ -660,7 +671,7 @@ class Catalog( Folder,
      ['searchResults', '__call__', 'uniqueValuesFor',
       'all_meta_types', 'valid_roles',
       'getCatalogSearchTableIds',
-      'getFilterableMethodList', ],
+      'getFilterableMethodList',],
      ['Anonymous', 'Manager']),
 
     ('Import/Export objects',
@@ -1355,7 +1366,7 @@ class Catalog( Folder,
     the site root and zope root are indexable
     """
     zope_root = self.getZopeRoot()
-    site_root = self.getSiteRoot()
+    site_root = self.getSiteRoot() # XXX-JPS - Why don't we use getPortalObject here ?
 
     root_indexable = int(getattr(zope_root, 'isIndexable', 1))
     site_indexable = int(getattr(site_root, 'isIndexable', 1))
@@ -1554,8 +1565,8 @@ class Catalog( Folder,
     objects at a time bloats the process's memory consumption, due to
     caching."""
     # XXX 300 is arbitrary.
-    for i in xrange(0, len(object_list), 300):
-      self._catalogObjectList(object_list[i:i+300], 
+    for i in xrange(0, len(object_list), OBJECT_LIST_SIZE):
+      self._catalogObjectList(object_list[i:i + OBJECT_LIST_SIZE],
                               method_id_list=method_id_list,
                               disable_cache=disable_cache,
                               check_uid=check_uid,
@@ -1577,7 +1588,9 @@ class Catalog( Folder,
     if not self.isIndexable():
       return None
 
-    portal_catalog = self.getSiteRoot().portal_catalog
+    portal_catalog = self.getSiteRoot().portal_catalog # XXX-JPS - This is a hardcoded name. Weird
+                                                       # Isn't self == self.getSiteRoot().portal_catalog
+                                                       # in this case ?
 
     # Reminder about optimization: It might be possible to issue just one
     # query to get enought results to check uid & path consistency.
@@ -1656,7 +1669,7 @@ class Catalog( Folder,
           elif catalog_path is not None:
             # An uid conflict happened... Why?
             # can be due to path length
-            if len(path) > 255:
+            if len(path) > MAX_PATH_LEN:
               LOG('SQLCatalog', WARNING, 'path of object %r is too long for catalog. You should use a shorter path.' %(object,))
 
             object.uid = self.newUid()
@@ -1666,6 +1679,7 @@ class Catalog( Folder,
     if method_id_list is None:
       method_id_list = self.sql_catalog_object_list
     econtext_cache = {}
+    expression_result_cache = {}
     argument_cache = {}
 
     try:
@@ -1678,20 +1692,43 @@ class Catalog( Folder,
         if self.isMethodFiltered(method_name):
           catalogged_object_list = []
           type_list = self.filter_dict[method_name]['type']
+          type_dict = dict(zip(type_list, type_list)) or None
           expression = self.filter_dict[method_name]['expression_instance']
+          expression_cache_key_list = self.filter_dict[method_name].get('expression_cache_key', '').split()
           for object in object_list:
             # We will check if there is an filter on this
             # method, if so we may not call this zsqlMethod
             # for this object
-            if type_list and object.getPortalType() not in type_list:
+            if type_dict is not None and object.getPortalType() not in type_dict:
               continue
             elif expression is not None:
-              try:
-                econtext = econtext_cache[object.uid]
-              except KeyError:
-                econtext = self.getExpressionContext(object)
-                econtext_cache[object.uid] = econtext
-              result = expression(econtext)
+              if expression_cache_key_list:
+                # We try to save results of expressions by portal_type
+                # or by anyother key which can prevent us from evaluating
+                # expressions. This cache is built each time we reindex
+                # objects but we could also use over multiple transactions
+                # if this can improve performance significantly
+                try:
+                  cache_key = map(lambda key: object.getProperty(key, None), expression_cache_key_list)
+                    # ZZZ - we could find a way to compute this once only
+                  cache_key = (method_name, tuple(cache_key))
+                  result = expression_result_cache[cache_key]
+                  compute_result = 0
+                except KeyError:
+                  cache_result = 1
+                  compute_result = 1
+              else:
+                cache_result = 0
+                compute_result = 1
+              if compute_result:
+                try:
+                  econtext = econtext_cache[object.uid]
+                except KeyError:
+                  econtext = self.getExpressionContext(object)
+                  econtext_cache[object.uid] = econtext
+                result = expression(econtext)
+              if cache_result:
+                expression_result_cache[cache_key] = result
               if not result:
                 continue
             catalogged_object_list.append(object)
@@ -1733,9 +1770,7 @@ class Catalog( Folder,
             append(value)
           kw[arg] = value_list
 
-      for method_name in method_id_list:
-        if method_name not in method_kw_dict:
-          continue
+      for method_name in method_kw_dict.keys():
         kw = method_kw_dict[method_name]
         method = getattr(self, method_name)
         method = aq_base(method).__of__(portal_catalog) # Use method in
@@ -2514,9 +2549,11 @@ class Catalog( Folder,
         # We will first look if the filter is activated
         if not self.filter_dict.has_key(id):
           self.filter_dict[id] = PersistentMapping()
-          self.filter_dict[id]['filtered']=0
-          self.filter_dict[id]['type']=[]
-          self.filter_dict[id]['expression']=""
+          self.filter_dict[id]['filtered'] = 0
+          self.filter_dict[id]['type'] = []
+          self.filter_dict[id]['expression'] = ""
+          self.filter_dict[id]['expression_cache_key'] = "portal_type"
+
         if REQUEST.has_key('%s_box' % id):
           self.filter_dict[id]['filtered'] = 1
         else:
@@ -2542,6 +2579,15 @@ class Catalog( Folder,
           self.filter_dict[id]['type'] = list_type
         else:
           self.filter_dict[id]['type'] = []
+
+        if REQUEST.has_key('%s_expression_cache_key' % id):
+          expression_cache_key = REQUEST['%s_expression_cache_key' % id]
+          if expression_cache_key == "":
+            self.filter_dict[id]['expression_cache_key'] = expression_cache_key
+          else:
+            self.filter_dict[id]['expression_cache_key'] = ""
+        else:
+          self.filter_dict[id]['expression_cache_key'] = ""
 
     if RESPONSE and URL1:
       RESPONSE.redirect(URL1 + '/manage_catalogFilter?manage_tabs_message=Filter%20Changed')
@@ -2575,6 +2621,20 @@ class Catalog( Folder,
         return ""
     return ""
 
+  def getExpressionCacheKey(self, method_name):
+    """ Get the key string which is used to cache results
+        for the given expression.
+    """
+    if withCMF:
+      if getattr(aq_base(self), 'filter_dict', None) is None:
+        self.filter_dict = PersistentMapping()
+        return ""
+      try:
+        return self.filter_dict[method_name]['expression_cache_key']
+      except KeyError:
+        return ""
+    return ""
+
   def getExpressionInstance(self, method_name):
     """ Get the filter expression instance for this method.
     """
@@ -2601,6 +2661,19 @@ class Catalog( Folder,
         return 0
     return 0
 
+  def getFilteredPortalTypeList(self, method_name):
+    """ Returns the list of portal types which define
+        the filter.
+    """
+    if withCMF:
+      if getattr(aq_base(self), 'filter_dict', None) is None:
+        self.filter_dict = PersistentMapping()
+        return []
+      try:
+        return self.filter_dict[method_name]['type']
+      except KeyError:
+        return []
+    return []
 
   def getFilterableMethodList(self):
     """
@@ -2644,6 +2717,3 @@ Globals.default__class_init__(Catalog)
 
 class CatalogError(Exception): pass
 
-
-
-# vim: filetype=python syntax=python shiftwidth=2

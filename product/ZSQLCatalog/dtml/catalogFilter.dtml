@@ -44,6 +44,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                         <dtml-if expr="isMethodFiltered(id)">checked</dtml-if> value="1">
         </td>
       </tr>
+      <dtml-if expr="getFilteredPortalTypeList(method_id)">
       <tr>
         <td align="left" valign="top">
         Portal Type <select size="5" multiple="multiple" name="<dtml-var id>_type">
@@ -53,10 +54,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         </select>
         </td>
       </tr>
+      </dtml-if>
       <tr>
         <td align="left" valign="top">
         Expression <input type="text" name="<dtml-var id>_expression" size="20"
                          value="<dtml-var expr="getExpression(id)">">
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top">
+        Expression Cache Key(s) <input type="text" name="<dtml-var id>_expression_cache_key" size="20"
+                         value="<dtml-var expr="getExpressionCacheKey(id)">">
         </td>
       </tr>
 
