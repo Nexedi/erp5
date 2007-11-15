@@ -1,25 +1,38 @@
 from Acquisition import Implicit
-from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Base import WorkflowMethod
+from Products.ERP5Type import Permissions
 
 class DocumentationSection(Implicit):
 
-  def __init__(self, id, title, class_name, uri):
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  def __init__(self, id, title, class_name, uri_list):
     self.id = id
     self.title = title
     self.class_name = class_name
-    self.uri = uri
+    self.uri_list = uri_list
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getClassName')
+  def getClassName(self):
+    return self.class_name
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getURIList')
+  def getURIList(self):
+    return self.uri_list
 
   # more API needed XXX
+
+InitializeClass(DocumentationSection)
 
 class DocumentationHelper(Implicit):
   """
     Example URIs
-    
+
     person_module/23
     person_module/23#title
     person_module/23#getTitle
@@ -31,9 +44,41 @@ class DocumentationHelper(Implicit):
     portal_types/Person
     portal_types/Person/actions#view
   """
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
   # Methods to override
   def __init__(self, uri):
-    raise NotImplemented
+    self.uri = uri
+
+  def getDocumentedObject(self):
+    from zLOG import LOG
+    if '/' in self.uri:
+      # URI refers to a portal object
+      # and is a relative URL
+      documented_object = self.getPortalObject().portal_categories.resolveCategory(uri)
+    else:
+      # URI refers to a python class / method
+      import imp
+      module_list = self.uri.split('.')
+      LOG('module_list', 0, repr(module_list))
+      LOG('uri', 0, repr(self.uri))
+      base_module = module_list[0]
+      if base_module == 'Products':
+        # For now, we do not even try to import
+        # or locate objects which are not in Products
+        import Products
+        documented_object = Products
+        for key in module_list[1:]:
+          LOG('loop in module_list', 0, repr(documented_object))
+          documented_object = getattr(documented_object, key)
+      else:
+        raise NotImplemented
+        # fp, pathname, description = imp.find_module(base_module)
+        # documented_object = imp.load_module(fp, pathname, description)
+
+    LOG('documented_object', 0, repr(documented_object))
+    return documented_object
 
   def getTitle(self):
     """
@@ -49,33 +94,42 @@ class DocumentationHelper(Implicit):
     """
     raise NotImplemented
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
   def getSectionList(self):
     """
     Returns a list of documentation sections
     """
     raise NotImplemented
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getURI')
   def getURI(self):
     """
     Returns a URI to later access this documentation
     from portal_classes
     """
-    raise NotImplemented
+    return self.uri
 
   # Generic methods which all subclasses should inherit
-  def getClass(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getClassName')
+  def getClassName(self):
     """
     Returns our own class name
     """
-    return self.__class__
+    return self.__class__.__name__
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'view')
   def view(self):
     """
     Renders the documentation with a standard form
     ex. PortalTypeInstanceDocumentationHelper_view
     """
-    return getattr(self, '%s_view' % self.__class__)()
+    return getattr(self, '%s_view' % self.getClassName())()
 
+  security.declareProtected(Permissions.AccessContentsInformation, '__call__')
+  def __call__(self):
+    return self.view()
+
+InitializeClass(DocumentationHelper)
 
 class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
   """
@@ -87,49 +141,62 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def __init__(self, uri):
-    self.instance = self.getPortalObject().restrictedTraverse(uri)
+    self.instance_uri = uri
+
+  def getInstance(self):
+    return self.getPortalObject().restrictedTraverse(self.instance_uri)
 
   # API Implementation
+  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return instance.getTitleOrId()
+    return self.getInstance().getTitleOrId()
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
     """
     Returns the type of the documentation helper
     """
-    return instance.getPortalType()
+    return "Portal Type Instance"
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
   def getSectionList(self):
     """
     Returns a list of documentation sections
     """
     return [
+      #DocumentationSection(
+        #id='instance_property',
+        #title='Instance Properties',
+        #class_name='InstancePropertyDocumentationHelper',
+        #uri_list=self.getClassPropertyURIList(),
+      #),
+      #DocumentationSection(
+        #id='accessor',
+        #title='Accessors',
+        #class_name='AccessorDocumentationHelper',
+        #uri_list=self.getClassPropertyURIList(),
+      #),
       DocumentationSection(
-        id='instance_property',
-        title='Instance Properties',
-        class_name='InstancePropertyDocumentationHelper',
-        uri=self.getClassPropertyURIList(),
-      ),
-      DocumentationSection(
-        id='accessor',
-        title='Accessors',
-        class_name='AccessorDocumentationHelper',
-        uri=self.getClassPropertyURIList(),
-      ),
+        id='class_method',
+        title='Class Methods',
+        class_name='ClassMethodDocumentationHelper',
+        uri_list=self.getClassMethodURIList(inherited=0),
+      ).__of__(self.getInstance()),
     ]
 
   # Specific methods
+  security.declareProtected( Permissions.AccessContentsInformation, 'getPortalType' )
   def getPortalType(self):
     """
     """
-    return self.instance.getPortalType()
+    return self.getInstance().getPortalType()
 
   def _getPropertyHolder(self):
     from Products.ERP5Type.Base import Base
-    return Base.aq_portal_type[self.getPortalType()]
+    return Base.aq_portal_type[(self.getPortalType(), self.getInstance().__class__)]
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getAccessorMethodItemList' )
   def getAccessorMethodItemList(self):
@@ -172,7 +239,7 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     """
     Return a list of tuple (id, method) for every class method
     """
-    klass = self.instance.__class__
+    klass = self.getInstance().__class__
     return self._getPropertyHolder().getClassMethodItemList(klass, inherited=inherited, local=local)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getClassMethodIdList' )
@@ -180,15 +247,27 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     """
     Return a list of tuple (id, method) for every class method
     """
-    klass = self.instance.__class__
+    klass = self.getInstance().__class__
     return self._getPropertyHolder().getClassMethodIdList(klass, inherited=inherited, local=local)
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getClassMethodURIList' )
+  def getClassMethodURIList(self, inherited=1, local=1):
+    """
+    Returns a list of URIs to class methods
+    """
+    method_id_list = self.getClassMethodIdList(inherited=inherited, local=local)
+    klass = self.getInstance().__class__
+    class_name = klass.__name__
+    module = klass.__module__
+    uri_prefix = '%s.%s.' % (module, class_name)
+    return map(lambda x: '%s%s' % (uri_prefix, x), method_id_list)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getClassPropertyItemList' )
   def getClassPropertyItemList(self, inherited=1, local=1):
     """
     Return a list of tuple (id, method) for every class method
     """
-    klass = self.instance.__class__
+    klass = self.getInstance().__class__
     return self._getPropertyHolder().getClassPropertyItemList(klass, inherited=inherited, local=local)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getClassPropertyIdList' )
@@ -196,13 +275,15 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     """
     Return a list of tuple (id, method) for every class method
     """
-    klass = self.instance.__class__
+    klass = self.getInstance().__class__
     return self._getPropertyHolder().getClassPropertyIdList(klass, inherited=inherited, local=local)
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'getGeneratedPropertyIdList' )
   def getGeneratedPropertyIdList(self):
     """
     """
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'getGeneratedBaseCategoryIdList' )
   def getGeneratedBaseCategoryIdList(self):
     """
     """
@@ -220,6 +301,34 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
 class ClassDocumentationHelper(DocumentationHelper):
   """
   """
+
+class ClassMethodDocumentationHelper(DocumentationHelper):
+  """
+    Provides documentation about a class method
+  """
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
+  def getDescription(self):
+    return self.getDocumentedObject().__doc__
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  def getType(self):
+    """
+    Returns the type of the documentation helper
+    """
+    return "Class Method"
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
+  def getTitle(self):
+    """
+    Returns the type of the documentation helper
+    """
+    return self.getDocumentedObject().__name__
+
+
+InitializeClass(ClassMethodDocumentationHelper)
 
 class CallableDocumentationHelper(DocumentationHelper):
   """
