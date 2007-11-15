@@ -82,7 +82,7 @@ class POSBoxWidget(Widget.Widget):
     "Page Template for generating POSBox UI HTML"),
                                 default="POSBox",
                                 required=1)
-                                
+
   javascript_ZPT = fields.StringField(
                                 'javascript_ZPT',
                                 title='Page Template for JavaScript',
@@ -98,10 +98,10 @@ class POSBoxWidget(Widget.Widget):
       "Page Template for generating dynamic CSS"),
                                 default="POSBox_css",
                                 required=1)
-  
+
   getResourceByReference_ZPT = fields.StringField(
                                 'getResourceByReference_ZPT',
-		    		                    title="Page Template for generating resource's XML",
+                                title="Page Template for generating resource's XML",
                                 description=(
     "Page template which generates the XML of the resource when asking for a referencce"),
                                 default="getResourceByReference",
