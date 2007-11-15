@@ -442,6 +442,14 @@ class OOoDocument(File, ConversionCacheMixin):
       archive_file.close()
 
   # Base format implementation
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  def hasBaseData(self):
+    """
+      OOo instances implement conversion to a base format. We should therefore
+      use the default accessor.
+    """
+    return self.baseHasBaseData()
+
   security.declarePrivate('_convertToBaseFormat')
   def _convertToBaseFormat(self):
     """
