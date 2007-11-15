@@ -136,12 +136,25 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # filter content types to add inside Person.
       self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
 
+      # turn on Person.acquire_local_roles only for test_22_securityReindex.
+      if str(self).startswith('test_22_securityReindex'):
+        person = self.getTypesTool().getTypeInfo('Person')
+        self.person_acquire_local_roles = person.acquire_local_roles
+        person.acquire_local_roles = True
+        self.portal.portal_caches.clearAllCache()
+
     def beforeTearDown(self):
       get_transaction().abort()
       for module in [ self.getPersonModule(),
                       self.getOrganisationModule(),
                       self.getCategoryTool().region ]:
         module.manage_delObjects(list(module.objectIds()))
+
+      # turn off Person.acquire_local_roles only for test_22_securityReindex.
+      if str(self).startswith('test_22_securityReindex'):
+        self.getTypesTool().getTypeInfo('Person').acquire_local_roles = self.person_acquire_local_roles
+        self.portal.portal_caches.clearAllCache()
+
       get_transaction().commit()
       self.tic()
 
@@ -1167,7 +1180,9 @@ class TestPropertySheet:
 
     def test_22_securityReindex(self, quiet=quiet, run=run_all_test):
       """
-      Tests that the security is reindexed when a role is changed on an object
+      Tests that the security is reindexed when a role is changed on an object.
+      
+      Note: Turn on Person.acquire_local_roles to 0 in afterSetUp.
       """
       if not run: return
       from AccessControl import getSecurityManager
