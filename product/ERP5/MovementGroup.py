@@ -448,6 +448,7 @@ class QuantitySignMovementGroup(RootMovementGroup):
       return 1
     if self.sign == 0:
       self.sign = sign
+      self.setGroupEdit(quantity_sign=self.sign)
       return 1
     return self.sign == sign
 
