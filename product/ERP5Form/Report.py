@@ -66,7 +66,7 @@ def addERP5Report(self, id, title="", REQUEST=None):
     # respond to the add_and_edit button if necessary
     add_and_edit(self, id, REQUEST)
     return ''
-    
+
 class ERP5Report(ERP5Form):
     """
         An ERP5Form which allows to aggregate a list of 
@@ -113,7 +113,7 @@ class ERP5Report(ERP5Form):
 
     # Default Attributes
     report_method = None
-    
+
     # Special Settings
     settings_form = create_settings_form()
 
@@ -178,7 +178,7 @@ def manage_add_report(self, id, title="", unicode_mode=0, REQUEST=None):
 
 class ReportSection:
   """ A section in an ERP5Report.
-  
+
   ERP5 Reports are made of sections, which are some standards ERP5 Forms
   rendered in a single document.
   To create a report section, you have to define which object will be
@@ -188,15 +188,22 @@ class ReportSection:
   """
   meta_type = "ReportSection"
   security = ClassSecurityInfo()
-  
-  param_dict = {}
 
-  def __init__(self, path='', form_id='',
-                     title=None, translated_title=None, level=1,
-                     selection_name=None, selection_params=None,
-                     listbox_display_mode=None, selection_columns=None,
+  def __init__(self, path='',
+                     form_id='',
+                     method_id=None,
+                     title=None, 
+                     translated_title=None, 
+                     level=1,
+                     param_list=None,
+                     param_dict=None,
+                     selection_name=None, 
+                     selection_params=None,
+                     listbox_display_mode=None, 
+                     selection_columns=None,
                      selection_sort_order=None,
-                     selection_report_path=None, selection_report_list=None):
+                     selection_report_path=None,
+                     selection_report_list=None):
     """
       Initialize the line and set the default values
       Selected columns must be defined in parameter of listbox.render...
@@ -205,7 +212,7 @@ class ReportSection:
         selection_report_path, the root category for this report 
         selection_report_list, the list of unfolded categories (defaults to all)      
     """
-    
+
     self.path = path
     self.form_id = form_id
     self.title = title
@@ -223,7 +230,10 @@ class ReportSection:
     self.selection_report_path = selection_report_path
     self.selection_report_list = selection_report_list
     self.saved_request_form = {}
-    
+    self.param_dict = param_dict or {}
+    self.param_list = param_list or []
+    self.method_id = method_id
+
   security.declarePublic('getTitle')
   def getTitle(self):
     return self.title
@@ -243,26 +253,30 @@ class ReportSection:
 
   security.declarePublic('getObject')
   def getObject(self, context):
-    return context.getPortalObject().restrictedTraverse(self.path)
+    object = context.getPortalObject().restrictedTraverse(self.path)
+    if self.method_id is not None:
+
+      object = getattr(object, self.method_id)(*self.param_list, **self.param_dict)
+    return object
 
   security.declarePublic('getFormId')
   def getFormId(self):
     return self.form_id
-  
+
   _no_parameter_ = []
-    
+
   security.declarePublic('pushReport')
   def pushReport(self, context):
     REQUEST = get_request()
     for k,v in self.param_dict.items():
       self.saved_request[k] = REQUEST.form.get(k, self._no_parameter_)
       REQUEST.form[k] = v
-    
+
     portal_selections = context.portal_selections
     selection_list = [self.selection_name]
-    if self.form_id and hasattr(context[self.form_id], 'listbox') :
+    if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
       selection_list += [
-          context[self.form_id].listbox.get_value('selection_name') ]
+          context[self.getFormId()].listbox.get_value('selection_name') ]
     # save report's selection and orignal form's selection,
     #as ListBox will overwrite it
     for selection_name in selection_list :
@@ -311,7 +325,7 @@ class ReportSection:
 
     self.saved_request_form = REQUEST.form
     REQUEST.form = {}
-    
+
   security.declarePublic('popReport')
   def popReport(self, context):
     REQUEST = get_request()
@@ -320,12 +334,12 @@ class ReportSection:
         del REQUEST.form[k]
       else:
         REQUEST.form[k] = self.saved_request[k]
-    
+
     portal_selections = context.portal_selections
     selection_list = []
-    if self.form_id and hasattr(context[self.form_id], 'listbox') :
+    if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
       selection_list += [
-                context[self.form_id].listbox.get_value('selection_name') ]
+                context[self.getFormId()].listbox.get_value('selection_name') ]
     selection_list += [self.selection_name]
     # restore report then form selection
     for selection_name in selection_list:
@@ -363,9 +377,8 @@ class ReportSection:
           portal_selections.setSelectionSortOrder(selection_name,
                       self.saved_selections[selection_name]['sort_order'],
                       REQUEST=REQUEST)
-    
+
     REQUEST.form = self.saved_request_form
 
 InitializeClass(ReportSection)
 allow_class(ReportSection)
-
