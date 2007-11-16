@@ -235,8 +235,11 @@ class Predicate(XMLObject, Folder):
                                           strict_membership=strict_membership,
                                           table=table_alias,
                                           base_category=base_category))
-    membership_select_list = map(lambda l: '( %s )' % ' OR '.join(l),
-                                                         membership_dict.values())
+    membership_select_list = []
+    for expression_list in membership_dict.values():
+      or_expression = ' OR '.join(expression_list)
+      if or_expression:
+        membership_select_list.append('( %s )' % or_expression)
 
     # Then build SQL for multimembership_dict criteria
     multimembership_dict = {}
@@ -255,7 +258,11 @@ class Predicate(XMLObject, Folder):
                                           strict_membership=strict_membership,
                                           table=table_alias,
                                           base_category=base_category))
-    multimembership_select_list = map(lambda l: ' AND '.join(l), multimembership_dict.values())
+    multimembership_select_list = []
+    for expression_list in multimembership_dict.values():
+      and_expression = ' AND '.join(expression_list)
+      if and_expression:
+        multimembership_select_list.append(and_expression)
 
     # Build the join where expression
     join_select_list = []
