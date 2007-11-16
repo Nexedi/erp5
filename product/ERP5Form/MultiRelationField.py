@@ -307,7 +307,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     here = REQUEST['here']
     portal_url = getToolByName(here, 'portal_url')
     portal_url_string = portal_url()
-    portal_selections_url_string = here.portal_selections.absolute_url_path()
+    portal_selections_url_string = here.portal_url.getRelativeContentURL(here.portal_selections)
     if sub_index is None:
       sub_index_string = ''
     else:
