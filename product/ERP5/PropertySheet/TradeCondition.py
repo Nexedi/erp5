@@ -57,9 +57,10 @@ class TradeCondition:
                                      'payment_term', 'payment_additional_term',
                                      'payment_end_of_month', 'payment_date',
                                      'quantity', 'efficiency',
-                                'source_payment', 'source_payment_title',
-                                'destination_payment', 'destination_payment_title',
-                            ),
+                                     'source_payment', 'source_payment_title',
+                                     'destination_payment', 
+                                     'destination_payment_title',
+                                   ),
           'mode'        : 'w' },
   )
 
