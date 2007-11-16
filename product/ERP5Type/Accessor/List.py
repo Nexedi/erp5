@@ -34,6 +34,7 @@ from TypeDefinition import asList, identity
 import Base
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
+from types import ListType, TupleType
 
 from zLOG import LOG
 
@@ -234,8 +235,13 @@ class DefaultGetter(Method):
             list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value
-        if len(list_value) > 0:
-          return list_value[0]
+        if type(list_value) in (ListType, TupleType):
+          if len(list_value) > 0:
+            return list_value[0]
+          else:
+            return None
+        # This should not happen though
+        return list_value
       if default and len(default):
         return default[0]
       return None
@@ -285,10 +291,14 @@ class ListGetter(Method):
             list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value
-        return list(list_value)
+        if type(list_value) is TupleType:
+          return list(list_value) # Make sure we return a list rather than a tuple
+        return list_value
       if default is None:
-        return None # nothing was defined as default so None is the right value
-      return list(default) # Make sure we return a list rather than a tuple
+        return None # nothing was defined as default so None is the appropriate value
+      if type(default) is TupleType:
+        return list(default) # Make sure we return a list rather than a tuple
+      return default
 
     psyco.bind(__call__)
 
