@@ -100,9 +100,7 @@
         <item>
             <key> <string>test_method_id</string> </key>
             <value>
-              <tuple>
-                <string>AmortisationRule_test</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
