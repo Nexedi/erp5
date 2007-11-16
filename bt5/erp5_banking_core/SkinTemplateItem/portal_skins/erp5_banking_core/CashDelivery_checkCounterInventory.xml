@@ -87,6 +87,7 @@ line_list = []\n
 resource_dict = {}\n
 node_dict = {}\n
 variation_text_dict = {}\n
+start_date = context.getStartDate()\n
 for l in tmp_list :\n
   # The source can be different for every line (due to getBaobabSource approach)\n
   if source is None:\n
@@ -122,6 +123,7 @@ def checkActivities(source_counter):\n
     raise ValidationFailed, (msg,)\n
 \n
 inventory_list = context.portal_simulation.getCurrentInventoryList(\n
+                   at_date=start_date,\n
                    group_by_variation=1,\n
                    group_by_node=1,\n
                    group_by_resource=1,\n
@@ -169,10 +171,12 @@ for line in line_list :\n
       #context.log(\'cell quantity\', cell.getQuantity())\n
       #context.log(\'inventory value\', inventory_value)\n
       if inventory_value - cell.getQuantity() < 0:\n
-        msg = Message(domain=\'ui\', message=\'Insufficient balance for $resource, letter $letter, status $status and variation $variation\', mapping={\'resource\':cell.getResourceTranslatedTitle(),\n
-                                                                                                                        \'letter\': cell.getEmissionLetterTitle(),\n
-                                                                                                                        \'status\': cell.getCashStatusTranslatedTitle(),\n
-                                                                                                                        \'variation\':cell.getVariationTitle()})\n
+        msg = Message(domain=\'ui\',\n
+                      message=\'Insufficient balance for $resource, letter $letter, status $status and variation $variation\',\n
+                      mapping={\'resource\':cell.getResourceTranslatedTitle(),\n
+                               \'letter\': cell.getEmissionLetterTitle(),\n
+                               \'status\': cell.getCashStatusTranslatedTitle(),\n
+                               \'variation\':cell.getVariationTitle()})\n
         raise ValidationFailed, (msg,)\n
   else :\n
     raise ValueError, \'This script must not be used on movements without cells. It is deprecated and dangerous, therefor it raises.\'\n
@@ -254,6 +258,7 @@ return 0\n
                             <string>resource_dict</string>
                             <string>node_dict</string>
                             <string>variation_text_dict</string>
+                            <string>start_date</string>
                             <string>_getiter_</string>
                             <string>l</string>
                             <string>None</string>
