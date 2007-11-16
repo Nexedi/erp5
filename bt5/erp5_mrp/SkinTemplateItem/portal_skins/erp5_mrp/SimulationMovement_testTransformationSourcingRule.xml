@@ -168,7 +168,7 @@ return True\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TransformationSourcingRule_test</string> </value>
+            <value> <string>SimulationMovement_testTransformationSourcingRule</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

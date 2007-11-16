@@ -185,7 +185,7 @@ return True\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TransformationRule_test</string> </value>
+            <value> <string>SimulationMovement_testTransformationRule</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
