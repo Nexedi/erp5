@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -75,7 +78,7 @@ from Products.CMFCore.utils import getToolByName\n
 translation_service = getToolByName(context, \'Localizer\', None)\n
 if translation_service is not None :\n
   try:\n
-    return translation_service.translate(catalog, msg, lang, **kw).encode(encoding)\n
+    return translation_service.translate(catalog, msg, lang=lang, **kw).encode(encoding)\n
   except AttributeError: # This happens in unit testing, because it is not able to find something with get_context()\n
     pass\n
 return msg\n
