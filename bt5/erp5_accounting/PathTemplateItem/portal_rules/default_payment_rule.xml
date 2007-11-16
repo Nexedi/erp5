@@ -67,7 +67,7 @@
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>PaymentRule_testMovementId</string>
+                <string>SimulationMovement_testPaymentRule</string>
               </tuple>
             </value>
         </item>

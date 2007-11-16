@@ -65,19 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getId() not in (\'receivable\',):\n
-  return False\n
+            <value> <string>movement = context\n
 \n
-parent = context.getParentValue()\n
-if parent.getPortalType() != \'Applied Rule\':\n
-  return False\n
-\n
-parent_rule = parent.getSpecialiseValue()\n
-if parent_rule.getPortalType() not in [\'Invoice Transaction Rule\']:\n
-  return False\n
-\n
-delivery_movement = context.getDeliveryValue()\n
-return delivery_movement is None or delivery_movement.getPortalType() in context.getPortalAccountingMovementTypeList()\n
+parent = movement.getParentValue()\n
+if parent.getPortalType() == \'Applied Rule\':\n
+  parent_rule = parent.getSpecialiseValue()\n
+  if parent_rule.getPortalType() in [\'Order Rule\', \'Delivery Rule\']:\n
+    return True\n
+return False\n
 </string> </value>
         </item>
         <item>
@@ -127,13 +122,13 @@ return delivery_movement is None or delivery_movement.getPortalType() in context
                         <value>
                           <tuple>
                             <string>rule</string>
-                            <string>_getattr_</string>
                             <string>context</string>
-                            <string>False</string>
+                            <string>movement</string>
+                            <string>_getattr_</string>
                             <string>parent</string>
                             <string>parent_rule</string>
-                            <string>delivery_movement</string>
-                            <string>None</string>
+                            <string>True</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
@@ -150,7 +145,7 @@ return delivery_movement is None or delivery_movement.getPortalType() in context
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaymentRule_testMovementId</string> </value>
+            <value> <string>SimulationMovement_testInvoicingRule</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
