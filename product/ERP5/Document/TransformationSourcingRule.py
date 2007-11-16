@@ -151,33 +151,6 @@ class TransformationSourcingRule(Rule):
     # Class variable 
     simulation_movement_portal_type = "Simulation Movement"
 
-    def _test(self, movement):
-      """
-        Tests if the rule (still) applies
-      """
-      # Test if we must transform
-      # The test should actually be based on nodes, paths
-      # and capacities, which is not possible now
-      result = 1
-      # Only apply to Order applied rule
-      root_applied_rule = movement.getRootAppliedRule()
-      root_rule = root_applied_rule.getSpecialiseValue()
-      order = root_applied_rule.getCausalityValue()
-      # Test some properties to see if we are really 
-      # in a 'production' expand.
-      if (root_rule is None) or\
-         (root_rule.getPortalType() != "Production Order Rule") or\
-         (order is None) or\
-         (movement.getResourceValue() is None) or\
-         (movement.getSourceValue() is None):
-           result = 0
-      else:
-        supply_chain = self.getSupplyChain(movement.getParentValue())
-        parent_supply_link = self.getCurrentSupplyLink(movement)
-        if not supply_chain.test(parent_supply_link, movement):
-          result = 0
-      return result
-
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, activate_kw=None,**kw):
       """

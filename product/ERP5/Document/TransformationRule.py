@@ -63,43 +63,6 @@ class TransformationRule(Rule):
     # Class variable 
     simulation_movement_portal_type = "Simulation Movement"
 
-    def _test(self, movement):
-      """
-        Tests if the rule (still) applies
-      """
-      # Test if we must transform
-      # The test should actually be based on nodes, paths
-      # and capacities, which is not possible now
-      result = 1
-      # Only apply to Order applied rule
-      root_applied_rule = movement.getRootAppliedRule()
-      root_rule = root_applied_rule.getSpecialiseValue()
-      order = root_applied_rule.getCausalityValue()
-      root_movement = movement.getRootSimulationMovement()
-      # Test movement
-      if (root_rule is None) or\
-         (root_rule.getPortalType() != "Production Order Rule") or\
-         (order is None) or\
-         (movement.getResourceValue() is None) or\
-         (movement.getSourceValue() is None) or\
-         (movement.getResourceValue() != root_movement.getResourceValue()):
-         # We only produced what is asked on the Production Order
-           result = 0
-      else:
-        supply_chain = self.getSupplyChain(movement.getParentValue())
-        parent_supply_link = self.getCurrentSupplyLink(movement)
-        current_tranfo_link_list = supply_chain.\
-                       getPreviousProductionSupplyLinkList(parent_supply_link)
-        length = len(current_tranfo_link_list)
-        if length == 0:
-          result = 0
-        elif length > 1:
-          result = 0
-          # XXX FIXME: implementation needed
-          raise TransformationRuleError,\
-                "TransformationRule not able to use multiple SupplyLink."
-      return result
-
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, **kw):
