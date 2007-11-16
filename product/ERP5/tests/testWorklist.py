@@ -98,7 +98,7 @@ class TestWorklist(ERP5TypeTestCase):
         start_date = '01/01/1900',
         stop_date = '01/01/2900',
       )
-      assignment.openAction()
+      assignment.open()
     # Reindexing is required for the security to work
     get_transaction().commit()
     self.tic()
