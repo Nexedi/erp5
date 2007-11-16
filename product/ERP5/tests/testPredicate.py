@@ -491,6 +491,38 @@ class TestPredicates(ERP5TypeTestCase):
       stepAssertPredicateFalse
     """)
 
+  def test_MembershipCriterion_SQLQuery(self, quiet=QUIET, run=RUN_ALL_TESTS):
+    """
+    Make sure that predicate generate valid sql.
+    """
+    if not run : return
+
+    predicate_without_membership_values = self.createPredicate(
+      membership_criterion_base_category_list=['group'])
+    self.assert_(predicate_without_membership_values.searchResults())
+
+    predicate_with_membership_values = self.createPredicate(
+      membership_criterion_base_category_list=['group'],
+      membership_criterion_category_list=GROUP_STOREVER_PATH,
+      )
+    self.assert_(predicate_with_membership_values.searchResults())
+
+  def test_MultiValuedMembershipCriterion_SQLQuery(self, quiet=QUIET, run=RUN_ALL_TESTS):
+    """
+    Make sure that predicate generate valid sql.
+    """
+    if not run : return
+
+    predicate_without_membership_values = self.createPredicate(
+      multimembership_criterion_base_category_list=['group'])
+    self.assert_(predicate_without_membership_values.searchResults())
+
+    predicate_with_membership_values = self.createPredicate(
+      multimembership_criterion_base_category_list=['group'],
+      membership_criterion_category_list=GROUP_STOREVER_PATH,
+      )
+    self.assert_(predicate_with_membership_values.searchResults())
+
 # TODO :
 #  multi membership category
 #  asPredicate scripts
