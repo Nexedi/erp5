@@ -1,5 +1,6 @@
 2007-11-16 Yusei
 * Fixed Base_showFoundText. selection_name argument is required for listbox.
+* Fixed Base_showFoundText. if document contains charactor which utf-8 codec cannot decode, remove it from result.
 
 2007-10-11 Kazuhiko
 * move portal_contributions from Paths to Tools.

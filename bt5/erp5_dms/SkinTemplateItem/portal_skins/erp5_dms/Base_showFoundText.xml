@@ -121,7 +121,12 @@ found_text_fragments = context.cutFound(context, \n
                                         tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\'), \n
                                         trail = 5, \n
                                         maxlines = 5)\n
-return \' \'.join(map(str, found_text_fragments))\n
+result = \' \'.join(map(str, found_text_fragments))\n
+\n
+# Document may contains charactors which utf8 codec cannot decode.\n
+unicode_result = result.decode(\'utf-8\', \'ignore\')\n
+result = unicode_result.encode(\'utf-8\')\n
+return result\n
 
 
 ]]></string> </value>
@@ -198,6 +203,7 @@ return \' \'.join(map(str, found_text_fragments))\n
                             <string>len</string>
                             <string>found_text_fragments</string>
                             <string>map</string>
+                            <string>unicode_result</string>
                           </tuple>
                         </value>
                     </item>
