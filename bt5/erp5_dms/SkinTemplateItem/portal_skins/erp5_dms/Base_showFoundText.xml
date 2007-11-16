@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -149,7 +146,7 @@ return \' \'.join(map(str, found_text_fragments))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection=None</string> </value>
+            <value> <string>brain, selection=None, selection_name=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -169,7 +166,7 @@ return \' \'.join(map(str, found_text_fragments))\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -177,6 +174,7 @@ return \' \'.join(map(str, found_text_fragments))\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>document_text</string>
                             <string>hasattr</string>
                             <string>context</string>
@@ -212,6 +210,7 @@ return \' \'.join(map(str, found_text_fragments))\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>
