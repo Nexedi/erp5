@@ -35,6 +35,7 @@ from Products.ERP5Type import PropertySheet
 from BTrees.IOBTree import IOBTree
 from BTrees.Length import Length
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
+from random import randint
 
 from zLOG import LOG
 
@@ -82,12 +83,25 @@ class ActiveProcess(Base):
     # Declarative constructors
     constructors =   (manage_addActiveProcessForm, addActiveProcess)
 
+    def _generateRandomId(self):
+      """
+      Generate a random int depending on the size of the result list
+      """
+      random_id = randint(1, 10000 * (self.result_len.value + 1)) 
+      return random_id
+
     security.declareProtected(CMFCorePermissions.ManagePortal, 'postResult')
     def postResult(self, result):
       if getattr(self, 'result_list', None) is None:
         self.result_list = IOBTree()
         self.result_len = Length()
-      self.result_list[self.result_len.value] = result
+      random_id = self._generateRandomId()
+      _marker = []
+      # use a random id in order to store result in a way with
+      # fewer conflict errors
+      while self.result_list.get(random_id, _marker) is not _marker:
+        random_id = self._generateRandomId()
+      self.result_list[random_id] = result
       self.result_len.change(1)
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultList')
