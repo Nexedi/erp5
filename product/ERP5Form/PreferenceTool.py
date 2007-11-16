@@ -128,6 +128,8 @@ class PreferenceMethod(Method):
       value = None
       for pref in instance._getSortedPreferenceList(*args, **kw):
         value = getattr(pref, self._preference_name, _marker)
+        # XXX-JPS Why don't we use accessors here such as:
+        # value = pref.getProperty(self._preference_name, _marker)
         if value is not _marker:
           # If callable, store the return value.
           if callable(value):

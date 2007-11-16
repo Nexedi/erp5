@@ -386,7 +386,8 @@ class TestPreferences(ERP5TypeTestCase):
     state_list = method()
     self.assertEquals(state_list, None)
     state_list = method(('default',))
-    self.assertEquals(state_list, ('default',))
+    self.assertEquals(state_list, ['default',]) # getPreferredAccountingTransactionSimulationStateList
+                                                # always tries to cast tuples to lists
  
     method = lambda *args: pref_tool.getPreference('preferred_accounting_transaction_simulation_state_list', *args)
     state_list = method()
