@@ -497,15 +497,20 @@ class TestPredicates(ERP5TypeTestCase):
     """
     if not run : return
 
+    def test(function):
+      """make sure that an exception is not raised"""
+      function()
+      return True
+
     predicate_without_membership_values = self.createPredicate(
       membership_criterion_base_category_list=['group'])
-    self.assert_(predicate_without_membership_values.searchResults())
+    self.assert_(test(predicate_without_membership_values.searchResults))
 
     predicate_with_membership_values = self.createPredicate(
       membership_criterion_base_category_list=['group'],
       membership_criterion_category_list=GROUP_STOREVER_PATH,
       )
-    self.assert_(predicate_with_membership_values.searchResults())
+    self.assert_(test(predicate_with_membership_values.searchResults))
 
   def test_MultiValuedMembershipCriterion_SQLQuery(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """
@@ -513,15 +518,20 @@ class TestPredicates(ERP5TypeTestCase):
     """
     if not run : return
 
+    def test(function):
+      """make sure that an exception is not raised"""
+      function()
+      return True
+
     predicate_without_membership_values = self.createPredicate(
       multimembership_criterion_base_category_list=['group'])
-    self.assert_(predicate_without_membership_values.searchResults())
+    self.assert_(test(predicate_without_membership_values.searchResults))
 
     predicate_with_membership_values = self.createPredicate(
       multimembership_criterion_base_category_list=['group'],
       membership_criterion_category_list=GROUP_STOREVER_PATH,
       )
-    self.assert_(predicate_with_membership_values.searchResults())
+    self.assert_(test(predicate_with_membership_values.searchResults))
 
 # TODO :
 #  multi membership category
