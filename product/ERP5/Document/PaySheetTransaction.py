@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Invoice import Invoice
+from zLOG import LOG
 
 class PaySheetTransaction(Invoice):
   """
@@ -278,31 +279,6 @@ class PaySheetTransaction(Invoice):
     column, row = getDictList(['tax_category', 'base_amount'])
     base_amount_table = getEmptyTwoDimentionalTable(nb_columns=len(column),
                                                     nb_rows=len(row))
-    # XXX currently, there is a problem not resolved yet :
-    # if a tax_category have a base_application ('non_deductible_tax','bonus')
-    # and if a bonus have a base_application ('base_salary',), calculation 
-    # must be made in a particular order, and sometimes, it's possible to 
-    # have circular dependencies and so, impossible to resove this cases.
-    # The best, will to do calculation with understanding dependencies and 
-    # raise an error if there is circular dependence. Currently, caluls are 
-    # made in a paticular order defined by the list order_of_calculation 
-    # so dependencies are not taken into account. 
-    # And result are wrong in some cases.
-    # solutions :
-    #  1 - do calculation without any order and redo evry calculs while a value
-    #  in the base_amount_table have changed. This is a little slow but safe.
-    #  2 - determine an order using dependencies graph, but this solution 
-    #  is not evolutive and safe, because it not take into account the new 
-    #  categories
-    #  3 - add an order field in paysheet lines and model lines : the user 
-    #  must determine an order manually and it will be easy to apply it
-    # in my opinion, the best solution for the accountant is the first, but it 
-    # will be slow, the easier is the 3.
-
-
-    # It's important to do calculation in a precise order,
-    # most of time, a tax could depend on base_salary and bonus, 
-    # so they must be calculated before
 
     def sortByIntIndex(a, b):
       return cmp(a.getIntIndex(),
@@ -311,13 +287,10 @@ class PaySheetTransaction(Invoice):
 
     base_amount_list = self.portal_categories['base_amount'].contentValues()
     base_amount_list.sort(sortByIntIndex)
-    order_of_calculation = [x.getRelativeUrl() for x in base_amount_list]
-    #order_of_calculation = ('base_amount/base_salary', 'base_amount/bonus', 
-    #                        'base_amount/non_deductible_tax', 
-    #                        'base_amount/deductible_tax')
 
     # it's important to get the editable lines to know if they contribute to
-    # a base_amount (this is required to do the calcul later
+    # a base_amount (this is required to do the calcul later)
+
     # get edited lines:
     paysheetline_list = self.contentValues(portal_type = ['Pay Sheet Line'])
 
@@ -342,152 +315,135 @@ class PaySheetTransaction(Invoice):
 
     # get not editables model lines
     model = self.getSpecialiseValue()
-    model_line_list = model.contentValues(portal_type='Pay Sheet Model Line')
+    model_line_list = model.contentValues(portal_type='Pay Sheet Model Line',
+                                               sort_on='int_index')
+    model_line_list = [line for line in model_line_list if not line.getEditable()]
 
     pay_sheet_line_list = []
     employee_tax_amount = 0
 
-    # initilise a dict with model_line relative url and 0 value to know
-    # if a contribution have already been calculated
-    already_calculate = dict([[model_line.getRelativeUrl(), 0] \
-        for model_line in model_line_list])
-
     # main loop : find all informations and create cell and PaySheetLines
-    for base_ordered in order_of_calculation:
-      for model_line in model_line_list:
+    for model_line in model_line_list:
+      cell_list       = []
+      # test with predicate if this model line could be applied
+      if not model_line.test(self,):
+        # This line should not be used
+        continue
 
-        # get only not editables model lines
-        if model_line.getEditable():
-          continue
-        if model_line.getResourceValue().getBaseAmountList(base=1) and \
-            base_ordered not in \
-            model_line.getResourceValue().getBaseAmountList(base=1):
-            continue
-        if already_calculate[model_line.getRelativeUrl()]:
-          continue
-        else:
-          already_calculate[model_line.getRelativeUrl()] = 1
-        # this prevent to calculate two times the same model line if it's 
-        # resource have many Base Participation, it will be calculate 
-        # many times. 
+      service     = model_line.getResourceValue()
+      title       = model_line.getTitleOrId()
+      id          = model_line.getId()
+      res         = service.getRelativeUrl()
+      if model_line.getDescription():
+        desc      = ''.join(model_line.getDescription())
+      # if the model_line description is empty, the payroll service 
+      # description is used
+      else: desc  = ''.join(service.getDescription())
+      
+      variation_share_list = model_line.getVariationCategoryList(\
+                                      base_category_list=['tax_category',])
+      variation_slice_list = model_line.getVariationCategoryList(\
+                                      base_category_list=['salary_range',])
 
-        cell_list       = []
-        # test with predicate if this model line could be applied
-        if not model_line.test(self,):
-          # This line should not be used
-          continue
+      for share in variation_share_list:
+        base_application = None
+        for slice in variation_slice_list:
 
-        service     = model_line.getResourceValue()
-        title       = model_line.getTitleOrId()
-        id          = model_line.getId()
-        res         = service.getRelativeUrl()
-        if model_line.getDescription():
-          desc      = ''.join(model_line.getDescription())
-        # if the model_line description is empty, the payroll service 
-        # description is used
-        else: desc  = ''.join(service.getDescription())
-        
-        variation_share_list = model_line.getVariationCategoryList(\
-                                        base_category_list=['tax_category',])
-        variation_slice_list = model_line.getVariationCategoryList(\
-                                        base_category_list=['salary_range',])
-
-        for share in variation_share_list:
-          base_application = None
-          for slice in variation_slice_list:
-
-            #get the amount of application for this line
-            base_application_list = model_line.getBaseAmountList(base=1)
-            if base_application is None:
-              base_application = 0
-              for base in model_line.getBaseAmountList(base=1):
-                if base_amount_table[column[share]][row[base]] is not None:
-                  base_application += \
-                      base_amount_table[column[share]][row[base]]
-              
-            cell = model_line.getCell(slice, share)
+          #get the amount of application for this line
+          base_application_list = model_line.getBaseAmountList(base=1)
+          if base_application is None:
+            base_application = 0
+            for base in model_line.getBaseAmountList(base=1):
+              if base_amount_table[column[share]][row[base]] is not None:
+                base_application += \
+                    base_amount_table[column[share]][row[base]]
             
-            if cell is not None:
-              # get the slice :
-              model_slice = None
-              model_slice = model_line.getParentValue().getCell(slice)
-              quantity = 0.0
-              price = 0.0
-              if model_slice is not None:
-                model_slice_min = model_slice.getQuantityRangeMin()
-                model_slice_max = model_slice.getQuantityRangeMax()
-                quantity = cell.getQuantity()
-                price = cell.getPrice()
+          cell = model_line.getCell(slice, share)
+          
+          if cell is not None:
+            # get the slice :
+            model_slice = None
+            model_slice = model_line.getParentValue().getCell(slice)
+            quantity = 0.0
+            price = 0.0
+            if model_slice is not None:
+              model_slice_min = model_slice.getQuantityRangeMin()
+              model_slice_max = model_slice.getQuantityRangeMax()
+              quantity = cell.getQuantity()
+              price = cell.getPrice()
 
-                ######################
-                # calculation part : #
-                ######################
-                script_name = model.getLocalizedCalculationScriptId()
-                if script_name is None or \
-                    getattr(self, script_name, None) is None:
-                  # if no calculation script found, use a default method :
-                  if not quantity:
-                    if base_application <= model_slice_max:
-                      quantity = base_application
-                    else: 
-                      quantity = model_slice_max
+              ######################
+              # calculation part : #
+              ######################
+              script_name = model.getLocalizedCalculationScriptId()
+              if script_name is None or \
+                  getattr(self, script_name, None) is None:
+                # if no calculation script found, use a default method :
+                if not quantity:
+                  if base_application <= model_slice_max:
+                    quantity = base_application
+                  else: 
+                    quantity = model_slice_max
+              else:
+                localized_calculation_script = getattr(self, script_name, 
+                                                       None)
+                quantity, price = localized_calculation_script(\
+                    paysheet=self, 
+                    model_slice_min = model_slice_min, 
+                    model_slice_max=model_slice_max, 
+                    quantity=quantity, 
+                    price=price, 
+                    model_line=model_line)
+
+            # Cell creation :
+            # Define an empty new cell
+            new_cell = { 'axe_list' : [share, slice]
+                       , 'quantity' : quantity
+                       , 'price'    : price
+                       }
+            cell_list.append(new_cell)
+
+            #XXX this is a hack to have the net salary
+            base_list = model_line.getResourceValue().getBaseAmountList()
+            if price is not None and 'employee_share' in share and\
+                not ('base_salary' in base_list or\
+                    'bonus' in base_list or\
+                    'gross_salary' in base_list):
+              employee_tax_amount += round((price * quantity), precision)
+
+            # update base participation
+            base_participation_list = service.getBaseAmountList(base=1)
+            for base_participation in base_participation_list:
+              old_val = \
+                  base_amount_table[column[share]][row[base_participation]]
+
+              if quantity:
+                if old_val is not None:
+                  new_val = old_val + quantity
                 else:
-                  localized_calculation_script = getattr(self, script_name, 
-                                                         None)
-                  quantity, price = localized_calculation_script(\
-                      paysheet=self, 
-                      model_slice_min = model_slice_min, 
-                      model_slice_max=model_slice_max, 
-                      quantity=quantity, 
-                      price=price, 
-                      model_line=model_line)
-
-              # Cell creation :
-              # Define an empty new cell
-              new_cell = { 'axe_list' : [share, slice]
-                         , 'quantity' : quantity
-                         , 'price'    : price
-                         }
-              cell_list.append(new_cell)
-
-              #XXX this is a hack to have the net salary
-              if price is not None and 'employee_share' in share and\
-                  base_ordered not in ('base_salary', 'bonus') :
-                employee_tax_amount += round((price * quantity), precision)
-
-              # update base participation
-              base_participation_list = service.getBaseAmountList(base=1)
-              for base_participation in base_participation_list:
-                old_val = \
-                    base_amount_table[column[share]][row[base_participation]]
-
-                if quantity:
+                  new_val = quantity
+                if price:
                   if old_val is not None:
-                    new_val = old_val + quantity
-                  else:
-                    new_val = quantity
-                  if price:
-                    if old_val is not None:
-                      new_val = round((old_val + quantity*price), precision)
-                  base_amount_table[column[share]][row[base_participation]]= \
-                                                                        new_val
-                  base_amount_table[column[share]][row[base_participation]] = \
-                                                                        new_val
+                    new_val = round((old_val + quantity*price), precision)
+                base_amount_table[column[share]][row[base_participation]]= \
+                                                                      new_val
+                base_amount_table[column[share]][row[base_participation]] = \
+                                                                      new_val
 
-            # decrease the base_application used for this model line if 
-            if cell is not None :
-              base_application -= quantity
+          # decrease the base_application used for this model line 
+          if cell is not None :
+            base_application -= quantity
 
-        if cell_list:
-          # create the PaySheetLine
-          pay_sheet_line = self.createPaySheetLine(
-                                                    title     = title,
-                                                    id        = id,
-                                                    res       = res,
-                                                    desc      = desc,
-                                                    cell_list = cell_list,
-                                                  )
-          pay_sheet_line_list.append(pay_sheet_line)
+      if cell_list:
+        # create the PaySheetLine
+        pay_sheet_line = self.createPaySheetLine(
+                                                  title     = title,
+                                                  id        = id,
+                                                  res       = res,
+                                                  desc      = desc,
+                                                  cell_list = cell_list,
+                                                )
+        pay_sheet_line_list.append(pay_sheet_line)
 
     # create a line of the total tax payed by the employee
     # this hack permit to calculate the net salary
