@@ -26,14 +26,14 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TradeCondition import TradeCondition
-from Products.ERP5.Document.DeliveryLine import DeliveryLine
+from Products.ERP5Type.XMLMatrix import XMLMatrix
 
-class PaySheetModel(TradeCondition, DeliveryLine):
+
+class PaySheetModel(TradeCondition, XMLMatrix):
     """
       PaySheetModel are used to define calculating rules specific to a 
       date, a convention, a enmployees group...
@@ -64,31 +64,4 @@ class PaySheetModel(TradeCondition, DeliveryLine):
                       , PropertySheet.Amount
                       , PropertySheet.DefaultAnnotationLine
                       )
-
-    def getRatioQuantityFromReference(self, ratio_reference=None):
-      """
-      return the ratio value correponding to the ratio_reference,
-      or description if ratio value is empty,
-      None if ratio_reference not found
-      """
-      object_ratio_list = self.contentValues(portal_type=\
-          'Pay Sheet Model Ratio Line')
-      for object in object_ratio_list:
-        if object.getReference() == ratio_reference:
-          if not object.getQuantity():
-            return object.getDescription()
-          else:
-            return object.getQuantity()
-      return None 
-
-    def getRatioQuantityList(self, ratio_reference_list):
-      """
-      Return a list of reference_ratio_list correponding values.
-      reference_ratio_list is a list of references to the ratio lines
-      we want to get.
-      """
-      if type(ratio_reference_list) != type([]):
-        return None
-      return [self.getRatioQuantityFromReference(reference) \
-          for reference in ratio_reference_list]
 
