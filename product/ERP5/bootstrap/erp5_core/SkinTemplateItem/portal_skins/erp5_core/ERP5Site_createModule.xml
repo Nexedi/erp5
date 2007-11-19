@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -70,46 +67,38 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.Formulator.Errors import ValidationError, FormValidationError\n
-\n
-request=context.REQUEST\n
-\n
-# TODO\n
-#   - handle an optionnal "description" parameter\n
-#   - set the form action to "Base_edit"\n
-#   - export : xml\n
-#   - report : last modified\n
-#   - security : 5A\n
+request = container.REQUEST\n
 \n
 portal = context.getPortalObject()\n
 portal_types = portal.portal_types\n
 object_portal_type_id = object_portal_type\n
 \n
 # Create a new portal_type for the module\n
-context.portal_types.manage_addTypeInformation( \'ERP5 Type Information\'\n
-                                              , typeinfo_name = \'ERP5Type: ERP5 Folder\'\n
-                                              , id            = module_portal_type\n
-                                              )\n
-module_portal_type_value = context.portal_types[module_portal_type]\n
+portal_types.manage_addTypeInformation( \'ERP5 Type Information\'\n
+                                       , typeinfo_name = \'ERP5Type: ERP5 Folder\'\n
+                                       , id            = module_portal_type)\n
+module_portal_type_value = portal_types[module_portal_type]\n
 # Set icon and allowed content types\n
 module_portal_type_value.manage_changeProperties(\n
                content_icon=\'folder_icon.gif\',\n
                filter_content_types=1,\n
                allowed_content_types = (object_portal_type_id, ))\n
 \n
+module_list_form_id = (\'%s_view%sList\' % (module_portal_type,\n
+                        object_portal_type)).replace(\' \', \'\')\n
+\n
 action_list = module_portal_type_value.listActions()\n
 module_portal_type_value.deleteActions(selections=range(0, len(action_list)))\n
 module_portal_type_value.addAction( "view"\n
                                   , "View"\n
-                                  # FIXME: isn\'t it better to create a form for the module?\n
-                                  , "string:${object_url}/Folder_viewContentList"\n
+                                  , "string:${object_url}/%s" % module_list_form_id\n
                                   , ""\n
                                   , "View"\n
                                   , "object_list"\n
                                   , priority=1.0\n
                                   )\n
 \n
-# Create the skin directory if does not exist yet\n
+# Create the skin folder if does not exist yet\n
 portal_skins_folder_name = portal_skins_folder\n
 portal_skins = portal.portal_skins\n
 if not portal_skins_folder_name in portal.portal_skins.objectIds():\n
@@ -126,22 +115,75 @@ for skin_name, selection in portal_skins.getSkinPaths():\n
                                   , add_skin = 1\n
                                   )\n
 \n
-# Create the default ERP5 Form in order to view the object\n
-form_view_id = object_portal_type_id.replace(\' \',\'\') + \'_view\'\n
 factory = skin_folder.manage_addProduct[\'ERP5Form\']\n
-factory.addERP5Form( form_view_id\n
-                   , title  = object_title\n
-                   )\n
-form_view_object = skin_folder[form_view_id]\n
-form_view_object.rename_group(\'Default\', \'left\')\n
+\n
+# Create a form for the module\n
+factory.addERP5Form(module_list_form_id, title=module_title)\n
+form = skin_folder[module_list_form_id]\n
+default_groups = [\'bottom\', \'hidden\']\n
+for group in default_groups:\n
+  form.add_group(group)\n
+\n
+# XXX this is too low level, but we don\'t have an API available from restricted\n
+# environment. Afterall, this script should not use restricted environment\n
+form.manage_settings(\n
+    dict(field_title=form.title,\n
+         field_name=form.name,\n
+         field_description=form.description,\n
+         field_action=\'Base_doSelect\',\n
+         field_update_action=form.update_action,\n
+         field_enctype=form.enctype,\n
+         field_encoding=form.encoding,\n
+         field_stored_encoding=form.stored_encoding,\n
+         field_unicode_mode=form.unicode_mode,\n
+         field_method=form.method,\n
+         field_row_length=str(form.row_length),\n
+         field_pt=\'form_list\'))\n
+\n
+form.manage_addField(\n
+         id=\'listbox\',\n
+         fieldname=\'ProxyField\',\n
+         title=\'\')\n
+form.move_field_group((\'listbox\',), \'left\', \'bottom\')\n
+\n
+form.listbox.manage_edit_xmlrpc(\n
+    dict(form_id=\'Base_viewFieldLibrary\',\n
+         field_id=\'my_list_mode_listbox\'))\n
+\n
+form.listbox.manage_edit_surcharged_xmlrpc(\n
+    dict(selection_name=(\'_\'.join(object_title.split())).lower(),\n
+         title=module_title,\n
+         portal_type=[(object_portal_type, object_portal_type), ], ))\n
+\n
+\n
+# Create a form for the document\n
+form_view_id = object_portal_type_id.replace(\' \',\'\') + \'_view\'\n
+factory.addERP5Form(form_view_id, title=object_title)\n
+form = skin_folder[form_view_id]\n
+form.rename_group(\'Default\', \'left\')\n
 default_groups = [\'right\', \'center\', \'bottom\', \'hidden\']\n
 for group in default_groups:\n
-  form_view_object.add_group(group)\n
+  form.add_group(group)\n
 \n
-form_view_object.manage_addProduct[\'Formulator\'].manage_addField(\n
-        id=\'my_title\',\n
-        fieldname=\'StringField\',\n
-        title=\'Title\')\n
+form.manage_settings(dict(\n
+    dict(field_title=form.title,\n
+         field_name=form.name,\n
+         field_description=form.description,\n
+         field_action=\'Base_edit\',\n
+         field_update_action=form.update_action,\n
+         field_enctype=form.enctype,\n
+         field_encoding=form.encoding,\n
+         field_stored_encoding=form.stored_encoding,\n
+         field_unicode_mode=form.unicode_mode,\n
+         field_method=form.method,\n
+         field_row_length=str(form.row_length),\n
+         field_pt=\'form_view\')))\n
+\n
+form.manage_addField(\n
+         id=\'my_title\',\n
+         fieldname=\'StringField\',\n
+         title=\'Title\')\n
+\n
 \n
 # Then add the portal_type corresponding to the new object\n
 portal_types.manage_addTypeInformation(\'ERP5 Type Information\'\n
@@ -172,6 +214,10 @@ module_object = portal.newContent( portal_type = module_portal_type\n
                                    , title       = module_title\n
                                    )\n
 module_object.Base_setDefaultSecurity()\n
+\n
+# Clear caches so that module is immediatly visible\n
+portal.changeSkin(None)\n
+portal.portal_caches.clearAllCache()\n
 \n
 if not selection_index:\n
   redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
@@ -242,17 +288,16 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>selection_index</string>
                             <string>selection_name</string>
                             <string>form_id</string>
-                            <string>Products.Formulator.Errors</string>
-                            <string>ValidationError</string>
-                            <string>FormValidationError</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>container</string>
                             <string>request</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>portal_types</string>
                             <string>object_portal_type_id</string>
                             <string>_getitem_</string>
                             <string>module_portal_type_value</string>
+                            <string>module_list_form_id</string>
                             <string>action_list</string>
                             <string>range</string>
                             <string>len</string>
@@ -264,13 +309,16 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>selection</string>
                             <string>new_selection</string>
                             <string>tuple</string>
-                            <string>form_view_id</string>
                             <string>factory</string>
-                            <string>form_view_object</string>
+                            <string>form</string>
                             <string>default_groups</string>
                             <string>group</string>
+                            <string>dict</string>
+                            <string>str</string>
+                            <string>form_view_id</string>
                             <string>object_portal_type_value</string>
                             <string>module_object</string>
+                            <string>None</string>
                             <string>redirect_url</string>
                           </tuple>
                         </value>
