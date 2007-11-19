@@ -28,7 +28,6 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-
 from Products.ERP5.Document.Invoice import Invoice
 
 class PaySheetTransaction(Invoice):
@@ -66,6 +65,36 @@ class PaySheetTransaction(Invoice):
 
   # Declarative Interface
   __implements__ = ( )
+
+
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                          'getRatioQuantityFromReference')
+  def getRatioQuantityFromReference(self, ratio_reference=None):
+    """
+    return the ratio value correponding to the ratio_reference,
+    or description if ratio value is empty,
+    None if ratio_reference not found
+    """
+    object_ratio_list = self.contentValues(portal_type=\
+        'Pay Sheet Model Ratio Line')
+    for object in object_ratio_list:
+      if object.getReference() == ratio_reference:
+        return object.getQuantity()
+    return None 
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                          'getRatioQuantityList')
+  def getRatioQuantityList(self, ratio_reference_list):
+    """
+    Return a list of reference_ratio_list correponding values.
+    reference_ratio_list is a list of references to the ratio lines
+    we want to get.
+    """
+    if not isinstance(ratio_reference_list, list):
+      return [self.getRatioQuantityFromReference(ratio_reference_list)]
+    return [self.getRatioQuantityFromReference(reference) \
+        for reference in ratio_reference_list]
 
 
   security.declareProtected(Permissions.AddPortalContent,
