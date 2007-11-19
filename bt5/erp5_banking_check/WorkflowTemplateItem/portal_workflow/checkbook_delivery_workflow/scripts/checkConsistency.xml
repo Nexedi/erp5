@@ -87,8 +87,8 @@ if sum([len(x.getAggregateList()) for x in transaction.objectValues(portal_type=
 at_date = transaction.getStartDate()\n
 transaction.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = source)\n
 \n
-# check we are in an opened accounting day\n
-transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
+# check we are in an opened accounting day (Seb, Not required any more)\n
+# transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
 \n
 #site = transaction.getBaobabSourceValue()\n
 \n

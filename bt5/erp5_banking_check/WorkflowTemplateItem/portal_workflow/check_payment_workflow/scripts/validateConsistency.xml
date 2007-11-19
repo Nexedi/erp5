@@ -100,9 +100,9 @@ date = transaction.getStartDate()\n
 # check accounting date\n
 current_date = DateTime().Date()\n
 document_date = DateTime(date).Date()\n
-# transaction.log("check_payment_workflow/scripts/validateConsistency", "date = %s, current_date = %s, document_date = %s, site = %s" %(date, current_date, document_date, site))\n
-if not document_date > current_date:\n
-  transaction.Baobab_checkCounterDateOpen(site=site, date=date)\n
+# Do not check the counter date, not required at this stage\n
+#if not document_date > current_date:\n
+#  transaction.Baobab_checkCounterDateOpen(site=site, date=date)\n
 \n
 \n
 # Check the amount.\n
@@ -157,7 +157,7 @@ context.updateBankingOperation(state_change)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -192,6 +192,7 @@ context.updateBankingOperation(state_change)\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
