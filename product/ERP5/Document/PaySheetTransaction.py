@@ -469,9 +469,9 @@ class PaySheetTransaction(Invoice):
                   if price:
                     if old_val is not None:
                       new_val = round((old_val + quantity*price), precision)
-                base_amount_table[column[share]][row[base_participation]]= \
+                  base_amount_table[column[share]][row[base_participation]]= \
                                                                         new_val
-                base_amount_table[column[share]][row[base_participation]] = \
+                  base_amount_table[column[share]][row[base_participation]] = \
                                                                         new_val
 
             # decrease the base_application used for this model line if 
