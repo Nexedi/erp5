@@ -93,13 +93,14 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     module_id='unittest_module'
     module_title='UnitTests'
     
+    
+    skins_tool = self.portal.portal_skins
+    types_tool = self.portal.portal_types
     self.failIf(self.portal._getOb(module_id, None) is not None)
-    self.assertEqual(self.portal.portal_skins._getOb(portal_skins_folder, None),
-                     None)
-    self.assertEqual(self.portal.portal_types.getTypeInfo(module_portal_type),
-                     None)
-    self.assertEqual(self.portal.portal_types.getTypeInfo(object_portal_type),
-                     None)
+    self.assertEqual(skins_tool._getOb(portal_skins_folder, None), None)
+    self.assertEqual(types_tool._getOb(module_portal_type, None), None)
+    self.assertEqual(types_tool._getOb(object_portal_type, None), None)
+
     self.portal.ERP5Site_createModule(module_portal_type=module_portal_type,
                                       portal_skins_folder=portal_skins_folder,
                                       object_portal_type=object_portal_type,
@@ -107,16 +108,32 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                       module_id=module_id,
                                       module_title=module_title)
     self.failUnless(self.portal._getOb(module_id, None) is not None)
-    self.assertNotEqual(
-        self.portal.portal_skins._getOb(portal_skins_folder, None), None)
     self.assertEquals(module_title,
                       self.portal._getOb(module_id).getTitle())
-    self.assertNotEqual(self.portal.portal_types.getTypeInfo(module_portal_type),
-                        None)
-    self.assertNotEqual(self.portal.portal_types.getTypeInfo(object_portal_type),
-                        None)
-    #self.assertEqual(self.portal.portal_types[object_portal_type].title,
-    #                  object_title)
+    self.assertNotEqual(types_tool.getTypeInfo(module_portal_type), None)
+    self.assertNotEqual(types_tool.getTypeInfo(object_portal_type), None)
+    
+    skin_folder = skins_tool._getOb(portal_skins_folder, None)
+    self.assertNotEqual(skin_folder, None)
+    self.assert_('UnitTest_view' in skin_folder.objectIds())
+    view_form = skin_folder.UnitTest_view
+    self.assertEquals('form_view', view_form.pt)
+    self.assertEquals('Base_edit', view_form.action)
+    
+    self.assert_('UnitTestModule_viewUnitTestList' in skin_folder.objectIds())
+    list_form = skin_folder.UnitTestModule_viewUnitTestList
+    self.assertEquals('form_list', list_form.pt)
+    self.assertEquals('Base_doSelect', list_form.action)
+    self.assert_('listbox' in [x.getId() for x in list_form.get_fields()])
+    self.assert_('listbox' in
+            [x.getId() for x in list_form.get_fields_in_group('bottom')])
+
+    # make sure we can use our module
+    self.portal.unittest_module.view()
+    self.portal.unittest_module.newContent(id='document', portal_type='UnitTest')
+    self.portal.unittest_module.document.view()
+
+    
   
   def test_02_FavouritesMenu(self, quiet=quiet, run=run_all_test):
     """
