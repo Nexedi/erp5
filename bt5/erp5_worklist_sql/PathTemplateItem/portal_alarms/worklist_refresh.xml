@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Alarm" module="Products.ERP5Type.Document.Alarm"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>active_sense_method_id</string> </key>
+            <value> <string>Base_refreshWorklistTableContent</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>enabled</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>worklist_refresh</string> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute_frequency</string> </key>
+            <value> <int>5</int> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month_day</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_start_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_aday</string> </key>
+                        <value> <string>Fri</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_amon</string> </key>
+                        <value> <string>Nov</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_d</string> </key>
+                        <value> <float>39028.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_day</string> </key>
+                        <value> <int>9</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_dayoffset</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fday</string> </key>
+                        <value> <string>Friday</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fmon</string> </key>
+                        <value> <string>November</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_hour</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_millis</string> </key>
+                        <value> <long>1194566400000</long> </value>
+                    </item>
+                    <item>
+                        <key> <string>_minute</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_month</string> </key>
+                        <value> <int>11</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_nearsec</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pday</string> </key>
+                        <value> <string>Fri.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pm</string> </key>
+                        <value> <string>am</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmhour</string> </key>
+                        <value> <int>12</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmon</string> </key>
+                        <value> <string>Nov.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_second</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_t</string> </key>
+                        <value> <float>1194566400.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_tz</string> </key>
+                        <value> <string>GMT</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_year</string> </key>
+                        <value> <int>2007</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>time</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_week</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Alarm</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Refresh worklist table content</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

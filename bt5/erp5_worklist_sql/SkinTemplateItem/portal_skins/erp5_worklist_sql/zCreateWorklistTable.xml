@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>zCreateWorklistTable</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+DROP TABLE IF EXISTS worklist_cache\n
+<dtml-var sql_delimiter>\n
+CREATE TABLE `worklist_cache` (\n
+  `count` INT UNSIGNED NOT NULL,\n
+  `owner` VARCHAR(32) NOT NULL,\n
+  `security_uid` INT UNSIGNED NOT NULL,\n
+  `portal_type` VARCHAR(255) NOT NULL,\n
+  `validation_state` VARCHAR(255) NULL,\n
+  `simulation_state` VARCHAR(255) NULL,\n
+  KEY `portal_simulation_security` (`portal_type`, `simulation_state`, `security_uid`),\n
+  KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `owner`),\n
+  KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),\n
+  KEY `portal_validation_owner` (`portal_type`, `validation_state`, `owner`)\n
+) TYPE=InnoDB;
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="__newobj__" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+DROP TABLE IF EXISTS worklist_cache\n
+<dtml-var sql_delimiter>\n
+CREATE TABLE `worklist_cache` (\n
+  `count` INT UNSIGNED NOT NULL,\n
+  `owner` VARCHAR(32) NOT NULL,\n
+  `security_uid` INT UNSIGNED NOT NULL,\n
+  `portal_type` VARCHAR(255) NOT NULL,\n
+  `validation_state` VARCHAR(255) NULL,\n
+  `simulation_state` VARCHAR(255) NULL,\n
+  KEY `portal_simulation_security` (`portal_type`, `simulation_state`, `security_uid`),\n
+  KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `owner`),\n
+  KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),\n
+  KEY `portal_validation_owner` (`portal_type`, `validation_state`, `owner`)\n
+) TYPE=InnoDB;
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

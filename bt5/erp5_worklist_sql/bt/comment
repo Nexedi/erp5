@@ -1,0 +1,1 @@
+Depends on erp5_mysql_innodb_catalog version gein at least 1.1 (inclued) because it relies on the presence of the "owner" column.

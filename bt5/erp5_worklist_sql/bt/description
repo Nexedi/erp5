@@ -1,0 +1,3 @@
+SQL-based caching system for worklists.
+
+This allows to cache object count into a SQL table, reducing greatly the amount of work needed for every worklist generation.

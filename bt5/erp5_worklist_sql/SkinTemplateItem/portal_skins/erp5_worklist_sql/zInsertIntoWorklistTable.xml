@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>count</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>owner</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>portal_type</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>security_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>simulation_state</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>validation_state</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+<string>count</string>
+<string>security_uid</string>
+<string>portal_type</string>
+<string>simulation_state</string>
+<string>validation_state</string>
+<string>owner</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>count\r\n
+security_uid\r\n
+portal_type\r\n
+simulation_state\r\n
+validation_state\r\n
+owner</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>zInsertIntoWorklistTable</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+INSERT INTO\n
+  worklist_cache\n
+  (`count`, `owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`)\n
+VALUES\n
+<dtml-in prefix="loop" expr="_.range(_.len(count))">\n
+  (\n
+  <dtml-sqlvar expr="count[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="owner[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="simulation_state[loop_item]" type="string" optional>\n
+  )\n
+  <dtml-if sequence-end><dtml-else>,</dtml-if>\n
+</dtml-in>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="__newobj__" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+INSERT INTO\n
+  worklist_cache\n
+  (`count`, `owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`)\n
+VALUES\n
+<dtml-in prefix="loop" expr="_.range(_.len(count))">\n
+  (\n
+  <dtml-sqlvar expr="count[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="owner[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="simulation_state[loop_item]" type="string" optional>\n
+  )\n
+  <dtml-if sequence-end><dtml-else>,</dtml-if>\n
+</dtml-in>
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
