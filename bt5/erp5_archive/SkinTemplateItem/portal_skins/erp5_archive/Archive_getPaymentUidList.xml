@@ -125,12 +125,16 @@
 select distinct(stock.payment_uid) \n
 from stock \n
 where \n
-  stock.payment_uid in (\n
-   <dtml-in account_uid_list>\n
-    <dtml-unless sequence-start>, </dtml-unless>\n
-     <dtml-sqlvar sequence-item type="int">\n
-   </dtml-in>\n
-   ) \n
+  (1)\n
+  <dtml-if account_uid_list>\n
+    and\n
+    stock.payment_uid in (\n
+     <dtml-in account_uid_list>\n
+       <dtml-unless sequence-start>, </dtml-unless>\n
+       <dtml-sqlvar sequence-item type="int">\n
+     </dtml-in>\n
+     ) \n
+  </dtml-if>\n
   and stock.payment_uid is not NULL  \n
   and stock.payment_uid != ""
 
@@ -175,12 +179,16 @@ where \n
 select distinct(stock.payment_uid) \n
 from stock \n
 where \n
-  stock.payment_uid in (\n
-   <dtml-in account_uid_list>\n
-    <dtml-unless sequence-start>, </dtml-unless>\n
-     <dtml-sqlvar sequence-item type="int">\n
-   </dtml-in>\n
-   ) \n
+  (1)\n
+  <dtml-if account_uid_list>\n
+    and\n
+    stock.payment_uid in (\n
+     <dtml-in account_uid_list>\n
+       <dtml-unless sequence-start>, </dtml-unless>\n
+       <dtml-sqlvar sequence-item type="int">\n
+     </dtml-in>\n
+     ) \n
+  </dtml-if>\n
   and stock.payment_uid is not NULL  \n
   and stock.payment_uid != ""
 

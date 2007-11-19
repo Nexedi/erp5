@@ -1,3 +1,6 @@
+2007-11-19 Aurel
+* rewrite workflow script to do more check
+
 2007-11-14 Aurel
 * update workflow to defined h:m:s on archive date, many zsql method and script update to take more cases into account
 

@@ -133,14 +133,18 @@ account_node_uid</string> </value>
 select distinct(stock.node_uid) \n
 from stock \n
 where \n
-  (stock.payment_uid not in (\n
-   <dtml-in account_uid_list>\n
-    <dtml-unless sequence-start>, </dtml-unless>\n
-     <dtml-sqlvar sequence-item type="int">\n
-   </dtml-in>\n
-   ) \n
-  or stock.payment_uid is NULL\n
-  or stock.payment_uid = "")\n
+  (1)\n
+  <dtml-if account_uid_list>\n
+    or \n
+    (stock.payment_uid not in ( \n
+     <dtml-in account_uid_list>\n
+      <dtml-unless sequence-start>, </dtml-unless>\n
+       <dtml-sqlvar sequence-item type="int">\n
+     </dtml-in>\n
+     ) \n
+    or stock.payment_uid is NULL\n
+    or stock.payment_uid = "")\n
+  </dtml-if>\n
   <dtml-if account_node_uid>\n
     and stock.node_uid != <dtml-sqlvar account_node_uid type="int" >\n
   </dtml-if>
@@ -186,14 +190,18 @@ where \n
 select distinct(stock.node_uid) \n
 from stock \n
 where \n
-  (stock.payment_uid not in (\n
-   <dtml-in account_uid_list>\n
-    <dtml-unless sequence-start>, </dtml-unless>\n
-     <dtml-sqlvar sequence-item type="int">\n
-   </dtml-in>\n
-   ) \n
-  or stock.payment_uid is NULL\n
-  or stock.payment_uid = "")\n
+  (1)\n
+  <dtml-if account_uid_list>\n
+    or \n
+    (stock.payment_uid not in ( \n
+     <dtml-in account_uid_list>\n
+      <dtml-unless sequence-start>, </dtml-unless>\n
+       <dtml-sqlvar sequence-item type="int">\n
+     </dtml-in>\n
+     ) \n
+    or stock.payment_uid is NULL\n
+    or stock.payment_uid = "")\n
+  </dtml-if>\n
   <dtml-if account_node_uid>\n
     and stock.node_uid != <dtml-sqlvar account_node_uid type="int" >\n
   </dtml-if>

@@ -75,33 +75,58 @@ from Products.ERP5Type.Message import Message\n
 # Check connection definition\n
 \n
 archive = state_change[\'object\']\n
-min_stop_date = archive.getStopDateRangeMin()\n
+min_stop_date = archive.getStopDateRangeMin().Date()\n
 catalog_id = archive.getCatalogId()\n
 \n
 if "deferred" not in archive.getDeferredConnectionId():\n
   msg = Message(domain=\'ui\', message=\'Deferred connection ID choose is not a deferred connection.\')\n
   raise ValidationFailed, (msg,)\n
 \n
-previous_archive_list = [x.getObject() for x in archive.portal_catalog(portal_type="Archive", validation_state=\'validated\')]\n
-\n
 def sort_max_date(a, b):\n
   return cmp(a.getStopDateRangeMax(), b.getStopDateRangeMax())\n
-previous_archive_list.sort(sort_max_date)\n
 \n
-if len(previous_archive_list) > 0:\n
-  # Check the date\n
-  previous_archive = previous_archive_list[-1]\n
-  if previous_archive.getStopDateRangeMax() is None:\n
-    msg = Message(domain=\'ui\', message=\'No max stop date defined in previous archive.\')\n
-    raise ValidationFailed, (msg,)\n
-  if previous_archive.getStopDateRangeMax() + 1 != min_stop_date:\n
-    msg = Message(domain=\'ui\', message=\'Archive are not contiguous.\')\n
-    raise ValidationFailed, (msg,)\n
-  # Check the catalog\n
-  for arch in previous_archive_list:\n
-    if arch.getCatalogId() == catalog_id and arch is not previous_archive:\n
-      msg = Message(domain=\'ui\', message=\'Use of a former catalog is prohibited.\')\n
+\n
+if archive.getStopDateRangeMax() is not None:\n
+\n
+  previous_archive_list = [x.getObject() for x in archive.portal_catalog(portal_type="Archive",\n
+                                                                         validation_state=\'validated\')]\n
+  previous_archive_list.sort(sort_max_date)\n
+\n
+  if len(previous_archive_list) > 0:\n
+    # Check the date\n
+    for x in len(previous_archive_list):\n
+      previous_archive = previous_archive_list[x]\n
+      # find a previous archive which was not for current catalog\n
+      if previous_archive.getStopDateRangeMax() is not None:\n
+        break\n
+    if previous_archive.getStopDateRangeMax().Date() != min_stop_date:\n
+      msg = Message(domain=\'ui\', message=\'Archive are not contiguous.\')\n
       raise ValidationFailed, (msg,)\n
+else:\n
+  previous_archive_list = [x.getObject() for x in archive.portal_catalog(portal_type="Archive",\n
+                                                                         validation_state=\'ready\')]\n
+  previous_archive_list.sort(sort_max_date)\n
+\n
+  if len(previous_archive_list) > 0:\n
+    # Check the date\n
+    for x in len(previous_archive_list):\n
+      previous_archive = previous_archive_list[x]\n
+      # find a previous archive which was not for current catalog\n
+      if previous_archive.getStopDateRangeMax() is not None:\n
+        break\n
+    if previous_archive.getStopDateRangeMax().Date() != min_stop_date:\n
+      msg = Message(domain=\'ui\', message=\'Archive are not contiguous.\')\n
+      raise ValidationFailed, (msg,)\n
+\n
+\n
+# Check the catalog\n
+previous_archive_list = [x.getObject() for x in archive.portal_catalog(portal_type="Archive",\n
+                                                                       validation_state=[\'validated\', \'ready\'])]\n
+\n
+for arch in previous_archive_list:\n
+  if arch.getCatalogId() == catalog_id and arch is not previous_archive:\n
+    msg = Message(domain=\'ui\', message=\'Use of a former catalog is prohibited.\')\n
+    raise ValidationFailed, (msg,)\n
 
 
 ]]></string> </value>
@@ -157,15 +182,15 @@ if len(previous_archive_list) > 0:\n
                             <string>min_stop_date</string>
                             <string>catalog_id</string>
                             <string>msg</string>
+                            <string>sort_max_date</string>
+                            <string>None</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>previous_archive_list</string>
-                            <string>sort_max_date</string>
                             <string>len</string>
                             <string>previous_archive</string>
-                            <string>None</string>
                             <string>arch</string>
                           </tuple>
                         </value>
