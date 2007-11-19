@@ -2031,6 +2031,40 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
        ctool(portal_type='Organisation', title=dict(query='Foo%',
                                                     key='ExactMatch'))])
 
+  def test_ignore_empty_string(self):
+    # ERP5Catalog ignore empty strings by default
+    doc_with_title = self._makeOrganisation(title='X')
+    doc_with_empty_title = self._makeOrganisation(title='')
+    ctool = self.getCatalogTool()
+    def searchResults(**kw):
+      kw['portal_type'] = 'Organisation'
+      return set([x.getObject() for x in ctool.searchResults(**kw)])
+    
+    # title='' is ignored
+    self.assertEquals(set([doc_with_empty_title, doc_with_title]),
+                      searchResults(title=''))
+    # unless we exlicitly say we don't want to ignore empty strings
+    self.assertEquals(set([doc_with_empty_title]),
+                      searchResults(ignore_empty_string=0, title=''))
+
+  def test_ignore_empty_string_related_key(self):
+    # ERP5Catalog ignore empty strings by default, also on related keys
+    region_with_empty_title = self.portal.portal_categories.region.newContent(
+                                        portal_type='Category', title='')
+    doc_with_empty_region_title = self._makeOrganisation(title='X',
+                            region_value=region_with_empty_title)
+    doc_without_region = self._makeOrganisation(title='')
+    ctool = self.getCatalogTool()
+    def searchResults(**kw):
+      kw['portal_type'] = 'Organisation'
+      return set([x.getObject() for x in ctool.searchResults(**kw)])
+    
+    self.assertEquals(set([doc_with_empty_region_title, doc_without_region]),
+                      searchResults(region_title=''))
+    self.assertEquals(set([doc_with_empty_region_title]),
+        searchResults(ignore_empty_string=0, region_title=''))
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
