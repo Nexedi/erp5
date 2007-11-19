@@ -283,10 +283,22 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
       Exchange databases and finish reindexing in the same transaction.
     """
+    default_catalog_id = self.default_sql_catalog_id
     self.exchangeDatabases(source_sql_catalog_id=source_sql_catalog_id,
                            destination_sql_catalog_id=destination_sql_catalog_id,
                            skin_selection_dict=skin_selection_dict,
                            sql_connection_id_dict=sql_connection_id_dict)
+    # cancel archive use as current catalog before archive
+    if self.archive_path is not None  and \
+           getattr(self, "portal_archives", None) is not None:
+      if len(self.portal_archives):
+        archive_list = self.portal_archives.getArchiveList()
+        for archive_path in archive_list:
+          archive = self.unrestrictedTraverse(archive_path)
+          if archive.getCatalogId() == default_catalog_id:
+            # this is the current catalog used for archiving
+            archive.cancel()
+          
     self.setHotReindexingState(state=HOT_REINDEXING_FINISHED_STATE)
     clearCache(cache_factory_list=('erp5_content_short',))
 
@@ -706,10 +718,10 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     catalog_dict = {}
 
-    # Create archive obj list if necessary
+    # Create archive object list if necessary
     if archiving:
       # while archiving only test with the archive we used, do not care
-      # of other as they must alredy be ok
+      # of other as they must already be ok
       archive = self.unrestrictedTraverse(self.archive_path)
       archive_obj_list = [archive,]
       for archive_path in archive_list:
@@ -720,7 +732,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         if archive.getCatalogId() == self.destination_sql_catalog_id:
           archive_obj_list.append(archive)
     else:
-      # otherwise take all archive in use to knwo where object must go
+      # otherwise take all archive in use to know where object must go
       archive_obj_list = []
       for archive_path in archive_list:
         try:
@@ -759,8 +771,9 @@ class ZCatalog(Folder, Persistent, Implicit):
               catalog_dict[catalog_id]['obj'].append(obj)
             else:
               catalog_dict[catalog_id] = {'priority' : priority, 'obj' : [obj,]}
-        if catalog_id is None:
+        if catalog_id is None and not archiving:
           # at least put object in current catalog if no archive match
+          # and not doing archive
           goto_current_catalog = 1
       else:
         goto_current_catalog = 1
