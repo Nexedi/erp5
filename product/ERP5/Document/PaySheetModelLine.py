@@ -26,14 +26,10 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
-
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-
-from Products.ERP5.Document.PaySheetLine import PaySheetLine
+from Products.ERP5Type import Permissions, PropertySheet, Interface
 from Products.ERP5.Document.Predicate import Predicate
-from Products.ERP5.Variated import Variated
+from Products.ERP5.Document.PaySheetLine import PaySheetLine
 
 from zLOG import LOG
 
