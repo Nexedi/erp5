@@ -94,7 +94,7 @@ if archive.getStopDateRangeMax() is not None:\n
 \n
   if len(previous_archive_list) > 0:\n
     # Check the date\n
-    for x in len(previous_archive_list):\n
+    for x in xrange(len(previous_archive_list)):\n
       previous_archive = previous_archive_list[x]\n
       # find a previous archive which was not for current catalog\n
       if previous_archive.getStopDateRangeMax() is not None:\n
@@ -109,7 +109,7 @@ else:\n
 \n
   if len(previous_archive_list) > 0:\n
     # Check the date\n
-    for x in len(previous_archive_list):\n
+    for x in xrange(len(previous_archive_list)):\n
       previous_archive = previous_archive_list[x]\n
       # find a previous archive which was not for current catalog\n
       if previous_archive.getStopDateRangeMax() is not None:\n
@@ -190,6 +190,7 @@ for arch in previous_archive_list:\n
                             <string>x</string>
                             <string>previous_archive_list</string>
                             <string>len</string>
+                            <string>xrange</string>
                             <string>previous_archive</string>
                             <string>arch</string>
                           </tuple>
