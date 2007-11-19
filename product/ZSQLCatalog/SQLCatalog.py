@@ -2036,7 +2036,6 @@ class Catalog(Folder,
     # Do not generate dynamic related key for acceptable_keys
     dynamic_key_list = [k for k in key_list \
         if k not in self.getColumnMap().keys()]
-    dynamic_kw = {}
 
     dynamic_list = self.getDynamicRelatedKeyList(dynamic_key_list)
     full_list = list(dynamic_list) + list(self.sql_catalog_related_keys)
@@ -2241,6 +2240,10 @@ class Catalog(Folder,
       t_tuple = t.split('|')
       key = t_tuple[0].strip()
       if key in key_list:
+        if ignore_empty_string \
+            and kw.get(key, '') in ('', [], ()):
+              # we don't ignore 0
+          continue
         join_tuple = t_tuple[1].strip().split('/')
         related_keys[key] = None
         method_id = join_tuple[2]
