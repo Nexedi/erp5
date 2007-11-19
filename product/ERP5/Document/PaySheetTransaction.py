@@ -190,11 +190,12 @@ class PaySheetTransaction(Invoice):
 
       # perhaps here it will be necesary to raise an error ?
       if not paysheet_items.has_key(service_id):
-        paysheet_items[service_id] = { 'title'   : model_line.getTitleOrId()
-                                     , 'id'      : model_line.getId()
-                                     , 'desc'    : []
-                                     , 'res'     : service.getRelativeUrl()
-                                     , 'cell_list'   : []
+        paysheet_items[service_id] = { 
+                                       'title'    : model_line.getTitleOrId(),
+                                       'id'       : model_line.getId(),
+                                       'desc'     : [],
+                                       'res'      : service.getRelativeUrl(),
+                                       'cell_list': []
                                      }
       
       # create cells if a value has been entered by accountable
@@ -226,12 +227,11 @@ class PaySheetTransaction(Invoice):
         else: 
           desc = None
         paysheet.createPaySheetLine( 
-                        title    = item['title']
-                      , id       = item['id']
-                      , res      = item['res']
-                      , desc     = desc
-                      , cell_list    = item['cell_list']
-                      )
+                                    title     = item['title'],
+                                    id        = item['id'],
+                                    res       = item['res'],
+                                    desc      = desc,
+                                    cell_list = item['cell_list'],)
 
 
   security.declareProtected(Permissions.ModifyPortalContent,
@@ -481,11 +481,11 @@ class PaySheetTransaction(Invoice):
         if cell_list:
           # create the PaySheetLine
           pay_sheet_line = self.createPaySheetLine(
-                                                    title     = title
-                                                  , id        = id
-                                                  , res       = res
-                                                  , desc      = desc
-                                                  , cell_list = cell_list
+                                                    title     = title,
+                                                    id        = id,
+                                                    res       = res,
+                                                    desc      = desc,
+                                                    cell_list = cell_list,
                                                   )
           pay_sheet_line_list.append(pay_sheet_line)
 
