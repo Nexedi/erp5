@@ -976,7 +976,7 @@ class TestERP5BankingMixin:
     inventory_group_id = 'inventory_group_%s_%s%s' % \
                          (destination.getParentValue().getUid(),destination.getId(),extra_id)
     if start_date is None:
-      start_date = DateTime()
+      start_date = DateTime()-1
     if not hasattr(self, inventory_group_id):
       inventory_group =  self.cash_inventory_module.newContent(id=inventory_group_id,
                                                                portal_type='Cash Inventory Group',
