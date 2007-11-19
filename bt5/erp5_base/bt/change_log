@@ -1,3 +1,6 @@
+2007-11-19 Yusei
+* switch off acquire_local_roles on Assignment, Currency, Bank Account.
+
 2007-10-24 Jerome
 * rename career workflow state variable in 'validation_state'
 
