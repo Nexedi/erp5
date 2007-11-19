@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -98,6 +95,11 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>New Title</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
   <td>field_my_foo_category_title</td>\n
   <td>a1</td>\n
 </tr>\n
@@ -145,7 +147,12 @@
   <td>Site Error</td>\n
   <td/>\n
 </tr>\n
-<!-- To be continued... this is currently failing here :( -->\n
+<!-- Changes made to other fields are not lost -->\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_title</td>\n
+  <td>New Title</td>\n
+</tr>\n
 \n
 \n
 <!-- Type an unknown value, and validate -->\n
