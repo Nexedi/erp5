@@ -219,6 +219,21 @@ class ProxyField(ZMIField):
       return self.manage_main(self, REQUEST,
                               manage_tabs_message=message)
 
+  def manage_edit_surcharged_xmlrpc(self, mapping):
+    """Edit surcharged properties
+    This method is similar to manage_edit_xmlrpc, and it marks the properties
+    as not delegated.
+    """
+    self._surcharged_edit(mapping, mapping.keys())
+
+  def manage_tales_surcharged_xmlrpc(self, mapping):
+    """Edit surcharged TALES
+    This method is similar to manage_tales_xmlrpc, and it marks the TALES
+    properties as not delegated.
+    """
+    self._surcharged_tales(mapping, mapping.keys())
+
+
   def _surcharged_edit(self, result, surcharge_list):
     # first check for any changes  
     values = self.values

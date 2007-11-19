@@ -270,6 +270,25 @@ class TestProxyField(unittest.TestCase):
     # and validate
     self.container.Base_view.validate_all_to_request(dict())
     
+  def test_manage_edit_surcharged_xmlrpc(self):
+    # manage_edit_surcharged_xmlrpc is a method to edit proxyfields
+    # programmatically
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_string', 'String', 'StringField')
+    proxy_field = self.addField(self.container.Base_view,
+                                'my_String', '', 'ProxyField')
+    proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                        field_id='my_date',))
+
+    proxy_field.manage_edit_surcharged_xmlrpc(dict(title='Title'))
+    self.assertFalse(proxy_field.is_delegated('title'))
+    self.assertEquals('Title', proxy_field.get_value('title'))
+
+    # beware that all values that are not passed in the mapping will be
+    # delegated again, regardless of the old state.
+    proxy_field.manage_edit_surcharged_xmlrpc(dict())
+    self.assertTrue(proxy_field.is_delegated('title'))
+
 
 class TestFieldValueCache(unittest.TestCase):
   """Tests field value caching system
