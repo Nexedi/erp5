@@ -971,7 +971,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         acquisition_base_category_list = base_category_value.getAcquisitionBaseCategoryList()
         alt_base_category_list = base_category_value.getFallbackBaseCategoryList()
         all_acquisition_base_category_list = acquisition_base_category_list + alt_base_category_list
-        acquisition_pt = base_category_value.getAcquisitionPortalTypeList('python: []')
+        acquisition_pt = base_category_value.getAcquisitionPortalTypeList(None)
         for my_base_category in acquisition_base_category_list:
           # We implement here special keywords
           if my_base_category == 'parent':
@@ -984,7 +984,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               #LOG("Parent Object List ",0,str(acquisition_pt))
               #my_acquisition_object_path = parent.getPhysicalPath()
               #if my_acquisition_object_path in acquired_object_dict:
-              if acquisition_pt == [] or parent.portal_type in acquisition_pt:
+              if acquisition_pt is None or parent.portal_type in acquisition_pt:
                 my_acquisition_object_list = [parent]
               else:
                 my_acquisition_object_list = []
