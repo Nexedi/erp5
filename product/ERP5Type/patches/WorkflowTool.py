@@ -548,7 +548,7 @@ def WorkflowTool_refreshWorklistCache(self):
         worklist_dict[wf_id] = a
   # End of duplicated code
   if len(worklist_dict):
-    self.zCreateWorklistTable() # Create (or flush existing) table
+    self.Base_zCreateWorklistTable() # Create (or flush existing) table
     portal_catalog = getToolByName(self, 'portal_catalog')
     search_result = portal_catalog.unrestrictedSearchResults
     acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
@@ -589,6 +589,6 @@ def WorkflowTool_refreshWorklistCache(self):
           if column_id in value_column_dict:
             value_column_dict[column_id].append(value)
       if len(value_column_dict[COUNT_COLUMN_TITLE]):
-        self.zInsertIntoWorklistTable(**value_column_dict)
+        self.Base_zInsertIntoWorklistTable(**value_column_dict)
 
 WorkflowTool.refreshWorklistCache = WorkflowTool_refreshWorklistCache

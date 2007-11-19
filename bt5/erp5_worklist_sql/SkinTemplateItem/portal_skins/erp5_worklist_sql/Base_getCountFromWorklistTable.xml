@@ -66,10 +66,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from ZODB.POSException import ConflictError\n
-# Wrapper for zGetCountFromWorklistTable\n
+# Wrapper for Base_zGetCountFromWorklistTable\n
 where_expression = query.asSQLExpression()[\'where_expression\']\n
 try:\n
-  result = context.zGetCountFromWorklistTable(\n
+  result = context.Base_zGetCountFromWorklistTable(\n
   where_expression=where_expression,\n
   select_expression=select_expression,\n
   group_by_expression=group_by_expression,\n
@@ -80,7 +80,7 @@ except:\n
   # Possibly a SQL error caused by a non-existing table.\n
   # Attemp a refresh and retry without error handling.\n
   context.Base_refreshWorklistTableContent()\n
-  result = context.zGetCountFromWorklistTable(\n
+  result = context.Base_zGetCountFromWorklistTable(\n
   where_expression=where_expression,\n
   select_expression=select_expression,\n
   group_by_expression=group_by_expression,\n
