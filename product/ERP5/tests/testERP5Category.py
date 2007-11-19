@@ -303,6 +303,46 @@ class TestERP5Category(ERP5TypeTestCase):
     base_category.newContent(id='toto',title='Toto')
     self.assertTrue(len(base_category.Base_viewDict())>0)
 
+
+  def test_getAcquiredCategoryList(self):
+    # create a base category
+    ctool = self.getCategoryTool()
+    test_aq_category = ctool.newContent(id='test_aq_category',
+        portal_type='Base Category',
+        acquisition_base_category_list=['parent'],
+        acquisition_portal_type="python:['Organisation', 'Telephone']",)
+    test_aq_category.newContent(portal_type='Category', id='1')
+    # this category will acquire from parent category
+    self.assertEquals(['parent'], test_aq_category.getAcquisitionBaseCategoryList())
+    # only if portal type of the current document and his parent are in
+    # acquisition portal type
+    self.assertEquals(['Organisation', 'Telephone'],
+                      test_aq_category.getAcquisitionPortalTypeList())
+    
+    # associate the base category with our portal types
+    ttool = self.getTypesTool()
+    ttool['Organisation'].base_category_list = ['test_aq_category']
+    ttool['Telephone'].base_category_list = ['test_aq_category']
+
+    doc = self.organisation
+    subdoc = doc['1']
+
+    doc.setCategoryList(['test_aq_category/1'])
+    self.assertEquals(['test_aq_category/1'], ctool.getAcquiredCategoryList(doc))
+    self.assertEquals(['test_aq_category/1'], doc.getAcquiredCategoryList())
+    
+    # Telephone subdocument acquire categories, because 'test_aq_category' has
+    # 'parent' in its acquisition_base_category_list
+    self.assertEquals([], subdoc.getCategoryList())
+    self.assertEquals(['test_aq_category/1'], subdoc.getAcquiredCategoryList())
+    
+    doc.setCategoryList([])
+    self.assertEquals([], ctool.getAcquiredCategoryList(doc))
+
+    # XXX this test's beforeTearDown commits transaction
+    get_transaction().abort()
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Category))
