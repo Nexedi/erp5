@@ -206,7 +206,7 @@ class BaobabConduit(ERP5Conduit):
   except ImportError:
     inventory_code_to_path = {}
     vault_code_to_path = {}
-    ariation_translate_dict = {}
+    variation_translate_dict = {}
     status_code_to_cash_status = {}
     former_coin_variation_list = []
     default_letter_code = None
@@ -593,10 +593,10 @@ class BaobabConduit(ERP5Conduit):
               category = 'not_defined'
           elif base_key == 'letter_code':
             letter = kw[base_key]
-            if letter in valid_letter_code_set:
+            if letter in self.valid_letter_code_set:
               category = letter
             else:
-              category = default_letter_code
+              category = self.default_letter_code
         else:
           category = 'not_defined'
         # We must have at least a category for each axis
