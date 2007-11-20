@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Generic Search Dialog</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test Generic Search Dialog</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string:${here/portal_url}/bar_module/FooModule_createObjects?start:int=1&num:int=1"/>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string:${here/portal_url}/bar_module/FooModule_createObjects?start:int=2&num:int=1&portal_type=Bar"/>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string:${here/portal_url}/Zuite_waitForActivities"/>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string:${here/portal_url}/bar_module/view"/>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name=\'field_your_title\']</td>\n
+  <td>Title</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertSelected</td>\n
+  <td>field_your_title_search_key</td>\n
+  <td>Default (Keyword)</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>title</td>\n
+  <td>Title</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>2 record(s)</td>\n
+</tr>\n
+\n
+\n
+<!-- selection is saved -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//input[@name=\'field_your_title\']</td>\n
+  <td>Title</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- search more\n
+XXX doing more advanced stuffs requires \'addSelection\' and \'removeSelection\'\n
+commands from selenium 0.8\n
+-->\n
+<tr>\n
+  <td>select</td>\n
+  <td>field_your_simulation_state</td>\n
+  <td>label=Draft</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>title</td>\n
+  <td>Title</td>\n
+</tr>\n
+<!-- only \'Foo\' portal type have a simulation state, so we only have 1 document\n
+-->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>1 record(s)</td>\n
+</tr>\n
+\n
+\n
+<!-- select again, with exact search mode -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>field_your_title_search_key</td>\n
+  <td>label=ExactMatch</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>0 record(s)</td>\n
+</tr>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testSearchDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
