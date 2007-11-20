@@ -2217,12 +2217,13 @@ class Catalog(Folder,
 
     # if we have a sort index, we must take it into account to get related
     # keys.
+    sort_key_dict = dict()
     if sort_index:
-      related_key_kw = dict(kw)
       for sort_info in sort_index:
         sort_key = sort_info[0]
         if sort_key not in key_list:
           key_list.append(sort_key)
+        sort_key_dict[sort_key] = 1
 
     related_tuples = self.getSQLCatalogRelatedKeyList(key_list=key_list)
 
@@ -2241,8 +2242,10 @@ class Catalog(Folder,
       key = t_tuple[0].strip()
       if key in key_list:
         if ignore_empty_string \
-            and kw.get(key, '') in ('', [], ()):
-              # we don't ignore 0
+            and kw.get(key, None) in ('', [], ())\
+            and key not in sort_key_dict:
+              # We don't ignore 0 and None, but if the key is used for sorting,
+              # we should not discard this key
           continue
         join_tuple = t_tuple[1].strip().split('/')
         related_keys[key] = None
