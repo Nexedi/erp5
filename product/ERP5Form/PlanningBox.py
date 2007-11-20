@@ -43,6 +43,7 @@
 from Products.PythonScripts.Utility import allow_class
 from Globals import InitializeClass
 
+from ZODB.POSException import ConflictError
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from DateTime import DateTime
