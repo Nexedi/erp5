@@ -319,6 +319,32 @@ class TestTransactionValidation(AccountingTestCase):
     transaction.setStopDate(DateTime("2007/03/03"))
     self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
 
+  def test_UnusedSectionTransactionValidationDate(self):
+    # If a section doesn't have any accounts on its side, we don't check the
+    # accounting period dates
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2006/03/03'),
+               source_section_value=self.organisation_module.supplier,
+               destination_section_value=self.section,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    # 2006 is closed for destination_section
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    # If we don't have accounts on destination side, validating transaction is
+    # not refused
+    for line in transaction.getMovementList():
+      line.setDestination(None)
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
   def test_AccountingTransactionValidationStartDate(self):
     # Check we can/cannot validate at date boundaries of the period
     transaction = self._makeOne(
