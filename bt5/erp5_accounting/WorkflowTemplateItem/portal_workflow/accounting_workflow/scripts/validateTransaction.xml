@@ -104,18 +104,29 @@ if not currency :\n
 if not transaction.getStartDate() and transaction.getStopDate():\n
   transaction.setStartDate(transaction.getStopDate())\n
 \n
+      \n
+transaction_line_list = transaction.getMovementList(\n
+        portal_type=transaction.getPortalAccountingMovementTypeList())\n
 if not transaction.getStartDate() :\n
   raise ValidationFailed(N_(\'Date is not Defined\'))\n
 else:\n
   if not skip_period_validation :\n
     # check the date is in an opened period\n
     if source_section is not None:\n
+      # if we don\'t have any accounts on this side, we don\'t enforce date\n
+      # checks\n
       valid_date = False\n
+      no_accounts = True\n
+      for line in transaction_line_list:\n
+        if line.getSource():\n
+          no_accounts = False\n
+      if no_accounts:\n
+        valid_date = True\n
       transaction_date = transaction.getStartDate().earliestTime()\n
       openned_accounting_period_list = source_section.searchFolder(\n
                                  portal_type="Accounting Period",\n
                                  # planned is for b/w compatibility\n
-                                 simulation_state=("planned", \'started\'))\n
+                                 simulation_state=(\'planned\', \'started\'))\n
       if not len(source_section.contentValues(\n
                filter=dict(portal_type="Accounting Period"))):\n
         # if the entity doesn\'t have any accounting period, we can\n
@@ -131,11 +142,19 @@ else:\n
                                   "for source section"))\n
     # do the same for destination section \n
     if destination_section is not None:\n
+      # if we don\'t have any accounts on this side, we don\'t enforce date\n
+      # checks\n
       valid_date = False\n
+      no_accounts = True\n
+      for line in transaction_line_list:\n
+        if line.getDestination():\n
+          no_accounts = False\n
+      if no_accounts:\n
+        valid_date = True\n
       transaction_date = transaction.getStopDate().earliestTime()\n
       openned_accounting_period_list = destination_section.searchFolder(\n
                                  portal_type = "Accounting Period",\n
-                                 simulation_state = (\'planned\', \'started\'))\n
+                                 simulation_state=(\'planned\', \'started\'))\n
       if not len(destination_section.contentValues(\n
                filter=dict(portal_type="Accounting Period"))):\n
         valid_date = True\n
@@ -223,14 +242,17 @@ else:\n
                             <string>None</string>
                             <string>destination_section</string>
                             <string>currency</string>
+                            <string>transaction_line_list</string>
                             <string>False</string>
                             <string>valid_date</string>
+                            <string>True</string>
+                            <string>no_accounts</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
                             <string>transaction_date</string>
                             <string>openned_accounting_period_list</string>
                             <string>len</string>
                             <string>dict</string>
-                            <string>True</string>
-                            <string>_getiter_</string>
                             <string>apd</string>
                           </tuple>
                         </value>
