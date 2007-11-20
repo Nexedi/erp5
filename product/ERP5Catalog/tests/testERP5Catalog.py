@@ -2031,6 +2031,21 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
        ctool(portal_type='Organisation', title=dict(query='Foo%',
                                                     key='ExactMatch'))])
 
+  def test_KeywordSearch(self):
+    # test keyword search with queries
+    doc = self._makeOrganisation(description='Foo')
+    other_doc = self._makeOrganisation(description='Foobar')
+    ctool = self.getCatalogTool()
+
+    # description is not a keyword by default. (This might change in the
+    # future, in this case, this test have to be updated)
+    self.assertSameSet([doc], [x.getObject() for x in 
+        ctool(portal_type='Organisation', description='Foo')])
+    self.assertEquals(set([doc, other_doc]), set([x.getObject() for x in
+      ctool(portal_type='Organisation', description=dict(query='Foo',
+                                                         key='Keyword'))]))
+
+
   def test_ignore_empty_string(self):
     # ERP5Catalog ignore empty strings by default
     doc_with_title = self._makeOrganisation(title='X')
