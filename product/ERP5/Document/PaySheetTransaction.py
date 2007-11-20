@@ -100,7 +100,8 @@ class PaySheetTransaction(Invoice):
 
   security.declareProtected(Permissions.AddPortalContent,
                           'createPaySheetLine')
-  def createPaySheetLine(self, cell_list, title='', res='', desc='', **kw):
+  def createPaySheetLine(self, cell_list, title='', res='', desc='', 
+      base_amount_list=None, **kw):
     '''
     This function register all paysheet informations in paysheet lines and 
     cells. Select good cells only
@@ -135,6 +136,7 @@ class PaySheetTransaction(Invoice):
              destination                  = self.getDestinationSection(),
              variation_base_category_list = ('tax_category', 'salary_range'),
              variation_category_list      = var_cat_list,
+             base_amount_list             = base_amount_list,
              **kw)
 
     base_id = 'movement'
@@ -192,12 +194,12 @@ class PaySheetTransaction(Invoice):
       # perhaps here it will be necesary to raise an error ?
       if not paysheet_items.has_key(service_id):
         paysheet_items[service_id] = { 
-                                       'title'    : model_line.getTitleOrId(),
-                                       'id'       : model_line.getId(),
-                                       'desc'     : [],
-                                       'res'      : service.getRelativeUrl(),
-                                       'cell_list': []
-                                     }
+                           'title'            : model_line.getTitleOrId(),
+                           'desc'             : [],
+                           'base_amount_list' : model_line.getBaseAmountList(),
+                           'res'              : service.getRelativeUrl(),
+                           'cell_list'        : []
+                         }
       
       # create cells if a value has been entered by accountable
       if quantity or price:
@@ -229,10 +231,10 @@ class PaySheetTransaction(Invoice):
           desc = None
         paysheet.createPaySheetLine( 
                                     title     = item['title'],
-                                    id        = item['id'],
                                     res       = item['res'],
                                     desc      = desc,
-                                    cell_list = item['cell_list'],)
+                                    cell_list = item['cell_list'],
+                                    base_amount_list=item['base_amount_list'],)
 
 
   security.declareProtected(Permissions.ModifyPortalContent,
@@ -333,6 +335,7 @@ class PaySheetTransaction(Invoice):
       service     = model_line.getResourceValue()
       title       = model_line.getTitleOrId()
       id          = model_line.getId()
+      base_amount_list = model_line.getBaseAmountList()
       res         = service.getRelativeUrl()
       if model_line.getDescription():
         desc      = ''.join(model_line.getDescription())
@@ -437,12 +440,12 @@ class PaySheetTransaction(Invoice):
       if cell_list:
         # create the PaySheetLine
         pay_sheet_line = self.createPaySheetLine(
-                                                  title     = title,
-                                                  id        = id,
-                                                  res       = res,
-                                                  desc      = desc,
-                                                  cell_list = cell_list,
-                                                )
+                                    title     = title,
+                                    res       = res,
+                                    desc      = desc,
+                                    base_amount_list = base_amount_list,
+                                    cell_list = cell_list,
+                                  )
         pay_sheet_line_list.append(pay_sheet_line)
 
     # create a line of the total tax payed by the employee
