@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -69,13 +66,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
-folder = context.foo_module\n
 category_list = (\'a\', \'b\', \'a/a1\', \'a/a2\')\n
 \n
 for i in range(start, start + num):\n
   category = category_list[i % len(category_list)]\n
-  foo = folder.newContent(id = str(i), title = \'Title %d\' % i, quantity = 10.0 - float(i),\n
-                    foo_category = category)\n
+  foo = context.newContent(id = str(i), title = \'Title %d\' % i, quantity = 10.0 - float(i),\n
+                    foo_category = category, portal_type=portal_type)\n
   if set_dates:\n
     foo.setStartDate(DateTime(i, i, i))\n
 return \'Created Successfully.\'\n
@@ -101,7 +97,7 @@ return \'Created Successfully.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>start=0, num=10, set_dates=0</string> </value>
+            <value> <string>start=0, num=10, set_dates=0, portal_type=\'Foo\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,7 +117,7 @@ return \'Created Successfully.\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -130,10 +126,8 @@ return \'Created Successfully.\'\n
                             <string>start</string>
                             <string>num</string>
                             <string>set_dates</string>
+                            <string>portal_type</string>
                             <string>DateTime</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>folder</string>
                             <string>category_list</string>
                             <string>_getiter_</string>
                             <string>range</string>
@@ -141,6 +135,8 @@ return \'Created Successfully.\'\n
                             <string>_getitem_</string>
                             <string>len</string>
                             <string>category</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>str</string>
                             <string>float</string>
                             <string>foo</string>
@@ -159,6 +155,7 @@ return \'Created Successfully.\'\n
                 <int>0</int>
                 <int>10</int>
                 <int>0</int>
+                <string>Foo</string>
               </tuple>
             </value>
         </item>
