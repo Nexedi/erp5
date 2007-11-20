@@ -201,11 +201,14 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     bi_counter = self.paris.surface.banque_interne
     bi_counter_vault = bi_counter.guichet_1.encaisse_des_billets_et_monnaies.entrante
     line_list = self.line_list
+    start_date = DateTime()
     self.resetInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
-                             line_list=line_list,extra_id='_reset_in')
+                             line_list=line_list,extra_id='_reset_in',
+                             start_date=start_date)
     bi_counter_vault = bi_counter.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.resetInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
-                             line_list=line_list,extra_id='_reset_out')
+                             line_list=line_list,extra_id='_reset_out',
+                             start_date=start_date)
 
   def stepCheckRightStockBeforeClosingDate(self, 
                sequence=None, sequence_list=None, **kwd):

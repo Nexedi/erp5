@@ -1100,7 +1100,7 @@ class TestERP5BankingMixin:
 
   def resetInventory(self, 
                sequence=None, line_list=None, sequence_list=None, extra_id=None, 
-               destination=None, currency=None, **kwd):
+               destination=None, currency=None, start_date=None, **kwd):
     """
     Make sure we can not close the counter date 
     when there is still some operations remaining
@@ -1111,7 +1111,8 @@ class TestERP5BankingMixin:
       extra_id = '_reset'
     # Before the test, we need to input the inventory
     self.createCashInventory(source=None, destination=destination, currency=currency,
-                             line_list=line_list,extra_id=extra_id, reset_quantity=1)
+                             line_list=line_list,extra_id=extra_id, reset_quantity=1,
+                             start_date=start_date)
 
   def stepDeleteResetInventory(self, sequence=None, sequence_list=None, **kwd):
     """
