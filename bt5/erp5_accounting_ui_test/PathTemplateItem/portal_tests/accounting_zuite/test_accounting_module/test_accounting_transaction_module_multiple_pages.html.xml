@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -126,51 +123,15 @@ Test Accounting module listbox multi pages\n
   <td>//tr[@id=\'listbox_data_line_8\']/td[5]</td>\n
   <td>2005/03/01</td>\n
 </tr>\n
-<tr>\n
+<tr> \n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_9\']/td[5]</td>\n
   <td>2005/03/02</td>\n
 </tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_10\']/td[5]</td>\n
-  <td>2005/03/03</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_11\']/td[5]</td>\n
-  <td>2005/03/04</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_12\']/td[5]</td>\n
-  <td>2005/04/01</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_13\']/td[5]</td>\n
-  <td>2005/04/02</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_14\']/td[5]</td>\n
-  <td>2005/04/03</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_15\']/td[5]</td>\n
-  <td>2005/04/04</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_16\']/td[5]</td>\n
-  <td>2005/05/01</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_17\']/td[5]</td>\n
-  <td>2005/05/02</td>\n
-</tr>\n
+\n
+\n
+<!--\n
+-->\n
 <!-- stats -->\n
 <tr>\n
   <td>verifyFloat</td>\n
@@ -194,96 +155,59 @@ Test Accounting module listbox multi pages\n
   <td></td>\n
 </tr>\n
 \n
+\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[5]</td>\n
-  <td>2005/05/03</td>\n
+  <td>2005/03/03</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[5]</td>\n
-  <td>2005/05/04</td>\n
+  <td>2005/03/04</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_2\']/td[5]</td>\n
-  <td>2005/06/01</td>\n
+  <td>2005/04/01</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_3\']/td[5]</td>\n
-  <td>2005/06/02</td>\n
+  <td>2005/04/02</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_4\']/td[5]</td>\n
-  <td>2005/06/03</td>\n
+  <td>2005/04/03</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_5\']/td[5]</td>\n
-  <td>2005/06/04</td>\n
+  <td>2005/04/04</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_6\']/td[5]</td>\n
-  <td>2005/07/01</td>\n
+  <td>2005/05/01</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_7\']/td[5]</td>\n
-  <td>2005/07/02</td>\n
+  <td>2005/05/02</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_8\']/td[5]</td>\n
-  <td>2005/07/03</td>\n
+  <td>2005/05/03</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_9\']/td[5]</td>\n
-  <td>2005/07/04</td>\n
+  <td>2005/05/04</td>\n
 </tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_10\']/td[5]</td>\n
-  <td>2005/08/01</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_11\']/td[5]</td>\n
-  <td>2005/08/02</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_12\']/td[5]</td>\n
-  <td>2005/08/03</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_13\']/td[5]</td>\n
-  <td>2005/08/04</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_14\']/td[5]</td>\n
-  <td>2005/09/01</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_15\']/td[5]</td>\n
-  <td>2005/09/02</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_16\']/td[5]</td>\n
-  <td>2005/09/03</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_17\']/td[5]</td>\n
-  <td>2005/09/04</td>\n
-</tr>\n
+\n
+\n
 \n
 <!-- stats -->\n
 <tr>\n
@@ -383,46 +307,6 @@ Test Accounting module listbox multi pages\n
   <td>//tr[@id=\'listbox_data_line_9\']/td[5]</td>\n
   <td>2005/05/03</td>\n
 </tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_10\']/td[5]</td>\n
-  <td>2005/06/02</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_11\']/td[5]</td>\n
-  <td>2005/06/03</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_12\']/td[5]</td>\n
-  <td>2005/07/02</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_13\']/td[5]</td>\n
-  <td>2005/07/03</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_14\']/td[5]</td>\n
-  <td>2005/08/02</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_15\']/td[5]</td>\n
-  <td>2005/08/03</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_16\']/td[5]</td>\n
-  <td>2005/09/02</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_17\']/td[5]</td>\n
-  <td>2005/09/03</td>\n
-</tr>\n
 \n
 <!-- stats -->\n
 <tr>\n
@@ -449,32 +333,52 @@ Test Accounting module listbox multi pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[5]</td>\n
-  <td>2005/10/02</td>\n
+  <td>2005/06/02</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']/td[5]</td>\n
-  <td>2005/10/03</td>\n
+  <td>2005/06/03</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_2\']/td[5]</td>\n
-  <td>2005/11/02</td>\n
+  <td>2005/07/02</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_3\']/td[5]</td>\n
-  <td>2005/11/03</td>\n
+  <td>2005/07/03</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_4\']/td[5]</td>\n
-  <td>2005/12/02</td>\n
+  <td>2005/08/02</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_5\']/td[5]</td>\n
-  <td>2005/12/03</td>\n
+  <td>2005/08/03</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_6\']/td[5]</td>\n
+  <td>2005/09/02</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_7\']/td[5]</td>\n
+  <td>2005/09/03</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_8\']/td[5]</td>\n
+  <td>2005/10/02</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_9\']/td[5]</td>\n
+  <td>2005/10/03</td>\n
 </tr>\n
 \n
 <!-- stats -->\n
