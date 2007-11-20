@@ -36,7 +36,7 @@ from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.ListBox import ListBoxListRenderer
 
 
-def getSearchDialog(self, listbox=None):
+def getSearchDialog(self, REQUEST=None):
   """Generate a dynamic search dialog from a listbox.
   """
   request = get_request()
@@ -350,5 +350,9 @@ def getSearchDialog(self, listbox=None):
     elif field.get_value('field_id') == 'your_category_list':
       temp_form.move_field_group([field_id], default_group, 'center')
 
+  if REQUEST is not None:
+    # if called from the web, render the form, other wise return it (for
+    # Base_callDialogMethod)
+    return temp_form(REQUEST)
   return temp_form
 
