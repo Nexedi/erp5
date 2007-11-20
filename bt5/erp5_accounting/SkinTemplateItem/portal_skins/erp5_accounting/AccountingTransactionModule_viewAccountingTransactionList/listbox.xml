@@ -25,8 +25,6 @@
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>default_params</string>
-                <string>search</string>
-                <string>select</string>
                 <string>editable_columns</string>
                 <string>stat_columns</string>
                 <string>url_columns</string>
@@ -271,7 +269,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -323,10 +321,6 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>search</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key>                 <string>search_columns</string> </key>
                     <value>
                       <list>
@@ -364,10 +358,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key>                 <string>select</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
