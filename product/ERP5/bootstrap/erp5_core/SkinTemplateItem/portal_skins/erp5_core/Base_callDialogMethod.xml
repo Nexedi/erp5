@@ -155,6 +155,11 @@ if kw.has_key(\'pickle_string\'):\n
 else:\n
   form_context = context\n
 form = getattr(form_context, dialog_id)\n
+\n
+# form can be a python script that returns the form\n
+if not hasattr(form, \'validate_all_to_request\'):\n
+  form = form()\n
+\n
 # Validate the form\n
 try:\n
   # It is necessary to force editable_mode before validating\n
@@ -351,6 +356,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>form_context</string>
                             <string>getattr</string>
                             <string>form</string>
+                            <string>hasattr</string>
                             <string>request</string>
                             <string>editable_mode</string>
                             <string>validation_errors</string>
@@ -363,7 +369,6 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>field</string>
                             <string>k</string>
                             <string>v</string>
-                            <string>hasattr</string>
                             <string>splitted</string>
                             <string>len</string>
                             <string>_write_</string>
