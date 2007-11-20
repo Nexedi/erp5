@@ -1684,6 +1684,34 @@ class TestPropertySheet:
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
     
+    def test_list_accessors(self):
+      self._addProperty('Person', '''{'id': 'dummy',
+                                      'type': 'lines',
+                                      'mode': 'w',}''')
+      module = self.getPersonModule()
+      # we set the property on the module, to check acquisition works as
+      # expected.
+      module.dummy = 'value acquired on the module'
+      person = module.newContent(id='1', portal_type='Person')
+
+      # default accessor and list accessors are generated
+      self.assertTrue(hasattr(person, 'getDummy'))
+      self.assertTrue(hasattr(person, 'getDummyList'))
+
+      self.assertEquals(person.getDummy(), None)
+      # self.assertEquals(person.getDummyList(), []) # XXX what is the default
+                                                     # value for a list getter ?
+
+      person.setDummyList(['a', 'b'])
+      self.assertEquals(person.getDummy(), 'a')
+      self.assertEquals(person.getDummyList(), ['a', 'b'])
+
+      person.setDummy('value')
+      self.assertEquals(person.getDummy(), 'value')
+      self.assertEquals(person.getDummyList(), ['value'])
+
+
+
     # _aq_reset should be called implicitly when the system configuration
     # changes:
     def test_aq_reset_on_portal_types_properties_change(self):

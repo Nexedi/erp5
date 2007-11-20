@@ -228,7 +228,7 @@ class DefaultGetter(Method):
         default = args[0]
       else:
         default = self._default
-      list_value = getattr(instance, self._storage_id, default)
+      list_value = getattr(aq_base(instance), self._storage_id, default)
       if list_value is not None:
         if self._is_tales_type:
           if kw.get('evaluate', 1):
