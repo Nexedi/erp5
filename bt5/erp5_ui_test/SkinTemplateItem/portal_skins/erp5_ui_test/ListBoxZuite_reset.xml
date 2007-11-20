@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -116,9 +113,12 @@ def resetSelection(selection_name):\n
     selection_tool.setSelectionColumns(selection_name, [])\n
     selection_tool.setSelectionStats(selection_name, [])\n
     selection_tool.setListboxDisplayMode(context.REQUEST, \'FlatListMode\', selection_name)\n
+    selection_tool.setSelectionParamsFor(selection_name, dict())\n
 \n
 resetSelection(\'foo_selection\')\n
 resetSelection(\'foo_line_selection\')\n
+resetSelection(\'bar_selection\')\n
+\n
 \n
 pref = context.portal_preferences.newContent()\n
 pref.setPreferredListboxListModeLineCount(10)\n
