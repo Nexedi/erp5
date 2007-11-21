@@ -555,7 +555,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       name, ext = os.path.splitext(file.name)
       compiled_file = name + '.zexp'
       if not os.path.exists(compiled_file) or os.path.getmtime(file.name) > os.path.getmtime(compiled_file):
-          print 'Compiling %s to %s...' % (file.name, compiled_file)
+          LOG('Business Template', 0, 'Compiling %s to %s...' % (file.name, compiled_file))
           try:
               from Shared.DC.xml import ppml
               from OFS.XMLExportImport import start_zopedata, save_record, save_zopedata
