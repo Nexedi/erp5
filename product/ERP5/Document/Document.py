@@ -581,7 +581,9 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     # make it unique first time (before getting lastversionvalue)
     di = dict.fromkeys([r.getObject() for r in lst])
     # then get latest version and make unique again
-    di = dict.fromkeys([o.getLatestVersionValue() for o in di.keys()])
+    di = dict.fromkeys([o.getLatestVersionValue()
+                        for o in di.keys()
+                        if getattr(o, 'getLatestVersionValue', None)])
     ref = self.getReference()
     return [o for o in di.keys() if o.getReference() != ref] # every object has its own reference in SearchableText
 
