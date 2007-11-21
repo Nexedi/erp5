@@ -384,9 +384,9 @@ class PaySheetTransaction(Invoice):
                 # if no calculation script found, use a default method :
                 if not quantity:
                   if base_application <= model_slice_max:
-                    quantity = base_application
-                  else: 
-                    quantity = model_slice_max
+                    quantity = base_application-model_slice_min
+                  else:
+                    quantity = model_slice_max-model_slice_min
               else:
                 localized_calculation_script = getattr(self, script_name, 
                                                        None)
@@ -432,10 +432,6 @@ class PaySheetTransaction(Invoice):
                                                                       new_val
                 base_amount_table[column[share]][row[base_participation]] = \
                                                                       new_val
-
-          # decrease the base_application used for this model line 
-          if cell is not None :
-            base_application -= quantity
 
       if cell_list:
         # create the PaySheetLine
