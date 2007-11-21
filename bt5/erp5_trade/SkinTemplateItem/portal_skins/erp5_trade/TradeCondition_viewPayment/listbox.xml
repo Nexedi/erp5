@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -187,6 +184,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -240,7 +241,9 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -248,6 +251,10 @@
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -330,8 +337,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>translated_id</string>
+                          <string>Payement Condition Function</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
@@ -340,6 +347,34 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Total</string>
+                        </tuple>
+                        <tuple>
+                          <string>efficiency</string>
+                          <string>Percentage Of Total</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_payment_title</string>
+                          <string>Source Payment</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_payment_title</string>
+                          <string>Destination Payment</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_term</string>
+                          <string>Payment Delay</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_end_of_month</string>
+                          <string>Payment At The End Of Month</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_date</string>
+                          <string>Payment Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -419,12 +454,12 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
+                    <value> <string>list</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -432,6 +467,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -528,8 +567,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
         </tuple>
         <none/>
       </tuple>
@@ -537,8 +576,28 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getId}
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
             <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
+            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>
