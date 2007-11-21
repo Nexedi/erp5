@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -88,10 +85,13 @@ if context.getLanguage() is not None:\n
   if context.getVersion() is not None:\n
     ss.append(context.getReference() + \'-\' + context.getLanguage() + \'-\' + context.getVersion())\n
 \n
+# Find from only document types\n
+document_type_list = context.getPortalDocumentTypeList()\n
+\n
 lst=[]\n
 for t in ss:\n
   kw = {\'full_text.SearchableText\':\'%\' + t + \'%\'}\n
-  lst += context.portal_catalog(**kw)\n
+  lst += context.portal_catalog(portal_type=document_type_list, **kw)\n
 \n
 return lst\n
 </string> </value>
@@ -148,9 +148,11 @@ return lst\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
+                            <string>document_type_list</string>
                             <string>lst</string>
                             <string>_getiter_</string>
                             <string>t</string>
+                            <string>_inplacevar_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>

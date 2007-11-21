@@ -1,4 +1,7 @@
 2007-11-21 Yusei
+* Search predecessor only from document type documents.
+
+2007-11-21 Yusei
 * Disable search using xxx_relative_url argument in advanced search, language property is not stored as relation in a document. And fixed ambiguous table name in sql.
 
 2007-11-16 Yusei
