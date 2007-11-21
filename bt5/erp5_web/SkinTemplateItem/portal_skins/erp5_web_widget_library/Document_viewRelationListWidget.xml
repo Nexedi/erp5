@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -53,7 +50,7 @@
     <div class="title" i18n:translate="" i18n:domain="ui">Related</div>\n
     <ul>\n
       <li tal:repeat="doc doc_list">\n
-        <a tal:content="doc/title" tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+        <a tal:content="doc/getTitleOrId" tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
       </li>\n
     </ul>\n
   </div>\n
@@ -63,7 +60,7 @@
     <div class="title" i18n:translate="" i18n:domain="ui">Similar</div>\n
     <ul>\n
       <li tal:repeat="doc doc_list">\n
-        <a tal:content="doc/title" tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+        <a tal:content="doc/getTitleOrId" tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
       </li>\n
     </ul>\n
   </div>\n
@@ -73,7 +70,7 @@
     <div class="title" i18n:translate="" i18n:domain="ui">Reference</div>\n
     <ul>\n
       <li tal:repeat="doc doc_list">\n
-        <a tal:content="doc/title" tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+        <a tal:content="doc/getTitleOrId" tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
       </li>\n
     </ul>\n
   </div>\n

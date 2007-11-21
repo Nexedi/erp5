@@ -1,3 +1,6 @@
+2007-11-21 Yusei
+* if document's title is empty, then display its id in document relation box.
+
 2007-09-04 Kazuhiko
 * use absolute_url_path instead of getPortalPath for better virtual host support.
 
