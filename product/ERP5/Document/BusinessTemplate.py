@@ -76,7 +76,7 @@ from urllib import quote, unquote
 from difflib import unified_diff
 import posixpath
 import shutil
-    
+
 # those attributes from CatalogMethodTemplateItem are kept for
 # backward compatibility
 catalog_method_list = ('_is_catalog_list_method_archive',
@@ -435,7 +435,7 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     _marker = []
     base_obj = aq_base(obj)
-    
+
     if getattr(base_obj, '_dav_writelocks', _marker) is not _marker:
       del aq_base(obj)._dav_writelocks
     if getattr(base_obj, '__ac_local_roles__', _marker) is not _marker:
@@ -557,11 +557,9 @@ class ObjectTemplateItem(BaseTemplateItem):
       if not os.path.exists(compiled_file) or os.path.getmtime(file.name) > os.path.getmtime(compiled_file):
           print 'Compiling %s to %s...' % (file.name, compiled_file)
           try:
-              import Shared.DC.xml.ppml
-              ppml = Shared.DC.xml.ppml
+              from Shared.DC.xml import ppml
               from OFS.XMLExportImport import start_zopedata, save_record, save_zopedata
-              import Shared.DC.xml.pyexpat.pyexpat
-              pyexpat=Shared.DC.xml.pyexpat.pyexpat
+              import pyexpat
               outfile=open(compiled_file, 'wb')
               try:
                   data=file.read()
@@ -584,10 +582,11 @@ class ObjectTemplateItem(BaseTemplateItem):
               raise
       return open(compiled_file)
 
-  def _importFile(self, file_name, file):
+  def _importFile(self, file_name, file_obj):
     # import xml file
     if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      if not file_name.endswith('.zexp'):
+        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     obj = self
     connection = None
@@ -595,8 +594,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj=obj.aq_parent
       connection=obj._p_jar
     __traceback_info__ = 'Importing %s' % file_name
-    obj = connection.importFile(file, customImporters=customImporters)
-    # obj = connection.importFile(self._compileXML(file))
+    if isinstance(file_obj, file):
+      obj = connection.importFile(self._compileXML(file_obj))
+    else:
+      obj = connection.importFile(file_obj, customImporters=customImporters)
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_bt, **kw):
