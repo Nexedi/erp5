@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -54,90 +51,70 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-<!--\n
-Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
-                   Vincent Pelletier <vincent@nexedi.com>\n
-                   Christophe Dumez <christophe@nexedi.com>\n
-\n
-This program is Free Software; you can redistribute it and/or\n
-modify it under the terms of the GNU General Public License\n
-as published by the Free Software Foundation; either version 2\n
-of the License, or (at your option) any later version.\n
-\n
-This program is distributed in the hope that it will be useful,\n
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
-GNU General Public License for more details.\n
-\n
-You should have received a copy of the GNU General Public License\n
-along with this program; if not, write to the Free Software\n
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
--->\n
-</tal:block>\n
-<tal:block metal:define-macro="master">\n
-  <tal:block metal:use-macro="here/dialog_main/macros/master">\n
-    <tal:block metal:fill-slot="main">\n
-      <div class="dialog_box">\n
-        <tal:block tal:condition="preferred_html_style_developper_mode">\n
-          <tal:block metal:use-macro="developper_shortcut_render/macros/form"/>\n
-        </tal:block>\n
-        <div class="content"\n
-            tal:define="items python:here.portal_selections.getSelectionSortOrder(request[\'selection_name\'], REQUEST=request);\n
-                        base_form python:getattr(here,request[\'form_id\']);\n
-                        groups base_form/get_groups;\n
-                        listbox python:base_form.Form_getListbox();\n
-                        columns python:listbox.get_value(\'all_columns\');\n
-                        global row_index python:0;\n
-                        global row_keys python:[\'None\'];\n
-                        all_columns python: [(\'None\',\'\')] + columns;">\n
-          <div tal:repeat="item items"\n
-              class="field">\n
-            <label tal:define="global row_index python:row_index+1">\n
-              <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>\n
-              <tal:block tal:replace="row_index" />\n
-            </label>\n
-            <div class="input" tal:attributes="id string:sort_${row_index}"\n
-                               tal:define="sort_type python:((len(item) > 2) and item[2]) or \'\'">\n
-              <select name="field_sort_on">\n
-                <tal:block tal:repeat="option all_columns">\n
-                  <option tal:content="python:option[1]"\n
-                          tal:attributes="value python:option[0];\n
-                                          selected python:option[0]==item[0] and \'selected\' or nothing"\n
-                          i18n:translate="" i18n:domain="ui"></option>\n
-                </tal:block>\n
-              </select>\n
-              <tal:block tal:replace="structure python:form.sort_order.render(item[1], request)" />\n
-              <tal:block tal:replace="structure python:form.sort_type.render(sort_type, request)" />\n
-            </div>\n
-            <p class="clear"></p>\n
-          </div>\n
-          <div tal:repeat="item columns"\n
-              class="field">\n
-            <tal:block tal:condition="python: item[0] not in row_keys">\n
+  <tal:block metal:define-macro="master">\n
+    <tal:block metal:use-macro="here/dialog_main/macros/master">\n
+      <tal:block metal:fill-slot="main">\n
+        <div class="dialog_box">\n
+          <tal:block tal:condition="preferred_html_style_developper_mode">\n
+            <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
+          </tal:block>\n
+          <div class="content"\n
+               tal:define="items python:here.portal_selections.getSelectionSortOrder(request[\'selection_name\'], REQUEST=request);\n
+               base_form python:getattr(here,request[\'form_id\']);\n
+               groups base_form/get_groups;\n
+               listbox python:base_form.Form_getListbox();\n
+               columns python:listbox.get_value(\'all_columns\');\n
+               global row_index python:0;\n
+               global row_keys python:[\'None\'];\n
+               all_columns python: [(\'None\',\'\')] + columns;">\n
+            <div tal:repeat="item items"\n
+                 class="field">\n
               <label tal:define="global row_index python:row_index+1">\n
                 <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>\n
                 <tal:block tal:replace="row_index" />\n
               </label>\n
-              <div class="input" tal:attributes="id string:sort_${row_index}">\n
+              <div class="input" tal:attributes="id string:sort_${row_index}"\n
+                   tal:define="sort_type python:((len(item) &gt; 2) and item[2]) or \'\'">\n
                 <select name="field_sort_on">\n
-                  <option selected="selected" value="None"></option>\n
-                  <option tal:repeat="option columns"\n
-                          tal:content="python:option[1]"\n
-                          tal:attributes="value python:option[0]"\n
-                          i18n:translate="" i18n:domain="ui"></option>\n
+                  <tal:block tal:repeat="option all_columns">\n
+                    <option tal:content="python:option[1]"\n
+                            tal:attributes="value python:option[0];\n
+                            selected python:option[0]==item[0] and \'selected\' or nothing"\n
+                            i18n:translate="" i18n:domain="ui"></option>\n
+                  </tal:block>\n
                 </select>\n
-                <span tal:replace="structure python:form.sort_order.render(\'\', request)" />\n
-                <tal:block tal:replace="structure python:form.sort_type.render(\'\', request)" />\n
+                <tal:block tal:replace="structure python:form.sort_order.render(item[1], request)" />\n
+                <tal:block tal:replace="structure python:form.sort_type.render(sort_type, request)" />\n
               </div>\n
-            </tal:block>\n
-            <p class="clear"></p>\n
+              <p class="clear"></p>\n
+            </div>\n
+            <div tal:repeat="item columns"\n
+                 class="field">\n
+              <tal:block tal:condition="python: item[0] not in row_keys">\n
+                <label tal:define="global row_index python:row_index+1">\n
+                  <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>\n
+                  <tal:block tal:replace="row_index" />\n
+                </label>\n
+                <div class="input" tal:attributes="id string:sort_${row_index}">\n
+                  <select name="field_sort_on">\n
+                    <option selected="selected" value="None"></option>\n
+                    <option tal:repeat="option columns"\n
+                            tal:content="python:option[1]"\n
+                            tal:attributes="value python:option[0]"\n
+                            i18n:translate="" i18n:domain="ui"></option>\n
+                  </select>\n
+                  <span tal:replace="structure python:form.sort_order.render(\'\', request)" />\n
+                  <tal:block tal:replace="structure python:form.sort_type.render(\'\', request)" />\n
+                </div>\n
+              </tal:block>\n
+              <p class="clear"></p>\n
+            </div>\n
           </div>\n
         </div>\n
-      </div>\n
+      </tal:block>\n
     </tal:block>\n
   </tal:block>\n
 </tal:block>\n

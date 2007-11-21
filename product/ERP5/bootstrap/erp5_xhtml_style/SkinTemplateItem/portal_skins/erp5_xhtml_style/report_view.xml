@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -54,47 +51,27 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-<!--\n
-Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
-                   Vincent Pelletier <vincent@nexedi.com>\n
-                   Christophe Dumez <christophe@nexedi.com>\n
-\n
-This program is Free Software; you can redistribute it and/or\n
-modify it under the terms of the GNU General Public License\n
-as published by the Free Software Foundation; either version 2\n
-of the License, or (at your option) any later version.\n
-\n
-This program is distributed in the hope that it will be useful,\n
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
-GNU General Public License for more details.\n
-\n
-You should have received a copy of the GNU General Public License\n
-along with this program; if not, write to the Free Software\n
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
--->\n
-</tal:block>\n
-<tal:block tal:define="title string:${template/title_or_id} - ${here/Title}">\n
-  <tal:block  metal:use-macro="here/view_main/macros/master">\n
-    <tal:block metal:fill-slot="main">\n
-      <tal:block metal:use-macro="here/form_render/macros/master" />\n
-      <tal:block tal:define="portal_object here/getPortalObject">\n
-        <tal:block tal:repeat="report_item report_method">\n
-          <tal:block tal:define="here python: report_item.getObject(portal_object);\n
-                                 dummy python: report_item.pushReport(portal_object)">\n
-            <span tal:condition="report_item/getTitle"\n
-                  tal:content="report_item/getTitle"\n
-                  tal:attributes="class string:report_title_level_${report_item/getLevel}"/>\n
-            <tal:block tal:condition="report_item/getFormId">\n
-              <tal:block tal:define="form python:getattr(here,report_item.getFormId())" >\n
-                <tal:block metal:use-macro="here/form_render/macros/master" />\n
+  <tal:block tal:define="title string:${template/title_or_id} - ${here/Title}">\n
+    <tal:block  metal:use-macro="here/view_main/macros/master">\n
+      <tal:block metal:fill-slot="main">\n
+        <tal:block metal:use-macro="here/form_render/macros/master" />\n
+        <tal:block tal:define="portal_object here/getPortalObject">\n
+          <tal:block tal:repeat="report_item report_method">\n
+            <tal:block tal:define="here python: report_item.getObject(portal_object);\n
+                       dummy python: report_item.pushReport(portal_object)">\n
+              <span tal:condition="report_item/getTitle"\n
+                    tal:content="report_item/getTitle"\n
+                    tal:attributes="class string:report_title_level_${report_item/getLevel}" />\n
+              <tal:block tal:condition="report_item/getFormId">\n
+                <tal:block tal:define="form python:getattr(here,report_item.getFormId())" >\n
+                  <tal:block metal:use-macro="here/form_render/macros/master" />\n
+                </tal:block>\n
               </tal:block>\n
+              <tal:block tal:define="dummy python:report_item.popReport(portal_object)" />\n
             </tal:block>\n
-            <tal:block tal:define="dummy python:report_item.popReport(portal_object)" />\n
           </tal:block>\n
         </tal:block>\n
       </tal:block>\n

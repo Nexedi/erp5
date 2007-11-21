@@ -51,48 +51,46 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block metal:define-macro="header_definitions">\n
-  <tal:block tal:define="\n
-    global portal              here/portal_url/getPortalObject;\n
-    global portal_path         portal/absolute_url;\n
-           local_parameter_list  local_parameter_list | python: {};\n
-\n
-    global actions          python: here.Base_filterDuplicateActions(portal.portal_actions.listFilteredActionsFor(here));\n
-    global url              here/absolute_url;\n
-    global current_form_id  python: local_parameter_list.get(\'dialog_id\', local_parameter_list.get(\'form_id\', \'view\'));\n
+<tal:block tal:replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block metal:define-macro="header_definitions">\n
+    <tal:block tal:define="\n
+      global portal              here/portal_url/getPortalObject;\n
+      global portal_path         portal/absolute_url;\n
+            local_parameter_list  local_parameter_list | python: {};\n
+      global actions          python: here.Base_filterDuplicateActions(portal.portal_actions.listFilteredActionsFor(here));\n
+      global url              here/absolute_url;\n
+      global current_form_id  python: local_parameter_list.get(\'dialog_id\', local_parameter_list.get(\'form_id\', \'view\'));\n
            dummy            python: request.set(\'current_form_id\', current_form_id);\n
-    global current_url      python: \'%s/%s\' % (url, current_form_id);\n
-    global current_action   python: portal.ERP5Site_getCurrentAction(current_url, actions);\n
+           global current_url      python: \'%s/%s\' % (url, current_form_id);\n
+           global current_action   python: portal.ERP5Site_getCurrentAction(current_url, actions);\n
            cancel_url       request/cancel_url | current_url;\n
            dummy            python: local_parameter_list.update({\'cancel_url\': cancel_url});\n
-\n
            dummy       python: request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\');\n
            dummy  python: request.set(\'here\', here);\n
-\n
-    global css_list  css_list | python: [];\n
+           global css_list  css_list | python: [];\n
            css_list_template css_list_template | python: [\'%s/erp5.css\' % (portal_path, )];\n
            dummy     python: css_list.extend(css_list_template);\n
-    global js_list   js_list | python: [\'%s/erp5_xhtml_appearance.js\' % portal_path,];\n
-    global js_list   python:[\'%s/MochiKit/MochiKit.js\' % portal_path,\n
-                             \'%s/erp5.js\' % portal_path, ] + js_list;\n
-\n
-    global http_parameter_list  python: portal.ERP5Site_filterParameterList(request.form);\n
+           global js_list   js_list | python: [\'%s/erp5_xhtml_appearance.js\' % portal_path,];\n
+           global js_list   python:[\'%s/MochiKit/MochiKit.js\' % portal_path,\n
+           \'%s/erp5.js\' % portal_path, ] + js_list;\n
+           global http_parameter_list  python: portal.ERP5Site_filterParameterList(request.form);\n
            dummy                python: http_parameter_list.update(local_parameter_list);\n
-    global http_parameters      python: portal.ERP5Site_renderHTTPParameterList(http_parameter_list);\n
-    global form                 nocall:form | nothing;\n
+           global http_parameters      python: portal.ERP5Site_renderHTTPParameterList(http_parameter_list);\n
+           global form                 nocall:form | nothing;\n
            portal_preferences   python: portal.portal_preferences;\n
-    global preferred_html_style_developper_mode   portal_preferences/getPreferredHtmlStyleDevelopperMode;\n
-    global preferred_html_style_translator_mode   portal_preferences/getPreferredHtmlStyleTranslatorMode;\n
-    global preferred_html_style_contextual_help   portal_preferences/getPreferredHtmlStyleContextualHelp;\n
-    global developper_shortcut_render             python: (preferred_html_style_developper_mode or preferred_html_style_translator_mode) and portal.developper_shortcut_render;\n
-    global selected_language    portal/Localizer/get_selected_language;\n
-  "/>\n
-</tal:block>\n
-\n
-<!-- ============================================================== -->\n
-\n
-<tal:block metal:define-macro="http_definitions">\n
-  <tal:block tal:replace="structure python: modules[\'ZTUtils\'].make_hidden_input(**http_parameter_list).replace(\'>\', \' />\')"/>\n
+           global preferred_html_style_developper_mode   portal_preferences/getPreferredHtmlStyleDevelopperMode;\n
+           global preferred_html_style_translator_mode   portal_preferences/getPreferredHtmlStyleTranslatorMode;\n
+           global preferred_html_style_contextual_help   portal_preferences/getPreferredHtmlStyleContextualHelp;\n
+           global developper_shortcut_render             python: (preferred_html_style_developper_mode or preferred_html_style_translator_mode) and portal.developper_shortcut_render;\n
+           global selected_language    portal/Localizer/get_selected_language;\n
+           " />\n
+  </tal:block>\n
+  <tal:block metal:define-macro="http_definitions">\n
+    <tal:block tal:replace="structure python: modules[\'ZTUtils\'].make_hidden_input(**http_parameter_list).replace(\'>\', \' />\')" />\n
+  </tal:block>\n
 </tal:block>\n
 
 

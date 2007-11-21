@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -54,110 +51,90 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-<!--\n
-Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
-                   Vincent Pelletier <vincent@nexedi.com>\n
-                   Christophe Dumez <christophe@nexedi.com>\n
-\n
-This program is Free Software; you can redistribute it and/or\n
-modify it under the terms of the GNU General Public License\n
-as published by the Free Software Foundation; either version 2\n
-of the License, or (at your option) any later version.\n
-\n
-This program is distributed in the hope that it will be useful,\n
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
-GNU General Public License for more details.\n
-\n
-You should have received a copy of the GNU General Public License\n
-along with this program; if not, write to the Free Software\n
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
--->\n
-</tal:block>\n
-<tal:block metal:define-macro="master"\n
-           tal:define="editable_mode python: True;\n
-                       dialog_mode python: True;\n
-                       dummy python: request.set(\'editable_mode\', editable_mode)">\n
-  <tal:block metal:use-macro="here/dialog_main/macros/master">\n
-    <tal:block metal:fill-slot="main">\n
-      <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
-                             dummy python: request.set(\'here\', here);\n
-                             left_group python: form.get_fields_in_group(\'left\');\n
-                             right_group python: form.get_fields_in_group(\'right\');\n
-                             center_group python: form.get_fields_in_group(\'center\');\n
-                             dialog_actions python: actions.get(dialog_category, []);\n
-                             field_render here/field_render/macros/field_render;">\n
-        <tal:block tal:condition="preferred_html_style_developper_mode">\n
-          <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
-        </tal:block>\n
-        <div tal:condition="python: len(left_group) or len(right_group) or len(center_group) or len(dialog_actions)>1"\n
-             class="dialog_box">\n
-          <div tal:condition="python: len(dialog_actions) > 1"\n
-              class="dialog_selector">\n
-            <label for="dialog_selector"\n
-                  tal:content="python: { \'object_exchange\': \'Select Exchange\'\n
-                                        , \'object_print\'   : \'Select Print\'\n
-                                        , \'object_search\'  : \'Select Search\'\n
-                                        , \'object_report\'  : \'Select Report\'\n
-                                        }.get(dialog_category, \'Select\')"\n
-                  i18n:translate="" i18n:domain="ui"></label>\n
-            <select name="select_dialog" id="dialog_selector"\n
-                    tal:attributes="onChange string:submitAction(this.form,\'Base_doDialog\')">\n
-              <tal:block tal:repeat="action dialog_actions">\n
-                <option tal:attributes="value action/url;\n
-                                        selected python: action is current_action and \'selected\' or None"\n
-                        tal:content="action/name"\n
-                        i18n:translate="" i18n:domain="ui"></option>\n
-              </tal:block>\n
-            </select>\n
-            <button type="submit" name="Base_doDialog:method">\n
-              <span class="image"></span>\n
-              <span class="description"\n
-                    i18n:translate="" i18n:domain="ui">Go</span>\n
-            </button>\n
-          </div>\n
-          <div class="content"\n
-                      tal:define="group_list python: form.Form_getGroupTitleAndId();\n
-                                  gid_list   python: \' \'.join([x[\'gid\'] for x in group_list if x not in (\'bottom\', \'hidden\')]);">\n
-            <tal:block tal:repeat="group group_list">\n
-              <tal:block tal:define="gid    group/gid">\n
-                <fieldset tal:condition="python: \'hidden\' not in gid and \'bottom\' not in gid"\n
-                          tal:attributes="class gid;\n
-                                          id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
-                  <legend tal:content="group/gtitle" class="group_title"/>\n
-                  <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
-                    <tal:block metal:use-macro="field_render"/>\n
-                  </tal:block>\n
-                </fieldset>\n
-              </tal:block>\n
-            </tal:block>\n
-            <p class="clear"></p>\n
-          </div>\n
-        </div>\n
-      </tal:block>\n
-    </tal:block>\n
-    <tal:block metal:fill-slot="bottom">\n
-      <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
-                              dummy python: request.set(\'here\', here);\n
-                              bottom_group python: form.get_fields_in_group(\'bottom\')">\n
-        <div tal:condition="python: len(bottom_group) > 0"\n
-             class="bottom">\n
-          <tal:block tal:repeat="field bottom_group">\n
-            <tal:block tal:condition="preferred_html_style_developper_mode">\n
-              <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper"/>\n
-            </tal:block>\n
-            <tal:block tal:define="field_description field/Field_getDescription"\n
-                       tal:condition="preferred_html_style_translator_mode">\n
-              <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator"/>\n
-            </tal:block>\n
-            <tal:block tal:define="value python:request.get(field.id, None)"\n
-                       tal:replace="structure python:field.render(value, request)" />\n
+  <tal:block metal:define-macro="master"\n
+             tal:define="editable_mode python: True;\n
+             dialog_mode python: True;\n
+             dummy python: request.set(\'editable_mode\', editable_mode)">\n
+    <tal:block metal:use-macro="here/dialog_main/macros/master">\n
+      <tal:block metal:fill-slot="main">\n
+        <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
+                   dummy python: request.set(\'here\', here);\n
+                   left_group python: form.get_fields_in_group(\'left\');\n
+                   right_group python: form.get_fields_in_group(\'right\');\n
+                   center_group python: form.get_fields_in_group(\'center\');\n
+                   dialog_actions python: actions.get(dialog_category, []);\n
+                   field_render here/field_render/macros/field_render;">\n
+          <tal:block tal:condition="preferred_html_style_developper_mode">\n
+            <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
           </tal:block>\n
-        </div>\n
+          <div tal:condition="python: len(left_group) or len(right_group) or len(center_group) or len(dialog_actions)>1"\n
+            class="dialog_box">\n
+            <div tal:condition="python: len(dialog_actions) > 1"\n
+              class="dialog_selector">\n
+              <label for="dialog_selector"\n
+                     tal:content="python: { \'object_exchange\': \'Select Exchange\'\n
+                     , \'object_print\'   : \'Select Print\'\n
+                     , \'object_search\'  : \'Select Search\'\n
+                     , \'object_report\'  : \'Select Report\'\n
+                     }.get(dialog_category, \'Select\')"\n
+                     i18n:translate="" i18n:domain="ui"></label>\n
+              <select name="select_dialog" id="dialog_selector"\n
+                      tal:attributes="onChange string:submitAction(this.form,\'Base_doDialog\')">\n
+                <tal:block tal:repeat="action dialog_actions">\n
+                  <option tal:attributes="value action/url;\n
+                          selected python: action is current_action and \'selected\' or None"\n
+                          tal:content="action/name"\n
+                          i18n:translate="" i18n:domain="ui"></option>\n
+                </tal:block>\n
+              </select>\n
+              <button type="submit" name="Base_doDialog:method">\n
+                <span class="image"></span>\n
+                <span class="description"\n
+                      i18n:translate="" i18n:domain="ui">Go</span>\n
+              </button>\n
+            </div>\n
+            <div class="content"\n
+                 tal:define="group_list python: form.Form_getGroupTitleAndId();\n
+                 gid_list   python: \' \'.join([x[\'gid\'] for x in group_list if x not in (\'bottom\', \'hidden\')]);">\n
+              <tal:block tal:repeat="group group_list">\n
+                <tal:block tal:define="gid    group/gid">\n
+                  <fieldset tal:condition="python: \'hidden\' not in gid and \'bottom\' not in gid"\n
+                            tal:attributes="class gid;\n
+                            id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
+                    <legend tal:content="group/gtitle" class="group_title" />\n
+                    <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
+                      <tal:block metal:use-macro="field_render" />\n
+                    </tal:block>\n
+                  </fieldset>\n
+                </tal:block>\n
+              </tal:block>\n
+              <p class="clear"></p>\n
+            </div>\n
+          </div>\n
+        </tal:block>\n
+      </tal:block>\n
+      <tal:block metal:fill-slot="bottom">\n
+        <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
+                   dummy python: request.set(\'here\', here);\n
+                   bottom_group python: form.get_fields_in_group(\'bottom\')">\n
+          <div tal:condition="python: len(bottom_group) > 0"\n
+            class="bottom">\n
+            <tal:block tal:repeat="field bottom_group">\n
+              <tal:block tal:condition="preferred_html_style_developper_mode">\n
+                <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper" />\n
+              </tal:block>\n
+              <tal:block tal:define="field_description field/Field_getDescription"\n
+                         tal:condition="preferred_html_style_translator_mode">\n
+                <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator" />\n
+              </tal:block>\n
+              <tal:block tal:define="value python:request.get(field.id, None)"\n
+                         tal:replace="structure python:field.render(value, request)" />\n
+            </tal:block>\n
+          </div>\n
+        </tal:block>\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n

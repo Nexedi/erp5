@@ -1,3 +1,6 @@
+2007-11-21 kazuhiko
+* Make Page Templates themselves valid XML (except DOCTYPE definition).
+
 2007-11-14 yusei
 * Fix tab style on konqueror
 

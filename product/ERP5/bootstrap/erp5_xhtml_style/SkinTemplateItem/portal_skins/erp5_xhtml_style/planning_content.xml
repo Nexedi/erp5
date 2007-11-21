@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -54,382 +51,347 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!--\n
-Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.\n
-            Thomas Bernard   <thomas@nexedi.com>\n
-\n
-This program is Free Software; you can redistribute it and/or\n
-modify it under the terms of the GNU General Public License\n
-as published by the Free Software Foundation; either version 2\n
-of the License, or (at your option) any later version.\n
-\n
-This program is distributed in the hope that it will be useful,\n
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
-GNU General Public License for more details.\n
-\n
-You should have received a copy of the GNU General Public License\n
-along with this program; if not, write to the Free Software\n
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
--->\n
-\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block tal:replace="nothing">\n
 <!--\n
 This Page template is aimed to generate the HTML code necessary to display correctly the\n
 PlaningBox. The process is based on the strucutre passed in parameter (i.e options/struct)\n
 Beware this only generates the HTML code, no CSS generation is done in this script\n
 -->\n
+  </tal:block>\n
+  <tal:block tal:define=" basic options/basic;\n
+             planning options/planning;\n
+             address python:basic.context.getUrl()">\n
+    <!-- hidden fields holding some usefull data-->\n
+    <input type="hidden" name="list_selection_name" value="PlanningView" tal:attributes="value python:basic.field.get_value(\'selection_name\')" />\n
+    <!-- setPage needs \'listbox_uid:list\'-->\n
+    <input type="hidden" name="listbox_uid:list" />\n
+    <!-- block_moved_list -->\n
+    <input type="hidden" name="previous_block_moved" value="None"\n
+           tal:attributes="value python:basic.REQUEST.get(\'previous_block_moved\',\'\')" />\n
+    <input type="hidden" name="block_moved" />\n
+    <!-- Planning\'s header -->\n
+    <div class="planning_box">\n
+      <table>\n
+        <tr>\n
+          <td>\n
+            <h3 i18n:translate="" i18n:domain="ui">\n
+              <tal:block tal:replace="structure python:basic.field.get_value(\'title\')" />      </h3>\n
+          </td>\n
+          <b tal:replace="nothing"><!-- report path selection --></b>\n
+          <td>\n
+            <select name="report_root_url" onChange="submitAction(this.form,\'/setReportRoot\')"\n
+                    tal:attributes="onChange string:submitAction(this.form,\'${address}/setReportRoot\')">\n
+              <tal:block tal:condition="python:basic.selection is None"\n
+                         tal:define="global selection_report_path python:basic.report_root_list[0][0]" />\n
+              <tal:block tal:condition="python:basic.selection is not None"\n
+                         tal:define="global selection_report_path python:basic.selection.report_path" />\n
+              <tal:block tal:repeat="report_root_element python:basic.report_root_list">\n
+                <tal:block tal:condition="python:report_root_element[0]==selection_report_path">\n
+                  <b tal:replace="nothing">actual value is selected</b>\n
+                  <option i18n:translate="" i18n:domain="ui" selected="selected" value="None"\n
+                          tal:attributes="value python:report_root_element[0]"\n
+                          tal:content="structure python:report_root_element[1]">_</option>\n
+                </tal:block>\n
+                <tal:block tal:condition="python:report_root_element[0]!=selection_report_path">\n
+                  <b tal:replace="nothing">actual value is not selected</b>\n
+                  <option i18n:translate="" i18n:domain="ui" value="None"\n
+                          tal:attributes="value python:report_root_element[0]"\n
+                          tal:content="structure python:report_root_element[1]">_</option>\n
+                </tal:block>\n
+              </tal:block>\n
+            </select>\n
+          </td>\n
+          <td>\n
+            <tal:block tal:repeat="nb python:range(8)">\n
+              &nbsp;\n
+            </tal:block>\n
+            <tal:block tal:condition="python:planning.main_axis == planning.Y">\n
+              <tal:block i18n:translate="" i18n:domain="ui"> Y Axis </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:condition="python:planning.main_axis != planning.Y">\n
+              <tal:block i18n:translate="" i18n:domain="ui"> X Axis </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:repeat="nb python:range(1)">\n
+              &nbsp;\n
+            </tal:block>\n
+          </td>\n
+          <td>\n
+            <b tal:replace="nothing">\n
+              <!-- page selection need to be implemented here\n
+                   for that will use structure.basic-->\n
+            </b>\n
+            <tal:block tal:condition="python:basic.main_axis_info[\'bound_start\']!=0">\n
+              <b tal:replace="nothing"> previous page exists </b>\n
+              <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
+                     tal:attributes="src string:${address}/images/1leftarrowv.png;\n
+                     name string:${address}/previousPage:method" />\n
+            </tal:block>\n
+            <select name="list_start" title="Change Page" size="1"\n
+                    onChange=""\n
+                    tal:condition="python:basic.main_axis_info[\'bound_page_total\'] &gt; 1"\n
+                    tal:attributes="onChange string:submitAction(this.form,\'${address}/setPage\')">\n
+              <tal:block tal:repeat="current_page_number python:range(basic.main_axis_info[\'bound_page_total\']+1)[1:]">\n
+                <tal:block tal:condition="python:current_page_number==basic.main_axis_info[\'bound_page_current\']">\n
+                  <b tal:replace="nothing"> actual page is selected </b>\n
+                  <option selected="selected" value="None"\n
+                          tal:attributes="value python:(current_page_number - 1)*basic.main_axis_info[\'bound_axis_groups\']"\n
+                          tal:content="structure python:str(current_page_number) + \' of \' +  str(basic.main_axis_info[\'bound_page_total\'])">page</option>\n
+                </tal:block>\n
+                <tal:block tal:condition="python:current_page_number!=basic.main_axis_info[\'bound_page_current\']">\n
+                  <b tal:replace="nothing"> actual page is not selected </b>\n
+                  <option value="None"\n
+                          tal:attributes="value python:(current_page_number - 1)*basic.main_axis_info[\'bound_axis_groups\']"\n
+                          tal:content="structure python:str(current_page_number) + \' of \' + str(basic.main_axis_info[\'bound_page_total\'])">page</option>\n
+                </tal:block>\n
+              </tal:block>\n
+            </select>\n
 \n
-<tal:block tal:define=" basic options/basic;\n
-                       planning options/planning;\n
-                       address python:basic.context.getUrl()">\n
+            <tal:block tal:condition="python:basic.main_axis_info[\'bound_stop\']!=basic.main_axis_info[\'bound_end\']">\n
+              <b tal:replace="nothing"> next page exists </b>\n
+              <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
+                     tal:attributes="src string:${address}/images/1rightarrowv.png;\n
+                     name string:${address}/nextPage:method" />\n
+            </tal:block>\n
+          </td>\n
 \n
-<!-- hidden fields holding some usefull data-->\n
-<input type="hidden" name="list_selection_name" value="PlanningView" tal:attributes="value python:basic.field.get_value(\'selection_name\')"/>\n
-<!-- setPage needs \'listbox_uid:list\'-->\n
-<input type="hidden" name="listbox_uid:list"/>\n
-<!-- block_moved_list -->\n
-<input type="hidden" name="previous_block_moved" value="None"\n
-       tal:attributes="value python:basic.REQUEST.get(\'previous_block_moved\',\'\')"/>\n
-<input type="hidden" name="block_moved"/>\n
+          <td>\n
+            <tal:block tal:repeat="nb python:range(8)">\n
+              &nbsp;\n
+            </tal:block>\n
+            <tal:block tal:condition="python:planning.main_axis == planning.Y">\n
+              <tal:block i18n:translate="" i18n:domain="ui"> X Axis </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:condition="python:planning.main_axis != planning.Y">\n
+              <tal:block i18n:translate="" i18n:domain="ui"> Y Axis </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:repeat="nb python:range(1)">\n
+              &nbsp;\n
+            </tal:block>\n
+          </td>\n
+          <td>\n
 \n
-<!-- Planning\'s header -->\n
-<div class="planning_box">\n
-\n
- <table>\n
-  <tr>\n
-     <td>\n
-      <h3 i18n:translate="" i18n:domain="ui">\n
-         <tal:block tal:replace="structure python:basic.field.get_value(\'title\')"/>      </h3>\n
-      </td>\n
-   <b tal:replace="nothing"><!-- report path selection --></b>\n
-  <td>\n
-    <select name="report_root_url" onChange="submitAction(this.form,\'/setReportRoot\')"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${address}/setReportRoot\')">\n
-      <tal:block tal:condition="python:basic.selection is None"\n
-                tal:define="global selection_report_path python:basic.report_root_list[0][0]"/>\n
-      <tal:block tal:condition="python:basic.selection is not None"\n
-                tal:define="global selection_report_path python:basic.selection.report_path"/>\n
-      <tal:block tal:repeat="report_root_element python:basic.report_root_list">\n
-        <tal:block tal:condition="python:report_root_element[0]==selection_report_path">\n
-        <b tal:replace="nothing">actual value is selected</b>\n
-        <option i18n:translate="" i18n:domain="ui" selected="selected" value="None"\n
-                tal:attributes="value python:report_root_element[0]"\n
-                tal:content="structure python:report_root_element[1]">_</option>\n
+            <!-- processing zoom level select -->\n
+            <select name="zoom_level" title="Change Zoom Level" size="1"\n
+                    onChange=""\n
+                    tal:attributes="onChange string:submitAction(this.form,\'${address}/setZoomLevel\')">\n
+              <tal:block tal:condition="python:not basic.field.get_value(\'use_date_zoom\')">\n
+                <tal:block tal:repeat="current_zoom_level python:[0.1,0.25,0.5,1,2,3,4,8,12,16,32,64]">\n
+                  <tal:block tal:condition="python:current_zoom_level==basic.secondary_axis_info[\'zoom_level\']">\n
+                    <b tal:replace="nothing"> current zoom level is selected </b>\n
+                    <option selected="selected" value="None"\n
+                            tal:attributes="value python:current_zoom_level"\n
+                            tal:content="structure python:\'Zoom %sx\' % current_zoom_level">Zoom level</option>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python:current_zoom_level!=basic.secondary_axis_info[\'zoom_level\']">\n
+                    <b tal:replace="nothing"> current zoom level is not selected </b>\n
+                    <option value="None"\n
+                            tal:attributes="value python:current_zoom_level"\n
+                            tal:content="structure python:\'Zoom %sx\' % current_zoom_level">Zoom level</option>\n
+                  </tal:block>\n
+                </tal:block>\n
+              </tal:block>\n
+              <tal:block tal:condition="python:basic.field.get_value(\'use_date_zoom\')">\n
+                <!-- Defining Date Zoom Level -->\n
+                <!-- XXX This part has to be improved -->\n
+                <tal:block tal:repeat="current_zoom_level python:[ [i.getTitle() , i.getIntIndex() ] for i in context.portal_categories.zoom.contentValues(sort_on=\'int_index\') ]">\n
+                  <tal:block tal:condition="python:current_zoom_level[1]==basic.secondary_axis_info[\'zoom_level\']">\n
+                    <b tal:replace="nothing"> current zoom level is selected </b>\n
+                    <option selected="selected" value="None"\n
+                            tal:attributes="value python:current_zoom_level[1]"\n
+                            i18n:translate="" i18n:domain="ui"\n
+                            tal:content="structure python:str(current_zoom_level[0])">Zoom level</option>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python:current_zoom_level[1]!=basic.secondary_axis_info[\'zoom_level\']">\n
+                    <b tal:replace="nothing"> current zoom level is not selected </b>\n
+                    <option value="None"\n
+                            tal:attributes="value python:current_zoom_level[1]"\n
+                            i18n:translate="" i18n:domain="ui"\n
+                            tal:content="structure python:str(current_zoom_level[0])">Zoom level</option>\n
+                  </tal:block>\n
+                </tal:block>\n
+              </tal:block>\n
+            </select>\n
+            <tal:block tal:condition="python:basic.field.get_value(\'use_date_zoom\')"\n
+                       tal:define="form_id python:\'%s\' % (basic.form.id);\n
+                       selection_name python:basic.field.get_value(\'selection_name\');\n
+                       zoom_level python:basic.secondary_axis_info[\'zoom_level\'];\n
+                       today python:\'%s/%s/%s\' % (str(DateTime().year()), str(DateTime().month()),str(DateTime().day()))">\n
+              <a tal:attributes="href python: \'%s/setZoomLevel?form_id=%s&amp;list_selection_name=%s&amp;zoom_date_start=%s\'\n
+                 % (context.absolute_url(), form_id,selection_name,today)">\n
+                <img src="/images/jump.png" title="Jump to Current Day" name="JumpToCurrentDay"\n
+                     tal:attributes="src string:${address}/images/jump.png;" />\n
+              </a>\n
+            </tal:block>\n
+          </td>\n
+        </tr>\n
+      </table>\n
+      <!-- div class="planning_box" -->\n
+      <!-- planning structure (axis and group representation)-->\n
+      <div tal:repeat="axis python:(planning.main_axis,planning.secondary_axis)"\n
+           tal:attributes="id python:axis.name">\n
+        <!-- groups of the current axis-->\n
+        <tal:block tal:repeat="axis_group python:axis.axis_group">\n
+          <div tal:attributes="id python:axis_group.name;\n
+               title python:axis_group.tooltip">\n
+            <!-- title of the current group-->\n
+            <a tal:attributes="href python:axis_group.info_title.link;\n
+               id python:axis_group.name + \'_info\'">\n
+              <tal:block tal:content="python:axis_group.info_title.title" />\n
+            </a>\n
+          </div>\n
+          <!-- depth of the current group -->\n
+          <div tal:repeat="depth python:range(axis_group.depth)"\n
+               tal:attributes="id python: axis_group.name + \'_depth_\' + str(depth)">\n
+          </div>\n
         </tal:block>\n
-        <tal:block tal:condition="python:report_root_element[0]!=selection_report_path">\n
-        <b tal:replace="nothing">actual value is not selected</b>\n
-        <option i18n:translate="" i18n:domain="ui" value="None"\n
-                tal:attributes="value python:report_root_element[0]"\n
-                tal:content="structure python:report_root_element[1]">_</option>\n
-        </tal:block>\n
-      </tal:block>\n
-    </select>\n
-  </td>\n
-\n
-  <td>\n
-    <tal:block tal:repeat="nb python:range(8)">\n
-      &nbsp;\n
-    </tal:block>\n
-    <tal:block tal:condition="python:planning.main_axis == planning.Y">\n
-            <tal:block i18n:translate="" i18n:domain="ui"> Y Axis </tal:block>\n
-    </tal:block>\n
-    <tal:block tal:condition="python:planning.main_axis != planning.Y">\n
-            <tal:block i18n:translate="" i18n:domain="ui"> X Axis </tal:block>\n
-    </tal:block>\n
-    <tal:block tal:repeat="nb python:range(1)">\n
-      &nbsp;\n
-    </tal:block>\n
-  </td>\n
-\n
-  <td>\n
-    <b tal:replace="nothing">\n
-    <!-- page selection need to be implemented here\n
-        for that will use structure.basic-->\n
-    </b>\n
-    <tal:block tal:condition="python:basic.main_axis_info[\'bound_start\']!=0">\n
-      <b tal:replace="nothing"> previous page exists </b>\n
-      <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
-        tal:attributes="src string:${address}/images/1leftarrowv.png;\n
-          name string:${address}/previousPage:method"/>\n
-    </tal:block>\n
-\n
-    <select name="list_start" title="Change Page" size="1"\n
-            onChange=""\n
-            tal:condition="python:basic.main_axis_info[\'bound_page_total\'] > 1"\n
-            tal:attributes="onChange string:submitAction(this.form,\'${address}/setPage\')">\n
-      <tal:block tal:repeat="current_page_number python:range(basic.main_axis_info[\'bound_page_total\']+1)[1:]">\n
-        <tal:block tal:condition="python:current_page_number==basic.main_axis_info[\'bound_page_current\']">\n
-          <b tal:replace="nothing"> actual page is selected </b>\n
-          <option selected="selected" value="None"\n
-                  tal:attributes="value python:(current_page_number - 1)*basic.main_axis_info[\'bound_axis_groups\']"\n
-                  tal:content="structure python:str(current_page_number) + \' of \' +  str(basic.main_axis_info[\'bound_page_total\'])">page</option>\n
-        </tal:block>\n
-        <tal:block tal:condition="python:current_page_number!=basic.main_axis_info[\'bound_page_current\']">\n
-          <b tal:replace="nothing"> actual page is not selected </b>\n
-          <option value="None"\n
-                  tal:attributes="value python:(current_page_number - 1)*basic.main_axis_info[\'bound_axis_groups\']"\n
-                  tal:content="structure python:str(current_page_number) + \' of \' + str(basic.main_axis_info[\'bound_page_total\'])">page</option>\n
-        </tal:block>\n
-      </tal:block>\n
-    </select>\n
-\n
-    <tal:block tal:condition="python:basic.main_axis_info[\'bound_stop\']!=basic.main_axis_info[\'bound_end\']">\n
-      <b tal:replace="nothing"> next page exists </b>\n
-      <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
-        tal:attributes="src string:${address}/images/1rightarrowv.png;\n
-          name string:${address}/nextPage:method"/>\n
-    </tal:block>\n
-  </td>\n
-\n
-  <td>\n
-    <tal:block tal:repeat="nb python:range(8)">\n
-      &nbsp;\n
-    </tal:block>\n
-    <tal:block tal:condition="python:planning.main_axis == planning.Y">\n
-      <tal:block i18n:translate="" i18n:domain="ui"> X Axis </tal:block>\n
-    </tal:block>\n
-    <tal:block tal:condition="python:planning.main_axis != planning.Y">\n
-      <tal:block i18n:translate="" i18n:domain="ui"> Y Axis </tal:block>\n
-    </tal:block>\n
-    <tal:block tal:repeat="nb python:range(1)">\n
-      &nbsp;\n
-    </tal:block>\n
-  </td>\n
-  <td>\n
-\n
-    <!-- processing zoom level select -->\n
-    <select name="zoom_level" title="Change Zoom Level" size="1"\n
-            onChange=""\n
-            tal:attributes="onChange string:submitAction(this.form,\'${address}/setZoomLevel\')">\n
-      <tal:block tal:condition="python:not basic.field.get_value(\'use_date_zoom\')">\n
-        <tal:block tal:repeat="current_zoom_level python:[0.1,0.25,0.5,1,2,3,4,8,12,16,32,64]">\n
-          <tal:block tal:condition="python:current_zoom_level==basic.secondary_axis_info[\'zoom_level\']">\n
-            <b tal:replace="nothing"> current zoom level is selected </b>\n
-            <option selected="selected" value="None"\n
-                  tal:attributes="value python:current_zoom_level"\n
-                  tal:content="structure python:\'Zoom %sx\' % current_zoom_level">Zoom level</option>\n
+        <tal:condition tal:condition="python:axis==planning.X">\n
+          <tal:block tal:define="global previous_src string:${address}/images/1leftarrowv.png;\n
+                     global next_src string:${address}/images/1rightarrowv.png">\n
           </tal:block>\n
-          <tal:block tal:condition="python:current_zoom_level!=basic.secondary_axis_info[\'zoom_level\']">\n
-            <b tal:replace="nothing"> current zoom level is not selected </b>\n
-            <option value="None"\n
-                  tal:attributes="value python:current_zoom_level"\n
-                  tal:content="structure python:\'Zoom %sx\' % current_zoom_level">Zoom level</option>\n
+        </tal:condition>\n
+        <tal:condition tal:condition="python:axis==planning.Y">\n
+          <tal:block tal:define="global previous_src string:${address}/images/1toparrow.png;\n
+                     global next_src string:${address}/images/1bottomarrow.png">\n
           </tal:block>\n
+        </tal:condition>\n
+        <!-- widgets of the current axis -->\n
+        <tal:block tal:condition="python:axis==planning.main_axis">\n
+          <!-- current axis is main axis-->\n
+          <tal:block tal:condition="python:basic.main_axis_info[\'bound_start\']!=0">\n
+            <!-- previous page exists -->\n
+            <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
+                   tal:attributes="src previous_src;\n
+                   name string:${address}/previousPage:method;\n
+                   id python:axis.name + \'_previous\'" />\n
+          </tal:block>\n
+          <tal:block tal:condition="python:basic.main_axis_info[\'bound_stop\']!=basic.main_axis_info[\'bound_end\']">\n
+            <!-- next page exists -->\n
+            <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
+                   tal:attributes="src next_src;\n
+                   name string:${address}/nextPage:method;\n
+                   id python:axis.name + \'_next\'" />\n
+          </tal:block>\n
+          <!-- inserting depth widget -->\n
+          <div tal:condition= "python:axis==planning.X"\n
+               tal:define="url python:\'%s/%s\' % (basic.context.absolute_url(),basic.form.id);\n
+               selection_name python:basic.field.get_value(\'selection_name\')"\n
+               tal:attributes="id python:axis.name + \'_depth\'">\n
+            <a tal:repeat="unfold_level python:range(0,4)"\n
+               tal:attributes="href python:\'%s?selection_index=&amp;selection_name=%s&amp;ignore_layout:int=0&amp;report_depth:int=%s\' % (url,selection_name,unfold_level)"\n
+               tal:content="structure python:str(unfold_level) + \'&lt;br&gt;\'">\n
+              0\n
+            </a>\n
+          </div>\n
+          <div tal:condition= "python:axis==planning.Y"\n
+               tal:define="url python:\'%s/%s\' % (basic.context.absolute_url(),basic.form.id);\n
+               selection_name python:basic.field.get_value(\'selection_name\')"\n
+               tal:attributes="id python:axis.name + \'_depth\'">\n
+            <a tal:repeat="unfold_level python:range(0,4)"\n
+               tal:attributes="href python:\'%s?selection_index=&amp;selection_name=%s&amp;ignore_layout:int=0&amp;report_depth:int=%s\' % (url,selection_name,unfold_level)"\n
+               tal:content="structure python:str(unfold_level) + \'&nbsp;\'">\n
+              0\n
+            </a>\n
+          </div>\n
         </tal:block>\n
-      </tal:block>\n
-      <tal:block tal:condition="python:basic.field.get_value(\'use_date_zoom\')">\n
-        <!-- Defining Date Zoom Level -->\n
-          <!-- XXX This part has to be improved -->\n
-          <tal:block tal:repeat="current_zoom_level python:[ [i.getTitle() , i.getIntIndex() ] for i in context.portal_categories.zoom.contentValues(sort_on=\'int_index\') ]">\n
-            <tal:block tal:condition="python:current_zoom_level[1]==basic.secondary_axis_info[\'zoom_level\']">\n
-              <b tal:replace="nothing"> current zoom level is selected </b>\n
-              <option selected="selected" value="None"\n
-                  tal:attributes="value python:current_zoom_level[1]"\n
-                  i18n:translate="" i18n:domain="ui"\n
-                  tal:content="structure python:str(current_zoom_level[0])">Zoom level</option>\n
-            </tal:block>\n
-            <tal:block tal:condition="python:current_zoom_level[1]!=basic.secondary_axis_info[\'zoom_level\']">\n
-              <b tal:replace="nothing"> current zoom level is not selected </b>\n
-              <option value="None"\n
-                    tal:attributes="value python:current_zoom_level[1]"\n
-                    i18n:translate="" i18n:domain="ui"\n
-                    tal:content="structure python:str(current_zoom_level[0])">Zoom level</option>\n
-            </tal:block>\n
+        <tal:block tal:condition="python:axis==planning.secondary_axis">\n
+          <!-- Zoom page-->\n
+          <!-- tal:block tal:condition="python:basic.secondary_axis_info[\'zoom_start\']!=0" -->\n
+          <!-- previous page exists -->\n
+          <input type="image" src="/images/1leftarrowv.png" title="Previous Zoom Page" name="" border="0"\n
+                 tal:attributes="src previous_src;\n
+                 name string:${address}/previousZoom:method;\n
+                 id python:axis.name + \'_previous\'" />\n
+          <!-- /tal:block -->\n
+          <!--  tal:block tal:condition="python:basic.secondary_axis_info[\'zoom_start\']!=(basic.secondary_axis_info[\'zoom_level\'] - 1) and basic.secondary_axis_info[\'zoom_level\'] > 1" -->\n
+          <!-- next page exists -->\n
+          <input type="image" src="/images/1rightarrowv.png" title="Next Zoom Page" name="" border="0"\n
+                 tal:attributes="src next_src;\n
+                 name string:${address}/nextZoom:method;\n
+                 id python:axis.name + \'_next\'" />\n
+          <!-- /tal:block -->\n
         </tal:block>\n
-      </tal:block>\n
-    </select>\n
-    <tal:block tal:condition="python:basic.field.get_value(\'use_date_zoom\')"\n
-           tal:define="form_id python:\'%s\' % (basic.form.id);\n
-                            selection_name python:basic.field.get_value(\'selection_name\');\n
-                            zoom_level python:basic.secondary_axis_info[\'zoom_level\'];\n
-                            today python:\'%s/%s/%s\' % (str(DateTime().year()), str(DateTime().month()),str(DateTime().day()))">\n
-       <a tal:attributes="href python: \'%s/setZoomLevel?form_id=%s&list_selection_name=%s&zoom_date_start=%s\'\n
-                                           % (context.absolute_url(), form_id,selection_name,today)">\n
-        <img src="/images/jump.png" title="Jump to Current Day" name="JumpToCurrentDay" \n
-             tal:attributes="src string:${address}/images/jump.png;" />\n
-      </a>  \n
-     </tal:block> \n
-  </td>\n
-  </tr>\n
-</table>\n
-\n
-<!-- div class="planning_box" -->\n
-<!-- planning structure (axis and group representation)-->\n
-<div tal:repeat="axis python:(planning.main_axis,planning.secondary_axis)"\n
-     tal:attributes="id python:axis.name">\n
- <!-- groups of the current axis-->\n
- <tal:block tal:repeat="axis_group python:axis.axis_group">\n
-   <div tal:attributes="id python:axis_group.name;\n
-                      title python:axis_group.tooltip">\n
-    <!-- title of the current group-->\n
-    <a tal:attributes="href python:axis_group.info_title.link;\n
-                        id python:axis_group.name + \'_info\'">\n
-        <tal:block tal:content="python:axis_group.info_title.title" />\n
-    </a>\n
-   </div>\n
-\n
-   <!-- depth of the current group -->\n
-   <div tal:repeat="depth python:range(axis_group.depth)"\n
-        tal:attributes="id python: axis_group.name + \'_depth_\' + str(depth)">\n
-   </div>\n
- </tal:block>\n
-\n
-  <tal:condition tal:condition="python:axis==planning.X">\n
-    <tal:block tal:define="global previous_src string:${address}/images/1leftarrowv.png;\n
-                           global next_src string:${address}/images/1rightarrowv.png">\n
-    </tal:block>\n
-  </tal:condition>\n
-  <tal:condition tal:condition="python:axis==planning.Y">\n
-    <tal:block tal:define="global previous_src string:${address}/images/1toparrow.png;\n
-                           global next_src string:${address}/images/1bottomarrow.png">\n
-    </tal:block>\n
-  </tal:condition>\n
-\n
-  <!-- widgets of the current axis -->\n
-  <tal:block tal:condition="python:axis==planning.main_axis">\n
-    <!-- current axis is main axis-->\n
-    <tal:block tal:condition="python:basic.main_axis_info[\'bound_start\']!=0">\n
-      <!-- previous page exists -->\n
-      <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
-        tal:attributes="src previous_src;\n
-                        name string:${address}/previousPage:method;\n
-                        id python:axis.name + \'_previous\'"/>\n
-    </tal:block>\n
-    <tal:block tal:condition="python:basic.main_axis_info[\'bound_stop\']!=basic.main_axis_info[\'bound_end\']">\n
-      <!-- next page exists -->\n
-      <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
-         tal:attributes="src next_src;\n
-                         name string:${address}/nextPage:method;\n
-                         id python:axis.name + \'_next\'"/>\n
-    </tal:block>\n
-\n
-    <!-- inserting depth widget -->\n
-    <div tal:condition= "python:axis==planning.X"\n
-         tal:define="url python:\'%s/%s\' % (basic.context.absolute_url(),basic.form.id);\n
-                     selection_name python:basic.field.get_value(\'selection_name\')"\n
-         tal:attributes="id python:axis.name + \'_depth\'">\n
-      <a tal:repeat="unfold_level python:range(0,4)"\n
-          tal:attributes="href python:\'%s?selection_index=&amp;selection_name=%s&amp;ignore_layout:int=0&amp;report_depth:int=%s\' % (url,selection_name,unfold_level)"\n
-          tal:content="structure python:str(unfold_level) + \'&lt;br&gt;\'">\n
-          0\n
-      </a>\n
-    </div>\n
-\n
-    <div tal:condition= "python:axis==planning.Y"\n
-         tal:define="url python:\'%s/%s\' % (basic.context.absolute_url(),basic.form.id);\n
-                     selection_name python:basic.field.get_value(\'selection_name\')"\n
-         tal:attributes="id python:axis.name + \'_depth\'">\n
-      <a tal:repeat="unfold_level python:range(0,4)"\n
-          tal:attributes="href python:\'%s?selection_index=&amp;selection_name=%s&amp;ignore_layout:int=0&amp;report_depth:int=%s\' % (url,selection_name,unfold_level)"\n
-          tal:content="structure python:str(unfold_level) + \'&nbsp;\'">\n
-          0\n
-      </a>\n
-    </div>\n
-\n
-  </tal:block>\n
-  <tal:block tal:condition="python:axis==planning.secondary_axis">\n
-    <!-- Zoom page-->\n
-    <!-- tal:block tal:condition="python:basic.secondary_axis_info[\'zoom_start\']!=0" -->\n
-      <!-- previous page exists -->\n
-      <input type="image" src="/images/1leftarrowv.png" title="Previous Zoom Page" name="" border="0"\n
-         tal:attributes="src previous_src;\n
-                         name string:${address}/previousZoom:method;\n
-                         id python:axis.name + \'_previous\'"/>\n
-    <!-- /tal:block -->\n
-    <!--  tal:block tal:condition="python:basic.secondary_axis_info[\'zoom_start\']!=(basic.secondary_axis_info[\'zoom_level\'] - 1) and basic.secondary_axis_info[\'zoom_level\'] > 1" -->\n
-      <!-- next page exists -->\n
-      <input type="image" src="/images/1rightarrowv.png" title="Next Zoom Page" name="" border="0"\n
-         tal:attributes="src next_src;\n
-                         name string:${address}/nextZoom:method;\n
-                         id python:axis.name + \'_next\'"/>\n
-    <!-- /tal:block -->\n
-  </tal:block>\n
-</div>\n
-\n
-<!-- planning content-->\n
-<div class="planning_content">\n
-  <!-- display main axis lines -->\n
-  <tal:block tal:repeat="axis_group python:planning.main_axis.axis_group">\n
-       <div tal:attributes="id python:axis_group.name + \'_line\'"></div>\n
-       <b tal:replace="nothing">\n
-       <!-- display main axis sub_lines if necessary --></b>\n
-       <tal:block tal:condition="python:axis_group.axis_element_number > 1">\n
-         <div tal:repeat="axis_element_number python:range(axis_group.axis_element_number)[1:]"\n
-              tal:attributes="id python:axis_group.name + \'_line_\' + str(axis_element_number)">\n
-         </div>\n
-       </tal:block>\n
-\n
-  </tal:block>\n
-\n
-  <!-- display secondary axis lines -->\n
-  <div tal:repeat="axis_group python:planning.secondary_axis.axis_group"\n
-       tal:attributes="id python:axis_group.name + \'_line\'"></div>\n
-\n
-  <!-- display blocks -->\n
-  <tal:block tal:repeat="block python:planning.content">\n
-    <div tal:condition="python:block.property_dict[\'stat\']== 0"\n
-        tal:attributes="id python:block.name;\n
-                        ondblclick string:showGrips();\n
-                        title python:block.title;\n
-                        style python:\'text-align:center\'">\n
-      <tal:block tal:condition="python:block.zone == 1">\n
-      <tal:block tal:repeat="area python:block.info.keys()">\n
-        <tal:block tal:define="info_area python:area.split(\'_\')[1]">\n
-             <!-- tal:attributes="id python:info_area"> <! python:block.name + \'_\' + area"-->\n
-          <tal:block tal:condition="python:block.info[area].info != \'\'">\n
-            <tal:block tal:condition="python:info_area!=\'center\'">\n
-              <a tal:condition="python:block.info[area].info != \'__\'"\n
-                tal:content="python:block.info[area].info"\n
-                tal:attributes="href python:block.info[area].link;\n
-                                class python:\'planning_box_\' + info_area">\n
-              </a>\n
-              \n
-              <a tal:condition="python:block.info[area].info == \'__\'"\n
-                tal:attributes="href python:block.info[area].link;\n
-                                class python:\'planning_box_\' + info_area">\n
-                <img tal:attributes="src python:basic.context.getUrl() + \'/images/question.png\'"\n
-                    height="15" width="15">\n
-              </a>\n
-            </tal:block>\n
-            <tal:block tal:condition="python:info_area==\'center\'" >\n
-              <div tal:attributes="class python:\'planning_box_\' + info_area">\n
-              <a tal:condition="python:block.info[area].info != \'__\'"\n
-                tal:content="python:block.info[area].info"\n
-                tal:attributes="href python:block.info[area].link">\n
-              </a>\n
-              <a tal:condition="python:block.info[area].info == \'__\'"\n
-                tal:attributes="href python:block.info[area].link"\n
-                tal:content="python:\'.\'">\n
-                <!-- not used any more\n
-                <img tal:attributes="src python:basic.here.getUrl() + \'/images/question.png\'"\n
-                    height="15" width="15">\n
-                -->\n
-              </a>\n
-              </div>\n
-            </tal:block>\n
+      </div>\n
+      <!-- planning content-->\n
+      <div class="planning_content">\n
+        <!-- display main axis lines -->\n
+        <tal:block tal:repeat="axis_group python:planning.main_axis.axis_group">\n
+          <div tal:attributes="id python:axis_group.name + \'_line\'"></div>\n
+          <b tal:replace="nothing">\n
+            <!-- display main axis sub_lines if necessary --></b>\n
+          <tal:block tal:condition="python:axis_group.axis_element_number &gt; 1">\n
+            <div tal:repeat="axis_element_number python:range(axis_group.axis_element_number)[1:]"\n
+                 tal:attributes="id python:axis_group.name + \'_line_\' + str(axis_element_number)">\n
+            </div>\n
           </tal:block>\n
         </tal:block>\n
-      </tal:block>\n
-      </tal:block>\n
-    </div>\n
-    <div tal:condition="python:block.property_dict[\'stat\']== 1"\n
-         tal:attributes="id python:block.name;\n
-                         title python:block.title">\n
+        <!-- display secondary axis lines -->\n
+        <div tal:repeat="axis_group python:planning.secondary_axis.axis_group"\n
+             tal:attributes="id python:axis_group.name + \'_line\'"></div>\n
+        <!-- display blocks -->\n
+        <tal:block tal:repeat="block python:planning.content">\n
+          <div tal:condition="python:block.property_dict[\'stat\']== 0"\n
+               tal:attributes="id python:block.name;\n
+               ondblclick string:showGrips();\n
+               title python:block.title;\n
+               style python:\'text-align:center\'">\n
+            <tal:block tal:condition="python:block.zone == 1">\n
+              <tal:block tal:repeat="area python:block.info.keys()">\n
+                <tal:block tal:define="info_area python:area.split(\'_\')[1]">\n
+                  <!-- tal:attributes="id python:info_area"> <! python:block.name + \'_\' + area"-->\n
+                  <tal:block tal:condition="python:block.info[area].info != \'\'">\n
+                    <tal:block tal:condition="python:info_area!=\'center\'">\n
+                      <a tal:condition="python:block.info[area].info != \'__\'"\n
+                         tal:content="python:block.info[area].info"\n
+                         tal:attributes="href python:block.info[area].link;\n
+                         class python:\'planning_box_\' + info_area">\n
+                      </a>\n
+                      <a tal:condition="python:block.info[area].info == \'__\'"\n
+                         tal:attributes="href python:block.info[area].link;\n
+                         class python:\'planning_box_\' + info_area">\n
+                        <img tal:attributes="src python:basic.context.getUrl() + \'/images/question.png\'"\n
+                             height="15" width="15" />\n
+                      </a>\n
+                    </tal:block>\n
+                    <tal:block tal:condition="python:info_area==\'center\'">\n
+                      <div tal:attributes="class python:\'planning_box_\' + info_area">\n
+                        <a tal:condition="python:block.info[area].info != \'__\'"\n
+                           tal:content="python:block.info[area].info"\n
+                           tal:attributes="href python:block.info[area].link">\n
+                        </a>\n
+                        <a tal:condition="python:block.info[area].info == \'__\'"\n
+                           tal:attributes="href python:block.info[area].link"\n
+                           tal:content="python:\'.\'">\n
+                          <!-- not used any more\n
+                               &lt;img tal:attributes="src python:basic.here.getUrl() + \'/images/question.png\'"\n
+                               height="15" width="15" /&gt;\n
+                               -->\n
+                        </a>\n
+                      </div>\n
+                    </tal:block>\n
+                  </tal:block>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+          </div>\n
+          <div tal:condition="python:block.property_dict[\'stat\']== 1"\n
+               tal:attributes="id python:block.name;\n
+               title python:block.title">\n
+          </div>\n
+        </tal:block>\n
+      </div>\n
+      <!-- generic div used for redimensionning-->\n
+      <div id="top" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>\n
+      <div id="right" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>\n
+      <div id="bottom" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>\n
+      <div id="left" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>\n
+      <!-- declaring DTML properties -->\n
+      <tal:block tal:replace="structure python:context.planning_dhtml(planning=planning)" />\n
+      <!--/div-->\n
     </div>\n
   </tal:block>\n
-</div>\n
-\n
-<!-- generic div used for redimensionning-->\n
-<div id="top" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>\n
-<div id="right" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>\n
-<div id="bottom" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>\n
-<div id="left" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>\n
-\n
-<!-- declaring DTML properties -->\n
-<tal:block tal:replace="structure python:context.planning_dhtml(planning=planning)"/>\n
-\n
-<!--/div-->\n
-</div>\n
 </tal:block>\n
 
 

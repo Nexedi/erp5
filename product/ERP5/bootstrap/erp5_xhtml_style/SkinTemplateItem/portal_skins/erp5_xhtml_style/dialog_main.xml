@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -54,58 +51,38 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-<!--\n
-Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
-                   Vincent Pelletier <vincent@nexedi.com>\n
-                   Christophe Dumez <christophe@nexedi.com>\n
+  <tal:block metal:define-macro="master">\n
+    <tal:block tal:define="form_action string:Base_callDialogMethod;\n
+               dialog_id form/id | template/id;\n
+               form_id request/form_id | string:view;\n
+               dialog_method form/action | dialog_id;\n
+               update_action form/update_action;\n
+               global dialog_category request/dialog_category | nothing;\n
 \n
-This program is Free Software; you can redistribute it and/or\n
-modify it under the terms of the GNU General Public License\n
-as published by the Free Software Foundation; either version 2\n
-of the License, or (at your option) any later version.\n
-\n
-This program is distributed in the hope that it will be useful,\n
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
-GNU General Public License for more details.\n
-\n
-You should have received a copy of the GNU General Public License\n
-along with this program; if not, write to the Free Software\n
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
--->\n
-</tal:block>\n
-<tal:block metal:define-macro="master">\n
-  <tal:block tal:define="form_action string:Base_callDialogMethod;\n
-                         dialog_id form/id | template/id;\n
-                         form_id request/form_id | string:view;\n
-                         dialog_method form/action | dialog_id;\n
-                         update_action form/update_action;\n
-                         global dialog_category request/dialog_category | nothing;\n
-\n
-                         local_parameter_list local_parameter_list | python: {};\n
-                         dummy python: local_parameter_list.update({\'dialog_id\': dialog_id, \'dialog_method\': dialog_method, \'update_method\': update_action, \'dialog_category\': dialog_category, \'cancel_url\': request.get(\'cancel_url\'), \'form_id\': form_id});\n
-                         title python: here.Base_translateString(here.Base_getFormViewDialogActionButtonTitle(form))">\n
-    <tal:block metal:use-macro="here/main_template/macros/master">\n
-      <tal:block metal:fill-slot="main">\n
-        <div class="list_dialog">\n
-          <tal:block metal:define-slot="main" />\n
-          <tal:block metal:define-slot="bottom" />\n
-        </div>\n
-        <input tal:condition="cancel_url|request/cancel_url|nothing"\n
-               i18n:attributes="value" i18n:domain="ui" value="Cancel Action"\n
-               id="dialog_cancel_button" name="Base_cancel:method" type="submit" />\n
-        <input i18n:attributes="value" i18n:domain="ui" value="Update"\n
-               tal:condition="python: form.update_action!=\'\'"\n
-               id="dialog_update_button"\n
-               name="Base_showUpdateDialog:method" type="submit" />\n
-        <input tal:attributes="value python: here.Base_getFormViewDialogActionButtonTitle(form);\n
-                               name string:${form_action}:method"\n
-               i18n:attributes="value" i18n:domain="ui" accesskey="V"\n
-               id="dialog_submit_button" type="submit" />\n
+               local_parameter_list local_parameter_list | python: {};\n
+               dummy python: local_parameter_list.update({\'dialog_id\': dialog_id, \'dialog_method\': dialog_method, \'update_method\': update_action, \'dialog_category\': dialog_category, \'cancel_url\': request.get(\'cancel_url\'), \'form_id\': form_id});\n
+               title python: here.Base_translateString(here.Base_getFormViewDialogActionButtonTitle(form))">\n
+      <tal:block metal:use-macro="here/main_template/macros/master">\n
+        <tal:block metal:fill-slot="main">\n
+          <div class="list_dialog">\n
+            <tal:block metal:define-slot="main" />\n
+            <tal:block metal:define-slot="bottom" />\n
+          </div>\n
+          <input tal:condition="cancel_url|request/cancel_url|nothing"\n
+                 i18n:attributes="value" i18n:domain="ui" value="Cancel Action"\n
+                 id="dialog_cancel_button" name="Base_cancel:method" type="submit" />\n
+          <input i18n:attributes="value" i18n:domain="ui" value="Update"\n
+                 tal:condition="python: form.update_action!=\'\'"\n
+                 id="dialog_update_button"\n
+                 name="Base_showUpdateDialog:method" type="submit" />\n
+          <input tal:attributes="value python: here.Base_getFormViewDialogActionButtonTitle(form);\n
+                 name string:${form_action}:method"\n
+                 i18n:attributes="value" i18n:domain="ui" accesskey="V"\n
+                 id="dialog_submit_button" type="submit" />\n
+        </tal:block>\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
