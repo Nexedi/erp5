@@ -685,9 +685,9 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       else:
         rule_id = rule_reference
 
+      # only expand if we are not in a "too early" or "too late" state
       if (self.getSimulationState() not in
           self.getPortalDraftOrderStateList()):
-        # Nothing to do if we are already simulated
         self._createAppliedRule(rule_id, force=force, **kw)
 
     def _createAppliedRule(self, rule_id, force=0, activate_kw=None, **kw):
@@ -695,12 +695,6 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         Create a new Applied Rule is none is related, or call expand
         on the existing one.
       """
-      # Return if draft or cancelled simulation_state
-      if self.getSimulationState() in ('cancelled',):
-        # The applied rule should be cleaned up 
-        # ie. empty all movements which have no confirmed children
-        return
-      # Otherwise, expand
       # Look up if existing applied rule
       my_applied_rule_list = self.getCausalityRelatedValueList(
           portal_type='Applied Rule')
