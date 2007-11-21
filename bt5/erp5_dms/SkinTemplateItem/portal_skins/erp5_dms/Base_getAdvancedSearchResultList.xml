@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -103,12 +100,14 @@ args = context.parseSearchString(sstr)\n
 if not args.has_key(\'portal_type\') or args[\'portal_type\'] == ():\n
   args[\'portal_type\'] = context.getPortalDocumentTypeList()\n
 \n
-# process searching by category\n
-cats = []\n
-bases = context.portal_categories.getBaseCategoryList()\n
-for k,v in args.items():\n
-  if k in bases:\n
-    args[k+\'_relative_url\'] = k + \'/\' + v\n
+### All document types in DMS do not use any xxx_relative property.\n
+### So, I comment out here. (yusei)\n
+## process searching by category\n
+#cats = []\n
+#bases = context.portal_categories.getBaseCategoryList()\n
+#for k,v in args.items():\n
+#  if k in bases and k!=\'language\':\n
+#    args[k+\'_relative_url\'] = k + \'/\' + v\n
 \n
 # expand simplified notation of search mode\n
 #mode = args.get(\'mode\')\n
@@ -132,13 +131,13 @@ mt = args.get(\'modification_to\')\n
 \n
 wheres = []\n
 if cf:\n
-  wheres.append(\'creation_date>"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
+  wheres.append(\'catalog.creation_date>"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
 if ct:\n
-  wheres.append(\'creation_date<"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
+  wheres.append(\'catalog.creation_date<"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
 if mf:\n
-  wheres.append(\'modification_date>"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
+  wheres.append(\'catalog.modification_date>"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
 if mt:\n
-  wheres.append(\'modification_date<"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
+  wheres.append(\'catalog.modification_date<"\' + cf.strftime(\'%Y-%m-%d\') + \'"\')\n
 if wheres != []:\n
   args[\'where_expression\'] = \' AND \'.join(wheres)\n
 \n
@@ -222,11 +221,6 @@ return res\n
                             <string>args</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
-                            <string>cats</string>
-                            <string>bases</string>
-                            <string>_getiter_</string>
-                            <string>k</string>
-                            <string>v</string>
                             <string>cf</string>
                             <string>ct</string>
                             <string>mf</string>
@@ -241,6 +235,7 @@ return res\n
                             <string>res</string>
                             <string>append</string>
                             <string>$append0</string>
+                            <string>_getiter_</string>
                             <string>doc</string>
                           </tuple>
                         </value>

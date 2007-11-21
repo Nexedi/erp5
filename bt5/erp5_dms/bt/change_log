@@ -1,3 +1,6 @@
+2007-11-21 Yusei
+* Disable search using xxx_relative_url argument in advanced search, language property is not stored as relation in a document. And fixed ambiguous table name in sql.
+
 2007-11-16 Yusei
 * Fixed Base_showFoundText. selection_name argument is required for listbox.
 * Fixed Base_showFoundText. if document contains charactor which utf-8 codec cannot decode, remove it from result.
