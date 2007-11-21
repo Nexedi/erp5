@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>DateTimeField</string>
-        </tuple>
-        <none/>
+        <global name="DateTimeField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -199,8 +196,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>input_order</string> </key>
+                    <key> <string>hidden_day_is_last_day</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_day</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_order</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
@@ -352,37 +359,37 @@
                 <item>
                     <key> <string>ampm</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>day</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>hour</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>minute</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>month</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>year</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -455,6 +462,22 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>preferences/getPreferredDateOrder | string:ymd</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <tuple>
@@ -717,7 +740,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <tuple>
         <tuple>
@@ -972,7 +995,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <tuple>
@@ -1227,7 +1250,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
         <tuple>
@@ -1482,7 +1505,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <tuple>
         <tuple>
@@ -1737,7 +1760,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <tuple>
         <tuple>
