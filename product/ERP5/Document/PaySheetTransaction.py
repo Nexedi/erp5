@@ -101,7 +101,7 @@ class PaySheetTransaction(Invoice):
   security.declareProtected(Permissions.AddPortalContent,
                           'createPaySheetLine')
   def createPaySheetLine(self, cell_list, title='', res='', desc='', 
-      base_amount_list=None, **kw):
+      base_amount_list=None, int_index=None, **kw):
     '''
     This function register all paysheet informations in paysheet lines and 
     cells. Select good cells only
@@ -137,6 +137,7 @@ class PaySheetTransaction(Invoice):
              variation_base_category_list = ('tax_category', 'salary_range'),
              variation_category_list      = var_cat_list,
              base_amount_list             = base_amount_list,
+             int_index                    = int_index,
              **kw)
 
     base_id = 'movement'
@@ -198,6 +199,7 @@ class PaySheetTransaction(Invoice):
                            'desc'             : [],
                            'base_amount_list' : model_line.getBaseAmountList(),
                            'res'              : service.getRelativeUrl(),
+                           'int_index'        : model_line.getFloatIndex(),
                            'cell_list'        : []
                          }
       
@@ -234,6 +236,7 @@ class PaySheetTransaction(Invoice):
                                     res       = item['res'],
                                     desc      = desc,
                                     cell_list = item['cell_list'],
+                                    int_index = item['int_index'],
                                     base_amount_list=item['base_amount_list'],)
 
 
@@ -334,6 +337,7 @@ class PaySheetTransaction(Invoice):
 
       service     = model_line.getResourceValue()
       title       = model_line.getTitleOrId()
+      int_index   = model_line.getFloatIndex()
       id          = model_line.getId()
       base_amount_list = model_line.getBaseAmountList()
       res         = service.getRelativeUrl()
@@ -438,24 +442,20 @@ class PaySheetTransaction(Invoice):
         pay_sheet_line = self.createPaySheetLine(
                                     title     = title,
                                     res       = res,
+                                    int_index = int_index,
                                     desc      = desc,
                                     base_amount_list = base_amount_list,
                                     cell_list = cell_list,
                                   )
         pay_sheet_line_list.append(pay_sheet_line)
 
-    # create a line of the total tax payed by the employee
-    # this hack permit to calculate the net salary
-    new_cell = { 'axe_list' : [ 'tax_category/employer_share',
-                                'salary_range/france/forfait']
-               , 'quantity'     : employee_tax_amount
-               , 'price'     : 1
-               }
-    pay_sheet_line = self.createPaySheetLine(
-              title    = 'total employee contributions'
-            , res      = 'payroll_service_module/total_employee_contributions'
-            , desc     = 'this line permit to calculate the sum of the employer'
-                         ' share and permit to calculate the net salary'
-            , cell_list    = [new_cell])
+
+    # this script is used to add a line that permit to have good accounting 
+    # lines
+    localized_add_end_line_script = getattr(self,
+                                            'PaySheetTransaction_addEndLine', 
+                                            None)
+    if localized_add_end_line_script:
+      localized_add_end_line_script(employee_tax_amount)
 
     return pay_sheet_line_list
