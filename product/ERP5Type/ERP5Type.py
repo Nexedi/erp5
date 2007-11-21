@@ -144,8 +144,6 @@ class ERP5TypeInformation( FactoryTypeInformation,
     product = 'ERP5Type'
     immediate_view = 'view'
     hidden_content_type_list = ()
-    filter_actions = 0
-    allowed_action_list = []
     permission = ''
 
     # Groups are used to classify portal types (e.g. resource).
