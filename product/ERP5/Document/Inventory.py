@@ -223,15 +223,17 @@ class Inventory(Delivery):
             # we got the quantity from first level key
             diff_quantity = movement_quantity - inventory_value
               
-          # Create tmp movement with only diff between inventory
-          # and previous stock values
+          # Create tmp movement
+          kwd = {'uid': movement.getUid(),
+                 'start_date': stop_date}
+          temp_delivery_line = temp_constructor(self,
+                                                inventory_id)
+          # set category on it only if quantity not null
+          # thus line with same uid will be deleted but we
+          # don't insert line with null quantity as we test
+          # some categories like resource/destination/source
+          # before insert but not before delete
           if diff_quantity != 0:
-            kwd = {'uid': movement.getUid(),
-                   'start_date': stop_date}
-
-            # create the tmp line and set category on it
-            temp_delivery_line = temp_constructor(self,
-                                                  inventory_id)
             kwd['quantity'] = diff_quantity
             category_list = self.getCategoryList()            
 
@@ -251,8 +253,8 @@ class Inventory(Delivery):
                 method(category_list, value, base_category)
 
             kwd['category_list'] = category_list
-            temp_delivery_line.edit(**kwd)
-            stock_append(temp_delivery_line)
+          temp_delivery_line.edit(**kwd)
+          stock_append(temp_delivery_line)
 
       # Now create line to remove some subvariation text not present 
       # in new inventory
