@@ -594,8 +594,13 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj=obj.aq_parent
       connection=obj._p_jar
     __traceback_info__ = 'Importing %s' % file_name
-    if isinstance(file_obj, file):
-      obj = connection.importFile(self._compileXML(file_obj))
+    # The pre-compilation hack is disabled, because the design is not
+    # nice. Do not enable it without yo's approval.
+    if 0:
+      if isinstance(file_obj, file):
+        obj = connection.importFile(self._compileXML(file_obj))
+      else:
+        obj = connection.importFile(file_obj, customImporters=customImporters)
     else:
       obj = connection.importFile(file_obj, customImporters=customImporters)
     self._objects[file_name[:-4]] = obj
