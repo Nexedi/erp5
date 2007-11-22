@@ -382,25 +382,28 @@ class PaySheetTransaction(Invoice):
               ######################
               # calculation part : #
               ######################
-              script_name = model.getLocalizedCalculationScriptId()
-              if script_name is None or \
-                  getattr(self, script_name, None) is None:
-                # if no calculation script found, use a default method :
-                if not quantity:
-                  if base_application <= model_slice_max:
-                    quantity = base_application-model_slice_min
-                  else:
-                    quantity = model_slice_max-model_slice_min
-              else:
-                localized_calculation_script = getattr(self, script_name, 
-                                                       None)
-                quantity, price = localized_calculation_script(\
-                    paysheet=self, 
-                    model_slice_min = model_slice_min, 
-                    model_slice_max=model_slice_max, 
-                    quantity=quantity, 
-                    price=price, 
-                    model_line=model_line)
+              # get the model line script
+              script_name = model_line.getCalculationScriptId()
+              if script_name is None:
+                # if model line script is None, get the default model script
+                script_name = model.getDefaultCalculationScriptId()
+
+              if script_name is None:
+                # if no calculation script found, use a default script :
+                script_name = 'PaySheetTransaction_defaultCalculationScript'
+
+              if getattr(self, script_name, None) is None:
+                raise ValueError, "Unable to find `%s` calculation script" % \
+                                                                 script_name
+              LOG('script_name :',0,script_name)
+              calculation_script = getattr(self, script_name, None)
+              quantity, price = calculation_script(\
+                  base_application=base_application,
+                  model_slice_min = model_slice_min, 
+                  model_slice_max=model_slice_max, 
+                  quantity=quantity, 
+                  price=price, 
+                  model_line=model_line)
 
             # Cell creation :
             # Define an empty new cell
@@ -453,8 +456,8 @@ class PaySheetTransaction(Invoice):
     # this script is used to add a line that permit to have good accounting 
     # lines
     localized_add_end_line_script = getattr(self,
-                                            'PaySheetTransaction_addEndLine', 
-                                            None)
+                                'PaySheetTransaction_postCalculation', None)
+    LOG('localized_add_end_line_script :', 0, localized_add_end_line_script)
     if localized_add_end_line_script:
       localized_add_end_line_script(employee_tax_amount)
 
