@@ -2812,7 +2812,7 @@ class Base( CopyContainer,
 
       fallback_script_id : the script to use if nothing is found
     """
-    def cached_getattr(portal_type, method_id):
+    def getScriptName(portal_type, method_id):
       script_name_end = '_%s' % method_id
       for script_name_begin in [portal_type, self.getMetaType(),
           self.__class__.__name__]:
@@ -2820,17 +2820,27 @@ class Base( CopyContainer,
         script = getattr(self, name, None)
         if script is not None:
           return name
-    cached_getattr = CachingMethod(cached_getattr, id='Base__getattr',
-        cache_factory='erp5_content_long')
 
     # script_id should not be used any more, keep compatibility
     if script_id is not None:
       LOG('ERP5Type/Base.getTypeBaseMethod',0,
            'DEPRECATED script_id parameter is used')
       fallback_script_id=script_id
-    # Look at a local script which
-    # can return a new predicate.
-    name = cached_getattr(self.getPortalType(), method_id)
+
+    # use a transactional variable to cache results within the same
+    # transaction
+    portal_type = self.getPortalType()
+    tv = getTransactionalVariable(self)
+    type_base_cache = tv.setdefault(
+        'Base.type_based_cache', {})
+
+    cache_key = (portal_type, method_id)
+    try:
+      name = type_base_cache[cache_key]
+    except KeyError:
+      name = getScriptName(portal_type, method_id)
+      type_base_cache[cache_key] = name
+
     if name is not None:
       return getattr(self, name)
     if fallback_script_id is not None:
