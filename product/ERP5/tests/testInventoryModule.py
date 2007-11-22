@@ -36,7 +36,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
   """
     Test inventory module
   """
-  run_all_test = 1
+  run_all_test = 0
   inventory_portal_type = 'Inventory'
   inventory_line_portal_type = 'Inventory Line'
   inventory_cell_portal_type = 'Inventory Cell'
@@ -158,8 +158,19 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     date = DateTime(self.second_date_string)
     quantity=self.default_quantity - 2
     self.createInventory(start_date=date,sequence=sequence)
-    self.createNotVariatedInventoryLine(sequence=sequence,
+    self.second_inventory = self.createNotVariatedInventoryLine(sequence=sequence,
                                     quantity=quantity)
+
+
+  def stepModifySecondNotVariatedInventory(self, sequence=None,
+                                           sequence_list=None, **kw):
+    """
+    Modify the quantity to have a tmp line with null quantity
+    """
+    quantity=self.default_quantity
+    inventory_line = self.second_inventory.objectValues()[0]
+    inventory_line.edit(inventory=quantity)
+    
 
   def stepCheckFirstNotVariatedInventory(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
@@ -185,7 +196,18 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                         to_date=date,simulation_state='delivered')
     self.assertEquals(self.default_quantity-2,quantity)
 
-  def test_01_NotVariatedInventory(self, quiet=0, run=run_all_test):
+  def stepCheckSecondNotVariatedInventoryModified(self, start_date=None,quantity=None,
+                                             sequence=None,**kw):
+    node_uid = sequence.get('organisation1').getUid()
+    resource_url = sequence.get('resource').getRelativeUrl()
+    date = DateTime(self.view_stock_date)
+    quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
+                        resource=resource_url,
+                        to_date=date,simulation_state='delivered')
+    self.assertEquals(self.default_quantity,quantity)
+
+
+  def test_01_NotVariatedInventory(self, quiet=0, run=1): #run_all_test):
     """
     We will create an inventory with the default quantity for
     a particular resource. Then we will check if the is correct.
@@ -207,7 +229,10 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                        stepCheckFirstNotVariatedInventory \
                        stepCreateSecondNotVariatedInventory \
                        stepTic \
-                       stepCheckSecondNotVariatedInventory'
+                       stepCheckSecondNotVariatedInventory \
+                       stepModifySecondNotVariatedInventory \
+                       stepTic \
+                       stepCheckSecondNotVariatedInventoryModified'
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
