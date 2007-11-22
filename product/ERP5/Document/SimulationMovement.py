@@ -31,12 +31,15 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from Products.ERP5.Document.Movement import Movement
 
 from zLOG import LOG
 
 from Acquisition import aq_base
+
+from AppliedRule import TREE_DELIVERED_CACHE_KEY, TREE_DELIVERED_CACHE_ENABLED
 
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready
 
@@ -209,36 +212,57 @@ class SimulationMovement(Movement):
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, force=0, **kw):
     """
-      Parses all existing applied rules and make sure they apply.
-      Checks other possible rules and starts expansion process
-      (instanciates rule and calls expand on rule)
+    Checks all existing applied rules and make sure they still apply.
+    Checks for other possible rules and starts expansion process (instanciates
+    applied rules and calls expand on them).
 
-      Only movements which applied rule parent is expanded can
-      be expanded.
+    First get all applicable rules,
+    then, delete all applied rules that no longer match and are not linked to
+    a delivery,
+    finally, apply new rules if no rule with the same type is already applied.
     """
-    # XXX Default behaviour is not to expand if it has already been
-    # expanded, but some rules are configuration rules and need to be
-    # reexpanded  each time, because the rule apply only if predicates
-    # are true, then this kind of rule must always be tested. Currently,
-    # we know that invoicing rule acts like this, and that it comes after
-    # invoice or invoicing_rule, so we if we come from invoince rule or
-    # invoicing rule, we always expand regardless of the causality state.
-    if ((self.getParentValue().getSpecialiseReference() not in
-         ('default_invoicing_rule', 'default_invoice_rule')
-         and self.getCausalityState() == 'expanded' ) or \
-         len(self.objectIds()) != 0):
-      # Reexpand
-      for my_applied_rule in self.objectValues():
-        my_applied_rule.expand(force=force,**kw)
-    else:
-      portal_rules = getToolByName(self, 'portal_rules')
-      # Parse each rule and test if it applies
-      for rule in portal_rules.searchRuleList(self):
-        rule.constructNewAppliedRule(self, **kw)
-      for my_applied_rule in self.objectValues() :
-        my_applied_rule.expand(force=force,**kw)
-      # Set to expanded
-      self.setCausalityState('expanded')
+    portal_rules = getToolByName(self, 'portal_rules')
+
+    tv = getTransactionalVariable(self)
+    cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
+    cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
+
+    # enable cache
+    if not cache_enabled:
+      cache[TREE_DELIVERED_CACHE_ENABLED] = 1
+
+    applied_rule_dict = {}
+    applicable_rule_dict = {}
+    for rule in portal_rules.searchRuleList(self, sort_on='version',
+        sort_order='descending'):
+      ref = rule.getReference()
+      if ref and ref not in applicable_rule_dict.iterkeys():
+        applicable_rule_dict[ref] = rule
+
+    for applied_rule in self.objectValues():
+      rule = applied_rule.getSpecialiseValue()
+      if not applied_rule._isTreeDelivered() and not rule.test(self):
+        self._delObject(applied_rule.getId())
+      else:
+        applied_rule_dict[rule.getPortalType()] = applied_rule
+
+    for rule in applicable_rule_dict.itervalues():
+      rule_type = rule.getPortalType()
+      if rule_type not in applied_rule_dict.iterkeys():
+        applied_rule = rule.constructNewAppliedRule(self, **kw)
+        applied_rule_dict[rule_type] = applied_rule
+
+    self.setCausalityState('expanded')
+    # expand
+    for applied_rule in applied_rule_dict.itervalues():
+      applied_rule.expand(force=force, **kw)
+
+    # disable and clear cache
+    if not cache_enabled:
+      try:
+        del tv[TREE_DELIVERED_CACHE_KEY]
+      except KeyError:
+        pass
 
   security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
   def diverge(self):
@@ -479,4 +503,39 @@ class SimulationMovement(Movement):
   #                                        ['immediateReindexObject',
   #                                         'recursiveImmediateReindexObject']))
   #    activity.edit()
+
+  def _isTreeDelivered(self, ignore_first=0):
+    """
+    checks if subapplied rules  of this movement (going down the complete
+    simulation tree) have a child with a delivery relation.
+    Returns True if at least one is delivered, False if none of them are.
+
+    see AppliedRule._isTreeDelivered
+    """
+    tv = getTransactionalVariable(self)
+    cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
+    cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
+
+    def getTreeDelivered(movement, ignore_first=0):
+      if ignore_first:
+        if len(movement.getDeliveryList()) > 0:
+          return True
+      for applied_rule in movement.objectValues():
+        if applied_rule._isTreeDelivered():
+          return True
+      return False
+
+    if ignore_first:
+      rule_key = (self.getRelativeUrl(), 1)
+    else:
+      rule_key = self.getRelativeUrl()
+    if cache_enabled:
+      try:
+        return cache[rule_key]
+      except:
+        result = getTreeDelivered(self, ignore_first=ignore_first)
+        cache[rule_key] = result
+        return result
+    else:
+      return getTreeDelivered(self, ignore_first=ignore_first)
 

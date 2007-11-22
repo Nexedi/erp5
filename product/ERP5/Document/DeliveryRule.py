@@ -85,7 +85,7 @@ class DeliveryRule(Rule):
             (delivery.getPortalDraftOrderStateList() + \
             delivery.getPortalPlannedOrderStateList()):
           movement_delivery = movement.getDeliveryValue()
-          if not self._isTreeDelivered([movement], ignore_first=1) and \
+          if not movement._isTreeDelivered(ignore_first=1) and \
               movement_delivery not in delivery_movement_list:
             applied_rule._delObject(movement.getId())
           else:
@@ -103,7 +103,7 @@ class DeliveryRule(Rule):
             # We are on a line
             new_id = deliv_mvt.getId()
           else:
-            # Weare on a cell
+            # We are on a cell
             new_id = "%s_%s" % (deliv_mvt.getParentId(), deliv_mvt.getId())
           # Generate the simulation deliv_mvt
           # XXX Hardcoded value

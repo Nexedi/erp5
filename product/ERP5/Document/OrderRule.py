@@ -86,7 +86,7 @@ class OrderRule(DeliveryRule):
             order.getPortalReservedInventoryStateList() and
             not movement.getLastExpandSimulationState() in
             order.getPortalCurrentInventoryStateList()) and \
-            not self._isTreeDelivered([movement]):
+            not movement._isTreeDelivered():
 
           movement_order = movement.getOrderValue()
           if movement_order in order_movement_list:

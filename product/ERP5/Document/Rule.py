@@ -220,21 +220,6 @@ class Rule(Predicate, XMLObject):
     return 1
 
 #### Helpers
-  def _isTreeDelivered(self, movement_list, ignore_first=0):
-    """
-    returns 1 if the movement or any of its child is linked to a delivery
-    """
-    child_movement_list = []
-    for movement in movement_list:
-      if not ignore_first and len(movement.getDeliveryList()) > 0:
-        return 1
-      else:
-        for applied_rule in movement.objectValues():
-          child_movement_list = applied_rule.objectValues()
-    if len(child_movement_list) == 0:
-      return 0
-    return self._isTreeDelivered(child_movement_list)
-
   def _getCurrentMovementList(self, applied_rule, **kw):
     """
     Returns the list of current children of the applied rule, sorted in 3
@@ -263,7 +248,7 @@ class Rule(Predicate, XMLObject):
       if movement.isFrozen():
         immutable_movement_list.append(movement)
       else:
-        if self._isTreeDelivered([movement]):
+        if movement._isTreeDelivered():
           mutable_movement_list.append(movement)
         else:
           deletable_movement_list.append(movement)

@@ -31,8 +31,12 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.PsycoWrapper import psyco
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG
+
+TREE_DELIVERED_CACHE_KEY = 'AppliedRule._isTreeDelivered_cache'
+TREE_DELIVERED_CACHE_ENABLED = 'TREE_DELIVERED_CACHE_ENABLED'
 
 class AppliedRule(XMLObject):
     """
@@ -89,6 +93,14 @@ class AppliedRule(XMLObject):
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
+      tv = getTransactionalVariable(self)
+      cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
+      cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
+
+      # enable cache
+      if not cache_enabled:
+        cache[TREE_DELIVERED_CACHE_ENABLED] = 1
+
       rule = self.getSpecialiseValue()
       if rule is not None:
         if self.isRootAppliedRule():
@@ -101,6 +113,13 @@ class AppliedRule(XMLObject):
 #                after_method_id=["immediateReindexObject",
 #                                 "recursiveImmediateReindexObject"]).\
 #                                   notifySimulationChange(rule._v_notify_dict)
+
+      # disable and clear cache
+      if not cache_enabled:
+        try:
+          del tv[TREE_DELIVERED_CACHE_KEY]
+        except KeyError:
+          pass
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, solution_list):
@@ -193,3 +212,33 @@ class AppliedRule(XMLObject):
                delivery_url)
         else:
           delivery_value.notifySimulationChange()
+
+    def _isTreeDelivered(self):
+      """
+      Checks if submovements of this applied rule (going down the complete
+      simulation tree) have a delivery relation.
+      Returns True if at least one is delivered, False if none of them are.
+
+      see SimulationMovement._isTreeDelivered
+      """
+      tv = getTransactionalVariable(self)
+      cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
+      cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
+
+      def getTreeDelivered(applied_rule):
+        for movement in applied_rule.objectValues():
+          if movement._isTreeDelivered():
+            return True
+        return False
+
+      rule_key = self.getRelativeUrl()
+      if cache_enabled:
+        try:
+          return cache[rule_key]
+        except:
+          result = getTreeDelivered(self)
+          cache[rule_key] = result
+          return result
+      else:
+        return getTreeDelivered(self)
+
