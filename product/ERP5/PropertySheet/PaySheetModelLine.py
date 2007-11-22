@@ -33,10 +33,18 @@ class PaySheetModelLine:
     Properties which allow to define a generic Price.
   """
   _properties = ( 
-          { 'id'          : 'editable',
-            'description' : 'If set to 1, self could be edited at the paySheet creation',
-            'type'        : 'boolean',
-            'mode'        : 'w' },
+    { 'id'          : 'editable',
+      'description' : 'If set to 1, the Pay Sheet Line values could be edited \
+          at the Pay Sheet calculation step',
+      'type'        : 'boolean',
+      'mode'        : 'w' 
+    },
+    { 'id'          : 'calculation_script_id',
+      'description' : 'If no script found on Pay Sheet Model Lines, this \
+          script is used to do localised calculs',
+      'type'        : 'string',
+      'mode'        : 'w',
+    },
   )
 
 
