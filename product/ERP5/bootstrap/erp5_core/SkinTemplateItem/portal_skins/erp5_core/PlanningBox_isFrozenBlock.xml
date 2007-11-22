@@ -74,10 +74,8 @@
 # - it\'s a part of a block \n
 # - the object is one Calendar Period\n
 \n
-frozen_portal_type_list = context.getPortalCalendarPeriodTypeList() + (\'Simulation Movement\',\'Presence Request Period\')\n
 \n
 return (not context.portal_membership.checkPermission(\'Modify portal content\', block.parent_activity.object)) or \\\n
-           (block.parent_activity.object.getPortalType() in frozen_portal_type_list ) or \\\n
            (not ((block.position_x.relative_begin > 0) and \\\n
                    (block.position_x.relative_end < 1) and \\\n
                    (block.property_dict[\'stat\'] == 0)))\n
@@ -134,7 +132,6 @@ return (not context.portal_membership.checkPermission(\'Modify portal content\',
                             <string>block</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>frozen_portal_type_list</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>
