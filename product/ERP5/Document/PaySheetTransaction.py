@@ -251,39 +251,11 @@ class PaySheetTransaction(Invoice):
     # Get Precision
     precision = self.getPriceCurrencyValue().getQuantityPrecision()
 
-    def getDictList(category_list):
-      '''
-        This method return a list of dict wich are composed with the given
-        category as key and an integer as value. It's used to find datas 
-        in a two-dimensional table
-      '''
-      list_of_dict = []
-      for category in category_list:
-        base_amount_list=[x.getRelativeUrl() for x in\
-                          self.portal_categories[category].objectValues()]
-        list_of_dict.append(dict([[base, base_amount_list.index(base)] \
-            for base in base_amount_list]))
-      return list_of_dict
 
-    def getEmptyTwoDimentionalTable(nb_columns=0, nb_rows=0):
-      '''
-        create a two-dimentional table with nb_columns columns and nb_rows rows
-        all item of this table are set to None
-        ex : with nb_columns=2 and nb_rows=4, this function returns :
-        [[None, None, None, None], [None, None, None, None]]
-      '''
-      base_amount = []
-      for i in range(nb_columns):
-        line = []
-        for j in range(nb_rows):
-          line.append(None)
-        base_amount.append(line)
-      return base_amount
-
-    # this dict permit to have the index of the category in the table
-    column, row = getDictList(['tax_category', 'base_amount'])
-    base_amount_table = getEmptyTwoDimentionalTable(nb_columns=len(column),
-                                                    nb_rows=len(row))
+    # in this dictionary will be saved the current amount corresponding to 
+    # the tuple (tax_category, base_amount) :
+    # current_amount = base_amount_table[(tax_category, base_amount)]
+    base_amount_table = {}
 
     def sortByIntIndex(a, b):
       return cmp(a.getIntIndex(),
@@ -303,20 +275,17 @@ class PaySheetTransaction(Invoice):
       service = paysheetline.getResourceValue()
       base_amount_list = service.getBaseAmountList(base=1)
       for base_amount in base_amount_list:
-        if not row.has_key(base_amount):
-           raise ValueError, "Unable to find `%s` base_amount category" % \
-                                                                 base_amount
         paysheetcell_list = paysheetline.contentValues(portal_type = \
                                                             ['Pay Sheet Cell'])
         for paysheetcell in paysheetcell_list:
           tax_category = paysheetcell.getTaxCategory(base=1)
           if tax_category and paysheetcell.getQuantity():
-            old_val = base_amount_table[column[tax_category]][row[base_amount]]
-            if old_val is not None:
-              new_val = old_val + paysheetcell.getQuantity()
-            else: 
-              new_val = paysheetcell.getQuantity()
-            base_amount_table[column[tax_category]][row[base_amount]] = new_val
+            if base_amount_table.has_key((tax_category, base_amount)):
+              old_val = base_amount_table[(tax_category, base_amount)]
+            else:
+              old_val = 0
+            new_val = old_val + paysheetcell.getQuantity()
+            base_amount_table[(tax_category, base_amount)] = new_val
 
     # get not editables model lines
     model = self.getSpecialiseValue()
@@ -353,20 +322,8 @@ class PaySheetTransaction(Invoice):
                                       base_category_list=['salary_range',])
 
       for share in variation_share_list:
-        base_application = None
         for slice in variation_slice_list:
-
-          #get the amount of application for this line
-          base_application_list = model_line.getBaseAmountList(base=1)
-          if base_application is None:
-            base_application = 0
-            for base in model_line.getBaseAmountList(base=1):
-              if base_amount_table[column[share]][row[base]] is not None:
-                base_application += \
-                    base_amount_table[column[share]][row[base]]
-            
           cell = model_line.getCell(slice, share)
-          
           if cell is not None:
             # get the slice :
             model_slice = None
@@ -376,8 +333,6 @@ class PaySheetTransaction(Invoice):
             if model_slice is not None:
               model_slice_min = model_slice.getQuantityRangeMin()
               model_slice_max = model_slice.getQuantityRangeMax()
-              quantity = cell.getQuantity()
-              price = cell.getPrice()
 
               ######################
               # calculation part : #
@@ -397,13 +352,14 @@ class PaySheetTransaction(Invoice):
                                                                  script_name
               LOG('script_name :',0,script_name)
               calculation_script = getattr(self, script_name, None)
-              quantity, price = calculation_script(\
-                  base_application=base_application,
-                  model_slice_min = model_slice_min, 
+              result = calculation_script(\
+                  base_amount_table=base_amount_table,
+                  share=share,
+                  model_slice_min=model_slice_min, 
                   model_slice_max=model_slice_max, 
-                  quantity=quantity, 
-                  price=price, 
-                  model_line=model_line)
+                  cell=cell,)
+              quantity = result['quantity']
+              price = result['price']
 
             # Cell creation :
             # Define an empty new cell
@@ -424,21 +380,17 @@ class PaySheetTransaction(Invoice):
             # update base participation
             base_participation_list = service.getBaseAmountList(base=1)
             for base_participation in base_participation_list:
-              old_val = \
-                  base_amount_table[column[share]][row[base_participation]]
-
               if quantity:
-                if old_val is not None:
-                  new_val = old_val + quantity
+                if base_amount_table.has_key((share, base_participation)):
+                  old_val = base_amount_table[(share, base_participation)]
                 else:
-                  new_val = quantity
+                  old_val = 0
+                new_val = old_val + quantity
+
                 if price:
-                  if old_val is not None:
-                    new_val = round((old_val + quantity*price), precision)
-                base_amount_table[column[share]][row[base_participation]]= \
-                                                                      new_val
-                base_amount_table[column[share]][row[base_participation]] = \
-                                                                      new_val
+                  if old_val != 0:
+                    new_val = round((old_val + quantity*price), precision) 
+                base_amount_table[(share, base_participation)] = new_val
 
       if cell_list:
         # create the PaySheetLine
@@ -457,7 +409,6 @@ class PaySheetTransaction(Invoice):
     # lines
     localized_add_end_line_script = getattr(self,
                                 'PaySheetTransaction_postCalculation', None)
-    LOG('localized_add_end_line_script :', 0, localized_add_end_line_script)
     if localized_add_end_line_script:
       localized_add_end_line_script(employee_tax_amount)
 
