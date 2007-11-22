@@ -40,9 +40,10 @@ class PaySheetModel:
       'default'     : [],
       'mode'        : 'w' 
     },
-    { 'id'          : 'localized_calculation_script_id'
-    , 'description' : 'name of the script used to do localised calculs'
-    , 'type'        : 'string'
-    , 'mode'        : 'w'
+    { 'id'          : 'default_calculation_script_id',
+      'description' : 'If no script found on Pay Sheet Model Lines, this\
+          script is used to do localised calculs',
+      'type'        : 'string',
+      'mode'        : 'w',
     },
   )
