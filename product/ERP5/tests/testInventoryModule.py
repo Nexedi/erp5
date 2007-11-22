@@ -36,7 +36,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
   """
     Test inventory module
   """
-  run_all_test = 0
+  run_all_test = 1
   inventory_portal_type = 'Inventory'
   inventory_line_portal_type = 'Inventory Line'
   inventory_cell_portal_type = 'Inventory Cell'
@@ -207,7 +207,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(self.default_quantity,quantity)
 
 
-  def test_01_NotVariatedInventory(self, quiet=0, run=1): #run_all_test):
+  def test_01_NotVariatedInventory(self, quiet=0, run=run_all_test):
     """
     We will create an inventory with the default quantity for
     a particular resource. Then we will check if the is correct.
