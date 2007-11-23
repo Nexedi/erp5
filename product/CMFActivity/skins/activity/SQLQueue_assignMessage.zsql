@@ -10,7 +10,6 @@ class_file:
 <params>path
 processing_node
 method_id
-broadcast
 uid</params>
 UPDATE message_queue
 SET
@@ -18,9 +17,11 @@ SET
   processing=0
 WHERE
 <dtml-if path> path = <dtml-sqlvar path type="string"> 
-<dtml-else> uid = <dtml-sqlvar uid type="int"> </dtml-if>
-<dtml-if method_id> AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
-<dtml-if broadcast>
-  AND broadcast = <dtml-sqlvar broadcast type="int">
+<dtml-else>
+  uid IN (
+<dtml-in uid><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
+)
 </dtml-if>
-
+<dtml-if method_id> AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
+<dtml-var sql_delimiter>
+COMMIT

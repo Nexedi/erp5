@@ -11,7 +11,7 @@ class_file:
 UPDATE
   message_queue
 SET
-  processing="0"
+  processing=0,
+  processing_node=0
 WHERE
-  processing="1"
-  AND processing_node="<dtml-sqlvar processing_node type="int">"
+  processing_node=<dtml-sqlvar processing_node type="int">

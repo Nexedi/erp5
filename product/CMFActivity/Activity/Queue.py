@@ -117,7 +117,6 @@ class Queue:
     self.is_alive = {}
     self.is_awake = {}
     self.is_initialized = 0
-    self.max_processing_date = DateTime()
 
   def initialize(self, activity_tool):
     # This is the only moment when
@@ -206,7 +205,7 @@ class Queue:
     return message_list
 
   def getExecutableMessageList(self, activity_tool, message, message_dict,
-                               validation_text_dict):
+                               validation_text_dict, now_date=None):
     """Get messages which have no dependent message, and store them in the dictionary.
 
     If the passed message itself is executable, simply store only that message.
@@ -233,7 +232,8 @@ class Queue:
       if message_list:
         # The result is not empty, so this message is not executable.
         validation_text_dict[message.order_validation_text] = 0
-        now_date = DateTime()
+        if now_date is None:
+          now_date = DateTime()
         for activity, m in message_list:
           # Note that the messages may contain ones which are already assigned or not
           # executable yet.
@@ -242,7 +242,7 @@ class Queue:
             message_dict[message.uid] = None
             try:
               self.getExecutableMessageList(activity_tool, m, message_dict,
-                                             validation_text_dict)
+                                             validation_text_dict, now_date=now_date)
             finally:
               del message_dict[message.uid]
       else:

@@ -1,0 +1,30 @@
+<dtml-comment>
+title:
+connection_id:cmf_activity_sql_connection
+max_rows:0
+max_cache:0
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>processing_node
+to_date
+limit
+group_method_id
+order_validation_text</params>
+UPDATE
+  message
+SET
+  processing_node=<dtml-sqlvar processing_node type="int">
+WHERE
+  processing_node=0
+  AND date <= <dtml-sqlvar to_date type="datetime">
+  <dtml-if group_method_id> AND group_method_id = <dtml-sqlvar group_method_id type="string"> </dtml-if>
+  <dtml-if order_validation_text> AND order_validation_text = <dtml-sqlvar order_validation_text type="string"> </dtml-if>
+ORDER BY
+  priority, date, uid
+<dtml-if limit>
+  LIMIT <dtml-sqlvar limit type="int">
+</dtml-if>
+<dtml-var sql_delimiter>
+COMMIT

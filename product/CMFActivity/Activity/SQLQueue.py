@@ -28,7 +28,6 @@
 
 from Products.CMFActivity.ActivityTool import registerActivity
 from RAMQueue import RAMQueue
-from DateTime import DateTime
 from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY, \
         abortTransactionSynchronously
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
@@ -37,26 +36,25 @@ from ZODB.POSException import ConflictError
 from types import ClassType
 import sys
 from time import time
+from sets import ImmutableSet
+from SQLBase import SQLBase
 
 try:
   from transaction import get as get_transaction
 except ImportError:
   pass
 
-from zLOG import LOG, WARNING, ERROR
+from zLOG import LOG, WARNING, ERROR, INFO, PANIC, TRACE
 
 MAX_PRIORITY = 5
+# Stop validating more messages when this limit is reached
+MAX_VALIDATED_LIMIT = 1000
+# Read this many messages to validate.
+READ_MESSAGE_LIMIT = 1000
+# Process this many messages in each dequeueMessage call.
+MESSAGE_BUNDLE_SIZE = 10
 
-priority_weight = \
-  [1] * 64 + \
-  [2] * 20 + \
-  [3] * 10 + \
-  [4] * 5 + \
-  [5] * 1
-
-LAST_PROCESSING_NODE = 1
-
-class SQLQueue(RAMQueue):
+class SQLQueue(RAMQueue, SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions
     and provide sequentiality. Should not create conflict
@@ -66,121 +64,240 @@ class SQLQueue(RAMQueue):
     if m.is_registered:
       id_tool = activity_tool.getPortalObject().portal_ids
       uid = id_tool.generateNewLengthId(id_group='portal_activity_queue', store=0)
-      activity_tool.SQLQueue_writeMessage(uid = uid,
-                                          path = '/'.join(m.object_path) ,
-                                          method_id = m.method_id,
-                                          priority = m.activity_kw.get('priority', 1),
-                                          broadcast = m.activity_kw.get('broadcast', 0),
-                                          message = self.dumpMessage(m),
-                                          date = m.activity_kw.get('at_date', DateTime()),
-                                          tag = m.activity_kw.get('tag', ''))
+      path = '/'.join(m.object_path)
+      method_id = m.method_id
+      priority = m.activity_kw.get('priority', 1)
+      date = m.activity_kw.get('at_date', None)
+      if date is None:
+        date = self.getNow(activity_tool)
+      tag = m.activity_kw.get('tag', '')
+      activity_tool.SQLQueue_writeMessage(uid=uid,
+                                          path=path,
+                                          method_id=method_id,
+                                          priority=priority,
+                                          message=self.dumpMessage(m),
+                                          date=date,
+                                          tag=tag)
 
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
     #LOG("prepareDeleteMessage", 0, str(m.__dict__))
     activity_tool.SQLQueue_delMessage(uid = [m.uid])
 
-  def dequeueMessage(self, activity_tool, processing_node):
-    readMessage = getattr(activity_tool, 'SQLQueue_readMessage', None)
-    if readMessage is None:
-      return 1
+  def getReservedMessageList(self, activity_tool, date, processing_node, limit=None):
+    """
+      Get and reserve a list of messages.
+      limit
+        Maximum number of messages to fetch.
+        This number is not garanted to be reached, because of:
+         - not enough messages being pending execution
+         - race condition (other nodes reserving the same messages at the same
+           time)
+        This number is guaranted not to be exceeded.
+        If None (or not given) no limit apply.
+    """
+    result = activity_tool.SQLQueue_selectReservedMessageList(processing_node=processing_node, limit=limit)
+    if len(result) == 0:
+      activity_tool.SQLQueue_reserveMessageList(limit=limit, processing_node=processing_node, to_date=date)
+      result = activity_tool.SQLQueue_selectReservedMessageList(processing_node=processing_node, limit=limit)
+    return result
 
-    # XXX: arbitrary maximum delay.
-    # Stop processing new messages if processing duration exceeds 10 seconds.
-    activity_stop_time = time() + 10
-    now_date = DateTime()
-    # Next processing date in case of error
-    next_processing_date = now_date + float(VALIDATION_ERROR_DELAY)/86400
-    message_list = readMessage(processing_node=processing_node, to_date=now_date)
-    for line in message_list:
-      if time() > activity_stop_time:
-        break
-      path = line.path
-      method_id = line.method_id
-      # Make sure message can not be processed anylonger
-      activity_tool.SQLQueue_processMessage(uid=line.uid)
-      get_transaction().commit() # Release locks before starting a potentially long calculation
+  def makeMessageListAvailable(self, activity_tool, uid_list):
+    """
+      Put messages back in processing_node=0 .
+    """
+    if len(uid_list):
+      activity_tool.SQLQueue_makeMessageListAvailable(uid_list=uid_list)
 
-      # At this point, the message is marked as processed.
-      try:
-        m = self.loadMessage(line.message)
-        # Make sure object exists
-        validation_state = m.validate(self, activity_tool, check_order_validation=0)
-        if validation_state is not VALID:
-          if line.priority > MAX_PRIORITY:
-            # This is an error.
-            # Assign message back to 'error' state.
-            activity_tool.SQLQueue_assignMessage(uid=line.uid,
-                                                 processing_node=VALIDATE_ERROR_STATE)
-            get_transaction().commit()                                        # and commit
-          else:
-            # Lower priority
-            activity_tool.SQLQueue_setPriority(uid=line.uid, priority=line.priority + 1)
-            get_transaction().commit() # Release locks before starting a potentially long calculation
-          continue
+  def getProcessableMessageList(self, activity_tool, processing_node):
+    """
+      Always true:
+        For each reserved message, delete redundant messages when it gets
+        reserved (definitely lost, but they are expandable since redundant).
 
-        # Try to invoke
-        activity_tool.invoke(m) # Try to invoke the message
-        if m.is_executed:                                          # Make sure message could be invoked
-          get_transaction().commit()                                        # If successful, commit
-      except:
-        # If an exception occurs, abort the transaction to minimize the impact,
-        LOG('SQLQueue', WARNING, 'Could not evaluate %s on %s' % (m.method_id, path),
-             error=sys.exc_info())
+      - reserve a message
+      - set reserved message to processing=1 state
+      - if this message has a group_method_id:
+        - reserve a bunch of BUNDLE_MESSAGE_COUNT messages
+        - untill number of impacted objects goes over MAX_GROUPED_OBJECTS
+          - get one message from the reserved bunch (this messages will be
+            "needed")
+          - increase the number of impacted object
+        - set "needed" reserved messages to processing=1 state
+        - unreserve "unneeded" messages
+      - return still-reserved message list
+
+      If any error happens in above described process, try to unreserve all
+      messages already reserved in that process.
+      If it fails, complain loudly that some messages might still be in an
+      unclean state.
+
+      Returned values:
+        list of 3-tuple:
+          - message uid
+          - message
+          - priority
+    """
+    def getReservedMessageList(limit):
+      line_list = self.getReservedMessageList(activity_tool=activity_tool,
+                                              date=now_date,
+                                              processing_node=processing_node,
+                                              limit=limit)
+      if len(line_list):
+        LOG('SQLQueue', TRACE, 'Reserved messages: %r' % ([x.uid for x in line_list]))
+      return line_list
+    def makeMessageListAvailable(uid_list):
+      self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
+    now_date = self.getNow(activity_tool)
+    message_list = []
+    def append(line, message):
+      uid = line.uid
+      message_list.append((uid, message, line.priority))
+    try:
+      result = getReservedMessageList(limit=MESSAGE_BUNDLE_SIZE)
+      for line in result:
+        m = self.loadMessage(line.message, uid=line.uid)
+        append(line, m)
+      if len(message_list):
+        activity_tool.SQLQueue_processMessage(uid=[x[0] for x in message_list])
+      return message_list
+    except:
+      LOG('SQLQueue', WARNING, 'Exception while reserving messages.', error=sys.exc_info())
+      if len(message_list):
+        to_free_uid_list = [x[0] for x in message_list]
         try:
-          abortTransactionSynchronously()
+          makeMessageListAvailable(to_free_uid_list)
         except:
-          # Unfortunately, database adapters may raise an exception against abort.
-          LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
-          pass
+          LOG('SQLQueue', PANIC, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
+        else:
+          if len(to_free_uid_list):
+            LOG('SQLQueue', TRACE, 'Freed messages %r' % (to_free_uid_list, ))
+      else:
+        LOG('SQLQueue', TRACE, '(no message was reserved)')
+      return []
 
-        # An exception happens at somewhere else but invoke, so messages
-        # themselves should not be delayed.
-        try:
-          activity_tool.SQLQueue_setPriority(uid=line.uid, date=line.date,
-                                             priority=line.priority)
-          get_transaction().commit()
-        except:
-          LOG('SQLQueue', ERROR, 'SQLQueue.dequeueMessage raised, and cannot even set processing to zero due to an exception',
-              error=sys.exc_info())
-          raise
-        continue
-
-      try:
-        if m.is_executed:
-          activity_tool.SQLQueue_delMessage(uid=[line.uid])  # Delete it
+  def finalizeMessageExecution(self, activity_tool, message_uid_priority_list):
+    def makeMessageListAvailable(uid_list):
+      self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
+    deletable_uid_list = []
+    delay_uid_list = []
+    final_error_uid_list = []
+    message_with_active_process_list = []
+    for uid, m, priority in message_uid_priority_list:
+      if m.is_executed:
+        deletable_uid_list.append(uid)
+        if m.active_process:
+          message_with_active_process_list.append(m)
+      else:
+        if type(m.exc_type) is ClassType and \
+           issubclass(m.exc_type, ConflictError):
+          delay_uid_list.append(uid)
+        elif priority > MAX_PRIORITY:
+          final_error_uid_list.append(uid)
         else:
           try:
-            # If not, abort transaction and start a new one
+            # Immediately update, because values different for every message
+            activity_tool.SQLQueue_setPriority(
+              uid=[uid],
+              delay=VALIDATION_ERROR_DELAY,
+              priority=priority + 1)
+          except:
+            LOG('SQLQueue', WARNING, 'Failed to increase priority of %r' % (uid, ), error=sys.exc_info())
+          try:
+            makeMessageListAvailable(delay_uid_list)
+          except:
+            LOG('SQLQueue', PANIC, 'Failed to unreserve %r' % (uid, ), error=sys.exc_info())
+          else:
+            LOG('SQLQueue', TRACE, 'Freed message %r' % (uid, ))
+    if len(deletable_uid_list):
+      try:
+        activity_tool.SQLQueue_delMessage(uid=deletable_uid_list)
+      except:
+        LOG('SQLQueue', PANIC, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
+      else:
+        LOG('SQLQueue', TRACE, 'Deleted messages %r' % (deletable_uid_list, ))
+    if len(delay_uid_list):
+      try:
+        # If this is a conflict error, do not lower the priority but only delay.
+        activity_tool.SQLQueue_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY)
+      except:
+        LOG('SQLQueue', TRACE, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
+      try:
+        makeMessageListAvailable(delay_uid_list)
+      except:
+        LOG('SQLQueue', PANIC, 'Failed to unreserve %r' % (delay_uid_list, ), error=sys.exc_info())
+      else:
+        LOG('SQLQueue', TRACE, 'Freed messages %r' % (delay_uid_list, ))
+    if len(final_error_uid_list):
+      try:
+        activity_tool.SQLQueue_assignMessage(uid=final_error_uid_list,
+                                             processing_node=INVOKE_ERROR_STATE)
+      except:
+        LOG('SQLQueue', WARNING, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
+    for m in message_with_active_process_list:
+      active_process = activity_tool.unrestrictedTraverse(m.active_process)
+      if not active_process.hasActivity():
+        # No more activity
+        m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
+
+
+  def dequeueMessage(self, activity_tool, processing_node):
+    def makeMessageListAvailable(uid_list):
+      self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
+    message_uid_priority_list = \
+      self.getProcessableMessageList(activity_tool, processing_node)
+    if len(message_uid_priority_list):
+      processing_stop_time = time() + 30 # Stop processing after more than 10 seconds were spent
+      processed_message_uid_list = []
+      # Commit right before executing messages.
+      # As MySQL transaction do no start exactly at the same time as ZODB
+      # transactions but a bit later, messages available might be called
+      # on objects which are not available - or available in an old
+      # version - to ZODB connector.
+      # So all connectors must be commited now that we have selected
+      # everything needed from MySQL to get a fresh view of ZODB objects.
+      get_transaction().commit()
+      for value in message_uid_priority_list:
+        processed_message_uid_list.append(value)
+        # Try to invoke
+        try:
+          activity_tool.invoke(value[1])
+          # Commit so that if a message raises it doesn't causes previous
+          # successfull messages to be rolled back. This commit might fail,
+          # so it is protected the same way as activity execution by the
+          # same "try" block.
+          get_transaction().commit()
+        except:
+          LOG('SQLQueue', WARNING, 'Exception raised when invoking message (uid, path, method_id) %r' % (value, ), error=sys.exc_info())
+          try:
+            makeMessageListAvailable([value[0]])
+          except:
+            LOG('SQQueue', PANIC, 'Failed to free message: %r' % (value, ), error=sys.exc_info())
+          else:
+            LOG('SQLQueue', TRACE, 'Freed message %r' % (value, ))
+          try:
             abortTransactionSynchronously()
           except:
             # Unfortunately, database adapters may raise an exception against abort.
-            LOG('SQLQueue', WARNING, 'abort failed, thus some objects may be modified accidentally')
-            pass
+            LOG('SQLQueue', PANIC, 'abort failed, thus some objects may be modified accidentally')
+            return True # Stop processing messages for this tic call for this queue.
+        if time() > processing_stop_time:
+          LOG('SQLQueue', TRACE, 'Stop processing message batch because processing delay exceeded')
+          break
+      # Release all unprocessed messages
+      processed_uid_set = ImmutableSet([x[0] for x in processed_message_uid_list])
+      to_free_uid_list = [x[0] for x in message_uid_priority_list if x[0] not in processed_uid_set]
+      if len(to_free_uid_list):
+        try:
+          makeMessageListAvailable(to_free_uid_list)
+        except:
+          LOG('SQQueue', PANIC, 'Failed to free remaining messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
+        else:
+          LOG('SQQueue', TRACE, 'Freed messages %r' % (to_free_uid_list, ))
+      self.finalizeMessageExecution(activity_tool, processed_message_uid_list)
+    get_transaction().commit()
+    return not len(message_uid_priority_list)
 
-          if type(m.exc_type) is ClassType \
-                  and issubclass(m.exc_type, ConflictError):
-            activity_tool.SQLQueue_setPriority(uid=line.uid,
-                                               date=next_processing_date,
-                                               priority=line.priority)
-          elif line.priority > MAX_PRIORITY:
-            # This is an error
-            activity_tool.SQLQueue_assignMessage(uid=line.uid,
-                                                 processing_node=INVOKE_ERROR_STATE)
-                                                                              # Assign message back to 'error' state
-            m.notifyUser(activity_tool)                                       # Notify Error
-          else:
-            # Lower priority
-            activity_tool.SQLQueue_setPriority(uid=line.uid, date=next_processing_date,
-                                               priority=line.priority + 1)
-        get_transaction().commit()
-      except:
-        LOG('SQLQueue', ERROR,
-            'SQLQueue.dequeueMessage raised an exception during checking for the results of processed messages',
-            error=sys.exc_info())
-        raise
-    get_transaction().commit() # Release locks before starting a potentially long calculation
-    return len(message_list) == 0
 
   def hasActivity(self, activity_tool, object, **kw):
     hasMessage = getattr(activity_tool, 'SQLQueue_hasMessage', None)
@@ -310,69 +427,36 @@ class SQLQueue(RAMQueue):
     return message_list
 
   def distribute(self, activity_tool, node_count):
+    offset = 0
     readMessageList = getattr(activity_tool, 'SQLQueue_readMessageList', None)
     if readMessageList is not None:
-      global LAST_PROCESSING_NODE
-      now_date = DateTime()
-      result = readMessageList(path=None, method_id=None,
-                               processing_node=-1, to_date=now_date)
-      get_transaction().commit()
+      now_date = self.getNow(activity_tool)
+      result = readMessageList(path=None, method_id=None, processing_node=-1,
+                               to_date=now_date, include_processing=0, 
+                               offset=offset, limit=READ_MESSAGE_LIMIT)
+      validated_count = 0
+      #TIME_begin = time()
+      while len(result) and validated_count < MAX_VALIDATED_LIMIT:
+        get_transaction().commit()
 
-      validation_text_dict = {'none': 1}
-      message_dict = {}
-      for line in result:
-        message = self.loadMessage(line.message, uid=line.uid)
-        message.order_validation_text = self.getOrderValidationText(message)
-        self.getExecutableMessageList(activity_tool, message, message_dict,
-                                      validation_text_dict)
-
-      # XXX probably this below can be optimized by assigning multiple messages at a time.
-      path_dict = {}
-      assignMessage = activity_tool.SQLQueue_assignMessage
-      processing_node = LAST_PROCESSING_NODE
-      id_tool = activity_tool.getPortalObject().portal_ids
-      for message in message_dict.itervalues():
-        path = '/'.join(message.object_path)
-        broadcast = message.activity_kw.get('broadcast', 0)
-        if broadcast:
-          # Broadcast messages must be distributed into all nodes.
-          assignMessage(processing_node=1, uid=message.uid)
-          if node_count > 1:
-            uid_list = id_tool.generateNewLengthIdList(id_group='portal_activity_queue',
-                                                       id_count=node_count - 1,
-						       store=0)
-            priority = message.activity_kw.get('priority', 1)
-            dumped_message = self.dumpMessage(message)
-            date = message.activity_kw.get('at_date', now_date)
-            tag = message.activity_kw.get('tag', '')
-            for node in xrange(2, node_count+1):
-              activity_tool.SQLQueue_writeMessage(uid=uid_list.pop(),
-                                                  path=path,
-                                                  method_id=message.method_id,
-                                                  priority=priority,
-                                                  broadcast=1,
-                                                  processing_node=node,
-                                                  message=dumped_message,
-                                                  date=date,
-                                                  tag=tag)
-          get_transaction().commit()
-        else:
-          # Select a processing node. If the same path appears again, dispatch the message to
-          # the same node, so that object caching is more efficient. Otherwise, apply a round
-          # robin scheduling.
-          node = path_dict.get(path)
-          round_robin_scheduling = message.activity_kw.get('round_robin_scheduling', 0)
-          if node is None:
-            node = processing_node
-	    if not round_robin_scheduling:
-              path_dict[path] = node
-            processing_node += 1
-            if processing_node > node_count:
-              processing_node = 1
-
-          assignMessage(processing_node=node, uid=message.uid, broadcast=0)
-          get_transaction().commit() # Release locks immediately to allow processing of messages
-      LAST_PROCESSING_NODE = processing_node
+        validation_text_dict = {'none': 1}
+        message_dict = {}
+        for line in result:
+          message = self.loadMessage(line.message, uid = line.uid)
+          message.order_validation_text = self.getOrderValidationText(message)
+          self.getExecutableMessageList(activity_tool, message, message_dict,
+                                        validation_text_dict, now_date=now_date)
+        distributable_count = len(message_dict)
+        if distributable_count:
+          activity_tool.SQLQueue_assignMessage(processing_node=0, uid=[message.uid for message in message_dict.itervalues()])
+          validated_count += distributable_count
+        if validated_count < MAX_VALIDATED_LIMIT:
+          offset += READ_MESSAGE_LIMIT
+          result = readMessageList(path=None, method_id=None, processing_node=-1,
+                                   to_date=now_date, include_processing=0, 
+                                   offset=offset, limit=READ_MESSAGE_LIMIT)
+      #TIME_end = time()
+      #LOG('SQLQueue.distribute', INFO, '%0.4fs : %i messages => %i distributables' % (TIME_end - TIME_begin, offset + len(result), validated_count))
 
   # Validation private methods
   def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None):

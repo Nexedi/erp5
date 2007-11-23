@@ -36,7 +36,7 @@ WHERE
   <dtml-in uid><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
   )
 </dtml-if>
-<dtml-if processing_node>
+<dtml-if expr="_.getattr(_, 'processing_node', None) is not None">
   AND processing_node = <dtml-sqlvar processing_node type="int">
 </dtml-if>
 <dtml-if order_validation_text>

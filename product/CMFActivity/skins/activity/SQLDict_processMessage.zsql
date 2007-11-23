@@ -7,14 +7,14 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>uid
-processing_node</params>
+<params>uid</params>
 UPDATE message
 SET
-  processing_date = <dtml-sqlvar "_.DateTime()" type="datetime">,
-  processing = 1,
-  processing_node = <dtml-sqlvar processing_node type="int">
+  processing_date = NOW(),
+  processing = 1
 WHERE
   uid IN (
 <dtml-in uid><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
   )
+<dtml-var sql_delimiter>
+COMMIT

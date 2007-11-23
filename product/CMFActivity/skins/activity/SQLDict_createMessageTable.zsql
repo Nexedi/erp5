@@ -17,7 +17,6 @@ CREATE TABLE `message` (
   `processing` TINYINT NOT NULL DEFAULT 0,
   `processing_date` DATETIME,
   `priority` TINYINT NOT NULL DEFAULT 0,
-  `broadcast` TINYINT NOT NULL DEFAULT 0,
   `group_method_id` VARCHAR(255) NOT NULL DEFAULT '',
   `tag` VARCHAR(255) NOT NULL,
   `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
@@ -26,8 +25,7 @@ CREATE TABLE `message` (
   PRIMARY KEY (`uid`),
   KEY (`path`),
   KEY (`method_id`),
-  KEY (`processing_node`),
-  KEY (`processing`),
+  KEY `processing_node_processing` (`processing_node`, `processing`),
   KEY (`priority`),
   KEY (`tag`),
   KEY (`order_validation_text`)

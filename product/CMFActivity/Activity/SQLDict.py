@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import registerActivity
 from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY, \
         abortTransactionSynchronously
@@ -36,47 +35,32 @@ from Products.CMFActivity.Errors import ActivityFlushError
 from ZODB.POSException import ConflictError
 import sys
 from types import ClassType
+#from time import time
+from SQLBase import SQLBase
 
 try:
   from transaction import get as get_transaction
 except ImportError:
   pass
 
-from zLOG import LOG, TRACE, WARNING, ERROR, INFO
+from zLOG import LOG, TRACE, WARNING, ERROR, INFO, PANIC
 
 MAX_PRIORITY = 5
+# Stop validating more messages when this limit is reached
+MAX_VALIDATED_LIMIT = 1000 
+# Read this many messages to validate.
+READ_MESSAGE_LIMIT = 1000
+# Stop electing more messages for processing if more than this many objects 
+# are impacted by elected messages.
 MAX_GROUPED_OBJECTS = 500
 
-priority_weight = \
-  [1] * 64 + \
-  [2] * 20 + \
-  [3] * 10 + \
-  [4] * 5 + \
-  [5] * 1
-
-LAST_PROCESSING_NODE = 1
-
-class SQLDict(RAMDict):
+class SQLDict(RAMDict, SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions
     and provide sequentiality. Should not create conflict
     because use of OOBTree.
   """
   # Transaction commit methods
-  def prepareQueueMessage(self, activity_tool, m):
-    if m.is_registered:
-      activity_tool.SQLDict_writeMessage( path = '/'.join(m.object_path) ,
-                                          method_id = m.method_id,
-                                          priority = m.activity_kw.get('priority', 1),
-                                          broadcast = m.activity_kw.get('broadcast', 0),
-                                          message = self.dumpMessage(m),
-                                          date = m.activity_kw.get('at_date', DateTime()),
-                                          group_method_id = '\0'.join([m.activity_kw.get('group_method_id', ''),
-                                                                      m.activity_kw.get('group_id', '')]),
-                                          tag = m.activity_kw.get('tag', ''),
-                                          order_validation_text = self.getOrderValidationText(m))
-                                          # Also store uid of activity
-
   def prepareQueueMessageList(self, activity_tool, message_list):
     registered_message_list = []
     for message in message_list:
@@ -87,21 +71,18 @@ class SQLDict(RAMDict):
       path_list = ['/'.join(message.object_path) for message in registered_message_list]
       method_id_list = [message.method_id for message in registered_message_list]
       priority_list = [message.activity_kw.get('priority', 1) for message in registered_message_list]
-      broadcast_list = [message.activity_kw.get('broadcast', 0) for message in registered_message_list]
       dumped_message_list = [self.dumpMessage(message) for message in registered_message_list]
-      datetime = DateTime()
-      date_list = [message.activity_kw.get('at_date', datetime) for message in registered_message_list]
+      date_list = [message.activity_kw.get('at_date', None) for message in registered_message_list]
       group_method_id_list = ['\0'.join([message.activity_kw.get('group_method_id', ''), message.activity_kw.get('group_id', '')])
                               for message in registered_message_list]
       tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
       order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]
       uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity', 
-		           id_count=len(registered_message_list), store=0)
+                   id_count=len(registered_message_list), store=0)
       activity_tool.SQLDict_writeMessageList( uid_list = uid_list,
                                               path_list = path_list,
                                               method_id_list = method_id_list,
                                               priority_list = priority_list,
-                                              broadcast_list = broadcast_list,
                                               message_list = dumped_message_list,
                                               date_list = date_list,
                                               group_method_id_list = group_method_id_list,
@@ -164,195 +145,293 @@ class SQLDict(RAMDict):
       return 0
     return 1
 
-  # Queue semantic
-  def dequeueMessage(self, activity_tool, processing_node):
-    readMessage = getattr(activity_tool, 'SQLDict_readMessage', None)
-    if readMessage is None:
-      return 1
+  def getReservedMessageList(self, activity_tool, date, processing_node, limit=None, **kw):
+    """
+      Get and reserve a list of messages.
+      limit
+        Maximum number of messages to fetch.
+        This number is not garanted to be reached, because of:
+         - not enough messages being pending execution
+         - race condition (other nodes reserving the same messages at the same
+           time)
+        This number is guaranted not to be exceeded.
+        If None (or not given) no limit apply.
+    """
+    result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, limit=limit)
+    if len(result) == 0:
+      activity_tool.SQLDict_reserveMessageList(limit=limit, processing_node=processing_node, to_date=date, **kw)
+      result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, limit=limit)
+    return result
 
-    now_date = DateTime()
-    result = readMessage(processing_node=processing_node, to_date=now_date)
-    if len(result) > 0:
-      line = result[0]
-      path = line.path
-      method_id = line.method_id
-      group_method_id = line.group_method_id
-      order_validation_text = line.order_validation_text
-      uid_list = activity_tool.SQLDict_readUidList(path=path, method_id=method_id,
-                                                   processing_node=None, to_date=now_date,
-                                                   order_validation_text=order_validation_text,
-                                                   group_method_id=group_method_id)
-      uid_list = [x.uid for x in uid_list]
-      uid_list_list = [uid_list]
-      priority_list = [line.priority]
-      # Make sure message can not be processed anylonger
-      if len(uid_list) > 0:
-        # Set selected messages to processing
-        activity_tool.SQLDict_processMessage(uid=uid_list,
-                                             processing_node=processing_node)
-      get_transaction().commit() # Release locks before starting a potentially long calculation
-      # This may lead (1 for 1,000,000 in case of reindexing) to messages left in processing state
+  def makeMessageListAvailable(self, activity_tool, uid_list):
+    """
+      Put messages back in processing_node=0 .
+    """
+    if len(uid_list):
+      activity_tool.SQLDict_makeMessageListAvailable(uid_list=uid_list)
 
-      # At this point, messages are marked as processed. So catch any kind of exception to make sure
-      # that they are unmarked on error.
-      try:
+  def deleteDuplicatedLineList(self, activity_tool, date, processing_node, line):
+    """
+      Delete all messages matching given one except itself.
+      Operator  Value
+      !=        uid
+      <=        date
+      =         path, method_id, group_method_id, order_validation_text,
+                processing_node, tag
+    """
+    activity_tool.SQLDict_deleteDuplicatedMessageList(
+      processing_node=processing_node, uid=line.uid,
+      to_date=line.date, path=line.path, method_id=line.method_id,
+      group_method_id=line.group_method_id,
+      order_validation_text=line.order_validation_text,
+      tag=line.tag)
+
+  def getProcessableMessageList(self, activity_tool, processing_node):
+    """
+      Always true:
+        For each reserved message, delete redundant messages when it gets
+        reserved (definitely lost, but they are expandable since redundant).
+
+      - reserve a message
+      - set reserved message to processing=1 state
+      - if this message has a group_method_id:
+        - reserve a bunch of BUNDLE_MESSAGE_COUNT messages
+        - untill number of impacted objects goes over MAX_GROUPED_OBJECTS
+          - get one message from the reserved bunch (this messages will be
+            "needed")
+          - increase the number of impacted object
+        - set "needed" reserved messages to processing=1 state
+        - unreserve "unneeded" messages
+      - return still-reserved message list and a group_method_id
+
+      If any error happens in above described process, try to unreserve all
+      messages already reserved in that process.
+      If it fails, complain loudly that some messages might still be in an
+      unclean state.
+
+      Returned values:
+        3-tuple:
+          - list of 3-tuple:
+            - message uid
+            - message
+            - priority
+          - impacted object count
+          - group_method_id
+    """
+    def getReservedMessageList(**kw):
+      line_list = self.getReservedMessageList(activity_tool=activity_tool,
+                                              date=now_date,
+                                              processing_node=processing_node,
+                                              **kw)
+      if len(line_list):
+        LOG('SQLDict', TRACE, 'Reserved messages: %r' % ([x.uid for x in line_list]))
+      return line_list
+    def deleteDuplicatedLineList(line):
+      self.deleteDuplicatedLineList(activity_tool=activity_tool, date=now_date,
+                                 processing_node=processing_node, line=line)
+    def makeMessageListAvailable(uid_list):
+      self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
+    BUNDLE_MESSAGE_COUNT = 100 # Arbitrary number
+    now_date = self.getNow(activity_tool)
+    message_list = []
+    def append(line, message):
+      uid = line.uid
+      message_list.append((uid, message, line.priority))
+    count = 0
+    group_method_id = None
+    try:
+      result = getReservedMessageList(limit=1)
+      if len(result) > 0:
+        line = result[0]
         m = self.loadMessage(line.message, uid=line.uid)
-        message_list = [m]
-        # Validate message (make sure object exists, priority OK, etc.)
-        if not self.validateMessage(activity_tool, m, uid_list, line.priority, processing_node):
-          return 0
-        
+        append(line, m)
+        group_method_id = line.group_method_id
+        # Delete all messages matching current one - except current one.
+        deleteDuplicatedLineList(line)
+        activity_tool.SQLDict_processMessage(uid=[line.uid])
         if group_method_id not in (None, '', '\0'):
           # Count the number of objects to prevent too many objects.
-          if m.hasExpandMethod():
-            count = len(m.getObjectList(activity_tool))
-          else:
-            count = 1
-          
+          count += len(m.getObjectList(activity_tool))
           if count < MAX_GROUPED_OBJECTS:
             # Retrieve objects which have the same group method.
-            result = readMessage(processing_node=processing_node,
-                                 to_date=now_date, group_method_id=group_method_id,
-                                 order_validation_text=order_validation_text)
-            #LOG('SQLDict dequeueMessage', 0, 'result = %d, group_method_id %s' % (len(result), group_method_id))
+            result = getReservedMessageList(limit=BUNDLE_MESSAGE_COUNT, group_method_id=group_method_id)
             path_and_method_id_dict = {}
+            unreserve_uid_list = []
             for line in result:
-              path = line.path
-              method_id = line.method_id
-
-              # Prevent using the same pair of a path and a method id.
-              key = (path, method_id)
+              # All fetched lines have the same group_method_id and
+              # processing_node.
+              # Their dates are lower-than or equal-to now_date.
+              # We read each line once so lines have distinct uids.
+              # So what remains to be filtered on are path, method_id,
+              # order_validation_text, tag
+              key = (line.path, line.method_id, line.order_validation_text, line.tag)
               if key in path_and_method_id_dict:
+                LOG('SQLDict', TRACE, 'Duplicate of message %r has been skipped (it should already be deleted anyway): %r' % (path_and_method_id_dict[key], line.uid))
                 continue
-              path_and_method_id_dict[key] = 1
-
-              uid_list = activity_tool.SQLDict_readUidList(path=path, method_id=method_id,
-                                                           processing_node=None,
-                                                           to_date=now_date, group_method_id=group_method_id,
-                                                           order_validation_text=order_validation_text)
-              uid_list = [x.uid for x in uid_list]
-              if len(uid_list) > 0:
-                # Set selected messages to processing
-                activity_tool.SQLDict_processMessage(uid=uid_list,
-                                                     processing_node=processing_node)
-              get_transaction().commit() # Release locks before starting a potentially long calculation
-
-              # Save this newly marked uids as soon as possible.
-              uid_list_list.append(uid_list)
-
-              m = self.loadMessage(line.message, uid=line.uid)
-              if self.validateMessage(activity_tool, m, uid_list, line.priority, processing_node):
-                if m.hasExpandMethod():
-                  count += len(m.getObjectList(activity_tool))
-                else:
-                  count += 1
-                message_list.append(m)
-                priority_list.append(line.priority)
-                if count >= MAX_GROUPED_OBJECTS:
-                  break
+              path_and_method_id_dict[key] = line.uid
+              deleteDuplicatedLineList(line)
+              if count < MAX_GROUPED_OBJECTS:
+                m = self.loadMessage(line.message, uid=line.uid)
+                count += len(m.getObjectList(activity_tool))
+                append(line, m)
               else:
-                # If the uids were not valid, remove them from the list, as validateMessage
-                # unmarked them.
-                uid_list_list.pop()
-
-          # Release locks before starting a potentially long calculation
-          get_transaction().commit()
-
-        # Remove group_id parameter from group_method_id
-        if group_method_id is not None:
-          group_method_id = group_method_id.split('\0')[0]
-        # Try to invoke
-        if group_method_id not in (None, ""):
-          LOG('SQLDict', INFO,
-              'invoking a group method %s with %d objects '\
-              ' (%d objects in expanded form)' % ( 
-            group_method_id, len(message_list), count))
-          activity_tool.invokeGroup(group_method_id, message_list)
+                unreserve_uid_list.append(line.uid)
+            activity_tool.SQLDict_processMessage(uid=[x[0] for x in message_list])
+            # Unreserve extra messages as soon as possible.
+            makeMessageListAvailable(unreserve_uid_list)
+      return message_list, count, group_method_id
+    except:
+      LOG('SQLDict', WARNING, 'Exception while reserving messages.', error=sys.exc_info())
+      if len(message_list):
+        to_free_uid_list = [x[0] for x in message_list]
+        try:
+          makeMessageListAvailable(to_free_uid_list)
+        except:
+          LOG('SQLDict', PANIC, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
         else:
-          activity_tool.invoke(message_list[0])
+          if len(to_free_uid_list):
+            LOG('SQLDict', TRACE, 'Freed messages %r' % (to_free_uid_list, ))
+      else:
+        LOG('SQLDict', TRACE, '(no message was reserved)')
+      return [], 0, None
 
-        # Check if messages are executed successfully.
-        # When some of them are executed successfully, it may not be acceptable to
-        # abort the transaction, because these remain pending, only due to other
-        # invalid messages. This means that a group method should not be used if
-        # it has a side effect. For now, only indexing uses a group method, and this
-        # has no side effect.
-        for m in message_list:
-          if m.is_executed:
-            get_transaction().commit()
-            break
+  def finalizeMessageExecution(self, activity_tool, message_uid_priority_list):
+    def makeMessageListAvailable(uid_list):
+      self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
+    deletable_uid_list = []
+    delay_uid_list = []
+    final_error_uid_list = []
+    message_with_active_process_list = []
+    for uid, m, priority in message_uid_priority_list:
+      if m.is_executed:
+        deletable_uid_list.append(uid)
+        if m.active_process:
+          message_with_active_process_list.append(m)
+      else:
+        if type(m.exc_type) is ClassType and \
+           issubclass(m.exc_type, ConflictError):
+          delay_uid_list.append(uid)
+        elif priority > MAX_PRIORITY:
+          final_error_uid_list.append(uid)
         else:
-          abortTransactionSynchronously()
+          try:
+            # Immediately update, because values different for every message
+            activity_tool.SQLDict_setPriority(
+              uid=[uid],
+              delay=VALIDATION_ERROR_DELAY,
+              priority=priority + 1)
+          except:
+            LOG('SQLDict', WARNING, 'Failed to increase priority of %r' % (uid, ), error=sys.exc_info())
+          try:
+            makeMessageListAvailable(delay_uid_list)
+          except:
+            LOG('SQLDict', PANIC, 'Failed to unreserve %r' % (uid, ), error=sys.exc_info())
+          else:
+            LOG('SQLDict', TRACE, 'Freed message %r' % (uid, ))
+    if len(deletable_uid_list):
+      try:
+        activity_tool.SQLDict_delMessage(uid=deletable_uid_list)
       except:
-        LOG('SQLDict', INFO, 
-            'an exception happened during processing %r' % (uid_list_list,),
-            error=sys.exc_info())
-        # If an exception occurs, abort the transaction to minimize the impact,
+        LOG('SQLDict', PANIC, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
+      else:
+        LOG('SQLDict', TRACE, 'Deleted messages %r' % (deletable_uid_list, ))
+    if len(delay_uid_list):
+      try:
+        # If this is a conflict error, do not lower the priority but only delay.
+        activity_tool.SQLDict_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY)
+      except:
+        LOG('SQLDict', TRACE, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
+      try:
+        makeMessageListAvailable(delay_uid_list)
+      except:
+        LOG('SQLDict', PANIC, 'Failed to unreserve %r' % (delay_uid_list, ), error=sys.exc_info())
+      else:
+        LOG('SQLDict', TRACE, 'Freed messages %r' % (delay_uid_list, ))
+    if len(final_error_uid_list):
+      try:
+        activity_tool.SQLDict_assignMessage(uid=final_error_uid_list,
+                                            processing_node=INVOKE_ERROR_STATE)
+      except:
+        LOG('SQLDict', WARNING, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
+    for m in message_with_active_process_list:
+      active_process = activity_tool.unrestrictedTraverse(m.active_process)
+      if not active_process.hasActivity():
+        # No more activity
+        m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
+
+  # Queue semantic
+  def dequeueMessage(self, activity_tool, processing_node):
+    def makeMessageListAvailable(uid_list):
+      self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
+    message_uid_priority_list, count, group_method_id = \
+      self.getProcessableMessageList(activity_tool, processing_node)
+    if len(message_uid_priority_list):
+      # Remove group_id parameter from group_method_id
+      if group_method_id is not None:
+        group_method_id = group_method_id.split('\0')[0]
+      message_list = [x[1] for x in message_uid_priority_list]
+      if group_method_id not in (None, ""):
+        method  = activity_tool.invokeGroup
+        args = (group_method_id, message_list)
+      else:
+        method = activity_tool.invoke
+        args = (message_list[0], )
+      try:
+        # Commit right before executing messages.
+        # As MySQL transaction do no start exactly at the same time as ZODB
+        # transactions but a bit later, messages available might be called
+        # on objects which are not available - or available in an old
+        # version - to ZODB connector.
+        # So all connectors must be commited now that we have selected
+        # everything needed from MySQL to get a fresh view of ZODB objects.
+        get_transaction().commit() 
+        # Try to invoke
+        method(*args)
+      except:
+        LOG('SQLDict', WARNING, 'Exception raised when invoking messages (uid, path, method_id) %r' % ([(x[0], x[1].object_path, x[1].method_id) for x in message_uid_priority_list], ), error=sys.exc_info())
+        to_free_uid_list = [x[0] for x in message_uid_priority_list]
+        try:
+          makeMessageListAvailable(to_free_uid_list)
+        except:
+          LOG('SQLDict', PANIC, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
+        else:
+          LOG('SQLDict', TRACE, 'Freed messages %r' % (to_free_uid_list))
         try:
           abortTransactionSynchronously()
         except:
           # Unfortunately, database adapters may raise an exception against abort.
-          LOG('SQLDict', WARNING,
+          LOG('SQLDict', PANIC,
               'abort failed, thus some objects may be modified accidentally')
-          pass
-
-        # An exception happens at somewhere else but invoke or invokeGroup, so messages
-        # themselves should not be delayed.
-        try:
-          for uid_list in uid_list_list:
-            if len(uid_list):
-              # This only sets processing to zero.
-              activity_tool.SQLDict_setPriority(uid=uid_list)
-              get_transaction().commit()
-        except:
-          LOG('SQLDict', ERROR,
-              'SQLDict.dequeueMessage raised, and cannot even set processing to zero due to an exception',
-              error=sys.exc_info())
-          raise
-        return 0
-      
+          return True # Stop processing messages for this tic call for this queue.
+      # Only abort if nothing succeeded.
+      # This means that when processing multiple messages, failed ones must not cause
+      # bad things to happen if transaction is commited.
+      if len([x for x in message_uid_priority_list if x[1].is_executed]) == 0:
+        endTransaction = abortTransactionSynchronously
+      else:
+        endTransaction = get_transaction().commit
       try:
-        for i in xrange(len(message_list)):
-          m = message_list[i]
-          uid_list = uid_list_list[i]
-          priority = priority_list[i]
-          if m.is_executed:
-            if len(uid_list) > 0:
-              activity_tool.SQLDict_delMessage(uid=uid_list)       # Delete it
-            get_transaction().commit()                             # If successful, commit
-            if m.active_process:
-              active_process = activity_tool.unrestrictedTraverse(m.active_process)
-              if not active_process.hasActivity():
-                # No more activity
-                m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
-          else:
-            if type(m.exc_type) is ClassType and issubclass(m.exc_type, ConflictError):
-              # If this is a conflict error, do not lower the priority but only delay.
-              activity_tool.SQLDict_setPriority(uid=uid_list, delay=VALIDATION_ERROR_DELAY)
-              get_transaction().commit() # Release locks before starting a potentially long calculation
-            elif priority > MAX_PRIORITY:
-              # This is an error
-              if len(uid_list) > 0:
-                activity_tool.SQLDict_assignMessage(uid=uid_list,
-                                                    processing_node=INVOKE_ERROR_STATE)
-                                                                                # Assign message back to 'error' state
-              m.notifyUser(activity_tool)                                       # Notify Error
-              get_transaction().commit()                                        # and commit
-            else:
-              # Lower priority
-              if len(uid_list) > 0:
-                activity_tool.SQLDict_setPriority(uid=uid_list, delay=VALIDATION_ERROR_DELAY,
-                                                  priority=priority + 1)
-              get_transaction().commit() # Release locks before starting a potentially long calculation
+        endTransaction()
       except:
-        LOG('SQLDict', ERROR,
-            'SQLDict.dequeueMessage raised an exception during checking for the results of processed messages',
-            error=sys.exc_info())
-        raise
-
-      return 0
-    get_transaction().commit() # Release locks before starting a potentially long calculation
-    return 1
+        LOG('SQLDict', WARNING, 'Failed to end transaction for messages (uid, path, method_id) %r' % ([(x[0], x[1].object_path, x[1].method_id) for x in message_uid_priority_list], ), error=sys.exc_info())
+        failed_message_uid_list = [x[0] for x in message_uid_priority_list]
+        try:
+          makeMessageListAvailable(failed_message_uid_list)
+        except:
+          LOG('SQQueue', PANIC, 'Failed to free remaining messages: %r' % (failed_message_uid_list, ), error=sys.exc_info())
+        else:
+          LOG('SQQueue', TRACE, 'Freed messages %r' % (failed_message_uid_list, ))
+        if endTransaction == abortTransactionSynchronously:
+          LOG('SQLDict', PANIC, 'Failed to abort executed messages. Some objects may be modified accidentally.')
+        else:
+          try:
+            abortTransactionSynchronously()
+          except:
+            LOG('SQLDict', PANIC, 'Failed to abort executed messages which also failed to commit. Some objects may be modified accidentally.')
+        return True # Stop processing messages for this tic call for this queue.
+      self.finalizeMessageExecution(activity_tool, message_uid_priority_list)
+    get_transaction().commit()
+    return not len(message_uid_priority_list)
 
   def hasActivity(self, activity_tool, object, **kw):
     hasMessage = getattr(activity_tool, 'SQLDict_hasMessage', None)
@@ -470,76 +549,34 @@ class SQLDict(RAMDict):
     return message_list
 
   def distribute(self, activity_tool, node_count):
+    offset = 0
     readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
     if readMessageList is not None:
-      global LAST_PROCESSING_NODE
-      now_date = DateTime()
+      now_date = self.getNow(activity_tool)
       result = readMessageList(path=None, method_id=None, processing_node=-1,
-                               to_date=now_date, include_processing=0)
-      get_transaction().commit()
+                               to_date=now_date, include_processing=0, offset=offset, count=READ_MESSAGE_LIMIT)
+      validated_count = 0
+      #TIME_begin = time()
+      while len(result) and validated_count < MAX_VALIDATED_LIMIT:
+        get_transaction().commit()
 
-      validation_text_dict = {'none': 1}
-      message_dict = {}
-      for line in result:
-        message = self.loadMessage(line.message, uid = line.uid,
-                                   order_validation_text = line.order_validation_text)
-        self.getExecutableMessageList(activity_tool, message, message_dict,
-                                      validation_text_dict)
-      # XXX probably this below can be optimized by assigning multiple messages at a time.
-      path_dict = {}
-      assignMessage = activity_tool.SQLDict_assignMessage
-      processing_node = LAST_PROCESSING_NODE
-      id_tool = activity_tool.getPortalObject().portal_ids
-  
-      for message in message_dict.itervalues():
-        path = '/'.join(message.object_path)
-        broadcast = message.activity_kw.get('broadcast', 0)
-        if broadcast:
-          # Broadcast messages must be distributed into all nodes.
-          uid = message.uid
-          assignMessage(processing_node=1, uid=[uid])
-          if node_count > 1:
-            uid_list = id_tool.generateNewLengthIdList(id_group='portal_activity',
-                                                       id_count=node_count - 1,
-						       store=0)
-            path_list = [path] * (node_count - 1)
-            method_id_list = [message.method_id] * (node_count - 1)
-            priority_list = [message.activity_kw.get('priority', 1)] * (node_count - 1)
-            processing_node_list = range(2, node_count + 1)
-            broadcast_list = [1] * (node_count - 1)
-            message_list = [self.dumpMessage(message)] * (node_count - 1)
-            date_list = [message.activity_kw.get('at_date', now_date)] * (node_count - 1)
-            group_method_id_list = ['\0'.join([message.activity_kw.get('group_method_id', ''),
-                                              message.activity_kw.get('group_id', '')])] * (node_count - 1)
-            tag_list = [message.activity_kw.get('tag', '')] * (node_count - 1)
-            order_validation_text_list = [message.order_validation_text] * (node_count - 1)
-            activity_tool.SQLDict_writeMessageList(uid_list=uid_list,
-                                                   path_list=path_list,
-                                                   method_id_list=method_id_list,
-                                                   priority_list=priority_list,
-                                                   broadcast_list=broadcast_list,
-                                                   processing_node_list=processing_node_list,
-                                                   message_list=message_list,
-                                                   date_list=date_list,
-                                                   group_method_id_list=group_method_id_list,
-                                                   tag_list=tag_list,
-                                                   order_validation_text_list=order_validation_text_list)
-          get_transaction().commit()
-        else:
-          # Select a processing node. If the same path appears again, dispatch the message to
-          # the same node, so that object caching is more efficient. Otherwise, apply a round
-          # robin scheduling.
-          node = path_dict.get(path)
-          if node is None:
-            node = processing_node
-            path_dict[path] = node
-            processing_node += 1
-            if processing_node > node_count:
-              processing_node = 1
-
-          assignMessage(processing_node=node, uid=[message.uid], broadcast=0)
-          get_transaction().commit() # Release locks immediately to allow processing of messages
-      LAST_PROCESSING_NODE = processing_node
+        validation_text_dict = {'none': 1}
+        message_dict = {}
+        for line in result:
+          message = self.loadMessage(line.message, uid = line.uid,
+                                     order_validation_text = line.order_validation_text)
+          self.getExecutableMessageList(activity_tool, message, message_dict,
+                                        validation_text_dict, now_date=now_date)
+        distributable_count = len(message_dict)
+        if distributable_count:
+          activity_tool.SQLDict_assignMessage(processing_node=0, uid=[message.uid for message in message_dict.itervalues()])
+          validated_count += distributable_count
+        if validated_count < MAX_VALIDATED_LIMIT:
+          offset += READ_MESSAGE_LIMIT
+          result = readMessageList(path=None, method_id=None, processing_node=-1,
+                                   to_date=now_date, include_processing=0, offset=offset, count=READ_MESSAGE_LIMIT)
+      #TIME_end = time()
+      #LOG('SQLDict.distribute', INFO, '%0.4fs : %i messages => %i distributables' % (TIME_end - TIME_begin, offset - READ_MESSAGE_LIMIT + len(result), validated_count))
 
   # Validation private methods
   def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None):

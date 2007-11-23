@@ -12,26 +12,24 @@ path_list
 method_id_list
 message_list
 priority_list
-broadcast_list
 date_list
 processing_node_list
 group_method_id_list
 tag_list
 order_validation_text_list</params>
 INSERT INTO message
-(uid, path, date, method_id, processing_node, processing, priority, broadcast, group_method_id, tag, order_validation_text, message)
+(uid, path, date, method_id, processing_node, processing, priority, group_method_id, tag, order_validation_text, message)
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(path_list))">
 <dtml-if sequence-start><dtml-else>,</dtml-if>
 (
   <dtml-sqlvar expr="uid_list[loop_item]" type="int">,
   <dtml-sqlvar expr="path_list[loop_item]" type="string">,
-  <dtml-if date_list><dtml-sqlvar expr="date_list[loop_item]" type="datetime"><dtml-else><dtml-sqlvar "_.DateTime()" type="datetime"></dtml-if>, 
+  <dtml-if date_list><dtml-if expr="date_list[loop_item] is not None"><dtml-sqlvar expr="date_list[loop_item]" type="datetime"><dtml-else>NOW()</dtml-if><dtml-else>NOW()</dtml-if>, 
   <dtml-sqlvar expr="method_id_list[loop_item]" type="string">,
   <dtml-if processing_node_list><dtml-sqlvar expr="processing_node_list[loop_item]" type="int"><dtml-else>-1</dtml-if>,
   0,
   <dtml-sqlvar expr="priority_list[loop_item]" type="int">,
-  <dtml-sqlvar expr="broadcast_list[loop_item]" type="int">,
   <dtml-sqlvar expr="group_method_id_list[loop_item]" type="string">,
   <dtml-sqlvar expr="tag_list[loop_item]" type="string">,
   <dtml-sqlvar expr="order_validation_text_list[loop_item]" type="string">,

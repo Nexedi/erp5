@@ -9,12 +9,21 @@ class_file:
 </dtml-comment>
 <params>uid
 priority
+delay
 date</params>
 UPDATE
     message_queue
 SET
-    priority = <dtml-sqlvar priority type="int">,
-    processing = 0,
-    date = <dtml-sqlvar date type="datetime">  
+    processing = 0
+    <dtml-if priority>
+    , priority = <dtml-sqlvar priority type="int">
+    </dtml-if>
+    <dtml-if delay>
+    , date = DATE_ADD(NOW(), INTERVAL <dtml-sqlvar delay type="int"> SECOND)
+    <dtml-elif date>
+    , date = <dtml-sqlvar date type="datetime">
+    </dtml-if>
 WHERE
-    uid = <dtml-sqlvar uid type="int">
+  uid IN (
+  <dtml-in uid><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
+  )

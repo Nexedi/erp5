@@ -12,7 +12,6 @@ path
 method_id
 message
 priority
-broadcast
 date
 processing_node=-1
 group_method_id
@@ -22,12 +21,11 @@ INSERT INTO message
 SET
   uid = <dtml-sqlvar uid type="int">,
   path = <dtml-sqlvar path type="string">,
-  <dtml-if date>date = <dtml-sqlvar date type="datetime">, <dtml-else>date = <dtml-sqlvar "_.DateTime()" type="datetime">, </dtml-if> 
+  date = <dtml-if date><dtml-sqlvar date type="datetime"><dtml-else>NOW()</dtml-if>,
   method_id = <dtml-sqlvar method_id type="string">,
   processing_node = <dtml-sqlvar processing_node type="int">,
   processing = 0,
   priority = <dtml-sqlvar priority type="int">,
-  broadcast = <dtml-sqlvar broadcast type="int">,
   group_method_id = <dtml-sqlvar group_method_id type="string">,
   tag = <dtml-sqlvar tag type="string">,
   order_validation_text = <dtml-sqlvar order_validation_text type="string">,

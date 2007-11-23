@@ -130,14 +130,16 @@ class Message:
 
   def getObjectList(self, activity_tool):
     """return the list of object that can be expanded from this message."""
+    object_list = []
     try:
-      expand_method_id = self.activity_kw['expand_method_id']
-      obj = self.getObject(activity_tool)
-      # FIXME: how to pass parameters?
-      object_list = getattr(obj, expand_method_id)()
+      object_list.append(self.getObject(activity_tool))
     except KeyError:
-      object_list = [self.getObject(activity_tool)]
-
+      pass
+    else:
+      if self.hasExpandMethod():
+        expand_method_id = self.activity_kw['expand_method_id']
+        # FIXME: how to pass parameters?
+        object_list = getattr(object_list[0], expand_method_id)()
     return object_list
 
   def hasExpandMethod(self):

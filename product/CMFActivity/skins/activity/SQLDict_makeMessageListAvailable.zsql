@@ -1,0 +1,21 @@
+<dtml-comment>
+title:
+connection_id:cmf_activity_sql_connection
+max_rows:0
+max_cache:0
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>uid_list</params>
+UPDATE
+  message
+SET
+  processing_node=0,
+  processing=0
+WHERE
+  uid IN (
+  <dtml-in prefix="uid" expr="uid_list"><dtml-sqlvar uid_item type="int"><dtml-if sequence-end><dtml-else>, </dtml-if></dtml-in>
+  )
+<dtml-var sql_delimiter>
+COMMIT

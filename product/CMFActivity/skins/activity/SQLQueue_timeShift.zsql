@@ -16,6 +16,6 @@ SET
   processing_date = processing_date - <dtml-sqlvar delay type="int">
 WHERE
   1 = 1
-<dtml-if processing_node>
+<dtml-if expr="processing_node is not None">
   AND processing_node = <dtml-sqlvar processing_node type="int">
 </dtml-if>
