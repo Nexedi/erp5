@@ -1,5 +1,6 @@
 2007-11-23 Yusei
 * Add bookmark box in WebSite_viewDashboardRenderer.
+* Try to get simulation state if validation state accessor does not exists.
 
 2007-11-21 Yusei
 * if document's title is empty, then display its id in document relation box.
