@@ -517,7 +517,7 @@ class SimulationMovement(Movement):
     cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
 
     def getTreeDelivered(movement, ignore_first=0):
-      if ignore_first:
+      if not ignore_first:
         if len(movement.getDeliveryList()) > 0:
           return True
       for applied_rule in movement.objectValues():
