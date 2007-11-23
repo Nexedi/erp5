@@ -1,3 +1,6 @@
+2007-11-23 Yusei
+* Add bookmark box in WebSite_viewDashboardRenderer.
+
 2007-11-21 Yusei
 * if document's title is empty, then display its id in document relation box.
 

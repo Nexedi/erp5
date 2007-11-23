@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -69,8 +66,8 @@
             <span tal:replace="doc/getTitle"/>\n
             <span tal:condition="python: hasattr(doc, \'getVersion\') and doc.getVersion()" \n
                         tal:replace="python: \'ver. %s\' % doc.getVersion()"/>\n
-            (<span tal:content="python: doc.getValidationStateTitle()" \n
-                    tal:attributes="class python:doc.getTranslatedValidationStateTitle()"/>)\n
+            (<span tal:content="python: getattr(doc, \'getValidationStateTitle\',None) and doc.getValidationStateTitle()" \n
+                    tal:attributes="class doc/getTranslatedValidationStateTitle|nothing"/>)\n
           </a>\n
          </tal:block>\n
         </li>\n
@@ -166,7 +163,31 @@
     </div>\n
   </tal:block>\n
 </tal:block>\n
-</tal:block>
+\n
+<tal:block metal:define-macro="bookmark">\n
+  <tal:block tal:define="content_list python: here.WebSite_getBookmarkContentValueList()">\n
+    <div class="boxHeader">\n
+      Bookmark\n
+    </div>\n
+    <div class="boxContent">\n
+      <ul>\n
+        <li tal:repeat="item python: content_list">\n
+          <a tal:define="url python: \'%s/view\' % item.absolute_url()"\n
+            tal:attributes="href url">\n
+            <tal:block tal:replace="python: here.WebSite_getFancyRelativeDate(item.getCreationDate())"\n
+                       tal:on-error="string:"/>&mdash;\n
+            <tal:block tal:replace="item/getTitleOrId"\n
+                       tal:on-error="string:"/>\n
+          </a>\n
+          <tal:block tal:replace="python: \'(%s)\' % item.getPortalType()"\n
+                     tal:on-error="string:"/>\n
+        </li>\n
+      </ul>\n
+    </div>\n
+  </tal:block>\n
+</tal:block>\n
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
