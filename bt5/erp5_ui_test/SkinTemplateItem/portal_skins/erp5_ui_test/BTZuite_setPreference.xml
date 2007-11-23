@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -74,7 +71,9 @@ if working_copy_list:\n
 else:\n
   list = (\'/var/lib/zope/unit_test/svn/bt5\', \'/var/lib/zope/unit_test/Products/ERP5/bootstrap\',)\n
 \n
-pref = context.portal_preferences.newContent()\n
+pref = getattr(context.portal_preferences, "erp5_ui_test_preference", None)\n
+if pref is None:\n
+  pref = context.portal_preferences.newContent(id="erp5_ui_test_preference")\n
 pref.setPreferredSubversionWorkingCopyList(list)\n
 pref.enable()\n
 \n
@@ -131,7 +130,9 @@ return \'Set Preference Successfully.\'\n
                             <string>tuple</string>
                             <string>_getattr_</string>
                             <string>list</string>
+                            <string>getattr</string>
                             <string>context</string>
+                            <string>None</string>
                             <string>pref</string>
                           </tuple>
                         </value>
