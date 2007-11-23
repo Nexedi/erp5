@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Planning Box Field </title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Column Header Link</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_editObjectLineDates</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Modified Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewPlanningBox/planning_box/PlanningBox_setPropertyList?calendar_view=\'checked\'</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Set Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'Planning\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Make sure that we are working with currently date -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@name=\'JumpToCurrentDay\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>selectAndWait</td>\n
+\t<td>zoom_level</td>\n
+\t<td>label=Year</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_1"]</td>\n
+  <td tal:content="python: \'%s/1\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_2"]</td>\n
+  <td tal:content="python: \'%s/2\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_3"]</td>\n
+  <td tal:content="python: \'%s/3\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_4"]</td>\n
+  <td tal:content="python: \'%s/4\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_5"]</td>\n
+  <td tal:content="python: \'%s/5\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_6"]</td>\n
+  <td tal:content="python: \'%s/6\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_7"]</td>\n
+  <td tal:content="python: \'%s/7\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_8"]</td>\n
+  <td tal:content="python: \'%s/8\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_9"]</td>\n
+  <td tal:content="python: \'%s/9\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_10"]</td>\n
+  <td tal:content="python: \'%s/10\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_11"]</td>\n
+  <td tal:content="python: \'%s/11\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="Group_sec_12"]</td>\n
+  <td tal:content="python: \'%s/12\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<!-- tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>.</td>\n
+</tr -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td tal:content="python: \'//div[@id=\\\'Group_sec_%s\\\']//a\' % (str(DateTime().month())) " ></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>Title 0</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td tal:content="python: \'//div[@id=\\\'Group_sec_%s\\\']//a\' % (str((DateTime().day()/3)+1)) " ></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>Title 0</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td tal:content="python: \'//div[@id=\\\'Group_sec_%s\\\']//a\' % (str(DateTime().dow()+1)) " ></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>Title 0</td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewPlanningBox/planning_box/PlanningBox_setPropertyList</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Set Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+</tbody></table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testPlanningBoxVerticalViewColumnHeaderLink</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
