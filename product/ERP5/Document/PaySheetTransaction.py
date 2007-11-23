@@ -254,8 +254,8 @@ class PaySheetTransaction(Invoice):
 
     # in this dictionary will be saved the current amount corresponding to 
     # the tuple (tax_category, base_amount) :
-    # current_amount = base_amount_table[(tax_category, base_amount)]
-    base_amount_table = {}
+    # current_amount = base_amount_current_value_dict[base_amount]
+    base_amount_current_value_dict = {}
 
     def sortByIntIndex(a, b):
       return cmp(a.getIntIndex(),
@@ -280,12 +280,12 @@ class PaySheetTransaction(Invoice):
         for paysheetcell in paysheetcell_list:
           tax_category = paysheetcell.getTaxCategory(base=1)
           if tax_category and paysheetcell.getQuantity():
-            if base_amount_table.has_key((tax_category, base_amount)):
-              old_val = base_amount_table[(tax_category, base_amount)]
+            if base_amount_current_value_dict.has_key(base_amount):
+              old_val = base_amount_current_value_dict[base_amount]
             else:
               old_val = 0
             new_val = old_val + paysheetcell.getQuantity()
-            base_amount_table[(tax_category, base_amount)] = new_val
+            base_amount_current_value_dict[base_amount] = new_val
 
     # get not editables model lines
     model = self.getSpecialiseValue()
@@ -353,11 +353,11 @@ class PaySheetTransaction(Invoice):
               LOG('script_name :',0,script_name)
               calculation_script = getattr(self, script_name, None)
               result = calculation_script(\
-                  base_amount_table=base_amount_table,
-                  share=share,
-                  model_slice_min=model_slice_min, 
-                  model_slice_max=model_slice_max, 
-                  cell=cell,)
+                base_amount_current_value_dict=base_amount_current_value_dict,
+                share=share,
+                model_slice_min=model_slice_min, 
+                model_slice_max=model_slice_max, 
+                cell=cell,)
               quantity = result['quantity']
               price = result['price']
 
@@ -381,8 +381,8 @@ class PaySheetTransaction(Invoice):
             base_participation_list = service.getBaseAmountList(base=1)
             for base_participation in base_participation_list:
               if quantity:
-                if base_amount_table.has_key((share, base_participation)):
-                  old_val = base_amount_table[(share, base_participation)]
+                if base_amount_current_value_dict.has_key(base_participation):
+                  old_val = base_amount_current_value_dict[base_participation]
                 else:
                   old_val = 0
                 new_val = old_val + quantity
@@ -390,7 +390,7 @@ class PaySheetTransaction(Invoice):
                 if price:
                   if old_val != 0:
                     new_val = round((old_val + quantity*price), precision) 
-                base_amount_table[(share, base_participation)] = new_val
+                base_amount_current_value_dict[base_participation] = new_val
 
       if cell_list:
         # create the PaySheetLine
