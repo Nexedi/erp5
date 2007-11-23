@@ -129,7 +129,6 @@ class AlarmTool(BaseTool):
       We will look at all alarms and see if they should be activated,
       if so then we will activate them.
     """
-    current_date = DateTime()
     for alarm in self.getAlarmList(to_active=1):
       if alarm is not None:
         user = alarm.getWrappedOwner()
