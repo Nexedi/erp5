@@ -145,7 +145,7 @@ class WorkflowMethod(Method):
       # critical sections in this part of the code and a
       # thread variable which tells in which semantic context the code
       # should ne executed. - XXX
-      return self_m(instance, *args, **kw)
+      return self._m(instance, *args, **kw)
 
     # New implementation does not use any longer wrapWorkflowMethod
     # but directly calls the workflow methods
@@ -278,8 +278,9 @@ global method_registration_cache
 method_registration_cache = {}
 
 WORKFLOW_METHOD_MARKER = ('Base._doNothing',)
-RESERVED_TUPLE_PROPERTY = ('_constraints', '_properties', '_categories',
-                           '__implements__', 'property_sheets', '_erp5_properties' )
+RESERVED_TUPLE_PROPERTY = set(('_constraints', '_properties', '_categories',
+                               '__implements__', 'property_sheets', 
+                               '_erp5_properties'))
 # It might be necessary to use another type for those reserved properties
 # ex. list type
 
@@ -641,7 +642,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder):
             else:
               LOG('initializePortalTypeDynamicWorkflowMethods', 100,
                   'WARNING! Can not initialize %s on %s' % \
-                    (method_id, str(work_method_holder)))
+                    (method_id, str(klass)))
           else:
             prop_holder.security.declareProtected(Permissions.AccessContentsInformation,
                                                   method_id)
@@ -691,7 +692,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder):
                 else:
                   LOG('initializePortalTypeDynamicWorkflowMethods', 100,
                       'WARNING! Can not initialize %s on %s' % \
-                        (method_id, str(work_method_holder)))
+                        (method_id, str(klass)))
               else:
                 prop_holder.security.declareProtected(Permissions.AccessContentsInformation,
                                                       method_id)
@@ -829,24 +830,18 @@ class Base( CopyContainer,
 
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
-    if aq_key in Base.aq_portal_type:
+    try:
       property_holder = Base.aq_portal_type[aq_key]
       accessor = getattr(property_holder, id, None)
-      if accessor is not None:
-        # Clearly this below has a bad effect in CMFCategory.
-        # Someone must investigate why. -yo
-        #return accessor.__of__(self) # XXX - JPS: I have no idea if we should __of__ before returning
-        if isinstance(accessor, types.TupleType):
-          if id in RESERVED_TUPLE_PROPERTY:
-            return accessor
-          Base.aq_portal_type[aq_key].createAccessor(id)
+      if isinstance(accessor, tuple):
+        if id not in RESERVED_TUPLE_PROPERTY:
+          property_holder.createAccessor(id)
           accessor = getattr(property_holder, id, None)
-          if accessor is not None:
-            return accessor
-        else:
-          return accessor
-      return None
-    elif id in ('portal_types', 'portal_url', 'portal_workflow'):
+      return accessor
+    except KeyError:
+      pass
+
+    if id in ('portal_types', 'portal_url', 'portal_workflow'):
       # This is required to precent infinite loop (we need to access portal_types tool)
       return None
 
