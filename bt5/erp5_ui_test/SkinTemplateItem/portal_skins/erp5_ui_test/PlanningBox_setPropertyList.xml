@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>d = dict(\n
+  field_title = \'Foo_viewPlanningBox\',\n
+  field_description = \'\',\n
+  field_css_class = \'\',\n
+  field_default = \'\',\n
+  field_alternate_name = \'\',\n
+  field_hidden = \'\',\n
+  field_js_enabled = \'checked\',\n
+  field_calendar_view = calendar_view,\n
+  field_main_axis_groups = \'10\' ,\n
+  field_size_border_width_left = \'10\' ,\n
+  field_size_planning_width = \'800\'   ,\n
+  field_size_y_axis_space = \'10\'   ,\n
+  field_size_y_axis_width = \'200\'   ,\n
+  field_use_date_zoom = \'checked\'   ,\n
+  field_size_header_height =  \'20\'  ,\n
+  field_size_planning_height = \'800\'  ,\n
+  field_size_x_axis_space = \'10\'   ,\n
+  field_size_x_axis_height = \'50\'   ,\n
+  field_y_axis_position = \'\'   ,\n
+  field_x_axis_position = \'\'   ,\n
+  field_report_root_list = """parent | parent\n
+foo_domain | foo_domain"""   ,\n
+  field_selection_name = \'planning_0\'   ,\n
+  field_portal_types = """Foo Line""",\n
+  field_sort = \'id\'   ,\n
+  field_list_method = \'searchFolder\'   ,\n
+  field_second_layer_list_method = \'\'   ,\n
+  field_title_line = \'getTitle\'   ,\n
+  field_x_start_bloc = \'start_date\'   ,\n
+  field_x_stop_bloc = \'stop_date\'   ,\n
+  field_y_size_block = height_method   ,\n
+  field_stat_method = \'\' ,\n
+  field_split_method = \'\' ,\n
+  field_color_script = \'\' ,\n
+  field_round_script = \'\' ,\n
+  field_sec_axis_script = \'Planning_generateDateZoomAxis\' ,\n
+  field_delimiter = \'5\' ,\n
+  field_info_center = \'getTitle\'   ,\n
+  field_info_topleft = \'getTitle\'   ,\n
+  field_info_topright = \'getTitle\'   ,\n
+  field_info_backleft = \'getTitle\'   ,\n
+  field_info_backright = \'getTitle\'   ,\n
+  field_info_tooltip = \'getTitle\'  ,\n
+  field_enabled = \'checked\',\n
+  field_editable = \'checked\',\n
+  field_page_template = \'\',\n
+  field_external_validator = \'\',\n
+  field_required = \'\',\n
+  field_whitespace_preserve = \'\',\n
+)\n
+\n
+d.update(context.REQUEST)\n
+d.update(kw)\n
+#context.log(\'ListBox_setPropertyList\', \'kw = %r, d = %r\' % (kw, d,))\n
+r = context.form.validate(d)\n
+context.manage_edit_xmlrpc(r)\n
+\n
+return \'Set Successfully.\'\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>stat_method = \'\', height_method = \'\', calendar_view = \'\',  **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>stat_method</string>
+                            <string>height_method</string>
+                            <string>calendar_view</string>
+                            <string>kw</string>
+                            <string>dict</string>
+                            <string>d</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>r</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+                <string></string>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PlanningBox_setPropertyList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
