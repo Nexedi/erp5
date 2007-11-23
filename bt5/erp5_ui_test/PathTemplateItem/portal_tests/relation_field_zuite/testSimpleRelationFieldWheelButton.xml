@@ -106,7 +106,7 @@
 <tr>\n
   <td>clickAndWait</td>\n
   <!-- XXX maybe a better locator for relation field -->\n
-  <td>//input[@value=\'update...\']</td>\n
+  <td>//input[@value=\'update...\' and @type="image"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
