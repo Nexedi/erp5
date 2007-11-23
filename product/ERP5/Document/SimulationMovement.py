@@ -39,7 +39,7 @@ from zLOG import LOG
 
 from Acquisition import aq_base
 
-from AppliedRule import TREE_DELIVERED_CACHE_KEY, TREE_DELIVERED_CACHE_ENABLED
+from Products.ERP5.Document.AppliedRule import TREE_DELIVERED_CACHE_KEY, TREE_DELIVERED_CACHE_ENABLED
 
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready
 
