@@ -174,8 +174,6 @@
         <li tal:repeat="item python: content_list">\n
           <a tal:define="url python: \'%s/view\' % item.absolute_url()"\n
             tal:attributes="href url">\n
-            <tal:block tal:replace="python: here.WebSite_getFancyRelativeDate(item.getCreationDate())"\n
-                       tal:on-error="string:"/>&mdash;\n
             <tal:block tal:replace="item/getTitleOrId"\n
                        tal:on-error="string:"/>\n
           </a>\n
