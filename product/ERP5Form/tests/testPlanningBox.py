@@ -90,7 +90,7 @@ class TestPlanningBox(ERP5TypeTestCase):
     portal = self.getPortal()
     message = portal.foo_module['0'].Foo_createObjects(num=1)
     self.failUnless('Created Successfully' in message)
-    #portal.foo_module['0'].Foo_editObjects(num=3)
+    portal.foo_module['0'].Foo_editObjectLineDates()
 
   def stepRenderStructure(self, sequence = None, sequence_list = None, **kw):
     portal = self.getPortal()
@@ -107,7 +107,8 @@ class TestPlanningBox(ERP5TypeTestCase):
                     planning=planning)
 
   def stepCheckPlanning(self, sequence = None, sequence_list = None, **kw):
-    planning = sequence.get('planning')  
+    planning = sequence.get('planning')
+    self.assertEquals(planning.calendar_view, 0)
     self.assertEquals(len(planning.content), 1)
     bloc = planning.content[0]
     self.assertEquals(bloc.name , 'Group_1_Activity_1_Block_1')
@@ -115,11 +116,19 @@ class TestPlanningBox(ERP5TypeTestCase):
     for info in bloc.info.values():
       self.assertEquals(info.info,'Title 0')
       self.assertEquals(info.link , '/%s/foo_module/0/0' % self.getPortal().getId())
-      
+    # Check Parent Activities
+    parent = bloc.parent_activity
+    for info in parent.info.values():
+      self.assertEquals(info,'Title 0')
+    self.assertEquals(parent.link , '/%s/foo_module/0/0' % self.getPortal().getId())
+    # XXX This test for Quantity is not complete, It should be improved. 
+    self.assertEquals(parent.height , None)
+    self.assertEquals(parent.title,'Title 0')
+
   def stepCheckBasic(self, sequence = None, sequence_list = None, **kw):
     basic = sequence.get('basic')
     self.assertEquals(len(basic.report_groups), 1)
-    # Note that this test use the use_date_zoom enabled
+    # Note that this test use the use_date_zoom enabled.
     sec_axis_info = basic.getSecondaryAxisInfo()
     date = DateTime()
     today = DateTime('%s/%s/%s' % (date.year(),date.month(),date.day()))
@@ -132,7 +141,6 @@ class TestPlanningBox(ERP5TypeTestCase):
     self.assertEquals(sec_axis_info['zoom_start'], 0)
     self.assertEquals(sec_axis_info['zoom_level'], 1.0)
     self.assertEquals(sec_axis_info['bound_range'], 1.0)
-
 
     for tree_list, activity_list,stat in basic.report_groups:
       self.assertEquals(len(activity_list), 1)
