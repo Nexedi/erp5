@@ -181,10 +181,9 @@ class SQLDict(RAMDict, SQLBase):
     """
     activity_tool.SQLDict_deleteDuplicatedMessageList(
       processing_node=processing_node, uid=line.uid,
-      to_date=line.date, path=line.path, method_id=line.method_id,
+      path=line.path, method_id=line.method_id,
       group_method_id=line.group_method_id,
-      order_validation_text=line.order_validation_text,
-      tag=line.tag)
+      order_validation_text=line.order_validation_text)
 
   def getProcessableMessageList(self, activity_tool, processing_node):
     """

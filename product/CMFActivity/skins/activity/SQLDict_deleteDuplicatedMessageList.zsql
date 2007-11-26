@@ -10,23 +10,19 @@ class_file:
 <params>
 processing_node
 uid
-to_date
 path
 method_id
 group_method_id
 order_validation_text
-tag
 </params>
 DELETE FROM
   message
 WHERE
   processing_node IN (0, <dtml-sqlvar processing_node type="int">)
   AND uid != <dtml-sqlvar uid type="int">
-  AND date <= <dtml-sqlvar to_date type="datetime">
   AND path = <dtml-sqlvar path type="string">
   AND method_id = <dtml-sqlvar method_id type="string">
   AND group_method_id = <dtml-sqlvar group_method_id type="string">
   AND order_validation_text = <dtml-sqlvar order_validation_text type="string">
-  AND tag IN ('', <dtml-sqlvar tag type="string">)
 <dtml-var sql_delimiter>
 COMMIT
