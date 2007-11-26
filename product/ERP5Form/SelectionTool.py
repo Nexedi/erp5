@@ -1052,102 +1052,6 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       new_md5_string = md5.new(str(object_uid_list)).hexdigest()
       return md5_string != new_md5_string
 
-    security.declareProtected(ERP5Permissions.View, 'getPickle')
-    def getPickle(self,**kw):
-      """
-      we give many keywords and we will get the corresponding
-      pickle string
-      """
-      #LOG('getPickle kw',0,kw)
-      # XXX Remove DateTime, This is really bad, only use for zope 2.6
-      # XXX This has to be removed as quickly as possible
-      for k,v in kw.items():
-        if isinstance(v,DateTime):
-          del kw[k]
-      # XXX End of the part to remove
-      #LOG('SelectionTool.getPickle, kw',0,kw)
-      pickle_string = pickle.dumps(kw)
-      msg = MIMEBase('application','octet-stream')
-      msg.set_payload(pickle_string)
-      Encoders.encode_base64(msg)
-      pickle_string = msg.get_payload()
-      pickle_string = pickle_string.replace('\n','@@@')
-      return pickle_string
-
-    security.declareProtected(ERP5Permissions.View, 'getPickleAndSignature')
-    def getPickleAndSignature(self,**kw):
-      """
-      we give many keywords and we will get the corresponding
-      pickle string and signature
-      """
-      cookie_password = self._getCookiePassword()
-      pickle_string = self.getPickle(**kw)
-      signature = hmac.new(cookie_password,pickle_string).hexdigest()
-      return (pickle_string,signature)
-
-    security.declareProtected(ERP5Permissions.View, 'getObjectFromPickle')
-    def getObjectFromPickle(self,pickle_string):
-      """
-      get object from a pickle string
-      """
-      object = None
-      pickle_string = pickle_string.replace('@@@','\n')
-      msg = MIMEBase('application','octet-stream')
-      Encoders.encode_base64(msg)
-      msg.set_payload(pickle_string)
-      pickle_string = msg.get_payload(decode=1)
-      object = pickle.loads(pickle_string)
-      return object
-
-    security.declareProtected(ERP5Permissions.View, 'getObjectFromPickleAndSignature')
-    def getObjectFromPickleAndSignature(self,pickle_string,signature):
-      """
-      get object from a pickle string only when a signature maches
-      """
-      cookie_password = self._getCookiePassword()
-      object = None
-      new_signature = hmac.new(cookie_password,pickle_string).hexdigest()
-      if new_signature==signature:
-        object = self.getObjectFromPickle(pickle_string)
-      return object
-
-    security.declarePrivate('_getCookiePassword')
-    def _getCookiePassword(self):
-      """
-      get the password used for encryption
-      """
-      cookie_password = getattr(self,'cookie_password',None)
-      if cookie_password is None:
-        cookie_password = str(random.randrange(1,2147483600))
-        self.cookie_password = cookie_password
-      return cookie_password
-
-    security.declareProtected(ERP5Permissions.View, 'setCookieInfo')
-    def setCookieInfo(self,request,cookie_name,**kw):
-      """
-      register info directly in cookie
-      """
-      cookie_name = cookie_name + '_cookie'
-      (pickle_string,signature) = self.getPickleAndSignature(**kw)
-      request.RESPONSE.setCookie(cookie_name,pickle_string,max_age=15*60)
-      signature_cookie_name = cookie_name + '_signature'
-      request.RESPONSE.setCookie(signature_cookie_name,signature,max_age=15*60)
-
-    security.declareProtected(ERP5Permissions.View, 'getCookieInfo')
-    def getCookieInfo(self,request,cookie_name):
-      """
-      get info directly from cookie
-      """
-      cookie_name = cookie_name + '_cookie'
-      object = None
-      if getattr(request,cookie_name,None) is not None:
-        pickle_string = request.get(cookie_name)
-        signature_cookie_name = cookie_name + '_signature'
-        signature = request.get(signature_cookie_name)
-        object = self.getObjectFromPickleAndSignature(pickle_string,signature)
-      if object is None:
-        object = {}
-      return object
 
     # Related document searching
     def viewSearchRelatedDocumentDialog(self, index, form_id,
@@ -1232,11 +1136,10 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
 
         # Save the current REQUEST form
         # We can't put FileUpload instances because we can't pickle them
-        pickle_kw = {}
-        for key in REQUEST.form.keys():
-          if not isinstance(REQUEST.form[key],FileUpload):
-            pickle_kw[key] = REQUEST.form[key]
-        form_pickle, form_signature = self.getPickleAndSignature(**pickle_kw)
+        saved_form_data = {}
+        for key, value in REQUEST.form.items():
+          if not isinstance(value, FileUpload):
+              saved_form_data[key] = value
 
         base_category = None
         kw = {}
@@ -1255,8 +1158,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         kw['form_id'] = form_id
         kw[field.get_value('catalog_index')] = field_value
         kw['portal_status_message'] = portal_status_message
-        kw['form_pickle'] = form_pickle
-        kw['form_signature'] = form_signature
+        kw['saved_form_data'] = saved_form_data
 
          # Empty the selection (uid)
         REQUEST.form = kw # New request form
