@@ -1214,6 +1214,8 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Order Tool', None)
     if not p.hasObject('portal_tests'):
       addTool('ERP5 Test Tool', None)
+    if not p.hasObject('portal_notifications'):
+      addTool('ERP5 Notification Tool', None)
 
     # Add ERP5Type Tool
     addTool = p.manage_addProduct['ERP5Type'].manage_addTool
