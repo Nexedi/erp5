@@ -97,6 +97,12 @@ class Inventory(Delivery):
     to have our own temp object constructor, this is usefull if we
     want to use some classes with some particular methods
     """
+    if self.getSimulationState() != "delivered":
+      # this prevent from trying to calculate stock
+      # with not all properties defined and thus making
+      # request with no condition in mysql
+      return
+    
     sql_catalog_id = kw.pop("sql_catalog_id", None)
     disable_archive = kw.pop("disable_archive", 0)
     connection_id = None
