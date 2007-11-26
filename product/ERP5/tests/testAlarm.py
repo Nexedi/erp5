@@ -436,14 +436,15 @@ class TestAlarm(ERP5TypeTestCase):
     self.getPortal().portal_skins[skin_folder_id][sense_method_id].ZPythonScript_edit('*args,**kw', 'context.newActiveProcess()')
     alarm.activeSense()
     get_transaction().commit()
-    # Note: this call to tic will not fail, because the same method on the same
-    # object is activated again in SQLDict. When the new message will be
-    # -successfully- processed, the previous -failed- message will get removed
-    # in the cleanup. This behaviour is logical if we consider that manually
-    # executing the failed message to get the error will lead to no error.
-    # But it can also be considered illogical if failed messages are supposed
-    # to be preserved for future analysis.
-    self.tic()
+    # Note: this call to tic will fail, because the previous message is still there
+    # This behaviour is logical if we consider that we want to keep errors
+    # in order to know that an error occured.
+    try:
+      self.tic()
+    except RuntimeError:
+      pass
+    else:
+      raise Exception, 'Tic did not raise though activity was supposed to fail'
     # Chen that the second alarm execution did happen
     self.assertNotEquals(alarm.getLastActiveProcess(), None)
 
