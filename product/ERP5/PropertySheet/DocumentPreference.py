@@ -73,6 +73,12 @@ class DocumentPreference:
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : '' },
+    { 'id'          : 'preferred_document_bookmark',
+      'description' : 'Preffered documents to refer frequently.',
+      'type'        : 'lines',
+      'preference'  : 1,
+      'default'     : [],
+      'mode'        : '' },
     # XXX-JPS. This is not a real property - it is somehow a hack.
     # BG: I was advised by somebody from Nexedi (I think it was Jerome)
     { 'id'              : 'preferred_document_ingestion_email_notification_selection',
