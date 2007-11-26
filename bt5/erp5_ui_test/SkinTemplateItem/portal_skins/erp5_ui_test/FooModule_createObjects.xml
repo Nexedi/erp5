@@ -74,6 +74,9 @@ for i in range(start, start + num):\n
                     foo_category = category, portal_type=portal_type)\n
   if set_dates:\n
     foo.setStartDate(DateTime(i, i, i))\n
+  if create_line:\n
+    foo.newContent()\n
+\n
 return \'Created Successfully.\'\n
 </string> </value>
         </item>
@@ -97,7 +100,7 @@ return \'Created Successfully.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>start=0, num=10, set_dates=0, portal_type=\'Foo\'</string> </value>
+            <value> <string>start=0, num=10, set_dates=0, portal_type=\'Foo\', create_line=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,7 +120,7 @@ return \'Created Successfully.\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -127,6 +130,7 @@ return \'Created Successfully.\'\n
                             <string>num</string>
                             <string>set_dates</string>
                             <string>portal_type</string>
+                            <string>create_line</string>
                             <string>DateTime</string>
                             <string>category_list</string>
                             <string>_getiter_</string>
@@ -156,6 +160,7 @@ return \'Created Successfully.\'\n
                 <int>10</int>
                 <int>0</int>
                 <string>Foo</string>
+                <int>0</int>
               </tuple>
             </value>
         </item>
