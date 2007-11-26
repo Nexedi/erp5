@@ -125,8 +125,7 @@ if dialog_method == \'Base_editRelation\':\n
                                    selection_index=kw[\'selection_index\'],\n
                                    uids=kw.get(\'uids\', ()),\n
                                    listbox_uid=kw.get(\'listbox_uid\', None),\n
-                                   form_pickle=kw[\'form_pickle\'],\n
-                                   form_signature=kw[\'form_signature\'])\n
+                                   saved_form_data=kw[\'saved_form_data\'])\n
 # Exception for create relation\n
 if dialog_method == \'Base_createRelation\':\n
   return context.Base_createRelation(form_id=kw[\'form_id\'],\n
@@ -146,16 +145,8 @@ if dialog_method == \'Folder_delete\':\n
                                uids=kw[\'listbox_uid\'],\n
                                md5_object_uid_list=kw[\'md5_object_uid_list\'])\n
 \n
-# If the request came with a pickled form, use it as context for form object search.\n
-if kw.has_key(\'pickle_string\'):\n
-  form_context = context.asContext(context=None,\n
-                                   portal_type=context.getPortalType(),\n
-                                   **(context.portal_selections.getObjectFromPickle(kw[\'pickle_string\']))\n
-                                  )\n
-else:\n
-  form_context = context\n
-form = getattr(form_context, dialog_id)\n
 \n
+form = getattr(context, dialog_id)\n
 # form can be a python script that returns the form\n
 if not hasattr(form, \'validate_all_to_request\'):\n
   form = form()\n
@@ -217,16 +208,6 @@ if len(listbox_id_list):\n
     listbox_line_list = tuple(listbox_line_list)\n
     kw[listbox_id] = request_form[listbox_id] = listbox_line_list\n
 \n
-if enable_pickle or (form.update_action != \'\'):\n
-  # Do not put listbox in pickle, because this pickle becomes too big\n
-  # wich is not compatible with the url limit size\n
-  pickle_kw = {}\n
-  excluded_key_list = listbox_id_list\n
-  excluded_key_list.extend(["%s_uid" % x for x in listbox_id_list])\n
-  for key in kw.keys():\n
-    if key not in excluded_key_list:\n
-      pickle_kw[key] = kw[key]\n
-  kw[\'pickle_string\'] = request_form[\'pickle_string\'] = context.portal_selections.getPickle(**pickle_kw)\n
 \n
 # Check if the selection changed\n
 if hasattr(kw, \'previous_md5_object_uid_list\'):\n
@@ -309,7 +290,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_method, dialog_id, dialog_category=\'\', enable_pickle=0, **kw</string> </value>
+            <value> <string>dialog_method, dialog_id, dialog_category=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -329,7 +310,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -338,7 +319,6 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>dialog_method</string>
                             <string>dialog_id</string>
                             <string>dialog_category</string>
-                            <string>enable_pickle</string>
                             <string>kw</string>
                             <string>isListBox</string>
                             <string>Products.Formulator.Errors</string>
@@ -352,8 +332,6 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>_getitem_</string>
                             <string>value</string>
                             <string>None</string>
-                            <string>_apply_</string>
-                            <string>form_context</string>
                             <string>getattr</string>
                             <string>form</string>
                             <string>hasattr</string>
@@ -380,11 +358,6 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>key</string>
                             <string>listbox_line</string>
                             <string>tuple</string>
-                            <string>pickle_kw</string>
-                            <string>excluded_key_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
                             <string>selection_list</string>
                             <string>map</string>
                             <string>object_uid_list</string>
@@ -396,6 +369,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>clean_kw</string>
                             <string>url_params_string</string>
                             <string>dialog_form</string>
+                            <string>_apply_</string>
                             <string>redirect_url</string>
                           </tuple>
                         </value>
@@ -410,7 +384,6 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
             <value>
               <tuple>
                 <string></string>
-                <int>0</int>
               </tuple>
             </value>
         </item>
