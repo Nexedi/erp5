@@ -79,3 +79,5 @@ class PaySheetLine(InvoiceLine):
       self.invokeFactory(type_name="Pay Sheet Cell",id=id)
       return self.get(id)
       
+    def isAccountable(self):
+      return 1

@@ -73,3 +73,6 @@ class PaySheetCell(InvoiceCell):
         We do not need conversion here
       """
       return self.getQuantity()
+
+    def isAccountable(self):
+      return 1
