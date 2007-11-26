@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -19,6 +16,7 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>selection_name</string>
+                <string>default_params</string>
                 <string>editable_columns</string>
               </list>
             </value>
@@ -105,6 +103,21 @@
                         <tuple>
                           <string>base_price</string>
                           <string>Fixing Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>default_params</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>checked_permission</string>
+                          <string>View</string>
                         </tuple>
                       </list>
                     </value>
