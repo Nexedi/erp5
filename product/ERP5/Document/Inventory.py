@@ -97,7 +97,7 @@ class Inventory(Delivery):
     to have our own temp object constructor, this is usefull if we
     want to use some classes with some particular methods
     """
-    if self.getSimulationState() != "delivered":
+    if self.getSimulationState() in self.getPortalDraftOrderStateList():
       # this prevent from trying to calculate stock
       # with not all properties defined and thus making
       # request with no condition in mysql
