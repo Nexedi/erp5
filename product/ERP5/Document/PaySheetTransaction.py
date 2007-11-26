@@ -314,7 +314,8 @@ class PaySheetTransaction(Invoice):
         desc      = ''.join(model_line.getDescription())
       # if the model_line description is empty, the payroll service 
       # description is used
-      else: desc  = ''.join(service.getDescription())
+      else: 
+        desc  = ''.join(service.getDescription())
       
       variation_share_list = model_line.getVariationCategoryList(\
                                       base_category_list=['tax_category',])
@@ -350,8 +351,9 @@ class PaySheetTransaction(Invoice):
               if getattr(self, script_name, None) is None:
                 raise ValueError, "Unable to find `%s` calculation script" % \
                                                                  script_name
-              LOG('script_name :',0,script_name)
               calculation_script = getattr(self, script_name, None)
+              quantity=0
+              price=0
               result = calculation_script(\
                 base_amount_current_value_dict=base_amount_current_value_dict,
                 share=share,
