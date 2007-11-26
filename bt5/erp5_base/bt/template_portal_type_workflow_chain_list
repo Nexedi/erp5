@@ -10,6 +10,7 @@ Credit Card | edit_workflow
 Currency Exchange Line | currency_exchange_line_interaction_workflow
 Currency Exchange Line | edit_workflow
 Currency | edit_workflow
+Currency | validation_workflow
 Email | edit_workflow
 Fax | edit_workflow
 File | edit_workflow

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -18,8 +15,7 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
+                <string>all_columns</string>
                 <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
@@ -88,19 +84,9 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                         <tuple>
                           <string>reference</string>
                           <string>Currency Code</string>
@@ -116,6 +102,55 @@
                         <tuple>
                           <string>base_unit_quantity</string>
                           <string>Precision</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_precision</string>
+                          <string>Quantity Precision</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Currency Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>short_title</string>
+                          <string>Symbol</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_unit_quantity</string>
+                          <string>Precision</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -140,25 +175,6 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Currency Code</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key>                 <string>selection_name</string> </key>
                     <value> <string>currency_module_selection</string> </value>
                 </item>
@@ -167,31 +183,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>reference</string>
                           <string>Currency Code</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>sort_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Currency Code</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
                         </tuple>
                       </list>
                     </value>
