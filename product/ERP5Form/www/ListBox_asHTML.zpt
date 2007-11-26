@@ -10,7 +10,7 @@
               selection here/getSelection;
               portal_url_string here/getPortalUrlString;
               real_context here/getContext;
-              context_url real_context/getUrl;
+              context_url real_context/absolute_url;
               md5_string here/getMD5Checksum;
               line_list here/query;
               is_domain_tree_mode here/isDomainTreeMode;
