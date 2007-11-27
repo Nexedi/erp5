@@ -293,8 +293,8 @@ class PropertyHolder:
     self.workflow_method_registry = {}
 
   def _getItemList(self):
-    return filter(lambda x: x[0] not in RESERVED_TUPLE_PROPERTY,
-                  self.__dict__.items())
+    return [x for x in self.__dict__.items() if x[0] not in
+        RESERVED_TUPLE_PROPERTY]
 
   # Accessor generation
   def createAccessor(self, id):
@@ -418,32 +418,41 @@ class PropertyHolder:
         #if x[1] is not WORKFLOW_METHOD_MARKER and issubclass(x[1][0], Accessor):
           #result.append(x)
     #return result
-    return filter(lambda x: isinstance(x[1], Accessor) or
-                            (isinstance(x[1], types.TupleType)
-                            and x[1] is not WORKFLOW_METHOD_MARKER
-                            and x[0] != '__ac_permissions__'
-                            and issubclass(x[1][0], Accessor))
-                , self._getItemList())
+    return [x for x in self._getItemList() if isinstance(x[1], Accessor)
+        or (isinstance(x[1], types.TupleType)
+            and x[1] is not WORKFLOW_METHOD_MARKER
+            and x[0] != '__ac_permissions__'
+            and issubclass(x[1][0], Accessor))]
 
   def getAccessorMethodIdList(self):
     """
     Return the list of accessor IDs
     """
-    return map(lambda x: x[0], self.getAccessorMethodItemList())
+    for x, y in self._getItemList():
+      if isinstance(y, types.TupleType):
+        if len(y) == 0:
+          raise ValueError("problem at %s %s" % (self._portal_type, x))
+    return [x[0] for x in self._getItemList() if isinstance(x[1], Accessor)
+        or (isinstance(x[1], types.TupleType)
+            and x[1] is not WORKFLOW_METHOD_MARKER
+            and x[0] != '__ac_permissions__'
+            and issubclass(x[1][0], Accessor))]
 
   def getWorkflowMethodItemList(self):
     """
     Return a list of tuple (id, method) for every workflow method
     """
-    return filter(lambda x: isinstance(x[1], WorkflowMethod) or
-                           (isinstance(x[1], types.TupleType)
-                            and x[1] is WORKFLOW_METHOD_MARKER), self._getItemList())
+    return [x for x in self._getItemList() if isinstance(x[1], WorkflowMethod)
+        or (isinstance(x[1], types.TupleType)
+            and x[1] is WORKFLOW_METHOD_MARKER)]
 
   def getWorkflowMethodIdList(self):
     """
     Return the list of workflow method IDs
     """
-    return map(lambda x: x[0], self.getWorkflowMethodItemList())
+    return [x[0] for x in self._getItemList() if isinstance(x[1], WorkflowMethod)
+        or (isinstance(x[1], types.TupleType)
+            and x[1] is WORKFLOW_METHOD_MARKER)]
 
   def _getClassDict(self, klass, inherited=1, local=1):
     """
@@ -469,34 +478,37 @@ class PropertyHolder:
     """
     Return a list of tuple (id, method, module) for every class method
     """
-    return filter(lambda x: callable(x[1]) and not isinstance(x[1], Method), 
-                  self._getClassItemList(klass, inherited=inherited, local=local))
+    return [x for x in self._getClassItemList(klass, inherited=inherited,
+      local=local) if callable(x[1]) and not isinstance(x[1], Method)]
 
   def getClassMethodIdList(self, klass, inherited=1, local=1):
     """
     Return the list of class method IDs
     """
-    return map(lambda x: x[0], self.getClassMethodItemList(klass, inherited=inherited, local=local))
+    return [x[0] for x in self._getClassItemList(klass, inherited=inherited,
+      local=local) if callable(x[1]) and not isinstance(x[1], Method)]
 
   def getClassPropertyItemList(self, klass, inherited=1, local=1):
     """
     Return a list of tuple (id, method) for every class method
     """
-    return filter(lambda x: not callable(x[1]),
-                  self._getClassItemList(klass, inherited=inherited, local=local))
+    return [x for x in self._getClassItemList(klass, inherited=inherited,
+      local=local) if not callable(x[1])]
 
   def getClassPropertyIdList(self, klass, inherited=1, local=1):
     """
     Return the list of class method IDs
     """
-    return map(lambda x: repr(x[0]), self.getClassPropertyItemList(klass, inherited=inherited, local=local))
+    return [x[0] for x in self._getClassItemList(klass, inherited=inherited,
+      local=local) if not callable(x[1])]
 
 def getClassPropertyList(klass):
   ps_list = getattr(klass, 'property_sheets', ())
   ps_list = tuple(ps_list)
   for super_klass in klass.__bases__:
-    if getattr(super_klass, 'isRADContent', 0): ps_list = ps_list + tuple(filter(lambda p: p not in ps_list,
-                                                         getClassPropertyList(super_klass)))
+    if getattr(super_klass, 'isRADContent', 0):
+      ps_list = ps_list + tuple([p for p in getClassPropertyList(super_klass)
+        if p not in ps_list])
   return ps_list
 
 def initializeClassDynamicProperties(self, klass):
@@ -540,9 +552,9 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key):
     if (ptype_object is not None) and \
        (ptype_object.meta_type == 'ERP5 Type Information'):
       # Make sure this is an ERP5Type object
-      ps_list = map(lambda p: getattr(PropertySheet, p, None),
-                    ptype_object.property_sheet_list)
-      ps_list = filter(lambda p: p is not None, ps_list)
+      ps_list = [getattr(PropertySheet, p, None) for p in
+          ptype_object.property_sheet_list]
+      ps_list = [p for p in ps_list if p is not None]
       # Always append the klass.property_sheets to this list (for compatibility)
       # Because of the order we generate accessors, it is still possible
       # to overload data access for some accessors
@@ -666,7 +678,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder):
               method_id_list = prop_holder.getAccessorMethodIdList() + prop_holder.getWorkflowMethodIdList()\
                              + prop_holder.getClassMethodIdList(klass)
                 # XXX - class stuff is missing here
-              method_id_list = filter(lambda x: method_id_matcher.match(x), method_id_list)
+              method_id_list = [x for x in method_id_list if method_id_matcher.match(x)]
             else:
               # Single method
               method_id_list = [imethod_id]
@@ -1077,7 +1089,7 @@ class Base( CopyContainer,
       #super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
       super_list = self._getAcquiredValueList(base_category, portal_type=portal_type,
                                               checked_permission=checked_permission) # Full acquisition
-      super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
+      super_list = [o for o in super_list if o.getPhysicalPath() != self.getPhysicalPath()] # Make sure we do not create stupid loop here
       #LOG("Get Acquired Property super_list",0,str(super_list))
       #LOG("Get Acquired Property accessor_id",0,str(accessor_id))
       if len(super_list) > 0:
@@ -1183,7 +1195,7 @@ class Base( CopyContainer,
           return value
       super_list = self._getAcquiredValueList(base_category, portal_type=portal_type,
                                               checked_permission=checked_permission) # Full acquisition
-      super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
+      super_list = [o for o in super_list if o.getPhysicalPath() != self.getPhysicalPath()] # Make sure we do not create stupid loop here
       if len(super_list) > 0:
         value = []
         for super in super_list:
@@ -2182,7 +2194,7 @@ class Base( CopyContainer,
     result.sort(lambda x, y: cmp(getattr(x,sort_id)(),getattr(y,sort_id)()))
     if method_id is None:
       return [(x, x) for x in membership_list]
-    return map(lambda x: (x,getattr(x, method_id)()), membership_list)
+    return [(x,getattr(x, method_id)()) for x in membership_list]
 
   security.declareProtected( Permissions.View, '_getDefaultCategoryMembership' )
   def _getDefaultCategoryMembership(self, category, spec=(), filter=None, portal_type=(), base=0,
