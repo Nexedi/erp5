@@ -85,26 +85,25 @@ class CacheFactory:
     """ When CacheFactory is called it will try to return cached value using
     appropriate cache plugin.
     """
-    cache_duration = self.cache_duration
-
     ## Expired Cache (if needed)
     self.expire()
 
     quick_cached = self.quick_cache.get(cache_id, scope)
     if quick_cached is not None:
-      return quick_cached.getValue()
+      return quick_cached.value
     else:
       ## not in local, check if it's in shared
       for shared_cache in self.shared_caches:
         if shared_cache.has_key(cache_id, scope):
           cache_entry = shared_cache.get(cache_id, scope)
-          value = cache_entry.getValue()
+          value = cache_entry.value
           ## update local cache
           self.quick_cache.set(cache_id, scope, value,
                               cache_entry.cache_duration,
                               cache_entry.calculation_time)
           return value
 
+    cache_duration = self.cache_duration
     ## not in any available cache plugins calculate and set to local ..
     start = time()
     value = callable_object(*args, **kwd)
