@@ -361,10 +361,21 @@ class Category(Folder):
     def getCategoryChildCompactTitleItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
-      given list of base categories. Uses title_and_id as default method
+      given list of base categories. Uses compact_title as default method
       """
       return self.getCategoryChildItemList(recursive=recursive,
                                            display_id='compact_title',
+                                           base=base, **kw)
+    
+    security.declareProtected(Permissions.AccessContentsInformation,
+                          'getCategoryChildCompactTranslatedTitleItemList')
+    def getCategoryChildCompactTranslatedTitleItemList(self, recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses translated_compact_title as default method
+      """
+      return self.getCategoryChildItemList(recursive=recursive,
+                                           display_id='translated_compact_title',
                                            base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
