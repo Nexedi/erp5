@@ -203,7 +203,7 @@ class PaySheetTransaction(Invoice):
                            'cell_list'        : []
                          }
       
-      # create cells if a value has been entered by accountable
+      # create cells if a value has been entered 
       if quantity or price:
         for salary_range in salary_range_categories: 
           # Define an empty new cell
@@ -285,12 +285,13 @@ class PaySheetTransaction(Invoice):
             else:
               old_val = 0
             new_val = old_val + paysheetcell.getQuantity()
+            # increment the corresponding amount
             base_amount_current_value_dict[base_amount] = new_val
 
     # get not editables model lines
     model = self.getSpecialiseValue()
     model_line_list = model.contentValues(portal_type='Pay Sheet Model Line',
-                                               sort_on='int_index')
+                                          sort_on='int_index')
     model_line_list = [line for line in model_line_list if not line.getEditable()]
 
     pay_sheet_line_list = []
@@ -304,18 +305,18 @@ class PaySheetTransaction(Invoice):
         # This line should not be used
         continue
 
-      service     = model_line.getResourceValue()
-      title       = model_line.getTitleOrId()
-      int_index   = model_line.getFloatIndex()
-      id          = model_line.getId()
+      service          = model_line.getResourceValue()
+      title            = model_line.getTitleOrId()
+      int_index        = model_line.getFloatIndex()
+      id               = model_line.getId()
       base_amount_list = model_line.getBaseAmountList()
-      res         = service.getRelativeUrl()
+      res              = service.getRelativeUrl()
       if model_line.getDescription():
-        desc      = ''.join(model_line.getDescription())
+        desc = ''.join(model_line.getDescription())
       # if the model_line description is empty, the payroll service 
       # description is used
       else: 
-        desc  = ''.join(service.getDescription())
+        desc = ''.join(service.getDescription())
       
       variation_share_list = model_line.getVariationCategoryList(\
                                       base_category_list=['tax_category',])
@@ -325,74 +326,86 @@ class PaySheetTransaction(Invoice):
       for share in variation_share_list:
         for slice in variation_slice_list:
           cell = model_line.getCell(slice, share)
-          if cell is not None:
-            # get the slice :
-            model_slice = None
-            model_slice = model_line.getParentValue().getCell(slice)
-            quantity = 0.0
-            price = 0.0
-            if model_slice is not None:
-              model_slice_min = model_slice.getQuantityRangeMin()
-              model_slice_max = model_slice.getQuantityRangeMax()
+          if cell is None:
+            LOG('createNotEditablePaySheetLineList : cell is None')
+            continue
+          # get the slice :
+          model_slice = None
+          model_slice = model_line.getParentValue().getCell(slice)
+          quantity = 0.0
+          price = 0.0
+          if model_slice is None:
+            LOG('createNotEditablePaySheetLineList : model_slice %s is None' %\
+                                                                          slice)
+            continue
+          model_slice_min = model_slice.getQuantityRangeMin()
+          model_slice_max = model_slice.getQuantityRangeMax()
 
-              ######################
-              # calculation part : #
-              ######################
-              # get the model line script
-              script_name = model_line.getCalculationScriptId()
-              if script_name is None:
-                # if model line script is None, get the default model script
-                script_name = model.getDefaultCalculationScriptId()
+          ######################
+          # calculation part : #
+          ######################
 
-              if script_name is None:
-                # if no calculation script found, use a default script :
-                script_name = 'PaySheetTransaction_defaultCalculationScript'
+          # get script in this order
+          # 1 - model_line script
+          # 2 - model script
+          # 3 - get the default calculation script
 
-              if getattr(self, script_name, None) is None:
-                raise ValueError, "Unable to find `%s` calculation script" % \
-                                                                 script_name
-              calculation_script = getattr(self, script_name, None)
-              quantity=0
-              price=0
-              result = calculation_script(\
-                base_amount_current_value_dict=base_amount_current_value_dict,
-                share=share,
-                model_slice_min=model_slice_min, 
-                model_slice_max=model_slice_max, 
-                cell=cell,)
-              quantity = result['quantity']
-              price = result['price']
+          # get the model line script
+          script_name = model_line.getCalculationScriptId()
+          if script_name is None:
+            # if model line script is None, get the default model script
+            script_name = model.getDefaultCalculationScriptId()
 
-            # Cell creation :
-            # Define an empty new cell
-            new_cell = { 'axe_list' : [share, slice]
-                       , 'quantity' : quantity
-                       , 'price'    : price
-                       }
-            cell_list.append(new_cell)
+          if script_name is None:
+            # if no calculation script found, use a default script :
+            script_name = 'PaySheetTransaction_defaultCalculationScript'
 
-            #XXX this is a hack to have the net salary
-            base_list = model_line.getResourceValue().getBaseAmountList()
-            if price is not None and 'employee_share' in share and\
-                not ('base_salary' in base_list or\
-                    'bonus' in base_list or\
-                    'gross_salary' in base_list):
-              employee_tax_amount += round((price * quantity), precision)
+          if getattr(self, script_name, None) is None:
+            raise ValueError, "Unable to find `%s` calculation script" % \
+                                                             script_name
+          calculation_script = getattr(self, script_name, None)
+          quantity=0
+          price=0
+          LOG('script_name :', 0, script_name)
+          result = calculation_script(\
+            base_amount_current_value_dict=base_amount_current_value_dict,
+            share=share,
+            model_slice_min=model_slice_min, 
+            model_slice_max=model_slice_max, 
+            cell=cell,)
 
-            # update base participation
-            base_participation_list = service.getBaseAmountList(base=1)
-            for base_participation in base_participation_list:
-              if quantity:
-                if base_amount_current_value_dict.has_key(base_participation):
-                  old_val = base_amount_current_value_dict[base_participation]
-                else:
-                  old_val = 0
-                new_val = old_val + quantity
+          quantity = result['quantity']
+          price = result['price']
 
-                if price:
-                  if old_val != 0:
-                    new_val = round((old_val + quantity*price), precision) 
-                base_amount_current_value_dict[base_participation] = new_val
+          # Cell creation :
+          # Define an empty new cell
+          new_cell = { 'axe_list' : [share, slice],
+                       'quantity' : quantity,
+                       'price'    : price,
+                     }
+          cell_list.append(new_cell)
+
+          #XXX this is a hack to have the net salary
+          base_list = model_line.getResourceValue().getBaseAmountList()
+          if price is not None and 'employee_share' in share and\
+              ('deductible_tax' in base_list or\
+               'non_deductible_tax' in base_list):
+            employee_tax_amount += round((price * quantity), precision)
+
+          # update base participation
+          base_participation_list = service.getBaseAmountList(base=1)
+          for base_participation in base_participation_list:
+            if quantity:
+              if base_amount_current_value_dict.has_key(base_participation):
+                old_val = base_amount_current_value_dict[base_participation]
+              else:
+                old_val = 0
+              new_val = old_val + quantity
+
+              if price:
+                if old_val != 0:
+                  new_val = round((old_val + quantity*price), precision) 
+              base_amount_current_value_dict[base_participation] = new_val
 
       if cell_list:
         # create the PaySheetLine
