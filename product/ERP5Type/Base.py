@@ -3100,13 +3100,15 @@ class Base( CopyContainer,
 
   security.declareProtected(Permissions.ManagePortal,
                             'updateRoleMappingsFor')
-  def updateRoleMappingsFor(self, wf_id,**kw):
+  def updateRoleMappingsFor(self, wf_id, **kw):
     """
     Update security policy according to workflow settings given by wf_id
     """
     workflow = self.portal_workflow.getWorkflowById(wf_id)
     if workflow is not None:
-      workflow.updateRoleMappingsFor(self)
+      changed = workflow.updateRoleMappingsFor(self)
+      if changed:
+        self.reindexObjectSecurity()
 
   # Template Management
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
