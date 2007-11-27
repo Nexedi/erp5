@@ -102,7 +102,7 @@
                         </tuple>
                         <tuple>
                           <string>base_price</string>
-                          <string>Fixing Price</string>
+                          <string>Exchange Rage</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -167,7 +167,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Currency Exchange Lines</string> </value>
+                    <value> <string>Currency Exchange Rates</string> </value>
                 </item>
               </dictionary>
             </value>

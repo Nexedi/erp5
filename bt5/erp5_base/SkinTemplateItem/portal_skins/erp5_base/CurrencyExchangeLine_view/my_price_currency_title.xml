@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -107,7 +104,7 @@
                 </item>
                 <item>
                     <key>                 <string>description</string> </key>
-                    <value> <string>The reference currency in which the fixing price is given.</string> </value>
+                    <value> <string>The reference currency in which the exchange rate is given.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
