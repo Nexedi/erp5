@@ -368,8 +368,8 @@ class Category(Folder):
                                            base=base, **kw)
     
     security.declareProtected(Permissions.AccessContentsInformation,
-                          'getCategoryChildCompactTranslatedTitleItemList')
-    def getCategoryChildCompactTranslatedTitleItemList(self, recursive=1, base=0, **kw):
+                        'getCategoryChildTranslatedCompactTitleItemList')
+    def getCategoryChildTranslatedCompactTitleItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses translated_compact_title as default method
