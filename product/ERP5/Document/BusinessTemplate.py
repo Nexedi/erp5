@@ -207,7 +207,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       os.makedirs(self.path)
 
   def addFolder(self, name=''):
-     if name !='':
+    if name != '':
       name = os.path.normpath(name)
       path = os.path.join(self.path, name)
       if not os.path.exists(path):
