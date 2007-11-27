@@ -76,9 +76,10 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Manager</string>
-                        <string>Assistant</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                         <string>Reviewer</string>
                       </tuple>
                     </value>
@@ -87,9 +88,10 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Manager</string>
-                        <string>Assistant</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -97,9 +99,10 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Manager</string>
-                        <string>Assistant</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -107,9 +110,10 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Manager</string>
-                        <string>Assistant</string>
                         <string>Assignor</string>
+                        <string>Assistant</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                         <string>Reviewer</string>
                       </tuple>
                     </value>
