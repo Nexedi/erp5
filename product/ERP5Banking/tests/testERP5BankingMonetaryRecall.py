@@ -132,6 +132,7 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     
     self.line_list = line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.cash = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
+    self.cash_surface = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     
     ###Comment this part because the destination is automatic
     #print self.paris.caveau.objectIds()
@@ -139,6 +140,13 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
 
     self.createCashInventory(source=None, destination=self.cash, currency=self.currency_1,
                              line_list=line_list)
+    surface_line_list = []
+    for line in line_list:
+      line['id'] = 'surface_%s' % line['id']
+      surface_line_list.append(line)
+    self.createCashInventory(source=None, destination=self.cash_surface, 
+                             currency=self.currency_1,
+                             line_list=surface_line_list)
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
     # Create an Organisation that will be used for users assignment
@@ -207,27 +215,31 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
-  def stepCreateMonetaryRecall(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateMonetaryRecall(self, sequence=None, sequence_list=None, 
+                               document_id='monetary_recall_1',
+                               source=None, **kwd):
     """
     Create a monetary recall document and check it
     """
     # Cash transfer has cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.monetary_recall = self.monetary_recall_module.newContent(
-                                 id='monetary_recall_1', 
+                                 id=document_id,
                                  portal_type='Monetary Recall', 
                                  description='test',
                                  source_total_asset_price=52400.0)
     
     # execute tic
     self.stepTic()
-    # check we have only one monetary recall
-    self.assertEqual(len(self.monetary_recall_module.objectValues()), 1)
     # get the monetary recall document
-    self.monetary_recall = getattr(self.monetary_recall_module, 'monetary_recall_1')
+    self.monetary_recall = getattr(self.monetary_recall_module, document_id)
     # check its portal type
     self.assertEqual(self.monetary_recall.getPortalType(), 'Monetary Recall')
     # check that its source is cash
-    self.assertEqual(self.monetary_recall.getSource(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
+    if source is None:
+      self.assertEqual(self.monetary_recall.getSource(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
+    else:
+      self.monetary_recall.setSource(source)
+      self.assertEqual(self.monetary_recall.getSource(), source)
     # set source reference
     self.setDocumentSourceReference(self.monetary_recall)
     # check source reference
@@ -237,6 +249,14 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.monetary_recall.getBaobabDestination(),
       'site/testsite/paris/caveau/serre/encaisse_des_billets_retires_de_la_circulation')
 
+  def stepCreateSurfaceMonetaryRecall(self, sequence=None, 
+      sequence_list=None, **kwd):
+    """
+    Create a monetary recall document and check it
+    """
+    source = self.cash_surface.getRelativeUrl()
+    self.stepCreateMonetaryRecall(source=source, 
+                                  document_id='monetary_recall_2')
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -270,8 +290,6 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
       self.assertEqual(cell.getPortalType(), 'Monetary Recall Cell')
       # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
-      # check the source vault is cash
-      self.assertEqual(cell.getSourceValue(), self.cash)
       # check the destination vault is counter
       ##self.assertEqual(cell.getDestinationValue(), self.counter)
       if cell.getId() == 'movement_0_0_0':
@@ -418,6 +436,31 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # check len of workflow history is 4
     self.assertEqual(len(workflow_history), 4)
 
+  def stepPlanMonetaryRecall(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Confirm the monetary recall and check it
+    """
+    self.monetary_recall.setSourceTotalAssetPrice('52400.0')
+    self.workflow_tool.doActionFor(self.monetary_recall, 'plan_action', wf_id='monetary_recall_workflow')
+    state = self.monetary_recall.getSimulationState()
+    self.assertEqual(state, 'planned')
+
+  def stepOrderMonetaryRecall(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Confirm the monetary recall and check it
+    """
+    self.monetary_recall.setSourceTotalAssetPrice('52400.0')
+    self.workflow_tool.doActionFor(self.monetary_recall, 'order_action', wf_id='monetary_recall_workflow')
+    state = self.monetary_recall.getSimulationState()
+    self.assertEqual(state, 'ordered')
+
+  def stepOrderToDeliverMonetaryRecall(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Confirm the monetary recall and check it
+    """
+    self.workflow_tool.doActionFor(self.monetary_recall, 'order_to_deliver_action', wf_id='monetary_recall_workflow')
+    state = self.monetary_recall.getSimulationState()
+    self.assertEqual(state, 'delivered')
 
   def stepCheckSourceDebitPlanned(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -539,6 +582,15 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'DeleteResetInventory Tic ' \
                     + 'DeliverMonetaryRecall ' \
                     + 'CheckSourceDebit CheckDestinationCredit CheckCashDeliveryLine '
+    sequence_list.addSequenceString(sequence_string)
+    # define the sequence
+    sequence_string = 'Tic '\
+                    + 'CreateSurfaceMonetaryRecall ' \
+                    + 'CreateValidLine1 CheckSubTotal ' \
+                    + 'CreateValidLine2 CheckTotal ' \
+                    + 'PlanMonetaryRecall Tic ' \
+                    + 'OrderMonetaryRecall Tic ' \
+                    + 'OrderToDeliverMonetaryRecall ' 
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
